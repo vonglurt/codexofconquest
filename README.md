@@ -1,17 +1,22 @@
 <!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude -->
 
-# roll2hit.com
+# CODEX OF CONQUEST — a single-file adventure RPG
 
-**A single-file adventure RPG.** The entire game — combat engine, world map, NPC
-dialogue, quest system, save system, hundreds of monsters, dozens of terrains,
-and 8 acts of story — lives inside one HTML file. No server, no build step, no
-install. Open it and play.
+The entire game — combat engine, world map, NPC dialogue, quest system, save
+system, hundreds of monsters, dozens of terrains, and 8 acts of story — lives
+inside one HTML file. No server, no build step, no install. Open it and play.
+
+> A dying courier presses a bloodstained map into your hand and says one word:
+> *"Sweelinck."* Seven scholar-kings each carried one Shard of the Codex into
+> hiding before they died, and the seals that bind the Void are weakening. The
+> Void is not a fog of consuming darkness. It is a conqueror — it advances where
+> the defenders are thin. You have a sword, a coin purse, and forty-nine days.
 
 ---
 
 ## Quick start — just play
 
-Open **`roll2hit-v3.html`** in any modern browser (Chrome, Firefox, Safari,
+Open **`index.html`** in any modern browser (Chrome, Firefox, Safari,
 Edge) with JavaScript enabled.
 
 - **Double-click** the file, or drag it onto a browser window, or `File → Open`.
@@ -27,7 +32,7 @@ Edge) with JavaScript enabled.
 
 ## What this project is
 
-`roll2hit-v3.html` is the single source of truth: a ~37,000-line HTML file that
+`index.html` is the single source of truth: a ~37,000-line HTML file that
 *is* the game. Everything else in this repository exists to **author, document,
 test, and host** that one file:
 
@@ -46,7 +51,7 @@ If you only want to play, you never need any of that — just open the HTML.
 
 ### 1. Play locally (no tooling)
 
-Open `roll2hit-v3.html` in a browser. Done.
+Open `index.html` in a browser. Done.
 
 ### 2. Host it (share it with others)
 
@@ -55,13 +60,13 @@ Because the game is a single static file, any static file server works:
 ```bash
 # Python (already on macOS/Linux) — serves the current directory at :8000
 python3 -m http.server 8000
-# then visit http://localhost:8000/roll2hit-v3.html
+# then visit http://localhost:8000/index.html
 
 # …or Node's one-liner static server
 npx serve .
 ```
 
-To publish on the web, upload `roll2hit-v3.html` to any static host (GitHub
+To publish on the web, upload `index.html` to any static host (GitHub
 Pages, Netlify, an S3 bucket, a plain nginx/Apache directory). No backend
 required. Rename it to `index.html` if you want it served at the site root.
 
@@ -89,7 +94,7 @@ npm install
 # Author visually: open worldbuilder.html in a browser while the server runs
 ```
 
-The server reads and rewrites `roll2hit-v3.html` in place. See
+The server reads and rewrites `index.html` in place. See
 **[CONTRIBUTING.md](CONTRIBUTING.md)** for the API-first authoring workflow and
 the WBAPI hazards to know before editing, and **`docs/api/`** for the full API
 reference.
@@ -111,7 +116,7 @@ npm run test:mud        # MUD server-protocol harness
 ## Repository layout
 
 ```
-roll2hit-v3.html        ← THE GAME (single file — open this to play)
+index.html        ← THE GAME (single file — open this to play)
 worldbuilder.html       ← visual authoring tool (needs the WBAPI server)
 
 # Launch / ops scripts (root)
@@ -152,7 +157,7 @@ maps/ · milepoints/ · ledger/   ← map assets, snapshots/logs, economy ledger
 
 ## Documentation system
 
-This repo maintains a **two-way sync** between `roll2hit-v3.html` and the
+This repo maintains a **two-way sync** between `index.html` and the
 markdown docs: every data structure in the HTML has a home document, and every
 documented item traces back to a line in the HTML.
 
@@ -228,3 +233,21 @@ MIT. Fork it. Extend it. Write Level 21. See [LICENSE](LICENSE) for full text.
 
 ---
 *© 2026 Paul Richeson — MIT License.*
+
+---
+
+## Authors
+
+**Paul Richeson** and **Claude** — see [LICENSE](LICENSE). The project was built
+across 1,472 commits between 2026-05-24 and 2026-08-23; 1,377 of them carry a
+`Co-Authored-By:` trailer naming the Claude model that worked on them.
+
+## A note on names
+
+The game file was called `roll2hit-v3.html` for most of its history and is now
+`index.html`, so that a static host serves it at the root URL. The project was
+called *Roll2Hit* before it was called *Codex of Conquest*.
+
+The `lab-reports/` and `plan-archive.md` are **history documents** — they are
+annotated, never rewritten (§DX-02c / §AUDIT-03m), so they still name the file
+and the project as they were called at the time. That is deliberate.

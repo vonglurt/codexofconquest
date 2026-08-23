@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude
 'use strict';
 // mover.js — §WALK-2 unified mover kernel: the single source of movement truth
-// shared by the SP client (inlined into roll2hit-v3.html) and the MUD server
+// shared by the SP client (inlined into index.html) and the MUD server
 // (require('./mover')).  PURE: no DOM, no SSE, no Math.random, no module globals.
 //
 // The region between the MOVER:CORE sentinels is inlined BYTE-IDENTICALLY into
-// roll2hit-v3.html; §WALK-4 walk-parity asserts the two copies match. Do not
+// index.html; §WALK-4 walk-parity asserts the two copies match. Do not
 // edit one copy without the other (or run: node scripts/check-mover-parity.js).
 //
 // world (read-only geo-grid snapshot, §4.1):

@@ -82,7 +82,7 @@ R16: WW  WW  WW  WW  WW  WW  WW  WW  WW  WW  WW  WW  WW  WW  WW  WW  WW  WW  WW 
 **To look up a node code, read the generated index — never a table in this file.**
 
 ```bash
-npm run nodes                 # regenerate docs/maps/node-index.md from roll2hit-v3.html
+npm run nodes                 # regenerate docs/maps/node-index.md from index.html
 ./api.sh get node CDG         # the other live answer
 ```
 
@@ -499,7 +499,7 @@ LITTORAL COURTS (§SIREN-01 — extended south from DS, Act IV)
 
 ## GATE LOCKS — ❌ REMOVED (Free-Movement Policy)
 
-> **The `GATE_LOCKS` array and all item-gated passage checks are gone from the code** (verified 2026-07-03: `GATE_LOCKS` greps to 0 in `roll2hit-v3.html`; `cellMove` is a thin `Mover.move` caller with no gate branch). Movement is refused for exactly two reasons — `'oob'` and `'sea'` — per the Free-Movement / Mission-Gating Policy (CONTRIBUTING.md). The old CR→CY / SC→FL / AL→SE / VC→DE item gates and the CO shard gate no longer block *movement*; story gating happens at the *mission-listing* level only (quest `gate` / `activateCond` in `storyCheckQuests`).
+> **The `GATE_LOCKS` array and all item-gated passage checks are gone from the code** (verified 2026-07-03: `GATE_LOCKS` greps to 0 in `index.html`; `cellMove` is a thin `Mover.move` caller with no gate branch). Movement is refused for exactly two reasons — `'oob'` and `'sea'` — per the Free-Movement / Mission-Gating Policy (CONTRIBUTING.md). The old CR→CY / SC→FL / AL→SE / VC→DE item gates and the CO shard gate no longer block *movement*; story gating happens at the *mission-listing* level only (quest `gate` / `activateCond` in `storyCheckQuests`).
 
 ---
 
@@ -634,7 +634,7 @@ See `docs/spec/spec-corridors.md` for the full historical spec.
 
 ## NAVIGATION ENGINE — Function Reference (F1 Coverage)
 
-> **Source of truth:** `roll2hit-v3.html`. This section documents all functions that read or write map/navigation state. Every function listed here is covered by at least one flowchart below.
+> **Source of truth:** `index.html`. This section documents all functions that read or write map/navigation state. Every function listed here is covered by at least one flowchart below.
 >
 > **§AUDIT-03e — the `code` field is a runtime backfill, not authored data.** 287 of the 416 authored
 > entries omit the redundant `code:` field (only 129 carry it, and **no entry has `code !== key`**). One

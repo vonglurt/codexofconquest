@@ -39,7 +39,7 @@ const path = require('path');
 const { seedAndLoad, dismissContinue } = require('./helpers');
 
 const ROOT = path.resolve(__dirname, '..', '..');
-const GAME = path.join(ROOT, 'roll2hit-v3.html');
+const GAME = path.join(ROOT, 'index.html');
 
 // The contract. Five values, in threat order — the same list TIER_ORDER ships.
 const TIERS = ['trivial', 'easy', 'medium', 'hard', 'deadly'];

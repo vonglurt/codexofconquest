@@ -5,7 +5,7 @@
 //
 //  1. THE DRIVER. Inc A built the suspending half of the coroutine (the execBits generator,
 //     the *choice handler, the _uqfPump slot) and never built the half that RENDERS an ask
-//     and resumes with the answer — `renderChoiceBlock` occurs 0 times in roll2hit-v3.html
+//     and resumes with the answer — `renderChoiceBlock` occurs 0 times in index.html
 //     and 0 times in js/quest.js; it has never existed as code. Every live execBits entry
 //     point wraps in _uqfRunToCompletion, which THROWS on an ask, so before this slice a
 //     `choice` bit in any chain could only throw. _uqfRunVerb/_uqfRenderAsk are that missing
@@ -28,7 +28,7 @@ const NEWGAME = { str: 10, dex: 8, con: 8, int: 8, wis: 8, cha: 8 };
 // state it wrote and the halt/refuse flags the chain set. Mirrors how the host driver builds
 // its ctx (fresh per run — which is what makes the kernel's sticky _halt flag safe).
 async function runChain(page, bits, st) {
-  await page.goto('/roll2hit-v3.html');
+  await page.goto('/index.html');
   return page.evaluate(({ NG, bits, st }) => {
     storyNewGame(NG);
     Object.assign(S_story, st);
@@ -91,7 +91,7 @@ test.describe('§VM-01-G4a — the cost leaf (refuse at click)', () => {
   test('a halt inside a choice option aborts the WHOLE chain, not just that branch', async ({ page }) => {
     // ctx is shared with the nested execBits a choice option runs, and the kernel deliberately
     // never clears _halt — otherwise the outer bits would run on after an unpaid price.
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate((NG) => {
       storyNewGame(NG);
       Object.assign(S_story, { gold: 5, costPaidFlag: false, afterCostFlag: false });
@@ -113,7 +113,7 @@ test.describe('§VM-01-G4a — the cost leaf (refuse at click)', () => {
   });
 
   test('the contract is registered and validates (a cost with no currency is rejected)', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const mk = bit => QuestRuntime.validateQuest({ id: 'x', schema: 'UQF-1.0', bits: [bit] });
       return {
@@ -268,7 +268,7 @@ test.describe('§VM-01-G4a — the host choice driver', () => {
     // G4a builds the driver for VERBS. It deliberately does not widen skill_check, which keeps
     // the kernel's own synchronous _questRunToCompletion so a require('./quest') server needs
     // no host driver.
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate((NG) => {
       storyNewGame(NG);
       let threw = false, msg = '';

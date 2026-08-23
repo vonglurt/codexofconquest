@@ -166,7 +166,7 @@ not list until §AUDIT-03d lands.
 ## The `npc` field — authoring metadata, not gameplay (§AUDIT-03b, 2026-07-29)
 
 `quest.npc` **anchors a quest to an NPC for authoring purposes only.** The game client
-(`roll2hit-v3.html`) has **zero** quest-level `.npc` reads — nothing a player sees depends
+(`index.html`) has **zero** quest-level `.npc` reads — nothing a player sees depends
 on it. Its consumers are the worldbuilder display, the server's `_questsByNpc` index,
 `./api.sh advise` (an unresolvable key is a *warning*), `./api.sh audit` (a **missing**
 field is an *error* — every quest must be anchored), and the NPC delete-guards.

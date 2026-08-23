@@ -161,7 +161,7 @@ const MONSTER_POOL = {};
   process.exit(ok1 && ok2 && ok3 && ok4 ? 0 : 1);
 }
 
-const src = fs.readFileSync(path.join(ROOT, 'roll2hit-v3.html'), 'utf8');
+const src = fs.readFileSync(path.join(ROOT, 'index.html'), 'utf8');
 const { fails, counts } = run(src);
 console.log('§AUDIT-03a duplicate-key audit');
 console.log('  ' + SECTIONS.map(s => `${s}=${counts[s]}`).join(' · '));

@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude
 // §NAV-01b — fungal road-net generator. Reads NODE_COORDS / SEA_RUNS / SEA_LANES
-// out of roll2hit-v3.html, connects every settlement cell (distinct occupied
+// out of index.html, connects every settlement cell (distinct occupied
 // CELL_GRID cell) with walkable road corridors, and emits a ROAD_RUNS RLE data
 // block (same encoding as SEA_RUNS).
 //
@@ -20,7 +20,7 @@
 //
 // Usage:  node scripts/build-roads.js          # dry-run: stats only
 //         node scripts/build-roads.js --apply  # patch/replace the ROAD_RUNS
-//                                              # block in roll2hit-v3.html
+//                                              # block in index.html
 // Pins:   roads-pins.json (repo root, optional) — full schema:
 //         { pins:[{r,c}], links:[["r,c","r,c"]], locked:["CODE",…] }
 //         `links` forces extra corridors here (worldbuilder §NAV-01h authors them);
@@ -31,7 +31,7 @@ const fs = require('fs');
 const path = require('path');
 
 const ROOT = path.resolve(__dirname, '..');
-const GAME_PATH = path.join(ROOT, 'roll2hit-v3.html');
+const GAME_PATH = path.join(ROOT, 'index.html');
 const GAME = fs.readFileSync(GAME_PATH, 'utf8');
 const APPLY = process.argv.includes('--apply');
 
@@ -221,7 +221,7 @@ const ROAD_CELLS = (() => {
 // ◆ §NAV-01b ROAD_RUNS:END`;
 
 if (!APPLY) {
-  console.log('\n(dry-run — pass --apply to patch roll2hit-v3.html)');
+  console.log('\n(dry-run — pass --apply to patch index.html)');
   process.exit(0);
 }
 
@@ -239,4 +239,4 @@ if (GAME.includes(START)) {
   out = GAME.slice(0, i) + '\n\n' + block + GAME.slice(i);
 }
 fs.writeFileSync(GAME_PATH, out);
-console.log(`\n✓ ROAD_RUNS block ${GAME.includes(START) ? 'replaced' : 'inserted'} in roll2hit-v3.html`);
+console.log(`\n✓ ROAD_RUNS block ${GAME.includes(START) ? 'replaced' : 'inserted'} in index.html`);

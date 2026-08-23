@@ -36,7 +36,7 @@ async function at(page, code, overrides = {}) {
     localStorage.clear();
     localStorage.setItem('r2h_autosave', JSON.stringify(s));
   }, state);
-  await page.goto('/roll2hit-v3.html');
+  await page.goto('/index.html');
   await dismissContinue(page);
 }
 
@@ -45,7 +45,7 @@ const clickIn = (page, panelId, text) =>
 
 test.describe('§VM-01-G-FU-d — registry + source shape', () => {
   test('the six harbor hooks sit as a contiguous registry run with callable fns', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const first = NODE_HOOKS.findIndex(h => h.id === 'spark-lcy-harmony');
       const run = first === -1 ? [] : NODE_HOOKS.slice(first, first + 6);
@@ -64,7 +64,7 @@ test.describe('§VM-01-G-FU-d — registry + source shape', () => {
   });
 
   test('the SEN Clot/Warmth panel sits in NODE_PANELS: three entries share one DOM id with exclusive whens', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const ms = NODE_PANELS.filter(p => p.id === 'story-spark-ms');
       const states = [{}, { pipMet: true }, { pipMet: true, bioluminescentParasiteFound: true },
@@ -84,7 +84,7 @@ test.describe('§VM-01-G-FU-d — registry + source shape', () => {
   });
 
   test('the seven block bodies are gone from storyRender; dispatch calls sit in their place', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const src = storyRender.toString();
       return {

@@ -27,7 +27,7 @@ const path = require('path');
 const { test, expect } = require('@playwright/test');
 const { SEED_STATE, dismissContinue } = require('./helpers');
 
-const HTML = fs.readFileSync(path.join(__dirname, '..', '..', 'roll2hit-v3.html'), 'utf8');
+const HTML = fs.readFileSync(path.join(__dirname, '..', '..', 'index.html'), 'utf8');
 
 async function at(page, code, overrides = {}) {
   const state = Object.assign({}, SEED_STATE, {
@@ -38,7 +38,7 @@ async function at(page, code, overrides = {}) {
     localStorage.clear();
     localStorage.setItem('r2h_autosave', JSON.stringify(s));
   }, state);
-  await page.goto('/roll2hit-v3.html');
+  await page.goto('/index.html');
   await dismissContinue(page);
 }
 
@@ -69,7 +69,7 @@ const ELEMENT = { name: 'Sea Element', icon: '🔱', type: 'weapon', atkBonus: 2
 
 test.describe('§VM-01-G-FU-e — registry + source shape', () => {
   test('the four §LXX hooks sit as a contiguous registry run with callable fns', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const first = NODE_HOOKS.findIndex(h => h.id === 'lxx-can-doc');
       const run = first === -1 ? [] : NODE_HOOKS.slice(first, first + 4);
@@ -87,7 +87,7 @@ test.describe('§VM-01-G-FU-e — registry + source shape', () => {
   });
 
   test('the three button-less surfaces sit in NODE_PANELS; the DSF pair is mutually exclusive', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const da2 = NODE_PANELS.filter(p => (p.nodes || []).join(',') === 'DA2');
       const da3 = NODE_PANELS.filter(p => (p.nodes || []).join(',') === 'DA3');
@@ -113,7 +113,7 @@ test.describe('§VM-01-G-FU-e — registry + source shape', () => {
   });
 
   test('the smelt verb is a bare label verb whose bits are flag + narrative only — quest_forge_02 is the payer', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const v = NODE_VERBS.find(x => x.id === 'lxx-dsf-smelt');
       const q = QUEST_DB.quest_forge_02;

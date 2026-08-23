@@ -25,7 +25,7 @@ const { seedAndLoad, dismissContinue, readStory, SEED_STATE } = require('./helpe
 // then reload so storyEnter() sees the save. Reload-safe — no initScript.
 async function seedAndLoadViaStorage(page, overrides = {}) {
   const state = Object.assign({}, SEED_STATE, overrides);
-  await page.goto('/roll2hit-v3.html');   // initial load to establish correct origin
+  await page.goto('/index.html');   // initial load to establish correct origin
   await page.evaluate(s => {
     localStorage.clear();
     localStorage.setItem('r2h_autosave', JSON.stringify(s));

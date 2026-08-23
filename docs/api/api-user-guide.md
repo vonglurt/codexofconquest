@@ -45,7 +45,7 @@
 
 ## 1. Server Lifecycle
 
-The server reads `roll2hit-v3.html` into memory. Every write mutates in-memory objects and then persists to disk automatically — a temp file beside `roll2hit-v3.html`, renamed into place (atomic, so a reader never sees a half-written game file). `POST /api/save` is a *different* thing: it writes a **dated snapshot** next to the game file and copies it over, which is what `monitor-snapshots.py` / `archive-snapshots.sh` turn into the `milepoints/patches` chain. You do not need it to persist a write. *(§DX-02k, 2026-08-03 — before that fix every write went through the snapshot path and left the ~5.4 MB file behind, once per PUT.)*
+The server reads `index.html` into memory. Every write mutates in-memory objects and then persists to disk automatically — a temp file beside `index.html`, renamed into place (atomic, so a reader never sees a half-written game file). `POST /api/save` is a *different* thing: it writes a **dated snapshot** next to the game file and copies it over, which is what `monitor-snapshots.py` / `archive-snapshots.sh` turn into the `milepoints/patches` chain. You do not need it to persist a write. *(§DX-02k, 2026-08-03 — before that fix every write went through the snapshot path and left the ~5.4 MB file behind, once per PUT.)*
 
 ```bash
 # Start
@@ -76,7 +76,7 @@ curl -s -XPOST http://localhost:1367/api/reload | jq
 {
   "ok": true,
   "loaded": true,
-  "file": "roll2hit-v3.html",
+  "file": "index.html",
   "nodes": 241,
   "quests": 312,
   "monsters": 216,
@@ -1368,7 +1368,7 @@ curl -s -XPOST http://localhost:1367/api/layout/apply \
 ./api.sh snapshots --sweep [--force]
 ```
 
-Every write already persists on its own (temp beside `roll2hit-v3.html` + atomic rename, §DX-02k) — you do **not** need `save` after a `put`/`post`/`del`. What `save` gives you is the *dated snapshot* the `milepoints/patches` chain is built from.
+Every write already persists on its own (temp beside `index.html` + atomic rename, §DX-02k) — you do **not** need `save` after a `put`/`post`/`del`. What `save` gives you is the *dated snapshot* the `milepoints/patches` chain is built from.
 
 Disposal keeps history by default: `./archive-snapshots.sh` turns each snapshot into a patch and then removes the file, so `--sweep` deletes only snapshots that chain already holds; `--force` discards the rest. *(§DX-02l, 2026-08-03 — before that this section printed a raw `curl`, which is precisely what §3's golden rule says never to fall back to.)*
 

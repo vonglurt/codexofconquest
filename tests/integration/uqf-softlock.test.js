@@ -18,7 +18,7 @@ test.describe('§VM-01-E — the soft-lock prover', () => {
   // 1. The port: the plague onFail is now a nested CON DC 13 skill_check whose own
   //    onFail sets plague_exposed — the mechanic the fiction always promised.
   test('quest_1367_f_plague onFail is a seeded CON DC 13 save, not a coin-flip', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const q = QUEST_DB['quest_1367_f_plague'];
       const outer = q.bits[0];                     // the STR DC 12 clear
@@ -46,7 +46,7 @@ test.describe('§VM-01-E — the soft-lock prover', () => {
   //    come from the seeded stream") made executable — and the reason §VM-01-E's
   //    static reachability analysis can now see through the whole DB.
   test('no _legacy_fn in QUEST_DB contains Math.random (the blocker cannot return)', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const offenders = await page.evaluate(() => {
       const bad = [];
       const walk = (bits, qid) => {
@@ -71,7 +71,7 @@ test.describe('§VM-01-E — the soft-lock prover', () => {
   //    runs of the ported onFail chain (a coin-flip could not do this). Proves the
   //    §VM-01-B seeded stream now determines the plague outcome from the save.
   test('the ported save resolves identically from a fixed seed (deterministic)', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate((NG) => {
       const onFail = QUEST_DB['quest_1367_f_plague'].bits[0].onFail;
       const run = (seed) => {

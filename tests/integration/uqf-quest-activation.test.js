@@ -177,7 +177,7 @@ test.describe('§VM-01-G3 — declarative per-arc quest activation', () => {
   });
 
   test('source guard: storyRender carries no legacy activation writes for the migrated set; onActivate corpus is exactly the migrated 18', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const src = storyRender.toString();
       const writes = ['quest_ng_01', 'quest_ng_02', 'quest_ng_03', 'quest_wm_01', 'quest_wm_02', 'quest_wm_03', 'quest_wm_04',

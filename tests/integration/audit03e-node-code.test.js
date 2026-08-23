@@ -23,7 +23,7 @@ const KG_NPC_NODES = ['SPB', 'KMS', 'ZVD', 'FBR', 'TVR'];
 test.describe('§AUDIT-03e — NODE_MAP code backfill', () => {
 
   test('premise: every entry\'s code equals its key, and the backfilled set is exactly the ones that omitted it', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const keys = Object.keys(NODE_MAP);
       return {
@@ -43,7 +43,7 @@ test.describe('§AUDIT-03e — NODE_MAP code backfill', () => {
   });
 
   test('shared-slot regression: two backfilled nodes each pay exploration XP and each record their own visited flag', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       // Two backfilled nodes with no loot, so the grant is isolated from inventory effects.
       const [a, b] = [...NODE_CODE_BACKFILLED].filter(k => !NODE_MAP[k].loot && !NODE_MAP[k].junction).slice(0, 2);
@@ -66,7 +66,7 @@ test.describe('§AUDIT-03e — NODE_MAP code backfill', () => {
   });
 
   test('shared-slot regression: defeating a battle at one backfilled node does not mark the others defeated', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const withBattle = [...NODE_CODE_BACKFILLED].filter(k => NODE_MAP[k].battle);
       S_story.defeatedBattles = {};
@@ -137,7 +137,7 @@ test.describe('§AUDIT-03e — NODE_MAP code backfill', () => {
   });
 
   test('source guard: the backfill is a runtime normalisation, not 287 authored fields, and the ending map is pinned', async () => {
-    const src = fs.readFileSync(path.join(__dirname, '../../roll2hit-v3.html'), 'utf8');
+    const src = fs.readFileSync(path.join(__dirname, '../../index.html'), 'utf8');
     const nodeMapSrc = src.slice(src.indexOf('WORLDBUILDER:NODE_MAP:START'), src.indexOf('WORLDBUILDER:NODE_MAP:END'));
     const authored = (nodeMapSrc.match(/\bcode:\s*['"]/g) || []).length;
     expect(authored, 'the data section keeps its 129 authored code fields — the fix is one loader line').toBe(129);

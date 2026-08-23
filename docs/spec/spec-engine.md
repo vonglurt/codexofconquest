@@ -3,10 +3,10 @@
 # GAME ENGINE — Step 2: Design Specification
 ### roll2hit.com — The Shattered Codex
 
-> **What this document is:** The design blueprint for the playable game layer. **All Layers 0–45 are now implemented in `roll2hit-v3.html`.** This document covers Layers 0–37 in detail. Layers 38–45 (Epic Battlegrounds, Covenant Endings, NG+, Living World, Web of Connections) are documented in their respective lab reports — see `index.md`. Sections marked IMPLEMENTED reflect the actual code; any design details that changed during implementation are noted inline.
+> **What this document is:** The design blueprint for the playable game layer. **All Layers 0–45 are now implemented in `index.html`.** This document covers Layers 0–37 in detail. Layers 38–45 (Epic Battlegrounds, Covenant Endings, NG+, Living World, Web of Connections) are documented in their respective lab reports — see `index.md`. Sections marked IMPLEMENTED reflect the actual code; any design details that changed during implementation are noted inline.
 >
 > **Existing markdowns referenced:**
-> - `roll2hit-v3.html` — single-file game (~14,377 lines, 515 div pairs, no external deps)
+> - `index.html` — single-file game (~14,377 lines, 515 div pairs, no external deps)
 > - `story.md` — 76 nodes, 8 acts, all NPCs, all quests, all items, all battles
 > - `maps.md` — grid coordinates, node network, travel connections
 > - `world.md` — conditions, factions, Froberger's journal, loot context
@@ -33,7 +33,7 @@ The game has exactly two modes. Switching between them is explicit and intention
 │                  BATTLE MODE                    │
 │  Initiative · Attack rolls · Damage · Conditions│
 │  Death saves · Win/Lose states · Loot drop      │
-│  (Implemented in roll2hit-v3.html)              │
+│  (Implemented in index.html)              │
 └──────────────┬──────────────────────────────────┘
                │  🎲 END BATTLE trigger
                ▼
@@ -505,7 +505,7 @@ Before `🎲 START BATTLE`, Story Mode enters PRE_BATT:
 5. Show condition effect summary: "Target enters battle as **Prone**. Your melee attacks have **ADV**."
 6. Load enemy stats from MONSTER_POOL into the roll2hit combat tracker
 7. Set ADV/DIS flags in tracker based on applied condition
-8. Hand off to Battle Mode (roll2hit-v3.html takes over)
+8. Hand off to Battle Mode (index.html takes over)
 
 ### Battle Mode Input/Output Contract
 
@@ -555,7 +555,7 @@ The **inn system** acts as a checkpoint save: when the player sleeps at an inn, 
 
 ## PART EIGHT — CONDITION ITEMS IN PRE-BATT
 
-The 12 condition items (from world.md and conditions in roll2hit-v3.html) map directly to the existing CONDITION_ADV system in the combat tracker:
+The 12 condition items (from world.md and conditions in index.html) map directly to the existing CONDITION_ADV system in the combat tracker:
 
 ```
 Condition Item          → roll2hit Condition Code   → Effect in tracker
@@ -583,7 +583,7 @@ The PRE_BATT screen presents only the condition items the player currently holds
 The game is designed to be built in vertical slices. Each layer adds one complete interaction type. Nothing is mocked — each layer is real and usable.
 
 ### Layer 0 — ✅ IMPLEMENTED
-- Combat tracker (`roll2hit-v3.html`): attack rolls, damage, conditions, death saves, monster presets, terrain-filtered monster selection
+- Combat tracker (`index.html`): attack rolls, damage, conditions, death saves, monster presets, terrain-filtered monster selection
 - All 370 monsters in `MONSTER_POOL`
 - 46 base + 20 epic = 66 terrains in `WORLD_DB`
 
@@ -942,14 +942,14 @@ The story navigation control is a 3×3 grid of buttons. Corner buttons are `.dpa
 
 | File | Purpose | Role in Engine |
 |------|---------|----------------|
-| `roll2hit-v3.html` | Combat tracker | Battle Mode (already implemented) |
+| `index.html` | Combat tracker | Battle Mode (already implemented) |
 | `story.md` | Story document | Source for node text, NPC dialogue, quest descriptions |
 | `maps.md` | Grid map + node network | `NODE_MAP` data, travel connections, coordinates |
 | `world.md` | World lore, conditions, Froberger | Condition item descriptions, NPC profiles |
 | `monsters.md` | Monster stats reference | Verified against `MONSTER_POOL` in HTML |
 
 ### Current State
-All 37 layers are implemented in `roll2hit-v3.html` (~143,000 lines). The single-file, no-CDN architecture is complete. Story Mode and Battle Mode share a single mutable `S_story` state object. Layers 21–37 added the Fighter level-up system (tattoos, Extra Attack, Action Surge, Indomitable), d100 unified loot, notoriety scaling, world minimap, waypoint BFS, city slums node, and the d-pad 3×3 grid with Boyscout Token camping mechanics and character sheet overlay.
+All 37 layers are implemented in `index.html` (~143,000 lines). The single-file, no-CDN architecture is complete. Story Mode and Battle Mode share a single mutable `S_story` state object. Layers 21–37 added the Fighter level-up system (tattoos, Extra Attack, Action Surge, Indomitable), d100 unified loot, notoriety scaling, world minimap, waypoint BFS, city slums node, and the d-pad 3×3 grid with Boyscout Token camping mechanics and character sheet overlay.
 
 **§CELL migration (in progress — 2026-06-13):**
 - §CELL-02 ✅ `CELL_GRID` + `IMPASSABLE_CELLS` added

@@ -30,7 +30,7 @@ const os = require('os');
 const path = require('path');
 
 const ROOT = path.resolve(__dirname, '..', '..');
-const GAME = path.join(ROOT, 'roll2hit-v3.html');
+const GAME = path.join(ROOT, 'index.html');
 const PORT = 13897;
 const BASE = `http://localhost:${PORT}`;
 const STAMPED = /^roll2hit-v3-\d{8}-\d{6}\.html$/;
@@ -50,7 +50,7 @@ function cli(...args) {
 
 test.beforeAll(async () => {
   dir = fs.mkdtempSync(path.join(os.tmpdir(), 'r2h-dx02l-'));
-  scratch = path.join(dir, 'roll2hit-v3.html');
+  scratch = path.join(dir, 'index.html');
   fs.copyFileSync(GAME, scratch);
   server = spawn(process.execPath, ['js/wbapi-server.js'], {
     cwd: ROOT,

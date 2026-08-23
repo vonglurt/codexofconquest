@@ -9,7 +9,7 @@ test.describe('§PLAY-01-A — The Courier\'s Map (goal legibility)', () => {
   test('opening frame + persistent objective chip; symbols darken as shards return', async ({ page }) => {
     const pageErrors = [];
     page.on('pageerror', e => pageErrors.push(String(e)));
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
 
     const r = await page.evaluate(() => {
       const out = {};

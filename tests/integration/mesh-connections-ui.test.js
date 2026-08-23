@@ -38,7 +38,7 @@ async function loadHermetic(page) {
   });
   const pageErrors = [];
   page.on('pageerror', (e) => pageErrors.push(String(e)));
-  await page.goto('/roll2hit-v3.html');
+  await page.goto('/index.html');
   await page.waitForFunction(() => typeof window.__mesh02 === 'object');
   return pageErrors;
 }

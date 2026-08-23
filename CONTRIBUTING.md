@@ -14,7 +14,7 @@
 Before starting any BACKLOG row, in order:
 
 1. **`git status` + `git log --oneline -5` first.** Uncommitted changes or fresh commits matching the row mean the work exists — a prior session shipped it uncommitted, or another session is doing it *now*. Evaluate and finish/commit what exists; do not redo it.
-2. **Check for a concurrent session before editing shared files:** `ps aux | grep -c ' claude$'`. More than one live session → stop and ask the user which session proceeds. Two agents editing `roll2hit-v3.html` (or BACKLOG.md) concurrently will clobber each other.
+2. **Check for a concurrent session before editing shared files:** `ps aux | grep -c ' claude$'`. More than one live session → stop and ask the user which session proceeds. Two agents editing `index.html` (or BACKLOG.md) concurrently will clobber each other.
 3. **Grep-before-building, in the disprove-the-row direction.** The row's premise is a claim about the code; grep for the feature/flag/panel it says is missing. The row may predate work that already landed (rows drift stale; ship records lag).
 4. **Cross-check data claims against the live file:** `./api.sh audit` / `./api.sh list <type>` (this is API-First rule 5 — it applies to *reading* a row, not just writing one).
 5. **Mid-session drift is a red flag, not noise.** If a grep or read stops matching what you read minutes ago, do not shrug and continue — re-run `git status`, compare mtimes, and check for the concurrent session (rule 2). The file changing under you is how the 2026-07-28 collision was caught.
@@ -23,7 +23,7 @@ A row that turns out to be already done still gets closed properly: record the a
 
 ### API-First Development Policy
 
-**Preferred workflow for any data addition or edit to `roll2hit-v3.html`:**
+**Preferred workflow for any data addition or edit to `index.html`:**
 
 1. **Check API first** — before editing HTML, use `./api.sh` to confirm current state: `./api.sh ping`, `./api.sh list <type>`, `./api.sh audit`. Direct HTML edits are a fallback only when the API cannot yet express the operation.
 2. **Write the API method first** — if the operation isn't yet supported, add the endpoint to `wbapi-server.js` and restart before touching the HTML.
@@ -33,7 +33,7 @@ A row that turns out to be already done still gets closed properly: record the a
 
 > *«cli-quick-reference» archived to plan-archive.md (2026-07-02). Day-to-day: ./api.sh help. Full reference: docs/api/wbapi-help.md + docs/api/API-README.md.*
 
-**Single source of truth:** `roll2hit-v3.html` is the entire game. The API reads its text directly and writes mutations back in-place. `wbapi-server.js` and `worldbuilder.html` are authoring tools — the game requires neither at runtime.
+**Single source of truth:** `index.html` is the entire game. The API reads its text directly and writes mutations back in-place. `wbapi-server.js` and `worldbuilder.html` are authoring tools — the game requires neither at runtime.
 
 ### Cell-First Navigation Policy
 
@@ -125,7 +125,7 @@ node scripts/resolve-anchors.js <symbol>   # where does this live NOW?
 
 ### WBAPI Authoring Hazards (learned 2026-07-08, §KG session — a full session of work was clobbered + recovered from a dangling git blob)
 
-1. **The WBAPI server clobbers non-data edits when its in-memory buffer is stale.** The server holds the FULL file text from *when it started* and patches only data sections (NODE_MAP/QUEST_DB/MONSTER_POOL/…) into that buffer, then writes the whole thing back. If you edit CSS/JS **directly** (Edit tool / editor) while the server has been running since *before* those edits, the next `api.sh` WRITE (post/put/del node, highway, …) **re-saves the stale buffer and silently reverts your CSS/JS** — the advertised "auto-reload on external edit" only re-parses data sections, not the full text buffer. This ate this session's inventory/map/hunt work **and** pre-session §MP-MAPTABS at once (recovered via `git cat-file` of a dangling blob that had been staged mid-session — `git cat-file --batch-all-objects | grep` a known signature). **Rule: before any api.sh WRITE session, restart the server so it re-reads the current file** (`./wbapi-toggle.sh stop && start`); the monitor auto-restarts it, so **verify the PID is new AND a CSS/JS signature survives the first write** (`grep -c _monsterLevel roll2hit-v3.html`). When hand-editing CSS/JS, stop the server first. Commit early; keep a `/tmp` backup.
+1. **The WBAPI server clobbers non-data edits when its in-memory buffer is stale.** The server holds the FULL file text from *when it started* and patches only data sections (NODE_MAP/QUEST_DB/MONSTER_POOL/…) into that buffer, then writes the whole thing back. If you edit CSS/JS **directly** (Edit tool / editor) while the server has been running since *before* those edits, the next `api.sh` WRITE (post/put/del node, highway, …) **re-saves the stale buffer and silently reverts your CSS/JS** — the advertised "auto-reload on external edit" only re-parses data sections, not the full text buffer. This ate this session's inventory/map/hunt work **and** pre-session §MP-MAPTABS at once (recovered via `git cat-file` of a dangling blob that had been staged mid-session — `git cat-file --batch-all-objects | grep` a known signature). **Rule: before any api.sh WRITE session, restart the server so it re-reads the current file** (`./wbapi-toggle.sh stop && start`); the monitor auto-restarts it, so **verify the PID is new AND a CSS/JS signature survives the first write** (`grep -c _monsterLevel index.html`). When hand-editing CSS/JS, stop the server first. Commit early; keep a `/tmp` backup.
 2. **`api.sh post monster` — ✅ FIXED 2026-07-30 (§DX-01c); the hand-edit exception is retired.** Author monsters through the API like everything else:
    ```bash
    ./api.sh post monster key=dock_rat name="Dock Rat" ac=11 hp=6 atk=2 dmgDie=4 dmgCount=1 dmgFlat=0 tier=trivial

@@ -655,12 +655,12 @@ async function main() {
   // buildLook) must be BYTE-EQUAL to what the SP client renders for the same
   // cell. Reference = rooms.js describeCell (byte-identical to the client copy
   // by check:roomsparity) over a world built here the way the CLIENT builds it
-  // (literals re-parsed from roll2hit-v3.html, client fallbacks reproduced) —
+  // (literals re-parsed from index.html, client fallbacks reproduced) —
   // an independent construction, so server-side world-assembly drift fails.
   console.log('\n[M] §NAV-01f — server room ≡ client describeCell (byte-equal)');
   const Rooms = requireCjs(path.join(ROOT, 'js', 'rooms.js'));
   const CORE  = requireCjs(path.join(ROOT, 'js', 'wbapi-core.js'));
-  CORE.load(path.join(ROOT, 'roll2hit-v3.html'));
+  CORE.load(path.join(ROOT, 'index.html'));
   const gameSrc = CORE._rawSrc;
   const lit = (re) => { const m = gameSrc.match(re); return m ? (new Function('return ' + m[1]))() : null; };
   const expandRuns = (runs) => { const s = new Set(); for (const [r, rr] of Object.entries(runs || {})) for (const [a, b] of rr) for (let c = a; c <= b; c++) s.add(`${r},${c}`); return s; };

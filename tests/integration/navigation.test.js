@@ -10,7 +10,7 @@ const { seedAndLoad, dismissContinue, readStory } = require('./helpers.js');
 // `_gameWarn` (deleted). This rebuild ground-truths every fixture against the
 // CURRENT geo and the post-§TIMELESS-01 timeless-movement model.
 //
-// Current geo facts used below (from NODE_COORDS in roll2hit-v3.html):
+// Current geo facts used below (from NODE_COORDS in index.html):
 //   LHR = {r:10, c:197}  City Streets — Birka (canonical start; primary at its cell)
 //     • E → BMA (10,198) named (Birka Slums)
 //     • N → (9,197) empty land (inferred terrain 'city')

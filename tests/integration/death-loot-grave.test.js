@@ -8,7 +8,7 @@ const { test, expect } = require('@playwright/test');
 test.describe('§DEATH-01 — death, loot & the grave', () => {
 
   test('Inc A — respawn message tells the truth; equipped gear survives; save is atomic', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       storyNewGame({ str:10, dex:8, con:8, int:8, wis:8, cha:8 });
       // Loose bag: 2 ordinary items + 1 protected shard; 100 gold; a fall node.
@@ -58,7 +58,7 @@ test.describe('§DEATH-01 — death, loot & the grave', () => {
   });
 
   test('Inc A — zero-loot death reads honestly (no "0 item(s)")', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const msg = await page.evaluate(() => {
       storyNewGame({ str:10, dex:8, con:8, int:8, wis:8, cha:8 });
       S_story.inventory = [];       // nothing loose to drop
@@ -74,7 +74,7 @@ test.describe('§DEATH-01 — death, loot & the grave', () => {
   });
 
   test('Inc B — corpse chip: hidden at 0, names 1 place, "N places" for many, click opens map', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       storyNewGame({ str:10, dex:8, con:8, int:8, wis:8, cha:8 });
       const chip = document.getElementById('corpse-chip');
@@ -109,7 +109,7 @@ test.describe('§DEATH-01 — death, loot & the grave', () => {
   });
 
   test('Inc C — NG+ warns and aborts on decline; proceeds on accept; no prompt with no corpse', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const out = {};
       // (1) decline → NG+ aborts, corpse intact

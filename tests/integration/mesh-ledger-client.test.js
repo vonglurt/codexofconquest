@@ -21,7 +21,7 @@ const { seedAndLoad, dismissContinue } = require('./helpers');
 test.describe('§MESH-01i slice 2b — client ledger rung', () => {
 
   test('_mpPlayerKey: generates 32 lowercase hex ONCE, persists in S_story, replaces a malformed key', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const out = {};
       delete S_story.playerKey;
@@ -42,7 +42,7 @@ test.describe('§MESH-01i slice 2b — client ledger rung', () => {
   });
 
   test('mpMintStamp: stamps the SAME object via the mint response; never fires offline, on skip types, or twice', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(async () => {
       const out = {};
       const calls = [];
@@ -90,7 +90,7 @@ test.describe('§MESH-01i slice 2b — client ledger rung', () => {
   });
 
   test('_mpTradeableInv: only minted, non-progression items are offered', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const saved = S_story.inventory;
       S_story.inventory = [
@@ -107,7 +107,7 @@ test.describe('§MESH-01i slice 2b — client ledger rung', () => {
   });
 
   test('_mpTradeApply: removes what I gave by mintKey, adds what I received with the ledger-resolved name', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(async () => {
       const out = {};
       const saved = S_story.inventory;
@@ -145,7 +145,7 @@ test.describe('§MESH-01i slice 2b — client ledger rung', () => {
   });
 
   test('_mpRenderPresence: ⇄ only for players WITH a ledgerPid — never sentries or SSE-only arrivals', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const out = {};
       MP.on = true;
@@ -169,7 +169,7 @@ test.describe('§MESH-01i slice 2b — client ledger rung', () => {
   });
 
   test('disconnect clears the trade identity and any open trade modal', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       MP.on = true; MP.ledgerPid = 'aa:11'; MP.trade = { dir: 'out', to: 'bb:22' };
       document.getElementById('mp-trade-modal').classList.add('visible');

@@ -23,7 +23,7 @@ test.describe('§PLAY-01-G — Birka NPC cards render at real nodes', () => {
   test('every start-city NPC is keyed to a real node that matches its quest activateNode', async ({ page }) => {
     const pageErrors = [];
     page.on('pageerror', e => pageErrors.push(String(e)));
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
 
     const r = await page.evaluate(({ MAP, DEAD_CODES }) => {
       const out = { perNpc: {}, deadKeysGone: {}, cardName: {} };

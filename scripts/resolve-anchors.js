@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude
 // §DX-01e — a doc anchor names a SYMBOL; the line number is a refreshable hint.
 //
-// THE DEFECT THIS RETIRES. The docs pointed into `roll2hit-v3.html` with bare line
+// THE DEFECT THIS RETIRES. The docs pointed into `index.html` with bare line
 // numbers — "`execBits` (`21722`)", "`_addVoidPressure` (`26578`)". Every HTML edit
 // shifts them, and nothing ever noticed: of 14 anchors sampled when this row opened,
 // NINE pointed at unrelated code (`22104` had become a prof-bonus line, `31618` an
@@ -37,7 +37,7 @@ const fs = require('fs');
 const path = require('path');
 
 const ROOT = path.resolve(__dirname, '..');
-const HTML = path.join(ROOT, 'roll2hit-v3.html');
+const HTML = path.join(ROOT, 'index.html');
 
 // Docs that may carry anchors. Directories are walked for *.md.
 const DOC_ROOTS = ['.', 'docs', 'lab-reports'];

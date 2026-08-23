@@ -7,7 +7,7 @@
 'use strict';
 const fs = require('fs');
 const path = require('path');
-const GAME = fs.readFileSync(path.join(path.resolve(__dirname, '..'), 'roll2hit-v3.html'), 'utf8');
+const GAME = fs.readFileSync(path.join(path.resolve(__dirname, '..'), 'index.html'), 'utf8');
 function objLiteral(name) {
   const m = GAME.match(new RegExp(`const\\s+${name}\\s*=\\s*(\\{[\\s\\S]*?\\});`));
   return eval('(' + m[1] + ')');

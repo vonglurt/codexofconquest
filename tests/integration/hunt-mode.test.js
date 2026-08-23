@@ -31,7 +31,7 @@ test.describe('§KG-01 Hunt Mode', () => {
         min: Math.min(...all), max: Math.max(...all),
       };
     });
-    // Calibrated low band — see _monsterLevel comment in roll2hit-v3.html.
+    // Calibrated low band — see _monsterLevel comment in index.html.
     expect(r.commoner).toBe(1);
     expect(r.kobold).toBe(2);
     expect(r.giant_rat).toBe(2);

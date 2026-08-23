@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude
 // §WALK-2 / §WALK-4 — structural walk-parity: assert the MOVER:CORE block inlined
-// in roll2hit-v3.html is byte-identical to the same block in mover.js.
+// in index.html is byte-identical to the same block in mover.js.
 'use strict';
 const fs = require('fs');
 const path = require('path');
@@ -18,9 +18,9 @@ function core(file) {
 }
 
 const a = core('js/mover.js');
-const b = core('roll2hit-v3.html');
+const b = core('index.html');
 if (a === b) {
-  console.log(`✓ mover parity: MOVER:CORE identical in mover.js and roll2hit-v3.html (${a.length} bytes)`);
+  console.log(`✓ mover parity: MOVER:CORE identical in mover.js and index.html (${a.length} bytes)`);
   process.exit(0);
 }
 console.error('✗ mover parity FAILED: the inlined MOVER:CORE block differs from mover.js');

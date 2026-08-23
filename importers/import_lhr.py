@@ -3,7 +3,7 @@
 # ═══════════════════════════════════════════════════════════════════════════
 # ⚠️  ARCHAIC — OUT OF DATE.  Historical one-shot importer (POSTs to the
 #     localhost:1367 WBAPI).  Content was long ago imported and lives in
-#     roll2hit-v3.html.  This script likely NO LONGER RUNS against the current
+#     index.html.  This script likely NO LONGER RUNS against the current
 #     server/schema.  Kept for reference only — do not run without review.
 #     Import history: BACKLOG.md / plan-archive.md / 1367-sources/.
 # ═══════════════════════════════════════════════════════════════════════════

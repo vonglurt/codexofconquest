@@ -17,7 +17,7 @@ async function renderAt(page, code, ov = {}) {
 
 test.describe('§VM-01-G2 — NODE_HOOKS registry + in-place dispatch', () => {
   test('registry integrity: the 7 G2 entries lead the registry, unique ids, callable fns, dispatch reaches the fn', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       // §VM-01-G2b appended 29 npc-row hooks after these; this test owns the G2 head of the
       // registry (the story-text-box-anchored ones), uqf-npc-row-hooks.test.js owns the tail.
@@ -116,7 +116,7 @@ test.describe('§VM-01-G2 — NODE_HOOKS registry + in-place dispatch', () => {
   });
 
   test('source guard: the 7 block bodies are gone from storyRender; dispatch calls sit in their place', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const src = storyRender.toString();
       return {

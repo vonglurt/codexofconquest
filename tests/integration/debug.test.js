@@ -7,7 +7,7 @@ test('debug — patched game script loads and storyFishing is accessible', async
   await patchGameHtml(page);
   const errors = [];
   page.on('pageerror', e => errors.push(e.message.substring(0, 80)));
-  await page.goto('/roll2hit-v3.html');
+  await page.goto('/index.html');
   await page.waitForLoadState('networkidle');
 
   const ok = await page.evaluate(() => typeof storyFishing === 'function');

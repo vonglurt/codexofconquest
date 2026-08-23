@@ -2,12 +2,12 @@
 'use strict';
 // rooms.js — §NAV-01c unified room-description kernel: the single source of
 // "what does this cell look like" shared by the SP client (inlined into
-// roll2hit-v3.html) and the MUD server (require('./rooms'), §NAV-01f).
+// index.html) and the MUD server (require('./rooms'), §NAV-01f).
 // PURE: no DOM, no SSE, no Math.random (prose variants are picked by a
 // deterministic per-cell hash so client, server, and tests always agree).
 //
 // The region between the ROOMS:CORE sentinels is inlined BYTE-IDENTICALLY into
-// roll2hit-v3.html; scripts/check-rooms-parity.js asserts the two copies match.
+// index.html; scripts/check-rooms-parity.js asserts the two copies match.
 // Do not edit one copy without the other.
 //
 // world (read-only snapshot — the mover world of §4.1 plus room lookups):

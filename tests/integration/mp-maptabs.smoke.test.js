@@ -11,7 +11,7 @@ test.describe('§MP-MAPTABS — Local/World/Full map sub-tabs + click-to-travel'
     const errors = [];
     page.on('pageerror', e => errors.push(e.message));
     await page.addInitScript(() => localStorage.clear());
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     await page.locator('#story-panel').waitFor({ state: 'visible' });
 
     const r = await page.evaluate(() => {

@@ -284,17 +284,17 @@ The Harrow Manifest's `wmFirstResearcherKnown` gate creates a direct connection 
 
 | File | Location | Content |
 |------|----------|---------|
-| `roll2hit-v3.html` | Line 4624 | `hollow_hands_guard` monster definition |
-| `roll2hit-v3.html` | Line 5051 | `hollow_hands_guard` drop — Hollow Hands Seal |
-| `roll2hit-v3.html` | Line 5426 | `goblin_cave` terrain pool — includes hollow_hands_guard |
-| `roll2hit-v3.html` | Lines 7691–7704 | Rennau NPC profile |
-| `roll2hit-v3.html` | Lines 7706–7718 | Vonn NPC profile |
-| `roll2hit-v3.html` | Lines 7722–7745 | Solvak and Yva NPC profiles |
-| `roll2hit-v3.html` | Lines 8032–8067 | quest_tl_01–03 + quest_vs_01–03 QUEST_DB entries |
-| `roll2hit-v3.html` | Lines 8436, 8438 | Tilbury + Visby state flags in `_S_DEFAULTS()` |
-| `roll2hit-v3.html` | Lines 13121–13158 | Quest reward handlers — tl_01–03, vs_01–03 |
-| `roll2hit-v3.html` | Lines 14456–14542 | §XIX Tilbury render block — harbor board, Ori, Vonn choice |
-| `roll2hit-v3.html` | Lines 14544–14609 | §XX Visby render block — Solvak, Mordus, Yva, seal delivery |
+| `index.html` | Line 4624 | `hollow_hands_guard` monster definition |
+| `index.html` | Line 5051 | `hollow_hands_guard` drop — Hollow Hands Seal |
+| `index.html` | Line 5426 | `goblin_cave` terrain pool — includes hollow_hands_guard |
+| `index.html` | Lines 7691–7704 | Rennau NPC profile |
+| `index.html` | Lines 7706–7718 | Vonn NPC profile |
+| `index.html` | Lines 7722–7745 | Solvak and Yva NPC profiles |
+| `index.html` | Lines 8032–8067 | quest_tl_01–03 + quest_vs_01–03 QUEST_DB entries |
+| `index.html` | Lines 8436, 8438 | Tilbury + Visby state flags in `_S_DEFAULTS()` |
+| `index.html` | Lines 13121–13158 | Quest reward handlers — tl_01–03, vs_01–03 |
+| `index.html` | Lines 14456–14542 | §XIX Tilbury render block — harbor board, Ori, Vonn choice |
+| `index.html` | Lines 14544–14609 | §XX Visby render block — Solvak, Mordus, Yva, seal delivery |
 | `lab-report-tilbury-visby-arcs.md` | All | §XIX + §XX full implementation record |
 | `lab-report-void-shaman.md` | §II | `vsShamanKnown` downstream use — §XXI Warden encounter |
 | `lab-report-weimar-scholar-gate.md` | §II.G | `tlLedgerRead` cross-reference; archiveLetterObtained path |

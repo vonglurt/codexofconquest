@@ -438,17 +438,17 @@ The callback fires only on the persuasion path because the persuasion path left 
 
 | File | Location | Content |
 |------|----------|---------|
-| `roll2hit-v3.html` | Line 4623 | `scholars_guard` monster definition |
-| `roll2hit-v3.html` | Line 4626 | `void_shaman` monster definition — named "The Warden" |
-| `roll2hit-v3.html` | Lines 7657–7676 | Isolde Voss and Benedikt Rasp NPC profiles |
-| `roll2hit-v3.html` | Lines 7979–8030 | quest_wm_01–04 + quest_va_01–04 QUEST_DB entries |
-| `roll2hit-v3.html` | Lines 8069–8075 | quest_vs_warden QUEST_DB entry |
-| `roll2hit-v3.html` | Lines 8428–8441 | Weimar + Void Archaeology + Void Shaman state flags in `_S_DEFAULTS()` |
-| `roll2hit-v3.html` | Lines 12359–12455 | `WM_ARCHIVE_DOCS` + `_storyWmArchiveModal()` — 4 documents |
-| `roll2hit-v3.html` | Lines 12836–12866 | CO fifth ending variant + victory screen addendum |
-| `roll2hit-v3.html` | Lines 14325–14373 | §XVI quest activation chain and reading circle logic at `NUE` (historical `SQ`) |
-| `roll2hit-v3.html` | Lines 14380–14449 | §XVII `[INVESTIGATE]` block — gate, sites, `GVA` (historical `MT`) tunnel, quest chain |
-| `roll2hit-v3.html` | Lines 14611–14729 | §XXI render block — gate, vshamanFound, dual path, Benedikt callback |
+| `index.html` | Line 4623 | `scholars_guard` monster definition |
+| `index.html` | Line 4626 | `void_shaman` monster definition — named "The Warden" |
+| `index.html` | Lines 7657–7676 | Isolde Voss and Benedikt Rasp NPC profiles |
+| `index.html` | Lines 7979–8030 | quest_wm_01–04 + quest_va_01–04 QUEST_DB entries |
+| `index.html` | Lines 8069–8075 | quest_vs_warden QUEST_DB entry |
+| `index.html` | Lines 8428–8441 | Weimar + Void Archaeology + Void Shaman state flags in `_S_DEFAULTS()` |
+| `index.html` | Lines 12359–12455 | `WM_ARCHIVE_DOCS` + `_storyWmArchiveModal()` — 4 documents |
+| `index.html` | Lines 12836–12866 | CO fifth ending variant + victory screen addendum |
+| `index.html` | Lines 14325–14373 | §XVI quest activation chain and reading circle logic at `NUE` (historical `SQ`) |
+| `index.html` | Lines 14380–14449 | §XVII `[INVESTIGATE]` block — gate, sites, `GVA` (historical `MT`) tunnel, quest chain |
+| `index.html` | Lines 14611–14729 | §XXI render block — gate, vshamanFound, dual path, Benedikt callback |
 | `lab-report-weimar-scholar-gate.md` | All | §XVI full implementation record |
 | `lab-report-void-archaeology.md` | All | §XVII full implementation record |
 | `lab-report-void-shaman.md` | All | §XXI full implementation record |

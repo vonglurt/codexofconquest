@@ -15,7 +15,7 @@ const { test, expect } = require('@playwright/test');
 test.describe('§VM-01-F — gate expression AST', () => {
 
   test('full-corpus differential: compiled kernel === reference interpreter over every live gate', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       // ── an independent reference interpreter (re-implemented, not the kernel) ──
       const pathVal = (st, p) => p.split('.').reduce((o, k) => (o == null ? undefined : o[k]), st);
@@ -125,7 +125,7 @@ test.describe('§VM-01-F — gate expression AST', () => {
   });
 
   test('quest_wm_01 completes on letter OR 3 seals (grammar); no live gate uses itemsMinAny', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const q = QUEST_DB['quest_wm_01'];
       const evalC = st => createQuestRuntime({ getState: () => st, effects: { getQuest: () => q } }).canComplete('quest_wm_01');

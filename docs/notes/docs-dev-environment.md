@@ -5,7 +5,7 @@
 
 Roll2Hit is a single-file D&D 5e combat and world-exploration assistant.
 The entire game — monsters, quests, NPCs, nodes, world map, terrain, loot
-tables, fish pools, dialogue trees — lives in one HTML file: `roll2hit-v3.html`.
+tables, fish pools, dialogue trees — lives in one HTML file: `index.html`.
 At 210 MB it is simultaneously a playable web application, a database, and a
 version-controlled document.
 
@@ -33,7 +33,7 @@ The developer environment described here is built around three ideas:
 
 ```
 ┌───────────────────────────────────────────────────────────────┐
-│  roll2hit-v3.html  (210 MB — game state + UI in one file)     │
+│  index.html  (210 MB — game state + UI in one file)     │
 └────────────────────────────┬──────────────────────────────────┘
                              │  read / write
                     ┌────────▼────────┐
@@ -47,7 +47,7 @@ The developer environment described here is built around three ideas:
    (api/wb.js)         (browser GUI)        (TUI + keepalive)
 ```
 
-### roll2hit-v3.html
+### index.html
 
 The game file embeds structured data as JavaScript object literals inside
 `<script>` tags, parsed at runtime by the browser and at edit-time by
@@ -100,7 +100,7 @@ and git commits are reserved for intentional milestones.
 When you save the game file, copy it with a timestamp:
 
 ```bash
-cp roll2hit-v3.html roll2hit-v3-$(date +%Y%m%d-%H%M%S).html
+cp index.html roll2hit-v3-$(date +%Y%m%d-%H%M%S).html
 # …or ask the server for one:
 ./api.sh save                  # dated backup beside the game file, then overwrite + reload
 ./api.sh snapshots             # what is sitting there right now (they are gitignored)

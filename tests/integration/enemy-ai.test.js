@@ -6,7 +6,7 @@ const { test, expect } = require('@playwright/test');
 
 test.describe('§PLAY-01-B — enemy AI per tier (press vs flee)', () => {
   test('pure helpers: classification + tier-scaled magnitudes', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       storyNewGame({ str:10, dex:8, con:8, int:8, wis:8, cha:8 });   // S_story valid; at LHR (non-void)
       const out = {};
@@ -36,7 +36,7 @@ test.describe('§PLAY-01-B — enemy AI per tier (press vs flee)', () => {
   });
 
   test('Void enemy presses ONCE at low HP (enrage is not per-turn)', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       storyNewGame({ str:10, dex:8, con:8, int:8, wis:8, cha:8 });
       _storyRollInit();                                              // resets S.opp.enraged
@@ -62,7 +62,7 @@ test.describe('§PLAY-01-B — enemy AI per tier (press vs flee)', () => {
   });
 
   test('mundane beast flees at low HP, earns effort XP, closes the fight', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       storyNewGame({ str:10, dex:8, con:8, int:8, wis:8, cha:8 });
       _storyRollInit();
@@ -87,7 +87,7 @@ test.describe('§PLAY-01-B — enemy AI per tier (press vs flee)', () => {
   });
 
   test('full-HP enemy behaves as before — no enrage, no flee (regression)', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       storyNewGame({ str:10, dex:8, con:8, int:8, wis:8, cha:8 });
       _storyRollInit();

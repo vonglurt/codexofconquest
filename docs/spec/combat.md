@@ -1,7 +1,7 @@
 <!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude -->
 
 # Roll2Hit — Combat System Reference
-**File:** `roll2hit-v3.html` · **Layers:** 11–17 (battle engine), 21 (level-up), 23 (notoriety), 36–37 (features, d-pad, Boyscout)  
+**File:** `index.html` · **Layers:** 11–17 (battle engine), 21 (level-up), 23 (notoriety), 36–37 (features, d-pad, Boyscout)  
 **Last synced:** 2026-05-26 · 17,762 lines · §API-02 line numbers verified
 
 ---

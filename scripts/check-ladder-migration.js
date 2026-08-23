@@ -31,7 +31,7 @@ const fs = require('fs');
 const path = require('path');
 const vm = require('vm');
 const WBAPI = require(path.join(__dirname, '..', 'js', 'wbapi-core'));
-const GAME = path.join(__dirname, '..', 'roll2hit-v3.html');
+const GAME = path.join(__dirname, '..', 'index.html');
 
 let pass = 0, fail = 0;
 const ok = (c, m) => { if (c) { pass++; } else { fail++; console.log('  ✗ FAIL:', m); } };

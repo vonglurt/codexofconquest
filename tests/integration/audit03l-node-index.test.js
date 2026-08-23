@@ -20,7 +20,7 @@ const fs = require('fs');
 const path = require('path');
 
 const ROOT = path.resolve(__dirname, '..', '..');
-const GAME = path.join(ROOT, 'roll2hit-v3.html');
+const GAME = path.join(ROOT, 'index.html');
 const INDEX = path.join(ROOT, 'docs', 'maps', 'node-index.md');
 const GEN = path.join(ROOT, 'scripts', 'node-index.js');
 

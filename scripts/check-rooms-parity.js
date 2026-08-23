@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude
 // §NAV-01c — structural rooms-parity: assert the ROOMS:CORE block inlined in
-// roll2hit-v3.html is byte-identical to the same block in rooms.js.
+// index.html is byte-identical to the same block in rooms.js.
 'use strict';
 const fs = require('fs');
 const path = require('path');
@@ -18,9 +18,9 @@ function core(file) {
 }
 
 const a = core('js/rooms.js');
-const b = core('roll2hit-v3.html');
+const b = core('index.html');
 if (a === b) {
-  console.log(`✓ rooms parity: ROOMS:CORE identical in rooms.js and roll2hit-v3.html (${a.length} bytes)`);
+  console.log(`✓ rooms parity: ROOMS:CORE identical in rooms.js and index.html (${a.length} bytes)`);
   process.exit(0);
 }
 console.error('✗ rooms parity FAILED: the inlined ROOMS:CORE block differs from rooms.js');

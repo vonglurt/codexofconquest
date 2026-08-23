@@ -10,7 +10,7 @@ const { test, expect } = require('@playwright/test');
 
 test.describe('§CHAR-01-A — point-buy character creation (already shipped; contract lock)', () => {
   test('point-buy constants are the standard 5e 27-point budget with the canonical cost curve', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => ({
       budget: CC_BUDGET,
       cost: _CC_COST,
@@ -28,7 +28,7 @@ test.describe('§CHAR-01-A — point-buy character creation (already shipped; co
   });
 
   test('the modal exists with custom + hard origins and a begin button', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     await page.evaluate(() => _showCharCreate());
     await expect(page.locator('#story-charcreate-modal')).toHaveClass(/visible/);
     await expect(page.locator('#charcreate-tabs [data-mode="custom"]')).toHaveCount(1);
@@ -37,7 +37,7 @@ test.describe('§CHAR-01-A — point-buy character creation (already shipped; co
   });
 
   test('custom point-buy: Begin writes the chosen abilityScores into a fresh game and derives ATK/HP', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     await page.evaluate(() => {
       _showCharCreate();
       _cc_mode = 'custom';
@@ -56,7 +56,7 @@ test.describe('§CHAR-01-A — point-buy character creation (already shipped; co
   });
 
   test('hard origin: Begin uses the fixed low array, not the point-buy spread', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     await page.evaluate(() => {
       _showCharCreate();
       _cc_mode = 'hard';

@@ -1,7 +1,7 @@
 <!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude -->
 # POTENTIAL — Backlog Seeds from the "40+ Solo RPG Prompts" Listicle
 
-> **What this file is.** A source list of 44 solo-RPG prompts was read against `roll2hit-v3.html` @ `43bd09c` (`ENGINE_VER = 'r2h-3.104.0'`), one prompt at a time, and each was answered with *what the file actually does today* before any improvement was proposed. Seeds only — **nothing here is scoped work.** Promoting a seed = its own `§` entry in **[BACKLOG.md](BACKLOG.md)** (+ a `lab-reports/lab-report-*.md` locking data shapes before any HTML edit, per the Lab Report Policy in **[CONTRIBUTING.md](CONTRIBUTING.md)**).
+> **What this file is.** A source list of 44 solo-RPG prompts was read against `index.html` @ `43bd09c` (`ENGINE_VER = 'r2h-3.104.0'`), one prompt at a time, and each was answered with *what the file actually does today* before any improvement was proposed. Seeds only — **nothing here is scoped work.** Promoting a seed = its own `§` entry in **[BACKLOG.md](BACKLOG.md)** (+ a `lab-reports/lab-report-*.md` locking data shapes before any HTML edit, per the Lab Report Policy in **[CONTRIBUTING.md](CONTRIBUTING.md)**).
 >
 > **Relation to §IDEA-01.** This is an §IDEA-01-*shaped* pass — found-text list → dedupe → per-line coverage table proving 100% coverage — but the source is **design prompts, not narrative found-text**, so the output is *engine/content capability rows here*, not quest-theme one-liners in `docs/notes/brainstorm-one-liners.md`. It is a sibling of S1–S3, not S4.
 >
@@ -11,7 +11,7 @@
 
 Every count, line number, and liveness claim below was **measured from the live file**, not recalled — the repo's most expensive recurring lesson is that six arcs were planned as new work and closed as *already shipped* (`project_data01_reverted`: **grep before building**). Where a prompt is already answered, this file says so and proposes nothing.
 
-Live counts measured this pass (`roll2hit-v3.html`, 37,271 lines / 5.3 MB):
+Live counts measured this pass (`index.html`, 37,271 lines / 5.3 MB):
 
 | Structure | Live count | Note |
 |---|---|---|

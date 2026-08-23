@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude
 // §MESH-01j — structural duel-parity: assert the DUEL:CORE block inlined in
-// roll2hit-v3.html is byte-identical to the same block in duel.js (the
+// index.html is byte-identical to the same block in duel.js (the
 // mover.js / rooms.js precedent). A duel outcome must replay identically on
 // client, server, and any third-party verifier.
 'use strict';
@@ -20,9 +20,9 @@ function core(file) {
 }
 
 const a = core('js/duel.js');
-const b = core('roll2hit-v3.html');
+const b = core('index.html');
 if (a === b) {
-  console.log(`✓ duel parity: DUEL:CORE identical in duel.js and roll2hit-v3.html (${a.length} bytes)`);
+  console.log(`✓ duel parity: DUEL:CORE identical in duel.js and index.html (${a.length} bytes)`);
   process.exit(0);
 }
 console.error('✗ duel parity FAILED: the inlined DUEL:CORE block differs from duel.js');

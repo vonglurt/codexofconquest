@@ -2,7 +2,7 @@
 
 # Roll2Hit World Builder — API Reference
 
-**Architecture**: `./api.sh` → WBAPI server (localhost:1367) → `roll2hit-v3.html`
+**Architecture**: `./api.sh` → WBAPI server (localhost:1367) → `index.html`
 
 ---
 

@@ -7,7 +7,7 @@
 // SPDX-License-Identifier: MIT
 // ============================================================
 'use strict';
-// Local REST API for roll2hit-v3.html — reads and writes the HTML file
+// Local REST API for index.html — reads and writes the HTML file
 // directly.  The game is fully self-contained in that one file.
 // Toggle: ./wbapi-toggle.sh [start|stop|restart|status]
 // curl:   curl http://localhost:1367/api/ping
@@ -34,9 +34,9 @@ const fs        = require('fs');
 const path      = require('path');
 const crypto    = require('crypto');
 const WBAPI     = require('./wbapi-core');
-const Mover     = require('./mover');   // §WALK-2 shared movement kernel (also inlined in roll2hit-v3.html)
-const Rooms     = require('./rooms');   // §NAV-01f shared room-description kernel (also inlined in roll2hit-v3.html)
-const Duel      = require('./duel');    // §MESH-01j shared duel-resolution kernel (also inlined in roll2hit-v3.html)
+const Mover     = require('./mover');   // §WALK-2 shared movement kernel (also inlined in index.html)
+const Rooms     = require('./rooms');   // §NAV-01f shared room-description kernel (also inlined in index.html)
+const Duel      = require('./duel');    // §MESH-01j shared duel-resolution kernel (also inlined in index.html)
 const Anthropic = require('@anthropic-ai/sdk');
 
 // ── Repo layout (this file lives in js/; assets/data are one level up) ────────
@@ -80,7 +80,7 @@ const SESSION_TTL = parseInt(process.env.SESSION_TTL_MS || '', 10) || 30 * 60 * 
 // (bot:true, kind:'sentry') so they ride EVERY presence surface for free — a
 // co-located player sees them in buildLook.players / who / player_arrived, and
 // the client reads that to suppress encounters + auto-assist battles in the
-// sentry's cell (roll2hit-v3.html §MESH-01h). Single-writer holds: only THIS
+// sentry's cell (index.html §MESH-01h). Single-writer holds: only THIS
 // origin mutates its own sentries, exactly like a player session. Bots never
 // idle-expire (sessionPrune skips them) and never roll encounters (they never
 // call /session/move) — they are recalled explicitly via POST /api/sentry/recall.
@@ -214,7 +214,7 @@ const SERVER_NAME = String(process.env.SERVER_NAME
   || require('os').hostname() || 'r2h-server').slice(0, 60);
 const GAME_FILE = process.env.ROLL2HIT_FILE
   || process.argv.find((a, i) => process.argv[i-1] === '--file')
-  || path.join(ROOT, 'roll2hit-v3.html');
+  || path.join(ROOT, 'index.html');
 
 // ══ §MESH-01 b/c — identity · world manifest · ACL · gossip mesh ═════════════
 // Design: lab-reports/lab-report-mesh-multiuser.md. Presence records are
@@ -973,7 +973,7 @@ function getCellGrid() {
 // CELL_GRID) and the IMPASSABLE set. Both are cached and rebuild on reload.
 
 // IMPASSABLE_CELLS parsed from the game's SEA_RUNS literal — the same set the
-// client builds at load (roll2hit-v3.html). Closes the latent bug where the
+// client builds at load (index.html). Closes the latent bug where the
 // server move ignored sea cells (lab report §8). Cached by raw-source reference.
 let _seaCacheSrc = null, _seaCache = null;
 function getImpassable() {
@@ -1084,7 +1084,7 @@ function getEncounterRateTable() {
 }
 
 // §WALK-5 Inc 1 — server-side terrain inference, mirrors the client _inferTerrain
-// (roll2hit-v3.html): a sea-lane cell is 'ocean'; otherwise the majority terrain
+// (index.html): a sea-lane cell is 'ocean'; otherwise the majority terrain
 // among the 4 orthogonal PRIMARY neighbours (NODE_MAP[code].name), strict-> tie-break
 // so the first terrain seen in N,S,E,W order wins ties; no named neighbour →
 // 'midlands'. Same neighbour order (MOVES4) + tie-break as the client for parity.
@@ -1122,7 +1122,7 @@ function getMoverWorld() {
 }
 
 // §NAV-01f — room world: the mover world plus the lookups describeCell needs.
-// Mirrors the client _roomWorld() (roll2hit-v3.html) field-for-field — same
+// Mirrors the client _roomWorld() (index.html) field-for-field — same
 // fallbacks, same label sources — so the server's room text is byte-equal to
 // the client's for the same cell (asserted by mud-harness section [M]).
 function getRoomWorld() {
@@ -1277,11 +1277,11 @@ function locationConnections(key) {
 const CONNECT = { node:nodeConnections, quest:questConnections, monster:monsterConnections, npc:npcConnections };
 
 // ═══════════════════════════════════════════════════════════════════════════
-// Schema — canonical field reference derived from roll2hit-v3.html
+// Schema — canonical field reference derived from index.html
 // ═══════════════════════════════════════════════════════════════════════════
 const SCHEMAS = {
   _version: '1.0',
-  _source: 'roll2hit-v3.html',
+  _source: 'index.html',
   _anchors: {
     MONSTER_POOL:  '// ◆◆◆ WORLDBUILDER:MONSTER_POOL:START ◆◆◆',
     MONSTER_DROPS: '// ◆◆◆ WORLDBUILDER:MONSTER_DROPS:START ◆◆◆',
@@ -1973,7 +1973,7 @@ async function route(req, res) {
         title: 'Overview',
         body: [
           'OVERVIEW',
-          '  roll2hit-v3.html is the single source of truth for the entire game.',
+          '  index.html is the single source of truth for the entire game.',
           '  All data (nodes, quests, monsters, terrain, NPCs, fish, lake magic)',
           '  is stored as JavaScript literals inside that one HTML file.',
           '',
@@ -1981,13 +1981,13 @@ async function route(req, res) {
           '  Every write endpoint mutates the in-memory objects, then serialises',
           '  them back into the HTML file via POST /api/save.',
           '',
-          '  The game is fully playable in a browser with only roll2hit-v3.html —',
+          '  The game is fully playable in a browser with only index.html —',
           '  no Node, no server, no dependencies.',
           '',
           'ARCHITECTURE',
-          '  Browser ─── roll2hit-v3.html (game engine + all data)',
+          '  Browser ─── index.html (game engine + all data)',
           '  Dev tool ── worldbuilder.html (reads game via API, never touched by game)',
-          '  API server ─ wbapi-server.js  (parses + writes roll2hit-v3.html in-place)',
+          '  API server ─ wbapi-server.js  (parses + writes index.html in-place)',
           '',
           'TYPICAL WORKFLOW',
           '  1. ./wbapi-toggle.sh start',
@@ -2022,7 +2022,7 @@ async function route(req, res) {
           `     curl ${b}/api/export/quest_db?format=json`,
           '',
           '2. GUIDED-WRITE MODE (requires nonce)',
-          '   POST / PUT / DELETE endpoints that mutate roll2hit-v3.html.',
+          '   POST / PUT / DELETE endpoints that mutate index.html.',
           '   Every write operation is two-step:',
           '',
           '   Step A — request a nonce (expires in 5 minutes):',
@@ -2091,7 +2091,7 @@ async function route(req, res) {
           '  Health check. Returns counts of all loaded collections.',
           '',
           `GET ${b}/api/source`,
-          '  Raw HTML source of roll2hit-v3.html. Pipe to file to download.',
+          '  Raw HTML source of index.html. Pipe to file to download.',
           `  curl ${b}/api/source -o backup.html`,
           '',
           `GET ${b}/api/audit`,
@@ -2147,7 +2147,7 @@ async function route(req, res) {
       write: {
         title: 'Write Endpoints (POST / PUT / DELETE)',
         body: [
-          'WRITE ENDPOINTS — All mutate roll2hit-v3.html. Run POST /api/save after.',
+          'WRITE ENDPOINTS — All mutate index.html. Run POST /api/save after.',
           '',
           'CREATE',
           `  POST ${b}/api/node          body: {code, label, act, name?, desc?, ...}`,
@@ -2182,8 +2182,8 @@ async function route(req, res) {
           `  DELETE ${b}/api/npc/{key}        X-Nonce: <token>`,
           '',
           'SYSTEM',
-          `  POST ${b}/api/save      — serialise all in-memory edits back to roll2hit-v3.html`,
-          `  POST ${b}/api/reload    — re-parse roll2hit-v3.html from disk (auto-reload already active via fs.watch — manual call is redundant)`,
+          `  POST ${b}/api/save      — serialise all in-memory edits back to index.html`,
+          `  POST ${b}/api/reload    — re-parse index.html from disk (auto-reload already active via fs.watch — manual call is redundant)`,
           `  POST ${b}/api/restart   — exit(0); external process handles relaunch`,
           '',
           'See: GET /api/help/nonce  |  GET /api/help/wizard',
@@ -2914,7 +2914,7 @@ async function route(req, res) {
   }
 
   // ── §MESH-01d3: world download — the single file IS the server ──
-  // Serves this server's roll2hit-v3.html verbatim with identity headers. The
+  // Serves this server's index.html verbatim with identity headers. The
   // RECEIVING side carries the safety story: the worldbuilder ⬇ button sits
   // behind a BIG WARNING modal (someone else's CODE, MIT, inspect first) and
   // scripts/world-diff.js shows the modification set. Never a write path.
@@ -3157,7 +3157,7 @@ async function route(req, res) {
       logResponse(method, url.pathname, 200, 'reload ok');
       return json(res, 200, {
         ok: true,
-        note: 'Auto-reload is already active — the server watches roll2hit-v3.html and reloads automatically on any external edit. Manual POST /api/reload is redundant unless the watcher missed an event.',
+        note: 'Auto-reload is already active — the server watches index.html and reloads automatically on any external edit. Manual POST /api/reload is redundant unless the watcher missed an event.',
       });
     } catch(e) {
       log('ERROR', `Reload failed: ${e.message}`);
@@ -5860,7 +5860,7 @@ async function route(req, res) {
       });
 
       const page = suggestions.slice(skip, skip + limit);
-      return json(res, 200, { ok:true, hub, minHops, spatialRadius: spatialR, total:suggestions.length, skip, limit, results:page, reminder:'Use API only: PUT /api/node/{code}, PUT /api/coords/{code}, POST /api/graph/junction — never edit roll2hit-v3.html directly.' });
+      return json(res, 200, { ok:true, hub, minHops, spatialRadius: spatialR, total:suggestions.length, skip, limit, results:page, reminder:'Use API only: PUT /api/node/{code}, PUT /api/coords/{code}, POST /api/graph/junction — never edit index.html directly.' });
     }
 
     // ── POST /api/graph/junction ───────────────────────────────────────────
@@ -5965,7 +5965,7 @@ async function route(req, res) {
         clusterWired,
         junctionNode: WBAPI.nodeMap[jCode],
         note: `Junction ${jCode} created and wired to ${anchor}.${anchorDir}.${clusterEntry ? ` Cluster entry ${clusterEntry} also wired.` : ''}`,
-        reminder: 'Use API only: PUT /api/node/{code}, PUT /api/coords/{code}, POST /api/graph/junction — never edit roll2hit-v3.html directly.',
+        reminder: 'Use API only: PUT /api/node/{code}, PUT /api/coords/{code}, POST /api/graph/junction — never edit index.html directly.',
       });
     }
 
@@ -7408,7 +7408,7 @@ async function route(req, res) {
       WBAPI._rawSrc = WBAPI._rawSrc.slice(0, sIdx) + section + WBAPI._rawSrc.slice(eIdx);
       logRow('coords', `${targetCode}  ${prev?`r:${prev.r},c:${prev.c} → `:'(new) '}r:${r},c:${c}`);
       logResponse(method, url.pathname, 200, `coords/${targetCode} → r:${r} c:${c}`);
-      return saveAndRestart(res, 200, { ok:true, code: targetCode, prev, coords: { r, c }, reminder: 'Use API only: PUT /api/node/{code}, PUT /api/coords/{code}, POST /api/graph/junction — never edit roll2hit-v3.html directly.' });
+      return saveAndRestart(res, 200, { ok:true, code: targetCode, prev, coords: { r, c }, reminder: 'Use API only: PUT /api/node/{code}, PUT /api/coords/{code}, POST /api/graph/junction — never edit index.html directly.' });
     }
 
     // ── POST /api/coords/{code}/nudge — move relatively ──────────────────────
@@ -11159,7 +11159,7 @@ async function route(req, res) {
       // round trip report `ok:false — field mismatch` on a write that was entirely correct.
       if (r.ok && r.strategy === 'editField' && !r.removed) expectedFields[r.field] = String(r.aliased ? r.aliased.to : body[r.field]);
     }
-    const putReminder = type === 'node' ? { reminder: 'Use API only: PUT /api/node/{code}, PUT /api/coords/{code}, POST /api/graph/junction — never edit roll2hit-v3.html directly.' } : {};
+    const putReminder = type === 'node' ? { reminder: 'Use API only: PUT /api/node/{code}, PUT /api/coords/{code}, POST /api/graph/junction — never edit index.html directly.' } : {};
     const autoJunctionInfo = autoJunctionCreated.length
       ? { autoJunctionsCreated: autoJunctionCreated, note: `${autoJunctionCreated.length} junction(s) auto-inserted (source was deg=3). Pass autoJunction:false to bypass.` }
       : {};

@@ -10,7 +10,7 @@
 
 ## Abstract
 
-This report documents the architectural migration of `roll2hit-v3.html` — a self-contained, browser-based combat tracker — into a two-mode narrative game engine capable of supporting a 42-node story world, persistent inventory, quest journaling, and a pre-battle condition item selection system. The migration was executed in eight discrete vertical layers, each adding one complete interaction type without disturbing prior functionality. The source system (Layer 0) consisted of a fully operational dice-rolling and initiative-tracking engine with 329 monsters in a static `MONSTER_POOL` object. The completed system (Layers 0–8) comprises a MUD-style N/E/S/W node navigation shell, a live inventory system, a quest journal, Froberger's journal read-aloud modals, a pre-battle condition item selection overlay, inn-based sleep and time pressure mechanics, full localStorage save/load with checkpoint respawn, main quest gate locks, a combat drop and vendor economy (MONSTER_DROPS, 4-tier potions, Hearth Home, Transmort Scroll), a flee mechanic, and an 11×11 dynamic map overlay. The entire implementation is constrained to a single HTML file with no external dependencies, no build step, and no CDN references. The file reached approximately 6,100 lines at Layer 8 completion.
+This report documents the architectural migration of `index.html` — a self-contained, browser-based combat tracker — into a two-mode narrative game engine capable of supporting a 42-node story world, persistent inventory, quest journaling, and a pre-battle condition item selection system. The migration was executed in eight discrete vertical layers, each adding one complete interaction type without disturbing prior functionality. The source system (Layer 0) consisted of a fully operational dice-rolling and initiative-tracking engine with 329 monsters in a static `MONSTER_POOL` object. The completed system (Layers 0–8) comprises a MUD-style N/E/S/W node navigation shell, a live inventory system, a quest journal, Froberger's journal read-aloud modals, a pre-battle condition item selection overlay, inn-based sleep and time pressure mechanics, full localStorage save/load with checkpoint respawn, main quest gate locks, a combat drop and vendor economy (MONSTER_DROPS, 4-tier potions, Hearth Home, Transmort Scroll), a flee mechanic, and an 11×11 dynamic map overlay. The entire implementation is constrained to a single HTML file with no external dependencies, no build step, and no CDN references. The file reached approximately 6,100 lines at Layer 8 completion.
 
 ---
 
@@ -38,7 +38,7 @@ This report covers the architectural decisions, data structure designs, state ma
 
 ### II-A. Existing Architecture
 
-Prior to migration, `roll2hit-v3.html` comprised approximately 3,500 lines implementing the following subsystems:
+Prior to migration, `index.html` comprised approximately 3,500 lines implementing the following subsystems:
 
 - **Initiative tracker** — drag-reorderable combatant list with HP bars, condition chips, and death save pips
 - **Attack roller** — configurable ATK bonus, damage dice, crit threshold, and modifiers (ADV/DIS, half cover, flanking)
@@ -283,7 +283,7 @@ The world is an island. The full map occupies a 26×16 named grid (columns C01�
 
 **Objective:** Implement a text UI showing current node description with N/E/S/W movement between all 42 nodes.
 
-**Implementation approach:** Three additions to `roll2hit-v3.html`: a CSS block, an HTML panel, and a JavaScript block. The HTML panel uses a two-column flex layout: a left sidebar (180px fixed width, dark panel background) containing the act badge, travel log, and character status; and a flex-1 center column containing the node header, story text box, info chips, and D-pad control cluster.
+**Implementation approach:** Three additions to `index.html`: a CSS block, an HTML panel, and a JavaScript block. The HTML panel uses a two-column flex layout: a left sidebar (180px fixed width, dark panel background) containing the act badge, travel log, and character status; and a flex-1 center column containing the node header, story text box, info chips, and D-pad control cluster.
 
 **Key functions introduced:**
 
@@ -555,7 +555,7 @@ Key design constraint: `storyCheckContinue()` must run and return `true` before 
 
 ## XI. Conclusion
 
-The migration of `roll2hit-v3.html` from a pure combat tracker to a two-mode narrative game engine demonstrates that incremental vertical-slice architecture is viable within a single-file, zero-dependency web application. Each of the four completed layers delivered a testable, usable feature set without regressing prior layers. The constraint of a single HTML file, rather than limiting design, enforced a discipline of minimalism: each addition required explicit justification against the single-file deployment property.
+The migration of `index.html` from a pure combat tracker to a two-mode narrative game engine demonstrates that incremental vertical-slice architecture is viable within a single-file, zero-dependency web application. Each of the four completed layers delivered a testable, usable feature set without regressing prior layers. The constraint of a single HTML file, rather than limiting design, enforced a discipline of minimalism: each addition required explicit justification against the single-file deployment property.
 
 The central architectural insight is the separation of narrative state (`S_story`) from presentation logic (`storyRender()` and its overlay pattern) and from the existing battle engine (`loadEnemyPreset()`). These three concerns are loosely coupled through a small, stable API surface. This coupling structure directly determines the feasibility of the remaining four layers: they require new state fields and new UI elements, but they do not require modification of the battle engine or the layer architecture established here.
 
@@ -565,7 +565,7 @@ The world of *The Shattered Codex* — 42 nodes, 8 acts, 49 days, 7 Shards, and 
 
 ## References
 
-[1] *roll2hit-v3.html* — Roll2hit.com combat tracker, Layer 0 substrate. Single-file browser application, ~3,500 lines at Layer 0 baseline. Extended to ~6,100 lines after Layer 8 completion.
+[1] *index.html* — Roll2hit.com combat tracker, Layer 0 substrate. Single-file browser application, ~3,500 lines at Layer 0 baseline. Extended to ~6,100 lines after Layer 8 completion.
 
 [2] *spec-engine.md* — Design specification document: data schemas, state machine, navigation model, loot tables, PRE_BATT interface contract, iteration layer plan. Authored concurrent with Layer 0 review.
 

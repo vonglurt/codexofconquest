@@ -9,7 +9,7 @@ const path = require('path');
 const WBAPI = require('../js/wbapi-core');
 
 // ── Config ──────────────────────────────────────────────────────────────────
-const DEFAULT_GAME_FILE = path.join(__dirname, '..', 'roll2hit-v3.html');  // repo ROOT (tools/ is one level down)
+const DEFAULT_GAME_FILE = path.join(__dirname, '..', 'index.html');  // repo ROOT (tools/ is one level down)
 const gameFile = process.env.ROLL2HIT_FILE || DEFAULT_GAME_FILE;
 
 // ── Arg parsing ──────────────────────────────────────────────────────────────
@@ -362,7 +362,7 @@ WORLD FOLDER STRUCTURE
       {monster_key}.json
 
 ENVIRONMENT
-  ROLL2HIT_FILE   path to roll2hit-v3.html  (default: ./roll2hit-v3.html)
+  ROLL2HIT_FILE   path to index.html  (default: ./index.html)
 
 EXAMPLES
   node wbapi-cli.js get location CY

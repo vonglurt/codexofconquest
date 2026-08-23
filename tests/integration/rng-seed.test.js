@@ -17,7 +17,7 @@ test.describe('§VM-01-B — the seeded client RNG', () => {
   // 1. Replayability: the stream is a pure function of rngState. Restoring a save's
   //    seed reproduces the exact roll sequence — the whole deliverable.
   test('the stream is a pure function of S_story.rngState (fix the seed → identical sequence)', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate((NG) => {
       storyNewGame(NG);
       const draw = (n) => { const out = []; for (let i = 0; i < n; i++) out.push(_seededNext()); return out; };
@@ -35,7 +35,7 @@ test.describe('§VM-01-B — the seeded client RNG', () => {
   // 2. Persistence round-trip through the REAL autosave/load: rngState rides the save,
   //    and load resumes the stream EXACTLY (no re-bootstrap — the saved seed is non-zero).
   test('rngState persists through storyAutoSave/storyLoadSave and the stream resumes exactly', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(([NG, MULB]) => {
       eval(MULB);                                    // defines _ref (reference mulberry32)
       storyNewGame(NG);
@@ -61,7 +61,7 @@ test.describe('§VM-01-B — the seeded client RNG', () => {
   //    defaults-in-the-middle merge supplies the 0 sentinel; the first draw lazily
   //    bootstraps a non-zero seed. No version bump, no backfill, no exception.
   test('a pre-§VM-01-B save (no rngState) loads and lazily bootstraps a non-zero seed', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate((NG) => {
       storyNewGame(NG);
       // Build a legacy save snapshot, then STRIP rngState to mimic a pre-feature save.
@@ -90,7 +90,7 @@ test.describe('§VM-01-B — the seeded client RNG', () => {
   // 4. Range integrity: the converted sites keep their exact ranges — the substitution
   //    changed the SOURCE of randomness, never a distribution.
   test('_seededNext stays in [0,1); derived d20 is 1..20 and d100 is 0..99', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate((NG) => {
       storyNewGame(NG);
       S_story.rngState = 777;
@@ -114,7 +114,7 @@ test.describe('§VM-01-B — the seeded client RNG', () => {
   // 5. Game-facing proof: QuestRuntime._rollSkill's d20 is now seeded — fixing the seed
   //    reproduces the roll (and thus the pass/fail routing). "Pure roll" is finally honest.
   test('QuestRuntime._rollSkill is reproducible from the seed', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate((NG) => {
       storyNewGame(NG);
       S_story.rngState = 0xC0FFEE; const first  = [0, 1, 2].map(() => QuestRuntime._rollSkill('str').d20);

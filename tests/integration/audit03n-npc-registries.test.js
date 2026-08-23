@@ -26,7 +26,7 @@ const path = require('path');
 const { SEED_STATE, seedAndLoad, dismissContinue } = require('./helpers');
 
 const ROOT = path.resolve(__dirname, '..', '..');
-const GAME = path.join(ROOT, 'roll2hit-v3.html');
+const GAME = path.join(ROOT, 'index.html');
 
 function freshWorld() {
   delete require.cache[require.resolve(path.join(ROOT, 'js', 'wbapi-core.js'))];

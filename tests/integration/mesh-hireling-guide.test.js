@@ -18,7 +18,7 @@ const { test, expect } = require('@playwright/test');
 test.describe('§MESH-01g hireling guide bot', () => {
 
   test('_hirelingHire: pays upfront wage, stamps the record; refuses double-hire and when broke', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const out = {};
       S_story.hireling = null; S_story.gold = 100; S_story.day = 3;
@@ -52,7 +52,7 @@ test.describe('§MESH-01g hireling guide bot', () => {
   });
 
   test('_hirelingDayTick: pays the daily wage when affordable, auto-dismisses when broke', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const out = {};
       S_story.hireling = null; S_story.gold = 100; S_story.day = 1;
@@ -84,7 +84,7 @@ test.describe('§MESH-01g hireling guide bot', () => {
   });
 
   test('_hirelingResolve: nat1 auto-miss, nat20 auto-crit, else total vs AC', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const h = { atkBonus: 4 };
       return {
@@ -101,7 +101,7 @@ test.describe('§MESH-01g hireling guide bot', () => {
   });
 
   test('_hirelingStrike: no-op unhired / enemy-dead; damages a live enemy on a forced hit', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const out = {};
       // Minimal battle state.
@@ -134,7 +134,7 @@ test.describe('§MESH-01g hireling guide bot', () => {
   });
 
   test('_hirelingQuestTarget: resolves the active quest node, null when none', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const out = {};
       // Find a real UQF quest that carries a resolvable node.
@@ -161,7 +161,7 @@ test.describe('§MESH-01g hireling guide bot', () => {
   });
 
   test('_hirelingGuide: sets the waypoint to the active quest (Free-Movement: same waypoint the player could set)', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const out = {};
       S_story.active = false;                    // keeps _travelStart a no-op (no real walking in-test)

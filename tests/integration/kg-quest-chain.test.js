@@ -31,7 +31,7 @@ const NPC = {
 test.describe('§KG Increment 3 — corridor quest chain', () => {
 
   test('all 11 quests exist as UQF-1.0 with npc keys that resolve to their giver node', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const rows = await page.evaluate((chain) => {
       const slug = s => (s || '').toLowerCase().replace(/\s/g, '_');
       return chain.map(id => {
@@ -54,7 +54,7 @@ test.describe('§KG Increment 3 — corridor quest chain', () => {
   });
 
   test('the new generic monsterKills counter is in _S_DEFAULTS and feeds countMin completion', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const defaults = _S_DEFAULTS();
       const out = { hasDefault: Object.prototype.hasOwnProperty.call(defaults, 'monsterKills'),
@@ -80,7 +80,7 @@ test.describe('§KG Increment 3 — corridor quest chain', () => {
   });
 
   test('gate sequence unlocks the chain W→E in order (listing only)', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const steps = await page.evaluate(() => {
       const can = id => QuestRuntime.canActivate(id);
       S_story.quests = S_story.quests || {};
@@ -115,7 +115,7 @@ test.describe('§KG Increment 3 — corridor quest chain', () => {
   });
 
   test('delivery completes only at the destination node; skill_check quests are well-formed', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const out = {};
       // kg_02 delivery: manifest in bag, but completion only fires while standing at KMS.

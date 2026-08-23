@@ -2,7 +2,7 @@
 // §VM-01-D — QUEST:CORE, the fourth kernel (host-injected).
 // The quest VM (opcode table + gate evaluators + bit-chain executor) is extracted
 // into js/quest.js behind createQuestRuntime({getState, effects}) and inlined
-// BYTE-IDENTICALLY into roll2hit-v3.html (scripts/check-quest-parity.js). Because
+// BYTE-IDENTICALLY into index.html (scripts/check-quest-parity.js). Because
 // the kernel names no global (S_story/QUEST_DB/NODE_MAP/storyX all arrive through
 // the two params), it runs HEADLESS in Node — the engine the server "could not run."
 // Most tests here need no browser: they require the kernel directly. One browser
@@ -148,7 +148,7 @@ test.describe('§VM-01-D — the live factory-built QuestRuntime is a no-op', ()
   // 7. In the browser, window.QuestRuntime (now built by createQuestRuntime over the
   //    live S_story + host effects) drives a chain exactly as the pre-D literal did.
   test('window.QuestRuntime mutates the live S_story through the injected host seam', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate((NG) => {
       storyNewGame(NG);
       S_story.quests = S_story.quests || {};

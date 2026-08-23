@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude
 'use strict';
 // quest.js — §VM-01-D unified quest-VM kernel: the single source of the UQF
-// runtime shared by the SP client (inlined into roll2hit-v3.html) and, when a
+// runtime shared by the SP client (inlined into index.html) and, when a
 // consumer is wired, the WBAPI server (require('./quest')). The engine that runs
 // all ~2,850 quests — its opcode table, gate evaluators, and bit-chain executor.
 //
@@ -15,7 +15,7 @@
 // CALLS behind `effects`, so the whole runtime can run headless in Node.
 //
 // The region between the QUEST:CORE sentinels is inlined BYTE-IDENTICALLY into
-// roll2hit-v3.html; scripts/check-quest-parity.js asserts the two copies match.
+// index.html; scripts/check-quest-parity.js asserts the two copies match.
 // Do not edit one copy without the other (or run: node scripts/check-quest-parity.js).
 //
 // host: { getState: () => state,          // returns the live progress state (S_story)

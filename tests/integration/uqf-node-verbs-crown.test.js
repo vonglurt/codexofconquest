@@ -24,7 +24,7 @@ const path = require('path');
 const { test, expect } = require('@playwright/test');
 const { SEED_STATE, dismissContinue } = require('./helpers');
 
-const HTML = fs.readFileSync(path.join(__dirname, '..', '..', 'roll2hit-v3.html'), 'utf8');
+const HTML = fs.readFileSync(path.join(__dirname, '..', '..', 'index.html'), 'utf8');
 
 async function at(page, code, overrides = {}) {
   const state = Object.assign({}, SEED_STATE, {
@@ -35,7 +35,7 @@ async function at(page, code, overrides = {}) {
     localStorage.clear();
     localStorage.setItem('r2h_autosave', JSON.stringify(s));
   }, state);
-  await page.goto('/roll2hit-v3.html');
+  await page.goto('/index.html');
   await dismissContinue(page);
 }
 
@@ -69,7 +69,7 @@ test.describe('§VM-01-G-FU-a — registry + source shape', () => {
   });
 
   test('the migrated blocks are gone from storyRender; hooks and panels dispatch in their place', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const src = storyRender.toString();
       return {

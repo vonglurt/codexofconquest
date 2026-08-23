@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude
 // §VM-01-D — structural quest-parity: assert the QUEST:CORE block inlined in
-// roll2hit-v3.html is byte-identical to the same block in js/quest.js. The quest
+// index.html is byte-identical to the same block in js/quest.js. The quest
 // VM (opcode table + gate evaluators + bit-chain executor) is a host-injected
 // kernel; this is the fourth parity fence beside mover/rooms/duel.
 'use strict';
@@ -20,9 +20,9 @@ function core(file) {
 }
 
 const a = core('js/quest.js');
-const b = core('roll2hit-v3.html');
+const b = core('index.html');
 if (a === b) {
-  console.log(`✓ quest parity: QUEST:CORE identical in quest.js and roll2hit-v3.html (${a.length} bytes)`);
+  console.log(`✓ quest parity: QUEST:CORE identical in quest.js and index.html (${a.length} bytes)`);
   process.exit(0);
 }
 console.error('✗ quest parity FAILED: the inlined QUEST:CORE block differs from quest.js');

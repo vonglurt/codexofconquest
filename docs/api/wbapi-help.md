@@ -433,7 +433,7 @@ The canonical workflow for adding any quest chain via the API. Steps are invaria
 # Step 0: confirm node exists and terrain is correct
 ./api.sh location {startNode}
 
-# Step 1: register new flags in _S_DEFAULTS (manual edit in roll2hit-v3.html)
+# Step 1: register new flags in _S_DEFAULTS (manual edit in index.html)
 
 # Step 2: inspect quest schema
 ./api.sh get quest --schema

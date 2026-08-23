@@ -7,7 +7,7 @@ test.describe('§MP-MAP — multiplayer hub on the map screen', () => {
   test('pane opens; advertise toggle + Local/World chat scope + proximity filter work, no page errors', async ({ page }) => {
     const pageErrors = [];
     page.on('pageerror', e => pageErrors.push(String(e)));
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
 
     const r = await page.evaluate(() => {
       const out = {};

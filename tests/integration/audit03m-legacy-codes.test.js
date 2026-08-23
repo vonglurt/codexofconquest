@@ -174,7 +174,7 @@ test.describe('§AUDIT-03m — legacy node codes in doc prose', () => {
     // The §AUDIT-03m lesson, and the reason this row re-read every claim it annotated:
     // annotating a WRONG node code launders it into a confident-looking live one.
     // world.md's Act VIII Homecoming table named four wrong places; `birkaNpcs` settles it.
-    const html = fs.readFileSync(path.join(ROOT, 'roll2hit-v3.html'), 'utf8');
+    const html = fs.readFileSync(path.join(ROOT, 'index.html'), 'utf8');
     const roster = html.match(/const birkaNpcs = \{[^}]*\}/);
     expect(roster, 'birkaNpcs is the authority on where these NPCs stand').not.toBeNull();
     for (const [npc, node] of [['yael', 'LHR'], ['brynn', 'TLL'], ['quill', 'MHQ'], ['pachelbel', 'LLA']]) {
@@ -282,7 +282,7 @@ test.describe('§AUDIT-03m — legacy node codes in doc prose', () => {
     // The engine can: the lute handover is keyed to the NPC, and `birkaNpcs` says where
     // he stands. Annotating `SH` to a guessed node is exactly the laundering §AUDIT-03m-FU
     // found four times in the Homecoming table.
-    const html = fs.readFileSync(path.join(ROOT, 'roll2hit-v3.html'), 'utf8');
+    const html = fs.readFileSync(path.join(ROOT, 'index.html'), 'utf8');
     expect(html, "the lute is handed over from Pachelbel's card, not at a node")
       .toMatch(/key === 'pachelbel'[\s\S]{0,200}Quill's Lute/);
     expect(html.match(/const birkaNpcs = \{[^}]*\}/)[0]).toMatch(/LLA:\['?pachelbel/);

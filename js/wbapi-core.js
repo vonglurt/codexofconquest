@@ -2,7 +2,7 @@
 'use strict';
 // wbapi-core.js — Roll2Hit World Builder data layer for Node.js
 // Mirrors the parsing logic in worldbuilder.html.
-// Usage: const WBAPI = require('./wbapi-core'); WBAPI.load('./roll2hit-v3.html');
+// Usage: const WBAPI = require('./wbapi-core'); WBAPI.load('./index.html');
 
 const fs   = require('fs');
 const path = require('path');
@@ -22,7 +22,7 @@ function extrSection(src, name) {
 //
 // A WORLDBUILDER section's object closes BEFORE any nested section begins, and
 // MONSTER_POOL is the one live nest: its END anchor sits *after* MONSTER_DROPS:END
-// in roll2hit-v3.html, so the obvious "last `};` before our END anchor" finds the
+// in index.html, so the obvious "last `};` before our END anchor" finds the
 // TROPHY-DROPS map's brace. That is exactly where every `post monster` entry landed
 // for as long as the route existed (WBAPI Hazard #2) — the entry was written to a
 // real section, just the wrong one, which is why it never threw. Stop the search at
@@ -1640,7 +1640,7 @@ const WBAPI = {
   },
 
   getStampedName(base) {
-    base = base || path.basename(this._srcPath||'roll2hit-v3.html', '.html');
+    base = base || path.basename(this._srcPath||'index.html', '.html');
     // Strip any cascaded timestamps to prevent runaway filename growth
     base = base.replace(/(-\d{8}-\d{6})+$/, '');
     const d = new Date();

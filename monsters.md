@@ -2,7 +2,7 @@
 
 # roll2hit.com — Monster Reference
 
-**Total: 398 monsters** across 5 tiers, 8 source pools. All entries implemented in `MONSTER_POOL` in `roll2hit-v3.html`. *(Count re-verified 2026-07-30 against a live `wbapi-core` parse: 398 pool entries, 398 drops.)*
+**Total: 398 monsters** across 5 tiers, 8 source pools. All entries implemented in `MONSTER_POOL` in `index.html`. *(Count re-verified 2026-07-30 against a live `wbapi-core` parse: 398 pool entries, 398 drops.)*
 
 ## Authoring a monster (§DX-01c, 2026-07-30)
 

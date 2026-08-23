@@ -15,13 +15,13 @@ const { test, expect } = require('@playwright/test');
 
 test.describe('§MESH-01f co-presence buffs', () => {
   test('_partyHitBonus: +1 per ally, hard cap at +2, floors at 0', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => [0, 1, 2, 3, 5, -1].map(_partyHitBonus));
     expect(r).toEqual([0, 1, 2, 2, 2, 0]);
   });
 
   test('_partyLootMult: +10% per ally, cap +20%', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => [0, 1, 2, 3, 9].map(_partyLootMult));
     // 0→1.0, 1→1.1, 2→1.2, 3+→1.2 (rides the +2 hit-bonus cap)
     expect(r[0]).toBeCloseTo(1.0, 10);
@@ -32,7 +32,7 @@ test.describe('§MESH-01f co-presence buffs', () => {
   });
 
   test('_mpAllyCount reads MP.players only when connected', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const out = {};
       // Off: a stale players array must never count.
@@ -53,7 +53,7 @@ test.describe('§MESH-01f co-presence buffs', () => {
   });
 
   test('_partyEncounterRate halves the base rate only with co-present allies', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const out = {};
       MP.on = false; MP.players = [];
@@ -71,7 +71,7 @@ test.describe('§MESH-01f co-presence buffs', () => {
   });
 
   test('battle-start snapshot: _storyRollInit captures the ally count into S, resets when off', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const out = {};
       // Two allies co-present at battle start → snapshot into transient S.
@@ -93,7 +93,7 @@ test.describe('§MESH-01f co-presence buffs', () => {
   });
 
   test('INVARIANT: multiplayer-off is a byte-for-byte no-op across every buff', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       MP.on = false; MP.players = [{ pid: 'ghost' }];   // even with a stale roster
       return {

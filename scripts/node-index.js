@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude
 //
-// scripts/node-index.js — the LIVE node reference for roll2hit-v3.html  (§AUDIT-03l)
+// scripts/node-index.js — the LIVE node reference for index.html  (§AUDIT-03l)
 //
 // Why this exists: `maps.md`'s hand-maintained "LEGEND — Two-Letter Code Reference"
 // was the doc an author consulted to write an `activateNode` — and 81 of its 92 rows
@@ -29,7 +29,7 @@ const fs = require('fs');
 const path = require('path');
 
 const ROOT = path.resolve(__dirname, '..');
-const HTML = path.join(ROOT, 'roll2hit-v3.html');
+const HTML = path.join(ROOT, 'index.html');
 const MAPS = path.join(ROOT, 'maps.md');
 const OUT  = path.join(ROOT, 'docs', 'maps', 'node-index.md');
 const WBAPI = require(path.join(ROOT, 'js', 'wbapi-core.js'));
@@ -101,7 +101,7 @@ lines.push('<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 paul@roll2h
 lines.push('<!-- GENERATED FILE — do not hand-edit. Regenerate with: npm run nodes  (scripts/node-index.js, §AUDIT-03l) -->');
 lines.push('# NODE INDEX — the live `NODE_MAP`');
 lines.push('');
-lines.push('> **Generated from `roll2hit-v3.html` by `npm run nodes`.** This is the authoritative answer to');
+lines.push('> **Generated from `index.html` by `npm run nodes`.** This is the authoritative answer to');
 lines.push('> *"what is this node\'s code?"* — it is parsed from the same `wbapi-core` extractor the `:1367`');
 lines.push('> server and every `scripts/check-*.js` use, so it cannot drift from the game. **Never take a node');
 lines.push('> code from a hand-maintained table** (that is how `710bb75` put `activateNode:"SF"` on eight');

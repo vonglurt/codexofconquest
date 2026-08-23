@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude
 /* §ARCH-01 Wave 2 — bulk legacy→UQF skill_check migrator.
  *
- * Surgically rewrites the `quest_*: { ... }` literals in roll2hit-v3.html for a
+ * Surgically rewrites the `quest_*: { ... }` literals in index.html for a
  * given allowlist of quest ids (by explicit ids or --prefix). DETERMINISTIC and
  * SAFE-BY-CONSTRUCTION: it never re-serializes narrative strings — it only
  *   (a) deletes the scalar legacy check fields (checkStat/checkSkill/checkLabel/
@@ -32,7 +32,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const FILE = path.join(__dirname, '..', 'roll2hit-v3.html');
+const FILE = path.join(__dirname, '..', 'index.html');
 
 // ── arg parsing ──────────────────────────────────────────────────────────
 const argv = process.argv.slice(2);

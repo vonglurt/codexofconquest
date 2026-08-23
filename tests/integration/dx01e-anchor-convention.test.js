@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude
 // §DX-01e — a doc anchor names a SYMBOL; the line number is a refreshable hint.
 //
-// The defect: the docs pointed into roll2hit-v3.html with bare line numbers, and every
+// The defect: the docs pointed into index.html with bare line numbers, and every
 // HTML edit shifted them with nothing to notice. Measured when this row opened: of 14
 // sampled anchors NINE pointed at unrelated code, and all 10 in CONTRIBUTING.md were
 // stale (`21556` for BIT_CONTRACTS had drifted 283 lines; `27685` for the client
@@ -25,7 +25,7 @@ const { spawnSync } = require('child_process');
 
 const ROOT = path.resolve(__dirname, '..', '..');
 const SCRIPT = path.join(ROOT, 'scripts', 'resolve-anchors.js');
-const GAME = path.join(ROOT, 'roll2hit-v3.html');
+const GAME = path.join(ROOT, 'index.html');
 
 const ANCHOR_RE = /`([^`\n]{1,80}?)@(\d{2,6})`/g;
 // The legacy form both rows retire: a bare backticked 4–5 digit line number.

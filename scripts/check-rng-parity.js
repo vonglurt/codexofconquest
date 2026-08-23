@@ -3,7 +3,7 @@
 // §VM-01-B — server↔client seeded-PRNG PARITY guard (CI-gated).
 //
 // The client rolls encounters / skill checks / loot from a seeded mulberry32
-// stream (_seededNext, roll2hit-v3.html) so a save fully determines future rolls
+// stream (_seededNext, index.html) so a save fully determines future rolls
 // and a single roll is server-verifiable. The server rolls the same encounter
 // from seededNext (js/wbapi-server.js). Two mulberry32s in two files silently
 // drift the day someone "tidies" one of them — a divergence no gameplay test
@@ -26,7 +26,7 @@ const fs = require('fs');
 const path = require('path');
 
 const ROOT = path.resolve(__dirname, '..');
-const GAME = fs.readFileSync(path.join(ROOT, 'roll2hit-v3.html'), 'utf8');
+const GAME = fs.readFileSync(path.join(ROOT, 'index.html'), 'utf8');
 const SERVER = fs.readFileSync(path.join(ROOT, 'js', 'wbapi-server.js'), 'utf8');
 
 const fails = [];

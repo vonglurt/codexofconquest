@@ -12,7 +12,7 @@
 
 ## EPIC BATTLEGROUNDS — Quest-Giver Dialogue
 
-> Source: `EB_NPC_DIALOGUE` in `roll2hit-v3.html`. Each entry has five fields indexed by **Q-code** (`Q{nodeNum}.{field}`): `.W` wound · `.O` opening · `.WA` warning · `.N` negotiate · `.R` return. Payment ranges: floor → ceiling (negotiation raises opening toward ceiling via CHA check DC17). Special items are inventory rewards beyond gold.
+> Source: `EB_NPC_DIALOGUE` in `index.html`. Each entry has five fields indexed by **Q-code** (`Q{nodeNum}.{field}`): `.W` wound · `.O` opening · `.WA` warning · `.N` negotiate · `.R` return. Payment ranges: floor → ceiling (negotiation raises opening toward ceiling via CHA check DC17). Special items are inventory rewards beyond gold.
 >
 > **Dual-role note:** Q59 (Draketide), Q65 (Izador), and Q71 (Mordus) are also Epic NPCs — see their profiles earlier in this document. Their EB dialogue gives a second context for the same character. Both contexts must remain consistent.
 

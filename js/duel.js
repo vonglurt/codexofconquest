@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude
 'use strict';
 // duel.js — §MESH-01j unified duel-resolution kernel: the single source of
-// "who won this duel" shared by the SP client (inlined into roll2hit-v3.html)
+// "who won this duel" shared by the SP client (inlined into index.html)
 // and the WBAPI server (require('./duel')). PURE: no DOM, no network, no
 // Math.random — every d20 comes from a mulberry32 stream seeded by the
 // commit-reveal duelSeed, so client, server, and any third-party replayer
@@ -10,7 +10,7 @@
 // inputs" (lab-report-mesh-multiuser.md §6.3).
 //
 // The region between the DUEL:CORE sentinels is inlined BYTE-IDENTICALLY into
-// roll2hit-v3.html; scripts/check-duel-parity.js asserts the two copies match.
+// index.html; scripts/check-duel-parity.js asserts the two copies match.
 // Do not edit one copy without the other.
 //
 // statBlock (each party's committed combat state — bounds-checked at reveal):

@@ -9,7 +9,7 @@ const ALLOWED = ['side', 'skill_check', 'craft', 'combat', 'hunt', 'delivery', '
 
 test.describe('§BOARD-01 — The Warrant\'s Board', () => {
   test('host gating + deterministic slate per (node, gameDay)', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       storyNewGame({ str: 10, dex: 8, con: 8, int: 8, wis: 8, cha: 8 });
       const inn = NODE_MAP.TLL;   // sleep:true → board host
@@ -31,7 +31,7 @@ test.describe('§BOARD-01 — The Warrant\'s Board', () => {
   });
 
   test('every posted bounty is legal: UQF, allowlisted type, real distant dest, gate-satisfied, not started', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate((allowed) => {
       storyNewGame({ str: 10, dex: 8, con: 8, int: 8, wis: 8, cha: 8 });
       const inn = NODE_MAP.TLL;
@@ -65,7 +65,7 @@ test.describe('§BOARD-01 — The Warrant\'s Board', () => {
   });
 
   test('selection is pure — mutates no S_story field', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       storyNewGame({ str: 10, dex: 8, con: 8, int: 8, wis: 8, cha: 8 });
       const before = JSON.stringify(S_story);
@@ -78,7 +78,7 @@ test.describe('§BOARD-01 — The Warrant\'s Board', () => {
   });
 
   test('accepting a bounty fires the first live `unlock`; idempotent; no double-add on arrival', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       storyNewGame({ str: 10, dex: 8, con: 8, int: 8, wis: 8, cha: 8 });
       const bounties = _boardBounties(NODE_MAP.TLL, 4);
@@ -110,7 +110,7 @@ test.describe('§BOARD-01 — The Warrant\'s Board', () => {
   });
 
   test('board renders as a section at a rest node and posts Take buttons', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       storyNewGame({ str: 10, dex: 8, con: 8, int: 8, wis: 8, cha: 8 });
       // Render the inn node directly (board host) and inspect the DOM the player sees.
@@ -134,7 +134,7 @@ test.describe('§BOARD-01 — The Warrant\'s Board', () => {
   });
 
   test('§BOARD-01-FU1 — honest reward preview: side xpAward fallback + skill_check onPass reward, never the dead q.reward', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       storyNewGame({ str: 10, dex: 8, con: 8, int: 8, wis: 8, cha: 8 });
       // quest_scar_04: type:'side', pays via the LIVE top-level xpAward (granted at
@@ -161,7 +161,7 @@ test.describe('§BOARD-01 — The Warrant\'s Board', () => {
   });
 
   test('§BOARD-01-FU2 — accepting a bounty auto-sets the waypoint to its destination (route only, no move)', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       storyNewGame({ str: 10, dex: 8, con: 8, int: 8, wis: 8, cha: 8 });
       S_story.currentCode = 'TLL';
@@ -179,7 +179,7 @@ test.describe('§BOARD-01 — The Warrant\'s Board', () => {
   });
 
   test('§BOARD-01-FU3 — distance-labeled slate: each shown card carries a leg count from the live player position', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       storyNewGame({ str: 10, dex: 8, con: 8, int: 8, wis: 8, cha: 8 });
       S_story.gameDay = 0;
@@ -204,7 +204,7 @@ test.describe('§BOARD-01 — The Warrant\'s Board', () => {
   });
 
   test('§BOARD-01-FU4 — Yael\'s onboarding signposts the Warrant\'s Board (the mechanic is discoverable)', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const line = NPC_DIALOGUES.yael.impartial[0];
       // The onboarding monologue must NAME the board and place it (any inn/rest node),
@@ -231,7 +231,7 @@ test.describe('§BOARD-01 — The Warrant\'s Board', () => {
   });
 
   test('§BOARD-01-FU5 — synthesized rumor derives from destination terrain; authored q.rumor still wins; deterministic', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       storyNewGame({ str: 10, dex: 8, con: 8, int: 8, wis: 8, cha: 8 });
       S_story.gameDay = 0;
@@ -273,7 +273,7 @@ test.describe('§BOARD-01 — The Warrant\'s Board', () => {
   // `unlock` (Inc B was the first live call site; this is the first content author). Drives
   // the REAL onComplete chains through the REAL execBits, exactly as storyCheckQuests does.
   test('§BOARD-01-FU6 — completing a bounty refers you onward (unlock in onComplete) across distant nodes', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       // The authored referral chains (source → next). Terminus quests carry NO unlock.
       const CHAINS = {
@@ -348,7 +348,7 @@ test.describe('§BOARD-01 — The Warrant\'s Board', () => {
   const CHRONICLE = ['quest_1367_a_najera', 'quest_1367_e_wycliffe', 'quest_1367_f_plague', 'quest_1367_d_hansa', 'quest_1367_c_ottoman', 'quest_1367_b_tamerlane'];
 
   test('§BOARD-01-FU6 (1367 chronicle) — completing a bounty refers you onward via onPass unlock, across distant regions', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate((CHAIN) => {
       const out = { edges: [], missing: [], terminus: null };
       for (const id of CHAIN) if (!QUEST_DB[id]) out.missing.push(id);
@@ -412,7 +412,7 @@ test.describe('§BOARD-01 — The Warrant\'s Board', () => {
   // Now onPass narratives are collected and passed as storyRender's prefix; this drives the
   // REAL resolve path (_rollCeremonia → _resolveQuestUQF) with a forced pass and reads the DOM.
   test('§BOARD-01-FU6 (1367 chronicle) — onPass referral narrative survives storyRender into #story-move-msg', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       storyNewGame({ str: 10, dex: 8, con: 8, int: 8, wis: 8, cha: 8 });
       const src = 'quest_1367_a_najera', dst = 'quest_1367_e_wycliffe';
@@ -444,7 +444,7 @@ test.describe('§BOARD-01 — The Warrant\'s Board', () => {
   // you CHOOSE which thread to pull. Drives the REAL onComplete chain through the REAL execBits,
   // exactly as storyCheckQuests (29404) fires a completed side quest's onComplete.
   test('§BOARD-01-FU6 (branch) — one completion forks to TWO onward bounties across distinct distant nodes', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const SRC = 'quest_brynn_ledger';
       const FORKS = ['quest_wm_01', 'quest_vs_01'];
@@ -521,7 +521,7 @@ test.describe('§BOARD-01 — The Warrant\'s Board', () => {
   // who canonically "knows what the mark means". Each edge is a single-target unlock in the
   // source's onComplete; the idempotent handler (~21801) makes the two edges order-independent.
   test('§BOARD-01-FU6 (convergence) — two distant sources unlock ONE shared target; order-independent; no cycle', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const SRCS = ['quest_pachelbel_shipment', 'quest_couperin_lute'];
       const TARGET = 'quest_vs_02';
@@ -624,7 +624,7 @@ test.describe('§BOARD-01 — The Warrant\'s Board', () => {
   // full flow source → Yva → Mordus runs end-to-end. Referral flow passes THROUGH the confluence,
   // not just into a sink — the topological statement that the referral network is a general DAG.
   test('§BOARD-01-FU6 (through-flow) — source → merge → onward leaf runs end-to-end and terminates', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const SRC = 'quest_pachelbel_shipment';   // either convergence source works; use one
       const MERGE = 'quest_vs_02';               // in-degree 2 (convergence) AND out-degree 1 (here)
@@ -684,7 +684,7 @@ test.describe('§BOARD-01 — The Warrant\'s Board', () => {
   // hint canonically makes it the kelpie arm's aftermath). Drives the REAL onComplete chains through
   // the REAL execBits, exactly as storyCheckQuests (29440) fires a completed side quest's onComplete.
   test('§BOARD-01-FU6 (diamond) — one source splits to two distant paths that reconverge on a shared capstone', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const SRC = 'quest_hunt_01';                       // apex (the fork)
       const ARMS = ['sq_2', 'quest_hunt2_01'];           // the two divergent paths (@KIR, @WRO)
@@ -796,7 +796,7 @@ test.describe('§BOARD-01 — The Warrant\'s Board', () => {
   // board's QUALITY (slate size + a reward-ceiling for premium jobs), never a step.
   // Design: lab-reports/lab-report-warrant-standing.md.
   test('§BOARD-01-FU7 — _creditWarrant accrues only on tagged bounties, is idempotent, announces on rank-up', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       storyNewGame({ str: 10, dex: 8, con: 8, int: 8, wis: 8, cha: 8 });
       const out = {};
@@ -831,7 +831,7 @@ test.describe('§BOARD-01 — The Warrant\'s Board', () => {
   });
 
   test('§BOARD-01-FU7 — _acceptBounty tags Warrant work; completing it at the REAL onPass site accrues standing', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       storyNewGame({ str: 10, dex: 8, con: 8, int: 8, wis: 8, cha: 8 });
       // A board-postable skill_check bounty (chronicle head): canActivate on a fresh game,
@@ -861,7 +861,7 @@ test.describe('§BOARD-01 — The Warrant\'s Board', () => {
   });
 
   test('§BOARD-01-FU7 — standing gates slate SIZE + a reward CEILING (premium jobs), never emptying a newcomer board', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       storyNewGame({ str: 10, dex: 8, con: 8, int: 8, wis: 8, cha: 8 });
       S_story.gameDay = 0;
@@ -895,7 +895,7 @@ test.describe('§BOARD-01 — The Warrant\'s Board', () => {
   });
 
   test('§BOARD-01-FU7 — crediting standing never moves the player (gates quality, not a step)', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       storyNewGame({ str: 10, dex: 8, con: 8, int: 8, wis: 8, cha: 8 });
       S_story.currentCode = 'TLL'; S_story.playerR = 5; S_story.playerC = 9;
@@ -915,7 +915,7 @@ test.describe('§BOARD-01 — The Warrant\'s Board', () => {
   const VOID_IDS = ['quest_void_tide_21', 'quest_void_tide_35', 'quest_void_tide_42'];
 
   test('§BOARD-01-FU8 — dormant before day 21; the pin appears and escalates in-window; bypasses slate + ceiling', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate((VOID_IDS) => {
       storyNewGame({ str: 10, dex: 8, con: 8, int: 8, wis: 8, cha: 8 });
       S_story.gameDay = 0;
@@ -963,7 +963,7 @@ test.describe('§BOARD-01 — The Warrant\'s Board', () => {
   });
 
   test('§BOARD-01-FU8 — closing window / missable: each hunt is live only in its own window, and never rotates into the normal pool', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate((VOID_IDS) => {
       storyNewGame({ str: 10, dex: 8, con: 8, int: 8, wis: 8, cha: 8 });
       const inn = NODE_MAP.TLL;
@@ -998,7 +998,7 @@ test.describe('§BOARD-01 — The Warrant\'s Board', () => {
   });
 
   test('§BOARD-01-FU8 — completing a Void hunt accrues the ESCALATED standing at the real onPass site; selection stays pure', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       storyNewGame({ str: 10, dex: 8, con: 8, int: 8, wis: 8, cha: 8 });
       const inn = NODE_MAP.TLL;
@@ -1056,7 +1056,7 @@ test.describe('§BOARD-01 — The Warrant\'s Board', () => {
   // exact wording: it asserts each anchor still has a non-empty authored rumor and that
   // the render path (_boardRumorLine) prefers it verbatim over the synthesized line.
   test('§BOARD-01 Inc C — referral-network anchors carry authored rumors the board surfaces verbatim', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const ANCHORS = [
         'quest_hunt_01', 'sq_2', 'quest_hunt2_01', 'quest_df_01',                          // diamond (closed crossings)

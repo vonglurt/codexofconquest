@@ -1,6 +1,6 @@
 <!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude -->
 
-# Migrating `roll2hit-v3.html` Onto the Cell-Grid Architecture
+# Migrating `index.html` Onto the Cell-Grid Architecture
 ### A practical companion to `ieee-paper-cell-grid-navigation.md`
 
 **Paul Richeson · roll2hit.com**
@@ -10,7 +10,7 @@
 
 ## 0. Scope of this document
 
-The IEEE paper (`ieee-paper-cell-grid-navigation.md`) describes the formal model: a sparse `(r, c)` cell grid, a `CELL_GRID` reverse lookup, BFS pathfinding, and one-step waypoint navigation. This document explains how that model lands inside the single-file game `roll2hit-v3.html` — what data shape replaces what, what functions go away, and what order to do the work in so the game stays playable through every commit.
+The IEEE paper (`ieee-paper-cell-grid-navigation.md`) describes the formal model: a sparse `(r, c)` cell grid, a `CELL_GRID` reverse lookup, BFS pathfinding, and one-step waypoint navigation. This document explains how that model lands inside the single-file game `index.html` — what data shape replaces what, what functions go away, and what order to do the work in so the game stays playable through every commit.
 
 Two migrations happen in lockstep:
 
@@ -21,7 +21,7 @@ The runtime side of this migration is already in flight (§CELL-01 through §CEL
 
 ---
 
-## 1. Why this is the new shape of `roll2hit-v3.html`
+## 1. Why this is the new shape of `index.html`
 
 The old shape — `NODE_MAP[code].N = "OTHER_CODE"` — is the same data shape CircleMUD used in 1993 [CircleMUD]. It works, but every named location carries up to six edge pointers, and every pointer has to stay in sync with the room it points at. Move a room, and every pointer to it must be rewritten. Forget one, and the next BFS produces a dead link. Zigler's MUD cookbook calls this out as one of the main maintenance taxes of the DikuMUD/Circle lineage [Zigler].
 
@@ -29,7 +29,7 @@ Patel's pathfinding guides at Red Blob Games [RedBlob] and the Stanford Game Pro
 
 The pathfinding comparison literature backs this up. On uniform-cost 4-connected grids, BFS is optimal and trivial to implement; A* with Manhattan heuristic improves average-case cell expansion on large grids but is unnecessary at the scales we operate on [DIVA, ResearchGate]. Talbot's object-oriented Ruby MUD writeup [Talbot] reaches the same conclusion from the opposite direction: when he tries to express MUD topology cleanly in OO Ruby, he ends up reinventing a coordinate system to avoid the edge-bookkeeping problem.
 
-So the new shape of `roll2hit-v3.html` is:
+So the new shape of `index.html` is:
 
 > **`NODE_MAP` holds *what* a location is. `NODE_COORDS` holds *where* it is. `CELL_GRID` is the inverse index used for adjacency. Nothing else stores connectivity.**
 
@@ -116,7 +116,7 @@ function storyMoveNorth() {
 }
 ```
 
-New movement reads from `CELL_GRID` via `cellMove(dir)` (§CELL-03 — currently at `roll2hit-v3.html:27336`):
+New movement reads from `CELL_GRID` via `cellMove(dir)` (§CELL-03 — currently at `index.html:27336`):
 
 ```javascript
 function cellMove(dir) {
@@ -152,7 +152,7 @@ Every other navigation entry point — keyboard arrows, the d-pad, waypoint auto
 
 ### 2.4 BFS and waypoint
 
-BFS runs on the grid, not the node graph (§CELL-09 — `roll2hit-v3.html:34447`):
+BFS runs on the grid, not the node graph (§CELL-09 — `index.html:34447`):
 
 ```javascript
 function _bfsGridPath(fromCode, toCode) {
@@ -228,7 +228,7 @@ These are the dead helpers that read or wrote explicit exit fields. They either 
 > A grep that confirms no code still reads exits:
 >
 > ```sh
-> grep -nE "\.[NSEW]\b" roll2hit-v3.html | grep -v "//\|cellMove\|DELTAS"
+> grep -nE "\.[NSEW]\b" index.html | grep -v "//\|cellMove\|DELTAS"
 > ```
 >
 > This should print nothing once the migration is finished. (As of this writing, the *runtime* side already passes this check; the *data* side still has ~1,693 dead exit lines inside `WORLDBUILDER:NODE_MAP`.)
@@ -242,7 +242,7 @@ Tasks are ordered so that the game is playable and tests pass after each batch.
 ### Phase A — data audit (read-only)
 
 - [ ] **A1.** Snapshot a known-good run of the BFS reachability audit (`./api.sh fix-bidirectional` then GET `/api/graph/reachability`) and store the expected reachable count.
-- [ ] **A2.** Run `grep -cE "^\s*[NSEW]:" roll2hit-v3.html` and record the dead-line count. (Currently ~1,693.)
+- [ ] **A2.** Run `grep -cE "^\s*[NSEW]:" index.html` and record the dead-line count. (Currently ~1,693.)
 - [ ] **A3.** Confirm zero code paths read `node.N/S/E/W`. The grep in §3 should already print nothing — if it doesn't, finish §B before touching data.
 - [ ] **A4.** Confirm every named node has an entry in `NODE_COORDS`. `node ./scripts/audit-coords.js` (or one-liner `Object.keys(NODE_MAP).filter(c => !NODE_COORDS[c])`).
 
@@ -263,7 +263,7 @@ The strip pass is built into the API as §CELL-14. It runs through the worldbuil
   ./api.sh migrate strip-exit-fields
   # → 404 nodes / 2095 fields  (N:514 S:519 E:536 W:524 portal:1 spire:1)
   ```
-- [ ] **C2.** Apply the strip. `saveAndRestart` persists the new source and reloads in-process. *(§DX-02k, 2026-08-03: it used to write a dated snapshot and copy that over `roll2hit-v3.html`, leaving the ~5.4 MB snapshot behind on every write; it now writes a temp beside the game file and renames it into place.)*
+- [ ] **C2.** Apply the strip. `saveAndRestart` persists the new source and reloads in-process. *(§DX-02k, 2026-08-03: it used to write a dated snapshot and copy that over `index.html`, leaving the ~5.4 MB snapshot behind on every write; it now writes a temp beside the game file and renames it into place.)*
   ```bash
   ./api.sh migrate strip-exit-fields --execute
   ```
@@ -321,7 +321,7 @@ Three things.
 
 The order matters. **Do not strip exit data before retiring readers.** If any code still reads `node.N`, stripping the data turns it into `undefined` reads, which the d-pad will silently absorb (disabling N/S/E/W buttons) and which BFS will turn into "no path" results. The result looks like a game that mostly works but mysteriously cannot navigate certain areas. Phase B before Phase C, always.
 
-The strip-pass itself is reversible — `git stash` covers it. The risky step is C5 (purging J-stubs), which deletes entire nodes from `NODE_MAP`. Before C5, verify by `grep -E "[\"']J\d+[\"']" roll2hit-v3.html` that no remaining code or quest spec references those junction codes by string.
+The strip-pass itself is reversible — `git stash` covers it. The risky step is C5 (purging J-stubs), which deletes entire nodes from `NODE_MAP`. Before C5, verify by `grep -E "[\"']J\d+[\"']" index.html` that no remaining code or quest spec references those junction codes by string.
 
 ### 5.4 Per-feature impact
 
@@ -341,7 +341,7 @@ The strip-pass itself is reversible — `git stash` covers it. The risky step is
 
 ### 6.1 Inputs and outputs
 
-**Input:** `roll2hit-v3.html` containing a `WORLDBUILDER:NODE_MAP` block where each entry has up to four exit pointer fields and may have `portal` / `spire` long-jump fields.
+**Input:** `index.html` containing a `WORLDBUILDER:NODE_MAP` block where each entry has up to four exit pointer fields and may have `portal` / `spire` long-jump fields.
 
 **Output:** Same file, same block, with all exit pointer fields removed. Every entry is reduced to the fields actually consumed by `storyRender` and the game systems: `num`, `code`, `name`, `label`, `act`, `text`, `npc`, `loot`, `battle`, `sleep`, plus any per-node feature flags (`sleepCost`, `vendorId`, etc.).
 
@@ -354,7 +354,7 @@ The script `scripts/strip-exit-fields.js` looks roughly like this:
 ```javascript
 import fs from 'fs';
 
-const path = 'roll2hit-v3.html';
+const path = 'index.html';
 const src = fs.readFileSync(path, 'utf8');
 
 const START = '// ◆◆◆ WORLDBUILDER:NODE_MAP:START ◆◆◆';
@@ -428,7 +428,7 @@ Once Phases A through F land, every fact about the world map has exactly one hom
 - **What is at (r, c)** → `CELL_GRID["r,c"]`.
 - **What connects to what** → derived, never stored.
 
-The d-pad, the keyboard, the waypoint button, the map click handler, the quest activator, and the multi-player session move endpoint all funnel into one function — `cellMove(dir)` — which does one lookup in `CELL_GRID` and either renders a named node or enters an open cell. That convergence is the new shape of `roll2hit-v3.html`: one navigation primitive, one source of truth for adjacency, and a class of bugs that can no longer be written.
+The d-pad, the keyboard, the waypoint button, the map click handler, the quest activator, and the multi-player session move endpoint all funnel into one function — `cellMove(dir)` — which does one lookup in `CELL_GRID` and either renders a named node or enters an open cell. That convergence is the new shape of `index.html`: one navigation primitive, one source of truth for adjacency, and a class of bugs that can no longer be written.
 
 ---
 

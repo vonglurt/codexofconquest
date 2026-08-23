@@ -21,7 +21,7 @@ const { test, expect } = require('@playwright/test');
 test.describe('§MESH-01h sentry bots (client)', () => {
 
   test('_sentryHere: true only when a sentry bot is co-present and connected', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const out = {};
       // Off: a stale roster with a sentry must never register.
@@ -42,7 +42,7 @@ test.describe('§MESH-01h sentry bots (client)', () => {
   });
 
   test('_mpAllyCount excludes sentries (a garrison is not a party ally)', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       MP.on = true;
       MP.players = [{ pid: 'a', kind: 'player' }, { pid: 'b' }, { pid: 's', kind: 'sentry' }];
@@ -56,7 +56,7 @@ test.describe('§MESH-01h sentry bots (client)', () => {
   });
 
   test('_partyEncounterRate: sentry suppresses to 0; else ally-halved; else base', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const out = {};
       MP.on = false; MP.players = [];
@@ -74,7 +74,7 @@ test.describe('§MESH-01h sentry bots (client)', () => {
   });
 
   test('_sentryStrike: no-op with no sentry / dead enemy; damages a live enemy on a forced hit', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const out = {};
       S.round = 1;
@@ -106,7 +106,7 @@ test.describe('§MESH-01h sentry bots (client)', () => {
   });
 
   test('_sentryDeployCharge: pays the upfront cost, stamps the record; refuses dup + when broke', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const out = {};
       S_story.sentries = []; S_story.gold = 300;
@@ -137,7 +137,7 @@ test.describe('§MESH-01h sentry bots (client)', () => {
   });
 
   test('_sentryDayTick: charges upkeep when affordable; drops the newest posts when broke; never negative', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const out = {};
       // Two posts at 20g/day each. Affordable tick pays 40.
@@ -169,7 +169,7 @@ test.describe('§MESH-01h sentry bots (client)', () => {
   });
 
   test('INVARIANT: a disconnected client sees no sentries — suppression + assist are inert', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       MP.on = false; MP.players = [{ pid: 'ghost', kind: 'sentry' }];   // stale roster
       S.enemy = { ac: 1 }; S.opp = { hp: 100, maxHp: 100, dmgMod: 0 }; S.round = 1;

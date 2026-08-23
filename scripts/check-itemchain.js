@@ -3,7 +3,7 @@
 'use strict';
 // §EDITOR-01-D — declarative itemChain guard.
 // (1) Extracts _flagToLabel/_grantMissionBit/_takeMissionBit/_applyItemChain
-//     from roll2hit-v3.html and exercises grant/take/grantBit/takeBit semantics
+//     from index.html and exercises grant/take/grantBit/takeBit semantics
 //     (defaults, `once` idempotency, take-first vs take-all, flag set/clear,
 //     unknown-action no-throw) in a sandbox with a mock S_story. (2) Verifies an
 //     itemChain object array round-trips through the ph3 source-patch path
@@ -14,7 +14,7 @@ const fs = require('fs');
 const path = require('path');
 const vm = require('vm');
 const WBAPI = require(path.join(__dirname, '..', 'js', 'wbapi-core'));
-const GAME = path.join(__dirname, '..', 'roll2hit-v3.html');
+const GAME = path.join(__dirname, '..', 'index.html');
 
 let pass = 0, fail = 0;
 const ok = (c, m) => { if (c) { pass++; } else { fail++; console.log('  ✗ FAIL:', m); } };

@@ -5,7 +5,7 @@ const { defineConfig, devices } = require('@playwright/test');
 module.exports = defineConfig({
   testDir: './tests/integration',
 
-  // Serve the project root so roll2hit-v3.html is at http://localhost:7654/roll2hit-v3.html
+  // Serve the project root so index.html is at http://localhost:7654/index.html
   // Port 7654 avoids collision with the WBAPI server on 1367.
   webServer: {
     command: 'npx --yes serve . --listen tcp://localhost:7654',

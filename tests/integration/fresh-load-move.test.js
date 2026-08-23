@@ -7,7 +7,7 @@ const { test, expect } = require('@playwright/test');
 
 test('fresh load: S_story carries the full default shape before any entry flow', async ({ page }) => {
   await page.addInitScript(() => localStorage.clear());
-  await page.goto('/roll2hit-v3.html');
+  await page.goto('/index.html');
   await page.locator('#story-panel').waitFor({ state: 'visible' });
   // These fields lived only in _S_DEFAULTS(), not the seed literal — assert they exist.
   const shape = await page.evaluate(() => ({
@@ -27,7 +27,7 @@ test('fresh load: moving via cellMove records the cell and throws nothing', asyn
   const errors = [];
   page.on('pageerror', e => errors.push(e.message));
   await page.addInitScript(() => localStorage.clear());
-  await page.goto('/roll2hit-v3.html');
+  await page.goto('/index.html');
   await page.locator('#story-panel').waitFor({ state: 'visible' });
 
   // Exercise the exact crash path from the bug report (cellMove → visitedCells write).

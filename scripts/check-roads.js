@@ -18,7 +18,7 @@ const fs = require('fs');
 const path = require('path');
 
 const ROOT = path.resolve(__dirname, '..');
-const GAME = fs.readFileSync(path.join(ROOT, 'roll2hit-v3.html'), 'utf8');
+const GAME = fs.readFileSync(path.join(ROOT, 'index.html'), 'utf8');
 const ROWS = 90, COLS = 360;
 const fails = [];
 

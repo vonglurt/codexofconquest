@@ -14,7 +14,7 @@ test.describe('§NPC-01-A — lean profiles render without the staticProfile.gre
   test('every sampled lean profile builds a card and shows its name; rich profiles keep their greeting', async ({ page }) => {
     const pageErrors = [];
     page.on('pageerror', e => pageErrors.push(String(e)));
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
 
     const r = await page.evaluate(() => {
       const out = { threw: [], nameMissing: [] };
@@ -55,7 +55,7 @@ test.describe('§NPC-01-B — render map derived from BIRKA_NPC_PROFILES.node', 
   test('derivation inverts profiles, covers many real nodes (0 dead), is wired into storyRender, and preserves the curated literal', async ({ page }) => {
     const pageErrors = [];
     page.on('pageerror', e => pageErrors.push(String(e)));
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
 
     const r = await page.evaluate(() => {
       const m = _deriveNpcRenderMap();
@@ -129,7 +129,7 @@ test.describe('§NPC-01-C — meta.enemy footer at Friendly (folds in §POT-C2)'
   test('enemy reveals at Friendly, worldTruth stays Dear-Friend-only, and enemy sits above worldTruth', async ({ page }) => {
     const pageErrors = [];
     page.on('pageerror', e => pageErrors.push(String(e)));
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
 
     const r = await page.evaluate(() => {
       const key = 'yael';
@@ -179,7 +179,7 @@ test.describe('§NPC-01-C — meta.enemy footer at Friendly (folds in §POT-C2)'
   test('data-driven: every sampled Friendly NPC with meta.enemy renders the ⚔ footer (not a yael special case)', async ({ page }) => {
     const pageErrors = [];
     page.on('pageerror', e => pageErrors.push(String(e)));
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
 
     const r = await page.evaluate(() => {
       // NPCs that have BOTH a profile (else _renderNpcCard early-returns) and an authored enemy line.
@@ -213,7 +213,7 @@ test.describe('§NPC-01-SF2 — profile-less, dialogue-only NPCs render from dlg
   test('every dialogue-only NPC (no profile) renders name+occupation, and the ⚔ footer still fires at Friendly', async ({ page }) => {
     const pageErrors = [];
     page.on('pageerror', e => pageErrors.push(String(e)));
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
 
     const r = await page.evaluate(() => {
       // The premise: dialogue entries with meta.name but NO BIRKA_NPC_PROFILES entry.
@@ -392,7 +392,7 @@ test.describe('§NPC-01-D — talk verb: reach Friendly (⚔) by talking, Dear F
   test('button shows only at Impartial; N distinct-day talks reach Friendly and light the ⚔ footer; never exceeds fav 1', async ({ page }) => {
     const pageErrors = [];
     page.on('pageerror', e => pageErrors.push(String(e)));
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
 
     const r = await page.evaluate(() => {
       // A renderable NPC that has BOTH an enemy (⚔, Friendly) and a worldTruth (✦, Dear Friend) line,
@@ -545,7 +545,7 @@ test.describe('§NPC-01-SF4 — dead codes CQ/SQ/GC remapped to CDG/NUE/TRD (car
   });
 
   test('source guard: no dead CQ/SQ/GC keys remain in the birkaNpcs literal', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const src = storyRender.toString();
       const litDecl = src.slice(src.indexOf('const birkaNpcs ='), src.indexOf('_npcNodeKey'));

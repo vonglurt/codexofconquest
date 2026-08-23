@@ -34,14 +34,14 @@ cell-based MUD coordinate grid. This is the first increment: add CELL_GRID and
 IMPASSABLE_CELLS as computed constants so the new movement engine has what it needs.
 
 Working directory: /Users/user/code/roll2hit.com
-Primary file: roll2hit-v3.html (~143,000 lines)
+Primary file: index.html (~143,000 lines)
 Full design spec: plan-archive.md §CELL-02
 
 The game's NODE_MAP already stores r and c on every node. NODE_COORDS is a parallel 
 object that also holds {r,c} per node code. We need a reverse lookup: given a grid 
 cell (r,c), what node is there?
 
-TASK: Add two new constants to roll2hit-v3.html, populated at DOMContentLoaded or 
+TASK: Add two new constants to index.html, populated at DOMContentLoaded or 
 immediately after NODE_MAP is defined (search for the end of the NODE_MAP object):
 
 1. CELL_GRID — Object, keyed "r,c" → node code string (or undefined if empty).
@@ -95,7 +95,7 @@ We are converting roll2hit.com to a MUD-style cell-based navigation system.
 This increment replaces storyMove with cellMove.
 
 Working directory: /Users/user/code/roll2hit.com
-Primary file: roll2hit-v3.html (~143,000 lines)
+Primary file: index.html (~143,000 lines)
 Full design spec: plan-archive.md §CELL-03
 
 CONTEXT — current system:
@@ -198,7 +198,7 @@ function. When the player moves to a cell with no named node, _enterEmptyCell(r,
 is called (currently a stub). This increment implements that function fully.
 
 Working directory: /Users/user/code/roll2hit.com
-Primary file: roll2hit-v3.html (~143,000 lines)
+Primary file: index.html (~143,000 lines)
 Full design spec: plan-archive.md §CELL-04
 
 TASK:
@@ -299,7 +299,7 @@ After making changes, commit:
 ```
 We are converting roll2hit.com to a MUD-style cell-based navigation system.
 §CELL-02, §CELL-03, §CELL-04 are complete and committed. Specifically:
-- CELL_GRID ("r,c" → node code) and IMPASSABLE_CELLS exist in roll2hit-v3.html
+- CELL_GRID ("r,c" → node code) and IMPASSABLE_CELLS exist in index.html
 - cellMove(dir) is the active movement handler — reads CELL_GRID, not NODE_MAP edges
 - _enterEmptyCell(r, c) handles open terrain with terrain inference and encounters
 - storyMove_LEGACY(dir) is retained but not wired to any UI element
@@ -308,7 +308,7 @@ The N/E/S/W direction fields in NODE_MAP are now dead navigation data.
 cellMove never reads them. This increment strips them from the data.
 
 Working directory: /Users/user/code/roll2hit.com
-Primary file: roll2hit-v3.html (~143,000+ lines)
+Primary file: index.html (~143,000+ lines)
 Server: wbapi-server.js (WBAPI runs on port 1367)
 Full design spec: plan-archive.md §CELL-01
 
@@ -319,7 +319,7 @@ Keep: portal (used by storyPortal() — a distinct mechanic, not a nav edge)
 Keep: all other content fields (code, r, c, name, label, act, text, npc, battle,
       loot, sleep, sleepCost, junction, isEpicBattleground, isFishingLake, bossKey)
 
-Remaining readers of node[dir] in roll2hit-v3.html (do NOT modify these —
+Remaining readers of node[dir] in index.html (do NOT modify these —
 they are either legacy-guarded or deferred to later §CELL sections):
 
   storyMove_LEGACY (~line 143192): reads node[dir] — retained until §CELL-05,
@@ -406,7 +406,7 @@ this session — they are §CELL-06 scope):
    Run this grep and confirm every line is either in storyMove_LEGACY, _mapAddExits,
    _bfsPath, or _buildNodeExits (all deferred):
    grep -n "node\[dir\]\|node\[d\]\|\bnode\.N\b\|\bnode\.S\b\|\bnode\.E\b\|\bnode\.W\b" \
-     roll2hit-v3.html | grep -v "//\|storyMove_LEGACY\|_mapAddExits\|_bfsPath\|_buildNodeExits"
+     index.html | grep -v "//\|storyMove_LEGACY\|_mapAddExits\|_bfsPath\|_buildNodeExits"
 
 8. Update docs-node-network.md Section 3 (Connection Object).
    The schema block currently shows N/S/E/W fields with the note
@@ -443,7 +443,7 @@ N/E/S/W fields are stripped, empty cells are traversable.
 This increment removes junction nodes — the auto-generated J##### routing stubs.
 
 Working directory: /Users/user/code/roll2hit.com
-Primary file: roll2hit-v3.html (~143,000 lines)
+Primary file: index.html (~143,000 lines)
 Full design spec: plan-archive.md §CELL-05
 
 CONTEXT:
@@ -458,8 +458,8 @@ through it without any special logic.
 TASK:
 
 1. Survey what exists:
-   grep -c 'junction:true' roll2hit-v3.html
-   grep 'junction:true' roll2hit-v3.html | grep -v 'label.*Elbow\|label.*Jct\|label.*Highway' | head -20
+   grep -c 'junction:true' index.html
+   grep 'junction:true' index.html | grep -v 'label.*Elbow\|label.*Jct\|label.*Highway' | head -20
    This will reveal any junctions with real narrative text (these may need promotion).
 
 2. Identify junctions with real content (text length > 60 chars that isn't the 
@@ -483,7 +483,7 @@ TASK:
      -H 'Content-Type: application/json' -d '{"dryRun":true}'
    Review count. Then run with dryRun:false.
 
-5. In roll2hit-v3.html:
+5. In index.html:
    - Remove storyMove_LEGACY (the old storyMove renamed in §CELL-03)
    - Remove CORRIDOR_TERRAIN constant (line ~126546)
    - Remove buildCorridorMap() function and CORRIDOR_CELLS constant (line ~126577)
@@ -504,7 +504,7 @@ Verify:
 - Load game in browser — no corridor overlay should ever appear
 - Navigating through where junctions used to be now shows empty cell messages
 - ./api.sh audit should report 0 junction-related warnings
-- grep -c 'junction:true' roll2hit-v3.html should be 0
+- grep -c 'junction:true' index.html should be 0
 
 After making changes, commit:
 "§CELL-05: abolish junction nodes — boilerplate J-nodes deleted, corridor system removed"
@@ -521,7 +521,7 @@ The quest system still uses activateNode which is a node code — that stays. Bu
 trigger mechanism and the BFS pathfinding for quest waypoints need updating.
 
 Working directory: /Users/user/code/roll2hit.com
-Primary file: roll2hit-v3.html (~143,000 lines)
+Primary file: index.html (~143,000 lines)
 Full design spec: plan-archive.md §CELL-09
 
 CONTEXT:
@@ -541,7 +541,7 @@ However, there are two things that need updating:
 TASK:
 
 1. Find the waypoint BFS function. Search for:
-   function _buildWaypointPath or _bfsToNode or waypoint in roll2hit-v3.html
+   function _buildWaypointPath or _bfsToNode or waypoint in index.html
    Also search for "waypoint" in the minimap render function.
 
 2. Replace the edge-graph BFS with a grid BFS:
@@ -604,11 +604,11 @@ We are converting roll2hit.com to a MUD-style cell-based navigation system.
 This increment updates the minimap to show a live player cursor and fog-of-war reveal.
 
 Working directory: /Users/user/code/roll2hit.com
-Primary file: roll2hit-v3.html (~143,000 lines)
+Primary file: index.html (~143,000 lines)
 Full design spec: plan-archive.md §CELL-10
 
 CONTEXT:
-There are two minimaps in roll2hit-v3.html:
+There are two minimaps in index.html:
 - _renderMiniMap(): the small HUD minimap shown during play
 - _renderWorldMiniMap(): the full world map view (toggled by a button)
 Both currently render only named node cells, with corridor wire-glyphs in between.
@@ -716,7 +716,7 @@ TASK:
 5. Verify:
    curl http://localhost:1367/api/audit   # 0 errors expected
    # Count remaining nodes — expect ~420
-   node -e "const f=require('fs').readFileSync('roll2hit-v3.html','utf8'); \
+   node -e "const f=require('fs').readFileSync('index.html','utf8'); \
      const m=f.match(/^\s{2}[A-Z][A-Z0-9_]{0,7}:\s*\{/gm); console.log(m?.length)"
 
 After making changes, commit:
@@ -1028,7 +1028,7 @@ After making changes, commit:
 ```
 We are converting roll2hit.com to a MUD-style cell-based navigation system.
 §CELL-05b is complete (zombie stubs purged). This increment removes the corridor
-system remnants still alive in roll2hit-v3.html even though cellMove never calls them.
+system remnants still alive in index.html even though cellMove never calls them.
 
 CRITICAL FINDING: _buildNodeExits() at line 45059 still runs at every page load
 and re-populates node.N/S/E/W in memory for every node that has NODE_COORDS coords.
@@ -1037,7 +1037,7 @@ the browser's runtime NODE_MAP always has N/S/E/W present. Removing _buildNodeEx
 cleanly severs the last in-memory edge-graph artifact.
 
 Working directory: /Users/user/code/roll2hit.com
-Primary file: roll2hit-v3.html (45,495 lines as of 2026-06-14)
+Primary file: index.html (45,495 lines as of 2026-06-14)
 Full design spec: plan-archive.md §CELL-11 Part A
 
 CONFIRMED LOCATIONS TO REMOVE (all verified by grep 2026-06-14):
@@ -1112,9 +1112,9 @@ CONFIRMED LOCATIONS TO REMOVE (all verified by grep 2026-06-14):
     Line 44767: inside another array — remove the entry 'story-corridor-overlay'
 
 VERIFY AFTER EACH DELETION:
-- The game still loads in browser (open roll2hit-v3.html, no JS errors)
+- The game still loads in browser (open index.html, no JS errors)
 - N/S/E/W movement still works via cellMove
-- grep -c "storyMove_LEGACY\|CORRIDOR_CELLS\|story-corridor-overlay\|_buildNodeExits\|buildCorridorMap" roll2hit-v3.html
+- grep -c "storyMove_LEGACY\|CORRIDOR_CELLS\|story-corridor-overlay\|_buildNodeExits\|buildCorridorMap" index.html
   Should return 0.
 
 After making changes, commit:
@@ -1134,7 +1134,7 @@ Working directory: /Users/user/code/roll2hit.com
 Full design spec: plan-archive.md §CELL-11
 
 Two-Way Sync Rule (from index.md): every item in the markdown docs traces back to
-roll2hit-v3.html. Everything in the HTML has a home doc.
+index.html. Everything in the HTML has a home doc.
 
 STALE REFERENCE INVENTORY (confirmed by grep 2026-06-14):
 

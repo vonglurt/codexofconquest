@@ -25,7 +25,7 @@ async function at(page, code, overrides = {}) {
     localStorage.clear();
     localStorage.setItem('r2h_autosave', JSON.stringify(s));
   }, state);
-  await page.goto('/roll2hit-v3.html');
+  await page.goto('/index.html');
   await dismissContinue(page);
 }
 
@@ -34,7 +34,7 @@ const clickIn = (page, panelId, text) =>
 
 test.describe('§VM-01-G-FU-b — registry + source shape', () => {
   test('the four hunt hooks sit as a contiguous registry run with callable fns', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       // §VM-01-G-FU-c appended the alch/wisdom hooks after these (their stack sits below the
       // hunt region in source order), so the pin is the contiguous run, no longer the tail —
@@ -55,7 +55,7 @@ test.describe('§VM-01-G-FU-b — registry + source shape', () => {
   });
 
   test('the five hunt panels sit in NODE_PANELS: per-state entries share one DOM id with exclusive whens', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const lh = NODE_PANELS.filter(p => p.id === 'story-hunt-lh');
       const ln = NODE_PANELS.filter(p => p.id === 'story-hunt-ln');
@@ -83,7 +83,7 @@ test.describe('§VM-01-G-FU-b — registry + source shape', () => {
   });
 
   test('the six block bodies are gone from storyRender; dispatch calls sit in their place', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const src = storyRender.toString();
       return {

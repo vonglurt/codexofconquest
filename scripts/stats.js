@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude
 //
-// scripts/stats.js — live entity counts for roll2hit-v3.html  (§DX-01g)
+// scripts/stats.js — live entity counts for index.html  (§DX-01g)
 //
 // The orientation docs (prompt.md §0, index.md's doc-health badge) cite the
 // game's headline totals — nodes, monsters, quests, acts, line count, byte size.
@@ -19,7 +19,7 @@ const fs = require('fs');
 const path = require('path');
 
 const ROOT = path.resolve(__dirname, '..');
-const HTML = path.join(ROOT, 'roll2hit-v3.html');
+const HTML = path.join(ROOT, 'index.html');
 const WBAPI = require(path.join(ROOT, 'js', 'wbapi-core.js'));
 
 WBAPI.load(HTML);
@@ -58,7 +58,7 @@ if (process.argv.includes('--json')) {
 }
 
 const row = (label, val) => console.log('  ' + String(label).padEnd(24) + val);
-console.log(`\nroll2hit-v3.html — live entity counts  (${stats.engineVer})`);
+console.log(`\nindex.html — live entity counts  (${stats.engineVer})`);
 console.log('  ' + '─'.repeat(46));
 row('nodes (NODE_MAP)',        stats.nodes);
 row('monsters (MONSTER_POOL)', stats.monsters);

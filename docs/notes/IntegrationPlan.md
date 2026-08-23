@@ -1,9 +1,9 @@
 <!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude -->
-# Integration Test Plan — roll2hit-v3.html
+# Integration Test Plan — index.html
 
 ## Overview
 
-Browser-level integration tests for roll2hit-v3.html using Playwright. Tests drive a real headless Chromium instance against the live game page, injecting known state via `localStorage` and asserting on DOM visibility and JS globals. Randomness is **not mocked** — tests are written to allow it.
+Browser-level integration tests for index.html using Playwright. Tests drive a real headless Chromium instance against the live game page, injecting known state via `localStorage` and asserting on DOM visibility and JS globals. Randomness is **not mocked** — tests are written to allow it.
 
 ---
 
@@ -28,7 +28,7 @@ The game hydrates from `localStorage.getItem('r2h_autosave')` at page load, via 
 await page.addInitScript(state => {
   localStorage.setItem('r2h_autosave', JSON.stringify(state));
 }, SEED_STATE);
-await page.goto('/roll2hit-v3.html');
+await page.goto('/index.html');
 ```
 
 On load, the game finds the autosave and shows a **continue modal** (`#story-continue-modal`). Clicking `#btn-continue-load` calls `storyLoadContinue()`, which re-reads the autosave, sets `S_story.active = true`, and calls `storyRender(NODE_MAP[S_story.currentCode])` — rendering the seeded node.

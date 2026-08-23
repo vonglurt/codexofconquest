@@ -68,7 +68,7 @@ test.describe('§VM-01-G1 — NODE_PANELS renders the migrated panels', () => {
   });
 
   test('source guard: old inline blocks are gone from storyRender; NODE_PANELS holds them; BK stays inline', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const src = storyRender.toString();
       return {

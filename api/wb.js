@@ -1500,7 +1500,7 @@ const CMD = {
   //   ./api.sh migrate strip-exit-fields --fields N,S,E,W   # narrow the field set
   //
   // Strips dead direction pointers (N/S/E/W/SW/portal/spire) from every NODE_MAP
-  // entry in roll2hit-v3.html. After §CELL-01–§CELL-13 these fields are no longer
+  // entry in index.html. After §CELL-01–§CELL-13 these fields are no longer
   // read by any runtime code path — adjacency comes from CELL_GRID. The cleanup
   // is documented in data-code-migration-into-cells.md §6.
   async migrate(pos, flags) {
@@ -1578,7 +1578,7 @@ const CMD = {
       '  • Reachability — nothing to do. A contiguous-land node is already walk-routable.',
       '      ./api.sh reachability     # the authority (BFS from LHR); target 100%',
       '  • An encounter-free ROAD between two nodes — lay real road cells:',
-      '      edit ROAD_RUNS in roll2hit-v3.html, then  node scripts/build-roads.js --apply',
+      '      edit ROAD_RUNS in index.html, then  node scripts/build-roads.js --apply',
       '      verify with  npm run check:walk  (check:roads R1–R3)',
       '  • Just the route plan — re-run without --execute (the default).',
     ].join('\n'));
@@ -1767,7 +1767,7 @@ ${C.bold}═══════════════════════�
     • Retry with exponential backoff on 5xx or connection errors
     • Pipe-safe JSON — errors land on stdout so | jq and | python3 work
     • Queued requests — serialised to avoid race conditions on writes
-    • Auto-reload notification — the server watches roll2hit-v3.html;
+    • Auto-reload notification — the server watches index.html;
       you do not need POST /api/reload after an external edit
 
   If a feature is missing from api.sh, request an API refactor — do not
@@ -3042,7 +3042,7 @@ ${C.bold}═══════════════════════�
   beside the game file and renames it in (atomic; nothing left to sweep).
   You do NOT need to run save after a put/post/del.
 
-    ./api.sh save               dated backup beside roll2hit-v3.html, then
+    ./api.sh save               dated backup beside index.html, then
                                 overwrite + hot-reload  (POST /api/save)
     ./api.sh snapshots          list the dated backups + total size
     ./api.sh snapshots --sweep  delete the ones already patch-archived

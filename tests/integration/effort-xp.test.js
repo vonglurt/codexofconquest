@@ -8,7 +8,7 @@ const { test, expect } = require('@playwright/test');
 
 test.describe('§XP-01 — universal effort XP (misses + failed checks)', () => {
   test('missed attack grants fractional effort XP; per-encounter cap holds', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       storyNewGame({ str:10, dex:8, con:8, int:8, wis:8, cha:8 });
       _storyRollInit();                                   // resets S.effortXpEarned = 0
@@ -41,7 +41,7 @@ test.describe('§XP-01 — universal effort XP (misses + failed checks)', () => 
   });
 
   test('misses bank XP silently — no mid-combat level-up modal', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       storyNewGame({ str:10, dex:8, con:8, int:8, wis:8, cha:8 });
       _storyRollInit();
@@ -66,7 +66,7 @@ test.describe('§XP-01 — universal effort XP (misses + failed checks)', () => 
   });
 
   test('failed skill-check grants 25% of reward XP, once per quest', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       storyNewGame({ str:8, dex:8, con:8, int:8, wis:8, cha:8 });
       // §DX-02f: force the FAIL by raising the DC out of reach, not by stubbing

@@ -2,7 +2,7 @@
 
 # roll2hit.com — Node Network Technical Reference
 
-**File:** `roll2hit-v3.html`  
+**File:** `index.html`  
 **Last updated:** 2026-08-04 §AUDIT-03m-FU (legacy-code sweep + retired-grid quarantine)  
 **Node count:** **416** named nodes, every one with a grid coordinate in `NODE_COORDS` (measured live via `wbapi-core`; run `npm run stats` rather than trusting this number). The 268 zombie J-stubs with no `r,c` were purged in §CELL-05b, and the last two `junction:true` nodes (J14/J15) were removed by §DX-01a — **there are now zero junction nodes.**
 

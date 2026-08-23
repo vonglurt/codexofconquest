@@ -2,7 +2,7 @@
 
 # Story Flowchart — The Shattered Codex
 
-> Node codes are two-letter identifiers from `NODE_MAP` in `roll2hit-v3.html`.
+> Node codes are two-letter identifiers from `NODE_MAP` in `index.html`.
 > Town hubs use bold two-letter abbreviations: **BI** Birka · **TL** Tilbury · **VS** Visby · **WM** Weimar.
 > `[dead]` = dead-end node (no exits). `──*──>` = portal/instant teleport. `[E*]` = Epic Battleground dead-end.
 >

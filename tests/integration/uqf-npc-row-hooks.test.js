@@ -30,7 +30,7 @@ async function renderAt(page, code, ov = {}) {
 
 test.describe('§VM-01-G2b — npc-row hooks', () => {
   test('registry: 29 npc-row entries in former source order, all anchor-tagged and callable', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const row = NODE_HOOKS.filter(h => h.anchor === 'npc-row');
       return {
@@ -54,7 +54,7 @@ test.describe('§VM-01-G2b — npc-row hooks', () => {
   });
 
   test('the ctx contract is honoured: a hook appends into the element it is HANDED, not a global', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       // dispatch the stall hook against a synthetic anchor — if the body had been rewritten to
       // reach for document.getElementById('story-npc-cards-row') this would render nothing
@@ -69,7 +69,7 @@ test.describe('§VM-01-G2b — npc-row hooks', () => {
   });
 
   test('ctx is required only where it is used: 21 hooks destructure npcRowDiv, 8 take (node) alone', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const row = NODE_HOOKS.filter(h => h.anchor === 'npc-row');
       const withCtx = row.filter(h => /^function [\w$]+\(node, \{ npcRowDiv \}\)/.test(h.fn.toString()));
@@ -147,7 +147,7 @@ test.describe('§VM-01-G2b — npc-row hooks', () => {
   // quest stanzas, here in five narrative beats. This test PINS the defect so the follow-up row
   // that re-gates them (a design call: which real signal means "Act VIII"?) has to update it.
   test('FINDING §VM-01-G2b-FU: five act-gated beats are unreachable — actNumber is node.act, and every Birka node is act 1', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const gates = {
         'birka-lamp-inquiry': 2, 'birka-brynn-heartwood-letter': 4,
@@ -186,7 +186,7 @@ test.describe('§VM-01-G2b — npc-row hooks', () => {
   });
 
   test('source guard: the 29 bodies are gone from storyRender; every dispatch call sits in its place', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(ids => {
       const src = storyRender.toString();
       return {

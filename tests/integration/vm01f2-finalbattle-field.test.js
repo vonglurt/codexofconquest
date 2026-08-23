@@ -22,7 +22,7 @@ const path = require('path');
 const { test, expect } = require('@playwright/test');
 const { seedAndLoad, dismissContinue } = require('./helpers');
 
-const GAME = path.join(__dirname, '..', '..', 'roll2hit-v3.html');
+const GAME = path.join(__dirname, '..', '..', 'index.html');
 
 test.describe('§VM-01-G-FU-f2 — finalBattle node field', () => {
 
@@ -40,7 +40,7 @@ test.describe('§VM-01-G-FU-f2 — finalBattle node field', () => {
   });
 
   test('data: TLS authors finalBattle{minLevel:20,minShards:7}; every author\'s shape is numeric', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const authors = Object.keys(NODE_MAP).filter(c => NODE_MAP[c].finalBattle);
       return {
@@ -57,7 +57,7 @@ test.describe('§VM-01-G-FU-f2 — finalBattle node field', () => {
   });
 
   test('helper: thresholds are AND-ed; a node without the field is always false', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const at = (level, shards, code) => {
         S_story.level = level; S_story.shards = shards;

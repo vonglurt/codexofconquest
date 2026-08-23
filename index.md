@@ -2,13 +2,13 @@
 
 # Roll2Hit — The Shattered Codex: Document Index
 
-**Project:** `roll2hit-v3.html` — single-file combat tracker + narrative RPG
+**Project:** `index.html` — single-file combat tracker + narrative RPG
 **Status:** Layers 0–104 implemented · 37,950 lines · 416 nodes · 398 monsters · ~2,848 quests · 85 lab reports · §WALK ✅ · **§ARCH-01 UQF ✅ CLOSED 2026-07-05** (all ~2,700 quests UQF-1.0; QuestRuntime sole execution surface) · **§NAV-01 ✅ COMPLETE** (Inc a–h, closed 2026-07-03) · §MESH-01 core ✅ + **§MESH-01 gameplay ladder (f–j) ✅ COMPLETE 2026-07-06** (buffs · hireling · sentries · no-dupe ledger incl. cross-origin trades · PvP duels) · **no jump travel** (§CELL-13 re-applied 2026-07-03 — portal/transmort/hearth re-removed after a snapshot-rollback revert) · full ✅ registry in the Completed Work table below · §DATA-01 ✅ RESOLVED 2026-07-06 (superseded by §ARCH-01 UQF; journal-renderer textContent residual shipped)
 **Last updated:** 2026-07-09 — repository reorganized + structure simplified (see below)
 
 > **📁 Repo reorganized 2026-07-09.** Root decluttered ~110 → ~35 files. `plan.md` split into `CONTRIBUTING.md` (dev policies) + `BACKLOG.md` (outstanding work). Historical docs moved under `docs/{spec,story,api,mechanics,notes}/`; importers → `importers/`, dev utilities → `tools/`, narrative texts → `sources/`. Core sync docs stay at root. Folder map + hosting/run instructions: **`README.md`**.
 >
-> **🧹 Structure simplified 2026-07-09 (§CLEANUP-02).** Runtime JavaScript moved to **`js/`** (`wbapi-server.js`, `wbapi-core.js`, `mesh.js`, `mover.js`, `rooms.js`, `duel.js`); data + config moved to **`config/`** (`peers.txt`, `roads-pins.json`, `walk-geo-gazetteer.json`, `mesh-acl.json`, plus runtime caches). One launcher at root: **`./r2h`** (`serve` · `game` · `world` · `test` · `checks` · `api` · `tracker`). The single-file game bundle `roll2hit-v3.html`, `worldbuilder.html`, the core sync docs, and shell launch scripts stay at root. Start the server with `./r2h serve` (was `node wbapi-server.js`).
+> **🧹 Structure simplified 2026-07-09 (§CLEANUP-02).** Runtime JavaScript moved to **`js/`** (`wbapi-server.js`, `wbapi-core.js`, `mesh.js`, `mover.js`, `rooms.js`, `duel.js`); data + config moved to **`config/`** (`peers.txt`, `roads-pins.json`, `walk-geo-gazetteer.json`, `mesh-acl.json`, plus runtime caches). One launcher at root: **`./r2h`** (`serve` · `game` · `world` · `test` · `checks` · `api` · `tracker`). The single-file game bundle `index.html`, `worldbuilder.html`, the core sync docs, and shell launch scripts stay at root. Start the server with `./r2h serve` (was `node wbapi-server.js`).
 
 ### Doc Health Badge
 
@@ -23,7 +23,7 @@
 | Live entity counts | **Run `npm run stats` for live totals** (§DX-01g — parsed from the data sections by `wbapi-core`, the single source; don't trust a hardcoded count). Last measured 2026-07-29: 416 nodes (418 − J14/J15, retired by §DX-01a) · 398 monsters · 111 terrains · 2,853 quests (§AUDIT-03f restored `quest_sea_01`/`quest_sb_01` to the parse — the count was an undercount, not new content; **every one of them now carries an `npc` anchor, §AUDIT-03g**) · 204 NPC profiles · 213 dialogues · 8 acts · 38,106 lines · 5.46 MB | ✅ 2026-07-29 (`npm run stats`) |
 | Last sync pass | 2026-07-09 — §CLEANUP-01 Part B doc-health: refreshed stale in-prose counts against the live `GET /api/list` parse — **monsters 370/392 → 398** (`monsters.md` header + `index.md` Status/footer/`MONSTER_POOL` row + spec-world row), **nodes 410 → 418** (Status/footer/cell-map row), **quests ~2,830 → ~2,848**, **footer line count 34,542 → 36,933**; terrain live count noted as 111 (check:invariants' 110 is its line-regex Set undercounting the JS-parse total by 1). `story.md`'s "42 story nodes" left as-is — it's a curated *narrative*-beat count, not the 418 world nodes (flagged for a narrative-owner review, not a mechanical overwrite). **Prior pass:** 2026-07-03 — §NAV-01 docs close-out: `lab-reports/lab-report-nav01-navigable-world.md` written; road-net + room-layer sections added to `maps.md` (+ FL1/FL9/FL12 flows re-verified against code, stale GATE_LOCKS section retired), `docs/notes/docs-node-network.md §13` (L0–L8 layer stack; §4/§9 rewritten to mover-kernel reality), `mechanics.md` (Roads, Rooms & Auto-Travel). **Sync findings:** `GATE_LOCKS` gone from code (docs claimed 4 live gates); §CELL-13 jump-travel removal partially reverted (`storyPortal`/`storyUseTransmort`/hearth live) → **resolved same day: user directed re-removal** (all jump-travel code cut from HTML; mechanics.md/mechanics-economy.md sections replaced with removal notes; gates check:walk 6/6, nav+autosave+fishing 48/48). Prior pass: 2026-07-02 §MESH docs close-out | ✅ |
 
-> Update this table at the start of each session: recount lab reports with `ls lab-reports/lab-report-*.md | wc -l`, check HTML line count with `wc -l roll2hit-v3.html`, confirm FC item status.
+> Update this table at the start of each session: recount lab reports with `ls lab-reports/lab-report-*.md | wc -l`, check HTML line count with `wc -l index.html`, confirm FC item status.
 
 ---
 
@@ -31,11 +31,11 @@
 
 > Read this section at the start of every session.
 
-**Adding = Planning.** Write a spec in `BACKLOG.md`. Assign a Layer number. Mark it `⚠️ PLANNED`. Do not touch `roll2hit-v3.html`. (Dev policies live in `CONTRIBUTING.md`.)
+**Adding = Planning.** Write a spec in `BACKLOG.md`. Assign a Layer number. Mark it `⚠️ PLANNED`. Do not touch `index.html`. (Dev policies live in `CONTRIBUTING.md`.)
 
 **Implementing = Code + Sync.** Write JavaScript. Then sync every markdown doc that describes what changed. Both steps required.
 
-**Two-Way Sync Rule.** Every item in the markdown docs traces back to `roll2hit-v3.html`. Everything in the HTML has a home doc. On each sync pass: verify world map consistency across `maps.md`, `story.md`, `world.md`.
+**Two-Way Sync Rule.** Every item in the markdown docs traces back to `index.html`. Everything in the HTML has a home doc. On each sync pass: verify world map consistency across `maps.md`, `story.md`, `world.md`.
 
 **Lab Report Rule.** Write a `lab-reports/lab-report-<title>.md` for: major collections, multi-system redesigns, new narrative arcs (3+ nodes), pre-implementation design reviews, or session postmortems with non-obvious decisions. Do not write one for single-item additions or value corrections.
 
@@ -76,9 +76,9 @@ Roll2Hit is a single-file HTML application. It runs as a combat dice tracker (Ba
 | `quest.md` | Master quest register — all quests organized by location (implemented + planned) | ✅ |
 | `mechanics.md` | High-level game mechanics overview — links to docs/mechanics/mechanics-combat.md and docs/mechanics/mechanics-economy.md; §MESH-01 multiplayer presence + world-identity boundary; §MESH-02 connection center (Map-tab sub-tabs, 💬 chat history, 👣 footprints, two-window quick-start) | ✅ Updated 2026-07-07 |
 | `docs/notes/docs-node-network.md` | Node network technical reference — cell grid, adjacency, code conventions, `cellMove` navigation, §12 multiplayer mesh (gossip/vv/tracker/ACL) + §MESH-02 operator endpoints (acl/blocklist/connect/chat) | ✅ Updated 2026-07-07 |
-| `mover.js` | **§WALK-2** unified mover kernel — pure `move(world,pos,dir)→MoveResult` (geo wrap/clamp/sea/locale per lab report §4.1; no DOM/SSE/RNG). The `MOVER:CORE` block is inlined byte-identically into `roll2hit-v3.html` and `require()`d by `wbapi-server.js` — single source of movement truth shared by SP client (`cellMove`) + MUD server (`POST /api/session/move`) | ✅ done 2026-06-26 |
-| `rooms.js` | **§NAV-01c/f** unified room-description kernel — pure `describeCell(world,pos)→Room` (deterministic prose hash, exits-with-signage, road/lane signposts, nearest landmarks). The `ROOMS:CORE` block is inlined byte-identically into `roll2hit-v3.html` (`check:roomsparity`) and `require()`d by `wbapi-server.js` — `room` on all session look surfaces, byte-equal SP/MUD (mud-harness [M]) | ✅ done 2026-07-02 |
-| `duel.js` | **§MESH-01j** unified duel-resolution kernel — pure `DUEL.run(statA,statB,duelSeed)→{transcript,winner,…}` (mulberry32 over the commit-reveal seed; own pure-JS sha256 so commit hashing never diverges; `checkBounds` impossible-stats gate). The `DUEL:CORE` block is inlined byte-identically into `roll2hit-v3.html` (`check:duelparity`) and `require()`d by `wbapi-server.js` — client replays + verifies every server verdict | ✅ done 2026-07-06 |
+| `mover.js` | **§WALK-2** unified mover kernel — pure `move(world,pos,dir)→MoveResult` (geo wrap/clamp/sea/locale per lab report §4.1; no DOM/SSE/RNG). The `MOVER:CORE` block is inlined byte-identically into `index.html` and `require()`d by `wbapi-server.js` — single source of movement truth shared by SP client (`cellMove`) + MUD server (`POST /api/session/move`) | ✅ done 2026-06-26 |
+| `rooms.js` | **§NAV-01c/f** unified room-description kernel — pure `describeCell(world,pos)→Room` (deterministic prose hash, exits-with-signage, road/lane signposts, nearest landmarks). The `ROOMS:CORE` block is inlined byte-identically into `index.html` (`check:roomsparity`) and `require()`d by `wbapi-server.js` — `room` on all session look surfaces, byte-equal SP/MUD (mud-harness [M]) | ✅ done 2026-07-02 |
+| `duel.js` | **§MESH-01j** unified duel-resolution kernel — pure `DUEL.run(statA,statB,duelSeed)→{transcript,winner,…}` (mulberry32 over the commit-reveal seed; own pure-JS sha256 so commit hashing never diverges; `checkBounds` impossible-stats gate). The `DUEL:CORE` block is inlined byte-identically into `index.html` (`check:duelparity`) and `require()`d by `wbapi-server.js` — client replays + verifies every server verdict | ✅ done 2026-07-06 |
 | `mesh.js` | **§MESH-01-REVIEW** server↔server mesh layer extracted from `wbapi-server.js` — ACL (`mesh-acl.json` hot-reload, fail-open warning) · per-IP ingress rate limit · presence gossip (single-writer, version-vector dedup, PEX) · tracker announce/rendezvous + federation + announce-table cache · bootstrap ladder (`--peer` / `MESH_PEERS` / `peers-cache.json` / `peers.txt` / `BOOTSTRAP_URLS`). Factory `require('./mesh')(deps)`: the server passes its live surfaces (SESSIONS, SSE fanout, chat ring, manifest/serverId, ledger hooks) and destructures the same symbol names back, so every endpoint call site is unchanged. Server-only — never inlined into the HTML (unlike `mover.js`/`rooms.js`/`duel.js` there is no `:CORE` parity block) | ✅ done 2026-07-06 |
 | `docs/notes/Year1367AD.md` | Canonical year 1367 AD — historical events, source texts, quest vignettes for §1367 integration | ✅ |
 
@@ -99,8 +99,8 @@ Roll2Hit is a single-file HTML application. It runs as a combat dice tracker (Ba
 |------|---------|--------|
 | `froberger-journal-all-entries.txt` | All 41 Froberger journal entries verbatim | ✅ Verified 41/41 (2026-05-24) |
 | `docs/notes/ux-first-battles.md` | First battles UX walkthrough, 10 UX fixes, wimper/flee flow | ✅ Accurate for L0–37 |
-| `sources/5thOrgan.html` | Standalone polyphonic pipe organ synthesizer (12-voice pool, 72-oscillator capacity, Beethoven Op.67 canon). **Not wired into the game — `roll2hit-v3.html` has zero Web Audio (§AUDIO-01).** Moved from the repo root by `5e48dd7` | ✅ 2026-05-24 · verified §DOC-02ad 2026-08-12 |
-| `worldbuilder.html` | World Builder UI — 17 tabs: Map, Bestiary, Loot, NPCs, Quests, Dice Lab, CRUD, API, Audit, Stats, Endpoints, Builder, Wizard, ✏ Editor (§EDITOR-01), ⛓ Mission (§EDITOR-02), 🚶 Walk (§WALK), 🌐 Mesh (§MESH-01). **This is the "Mission Explorer" of `lab-report-ponies-unicorns-aspirations-future-ideas.md` §III** (born `2d42ea2`, 5 days after the spec) — shipped **full CRUD** rather than the specified read-only, and **without** §III.C's debug-metadata layer (JS reference path · data type · array position) → §DX-02ao. The spec's *"must externalize the data constants"* cost was never paid: the server parses the HTML as text, so `roll2hit-v3.html` still has **0** `<script src=` tags | ✅ 2026-07-02 · verified §DOC-02ae 2026-08-12 |
+| `sources/5thOrgan.html` | Standalone polyphonic pipe organ synthesizer (12-voice pool, 72-oscillator capacity, Beethoven Op.67 canon). **Not wired into the game — `index.html` has zero Web Audio (§AUDIO-01).** Moved from the repo root by `5e48dd7` | ✅ 2026-05-24 · verified §DOC-02ad 2026-08-12 |
+| `worldbuilder.html` | World Builder UI — 17 tabs: Map, Bestiary, Loot, NPCs, Quests, Dice Lab, CRUD, API, Audit, Stats, Endpoints, Builder, Wizard, ✏ Editor (§EDITOR-01), ⛓ Mission (§EDITOR-02), 🚶 Walk (§WALK), 🌐 Mesh (§MESH-01). **This is the "Mission Explorer" of `lab-report-ponies-unicorns-aspirations-future-ideas.md` §III** (born `2d42ea2`, 5 days after the spec) — shipped **full CRUD** rather than the specified read-only, and **without** §III.C's debug-metadata layer (JS reference path · data type · array position) → §DX-02ao. The spec's *"must externalize the data constants"* cost was never paid: the server parses the HTML as text, so `index.html` still has **0** `<script src=` tags | ✅ 2026-07-02 · verified §DOC-02ae 2026-08-12 |
 | `Saul2Paul.txt` | §FUTURE-01 reference text — Paul's journey from Acts/Pauline letters, itinerary notes | ✅ |
 | `littoral-courts-story.txt` | §SIREN-01 vignette prose — Littoral Courts story text, French register source | ✅ |
 
@@ -120,14 +120,14 @@ Roll2Hit is a single-file HTML application. It runs as a combat dice tracker (Ba
 |------|---------|
 | `wbapi-core.js` | Core WBAPI library — `extractObj`, `removeFns`, Proxy model, comment-aware brace counting. **Persist surfaces (§DX-02k):** `save(dest)` — writes exactly there, refuses with no argument; `saveStamped([dir])` — dated backup **beside the source file**; source-level writers `editField` / `editStructuredField` / `editTerrainRoster` / `deleteEntrySource`. **NPC identity (§AUDIT-03k):** `NPC_ALIASES` + `npcCanonicalKey()` — the seven node-display-name slugs that are a second heading for a character who already has a profile; `npcKeyVocab()` excludes them, `editField` collapses a quest anchor onto the profile key on write |
 | `api.sh` / `api/wb.js` | **Primary CLI wrapper** — queued HTTP to WBAPI, auto-nonce, retry/backoff, `--ai` Claude assist, `--out` file output, pipe-friendly |
-| `wbapi-cli.js` | Low-level CLI — direct in-process reads/writes against `roll2hit-v3.html` (use `api.sh` for day-to-day work) |
+| `wbapi-cli.js` | Low-level CLI — direct in-process reads/writes against `index.html` (use `api.sh` for day-to-day work) |
 | `wbapi-server.js` | Local HTTP server — REST endpoints for worldbuilder.html at port 1367 |
 | `wbapi-toggle.sh` | Shell helper — start/stop wbapi-server |
 | `docs/api/wbapi-help.md` | WBAPI usage reference — endpoint list, anchor syntax, example calls; session/pos + Mesh API (manifest, gossip, tracker, world/download, ACL) |
 | `parse-nodes.js` | Standalone node parser — extracts NODE_MAP entries for external tooling |
-| `scripts/check-mover-parity.js` | **§WALK-2** structural walk-parity — asserts the `MOVER:CORE` block is byte-identical in `mover.js` and `roll2hit-v3.html` |
+| `scripts/check-mover-parity.js` | **§WALK-2** structural walk-parity — asserts the `MOVER:CORE` block is byte-identical in `mover.js` and `index.html` |
 | `scripts/check-mover-behaviour.js` | **§WALK-2** behavioural walk-parity — replays real `CELL_GRID`/`IMPASSABLE_CELLS` through old `cellMove` logic vs `mover.js`; asserts 0 content-affecting decision mismatches |
-| `scripts/check-duel-parity.js` | **§MESH-01j** structural duel-parity — asserts the `DUEL:CORE` block is byte-identical in `duel.js` and `roll2hit-v3.html` |
+| `scripts/check-duel-parity.js` | **§MESH-01j** structural duel-parity — asserts the `DUEL:CORE` block is byte-identical in `duel.js` and `index.html` |
 
 ### Integration Tests (Playwright)
 
@@ -754,10 +754,10 @@ All previously logged conflicts resolved. Current known gaps:
 | 8 HTML consts missing home docs (romance system, BRYNN_MAINTENANCE_TASKS, etc.) | `docs/mechanics/mechanics-economy.md` · `world.md` · `story.md` | ✅ Reverse-scan pass SP4 2026-05-26 |
 | State fields count "107" stale; plan.md description "230 lines" stale | `index.md` | ✅ Fixed 2026-05-26 (SP4) |
 | 20 stale ⚠️ PLANNED markers (Layers 46–74) in world.md + story.md | `world.md` · `story.md` | ✅ All cleared 2026-05-26 (SP4 stale-PLANNED scan) |
-| 67 HTML public consts had no `// → doc:` pointer (27 → 94 total) | `roll2hit-v3.html` | ✅ Full reverse scan complete 2026-05-26 (SP4) |
+| 67 HTML public consts had no `// → doc:` pointer (27 → 94 total) | `index.html` | ✅ Full reverse scan complete 2026-05-26 (SP4) |
 | F4 table re-drifted (+9–53 lines) after SP4 annotation pass | `docs/mechanics/mechanics-economy.md` | ✅ All 29 entries re-verified 2026-05-26 |
 | `surveyDeliveredToAuros` flag name wrong in world.md §Blue Shutters Archive | `world.md` | ✅ Corrected to `undercitySurveyDelivered` 2026-05-26 |
-| 5 `// → doc:` annotations pointed to non-existent section names (§Inn Sleep, §Gate Locks, §Quiet Return, §Act III NPC Lines, §Sweelinck Naming Ceremony) | `roll2hit-v3.html` · `story.md` | ✅ All fixed 2026-05-26 — annotations corrected; `#### Gate Locks` section added to story.md |
+| 5 `// → doc:` annotations pointed to non-existent section names (§Inn Sleep, §Gate Locks, §Quiet Return, §Act III NPC Lines, §Sweelinck Naming Ceremony) | `index.html` · `story.md` | ✅ All fixed 2026-05-26 — annotations corrected; `#### Gate Locks` section added to story.md |
 | OST code collision: `OST` node code was already used (Bruges — Cloth Hall), so La Chanson de Roland uses quest prefix `ost_` only; no OST hub node created | `1367-sources/plan.md` · `docs/api/api-data-audit.md` | ✅ Resolved 2026-06-05 — 4 new nodes RON/PYR/AIX/FRS created; cycles 1–2 route RON/PYR/AIX/FRS naturally; cycles 3–7 hub at AIX or RON |
 
 ---
@@ -800,7 +800,7 @@ This rule applies to `docs/api/api-data-audit.md`, `plan-archive.md §TTS`, and 
 ---
 
 *Last updated: 2026-07-02*
-*Codebase: `roll2hit-v3.html` · 37,950 lines · Layers 0–104 complete · 416 nodes · 398 monsters · ~2,848 quests · geo-cell navigation (§CELL + §WALK + §NAV-01 roads/rooms/auto-travel, complete) · §ARCH-01 UQF ✅ CLOSED · §MESH-01 core + full gameplay ladder f–j (ledger trades incl. cross-origin, PvP duels) · all jump-travel removed (§CELL-13 re-applied 2026-07-03)*
+*Codebase: `index.html` · 37,950 lines · Layers 0–104 complete · 416 nodes · 398 monsters · ~2,848 quests · geo-cell navigation (§CELL + §WALK + §NAV-01 roads/rooms/auto-travel, complete) · §ARCH-01 UQF ✅ CLOSED · §MESH-01 core + full gameplay ladder f–j (ledger trades incl. cross-origin, PvP duels) · all jump-travel removed (§CELL-13 re-applied 2026-07-03)*
 *MIT License — roll2hit.com — Copyright (c) 2026 — Free to use, modify, and share.*
 
 ---

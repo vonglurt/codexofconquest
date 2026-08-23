@@ -20,7 +20,7 @@ const path = require('path');
 const { test, expect } = require('@playwright/test');
 const { SEED_STATE, dismissContinue } = require('./helpers');
 
-const HTML = fs.readFileSync(path.join(__dirname, '..', '..', 'roll2hit-v3.html'), 'utf8');
+const HTML = fs.readFileSync(path.join(__dirname, '..', '..', 'index.html'), 'utf8');
 
 const ROD = { name: 'Fishing Rod', icon: '🎣', type: 'weapon', atkBonus: 1, dmgDie: 4, dmgCount: 1, dmgFlat: 0, sell: 10, desc: 'Standard rod.' };
 
@@ -38,7 +38,7 @@ async function at(page, overrides = {}) {
   await page.addInitScript(() => {
     window.__armRand = seq => { let i = 0; Math.random = () => seq[(i++) % seq.length]; };
   });
-  await page.goto('/roll2hit-v3.html');
+  await page.goto('/index.html');
   await dismissContinue(page);
 }
 
@@ -84,7 +84,7 @@ const clickCast = page => page.evaluate(() => {
 
 test.describe('§VM-01-G-FU-f — registry + source shape', () => {
   test('ssj-tournament sits in the registry after the §LXX run with a callable fn', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const idx = NODE_HOOKS.findIndex(h => h.id === 'ssj-tournament');
       const prev = idx > 0 ? NODE_HOOKS[idx - 1].id : null;

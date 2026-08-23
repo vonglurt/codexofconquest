@@ -340,7 +340,7 @@ The reference implementation (roll2hit.com) uses the following runtime component
 └────────────────────┬─────────────────────────────────────────┘
                      │ file I/O (fs.readFileSync / writeFileSync)
 ┌────────────────────▼─────────────────────────────────────────┐
-│  Single-file Game (roll2hit-v3.html)                         │
+│  Single-file Game (index.html)                         │
 │  • NODE_MAP     : location descriptors (no exit fields)      │
 │  • NODE_COORDS  : {code → {r, c}} coordinate index          │
 │  • CELL_GRID    : {"r,c" → code} reverse lookup (built once) │

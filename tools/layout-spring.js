@@ -68,7 +68,7 @@ OPTIONS
   --elbow     Suggest elbow junction nodes for bendy connections
   --help      Show this help
 
-GAME RULE (from _buildNodeExits in roll2hit-v3.html)
+GAME RULE (from _buildNodeExits in index.html)
   For every node, the game probes 1..4 coordinate cells in each cardinal
   direction. A connection is live only when a neighbour is found in [1,4].
   TWO CONSTRAINTS per edge:

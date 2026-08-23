@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude
 // §WALK-2 — behavioural walk-parity: replay the REAL geo-grid (CELL_GRID +
-// IMPASSABLE_CELLS extracted from roll2hit-v3.html) through both the OLD inline
+// IMPASSABLE_CELLS extracted from index.html) through both the OLD inline
 // cellMove decision logic and the NEW shared mover.js kernel, and assert they
 // agree on (ok, destCode) for every interior cell × every direction.
 //
@@ -15,7 +15,7 @@ const path = require('path');
 const { move } = require('../js/mover.js');
 
 const ROOT = path.resolve(__dirname, '..');
-const src = fs.readFileSync(path.join(ROOT, 'roll2hit-v3.html'), 'utf8');
+const src = fs.readFileSync(path.join(ROOT, 'index.html'), 'utf8');
 
 function literal(name) {
   const re = new RegExp(`const\\s+${name}\\s*=\\s*(\\{[\\s\\S]*?\\});`);

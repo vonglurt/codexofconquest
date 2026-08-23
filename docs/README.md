@@ -3,7 +3,7 @@
 
 Secondary documentation. The **core sync docs** stay at the repo root
 (`index.md`, `world.md`, `story.md`, `mechanics.md`, `monsters.md`, `maps.md`,
-`quest.md`) because they are kept in two-way sync with `roll2hit-v3.html` and are
+`quest.md`) because they are kept in two-way sync with `index.html` and are
 referenced constantly. Everything here is reference/history that changes less often.
 
 | Folder | Contents |

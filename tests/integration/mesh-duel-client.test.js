@@ -20,7 +20,7 @@ const { seedAndLoad, dismissContinue } = require('./helpers');
 test.describe('§MESH-01j — client duel rung', () => {
 
   test('DUEL:CORE kernel is inlined: sha256, canonical, deterministic run', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const out = {};
       out.hasKernel = typeof DUEL === 'object' && typeof DUEL.run === 'function';
@@ -43,7 +43,7 @@ test.describe('§MESH-01j — client duel rung', () => {
   });
 
   test('_duelStatBlock: derived from the live save and ALWAYS within DUEL.checkBounds', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const out = {};
       const sb1 = _duelStatBlock();
@@ -62,7 +62,7 @@ test.describe('§MESH-01j — client duel rung', () => {
   });
 
   test('_mpRenderPresence: ⚔ only for SAME-origin players with a ledgerPid — never remotes or sentries', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const out = {};
       MP.on = true;
@@ -84,7 +84,7 @@ test.describe('§MESH-01j — client duel rung', () => {
   });
 
   test('pvp opt-out: toggle persists in the save; disconnect clears duel state + modal', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const out = {};
       mpDuelPvpToggle(true);

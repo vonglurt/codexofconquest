@@ -13,7 +13,7 @@ const { test, expect } = require('@playwright/test');
 test.describe('§VM-01-F-FU — the activateNode index', () => {
   // 1. The index === a brute-force filter over the live corpus, for several real nodes.
   test('_questsByNode returns exactly the non-epic quests whose activateNode matches', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const brute = (code) => Object.values(QUEST_DB)
         .filter(q => q && q.type !== 'epic' && q.activateNode === code)
@@ -38,7 +38,7 @@ test.describe('§VM-01-F-FU — the activateNode index', () => {
   //    size-guard rebuilds because the entry count changed. This is the exact regression
   //    the §VM-01-F built-once cache produced and that F-FU exists to close.
   test('a runtime-injected quest is picked up (and a deleted one dropped) — no stale cache', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       _questsByNode('DK');                     // prime the index at the base count
       const beforeInject = _questsByNode('DK').some(q => q.id === '__ffu_inject');
@@ -62,7 +62,7 @@ test.describe('§VM-01-F-FU — the activateNode index', () => {
   // 3. Order/no-op parity: two quests injected at one fresh node activate — and emit their
   //    📋 messages — in Object.values (insertion) order, exactly as the old linear scan did.
   test('multi-quest node activates in insertion order — msgs stay byte-identical', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const msgs = await page.evaluate(() => {
       QUEST_DB.__ffu_a = { id: '__ffu_a', schema: 'UQF-1.0', title: 'Alpha', activateNode: 'ZZZ_FFU', gate: {}, bits: [] };
       QUEST_DB.__ffu_b = { id: '__ffu_b', schema: 'UQF-1.0', title: 'Beta',  activateNode: 'ZZZ_FFU', gate: {}, bits: [] };
@@ -77,7 +77,7 @@ test.describe('§VM-01-F-FU — the activateNode index', () => {
 
   // 4. Epics and activateNode-less quests never appear in the index (mirrors the scan filters).
   test('epic and activateNode-less quests are excluded from the index', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       QUEST_DB.__ffu_epic = { id: '__ffu_epic', schema: 'UQF-1.0', title: 'Epic', type: 'epic', activateNode: 'QQQ_FFU', gate: {}, bits: [] };
       QUEST_DB.__ffu_noact = { id: '__ffu_noact', schema: 'UQF-1.0', title: 'NoNode', gate: {}, bits: [] };

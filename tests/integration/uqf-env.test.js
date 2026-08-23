@@ -14,7 +14,7 @@ test.describe('§VM-01-C — the _ENV (ctx.state) seam', () => {
   // 1. Live-path no-op: a plain ctx (no .state) still mutates the live S_story exactly
   //    as before — execBits defaults ctx.state to S_story.
   test('a chain with a plain ctx mutates the live S_story (default env)', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate((NG) => {
       storyNewGame(NG);
       S_story.quests = S_story.quests || {};
@@ -38,7 +38,7 @@ test.describe('§VM-01-C — the _ENV (ctx.state) seam', () => {
   // 2. THE PAYOFF: the identical chain run with { state: scratch } writes the scratch
   //    object and leaves S_story untouched. This is exactly what D/E require.
   test('an explicit { state } routes every effect to the scratch state; S_story is untouched', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate((NG) => {
       storyNewGame(NG);
       delete S_story.envScratchFlag;
@@ -75,7 +75,7 @@ test.describe('§VM-01-C — the _ENV (ctx.state) seam', () => {
   // 3. The env threads through the §VM-01-A choice suspend/resume: a picked branch's
   //    flag_write lands in the SAME scratch env the outer execBits was handed.
   test('ctx.state survives a choice suspend/resume (picked branch writes the scratch env)', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate((NG) => {
       storyNewGame(NG);
       delete S_story.optA_taken; delete S_story.optB_taken;
@@ -103,7 +103,7 @@ test.describe('§VM-01-C — the _ENV (ctx.state) seam', () => {
   // 4. item_check reads the env inventory (not the live one): an item present only in
   //    scratch satisfies the check under { state: scratch } and fails under the live env.
   test('item_check reads ctx.state.inventory', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate((NG) => {
       storyNewGame(NG);
       S_story.inventory = (S_story.inventory || []).filter(i => i.name !== 'Env Key');  // ensure absent live
@@ -121,7 +121,7 @@ test.describe('§VM-01-C — the _ENV (ctx.state) seam', () => {
   // 5. _legacy_fn receives the env as its state arg (live path: ctx.state === S_story),
   //    so a legacy fn run under an explicit env touches scratch, not the live state.
   test('_legacy_fn receives ctx.state, not the S_story global', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate((NG) => {
       storyNewGame(NG);
       delete S_story.legacyTouched;

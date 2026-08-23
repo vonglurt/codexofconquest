@@ -50,7 +50,7 @@ The Phase 3 runtime is organized into seven logical subsystems. All subsystems s
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
-│                        roll2hit-v3.html                         │
+│                        index.html                         │
 │                                                                 │
 │  ┌──────────┐  ┌──────────┐  ┌───────────┐  ┌──────────────┐  │
 │  │  STATE   │  │  DICE    │  │ ANIMATION │  │   HISTORY    │  │

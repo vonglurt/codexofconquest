@@ -17,7 +17,7 @@ const path = require('path');
 const { test, expect } = require('@playwright/test');
 const { seedAndLoad, dismissContinue } = require('./helpers');
 
-const HTML = path.join(__dirname, '..', '..', 'roll2hit-v3.html');
+const HTML = path.join(__dirname, '..', '..', 'index.html');
 
 const CRACK = {
   birka:   'The cobblestones are colder than they should be.',

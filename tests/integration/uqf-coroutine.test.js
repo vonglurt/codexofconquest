@@ -12,7 +12,7 @@ test.describe('§VM-01-A — the quest VM coroutine', () => {
   // 1. Suspend-and-resume: a real `choice` bit yields an ask, applies NOTHING on the way
   //    in, and applies ONLY the chosen option's bits after the pick.
   test('choice suspends with an ask, and only the picked branch applies (after the pick)', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate((NG) => {
       storyNewGame(NG);
       delete S_story.optA_taken; delete S_story.optB_taken;
@@ -45,7 +45,7 @@ test.describe('§VM-01-A — the quest VM coroutine', () => {
   //    synchronous call sites stay no-ops: none of their chains contains a choice today,
   //    so runToCompletion never throws in production.
   test('_uqfRunToCompletion throws on an unresolved ask', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate((NG) => {
       storyNewGame(NG);
       const bit = { kind: 'choice', prompt: 'x', options: [
@@ -63,7 +63,7 @@ test.describe('§VM-01-A — the quest VM coroutine', () => {
   // 3. Plain chains are a NO-OP under the change: identical side effects AND message order
   //    to the old straight-line loop (the whole regression guarantee, in miniature).
   test('a plain flag_write + reward + narrative chain is byte-identical through the shim', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate((NG) => {
       storyNewGame(NG);
       delete S_story.goldenFlag;
@@ -94,7 +94,7 @@ test.describe('§VM-01-A — the quest VM coroutine', () => {
   //    in-flight generator lives only in the module slot _uqfPending, never in S_story,
   //    so JSON.stringify(S_story) round-trips clean with no generator anywhere.
   test('autosave taken mid-choice never serializes the suspended generator', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate((NG) => {
       storyNewGame(NG);
       const bit = { kind: 'choice', prompt: 'p', options: [
@@ -125,7 +125,7 @@ test.describe('§VM-01-A — the quest VM coroutine', () => {
   //    because the language had no branch. Now a `choice` can be resumed FROM it — the
   //    predicate is finally consumable to drive a decision.
   test('item_check result is consumable to drive a choice branch', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const drive = await page.evaluate((NG) => {
       function run(hasKeyInv) {
         storyNewGame(NG);

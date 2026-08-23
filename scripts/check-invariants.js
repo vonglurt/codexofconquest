@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude
 // §WALK-4 Inc 1 — terrain-field invariant proof (CI-gated, no server needed).
 //
-// Parses the committed roll2hit-v3.html (same approach as check-mover-*.js) and
+// Parses the committed index.html (same approach as check-mover-*.js) and
 // proves the three field invariants from the lab report §5/§6:
 //
 //   I1 (totality):      terrainAt is defined for every named cell — every
@@ -23,7 +23,7 @@ const fs = require('fs');
 const path = require('path');
 
 const ROOT = path.resolve(__dirname, '..');
-const src = fs.readFileSync(path.join(ROOT, 'roll2hit-v3.html'), 'utf8');
+const src = fs.readFileSync(path.join(ROOT, 'index.html'), 'utf8');
 const HUB = process.argv[2] || 'LHR';
 
 // ── Safe literal extraction (NODE_COORDS / SEA_RUNS are plain data, no refs) ──

@@ -1270,7 +1270,7 @@ Six one-time beats fire in Act VIII (actNumber === 8) when a player with Friendl
 > eleven.** Left annotated, not rewritten (§AUDIT-03m-FU).
 >
 > ⚠️ **The `Flags:` line below names `act8FarewellWeckmann`, which does not exist** (0 occurrences
-> in `roll2hit-v3.html`). `ACT8_FAREWELL_BEATS` is keyed by **profile key**, so the live flag is
+> in `index.html`). `ACT8_FAREWELL_BEATS` is keyed by **profile key**, so the live flag is
 > **`act8FarewellCrov`** — the doc uses the character's name, the code uses the ledger key.
 
 > **⚠️ Node column corrected 2026-08-04 (§AUDIT-03m-FU).** `ACT8_FAREWELL_BEATS` is keyed by **NPC key**, not by node — the beat fires wherever that NPC stands, which the engine settles in `birkaNpcs` (`LHR:['yael'] · TLL:['brynn'] · MHQ:['quill'] · LLA:['pachelbel'] · HKG:['crov','auros']`). Four of these six rows named the wrong place: Quill was listed at `LLA` (Pachelbel's node), Pachelbel at `SH` (**a code that was never in `NODE_MAP` at all** — the §AUDIT-03p born-dead class), Weckmann at `KRN` and Auros at `VBY`, when both are at `HKG`. Annotating those codes in place would have turned four wrong claims into four confident-looking live ones.  *(historical: `BA`=`LLA` · `CR`=`KRN` · `BK`=`VBY` · `CY`=`HKG`)*

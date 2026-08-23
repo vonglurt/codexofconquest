@@ -10,7 +10,7 @@ test.describe('§PLAY-01-D — Friendships With Magic (magic-path signpost)', ()
   test('Yael\'s first-meeting line signposts the Fisherman / Yugurt Lake / free rod', async ({ page }) => {
     const pageErrors = [];
     page.on('pageerror', e => pageErrors.push(String(e)));
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
 
     const r = await page.evaluate(() => {
       const out = {};

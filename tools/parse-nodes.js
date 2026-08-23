@@ -3,7 +3,7 @@
 /**
  * parse-nodes.js — roll2hit.com NODE_MAP parser
  *
- * Reads roll2hit-v3.html, extracts NODE_MAP and NODE_COORDS,
+ * Reads index.html, extracts NODE_MAP and NODE_COORDS,
  * and outputs structured records in multiple formats.
  *
  * Usage:
@@ -31,7 +31,7 @@ const format       = getArg('format', 'table');
 const filterRaw    = getArg('filter', null);
 const showCorridors = hasFlag('corridors');
 
-const HTML_FILE = path.join(__dirname, '..', 'roll2hit-v3.html');  // repo ROOT (tools/ is one level down)
+const HTML_FILE = path.join(__dirname, '..', 'index.html');  // repo ROOT (tools/ is one level down)
 
 // ── Parse HTML source ─────────────────────────────────────────────────────────
 const src = fs.readFileSync(HTML_FILE, 'utf8');
@@ -68,7 +68,7 @@ const NODE_MAP    = safeEval(nodeMapSrc);
 const NODE_COORDS = safeEval(nodeCoordSrc);
 
 // ── Build record array ────────────────────────────────────────────────────────
-const DIST_THRESHOLD = 3; // matches roll2hit-v3.html
+const DIST_THRESHOLD = 3; // matches index.html
 
 function nodeType(node) {
   if (node.isEpicBattleground) return 'epic';

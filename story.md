@@ -1852,7 +1852,7 @@ At **Dear Friend+** (level 3), joint NPC moments unlock:
 
 ### NPC_DIALOGUES — Full Transcript
 
-> Source: `NPC_DIALOGUES` const in `roll2hit-v3.html` (line 7204). 6 NPCs × 4 states × 5 quotes = 120 lines. Each NPC entry also has a `meta` block with `worldTruth`, `enemy`, and `missionBit`. Dialogue state selection order: `dearFriend` (fav ≥ 2) → `questActive` (active quest) → `friendly` (fav ≥ 1) → `impartial`.
+> Source: `NPC_DIALOGUES` const in `index.html` (line 7204). 6 NPCs × 4 states × 5 quotes = 120 lines. Each NPC entry also has a `meta` block with `worldTruth`, `enemy`, and `missionBit`. Dialogue state selection order: `dearFriend` (fav ≥ 2) → `questActive` (active quest) → `friendly` (fav ≥ 1) → `impartial`.
 
 #### Yael Scheidemann — City Guard Captain (`LHR` (historical `CI`))
 - **worldTruth:** "Every riot that gets suppressed becomes three quiet riots."
@@ -2072,7 +2072,7 @@ At **Dear Friend+** (level 3), joint NPC moments unlock:
 
 ## EPIC BATTLEGROUNDS — Quest-Giver Dialogue
 
-> Source: `EB_NPC_DIALOGUE` in `roll2hit-v3.html`. Each entry has five fields indexed by **Q-code** (`Q{nodeNum}.{field}`): `.W` wound · `.O` opening · `.WA` warning · `.N` negotiate · `.R` return. Payment ranges: floor → ceiling (negotiation raises opening toward ceiling via CHA check DC17). Special items are inventory rewards beyond gold.
+> Source: `EB_NPC_DIALOGUE` in `index.html`. Each entry has five fields indexed by **Q-code** (`Q{nodeNum}.{field}`): `.W` wound · `.O` opening · `.WA` warning · `.N` negotiate · `.R` return. Payment ranges: floor → ceiling (negotiation raises opening toward ceiling via CHA check DC17). Special items are inventory rewards beyond gold.
 >
 > **Dual-role note:** Q59 (Draketide), Q65 (Izador), and Q71 (Mordus) are also Epic NPCs — see their profiles earlier in this document. Their EB dialogue gives a second context for the same character. Both contexts must remain consistent.
 

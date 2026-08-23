@@ -32,7 +32,7 @@ const os = require('os');
 const path = require('path');
 
 const ROOT = path.resolve(__dirname, '..', '..');
-const GAME = path.join(ROOT, 'roll2hit-v3.html');
+const GAME = path.join(ROOT, 'index.html');
 const STAMPED = /^roll2hit-v3-\d{8}-\d{6}\.html$/;
 
 function freshWorld(file) {
@@ -66,7 +66,7 @@ test.describe('§DX-02k — save() requires a destination', () => {
   // The actual defect: the destination followed the process, not the file.
   test('saveStamped() lands beside the SOURCE FILE, not the CWD', () => {
     const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'r2h-dx02k-'));
-    const src = path.join(dir, 'roll2hit-v3.html');
+    const src = path.join(dir, 'index.html');
     fs.copyFileSync(GAME, src);
     try {
       const rootBefore = stampedIn(ROOT);

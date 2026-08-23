@@ -13,7 +13,7 @@ test.describe('§XP-02-A — first-arrival exploration XP', () => {
   test('grants EXPLORE_XP once on first arrival, nothing on re-visit, and is bounded below a real fight', async ({ page }) => {
     const pageErrors = [];
     page.on('pageerror', e => pageErrors.push(String(e)));
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
 
     const r = await page.evaluate(() => {
       // a real, non-junction node with no loot — isolates the XP grant from inventory side effects

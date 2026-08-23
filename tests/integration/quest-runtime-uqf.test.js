@@ -13,7 +13,7 @@ const { test, expect } = require('@playwright/test');
 
 test.describe('UQF runtime — Phase 1 inert engine (§ARCH-01)', () => {
   test('the engine is defined and exposed, schema = UQF-1.0', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => ({
       schema:    QuestRuntime.SCHEMA_VERSION,
       onWindow:  typeof window.QuestRuntime === 'object' && typeof window.validateQuest === 'function',
@@ -30,7 +30,7 @@ test.describe('UQF runtime — Phase 1 inert engine (§ARCH-01)', () => {
   });
 
   test('validateQuest enforces bit contracts', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const good = { schema:'UQF-1.0', id:'q_test', bits:[
         { kind:'skill_check', stat:'WIS', dc:13, onPass:[{ kind:'flag_write', set:['fooDone'] }] },
@@ -60,7 +60,7 @@ test.describe('UQF runtime — Phase 1 inert engine (§ARCH-01)', () => {
   });
 
   test('adaptLegacyQuest is a §W7d no-op: identity passthrough for legacy AND UQF entries', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       // Pre-W7d this wrapped legacy entries in a '0.legacy' UQF shell; the shim is
       // retired with the legacy execution paths (nothing left to adapt).
@@ -81,7 +81,7 @@ test.describe('UQF runtime — Phase 1 inert engine (§ARCH-01)', () => {
   });
 
   test('canActivate evaluates a declarative gate against S_story flags', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       // Inject a throwaway UQF quest into QUEST_DB (test-only; not played).
       QUEST_DB.__gatetest = { id:'__gatetest', schema:'UQF-1.0',
@@ -99,7 +99,7 @@ test.describe('UQF runtime — Phase 1 inert engine (§ARCH-01)', () => {
   });
 
   test('execBits runs a chain that mutates S_story exactly like a quest reward', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       S_story.xp = 0; S_story.gold = 100; S_story.inventory = []; S_story.knowledge = []; delete S_story.chainFlag;
       _uqfRunToCompletion(QuestRuntime.execBits([   // §VM-01-A: execBits is now a generator — pump to completion (a plain chain never yields)
@@ -119,7 +119,7 @@ test.describe('UQF runtime — Phase 1 inert engine (§ARCH-01)', () => {
   });
 
   test('the engine is inert — the live legacy skill-check path is unchanged', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => ({
       // legacy resolver still present and still the wired path
       legacyResolver: typeof _rollCeremonia === 'function',
@@ -146,7 +146,7 @@ test.describe('UQF dual-path dispatch — Phase 2 (§ARCH-01)', () => {
   // the REAL entry points, then deletes the synthetic quests.
 
   test('_rollCeremonia routes a passing UQF skill_check through the engine', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       S_story.quests = {};
       S_story.abilityScores = { str:10, dex:10, con:10, int:10, wis:14, cha:10 };
@@ -181,7 +181,7 @@ test.describe('UQF dual-path dispatch — Phase 2 (§ARCH-01)', () => {
   });
 
   test('_rollCeremonia routes a failing UQF skill_check: non-retryable → failed, retryable → stays', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const mk = (id, retryable) => ({ id, schema:'UQF-1.0', title:id, activateNode:'DK', retryable, bits:[
         { kind:'skill_check', stat:'WIS', dc:99,           // unreachable DC → always fail
@@ -210,7 +210,7 @@ test.describe('UQF dual-path dispatch — Phase 2 (§ARCH-01)', () => {
   });
 
   test('§W7d: the legacy roll path is RETIRED — a non-UQF skill_check roll is a warned no-op', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       S_story.quests = {}; S_story.abilityScores = { wis:14 }; S_story.level = 1; S_story.xp = 0; S_story.day = 1;
       S_story.inventory = []; delete S_story.__legacyDone;
@@ -240,7 +240,7 @@ test.describe('UQF dual-path dispatch — Phase 2 (§ARCH-01)', () => {
   });
 
   test('the quest panel renders a Roll Ceremonia card for a UQF skill_check', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const html = await page.evaluate(() => {
       S_story.quests = {}; S_story.abilityScores = { wis:14 }; S_story.level = 1;
       QUEST_DB.__uqf_panel = { id:'__uqf_panel', schema:'UQF-1.0', title:'Panel Demo', activateNode:'DK',
@@ -264,7 +264,7 @@ test.describe('UQF dual-path dispatch — Phase 2 (§ARCH-01)', () => {
   });
 
   test('storyCheckQuests honors a UQF declarative gate on activation', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       S_story.quests = {}; delete S_story.gateOpen;
       QUEST_DB.__uqf_gate = { id:'__uqf_gate', schema:'UQF-1.0', title:'Gate Demo',
@@ -294,7 +294,7 @@ test.describe('UQF dual-path dispatch — Phase 2 (§ARCH-01)', () => {
 
 test.describe('§WISDOM-01 migrated to UQF — quest_wis_01 (§ARCH-01 Phase 3)', () => {
   test('the quest is now UQF and still validates', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const q = QUEST_DB.quest_wis_01;
       return { schema: q.schema, hasGate: !!(q.gate && q.gate.flags), bitKind: q.bits[0].kind,
@@ -308,7 +308,7 @@ test.describe('§WISDOM-01 migrated to UQF — quest_wis_01 (§ARCH-01 Phase 3)'
   });
 
   test('activation honors the wisHookReceived gate at LCY', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       S_story.quests = {}; delete S_story.wisHookReceived;
       storyCheckQuests({ code:'LCY' });                 // hook not yet received → no activate
@@ -322,7 +322,7 @@ test.describe('§WISDOM-01 migrated to UQF — quest_wis_01 (§ARCH-01 Phase 3)'
   });
 
   test('a PASS grants the flag + mission-bit token + 150gp/250xp + W1 knowledge', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       S_story.quests = { quest_wis_01:'active' };
       S_story.abilityScores = { wis:40 };               // huge mod ⇒ DC 13 always passes
@@ -347,7 +347,7 @@ test.describe('§WISDOM-01 migrated to UQF — quest_wis_01 (§ARCH-01 Phase 3)'
   });
 
   test('a non-retryable FAIL locks the quest and grants nothing', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       QUEST_DB.quest_wis_01.bits[0].dc = 99;            // force fail (fresh page each test)
       S_story.quests = { quest_wis_01:'active' };
@@ -378,7 +378,7 @@ test.describe('§WISDOM-01 migrated to UQF — quest_wis_01 (§ARCH-01 Phase 3)'
 
 test.describe('§WISDOM-01 wis_02–05 migrated to UQF (§ARCH-01 Phase 3)', () => {
   test('all four validate as UQF with a skill_check bit', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => ['quest_wis_02','quest_wis_03','quest_wis_04','quest_wis_05'].map(id => {
       const q = QUEST_DB[id];
       return { id, schema:q.schema, bit:q.bits[0].kind, stat:q.bits[0].stat, dc:q.bits[0].dc,
@@ -391,7 +391,7 @@ test.describe('§WISDOM-01 wis_02–05 migrated to UQF (§ARCH-01 Phase 3)', () 
   });
 
   test('each PASS keeps byte-level parity (flag + token + exact xp/gold + knowledge)', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const got = await page.evaluate(() => {
       const cases = [
         { id:'quest_wis_02', flag:'wisPage2_aggression', xp:250, gold:0, know:'Ardley W2 — The Leak' },
@@ -432,7 +432,7 @@ test.describe('§WISDOM-01 wis_02–05 migrated to UQF (§ARCH-01 Phase 3)', () 
   });
 
   test('wis_02 honors its two-flag gate (needs wisHookReceived AND saltwickAccessed)', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       S_story.quests = {}; delete S_story.wisHookReceived; delete S_story.saltwickAccessed;
       const node = { code:'MME' };
@@ -459,7 +459,7 @@ test.describe('§WISDOM-01 wis_02–05 migrated to UQF (§ARCH-01 Phase 3)', () 
 
 test.describe('§WISDOM-01 side quests wis_00/06/07 → UQF (§ARCH-01 Phase 3)', () => {
   test('all three validate as UQF (completion gate, empty bits allowed)', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => ['quest_wis_00','quest_wis_06','quest_wis_07'].map(id => {
       const q = QUEST_DB[id];
       return { id, schema:q.schema, completion:!!q.completion, bits:q.bits.length, valid:validateQuest(q).valid };
@@ -468,7 +468,7 @@ test.describe('§WISDOM-01 side quests wis_00/06/07 → UQF (§ARCH-01 Phase 3)'
   });
 
   test('canComplete models wis_07 compound AND(pages) ∧ (flag OR battle)', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const pages = ['wisPage1_masks','wisPage2_aggression','wisPage3_thumbscrew','wisPage4_sight','wisPage5_form'];
       const reset = (obj) => { S_story.defeatedBattles = {}; [...pages,'wisPage6_shadow'].forEach(f => delete S_story[f]); Object.assign(S_story, obj || {}); };
@@ -488,7 +488,7 @@ test.describe('§WISDOM-01 side quests wis_00/06/07 → UQF (§ARCH-01 Phase 3)'
   });
 
   test('storyCheckQuests auto-completes wis_06 via either OR branch', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const run = (setup) => {
         S_story.quests = { quest_wis_06:'active' }; S_story.inventory = [];
@@ -509,7 +509,7 @@ test.describe('§WISDOM-01 side quests wis_00/06/07 → UQF (§ARCH-01 Phase 3)'
   });
 
   test('wis_00 gates activation (personalLegendComplete) then completion (wisHookReceived)', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       S_story.quests = {}; S_story.inventory = [];
       delete S_story.personalLegendComplete; delete S_story.wisHookReceived;
@@ -540,7 +540,7 @@ test.describe('§ARCH-01 Wave 1 — Wane\'s Crown arc (quest_wane_01..06)', () =
   const IDS = ['quest_wane_01','quest_wane_02','quest_wane_03','quest_wane_04','quest_wane_05','quest_wane_06'];
 
   test('all six validate as UQF skill_check quests with exact stat/dc/xp transcription', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate((ids) => ids.map(id => {
       const q = QUEST_DB[id];
       const sc = q.bits[0];
@@ -562,7 +562,7 @@ test.describe('§ARCH-01 Wave 1 — Wane\'s Crown arc (quest_wane_01..06)', () =
   });
 
   test('each PASS marks done, grants exact xp, and runs the _addCroneMark closure (+1 croneMark)', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const got = await page.evaluate((ids) => {
       const xpByQuest = { quest_wane_01:150, quest_wane_02:175, quest_wane_03:175, quest_wane_04:200, quest_wane_05:200, quest_wane_06:225 };
       const out = {};
@@ -584,7 +584,7 @@ test.describe('§ARCH-01 Wave 1 — Wane\'s Crown arc (quest_wane_01..06)', () =
   });
 
   test('a non-retryable FAIL locks the quest and grants no croneMark or xp', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       // deeply negative score ⇒ even a natural 20 lands far below the DC (deterministic fail)
       S_story.abilityScores = { str:-100, dex:-100, con:-100, int:-100, wis:-100, cha:-100 };
@@ -599,7 +599,7 @@ test.describe('§ARCH-01 Wave 1 — Wane\'s Crown arc (quest_wane_01..06)', () =
   });
 
   test('questsAttempted gate chains the arc: wane_02 needs wane_01 to have a status', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       S_story.quests = {};
       const blocked = QuestRuntime.canActivate('quest_wane_02');   // wane_01 not yet present
@@ -617,7 +617,7 @@ test.describe('§ARCH-01 Wave 1 — Wane\'s Crown arc (quest_wane_01..06)', () =
   });
 
   test('wane_06 PASS runs its compound closure (croneMark + waneCrownComplete computation)', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       // five prior wane quests marked 'complete' ⇒ the closure should set waneCrownComplete true
       S_story.abilityScores = { cha:40 };
@@ -634,7 +634,7 @@ test.describe('§ARCH-01 Wave 1 — Wane\'s Crown arc (quest_wane_01..06)', () =
   });
 
   test('canActivate questsDone term requires a terminal pass status (done/complete)', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       // synthetic probe quest exercising the new questsDone gate term in isolation
       QUEST_DB.__probe_done = { id:'__probe_done', schema:'UQF-1.0', gate:{ questsDone:['quest_wane_01'] }, bits:[] };
@@ -663,7 +663,7 @@ test.describe('§ARCH-01 Wave 1 — Whisper\'s Crown arc (quest_whisper_01..06)'
   const SKILL = ['quest_whisper_01','quest_whisper_02','quest_whisper_03','quest_whisper_04','quest_whisper_06'];
 
   test('five skill_checks + the side quest all validate as UQF', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate((skill) => {
       const sc = skill.map(id => {
         const q = QUEST_DB[id]; const bit = q.bits[0];
@@ -686,7 +686,7 @@ test.describe('§ARCH-01 Wave 1 — Whisper\'s Crown arc (quest_whisper_01..06)'
   });
 
   test('each skill_check PASS marks done, grants exact xp, runs _addCroneMark', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const got = await page.evaluate((skill) => {
       const xp = { quest_whisper_01:150, quest_whisper_02:175, quest_whisper_03:175, quest_whisper_04:200, quest_whisper_06:225 };
       const out = {};
@@ -707,7 +707,7 @@ test.describe('§ARCH-01 Wave 1 — Whisper\'s Crown arc (quest_whisper_01..06)'
   });
 
   test('whisper_06 PASS runs its compound closure (croneMark + whisperCrownComplete)', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       S_story.abilityScores = { cha:40 };
       S_story.level = 20; S_story.xp = 1000000; S_story.croneMarks = 0; S_story.day = 1;
@@ -723,7 +723,7 @@ test.describe('§ARCH-01 Wave 1 — Whisper\'s Crown arc (quest_whisper_01..06)'
   });
 
   test('whisper_05 (side): questsAttempted gate, then declarative completion via whisperSaintSeen + onComplete hook', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       // gate: needs whisper_01 to have a status
       S_story.quests = {}; delete S_story.whisperSaintSeen;
@@ -766,7 +766,7 @@ test.describe('§ARCH-01 Wave 1 — Glut\'s Crown arc (quest_glut_01..06)', () =
   const SKILL = ['quest_glut_01','quest_glut_02','quest_glut_03','quest_glut_04','quest_glut_05'];
 
   test('five skill_checks + the side quest all validate as UQF', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate((skill) => {
       const sc = skill.map(id => {
         const q = QUEST_DB[id]; const bit = q.bits[0];
@@ -792,7 +792,7 @@ test.describe('§ARCH-01 Wave 1 — Glut\'s Crown arc (quest_glut_01..06)', () =
   });
 
   test('each skill_check PASS marks done, grants exact xp, runs _addCroneMark', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const got = await page.evaluate((skill) => {
       const xp = { quest_glut_01:150, quest_glut_02:175, quest_glut_03:200, quest_glut_04:200, quest_glut_05:225 };
       const out = {};
@@ -813,7 +813,7 @@ test.describe('§ARCH-01 Wave 1 — Glut\'s Crown arc (quest_glut_01..06)', () =
   });
 
   test('glut_06 (side): flag gate, completion via glutGiftReturned, onComplete returns the gift + sets glutCrownComplete', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       // FLAG activation gate: needs glut_gift_held (not a quest-chain)
       S_story.quests = {}; delete S_story.glut_gift_held; delete S_story.glutGiftReturned;
@@ -865,7 +865,7 @@ test.describe('§ARCH-01 Wave 1 — Ceremonia: Yael arc (quest_ceremonia_yael_01
   const IDS = ['quest_ceremonia_yael_01','quest_ceremonia_yael_02','quest_ceremonia_yael_03','quest_ceremonia_yael_04','quest_ceremonia_yael_05'];
 
   test('all five validate as UQF with mission_bit + reward + transcription', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate((ids) => ids.map(id => {
       const q = QUEST_DB[id]; const bit = q.bits[0];
       const mb = (bit.onPass||[]).find(b => b.kind==='mission_bit');
@@ -885,7 +885,7 @@ test.describe('§ARCH-01 Wave 1 — Ceremonia: Yael arc (quest_ceremonia_yael_01
   });
 
   test('each PASS grants the mission-bit token+flag, exact xp, and runs the act-counter closure', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const got = await page.evaluate((ids) => {
       const meta = {
         quest_ceremonia_yael_01:{ flag:'ceremoniaPassed_yael_01', xp:75,  act:1 },
@@ -928,7 +928,7 @@ test.describe('§ARCH-01 Wave 1 — Ceremonia: Yael arc (quest_ceremonia_yael_01
   });
 
   test('yael_04 non-retryable FAIL → failed + grants the checkFailFlag mission-bit', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       S_story.abilityScores = { cha:-100 };                  // deterministic fail
       S_story.level = 1; S_story.day = 1; S_story.inventory = [];
@@ -949,7 +949,7 @@ test.describe('§ARCH-01 Wave 1 — Ceremonia: Yael arc (quest_ceremonia_yael_01
   });
 
   test('yael_01 retryable FAIL → stays active, records an attempt, grants no flag', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       S_story.abilityScores = { cha:-100 };
       S_story.level = 1; S_story.day = 5; S_story.inventory = [];
@@ -970,7 +970,7 @@ test.describe('§ARCH-01 Wave 1 — Ceremonia: Yael arc (quest_ceremonia_yael_01
   });
 
   test('favorMin gate term: yael_01 (favor∧quest) and yael_05 (flagsAny∧favor)', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const set = (favor, obj) => { S_story.npcFavorability = { yael:favor }; S_story.quests = {};
         ['ceremoniaPassed_yael_04','ceremonia_yael_04_failed'].forEach(f => delete S_story[f]);
@@ -993,7 +993,7 @@ test.describe('§ARCH-01 Wave 1 — Ceremonia: Yael arc (quest_ceremonia_yael_01
   });
 
   test('vignetteTextAlt is shown on the UQF render path when yael_04 was failed', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       S_story.abilityScores = { cha:14 }; S_story.level = 1; S_story.currentCode = 'LHR';
       const render = (failed) => {
@@ -1039,7 +1039,7 @@ test.describe('§ARCH-01 Wave 1 — §1367 skill-checks (quest_1367_{e,b,c,d})',
   const IDS = ['quest_1367_e_wycliffe','quest_1367_b_tamerlane','quest_1367_c_ottoman','quest_1367_d_hansa'];
 
   test('all four validate as UQF skill_checks (no mission_bit, exact stat/dc/xp)', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate((ids) => ids.map(id => {
       const q = QUEST_DB[id]; const bit = q.bits[0];
       return { id, schema:q.schema, valid:validateQuest(q).valid, stat:bit.stat, dc:bit.dc,
@@ -1057,7 +1057,7 @@ test.describe('§ARCH-01 Wave 1 — §1367 skill-checks (quest_1367_{e,b,c,d})',
   });
 
   test('each PASS grants exact xp and nudges the right clamped track counter', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const got = await page.evaluate((ids) => {
       const meta = {
         quest_1367_e_wycliffe:  { track:'faith_reform',   xp:110, inc:1 },
@@ -1090,7 +1090,7 @@ test.describe('§ARCH-01 Wave 1 — §1367 skill-checks (quest_1367_{e,b,c,d})',
   });
 
   test('d_hansa FAIL runs its onFail (faction_hansa -1) and, being retryable, stays active', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       S_story.abilityScores = { cha:-100 };           // deterministic fail
       S_story.level = 1; S_story.day = 3; S_story.skillCheckAttempts = {};
@@ -1118,7 +1118,7 @@ test.describe('§ARCH-01 Wave 1 — Ceremonia d0207 arc (5-act, fully UQF)', () 
   const ALL = ['quest_d0207_a1','quest_d0207_a2','quest_d0207_a3','quest_d0207_a4','quest_d0207_a5'];
 
   test('all five acts validate as UQF (3 skill_check + 2 side)', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate((ids) => ids.map(id => {
       const q = QUEST_DB[id];
       return { id, type:q.type, schema:q.schema, valid:validateQuest(q).valid,
@@ -1131,7 +1131,7 @@ test.describe('§ARCH-01 Wave 1 — Ceremonia d0207 arc (5-act, fully UQF)', () 
   });
 
   test('a1 notFlags gate: activatable until d0207_a1_passed, then closed; PASS grants flag+token+50xp', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       delete S_story.d0207_a1_passed;
       const before = QuestRuntime.canActivate('quest_d0207_a1');
@@ -1155,7 +1155,7 @@ test.describe('§ARCH-01 Wave 1 — Ceremonia d0207 arc (5-act, fully UQF)', () 
   });
 
   test('gate.battles: a4 activates only after HKG is defeated (and a1 passed)', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       S_story.d0207_a1_passed = true; S_story.defeatedBattles = {};
       const noBattle = QuestRuntime.canActivate('quest_d0207_a4');
@@ -1171,7 +1171,7 @@ test.describe('§ARCH-01 Wave 1 — Ceremonia d0207 arc (5-act, fully UQF)', () 
   });
 
   test('side acts complete declaratively: a2 via cyMadnessRoll flag, a3 via defeated HKG battle', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       // a2: completion {flags:['cyMadnessRoll']}
       delete S_story.cyMadnessRoll; S_story.defeatedBattles = {};
@@ -1195,7 +1195,7 @@ test.describe('§ARCH-01 Wave 1 — Ceremonia d0207 arc (5-act, fully UQF)', () 
   });
 
   test('a5 PASS grants cyOriginKnown token + 200xp and pushes the Name Plate item', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       S_story.abilityScores = { cha:40 }; S_story.level = 20; S_story.xp = 1000000;
       S_story.inventory = []; delete S_story.cyOriginKnown;
@@ -1228,7 +1228,7 @@ test.describe('§ARCH-01 Wave 1 — Ceremonia d0201/d0205/d0209 arcs (15 quests)
   for (const arc of ['d0201','d0205','d0209']) for (const a of ['a1','a2','a3','a4','a5']) ALL.push('quest_'+arc+'_'+a);
 
   test('all 15 validate as UQF; the a3 acts are declarative-completion side quests', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate((ids) => ids.map(id => {
       const q = QUEST_DB[id];
       return { id, schema:q.schema, valid:validateQuest(q).valid, type:q.type,
@@ -1242,7 +1242,7 @@ test.describe('§ARCH-01 Wave 1 — Ceremonia d0201/d0205/d0209 arcs (15 quests)
   });
 
   test('every skill_check PASS: done + flag + token + exact xp/gold', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const got = await page.evaluate(() => {
       const cases = [
         { id:'quest_d0201_a1', flag:'d0201_a1_passed', xp:50,  gold:0 },
@@ -1282,7 +1282,7 @@ test.describe('§ARCH-01 Wave 1 — Ceremonia d0201/d0205/d0209 arcs (15 quests)
   });
 
   test('onPass closures fire: maze counter, void-flux toggles, immunity choice', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const run = (id, setup) => {
         S_story.abilityScores = { str:40, dex:40, con:40, int:40, wis:40, cha:40 };
@@ -1308,7 +1308,7 @@ test.describe('§ARCH-01 Wave 1 — Ceremonia d0201/d0205/d0209 arcs (15 quests)
   });
 
   test('onFail closure: d0201_a2 FAIL bumps voidPressure and (retryable) stays active', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       S_story.abilityScores = { dex:-100 };       // deterministic fail
       S_story.level = 1; S_story.day = 2; S_story.voidPressure = 0; S_story.skillCheckAttempts = {};
@@ -1324,7 +1324,7 @@ test.describe('§ARCH-01 Wave 1 — Ceremonia d0201/d0205/d0209 arcs (15 quests)
   });
 
   test('side acts complete declaratively; d0205_a3 onComplete sets maze flags', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       // d0201_a3 via battle RAI
       delete S_story.defeatedBattles; S_story.defeatedBattles = {};
@@ -1371,7 +1371,7 @@ test.describe('§ARCH-01 Wave 1 — Ceremonia d0204/d0206/d0208/d0210 arcs (20 q
   for (const arc of ['d0204','d0206','d0208','d0210']) for (const a of ['a1','a2','a3','a4','a5']) ALL.push('quest_'+arc+'_'+a);
 
   test('all 20 validate as UQF', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate((ids) => ids.map(id => {
       const q = QUEST_DB[id];
       return { id, schema:q.schema, valid:validateQuest(q).valid };
@@ -1381,7 +1381,7 @@ test.describe('§ARCH-01 Wave 1 — Ceremonia d0204/d0206/d0208/d0210 arcs (20 q
   });
 
   test('new gate terms: shardsMin + notBattles (d0210_a1), restedAtMin (d0206_a3)', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       // d0210_a1: shardsMin:6, notBattles:['TLS']
       S_story.defeatedBattles = {};
@@ -1403,7 +1403,7 @@ test.describe('§ARCH-01 Wave 1 — Ceremonia d0204/d0206/d0208/d0210 arcs (20 q
   });
 
   test('questsComplete completion term (d0204_a3): strict ===complete, OR flag — a2 \'done\' is NOT enough', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const reset = () => { S_story.quests = {}; delete S_story.memorGateBypassUsed; };
       reset(); const none = QuestRuntime.canComplete('quest_d0204_a3');
@@ -1419,7 +1419,7 @@ test.describe('§ARCH-01 Wave 1 — Ceremonia d0204/d0206/d0208/d0210 arcs (20 q
   });
 
   test('BUG-FIX: a5 finales now grant their (formerly dead) completeItems + xp/gold', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const got = await page.evaluate(() => {
       const cases = [
         { id:'quest_d0204_a5', item:'Memory Token',      xp:250, gold:100 },
@@ -1447,7 +1447,7 @@ test.describe('§ARCH-01 Wave 1 — Ceremonia d0204/d0206/d0208/d0210 arcs (20 q
   });
 
   test('live onPass closures preserved: d0206_a2 wand, d0208_a4 cache + 3 tribbles', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       S_story.abilityScores = { str:40, dex:40, con:40, int:40, wis:40, cha:40 };
       S_story.level = 20; S_story.xp = 1000000;
@@ -1479,7 +1479,7 @@ test.describe('§ARCH-01 Wave 1 — Ceremonia d0204/d0206/d0208/d0210 arcs (20 q
 
 test.describe('§SKILLFIX-01 — legacy _rollCeremonia applies checkStat ability mod', () => {
   test('a checkStat quest now applies the real ability modifier (not +0) and a named label', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const cards = [];
       const orig = window._appendStoryHcard;
@@ -1498,7 +1498,7 @@ test.describe('§SKILLFIX-01 — legacy _rollCeremonia applies checkStat ability
   });
 
   test('a checkAbility quest is unchanged (the alias does not disturb the working convention)', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       // Find a still-legacy checkAbility quest dynamically (robust to future migrations).
       const id = Object.keys(QUEST_DB).find(k => {
@@ -1535,7 +1535,7 @@ test.describe('§ARCH-01 Wave 1 — Innmother skill-checks (quest_inn_{02,03,04}
   const IDS = ['quest_inn_02','quest_inn_03','quest_inn_04'];
 
   test('all three validate as UQF skill_checks (no mission_bit, sleptAt gate, exact stat/dc/xp)', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate((ids) => ids.map(id => {
       const q = QUEST_DB[id]; const bit = q.bits[0];
       return { id, schema:q.schema, valid:validateQuest(q).valid, stat:bit.stat, skill:bit.skill, dc:bit.dc,
@@ -1553,7 +1553,7 @@ test.describe('§ARCH-01 Wave 1 — Innmother skill-checks (quest_inn_{02,03,04}
   });
 
   test('the new sleptAt gate term: inactive until slept at INN, then activates', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       S_story.sleptAtNodes = {};
       const before = QuestRuntime.canActivate('quest_inn_02');
@@ -1569,7 +1569,7 @@ test.describe('§ARCH-01 Wave 1 — Innmother skill-checks (quest_inn_{02,03,04}
   });
 
   test('each PASS marks done, grants exact xp, and runs _innKindness(+1)', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const got = await page.evaluate((ids) => {
       const xpById = { quest_inn_02:150, quest_inn_03:175, quest_inn_04:150 };
       const out = {};
@@ -1591,7 +1591,7 @@ test.describe('§ARCH-01 Wave 1 — Innmother skill-checks (quest_inn_{02,03,04}
   });
 
   test('a non-retryable FAIL locks the quest and grants no xp or kindness', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       S_story.abilityScores = { wis:-100 };          // deterministic fail even on a nat 20
       S_story.level = 1; S_story.day = 3; S_story.skillCheckAttempts = {};
@@ -1618,7 +1618,7 @@ test.describe('§ARCH-01 Wave 1 — Innmother skill-checks (quest_inn_{02,03,04}
 
 test.describe('§ARCH-01 Wave 1j — Spark Harmony Chain (quest_spark_01..05)', () => {
   test('the three skill_checks validate with exact stat/skill/dc and mission_bit + gates', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => ['quest_spark_01','quest_spark_03','quest_spark_04'].map(id => {
       const q = QUEST_DB[id]; const bit = q.bits[0];
       const mb = (bit.onPass||[]).find(b=>b.kind==='mission_bit');
@@ -1636,7 +1636,7 @@ test.describe('§ARCH-01 Wave 1j — Spark Harmony Chain (quest_spark_01..05)', 
   });
 
   test('the two side quests validate as UQF completion gates that retain onComplete', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => ['quest_spark_02','quest_spark_05'].map(id => {
       const q = QUEST_DB[id];
       return { id, schema:q.schema, type:q.type, valid:validateQuest(q).valid,
@@ -1650,7 +1650,7 @@ test.describe('§ARCH-01 Wave 1j — Spark Harmony Chain (quest_spark_01..05)', 
   });
 
   test('spark_01 PASS: done, smaltBefriended flag+token, Smalt\'s Trust, +100gp/+100xp', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       S_story.abilityScores = { str:40, dex:40, con:40, int:40, wis:40, cha:40 };
       S_story.level = 20; S_story.gold = 0; S_story.xp = 0; S_story.inventory = [];
@@ -1665,7 +1665,7 @@ test.describe('§ARCH-01 Wave 1j — Spark Harmony Chain (quest_spark_01..05)', 
   });
 
   test('spark_03/04 PASS: exact gold/xp, item, knowledge, mission flag', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const run = (id) => {
         S_story.abilityScores = { str:40, dex:40, con:40, int:40, wis:40, cha:40 };
@@ -1685,7 +1685,7 @@ test.describe('§ARCH-01 Wave 1j — Spark Harmony Chain (quest_spark_01..05)', 
   });
 
   test('spark_01 retryable FAIL: not locked, hp-1, attempt recorded, no flag/reward', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       S_story.abilityScores = { cha:-100 };       // deterministic fail
       S_story.level = 1; S_story.day = 5; S_story.skillCheckAttempts = {};
@@ -1712,7 +1712,7 @@ test.describe('§ARCH-01 Wave 1j — Spark Harmony Chain (quest_spark_01..05)', 
 
 test.describe('§ARCH-01 Wave 1k — Spark2 Dunfall Harmony Chain (quest_spark2_01..05)', () => {
   test('the two skill_checks validate with exact stat/skill/dc, mission_bit (no label), gates, retryability', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => ['quest_spark2_02','quest_spark2_04'].map(id => {
       const q = QUEST_DB[id]; const bit = q.bits[0];
       const mb = (bit.onPass||[]).find(b=>b.kind==='mission_bit');
@@ -1730,7 +1730,7 @@ test.describe('§ARCH-01 Wave 1k — Spark2 Dunfall Harmony Chain (quest_spark2_
   });
 
   test('the three side quests validate as structural completion gates (no onComplete)', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => ['quest_spark2_01','quest_spark2_03','quest_spark2_05'].map(id => {
       const q = QUEST_DB[id];
       return { id, schema:q.schema, type:q.type, valid:validateQuest(q).valid,
@@ -1745,7 +1745,7 @@ test.describe('§ARCH-01 Wave 1k — Spark2 Dunfall Harmony Chain (quest_spark2_
   });
 
   test('spark2_02 PASS: done, bramBefriended flag+token, Bram\'s Fish Scale, +150xp', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       S_story.abilityScores = { str:40, dex:40, con:40, int:40, wis:40, cha:40 };
       S_story.level = 20; S_story.xp = 0; S_story.inventory = [];
@@ -1759,7 +1759,7 @@ test.describe('§ARCH-01 Wave 1k — Spark2 Dunfall Harmony Chain (quest_spark2_
   });
 
   test('spark2_04 PASS: +200xp, knowledge, splices Oat\'s Harbor Bead → Dunfall Drift Spore, sets brimFound', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       S_story.abilityScores = { str:40, dex:40, con:40, int:40, wis:40, cha:40 };
       S_story.level = 20; S_story.xp = 0; S_story.knowledge = [];
@@ -1774,7 +1774,7 @@ test.describe('§ARCH-01 Wave 1k — Spark2 Dunfall Harmony Chain (quest_spark2_
   });
 
   test('spark2_04 non-retryable FAIL: runs onFail msg then locks, no flag/reward', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       S_story.abilityScores = { int:-100 };       // deterministic fail
       S_story.level = 1; S_story.day = 5; S_story.skillCheckAttempts = {};
@@ -1803,7 +1803,7 @@ test.describe('§ARCH-01 Wave 1l — Codex Inquisitor gauntlet (quest_inquisitor
   const IDS = ['quest_inquisitor_handshake','quest_inquisitor_questions','quest_inquisitor_final'];
 
   test('all three validate; exact stat/skill/dc, mission_bit (no label), reward xp, gates, retryGateDays', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate((ids) => ids.map(id => {
       const q = QUEST_DB[id]; const bit = q.bits[0];
       const mb = (bit.onPass||[]).find(b=>b.kind==='mission_bit');
@@ -1822,7 +1822,7 @@ test.describe('§ARCH-01 Wave 1l — Codex Inquisitor gauntlet (quest_inquisitor
   });
 
   test('each PASS marks done, sets its flag+token, grants exact xp; final grants Archive Key', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate((ids) => {
       const xpById = { quest_inquisitor_handshake:50, quest_inquisitor_questions:75, quest_inquisitor_final:200 };
       const flagById = { quest_inquisitor_handshake:'inquisitorHandshakePassed', quest_inquisitor_questions:'inquisitorQuestionsPassed', quest_inquisitor_final:'inquisitorPassed' };
@@ -1849,7 +1849,7 @@ test.describe('§ARCH-01 Wave 1l — Codex Inquisitor gauntlet (quest_inquisitor
   });
 
   test('questions retryable FAIL: stays active, onFail docks 10 hp, no flag/xp', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       S_story.abilityScores = { wis:-100 };       // deterministic fail
       S_story.level = 1; S_story.day = 4; S_story.skillCheckAttempts = {};
@@ -1866,7 +1866,7 @@ test.describe('§ARCH-01 Wave 1l — Codex Inquisitor gauntlet (quest_inquisitor
   });
 
   test('the §D01-02 NUE handshake button still drives the migrated quest through _rollCeremonia', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       // simulate the button handler's body (L28442-28446) against the migrated quest
       S_story.abilityScores = { str:40, dex:40, con:40, int:40, wis:40, cha:40 };
@@ -1891,7 +1891,7 @@ test.describe('§ARCH-01 Wave 1l — Codex Inquisitor gauntlet (quest_inquisitor
 
 test.describe('§ARCH-01 Wave 1m — Sea: The Warmth Calm (quest_sea_01..03)', () => {
   test('the new completion.atNode term: sea_01 completes only while currentCode===NWI', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const q = QUEST_DB.quest_sea_01;
       S_story.currentCode = 'SEN';
@@ -1908,7 +1908,7 @@ test.describe('§ARCH-01 Wave 1m — Sea: The Warmth Calm (quest_sea_01..03)', (
   });
 
   test('the two skill_checks validate with exact stat/skill/dc + mission_bit (no label) + gates', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => ['quest_sea_02','quest_sea_03'].map(id => {
       const q = QUEST_DB[id]; const bit = q.bits[0];
       const mb = (bit.onPass||[]).find(b=>b.kind==='mission_bit');
@@ -1924,7 +1924,7 @@ test.describe('§ARCH-01 Wave 1m — Sea: The Warmth Calm (quest_sea_01..03)', (
   });
 
   test('sea_02/03 PASS: exact gold/xp, flags, knowledge (02), Joint Pirate Debt Note + ally flag (03)', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const run = (id) => {
         S_story.abilityScores = { str:40, dex:40, con:40, int:40, wis:40, cha:40 };
@@ -1957,7 +1957,7 @@ test.describe('§ARCH-01 Wave 1m — Sea: The Warmth Calm (quest_sea_01..03)', (
 
 test.describe('§ARCH-01 Wave 1n — Naval Intercept branch (quest_sb_*)', () => {
   test('the new flagEquals gate term: branch quests activate only on the matching sbChosenRole', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const probe = (id, seen, role) => { S_story.sbApproachSeen = seen; S_story.sbChosenRole = role; return QuestRuntime.canActivate(id); };
       return {
@@ -1973,7 +1973,7 @@ test.describe('§ARCH-01 Wave 1n — Naval Intercept branch (quest_sb_*)', () =>
   });
 
   test('all four validate; sb_01 structural side, sb_fight battle-completion, parley/examine skill_checks', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const get = (id) => { const q = QUEST_DB[id]; return { id, schema:q.schema, type:q.type, valid:validateQuest(q).valid, gate:JSON.stringify(q.gate), completion:q.completion?JSON.stringify(q.completion):null }; };
       const sc = (id) => { const q = QUEST_DB[id]; const b = q.bits[0]; const mb=(b.onPass||[]).find(x=>x.kind==='mission_bit'); return { id, stat:b.stat, skill:b.skill, dc:b.dc, mbFlag:mb&&mb.flag, mbLabel:mb&&(mb.label||null), failFlips:(b.onFail||[]).some(x=>x.kind==='_legacy_fn'), retryable:q.retryable }; };
@@ -1990,7 +1990,7 @@ test.describe('§ARCH-01 Wave 1n — Naval Intercept branch (quest_sb_*)', () =>
   });
 
   test('parley PASS: −80gp, +350xp, Letter of Marque, sbResolved+flag', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       S_story.abilityScores = { str:40, dex:40, con:40, int:40, wis:40, cha:40 };
       S_story.level = 20; S_story.gold = 1000; S_story.xp = 0; S_story.inventory = [];
@@ -2005,7 +2005,7 @@ test.describe('§ARCH-01 Wave 1n — Naval Intercept branch (quest_sb_*)', () =>
   });
 
   test('parley FAIL (non-retryable): locks, flips sbChosenRole→fight (sb_fight then activatable)', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       S_story.abilityScores = { cha:-100 };       // deterministic fail
       S_story.level = 1; S_story.day = 2; S_story.skillCheckAttempts = {};
@@ -2024,7 +2024,7 @@ test.describe('§ARCH-01 Wave 1n — Naval Intercept branch (quest_sb_*)', () =>
   });
 
   test('sb_fight onComplete grants +400xp + Letter of Marque + sbResolved (double-count fixed: xpAward removed → +400 total, not +800)', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       S_story.xp = 0; S_story.gold = 0; S_story.inventory = []; S_story.sbResolved = false;
       _uqfRunToCompletion(QuestRuntime.execBits(QUEST_DB.quest_sb_fight.onComplete, {}));   // §VM-01-A pump. the bit-chain portion only (W7b)
@@ -2056,7 +2056,7 @@ test.describe('§ARCH-01 Wave 1o — Lake/Relay Monster Hunt (quest_hunt_* / que
   ];
 
   test('all 8 validate; 4 skill_checks (no mission_bit label) + 4 side quests (hooks gate:{}, lairs battle-completion)', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const sk = ['quest_hunt2_02','quest_hunt2_03','quest_hunt_02','quest_hunt_03'].map(id => {
         const q = QUEST_DB[id]; const b = q.bits[0]; const mb=(b.onPass||[]).find(x=>x.kind==='mission_bit');
@@ -2088,7 +2088,7 @@ test.describe('§ARCH-01 Wave 1o — Lake/Relay Monster Hunt (quest_hunt_* / que
   });
 
   test('every skill_check PASS: done + flag + token + exact xp + knowledge count', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const got = await page.evaluate((SKILL) => {
       const out = {};
       for (const s of SKILL) {
@@ -2107,7 +2107,7 @@ test.describe('§ARCH-01 Wave 1o — Lake/Relay Monster Hunt (quest_hunt_* / que
   });
 
   test('lair-clear onComplete closures grant item + knowledge + gold/xp (double-count fixed: xpAward removed → single-count)', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const run = (id) => {
         S_story.xp = 0; S_story.gold = 0; S_story.inventory = []; S_story.knowledge = [];
@@ -2134,7 +2134,7 @@ test.describe('§ARCH-01 Wave 1o — Lake/Relay Monster Hunt (quest_hunt_* / que
 
 test.describe('§ARCH-01 Wave 1p — Bilge Mystery (quest_bilge_01..04)', () => {
   test('all 4 validate; 2 skill_checks (no label) + hook side (flag gate) + lair side (battle completion)', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const sk = ['quest_bilge_02','quest_bilge_03'].map(id => {
         const q = QUEST_DB[id]; const b = q.bits[0]; const mb=(b.onPass||[]).find(x=>x.kind==='mission_bit');
@@ -2158,7 +2158,7 @@ test.describe('§ARCH-01 Wave 1p — Bilge Mystery (quest_bilge_01..04)', () => 
   });
 
   test('both skill_check PASSes: done + flag + token + 200xp (03 no knowledge, 02 +1)', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const run = (id, flag) => {
         S_story.abilityScores = { str:40, dex:40, con:40, int:40, wis:40, cha:40 };
@@ -2174,7 +2174,7 @@ test.describe('§ARCH-01 Wave 1p — Bilge Mystery (quest_bilge_01..04)', () => 
   });
 
   test('bilge_04 onComplete: +600gp/+600xp + Sea Spawn Scale Fragment + knowledge + solved flag (double-count fixed: xpAward removed → +600, not +1200)', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       S_story.xp = 0; S_story.gold = 0; S_story.inventory = []; S_story.knowledge = []; S_story.whodunit2Solved = false;
       _uqfRunToCompletion(QuestRuntime.execBits(QUEST_DB.quest_bilge_04.onComplete, {}));   // §VM-01-A pump. W7b bit chain
@@ -2194,7 +2194,7 @@ test.describe('§ARCH-01 Wave 1p — Bilge Mystery (quest_bilge_01..04)', () => 
 // was dead — the player could never rename the Baby Mimic. Fixed to '=== done'.
 test.describe('open-gaps item 3 — mimic rename prompt (skill_check terminal is "done")', () => {
   test('LIM render shows the rename prompt when d0208_a5 is done + still named Baby Mimic; hidden while active', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const renderWith = (status) => {
         S_story.currentCode = 'LIM';
@@ -2228,7 +2228,7 @@ test.describe('open-gaps item 3 — mimic rename prompt (skill_check terminal is
 
 test.describe('§ARCH-01 Wave 1q — The Personal Legend (quest_alch_01..07)', () => {
   test('all 7 validate; 5 chained side quests (no onComplete) + 2 skill_checks (no label)', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const side = ['quest_alch_01','quest_alch_02','quest_alch_03','quest_alch_06','quest_alch_07'].map(id => {
         const q = QUEST_DB[id];
@@ -2256,7 +2256,7 @@ test.describe('§ARCH-01 Wave 1q — The Personal Legend (quest_alch_01..07)', (
   });
 
   test('alch_04/05 PASS: done + flag + token + exact xp/gold (05 also +250gp)', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const run = (id, flag) => {
         S_story.abilityScores = { str:40, dex:40, con:40, int:40, wis:40, cha:40 };
@@ -2272,7 +2272,7 @@ test.describe('§ARCH-01 Wave 1q — The Personal Legend (quest_alch_01..07)', (
   });
 
   test('alch_04 retryable FAIL: stays active, no flag/xp', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       S_story.abilityScores = { cha:-100 };       // deterministic fail
       S_story.level = 1; S_story.day = 2; S_story.skillCheckAttempts = {};
@@ -2296,7 +2296,7 @@ test.describe('§ARCH-01 Wave 1q — The Personal Legend (quest_alch_01..07)', (
 
 test.describe('§ARCH-01 Wave 1r — The Scar (quest_scar_01..04)', () => {
   test('all 4 validate; 3 checkAbility skill_checks (no mission_bit) + scar_04 side (flags+atNode completion)', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const sk = ['quest_scar_01','quest_scar_02','quest_scar_03'].map(id => {
         const q = QUEST_DB[id]; const b = q.bits[0];
@@ -2319,7 +2319,7 @@ test.describe('§ARCH-01 Wave 1r — The Scar (quest_scar_01..04)', () => {
   });
 
   test('scar_01/02 PASS: done + flag(s) + exact xp (no token, no checkPassFlag)', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const run = (id) => {
         S_story.abilityScores = { str:40, dex:40, con:40, int:40, wis:40, cha:40 };
@@ -2338,7 +2338,7 @@ test.describe('§ARCH-01 Wave 1r — The Scar (quest_scar_01..04)', () => {
   });
 
   test('scar_03 BRANCH: PASS→gretChoice=help (+250xp, done); FAIL→gretChoice=refuse (locks failed, no xp), both let scar_04 activate', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const pass = (() => {
         S_story.abilityScores = { wis:40 }; S_story.level = 20; S_story.xp = 0;
@@ -2359,7 +2359,7 @@ test.describe('§ARCH-01 Wave 1r — The Scar (quest_scar_01..04)', () => {
   });
 
   test('scar_04 completion.atNode: needs gretChoice AND currentCode===NUE', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       S_story.gretChoice = 'help';
       S_story.currentCode = 'LHR'; const wrongNode = QuestRuntime.canComplete('quest_scar_04');
@@ -2392,7 +2392,7 @@ const SIREN = [
 
 test.describe('§ARCH-01 Wave 1s — The Four Courts of the Littoral Sea (§SIREN-01)', () => {
   test('all 5 validate as UQF skill_checks; gate:{}, retryable:false, onPass mission_bit{flag,label}+reward, onFail mission_bit (solen onFail:[])', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate((SIREN) => SIREN.map(s => {
       const q = QUEST_DB[s.id]; const b = (q.bits || []).find(x => x.kind === 'skill_check');
       const pb = (b.onPass || []).find(x => x.kind === 'mission_bit');
@@ -2418,7 +2418,7 @@ test.describe('§ARCH-01 Wave 1s — The Four Courts of the Littoral Sea (§SIRE
   });
 
   test('activation gate:{} — all 5 activatable from a fresh slate', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate((SIREN) => {
       S_story.quests = {};
       return SIREN.map(s => ({ id:s.id, can:QuestRuntime.canActivate(s.id) }));
@@ -2427,7 +2427,7 @@ test.describe('§ARCH-01 Wave 1s — The Four Courts of the Littoral Sea (§SIRE
   });
 
   test('PASS parity: done + pass flag true + token{flagRef,name} + exact xp delta', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate((SIREN) => SIREN.map(s => {
       S_story.abilityScores = { [s.stat.toLowerCase()]: 40 };
       S_story.level = 20; S_story.xp = 0; S_story.inventory = [];
@@ -2446,7 +2446,7 @@ test.describe('§ARCH-01 Wave 1s — The Four Courts of the Littoral Sea (§SIRE
   });
 
   test('FAIL parity (non-retryable): failed + fail flag/token (same bitLabel), pass flag false, no xp; solen grants nothing', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate((SIREN) => SIREN.map(s => {
       S_story.abilityScores = { [s.stat.toLowerCase()]: -100 };
       S_story.level = 1; S_story.day = 1; S_story.skillCheckAttempts = {};
@@ -2488,7 +2488,7 @@ test.describe('§ARCH-01 Wave 1s — The Four Courts of the Littoral Sea (§SIRE
 //     {flags:['anathSightRestored']}.
 test.describe('§ARCH-01 Wave 1t — Biblical singletons (stoning_lystra, basket_damascus)', () => {
   test('both validate as UQF skill_checks with correct gate / stat / dc / onPass / onFail shape', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const dump = (id) => {
         const q = QUEST_DB[id]; const b = (q.bits || []).find(x => x.kind === 'skill_check');
@@ -2518,7 +2518,7 @@ test.describe('§ARCH-01 Wave 1t — Biblical singletons (stoning_lystra, basket
   });
 
   test('declarative gates open only when their prerequisite is met', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       S_story.quests = {}; S_story.anathSightRestored = false;
       const closed = { stoning:QuestRuntime.canActivate('quest_stoning_lystra'),
@@ -2533,7 +2533,7 @@ test.describe('§ARCH-01 Wave 1t — Biblical singletons (stoning_lystra, basket
   });
 
   test('stoning PASS parity: done + stoningEvent true + Lystra token + xp+150', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       S_story.abilityScores = { str:40 }; S_story.level = 20; S_story.xp = 0;
       S_story.hp = 30; S_story.inventory = []; S_story.stoningEvent = false;
@@ -2547,7 +2547,7 @@ test.describe('§ARCH-01 Wave 1t — Biblical singletons (stoning_lystra, basket
   });
 
   test('stoning FAIL parity (non-retryable): failed + stoningEvent true (shared flag) + token + hp→1 + no xp', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       S_story.abilityScores = { str:-100 }; S_story.level = 1; S_story.xp = 0;
       S_story.hp = 30; S_story.inventory = []; S_story.stoningEvent = false;
@@ -2561,7 +2561,7 @@ test.describe('§ARCH-01 Wave 1t — Biblical singletons (stoning_lystra, basket
   });
 
   test('basket PASS parity: done + both flags + two tokens + xp+150', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       S_story.abilityScores = { str:40 }; S_story.level = 20; S_story.xp = 0;
       S_story.inventory = []; S_story.escapedDamascus = false; S_story.basketRopeComplete = false;
@@ -2578,7 +2578,7 @@ test.describe('§ARCH-01 Wave 1t — Biblical singletons (stoning_lystra, basket
   });
 
   test('basket FAIL parity (retryable): stays active, no flags, no tokens, no xp, attempt recorded', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       S_story.abilityScores = { str:-100 }; S_story.level = 1; S_story.day = 5; S_story.xp = 0;
       S_story.skillCheckAttempts = {}; S_story.inventory = [];
@@ -2611,7 +2611,7 @@ const IODINE = [
 
 test.describe('§ARCH-01 Wave 1u — Atlantean iodine chain (iodine_01/shore_02/forge_01/sunken_01)', () => {
   test('all 4 validate as UQF skill_checks; retryable:true, onPass [reward{xp}, _legacy_fn], onFail:[]', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate((IODINE) => IODINE.map(s => {
       const q = QUEST_DB[s.id]; const b = (q.bits || []).find(x => x.kind === 'skill_check');
       const rw = (b.onPass || []).find(x => x.kind === 'reward');
@@ -2629,7 +2629,7 @@ test.describe('§ARCH-01 Wave 1u — Atlantean iodine chain (iodine_01/shore_02/
   });
 
   test('declarative gates: iodine_01 needs quest_inn_01 attempted, forge_01 needs atlanteanProcessKnown, shore_02/sunken_01 always', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       S_story.quests = {}; S_story.atlanteanProcessKnown = false;
       const closed = {};
@@ -2644,7 +2644,7 @@ test.describe('§ARCH-01 Wave 1u — Atlantean iodine chain (iodine_01/shore_02/
   });
 
   test('PASS parity: done + exact xp/gold + onPass closure side effects (items / flag / knowledge)', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate((IODINE) => IODINE.map(s => {
       S_story.abilityScores = { [s.stat]: 40 };
       S_story.level = 20; S_story.xp = 0; S_story.gold = 0;
@@ -2668,7 +2668,7 @@ test.describe('§ARCH-01 Wave 1u — Atlantean iodine chain (iodine_01/shore_02/
   });
 
   test('FAIL parity (retryable): stays active, no xp/gold, no closure effects, attempt recorded', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate((IODINE) => IODINE.map(s => {
       S_story.abilityScores = { [s.stat]: -100 };
       S_story.level = 1; S_story.day = 5; S_story.skillCheckAttempts = {};
@@ -2700,7 +2700,7 @@ const HIGHLAND = [
 
 test.describe('§ARCH-01 Wave 1v — Highland trade (df_02 / sk_02)', () => {
   test('both validate as UQF skill_checks; checkPassFlag → onPass [mission_bit(no label), _legacy_fn], onFail [_legacy_fn]', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate((HIGHLAND) => HIGHLAND.map(s => {
       const q = QUEST_DB[s.id]; const b = (q.bits || []).find(x => x.kind === 'skill_check');
       const mb = (b.onPass || []).find(x => x.kind === 'mission_bit');
@@ -2720,7 +2720,7 @@ test.describe('§ARCH-01 Wave 1v — Highland trade (df_02 / sk_02)', () => {
   });
 
   test('declarative gates: df_02 needs dunfallAccessed, sk_02 needs saltwickAccessed', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate((HIGHLAND) => HIGHLAND.map(s => {
       S_story[s.gateFlag] = false; const closed = QuestRuntime.canActivate(s.id);
       S_story[s.gateFlag] = true;  const open   = QuestRuntime.canActivate(s.id);
@@ -2733,7 +2733,7 @@ test.describe('§ARCH-01 Wave 1v — Highland trade (df_02 / sk_02)', () => {
   });
 
   test('PASS parity: done + flag set + bone token (flagRef + _flagToLabel name) + gold + xp + item', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate((HIGHLAND) => HIGHLAND.map(s => {
       S_story.abilityScores = { [s.stat]: 40 };
       S_story.level = 20; S_story.xp = 0; S_story.gold = 0; S_story.inventory = [];
@@ -2753,7 +2753,7 @@ test.describe('§ARCH-01 Wave 1v — Highland trade (df_02 / sk_02)', () => {
   });
 
   test('FAIL parity (retryable): stays active, no flag/token/gold/xp/item, attempt recorded', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate((HIGHLAND) => HIGHLAND.map(s => {
       S_story.abilityScores = { [s.stat]: -100 };
       S_story.level = 1; S_story.day = 5; S_story.skillCheckAttempts = {};
@@ -2778,7 +2778,7 @@ const FOLK = [
 
 test.describe('§ARCH-01 Wave 1v — folk wisdom (lxvii67 jester / guide_04 U-curve)', () => {
   test('both validate; xpAward → onPass [reward{xp}, _legacy_fn] (no token), onFail:[]', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate((FOLK) => FOLK.map(s => {
       const q = QUEST_DB[s.id]; const b = (q.bits || []).find(x => x.kind === 'skill_check');
       const rw = (b.onPass || []).find(x => x.kind === 'reward');
@@ -2797,7 +2797,7 @@ test.describe('§ARCH-01 Wave 1v — folk wisdom (lxvii67 jester / guide_04 U-cu
   });
 
   test('gates: guide_04 → questsDone[quest_guide_03]; lxvii67 keeps load-bearing activateCond behind a _legacyFn gate (faith_folk>=1 inexpressible)', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       S_story.quests = {}; const g04closed = QuestRuntime.canActivate('quest_guide_04');
       S_story.quests = { quest_guide_03:'done' }; const g04open = QuestRuntime.canActivate('quest_guide_04');
@@ -2812,7 +2812,7 @@ test.describe('§ARCH-01 Wave 1v — folk wisdom (lxvii67 jester / guide_04 U-cu
   });
 
   test('PASS parity: done + xp + onPass flag effect (faith_folk++ / emmerStage4a) + NO token', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate((FOLK) => FOLK.map(s => {
       S_story.abilityScores = { [s.stat]: 40 };
       S_story.level = 20; S_story.xp = 0; S_story.inventory = [];
@@ -2829,7 +2829,7 @@ test.describe('§ARCH-01 Wave 1v — folk wisdom (lxvii67 jester / guide_04 U-cu
   });
 
   test('FAIL parity (retryable): stays active, xp 0, flag unchanged, attempt recorded', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate((FOLK) => FOLK.map(s => {
       S_story.abilityScores = { [s.stat]: -100 };
       S_story.level = 1; S_story.day = 5; S_story.skillCheckAttempts = {};
@@ -2860,7 +2860,7 @@ test.describe('§ARCH-01 Wave 1v — folk wisdom (lxvii67 jester / guide_04 U-cu
 test.describe('§ARCH-01 Wave 2 — hav_* family (bulk-migrated, 30 acts)', () => {
   test('every hav_* skill_check is UQF-1.0, validates, onPass:[mission_bit], onFail:[]', async ({ page }) => {
     const errs = []; page.on('pageerror', e => errs.push(String(e)));
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const hav = Object.values(QUEST_DB).filter(q => /^hav_/.test(q.id) && q.type === 'skill_check');
       return hav.map(q => {
@@ -2885,7 +2885,7 @@ test.describe('§ARCH-01 Wave 2 — hav_* family (bulk-migrated, 30 acts)', () =
   });
 
   test('PASS parity: done + checkPassFlag true + bone token (name = _flagToLabel + " Token"), no xp/gold', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const hav = Object.values(QUEST_DB).filter(q => /^hav_/.test(q.id) && q.type === 'skill_check');
       return hav.map(q => {
@@ -2907,7 +2907,7 @@ test.describe('§ARCH-01 Wave 2 — hav_* family (bulk-migrated, 30 acts)', () =
   });
 
   test('FAIL parity (non-retryable): failed + flag false + no token', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const hav = Object.values(QUEST_DB).filter(q => /^hav_/.test(q.id) && q.type === 'skill_check');
       return hav.map(q => {
@@ -2927,7 +2927,7 @@ test.describe('§ARCH-01 Wave 2 — hav_* family (bulk-migrated, 30 acts)', () =
   });
 
   test('gate decomposition: act1 openers gate:{}, act2..N gate.flags === prior act pass-flag', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const hav = Object.values(QUEST_DB).filter(q => /^hav_/.test(q.id) && q.type === 'skill_check');
       return hav.map(q => ({ id:q.id, gate:q.gate,
@@ -2952,7 +2952,7 @@ test.describe('§ARCH-01 Wave 2 — hav_* family (bulk-migrated, 30 acts)', () =
 test.describe('§ARCH-01 Wave 2b — ada* family (bulk-migrated, 235 acts)', () => {
   test('every ada* skill_check is UQF-1.0, validates, gate:{}, onPass:[mission_bit](no label), onFail:[]', async ({ page }) => {
     const errs = []; page.on('pageerror', e => errs.push(String(e)));
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const ada = Object.values(QUEST_DB).filter(q => /^ada/.test(q.id) && q.type === 'skill_check');
       return ada.map(q => {
@@ -2978,7 +2978,7 @@ test.describe('§ARCH-01 Wave 2b — ada* family (bulk-migrated, 235 acts)', () 
   });
 
   test('PASS/FAIL parity across all 235: pass→done+flag+_flagToLabel token; fail→failed+no flag/token', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const ada = Object.values(QUEST_DB).filter(q => /^ada/.test(q.id) && q.type === 'skill_check');
       let passBad = [], failBad = [];
@@ -3022,7 +3022,7 @@ test.describe('§ARCH-01 Wave 2b — ada* family (bulk-migrated, 235 acts)', () 
 test.describe('§ARCH-01 Wave 2c — ath* family (bulk-migrated, 113 acts; fixes string-activateCond crash)', () => {
   test('every ath* skill_check is UQF-1.0, validates, onPass:[mission_bit](no label), onFail:[], NO residual activateCond', async ({ page }) => {
     const errs = []; page.on('pageerror', e => errs.push(String(e)));
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const ath = Object.values(QUEST_DB).filter(q => /^ath/.test(q.id) && q.type === 'skill_check');
       return ath.map(q => {
@@ -3052,7 +3052,7 @@ test.describe('§ARCH-01 Wave 2c — ath* family (bulk-migrated, 113 acts; fixes
   });
 
   test('PASS/FAIL parity across all 113 + gate behavior (flags ⇒ activatable iff flag set; {} ⇒ always)', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const ath = Object.values(QUEST_DB).filter(q => /^ath/.test(q.id) && q.type === 'skill_check');
       let passBad = [], failBad = [], gateBad = [];
@@ -3107,7 +3107,7 @@ test.describe('§ARCH-01 Wave 2c — ath* family (bulk-migrated, 113 acts; fixes
 test.describe('§ARCH-01 Wave 2d — lis* family (bulk-migrated, 89 acts)', () => {
   test('every lis* skill_check is UQF-1.0, validates, onPass:[mission_bit](no label), onFail:[], NO residual activateCond', async ({ page }) => {
     const errs = []; page.on('pageerror', e => errs.push(String(e)));
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const lis = Object.values(QUEST_DB).filter(q => /^lis/.test(q.id) && q.type === 'skill_check');
       return lis.map(q => {
@@ -3140,7 +3140,7 @@ test.describe('§ARCH-01 Wave 2d — lis* family (bulk-migrated, 89 acts)', () =
   });
 
   test('PASS/FAIL parity across all 89 + gate behavior (flags ⇒ activatable iff flag set; {} ⇒ always)', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       // checkStat is uppercase but abilityScores keys are lowercase; the UQF
       // resolver lowercases, so seed both cases for a deterministic extreme.
@@ -3197,7 +3197,7 @@ test.describe('§ARCH-01 Wave 2d — lis* family (bulk-migrated, 89 acts)', () =
 test.describe('§ARCH-01 Wave 2e — zth* family (bulk-migrated, 75 acts)', () => {
   test('every zth* skill_check is UQF-1.0, validates, onPass:[mission_bit](no label), onFail:[], NO residual activateCond', async ({ page }) => {
     const errs = []; page.on('pageerror', e => errs.push(String(e)));
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const zth = Object.values(QUEST_DB).filter(q => /^zth/.test(q.id) && q.type === 'skill_check');
       return zth.map(q => {
@@ -3230,7 +3230,7 @@ test.describe('§ARCH-01 Wave 2e — zth* family (bulk-migrated, 75 acts)', () =
   });
 
   test('PASS/FAIL parity across all 75 + gate behavior (flags ⇒ activatable iff flag set; {} ⇒ always)', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       // checkStat is uppercase but abilityScores keys are lowercase; the UQF
       // resolver lowercases, so seed both cases for a deterministic extreme.
@@ -3287,7 +3287,7 @@ test.describe('§ARCH-01 Wave 2e — zth* family (bulk-migrated, 75 acts)', () =
 test.describe('§ARCH-01 Wave 2f — flr* family (bulk-migrated, 71 acts)', () => {
   test('every flr* skill_check is UQF-1.0, validates, onPass:[mission_bit](no label), onFail:[], NO residual activateCond', async ({ page }) => {
     const errs = []; page.on('pageerror', e => errs.push(String(e)));
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const flr = Object.values(QUEST_DB).filter(q => /^flr/.test(q.id) && q.type === 'skill_check');
       return flr.map(q => {
@@ -3320,7 +3320,7 @@ test.describe('§ARCH-01 Wave 2f — flr* family (bulk-migrated, 71 acts)', () =
   });
 
   test('PASS/FAIL parity across all 71 + gate behavior (flags ⇒ activatable iff flag set; {} ⇒ always)', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       // checkStat is uppercase but abilityScores keys are lowercase; the UQF
       // resolver lowercases, so seed both cases for a deterministic extreme.
@@ -3379,7 +3379,7 @@ test.describe('§ARCH-01 Wave 2f — flr* family (bulk-migrated, 71 acts)', () =
 test.describe('§ARCH-01 Wave 2g — hft_* family (bulk-migrated, 50 acts; mixed flag/flagless)', () => {
   test('every hft_* skill_check is UQF-1.0, validates, onFail:[], NO residual activateCond; onPass = mission_bit OR empty', async ({ page }) => {
     const errs = []; page.on('pageerror', e => errs.push(String(e)));
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const hft = Object.values(QUEST_DB).filter(q => /^hft_/.test(q.id) && q.type === 'skill_check');
       return hft.map(q => {
@@ -3422,7 +3422,7 @@ test.describe('§ARCH-01 Wave 2g — hft_* family (bulk-migrated, 50 acts; mixed
   });
 
   test('PASS/FAIL parity across all 50 + gate behavior; flag-bearing grant a token, flagless grant nothing', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       // checkStat is uppercase but abilityScores keys are lowercase; the UQF
       // resolver lowercases, so seed both cases for a deterministic extreme.
@@ -3487,7 +3487,7 @@ test.describe('§ARCH-01 Wave 2g — hft_* family (bulk-migrated, 50 acts; mixed
 test.describe('§ARCH-01 Wave 2h — rkv_* family (bulk-migrated, 50 acts; mixed flag/flagless)', () => {
   test('every rkv_* skill_check is UQF-1.0, validates, onFail:[], NO residual activateCond; onPass = mission_bit OR empty', async ({ page }) => {
     const errs = []; page.on('pageerror', e => errs.push(String(e)));
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const rkv = Object.values(QUEST_DB).filter(q => /^rkv_/.test(q.id) && q.type === 'skill_check');
       return rkv.map(q => {
@@ -3529,7 +3529,7 @@ test.describe('§ARCH-01 Wave 2h — rkv_* family (bulk-migrated, 50 acts; mixed
   });
 
   test('PASS/FAIL parity across all 50 + gate behavior; flag-bearing grant a token, flagless grant nothing', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const seed = (k, v) => ({ [k]: v, [k.toLowerCase()]: v });
       const rkv = Object.values(QUEST_DB).filter(q => /^rkv_/.test(q.id) && q.type === 'skill_check');
@@ -3603,7 +3603,7 @@ test.describe('§ARCH-01 Wave 2i / §SKILLFIX-02 — ist_* family (skill→abili
 
   test('every ist_* skill_check is UQF-1.0, validates, stat is a real ability, skill→ability mapping holds', async ({ page }) => {
     const errs = []; page.on('pageerror', e => errs.push(String(e)));
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const ist = Object.values(QUEST_DB).filter(q => /^ist_/.test(q.id) && q.type === 'skill_check');
       return ist.map(q => {
@@ -3641,7 +3641,7 @@ test.describe('§ARCH-01 Wave 2i / §SKILLFIX-02 — ist_* family (skill→abili
   });
 
   test('NEW behavior (post-§SKILLFIX-02): the mapped ability mod drives the roll — forced PASS/FAIL + gate', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const seed = (k, v) => ({ [k]: v, [k.toLowerCase()]: v });
       const ist = Object.values(QUEST_DB).filter(q => /^ist_/.test(q.id) && q.type === 'skill_check');
@@ -3697,7 +3697,7 @@ test.describe('§ARCH-01 Wave 2i / §SKILLFIX-02 — ist_* family (skill→abili
 test.describe('§ARCH-01 Wave 2j — rix_* family (bulk-migrated, 47 acts; mixed flag/flagless)', () => {
   test('every rix_* skill_check is UQF-1.0, validates, onFail:[], NO residual activateCond; onPass = mission_bit OR empty', async ({ page }) => {
     const errs = []; page.on('pageerror', e => errs.push(String(e)));
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const rix = Object.values(QUEST_DB).filter(q => /^rix_/.test(q.id) && q.type === 'skill_check');
       return rix.map(q => {
@@ -3739,7 +3739,7 @@ test.describe('§ARCH-01 Wave 2j — rix_* family (bulk-migrated, 47 acts; mixed
   });
 
   test('PASS/FAIL parity across all 47 + gate behavior; flag-bearing grant a token, flagless grant nothing', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const seed = (k, v) => ({ [k]: v, [k.toLowerCase()]: v });
       const rix = Object.values(QUEST_DB).filter(q => /^rix_/.test(q.id) && q.type === 'skill_check');
@@ -3803,7 +3803,7 @@ test.describe('§ARCH-01 Wave 2j — rix_* family (bulk-migrated, 47 acts; mixed
 test.describe('§ARCH-01 Wave 2k — ost_* family (bulk-migrated, 46 acts; mixed flag/flagless)', () => {
   test('every ost_* skill_check is UQF-1.0, validates, onFail:[], NO residual activateCond; onPass = mission_bit OR empty', async ({ page }) => {
     const errs = []; page.on('pageerror', e => errs.push(String(e)));
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const ost = Object.values(QUEST_DB).filter(q => /^ost_/.test(q.id) && q.type === 'skill_check');
       return ost.map(q => {
@@ -3845,7 +3845,7 @@ test.describe('§ARCH-01 Wave 2k — ost_* family (bulk-migrated, 46 acts; mixed
   });
 
   test('PASS/FAIL parity across all 46 + gate behavior; flag-bearing grant a token, flagless grant nothing', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const seed = (k, v) => ({ [k]: v, [k.toLowerCase()]: v });
       const ost = Object.values(QUEST_DB).filter(q => /^ost_/.test(q.id) && q.type === 'skill_check');
@@ -3909,7 +3909,7 @@ test.describe('§ARCH-01 Wave 2k — ost_* family (bulk-migrated, 46 acts; mixed
 test.describe('§ARCH-01 Wave 2l — arn_* family (bulk-migrated, 43 acts; mixed flag/flagless)', () => {
   test('every arn_* skill_check is UQF-1.0, validates, onFail:[], NO residual activateCond; onPass = mission_bit OR empty', async ({ page }) => {
     const errs = []; page.on('pageerror', e => errs.push(String(e)));
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const arn = Object.values(QUEST_DB).filter(q => /^arn_/.test(q.id) && q.type === 'skill_check');
       return arn.map(q => {
@@ -3951,7 +3951,7 @@ test.describe('§ARCH-01 Wave 2l — arn_* family (bulk-migrated, 43 acts; mixed
   });
 
   test('PASS/FAIL parity across all 43 + gate behavior; flag-bearing grant a token, flagless grant nothing', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const seed = (k, v) => ({ [k]: v, [k.toLowerCase()]: v });
       const arn = Object.values(QUEST_DB).filter(q => /^arn_/.test(q.id) && q.type === 'skill_check');
@@ -4017,7 +4017,7 @@ test.describe('§ARCH-01 Wave 2l — arn_* family (bulk-migrated, 43 acts; mixed
 test.describe('§ARCH-01 Wave 2m — vby_* family (bulk-migrated, 42 acts; mixed flag/flagless)', () => {
   test('every vby_* skill_check is UQF-1.0, validates, onFail:[], NO residual activateCond; onPass = mission_bit OR empty', async ({ page }) => {
     const errs = []; page.on('pageerror', e => errs.push(String(e)));
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const vby = Object.values(QUEST_DB).filter(q => /^vby_/.test(q.id) && q.type === 'skill_check');
       return vby.map(q => {
@@ -4059,7 +4059,7 @@ test.describe('§ARCH-01 Wave 2m — vby_* family (bulk-migrated, 42 acts; mixed
   });
 
   test('PASS/FAIL parity across all 42 + gate behavior; flag-bearing grant a token, flagless grant nothing', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const seed = (k, v) => ({ [k]: v, [k.toLowerCase()]: v });
       const vby = Object.values(QUEST_DB).filter(q => /^vby_/.test(q.id) && q.type === 'skill_check');
@@ -4124,7 +4124,7 @@ test.describe('§ARCH-01 Wave 2m — vby_* family (bulk-migrated, 42 acts; mixed
 test.describe('§ARCH-01 Wave 2n — kya_* family (bulk-migrated, 52 acts; uniform flag-bearing)', () => {
   test('every kya_* skill_check is UQF-1.0, validates, onFail:[], NO residual activateCond; onPass = mission_bit', async ({ page }) => {
     const errs = []; page.on('pageerror', e => errs.push(String(e)));
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const kya = Object.values(QUEST_DB).filter(q => /^kya_/.test(q.id) && q.type === 'skill_check');
       return kya.map(q => {
@@ -4158,7 +4158,7 @@ test.describe('§ARCH-01 Wave 2n — kya_* family (bulk-migrated, 52 acts; unifo
   });
 
   test('PASS/FAIL parity across all 52 + gate behavior; every act grants a token on pass', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const seed = (k, v) => ({ [k]: v, [k.toLowerCase()]: v });
       const kya = Object.values(QUEST_DB).filter(q => /^kya_/.test(q.id) && q.type === 'skill_check');
@@ -4216,7 +4216,7 @@ test.describe('§ARCH-01 Wave 2n — kya_* family (bulk-migrated, 52 acts; unifo
 test.describe('§ARCH-01 Wave 2o — jrs_* family (bulk-migrated, 51 acts; uniform flag-bearing)', () => {
   test('every jrs_* skill_check is UQF-1.0, validates, onFail:[], NO residual activateCond; onPass = mission_bit', async ({ page }) => {
     const errs = []; page.on('pageerror', e => errs.push(String(e)));
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const jrs = Object.values(QUEST_DB).filter(q => /^jrs/.test(q.id) && q.type === 'skill_check');
       return jrs.map(q => {
@@ -4250,7 +4250,7 @@ test.describe('§ARCH-01 Wave 2o — jrs_* family (bulk-migrated, 51 acts; unifo
   });
 
   test('PASS/FAIL parity across all 51 + gate behavior; every act grants a token on pass', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const seed = (k, v) => ({ [k]: v, [k.toLowerCase()]: v });
       const jrs = Object.values(QUEST_DB).filter(q => /^jrs/.test(q.id) && q.type === 'skill_check');
@@ -4308,7 +4308,7 @@ test.describe('§ARCH-01 Wave 2o — jrs_* family (bulk-migrated, 51 acts; unifo
 test.describe('§ARCH-01 Wave 2p — clj_* family (bulk-migrated, 42 acts; mixed flag/flagless)', () => {
   test('every clj_* skill_check is UQF-1.0, validates, onFail:[], NO residual activateCond; onPass = mission_bit OR empty', async ({ page }) => {
     const errs = []; page.on('pageerror', e => errs.push(String(e)));
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const clj = Object.values(QUEST_DB).filter(q => /^clj/.test(q.id) && q.type === 'skill_check');
       return clj.map(q => {
@@ -4350,7 +4350,7 @@ test.describe('§ARCH-01 Wave 2p — clj_* family (bulk-migrated, 42 acts; mixed
   });
 
   test('PASS/FAIL parity across all 42 + gate behavior; flag-bearing grant a token, flagless grant nothing', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const seed = (k, v) => ({ [k]: v, [k.toLowerCase()]: v });
       const clj = Object.values(QUEST_DB).filter(q => /^clj/.test(q.id) && q.type === 'skill_check');
@@ -4413,7 +4413,7 @@ test.describe('§ARCH-01 Wave 2p — clj_* family (bulk-migrated, 42 acts; mixed
 test.describe('§ARCH-01 Wave 2q — nwi_* family (bulk-migrated, 42 acts; uniform flag-bearing)', () => {
   test('every nwi_* skill_check is UQF-1.0, validates, onFail:[], NO residual activateCond; onPass = mission_bit', async ({ page }) => {
     const errs = []; page.on('pageerror', e => errs.push(String(e)));
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const nwi = Object.values(QUEST_DB).filter(q => /^nwi/.test(q.id) && q.type === 'skill_check');
       return nwi.map(q => {
@@ -4447,7 +4447,7 @@ test.describe('§ARCH-01 Wave 2q — nwi_* family (bulk-migrated, 42 acts; unifo
   });
 
   test('PASS/FAIL parity across all 42 + gate behavior; every act grants a token on pass', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const seed = (k, v) => ({ [k]: v, [k.toLowerCase()]: v });
       const nwi = Object.values(QUEST_DB).filter(q => /^nwi/.test(q.id) && q.type === 'skill_check');
@@ -4504,7 +4504,7 @@ test.describe('§ARCH-01 Wave 2q — nwi_* family (bulk-migrated, 42 acts; unifo
 test.describe('§ARCH-01 Wave 2r — bey_* family (bulk-migrated, 42 acts; uniform flag-bearing)', () => {
   test('every bey_* skill_check is UQF-1.0, validates, onFail:[], NO residual activateCond; onPass = mission_bit', async ({ page }) => {
     const errs = []; page.on('pageerror', e => errs.push(String(e)));
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const bey = Object.values(QUEST_DB).filter(q => /^bey_/.test(q.id) && q.type === 'skill_check');
       return bey.map(q => {
@@ -4538,7 +4538,7 @@ test.describe('§ARCH-01 Wave 2r — bey_* family (bulk-migrated, 42 acts; unifo
   });
 
   test('PASS/FAIL parity across all 42 + gate behavior; every act grants a token on pass', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const seed = (k, v) => ({ [k]: v, [k.toLowerCase()]: v });
       const bey = Object.values(QUEST_DB).filter(q => /^bey_/.test(q.id) && q.type === 'skill_check');
@@ -4598,7 +4598,7 @@ test.describe('§ARCH-01 Wave 2r — bey_* family (bulk-migrated, 42 acts; unifo
 test.describe('§ARCH-01 Wave 2s — tbs_* family (bulk-migrated, 41 acts; uniform flag-bearing)', () => {
   test('every tbs_* skill_check is UQF-1.0, validates, onFail:[], NO residual activateCond; onPass = mission_bit', async ({ page }) => {
     const errs = []; page.on('pageerror', e => errs.push(String(e)));
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const tbs = Object.values(QUEST_DB).filter(q => /^tbs_/.test(q.id) && q.type === 'skill_check');
       return tbs.map(q => {
@@ -4632,7 +4632,7 @@ test.describe('§ARCH-01 Wave 2s — tbs_* family (bulk-migrated, 41 acts; unifo
   });
 
   test('PASS/FAIL parity across all 41 + gate behavior; every act grants a token on pass', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const seed = (k, v) => ({ [k]: v, [k.toLowerCase()]: v });
       const tbs = Object.values(QUEST_DB).filter(q => /^tbs_/.test(q.id) && q.type === 'skill_check');
@@ -4692,7 +4692,7 @@ test.describe('§ARCH-01 Wave 2s — tbs_* family (bulk-migrated, 41 acts; unifo
 test.describe('§ARCH-01 Wave 2t — crl_* family (bulk-migrated, 40 acts; uniform flag-bearing)', () => {
   test('every crl_* skill_check is UQF-1.0, validates, onFail:[], NO residual activateCond; onPass = mission_bit', async ({ page }) => {
     const errs = []; page.on('pageerror', e => errs.push(String(e)));
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const crl = Object.values(QUEST_DB).filter(q => /^crl/.test(q.id) && q.type === 'skill_check');
       return crl.map(q => {
@@ -4726,7 +4726,7 @@ test.describe('§ARCH-01 Wave 2t — crl_* family (bulk-migrated, 40 acts; unifo
   });
 
   test('PASS/FAIL parity across all 40 + gate behavior; every act grants a token on pass', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const seed = (k, v) => ({ [k]: v, [k.toLowerCase()]: v });
       const crl = Object.values(QUEST_DB).filter(q => /^crl/.test(q.id) && q.type === 'skill_check');
@@ -4785,7 +4785,7 @@ test.describe('§ARCH-01 Wave 2t — crl_* family (bulk-migrated, 40 acts; unifo
 test.describe('§ARCH-01 Wave 2u — shk_* family (bulk-migrated, 40 acts; mixed flag/flagless)', () => {
   test('every shk_* skill_check is UQF-1.0, validates, onFail:[], NO residual activateCond; onPass = mission_bit OR empty', async ({ page }) => {
     const errs = []; page.on('pageerror', e => errs.push(String(e)));
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const shk = Object.values(QUEST_DB).filter(q => /^shk/.test(q.id) && q.type === 'skill_check');
       return shk.map(q => {
@@ -4827,7 +4827,7 @@ test.describe('§ARCH-01 Wave 2u — shk_* family (bulk-migrated, 40 acts; mixed
   });
 
   test('PASS/FAIL parity across all 40 + gate behavior; flag-bearing grant a token, flagless grant nothing', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const seed = (k, v) => ({ [k]: v, [k.toLowerCase()]: v });
       const shk = Object.values(QUEST_DB).filter(q => /^shk/.test(q.id) && q.type === 'skill_check');
@@ -4889,7 +4889,7 @@ test.describe('§ARCH-01 Wave 2u — shk_* family (bulk-migrated, 40 acts; mixed
 test.describe('§ARCH-01 Wave 2v — kir_* family (bulk-migrated, 35 acts; uniform flag-bearing)', () => {
   test('every kir_* skill_check is UQF-1.0, validates, onFail:[], NO residual activateCond; onPass = mission_bit', async ({ page }) => {
     const errs = []; page.on('pageerror', e => errs.push(String(e)));
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const kir = Object.values(QUEST_DB).filter(q => /^kir/.test(q.id) && q.type === 'skill_check');
       return kir.map(q => {
@@ -4923,7 +4923,7 @@ test.describe('§ARCH-01 Wave 2v — kir_* family (bulk-migrated, 35 acts; unifo
   });
 
   test('PASS/FAIL parity across all 35 + gate behavior; every act grants a token on pass', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const seed = (k, v) => ({ [k]: v, [k.toLowerCase()]: v });
       const kir = Object.values(QUEST_DB).filter(q => /^kir/.test(q.id) && q.type === 'skill_check');
@@ -4984,7 +4984,7 @@ test.describe('§ARCH-01 Wave 2v — kir_* family (bulk-migrated, 35 acts; unifo
 test.describe('§ARCH-01 Wave 2w — lcy_* family (bulk-migrated, 35 acts; uniform flag-bearing)', () => {
   test('every lcy_* skill_check is UQF-1.0, validates, onFail:[], NO residual activateCond; onPass = mission_bit', async ({ page }) => {
     const errs = []; page.on('pageerror', e => errs.push(String(e)));
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const lcy = Object.values(QUEST_DB).filter(q => /^lcy/.test(q.id) && q.type === 'skill_check');
       return lcy.map(q => {
@@ -5018,7 +5018,7 @@ test.describe('§ARCH-01 Wave 2w — lcy_* family (bulk-migrated, 35 acts; unifo
   });
 
   test('PASS/FAIL parity across all 35 + gate behavior; every act grants a token on pass', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const seed = (k, v) => ({ [k]: v, [k.toLowerCase()]: v });
       const lcy = Object.values(QUEST_DB).filter(q => /^lcy/.test(q.id) && q.type === 'skill_check');
@@ -5078,7 +5078,7 @@ test.describe('§ARCH-01 Wave 2w — lcy_* family (bulk-migrated, 35 acts; unifo
 test.describe('§ARCH-01 Wave 2x — lgw_* family (bulk-migrated, 35 acts; uniform flag-bearing)', () => {
   test('every lgw_* skill_check is UQF-1.0, validates, onFail:[], NO residual activateCond; onPass = mission_bit', async ({ page }) => {
     const errs = []; page.on('pageerror', e => errs.push(String(e)));
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const lgw = Object.values(QUEST_DB).filter(q => /^lgw/.test(q.id) && q.type === 'skill_check');
       return lgw.map(q => {
@@ -5112,7 +5112,7 @@ test.describe('§ARCH-01 Wave 2x — lgw_* family (bulk-migrated, 35 acts; unifo
   });
 
   test('PASS/FAIL parity across all 35 + gate behavior; every act grants a token on pass', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const seed = (k, v) => ({ [k]: v, [k.toLowerCase()]: v });
       const lgw = Object.values(QUEST_DB).filter(q => /^lgw/.test(q.id) && q.type === 'skill_check');
@@ -5174,7 +5174,7 @@ test.describe('§ARCH-01 Wave 2x — lgw_* family (bulk-migrated, 35 acts; unifo
 test.describe('§ARCH-01 Wave 2y — gci_* family (bulk-migrated, 35 acts; uniform flag-bearing)', () => {
   test('every gci_* skill_check is UQF-1.0, validates, onFail:[], NO residual activateCond; onPass = mission_bit', async ({ page }) => {
     const errs = []; page.on('pageerror', e => errs.push(String(e)));
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const gci = Object.values(QUEST_DB).filter(q => /^gci/.test(q.id) && q.type === 'skill_check');
       return gci.map(q => {
@@ -5208,7 +5208,7 @@ test.describe('§ARCH-01 Wave 2y — gci_* family (bulk-migrated, 35 acts; unifo
   });
 
   test('PASS/FAIL parity across all 35 + gate behavior; every act grants a token on pass', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const seed = (k, v) => ({ [k]: v, [k.toLowerCase()]: v });
       const gci = Object.values(QUEST_DB).filter(q => /^gci/.test(q.id) && q.type === 'skill_check');
@@ -5273,7 +5273,7 @@ test.describe('§ARCH-01 Wave 2y — gci_* family (bulk-migrated, 35 acts; unifo
 test.describe('§ARCH-01 Wave 2z — waw_* family (bulk-migrated, 38 acts; uniform flag-bearing)', () => {
   test('every waw_* skill_check is UQF-1.0, validates, onFail:[], NO residual activateCond; onPass = mission_bit', async ({ page }) => {
     const errs = []; page.on('pageerror', e => errs.push(String(e)));
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const waw = Object.values(QUEST_DB).filter(q => /^waw/.test(q.id) && q.type === 'skill_check');
       return waw.map(q => {
@@ -5307,7 +5307,7 @@ test.describe('§ARCH-01 Wave 2z — waw_* family (bulk-migrated, 38 acts; unifo
   });
 
   test('PASS/FAIL parity across all 38 + gate behavior; every act grants a token on pass', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const seed = (k, v) => ({ [k]: v, [k.toLowerCase()]: v });
       const waw = Object.values(QUEST_DB).filter(q => /^waw/.test(q.id) && q.type === 'skill_check');
@@ -5366,7 +5366,7 @@ test.describe('§ARCH-01 Wave 2z — waw_* family (bulk-migrated, 38 acts; unifo
 test.describe('§ARCH-01 Wave 2aa — ams_* family (bulk-migrated, 35 acts; uniform flag-bearing)', () => {
   test('every ams_* skill_check is UQF-1.0, validates, onFail:[], NO residual activateCond; onPass = mission_bit', async ({ page }) => {
     const errs = []; page.on('pageerror', e => errs.push(String(e)));
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const ams = Object.values(QUEST_DB).filter(q => /^ams/.test(q.id) && q.type === 'skill_check');
       return ams.map(q => {
@@ -5400,7 +5400,7 @@ test.describe('§ARCH-01 Wave 2aa — ams_* family (bulk-migrated, 35 acts; unif
   });
 
   test('PASS/FAIL parity across all 35 + gate behavior; every act grants a token on pass', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const seed = (k, v) => ({ [k]: v, [k.toLowerCase()]: v });
       const ams = Object.values(QUEST_DB).filter(q => /^ams/.test(q.id) && q.type === 'skill_check');
@@ -5467,7 +5467,7 @@ test.describe('§ARCH-01 Wave 2ab / §SKILLFIX-02 — bgw_* family (skill→abil
 
   test('every bgw_* skill_check is UQF-1.0, validates, stat is a real ability, skill→ability mapping holds', async ({ page }) => {
     const errs = []; page.on('pageerror', e => errs.push(String(e)));
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const bgw = Object.values(QUEST_DB).filter(q => /^bgw_/.test(q.id) && q.type === 'skill_check');
       return bgw.map(q => {
@@ -5505,7 +5505,7 @@ test.describe('§ARCH-01 Wave 2ab / §SKILLFIX-02 — bgw_* family (skill→abil
   });
 
   test('NEW behavior (post-§SKILLFIX-02): the mapped ability mod drives the roll — forced PASS/FAIL + gate', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const seed = (k, v) => ({ [k]: v, [k.toLowerCase()]: v });
       const bgw = Object.values(QUEST_DB).filter(q => /^bgw_/.test(q.id) && q.type === 'skill_check');
@@ -5569,7 +5569,7 @@ test.describe('§ARCH-01 Wave 2ac / §SKILLFIX-02 — cai_* family (skill→abil
 
   test('every cai_* skill_check is UQF-1.0, validates, stat is a real ability, skill→ability mapping holds', async ({ page }) => {
     const errs = []; page.on('pageerror', e => errs.push(String(e)));
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const cai = Object.values(QUEST_DB).filter(q => /^cai_/.test(q.id) && q.type === 'skill_check');
       return cai.map(q => {
@@ -5607,7 +5607,7 @@ test.describe('§ARCH-01 Wave 2ac / §SKILLFIX-02 — cai_* family (skill→abil
   });
 
   test('NEW behavior (post-§SKILLFIX-02): the mapped ability mod drives the roll — forced PASS/FAIL + gate', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const seed = (k, v) => ({ [k]: v, [k.toLowerCase()]: v });
       const cai = Object.values(QUEST_DB).filter(q => /^cai_/.test(q.id) && q.type === 'skill_check');
@@ -5676,7 +5676,7 @@ const BLQ_WF_IDS = [
 test.describe('§ARCH-01 Wave 2ad — blq_* family SPLIT (29 well-formed migrated; 30 degenerate stubs left legacy)', () => {
   test('every well-formed blq act is UQF-1.0, validates, onFail:[], NO residual activateCond; onPass = mission_bit; the 30 stubs stay legacy', async ({ page }) => {
     const errs = []; page.on('pageerror', e => errs.push(String(e)));
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate((wfIds) => {
       const wfSet = new Set(wfIds);
       const allBlq = Object.values(QUEST_DB).filter(q => /^blq/.test(q.id) && q.type === 'skill_check');
@@ -5723,7 +5723,7 @@ test.describe('§ARCH-01 Wave 2ad — blq_* family SPLIT (29 well-formed migrate
   });
 
   test('PASS/FAIL parity across all 29 + gate behavior; every act grants a token on pass', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate((wfIds) => {
       const seed = (k, v) => ({ [k]: v, [k.toLowerCase()]: v });
       const wfSet = new Set(wfIds);
@@ -5786,7 +5786,7 @@ test.describe('§ARCH-01 Wave 2ad — blq_* family SPLIT (29 well-formed migrate
 test.describe('§ARCH-01 Wave 2ae — inv_* family (bulk-migrated, 35 acts; uniform flag-bearing)', () => {
   test('every inv_* skill_check is UQF-1.0, validates, onFail:[], NO residual activateCond; onPass = mission_bit', async ({ page }) => {
     const errs = []; page.on('pageerror', e => errs.push(String(e)));
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const inv = Object.values(QUEST_DB).filter(q => /^inv_/.test(q.id) && q.type === 'skill_check');
       return inv.map(q => {
@@ -5823,7 +5823,7 @@ test.describe('§ARCH-01 Wave 2ae — inv_* family (bulk-migrated, 35 acts; unif
   });
 
   test('PASS/FAIL parity across all 35 + gate behavior; every act grants a token on pass', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const seed = (k, v) => ({ [k]: v, [k.toLowerCase()]: v });
       const inv = Object.values(QUEST_DB).filter(q => /^inv_/.test(q.id) && q.type === 'skill_check');
@@ -5882,7 +5882,7 @@ test.describe('§ARCH-01 Wave 2ae — inv_* family (bulk-migrated, 35 acts; unif
 test.describe('§ARCH-01 Wave 2af — bhd_* family (bulk-migrated, 35 acts; uniform flag-bearing)', () => {
   test('every bhd_* skill_check is UQF-1.0, validates, onFail:[], NO residual activateCond; onPass = mission_bit', async ({ page }) => {
     const errs = []; page.on('pageerror', e => errs.push(String(e)));
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const bhd = Object.values(QUEST_DB).filter(q => /^bhd_/.test(q.id) && q.type === 'skill_check');
       return bhd.map(q => {
@@ -5919,7 +5919,7 @@ test.describe('§ARCH-01 Wave 2af — bhd_* family (bulk-migrated, 35 acts; unif
   });
 
   test('PASS/FAIL parity across all 35 + gate behavior; every act grants a token on pass', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const seed = (k, v) => ({ [k]: v, [k.toLowerCase()]: v });
       const bhd = Object.values(QUEST_DB).filter(q => /^bhd_/.test(q.id) && q.type === 'skill_check');
@@ -5979,7 +5979,7 @@ test.describe('§ARCH-01 Wave 2af — bhd_* family (bulk-migrated, 35 acts; unif
 test.describe('§ARCH-01 Wave 2ag — sdq_* family (bulk-migrated, 35 acts; uniform flag-bearing)', () => {
   test('every sdq_* skill_check is UQF-1.0, validates, onFail:[], NO residual activateCond; onPass = mission_bit', async ({ page }) => {
     const errs = []; page.on('pageerror', e => errs.push(String(e)));
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const sdq = Object.values(QUEST_DB).filter(q => /^sdq_/.test(q.id) && q.type === 'skill_check');
       return sdq.map(q => {
@@ -6016,7 +6016,7 @@ test.describe('§ARCH-01 Wave 2ag — sdq_* family (bulk-migrated, 35 acts; unif
   });
 
   test('PASS/FAIL parity across all 35 + gate behavior; every act grants a token on pass', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const seed = (k, v) => ({ [k]: v, [k.toLowerCase()]: v });
       const sdq = Object.values(QUEST_DB).filter(q => /^sdq_/.test(q.id) && q.type === 'skill_check');
@@ -6076,7 +6076,7 @@ test.describe('§ARCH-01 Wave 2ag — sdq_* family (bulk-migrated, 35 acts; unif
 test.describe('§ARCH-01 Wave 2ah — plw_* family (bulk-migrated, 35 acts; uniform flag-bearing)', () => {
   test('every plw_* skill_check is UQF-1.0, validates, onFail:[], NO residual activateCond; onPass = mission_bit', async ({ page }) => {
     const errs = []; page.on('pageerror', e => errs.push(String(e)));
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const plw = Object.values(QUEST_DB).filter(q => /^plw_/.test(q.id) && q.type === 'skill_check');
       return plw.map(q => {
@@ -6113,7 +6113,7 @@ test.describe('§ARCH-01 Wave 2ah — plw_* family (bulk-migrated, 35 acts; unif
   });
 
   test('PASS/FAIL parity across all 35 + gate behavior; every act grants a token on pass', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const seed = (k, v) => ({ [k]: v, [k.toLowerCase()]: v });
       const plw = Object.values(QUEST_DB).filter(q => /^plw_/.test(q.id) && q.type === 'skill_check');
@@ -6173,7 +6173,7 @@ test.describe('§ARCH-01 Wave 2ah — plw_* family (bulk-migrated, 35 acts; unif
 test.describe('§ARCH-01 Wave 2ai — gdn_* family (bulk-migrated, 35 acts; uniform flag-bearing)', () => {
   test('every gdn_* skill_check is UQF-1.0, validates, onFail:[], NO residual activateCond; onPass = mission_bit', async ({ page }) => {
     const errs = []; page.on('pageerror', e => errs.push(String(e)));
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const gdn = Object.values(QUEST_DB).filter(q => /^gdn_/.test(q.id) && q.type === 'skill_check');
       return gdn.map(q => {
@@ -6210,7 +6210,7 @@ test.describe('§ARCH-01 Wave 2ai — gdn_* family (bulk-migrated, 35 acts; unif
   });
 
   test('PASS/FAIL parity across all 35 + gate behavior; every act grants a token on pass', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const seed = (k, v) => ({ [k]: v, [k.toLowerCase()]: v });
       const gdn = Object.values(QUEST_DB).filter(q => /^gdn_/.test(q.id) && q.type === 'skill_check');
@@ -6270,7 +6270,7 @@ test.describe('§ARCH-01 Wave 2ai — gdn_* family (bulk-migrated, 35 acts; unif
 test.describe('§ARCH-01 Wave 2aj — boo_* family (bulk-migrated, 35 acts; uniform flag-bearing)', () => {
   test('every boo_* skill_check is UQF-1.0, validates, onFail:[], NO residual activateCond; onPass = mission_bit', async ({ page }) => {
     const errs = []; page.on('pageerror', e => errs.push(String(e)));
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const boo = Object.values(QUEST_DB).filter(q => /^boo_/.test(q.id) && q.type === 'skill_check');
       return boo.map(q => {
@@ -6307,7 +6307,7 @@ test.describe('§ARCH-01 Wave 2aj — boo_* family (bulk-migrated, 35 acts; unif
   });
 
   test('PASS/FAIL parity across all 35 + gate behavior; every act grants a token on pass', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const seed = (k, v) => ({ [k]: v, [k.toLowerCase()]: v });
       const boo = Object.values(QUEST_DB).filter(q => /^boo_/.test(q.id) && q.type === 'skill_check');
@@ -6367,7 +6367,7 @@ test.describe('§ARCH-01 Wave 2aj — boo_* family (bulk-migrated, 35 acts; unif
 test.describe('§ARCH-01 Wave 2ak — alf_* family (bulk-migrated, 35 acts; uniform flag-bearing)', () => {
   test('every alf_* skill_check is UQF-1.0, validates, onFail:[], NO residual activateCond; onPass = mission_bit', async ({ page }) => {
     const errs = []; page.on('pageerror', e => errs.push(String(e)));
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const alf = Object.values(QUEST_DB).filter(q => /^alf_/.test(q.id) && q.type === 'skill_check');
       return alf.map(q => {
@@ -6404,7 +6404,7 @@ test.describe('§ARCH-01 Wave 2ak — alf_* family (bulk-migrated, 35 acts; unif
   });
 
   test('PASS/FAIL parity across all 35 + gate behavior; every act grants a token on pass', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const seed = (k, v) => ({ [k]: v, [k.toLowerCase()]: v });
       const alf = Object.values(QUEST_DB).filter(q => /^alf_/.test(q.id) && q.type === 'skill_check');
@@ -6464,7 +6464,7 @@ test.describe('§ARCH-01 Wave 2ak — alf_* family (bulk-migrated, 35 acts; unif
 test.describe('§ARCH-01 Wave 2al — ksu_* family (bulk-migrated, 35 acts; uniform flag-bearing)', () => {
   test('every ksu_* skill_check is UQF-1.0, validates, onFail:[], NO residual activateCond; onPass = mission_bit', async ({ page }) => {
     const errs = []; page.on('pageerror', e => errs.push(String(e)));
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const ksu = Object.values(QUEST_DB).filter(q => /^ksu_/.test(q.id) && q.type === 'skill_check');
       return ksu.map(q => {
@@ -6501,7 +6501,7 @@ test.describe('§ARCH-01 Wave 2al — ksu_* family (bulk-migrated, 35 acts; unif
   });
 
   test('PASS/FAIL parity across all 35 + gate behavior; every act grants a token on pass', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const seed = (k, v) => ({ [k]: v, [k.toLowerCase()]: v });
       const ksu = Object.values(QUEST_DB).filter(q => /^ksu_/.test(q.id) && q.type === 'skill_check');
@@ -6563,7 +6563,7 @@ test.describe('§ARCH-01 Wave 2al — ksu_* family (bulk-migrated, 35 acts; unif
 test.describe('§ARCH-01 Wave 2am — cdg_* family (bulk-migrated, 35 acts; uniform flag-bearing)', () => {
   test('every cdg_* skill_check is UQF-1.0, validates, onFail:[], NO residual activateCond; onPass = mission_bit', async ({ page }) => {
     const errs = []; page.on('pageerror', e => errs.push(String(e)));
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const cdg = Object.values(QUEST_DB).filter(q => /^cdg_/.test(q.id) && q.type === 'skill_check');
       return cdg.map(q => {
@@ -6600,7 +6600,7 @@ test.describe('§ARCH-01 Wave 2am — cdg_* family (bulk-migrated, 35 acts; unif
   });
 
   test('PASS/FAIL parity across all 35 + gate behavior; every act grants a token on pass', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const seed = (k, v) => ({ [k]: v, [k.toLowerCase()]: v });
       const cdg = Object.values(QUEST_DB).filter(q => /^cdg_/.test(q.id) && q.type === 'skill_check');
@@ -6661,7 +6661,7 @@ test.describe('§ARCH-01 Wave 2am — cdg_* family (bulk-migrated, 35 acts; unif
 test.describe('§ARCH-01 Wave 2an — vie_* family (bulk-migrated, 35 acts; uniform flag-bearing)', () => {
   test('every vie_* skill_check is UQF-1.0, validates, onFail:[], NO residual activateCond; onPass = mission_bit', async ({ page }) => {
     const errs = []; page.on('pageerror', e => errs.push(String(e)));
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const vie = Object.values(QUEST_DB).filter(q => /^vie_/.test(q.id) && q.type === 'skill_check');
       return vie.map(q => {
@@ -6698,7 +6698,7 @@ test.describe('§ARCH-01 Wave 2an — vie_* family (bulk-migrated, 35 acts; unif
   });
 
   test('PASS/FAIL parity across all 35 + gate behavior; every act grants a token on pass', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const seed = (k, v) => ({ [k]: v, [k.toLowerCase()]: v });
       const vie = Object.values(QUEST_DB).filter(q => /^vie_/.test(q.id) && q.type === 'skill_check');
@@ -6761,7 +6761,7 @@ test.describe('§ARCH-01 Wave 2an — vie_* family (bulk-migrated, 35 acts; unif
 test.describe('§ARCH-01 Wave 2ao — erf_* family (bulk-migrated, 35 acts; uniform flag-bearing)', () => {
   test('every erf_* skill_check is UQF-1.0, validates, onFail:[], NO residual activateCond; onPass = mission_bit', async ({ page }) => {
     const errs = []; page.on('pageerror', e => errs.push(String(e)));
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const erf = Object.values(QUEST_DB).filter(q => /^erf_/.test(q.id) && q.type === 'skill_check');
       return erf.map(q => {
@@ -6798,7 +6798,7 @@ test.describe('§ARCH-01 Wave 2ao — erf_* family (bulk-migrated, 35 acts; unif
   });
 
   test('PASS/FAIL parity across all 35 + gate behavior; every act grants a token on pass', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const seed = (k, v) => ({ [k]: v, [k.toLowerCase()]: v });
       const erf = Object.values(QUEST_DB).filter(q => /^erf_/.test(q.id) && q.type === 'skill_check');
@@ -6858,7 +6858,7 @@ test.describe('§ARCH-01 Wave 2ao — erf_* family (bulk-migrated, 35 acts; unif
 test.describe('§ARCH-01 Wave 2ap — mla_* family (bulk-migrated, 34 acts; uniform flag-bearing)', () => {
   test('every mla* skill_check is UQF-1.0, validates, onFail:[], NO residual activateCond; onPass = mission_bit', async ({ page }) => {
     const errs = []; page.on('pageerror', e => errs.push(String(e)));
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const mla = Object.values(QUEST_DB).filter(q => /^mla/.test(q.id) && q.type === 'skill_check');
       return mla.map(q => {
@@ -6895,7 +6895,7 @@ test.describe('§ARCH-01 Wave 2ap — mla_* family (bulk-migrated, 34 acts; unif
   });
 
   test('PASS/FAIL parity across all 34 + gate behavior; every act grants a token on pass', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const seed = (k, v) => ({ [k]: v, [k.toLowerCase()]: v });
       const mla = Object.values(QUEST_DB).filter(q => /^mla/.test(q.id) && q.type === 'skill_check');
@@ -6955,7 +6955,7 @@ test.describe('§ARCH-01 Wave 2ap — mla_* family (bulk-migrated, 34 acts; unif
 test.describe('§ARCH-01 Wave 2aq — mse_* family (bulk-migrated, 34 acts; uniform flag-bearing)', () => {
   test('every mse_* skill_check is UQF-1.0, validates, onFail:[], NO residual activateCond; onPass = mission_bit', async ({ page }) => {
     const errs = []; page.on('pageerror', e => errs.push(String(e)));
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const mse = Object.values(QUEST_DB).filter(q => /^mse_/.test(q.id) && q.type === 'skill_check');
       return mse.map(q => {
@@ -6992,7 +6992,7 @@ test.describe('§ARCH-01 Wave 2aq — mse_* family (bulk-migrated, 34 acts; unif
   });
 
   test('PASS/FAIL parity across all 34 + gate behavior; every act grants a token on pass', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const seed = (k, v) => ({ [k]: v, [k.toLowerCase()]: v });
       const mse = Object.values(QUEST_DB).filter(q => /^mse_/.test(q.id) && q.type === 'skill_check');
@@ -7052,7 +7052,7 @@ test.describe('§ARCH-01 Wave 2aq — mse_* family (bulk-migrated, 34 acts; unif
 test.describe('§ARCH-01 Wave 2ar — lhr_* family (bulk-migrated, 34 acts; uniform flag-bearing)', () => {
   test('every lhr_* skill_check is UQF-1.0, validates, onFail:[], NO residual activateCond; onPass = mission_bit', async ({ page }) => {
     const errs = []; page.on('pageerror', e => errs.push(String(e)));
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const lhr = Object.values(QUEST_DB).filter(q => /^lhr_/.test(q.id) && q.type === 'skill_check');
       return lhr.map(q => {
@@ -7089,7 +7089,7 @@ test.describe('§ARCH-01 Wave 2ar — lhr_* family (bulk-migrated, 34 acts; unif
   });
 
   test('PASS/FAIL parity across all 34 + gate behavior; every act grants a token on pass', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const seed = (k, v) => ({ [k]: v, [k.toLowerCase()]: v });
       const lhr = Object.values(QUEST_DB).filter(q => /^lhr_/.test(q.id) && q.type === 'skill_check');
@@ -7149,7 +7149,7 @@ test.describe('§ARCH-01 Wave 2ar — lhr_* family (bulk-migrated, 34 acts; unif
 test.describe('§ARCH-01 Wave 2as — cid_* family (bulk-migrated, 34 acts; uniform flag-bearing)', () => {
   test('every cid_* skill_check is UQF-1.0, validates, onFail:[], NO residual activateCond; onPass = mission_bit', async ({ page }) => {
     const errs = []; page.on('pageerror', e => errs.push(String(e)));
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const cid = Object.values(QUEST_DB).filter(q => /^cid_/.test(q.id) && q.type === 'skill_check');
       return cid.map(q => {
@@ -7186,7 +7186,7 @@ test.describe('§ARCH-01 Wave 2as — cid_* family (bulk-migrated, 34 acts; unif
   });
 
   test('PASS/FAIL parity across all 34 + gate behavior; every act grants a token on pass', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const seed = (k, v) => ({ [k]: v, [k.toLowerCase()]: v });
       const cid = Object.values(QUEST_DB).filter(q => /^cid_/.test(q.id) && q.type === 'skill_check');
@@ -7247,7 +7247,7 @@ test.describe('§ARCH-01 Wave 2as — cid_* family (bulk-migrated, 34 acts; unif
 test.describe('§ARCH-01 Wave 2at — lbc_* family (bulk-migrated, 33 acts; uniform flag-bearing)', () => {
   test('every lbc_* skill_check is UQF-1.0, validates, onFail:[], NO residual activateCond; onPass = mission_bit', async ({ page }) => {
     const errs = []; page.on('pageerror', e => errs.push(String(e)));
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const lbc = Object.values(QUEST_DB).filter(q => /^lbc_/.test(q.id) && q.type === 'skill_check');
       return lbc.map(q => {
@@ -7284,7 +7284,7 @@ test.describe('§ARCH-01 Wave 2at — lbc_* family (bulk-migrated, 33 acts; unif
   });
 
   test('PASS/FAIL parity across all 33 + gate behavior; every act grants a token on pass', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const seed = (k, v) => ({ [k]: v, [k.toLowerCase()]: v });
       const lbc = Object.values(QUEST_DB).filter(q => /^lbc_/.test(q.id) && q.type === 'skill_check');
@@ -7345,7 +7345,7 @@ test.describe('§ARCH-01 Wave 2at — lbc_* family (bulk-migrated, 33 acts; unif
 test.describe('§ARCH-01 Wave 2au — hty_* family (bulk-migrated, 33 acts; mixed flag/flagless)', () => {
   test('every hty* skill_check is UQF-1.0, validates, onFail:[], NO residual activateCond; onPass = mission_bit OR empty', async ({ page }) => {
     const errs = []; page.on('pageerror', e => errs.push(String(e)));
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const hty = Object.values(QUEST_DB).filter(q => /^hty/.test(q.id) && q.type === 'skill_check');
       return hty.map(q => {
@@ -7390,7 +7390,7 @@ test.describe('§ARCH-01 Wave 2au — hty_* family (bulk-migrated, 33 acts; mixe
   });
 
   test('PASS/FAIL parity across all 33 + gate behavior; flag-bearing grant a token, flagless grant nothing', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const seed = (k, v) => ({ [k]: v, [k.toLowerCase()]: v });
       const hty = Object.values(QUEST_DB).filter(q => /^hty/.test(q.id) && q.type === 'skill_check');
@@ -7453,7 +7453,7 @@ test.describe('§ARCH-01 Wave 2au — hty_* family (bulk-migrated, 33 acts; mixe
 test.describe('§ARCH-01 Wave 2av — fro_* family (bulk-migrated, 32 acts; uniform flag-bearing)', () => {
   test('every fro_* skill_check is UQF-1.0, validates, onFail:[], NO residual activateCond; onPass = mission_bit', async ({ page }) => {
     const errs = []; page.on('pageerror', e => errs.push(String(e)));
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const fro = Object.values(QUEST_DB).filter(q => /^fro_/.test(q.id) && q.type === 'skill_check');
       return fro.map(q => {
@@ -7490,7 +7490,7 @@ test.describe('§ARCH-01 Wave 2av — fro_* family (bulk-migrated, 32 acts; unif
   });
 
   test('PASS/FAIL parity across all 32 + gate behavior; every act grants a token on pass', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const seed = (k, v) => ({ [k]: v, [k.toLowerCase()]: v });
       const fro = Object.values(QUEST_DB).filter(q => /^fro_/.test(q.id) && q.type === 'skill_check');
@@ -7549,7 +7549,7 @@ test.describe('§ARCH-01 Wave 2av — fro_* family (bulk-migrated, 32 acts; unif
 test.describe('§ARCH-01 Wave 2aw — mol* family (bulk-migrated, 30 acts; uniform flag-bearing)', () => {
   test('every mol* skill_check is UQF-1.0, validates, onFail:[], NO residual activateCond; onPass = mission_bit', async ({ page }) => {
     const errs = []; page.on('pageerror', e => errs.push(String(e)));
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const mol = Object.values(QUEST_DB).filter(q => /^mol/.test(q.id) && q.type === 'skill_check');
       return mol.map(q => {
@@ -7586,7 +7586,7 @@ test.describe('§ARCH-01 Wave 2aw — mol* family (bulk-migrated, 30 acts; unifo
   });
 
   test('PASS/FAIL parity across all 30 + gate behavior; every act grants a token on pass', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const seed = (k, v) => ({ [k]: v, [k.toLowerCase()]: v });
       const mol = Object.values(QUEST_DB).filter(q => /^mol/.test(q.id) && q.type === 'skill_check');
@@ -7639,7 +7639,7 @@ test.describe('§ARCH-01 Wave 2aw — mol* family (bulk-migrated, 30 acts; unifo
 test.describe('§ARCH-01 Wave 2bc — quest_* singletons (11 newly-migrated; xp/gold rewards, mixed gates)', () => {
   test('every newly-migrated quest_* is UQF-1.0, validates, onFail:[], has reward bit; mission_bit where flagged', async ({ page }) => {
     const errs = []; page.on('pageerror', e => errs.push(String(e)));
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const NEWLY_MIGRATED = new Set([
       'quest_muffat_01','quest_ezzir','quest_governor_cyprus','quest_lame_lystra',
       'quest_prison_phillam','quest_areopagus','quest_ephesus_riot','quest_shipwreck_melta',
@@ -7685,7 +7685,7 @@ test.describe('§ARCH-01 Wave 2bc — quest_* singletons (11 newly-migrated; xp/
   });
 
   test('PASS/FAIL parity across all 11; xp/gold granted on pass, nothing on fail', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const NEWLY_MIGRATED = [
       'quest_muffat_01','quest_ezzir','quest_governor_cyprus','quest_lame_lystra',
       'quest_prison_phillam','quest_areopagus','quest_ephesus_riot','quest_shipwreck_melta',
@@ -7741,7 +7741,7 @@ test.describe('§ARCH-01 Wave 2bc — quest_* singletons (11 newly-migrated; xp/
 test.describe('§ARCH-01 Wave 2bb — stn_* family (bulk-migrated, 11 acts; §SKILLFIX-02)', () => {
   test('every stn_* skill_check is UQF-1.0, validates, onFail:[], ability mapped; 10 have skill name + 1 raw-ability', async ({ page }) => {
     const errs = []; page.on('pageerror', e => errs.push(String(e)));
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const ABILS = new Set(['STR','DEX','CON','INT','WIS','CHA']);
       const stn = Object.values(QUEST_DB).filter(q => /^stn_c/.test(q.id) && q.type === 'skill_check');
@@ -7782,7 +7782,7 @@ test.describe('§ARCH-01 Wave 2bb — stn_* family (bulk-migrated, 11 acts; §SK
   });
 
   test('PASS/FAIL parity across all 11 + gate behavior; every act grants a token on pass', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const seed = (k, v) => ({ [k]: v, [k.toLowerCase()]: v });
       const stn = Object.values(QUEST_DB).filter(q => /^stn_c/.test(q.id) && q.type === 'skill_check');
@@ -7838,7 +7838,7 @@ test.describe('§ARCH-01 Wave 2bb — stn_* family (bulk-migrated, 11 acts; §SK
 test.describe('§ARCH-01 Wave 2ba — sen_* family (bulk-migrated, 19 acts; §SKILLFIX-02)', () => {
   test('every sen_* skill_check is UQF-1.0, validates, onFail:[], skill name preserved, ability mapped', async ({ page }) => {
     const errs = []; page.on('pageerror', e => errs.push(String(e)));
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const ABILS = new Set(['STR','DEX','CON','INT','WIS','CHA']);
       const sen = Object.values(QUEST_DB).filter(q => /^sen_/.test(q.id) && q.type === 'skill_check');
@@ -7879,7 +7879,7 @@ test.describe('§ARCH-01 Wave 2ba — sen_* family (bulk-migrated, 19 acts; §SK
   });
 
   test('PASS/FAIL parity across all 19 + gate behavior; every act grants a token on pass', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const seed = (k, v) => ({ [k]: v, [k.toLowerCase()]: v });
       const sen = Object.values(QUEST_DB).filter(q => /^sen_/.test(q.id) && q.type === 'skill_check');
@@ -7935,7 +7935,7 @@ test.describe('§ARCH-01 Wave 2ba — sen_* family (bulk-migrated, 19 acts; §SK
 test.describe('§ARCH-01 Wave 2az — man_* family (bulk-migrated, 23 acts; §SKILLFIX-02)', () => {
   test('every man_* skill_check is UQF-1.0, validates, onFail:[], skill name preserved, ability mapped', async ({ page }) => {
     const errs = []; page.on('pageerror', e => errs.push(String(e)));
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const ABILS = new Set(['STR','DEX','CON','INT','WIS','CHA']);
       const man = Object.values(QUEST_DB).filter(q => /^man_/.test(q.id) && q.type === 'skill_check');
@@ -7976,7 +7976,7 @@ test.describe('§ARCH-01 Wave 2az — man_* family (bulk-migrated, 23 acts; §SK
   });
 
   test('PASS/FAIL parity across all 23 + gate behavior; every act grants a token on pass', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const seed = (k, v) => ({ [k]: v, [k.toLowerCase()]: v });
       const man = Object.values(QUEST_DB).filter(q => /^man_/.test(q.id) && q.type === 'skill_check');
@@ -8031,7 +8031,7 @@ test.describe('§ARCH-01 Wave 2az — man_* family (bulk-migrated, 23 acts; §SK
 test.describe('§ARCH-01 Wave 2ay — clr_* family (pre-migrated, 5 acts; uniform flag-bearing)', () => {
   test('every clr_* skill_check is UQF-1.0, validates, onFail:[], NO residual activateCond; onPass = mission_bit', async ({ page }) => {
     const errs = []; page.on('pageerror', e => errs.push(String(e)));
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const clr = Object.values(QUEST_DB).filter(q => /^clr_/.test(q.id) && q.type === 'skill_check');
       return clr.map(q => {
@@ -8067,7 +8067,7 @@ test.describe('§ARCH-01 Wave 2ay — clr_* family (pre-migrated, 5 acts; unifor
   });
 
   test('PASS/FAIL parity across all 5 + gate behavior (all open); every act grants a token on pass', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const seed = (k, v) => ({ [k]: v, [k.toLowerCase()]: v });
       const clr = Object.values(QUEST_DB).filter(q => /^clr_/.test(q.id) && q.type === 'skill_check');
@@ -8119,7 +8119,7 @@ test.describe('§ARCH-01 Wave 2ay — clr_* family (pre-migrated, 5 acts; unifor
 test.describe('§ARCH-01 Wave 2ax — cph* family (bulk-migrated, 29 acts; uniform flag-bearing)', () => {
   test('every cph* skill_check is UQF-1.0, validates, onFail:[], NO residual activateCond; onPass = mission_bit', async ({ page }) => {
     const errs = []; page.on('pageerror', e => errs.push(String(e)));
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const cph = Object.values(QUEST_DB).filter(q => /^cph/.test(q.id) && q.type === 'skill_check');
       return cph.map(q => {
@@ -8156,7 +8156,7 @@ test.describe('§ARCH-01 Wave 2ax — cph* family (bulk-migrated, 29 acts; unifo
   });
 
   test('PASS/FAIL parity across all 29 + gate behavior; every act grants a token on pass', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const seed = (k, v) => ({ [k]: v, [k.toLowerCase()]: v });
       const cph = Object.values(QUEST_DB).filter(q => /^cph/.test(q.id) && q.type === 'skill_check');
@@ -8230,7 +8230,7 @@ test.describe('§ARCH-01 Wave 3a — side-quest declarative completion (61 migra
   const GATE_KEPT = ['quest_wm_05','quest_road_damascus','quest_inn_06'];
 
   test('all 61 are UQF-1.0, validate, bits:[], completion present, no completeFn; legacy holdouts untouched', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(({ w3a, w3b, kept }) => {
       const bad = [];
       for (const id of w3a) {
@@ -8255,7 +8255,7 @@ test.describe('§ARCH-01 Wave 3a — side-quest declarative completion (61 migra
   });
 
   test('completion.items engine term: fuzzy two-way OR matching, composes with flags AND-group', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       QUEST_DB.q_w3_items = { schema:'UQF-1.0', id:'q_w3_items', type:'side', title:'x',
         gate:{}, bits:[], completion:{ flags:['w3Gate'], items:['Trade Seal (Shard #9)','Ghost Rope'] } };
@@ -8277,7 +8277,7 @@ test.describe('§ARCH-01 Wave 3a — side-quest declarative completion (61 migra
   });
 
   test('flag1 + per-id effect parity: quest_wm_04 completes on flag, grants +300 gold via its W7c onComplete chain', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       S_story.level = 20; S_story.gold = 10000;
       S_story.quests.quest_wm_04 = 'active';
@@ -8291,7 +8291,7 @@ test.describe('§ARCH-01 Wave 3a — side-quest declarative completion (61 migra
   });
 
   test('flagAND truth-table (quest_wm_02) + flagsAny either-branch (quest_tl_02)', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const out = {};
       S_story.quests.quest_wm_02 = 'active';
@@ -8311,7 +8311,7 @@ test.describe('§ARCH-01 Wave 3a — side-quest declarative completion (61 migra
   });
 
   test('battle completion + questsAttempted gate (quest_inn_eel): lists only after inn_03 attempted, completes on INN_EEL', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const q = QUEST_DB.quest_inn_eel;
       const node = { code: q.activateNode };
@@ -8331,7 +8331,7 @@ test.describe('§ARCH-01 Wave 3a — side-quest declarative completion (61 migra
   });
 
   test('atNode (quest_shore_01, gate battles) + flag∧atNode (quest_inn_05) + items-only (sq_1 fuzzy)', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const out = {};
       out.shoreGateClosed = QuestRuntime.canActivate('quest_shore_01');          // HCA_BOSS not defeated
@@ -8385,7 +8385,7 @@ test.describe('§ARCH-01 Wave 3b — counter/nested-path/item-count sides (32 mi
   const GATE_KEPT = ['quest_fish_01','quest_tour_01','quest_guide_01'];
 
   test('all 32 are UQF-1.0, validate, bits:[], completion, no completeFn; holdouts stay legacy', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(({ w3b, holdouts, kept }) => {
       const bad = [];
       for (const id of w3b) {
@@ -8407,7 +8407,7 @@ test.describe('§ARCH-01 Wave 3b — counter/nested-path/item-count sides (32 mi
   });
 
   test('countMin coercion truth-table: number, array length, object keys, nested path, missing', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       QUEST_DB.q_w3_count = { schema:'UQF-1.0', id:'q_w3_count', type:'side', title:'x', gate:{}, bits:[],
         completion:{ countMin:[{ path:'w3Num', min:3 }, { path:'w3Deep.k', min:2 }] } };
@@ -8429,7 +8429,7 @@ test.describe('§ARCH-01 Wave 3b — counter/nested-path/item-count sides (32 mi
   });
 
   test('itemsAll exact-name AND semantics with min copies (vs fuzzy items): cat_02 + iodine_02 truth-tables', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const out = {};
       S_story.quests.quest_cat_02 = 'active';
@@ -8455,7 +8455,7 @@ test.describe('§ARCH-01 Wave 3b — counter/nested-path/item-count sides (32 mi
   });
 
   test('flagsPath in gate AND completion: tour chain listing + storyCheckQuests flip', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const q = QUEST_DB.quest_tour_02;
       const node = { code: q.activateNode };
@@ -8479,7 +8479,7 @@ test.describe('§ARCH-01 Wave 3b — counter/nested-path/item-count sides (32 mi
   });
 
   test('real counter flips: pit_debut via pitTrainingWins; mq_6 fuzzy-OR items; forge_02 flag-gated since §LXX-01-FU', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const out = {};
       S_story.level = 20; S_story.gold = 10000;
@@ -8529,7 +8529,7 @@ test.describe('§ARCH-01 Wave 3b — counter/nested-path/item-count sides (32 mi
 // §SKILLFIX-02 protocol.
 test.describe('§ARCH-01 Wave 4 — combat quests (fight-roll resolver, 78 migrated)', () => {
   test('all 81 type:combat quests are UQF-1.0, valid, skill_check bit, no legacy residue', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const combats = Object.values(QUEST_DB).filter(q => q.type === 'combat');
       const bad = [];
@@ -8559,7 +8559,7 @@ test.describe('§ARCH-01 Wave 4 — combat quests (fight-roll resolver, 78 migra
   });
 
   test('placeholder + defaulted stats: null/0 and absent stat/DC became STR DC 12', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const pick = id => { const b = QUEST_DB[id].bits.find(x => x.kind === 'skill_check'); return b.stat + ' ' + b.dc; };
       return {
@@ -8578,7 +8578,7 @@ test.describe('§ARCH-01 Wave 4 — combat quests (fight-roll resolver, 78 migra
   });
 
   test('FIGHT card renders for an active combat quest (⚔ + Fight button, not ROLL)', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       S_story.quests = { hty02_act4: 'active' };   // isolate: the card list renders only the first 6 active quests
       storyRender(NODE_MAP[S_story.currentCode]);
@@ -8599,7 +8599,7 @@ test.describe('§ARCH-01 Wave 4 — combat quests (fight-roll resolver, 78 migra
   });
 
   test('PASS grants the pass flag + token and opens the downstream sibling gate', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       S_story.level = 20; S_story.xp = 100000;                 // suppress level-up noise
       S_story.abilityScores = { ...S_story.abilityScores, str: 40 };  // guaranteed pass
@@ -8618,7 +8618,7 @@ test.describe('§ARCH-01 Wave 4 — combat quests (fight-roll resolver, 78 migra
   });
 
   test('FAIL on a non-retryable fight → failed, grants nothing; 1367 retryable fight → stays active', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       S_story.level = 20; S_story.xp = 100000;
       S_story.abilityScores = { ...S_story.abilityScores, str: -100 }; // mod −55: fails any DC
@@ -8639,7 +8639,7 @@ test.describe('§ARCH-01 Wave 4 — combat quests (fight-roll resolver, 78 migra
   });
 
   test('1367 najera PASS: reward xp then faction_hansa −1 via _legacy_fn (legacy order)', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       S_story.level = 20; S_story.xp = 100000;
       S_story.abilityScores = { ...S_story.abilityScores, str: 40 };
@@ -8657,7 +8657,7 @@ test.describe('§ARCH-01 Wave 4 — combat quests (fight-roll resolver, 78 migra
   });
 
   test('guide_02/03/06 dead gates fixed: questsDone accepts complete; countMin gate term works', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const out = {};
       out.g2NoPrior = QuestRuntime.canActivate('quest_guide_02');
@@ -8681,7 +8681,7 @@ test.describe('§ARCH-01 Wave 4 — combat quests (fight-roll resolver, 78 migra
   });
 
   test('worldbuilder-export artifact purged: no string-typed activateCond dups (ath/zth/cid crash fix)', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const strCond = Object.values(QUEST_DB).filter(q => typeof q.activateCond === 'string').map(q => q.id);
       // W4 kept the two hybrids' FUNCTION gates; W5 then migrated them fully:
@@ -8706,7 +8706,7 @@ test.describe('§ARCH-01 Wave 4 — combat quests (fight-roll resolver, 78 migra
 // completion:{items} migration (fuzzy-OR term = the legacy matching rule).
 test.describe('§ARCH-01 Wave 5 — other types (typed-roll resolvers + main parity, 106 migrated)', () => {
   test('all 99 dead-type quests are UQF-1.0 + valid with typed defaults; no legacy residue', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const bad = [];
       const byType = { delivery:0, escort:0, dialogue:0, hybrid:0 };
@@ -8735,7 +8735,7 @@ test.describe('§ARCH-01 Wave 5 — other types (typed-roll resolvers + main par
   });
 
   test('skill-name mapping: stn dialogue + cai hybrid stats govern correctly', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const pick = id => { const b = QUEST_DB[id].bits.find(x => x.kind === 'skill_check'); return [b.stat, b.skill || null, b.dc].join('|'); };
       return {
@@ -8752,7 +8752,7 @@ test.describe('§ARCH-01 Wave 5 — other types (typed-roll resolvers + main par
   });
 
   test('main quests mq_1–7: pure-parity completion:{items}; canComplete matches the legacy fuzzy rule', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const bad = [];
       for (let i = 1; i <= 7; i++) {
@@ -8777,7 +8777,7 @@ test.describe('§ARCH-01 Wave 5 — other types (typed-roll resolvers + main par
   });
 
   test('typed cards render: DELIVER, ESCORT, TALK with typed buttons', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       S_story.quests = { zth_08_act5:'active', stn_c1a1:'active', stn_c1a2:'active' };
       storyRender(NODE_MAP[S_story.currentCode]);
@@ -8797,7 +8797,7 @@ test.describe('§ARCH-01 Wave 5 — other types (typed-roll resolvers + main par
   });
 
   test('delivery PASS grants flag + token; escort FAIL is terminal and grants nothing', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       S_story.level = 20; S_story.xp = 100000;
       S_story.abilityScores = { ...S_story.abilityScores, cha: 40, str: -100 };
@@ -8827,7 +8827,7 @@ test.describe('§ARCH-01 Wave 5 — other types (typed-roll resolvers + main par
 // activation exclusion (`if (q.type==='epic') return;`) is untouched.
 test.describe('§ARCH-01 Wave 6 — epic quests (EB pairs, parity completion, 40 migrated)', () => {
   test('all 40 epics are UQF-1.0 + valid: 20 battles-completions, 20 flagsPath-completions, fields kept', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const epics = Object.values(QUEST_DB).filter(q => q.type === 'epic');
       const bad = [];
@@ -8852,7 +8852,7 @@ test.describe('§ARCH-01 Wave 6 — epic quests (EB pairs, parity completion, 40
   });
 
   test('epic activation exclusion untouched: storyCheckQuests never auto-activates an epic', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       delete S_story.quests.quest_ef_primary;
       storyCheckQuests({ code: QUEST_DB.quest_ef_primary.activateNode });   // FRO — would activate any non-epic
@@ -8862,7 +8862,7 @@ test.describe('§ARCH-01 Wave 6 — epic quests (EB pairs, parity completion, 40
   });
 
   test('primary parity: active + boss defeated → storyCheckQuests flips to complete', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       S_story.quests.quest_ef_primary = 'active';
       const before = QuestRuntime.canComplete('quest_ef_primary');
@@ -8877,7 +8877,7 @@ test.describe('§ARCH-01 Wave 6 — epic quests (EB pairs, parity completion, 40
   });
 
   test('return parity: ebReturnDone.PRN drives completion via flagsPath', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       S_story.quests.quest_ef_return = 'active';
       const before = QuestRuntime.canComplete('quest_ef_return');
@@ -8901,7 +8901,7 @@ test.describe('§ARCH-01 Wave 6 — epic quests (EB pairs, parity completion, 40
 
 test.describe('§ARCH-01 W7 — completion-bit execution point (Phase 4)', () => {
   test('an array-valued onComplete executes as a bit chain on completion', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       QUEST_DB.quest___w7a = { id:'quest___w7a', type:'side', schema:'UQF-1.0', gate:{},
         bits:[], completion:{ flags:['__w7aReady'] }, title:'W7a Probe',
@@ -8940,7 +8940,7 @@ test.describe('§ARCH-01 W7 — completion-bit execution point (Phase 4)', () =>
   });
 
   test('a function-valued onComplete still fires as a legacy closure (unchanged path)', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       QUEST_DB.quest___w7b = { id:'quest___w7b', type:'side', schema:'UQF-1.0', gate:{},
         bits:[], completion:{ flags:['__w7bReady'] }, title:'W7b Probe',
@@ -8958,7 +8958,7 @@ test.describe('§ARCH-01 W7 — completion-bit execution point (Phase 4)', () =>
   });
 
   test('validateQuest walks an array-valued onComplete chain', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const good = validateQuest({ id:'x', schema:'UQF-1.0', completion:{ flags:['f'] },
         onComplete:[{ kind:'reward', xp:10 }] });
@@ -8975,7 +8975,7 @@ test.describe('§ARCH-01 W7 — completion-bit execution point (Phase 4)', () =>
   });
 
   test('narrative bits outside a msgs context still fall back to storyMsg', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       _uqfRunToCompletion(QuestRuntime.execBits([{ kind:'narrative', msg:'🧪 W7 direct narrative' }], {}));   // §VM-01-A pump
       return document.getElementById('story-move-msg').textContent;
@@ -8997,7 +8997,7 @@ test.describe('§ARCH-01 W7 — completion-bit execution point (Phase 4)', () =>
 
 test.describe('§ARCH-01 W7b — QUEST_DB onComplete closures folded into bit chains', () => {
   test('no function-valued onComplete remains in QUEST_DB; all chains validate', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const carriers = Object.values(QUEST_DB).filter(q => q.onComplete);
       const fns = carriers.filter(q => typeof q.onComplete === 'function').map(q => q.id);
@@ -9019,7 +9019,7 @@ test.describe('§ARCH-01 W7b — QUEST_DB onComplete closures folded into bit ch
   });
 
   test('glut_06 full-chain parity: flags, gift removal, kindness, crown flag', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       S_story.quests = { quest_glut_06:'active' };
       S_story.inventory = [{ name:"Glut's Gift", icon:'🫙', sell:0 }];
@@ -9041,7 +9041,7 @@ test.describe('§ARCH-01 W7b — QUEST_DB onComplete closures folded into bit ch
   });
 
   test('sb_fight battle completion: bit chain fires; xpAward double-count fixed (removed) → single +400', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       S_story.quests = { quest_sb_fight:'active' };
       S_story.inventory = []; S_story.xp = 0; S_story.gold = 0; S_story.level = 20; // level cap avoids level-up churn
@@ -9062,7 +9062,7 @@ test.describe('§ARCH-01 W7b — QUEST_DB onComplete closures folded into bit ch
   });
 
   test('iodine_02 counted consumption: exactly 2 of 3 Swamp Kelp removed, 2 Iodine Salt granted', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const kelp = () => ({ name:'Swamp Kelp', icon:'🌿', sell:3, type:'craft' });
       S_story.quests = { quest_iodine_02:'active' };
@@ -9098,13 +9098,13 @@ test.describe('§ARCH-01 W7b — QUEST_DB onComplete closures folded into bit ch
 
 test.describe('§ARCH-01 W7c — per-id effects block folded into onComplete chains', () => {
   test('the id-keyed block is gone from storyCheckQuests', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => storyCheckQuests.toString().includes("if (id === '"));
     expect(r).toBe(false);
   });
 
   test('favor bit kind: set / add-with-cap semantics ride the monotonic _setNpcFavor', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const out = {};
       S_story.npcFavorability = {};
@@ -9132,7 +9132,7 @@ test.describe('§ARCH-01 W7c — per-id effects block folded into onComplete cha
   });
 
   test('slums_cleanup parity flip: +80 gold, yael favor 1, message in the msgs stream', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       S_story.level = 20; S_story.gold = 0; S_story.xp = 0;
       S_story.npcFavorability = {};
@@ -9146,7 +9146,7 @@ test.describe('§ARCH-01 W7c — per-id effects block folded into onComplete cha
   });
 
   test('city_watch_patrol: reward gold+xp, favor add raises 2→3 and clamps at 3', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const run = startFavor => {
         S_story.level = 20; S_story.gold = 0; S_story.xp = 0;
@@ -9163,7 +9163,7 @@ test.describe('§ARCH-01 W7c — per-id effects block folded into onComplete cha
   });
 
   test('scar_04 branches: mercy path grants one-shot WIS+1 + mercy message; refuse path plain', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const run = (choice, preGranted) => {
         S_story.level = 20; S_story.xp = 0;
@@ -9190,7 +9190,7 @@ test.describe('§ARCH-01 W7c — per-id effects block folded into onComplete cha
   });
 
   test('vs_warden three-way resolution message (neither / persuaded / defeated)', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const run = (persuaded, defeated) => {
         S_story.vsShamanPersuaded = persuaded; S_story.vshamanDefeated = defeated;
@@ -9207,7 +9207,7 @@ test.describe('§ARCH-01 W7c — per-id effects block folded into onComplete cha
   });
 
   test('fishing_guide: lazy _legacy_fn grants the readable with the real FISHING_GUIDE_TEXT', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       S_story.level = 20;
       S_story.quests = { quest_fishing_guide:'active' };
@@ -9224,7 +9224,7 @@ test.describe('§ARCH-01 W7c — per-id effects block folded into onComplete cha
   });
 
   test('wm_01 (legacy holdout) chain: 3 seals spent on the seal path, kept on the letter path', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const seal = () => ({ name:"Scholar Kings' Seal", icon:'📜', sell:0 });
       const run = viaLetter => {
@@ -9246,7 +9246,7 @@ test.describe('§ARCH-01 W7c — per-id effects block folded into onComplete cha
   });
 
   test('void_below chain: auros favor 2, bruhnsDepthsReported flag, narrative in stream', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       S_story.level = 20;
       S_story.npcFavorability = {};
@@ -9262,7 +9262,7 @@ test.describe('§ARCH-01 W7c — per-id effects block folded into onComplete cha
   });
 
   test('_legacy_fn handlers receive ctx (pushMsg routing) and still get S_story first', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const got = [];
       _uqfRunToCompletion(QuestRuntime.execBits([{ kind:'_legacy_fn', fn:(S, ctx) => ctx.pushMsg('ctx-ok:' + (S === S_story)) }],
@@ -9288,7 +9288,7 @@ test.describe('§ARCH-01 W7c — per-id effects block folded into onComplete cha
 
 test.describe('§ARCH-01 W7d / §VM-01-F — legacy branches retired; wm_01 in the gate grammar', () => {
   test('AST {any} + itemsAll replaces the deleted itemsMinAny: same OR-position exact-count truth table', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const seal = () => ({ name:"Scholar Kings' Seal" });
       // §VM-01-F — the grammar equivalent of the deleted `itemsMinAny` OR-entry:
@@ -9315,7 +9315,7 @@ test.describe('§ARCH-01 W7d / §VM-01-F — legacy branches retired; wm_01 in t
   });
 
   test('quest_wm_01 is UQF: validates, completion is the letter-OR-3-seals gate in the grammar, no completeFn residue', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const q = QUEST_DB.quest_wm_01;
       return { schema: q.schema, valid: validateQuest(q).valid, noFn: !('completeFn' in q),
@@ -9335,7 +9335,7 @@ test.describe('§ARCH-01 W7d / §VM-01-F — legacy branches retired; wm_01 in t
   });
 
   test('storyCheckQuests no longer honors legacy completeFn / completeItems terms', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       S_story.level = 20; S_story.inventory = [{ name:'Relic Token' }];
       // Pre-W7d both of these would complete on this pass; the terms are retired.
@@ -9351,7 +9351,7 @@ test.describe('§ARCH-01 W7d / §VM-01-F — legacy branches retired; wm_01 in t
   });
 
   test('§W8a canonical fields: no QUEST_DB entry carries a dead legacy field (completeItems / root check* / bitLabel / goldAward)', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       // Root-level legacy fields swept in W8a. NB checkStat/checkDC etc. are fine
       // INSIDE bits (that is the UQF home for stat/dc) — this checks quest roots only.
@@ -9369,7 +9369,7 @@ test.describe('§ARCH-01 W7d / §VM-01-F — legacy branches retired; wm_01 in t
   });
 
   test('the full non-UQF residue is exactly the 30 blq stubs (all activate-only, no completion surface)', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const nonUqf = Object.values(QUEST_DB).filter(q => q.schema !== 'UQF-1.0');
       return {
@@ -9404,7 +9404,7 @@ test.describe('§ARCH-01 W7d / §VM-01-F — legacy branches retired; wm_01 in t
 // gated); it stays inline-authoritative by design.
 test.describe('§ARCH-01 W8c — storyRender audit: engine is the sole completer', () => {
   test('tour + no_fishing_sign are engine-completable, and opp.xp === xpAward for every act (no divergence)', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const bad = [];
       for (const id of ['quest_tour_01','quest_tour_02','quest_tour_03','quest_tour_04',
@@ -9424,7 +9424,7 @@ test.describe('§ARCH-01 W8c — storyRender audit: engine is the sole completer
   });
 
   test('engine completes tour_01 + no_fishing_sign with a SINGLE xpAward grant (a re-added inline shortcut would double it)', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       S_story.level = 20;                                   // avoid level-up churn; xp is cumulative
       // tour_01: completion flagsPath yugurtTourBeat.pip, xpAward 100
@@ -9447,7 +9447,7 @@ test.describe('§ARCH-01 W8c — storyRender audit: engine is the sole completer
   });
 
   test('the two inline completion shortcuts are gone from source; la_riva_02 remains the documented inline exception', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const src = await page.evaluate(() => document.documentElement.outerHTML);
     expect(src.includes("S_story.quests[qId] = 'complete'")).toBe(false);                     // tournament win — engine now
     expect(src.includes("S_story.quests['quest_no_fishing_sign'] = 'complete'")).toBe(false); // coupon redeem — engine now
@@ -9472,7 +9472,7 @@ test.describe('§MATH-01 — quest_math_01–05 UQF completions', () => {
   };
 
   test('all five are UQF-1.0, validate, gate:{}, bits:[], itemsAll+atNode shapes as designed', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate((shapes) => {
       const bad = [];
       for (const [id, s] of Object.entries(shapes)) {
@@ -9496,7 +9496,7 @@ test.describe('§MATH-01 — quest_math_01–05 UQF completions', () => {
   });
 
   test('math nodes occupy the HKG pocket, one code per cell, cells passable; node.loot carries the documents', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const want = { EHZ: '29,247', ZERO: '28,247', MONS: '29,248', CNTR: '28,248' };
       const bad = [];
@@ -9519,7 +9519,7 @@ test.describe('§MATH-01 — quest_math_01–05 UQF completions', () => {
   });
 
   test('functional: arrival at ZERO grants both documents and completes active math_01 + math_04 same visit (xp+gold)', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       S_story.level = 20; S_story.gold = 1000; S_story.xp = 0;
       S_story.inventory = []; S_story.visited = {};
@@ -9549,7 +9549,7 @@ test.describe('§MATH-01 — quest_math_01–05 UQF completions', () => {
   });
 
   test('functional: math_02 activates at EHZ, does NOT complete there, completes at MONS on pickup', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       S_story.level = 20; S_story.gold = 0; S_story.xp = 0;
       S_story.inventory = []; S_story.visited = {};
@@ -9571,7 +9571,7 @@ test.describe('§MATH-01 — quest_math_01–05 UQF completions', () => {
   });
 
   test('functional: atNode holds — holding the Moonshine Memo does not complete math_05 away from CNTR', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       S_story.quests.quest_math_05 = 'active';
       S_story.inventory = [{ name: 'Moonshine Memo' }];
@@ -9594,7 +9594,7 @@ test.describe('§MATH-01 — quest_math_01–05 UQF completions', () => {
 
 test.describe('§MBIT-02 — _flagToLabel expander', () => {
   test('chain/act flags expand cleanly; plain camelCase is unchanged', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => [
       'athC1A1Done', 'bgw_c1a1_passed', 'lis_08_act1', 'WAW_002_act1Pass',
       'wisPage1_masks', 'blq02GatePassed', 'ams01a1', 'sbParleySucceeded',
@@ -9610,7 +9610,7 @@ test.describe('§MBIT-02 — _flagToLabel expander', () => {
   });
 
   test('no fallback label in QUEST_DB is left with raw underscores or glued letter-digit runs', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const flags = new Set();
       const walk = (bits) => (bits || []).forEach(b => {
@@ -9630,7 +9630,7 @@ test.describe('§MBIT-02 — _flagToLabel expander', () => {
   });
 
   test('Paul-arc mission_bits all carry explicit labels (fallback never used)', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       const ids = ['quest_ezzir', 'quest_governor_cyprus', 'quest_lame_lystra', 'quest_stoning_lystra',
                    'quest_prison_phillam', 'quest_areopagus', 'quest_ephesus_riot', 'quest_basket_damascus',
@@ -9660,7 +9660,7 @@ test.describe('§MBIT-02 — _flagToLabel expander', () => {
 // is the declarative `takeBit` itemChain action, which this guard makes safe.
 test.describe('§MBIT-02 — _takeMissionBit spends the token without un-gating an arc', () => {
   test('_gateFlagSet() collects flags/flagsAny/notFlags and includes a known gate flag', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => ({
       size: _gateFlagSet().size,
       hasEzzir: _gateFlagSet().has('ezzirConfronted'),   // gate:{flags:['ezzirConfronted']} on quest_governor_cyprus
@@ -9670,7 +9670,7 @@ test.describe('§MBIT-02 — _takeMissionBit spends the token without un-gating 
   });
 
   test('non-gating flag: token spent AND marker flag fully revoked', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       S_story.inventory = [];
       const flag = 'mbitTestNonGatingXyz';               // referenced by no gate
@@ -9687,7 +9687,7 @@ test.describe('§MBIT-02 — _takeMissionBit spends the token without un-gating 
   });
 
   test('gate-referenced flag: token spent, witnessed event (flag) preserved, warns', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       S_story.inventory = [];
       const warns = [];
@@ -9707,7 +9707,7 @@ test.describe('§MBIT-02 — _takeMissionBit spends the token without un-gating 
   });
 
   test('the takeBit itemChain action (only author path) routes through the guard', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       S_story.inventory = [];
       const flag = 'lyraConverted';                      // gate-referenced (2 gates)
@@ -9727,7 +9727,7 @@ test.describe('§MBIT-02 — _takeMissionBit spends the token without un-gating 
 // the real storyRenderInventory() into #inv-list and reads back the rendered order.
 test.describe('§MBIT-02 — Mission Tokens journal timeline (grouped by day earned)', () => {
   test('tokens render grouped under ascending Day dividers, grant order within a day', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       S_story.inventory = [];
       // Grant out of day order to prove the render sorts, not insertion order.
@@ -9762,7 +9762,7 @@ test.describe('§MBIT-02 — Mission Tokens journal timeline (grouped by day ear
   });
 
   test('legacy tokens without a day stamp fall into Day 1', async ({ page }) => {
-    await page.goto('/roll2hit-v3.html');
+    await page.goto('/index.html');
     const r = await page.evaluate(() => {
       S_story.inventory = [
         { name: 'Old Token', icon: '🪬', type: 'mission_bit', flagRef: 'mbitLegacy' }, // no .day

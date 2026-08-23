@@ -4,7 +4,7 @@ const { expect } = require('@playwright/test');
 
 // ── HTML patch ────────────────────────────────────────────────────────────────
 // The orphaned junction blocks (originally lines 9864–33152) that caused
-// "Missing initializer in const declaration" were removed from roll2hit-v3.html
+// "Missing initializer in const declaration" were removed from index.html
 // directly on 2026-06-12. patchGameHtml is now a no-op kept for API stability.
 async function patchGameHtml(page) { // eslint-disable-line no-unused-vars
   // no-op: HTML syntax was repaired in source
@@ -98,13 +98,13 @@ async function seedAndLoad(page, overrides = {}) {
     localStorage.clear();
     localStorage.setItem('r2h_autosave', JSON.stringify(s));
   }, state);
-  await page.goto('/roll2hit-v3.html');
+  await page.goto('/index.html');
 }
 
 /**
  * Dismiss the "Continue / New Game" modal and load the seeded save.
  *
- * storyEnter() is called automatically at the bottom of roll2hit-v3.html, so
+ * storyEnter() is called automatically at the bottom of index.html, so
  * the continue modal is already visible when the page finishes loading — no
  * need to click #story-mode-btn first.
  * Clicking #btn-continue-load calls storyLoadContinue() → storyLoadSave() →

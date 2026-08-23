@@ -434,7 +434,7 @@ function main() {
   const args = process.argv.slice(2);
   if (args.includes('--selftest')) return void selftest();
 
-  const htmlPath = path.join(__dirname, '..', 'roll2hit-v3.html');
+  const htmlPath = path.join(__dirname, '..', 'index.html');
   const html = fs.readFileSync(htmlPath, 'utf8');
   const CORE = require(path.join(__dirname, '..', 'js', 'wbapi-core.js'))._parse;
   const db = CORE.parseSanitized(CORE.extrSection(html, 'QUEST_DB'), 'QUEST_DB');

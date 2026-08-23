@@ -53,7 +53,7 @@ const fs = require('fs');
 const path = require('path');
 
 const ROOT = path.resolve(__dirname, '..');
-const HTML = path.join(ROOT, 'roll2hit-v3.html');
+const HTML = path.join(ROOT, 'index.html');
 const WBAPI = require(path.join(ROOT, 'js', 'wbapi-core.js'));
 
 // ── classification ────────────────────────────────────────────────────────────

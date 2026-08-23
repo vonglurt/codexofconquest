@@ -481,13 +481,13 @@ Tracks the last 100 rolls per die type, displayed as a section at the bottom of 
 
 ---
 
-## Phase 3 — Combat Utility Features (roll2hit-v3.html)
+## Phase 3 — Combat Utility Features (index.html)
 
 ### Goals
 
 Extend the arena with real-time combat-state tracking while keeping the interface fast to use. No character-sheet focus — every addition must be reachable in one click or one dropdown during a fight. Features are added one atomic step at a time; each step leaves the file in a working state.
 
-**File:** `roll2hit-v3.html` — started as a direct copy of `roll2hit-v2.html`.
+**File:** `index.html` — started as a direct copy of `roll2hit-v2.html`.
 
 ---
 
@@ -513,13 +513,13 @@ Extend the arena with real-time combat-state tracking while keeping the interfac
 
 #### Step S0 — File copy ✅
 ```bash
-cp roll2hit-v2.html roll2hit-v3.html
+cp roll2hit-v2.html index.html
 ```
-No code changes. All Phase 3 work targets `roll2hit-v3.html` only.
+No code changes. All Phase 3 work targets `index.html` only.
 
 ---
 
-#### Step S1 — On-die Display  ✅  `roll2hit-v3.html`
+#### Step S1 — On-die Display  ✅  `index.html`
 
 **What changed:**
 - Outcome banner converted from a single text node to a `flex-column` container with two child spans.
@@ -542,7 +542,7 @@ No code changes. All Phase 3 work targets `roll2hit-v3.html` only.
 
 ---
 
-#### Step S2 — Resistance / Vulnerability  ✅  `roll2hit-v3.html`
+#### Step S2 — Resistance / Vulnerability  ✅  `index.html`
 
 **What changed:**
 - Each arena zone has a `½ RES · NORM · ×2 VULN` button row, absolutely positioned bottom-right of the zone.
@@ -788,7 +788,7 @@ New sections added to the scrollable config panel:
 
 ---
 
-## Phase 4 — Story Mode Combat System (roll2hit-v3.html, Layers 11–37)
+## Phase 4 — Story Mode Combat System (index.html, Layers 11–37)
 
 This section documents the story-mode battle overlay that supersedes the standalone simulator for in-game encounters. The standalone simulator (Phases 0–3 above) remains fully functional; story mode adds a full-screen overlay on top of it with its own state and economy.
 

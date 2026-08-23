@@ -24,7 +24,7 @@
 // highway builder is refused (§DX-01d, the tool that manufactured J14/J15).
 //
 // Pure-node (no browser): this is an authoring-surface invariant. Every case runs
-// against an in-memory copy — `roll2hit-v3.html` is never written.
+// against an in-memory copy — `index.html` is never written.
 
 const { test, expect } = require('@playwright/test');
 const { execFileSync } = require('child_process');
@@ -32,7 +32,7 @@ const fs = require('fs');
 const path = require('path');
 
 const ROOT = path.resolve(__dirname, '..', '..');
-const GAME = path.join(ROOT, 'roll2hit-v3.html');
+const GAME = path.join(ROOT, 'index.html');
 const SRC = fs.readFileSync(GAME, 'utf8');
 
 // A fresh module instance loaded from the file TEXT (never a path), so no test can

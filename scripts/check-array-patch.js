@@ -5,13 +5,13 @@
 // Verifies WBAPI.editStructuredField serializes array/object/number values to
 // codebase-style JS literals, patches _rawSrc at SOURCE level (so they survive
 // save()), round-trips through a reload, inserts absent fields, and rejects
-// function values. Pure: loads roll2hit-v3.html read-only into a detached WBAPI
+// function values. Pure: loads index.html read-only into a detached WBAPI
 // instance and round-trips via load(text) — never writes the file.
 // Lab report: lab-reports/lab-report-wbapi01-ph3-array-patch.md
 
 const path = require('path');
 const WBAPI = require(path.join(__dirname, '..', 'js', 'wbapi-core'));
-const GAME = path.join(__dirname, '..', 'roll2hit-v3.html');
+const GAME = path.join(__dirname, '..', 'index.html');
 
 let pass = 0, fail = 0;
 const ok = (c, m) => { if (c) { pass++; } else { fail++; console.log('  ✗ FAIL:', m); } };
