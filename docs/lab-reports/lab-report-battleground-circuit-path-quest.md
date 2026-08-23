@@ -39,7 +39,7 @@ design-record verification
 
 ## I. Method
 
-Four measurements, all from HEAD (`play.html`, 38,707 lines, r2h-3.104.0):
+Four measurements, all from HEAD (`play.html`, 38,707 lines, coc-3.104.0):
 
 1. **Symbol census.** Every function, constant, field and DOM id the report names, batched through
    one `grep -c` loop. This partitions the report before a line of it is read (§DOC-02 accelerator 3).

@@ -133,7 +133,7 @@ mpChatLog     : last 200 chat lines (💬 history, survives reload)
 ```
 
 Server-list format (`http(s)` txt or JSON): text = one entry per line — `host:port`,
-`http(s)://…`, or an `r2h:?…` magnet, `#` comments ignored; JSON = array of strings or
+`http(s)://…`, or an `coc:?…` magnet, `#` comments ignored; JSON = array of strings or
 `{addr,name}` objects. Parsed to `[{addr|url|magnet, name?}]`, deduped.
 
 ## IV. Spec → Shipped Delta

@@ -437,7 +437,7 @@ Long rest also:
 - Resets `shortRests = 3`
 - Resets `surgeCharges` (1 at Lv2–16; 2 at Lv17+)
 - Resets `indomitableCharges` (1 at Lv9+)
-- Saves checkpoint via `r2h_checkpoint`
+- Saves checkpoint via `coc_checkpoint`
 
 ---
 
@@ -562,7 +562,7 @@ Both defeat screens show a full **run summary**: level reached, XP earned, day r
 #### Combat Death — ☠ You Have Fallen
 - HP drops to 0 during battle → game over modal fires
 - **Respawn available** at last checkpoint (inn slept at), at half max HP
-- Checkpoint saves on every inn sleep via `r2h_checkpoint`
+- Checkpoint saves on every inn sleep via `coc_checkpoint`
 
 #### The Corpse-Run — Death, Loot & the Grave (§DEATH-01)
 On a failed death-save fall (`_storyDeathSaveFall`) — a lighter loss than the game-over path — you
@@ -591,14 +591,14 @@ All state is persisted via `localStorage`. There is no server component.
 
 | Key | Written by | Read by | Content |
 |-----|-----------|---------|---------|
-| `r2h_autosave` | `storyAutoSave()` | `storyCheckContinue()` | Full `S_story` JSON snapshot; written on every move, battle end, level-up, and purchase |
-| `r2h_checkpoint` | `storySaveCheckpoint()` | `storyLoadSave('r2h_checkpoint')` | Full `S_story` JSON snapshot; written only on inn sleep (long rest) |
+| `coc_autosave` | `storyAutoSave()` | `storyCheckContinue()` | Full `S_story` JSON snapshot; written on every move, battle end, level-up, and purchase |
+| `coc_checkpoint` | `storySaveCheckpoint()` | `storyLoadSave('coc_checkpoint')` | Full `S_story` JSON snapshot; written only on inn sleep (long rest) |
 
-**Continue flow**: On page load, `storyCheckContinue()` reads `r2h_autosave`. If the save exists and `hp > 0`, the player is offered a **Continue** button that calls `storyLoadSave('r2h_autosave')`.
+**Continue flow**: On page load, `storyCheckContinue()` reads `coc_autosave`. If the save exists and `hp > 0`, the player is offered a **Continue** button that calls `storyLoadSave('coc_autosave')`.
 
-**Respawn flow**: On combat death (`hp === 0`), the respawn option calls `storyLoadSave('r2h_checkpoint')`, restoring the player to their last inn sleep at half max HP.
+**Respawn flow**: On combat death (`hp === 0`), the respawn option calls `storyLoadSave('coc_checkpoint')`, restoring the player to their last inn sleep at half max HP.
 
-**New Game / Wipe**: Both the Wipe Void Defeat screen and the explicit New Game path call `localStorage.removeItem('r2h_autosave')` and `localStorage.removeItem('r2h_checkpoint')` before resetting `S_story` to `_S_DEFAULTS()`.
+**New Game / Wipe**: Both the Wipe Void Defeat screen and the explicit New Game path call `localStorage.removeItem('coc_autosave')` and `localStorage.removeItem('coc_checkpoint')` before resetting `S_story` to `_S_DEFAULTS()`.
 
 **Format**: `JSON.stringify(S_story)` — a flat serialization of the entire `_S_DEFAULTS()` shape. No versioning field; forward compatibility relies on `Object.assign` merge (missing keys get default values from the running `_S_DEFAULTS()` call).
 

@@ -10592,7 +10592,7 @@ window.__walkG = {
           `${p.live ? ` <button class="btn sm" style="margin-left:6px" onclick="meshDownloadWorld('${esc(p.addr)}')">⬇ world</button>` : ''}</div>`).join('')
       : '<div style="color:var(--muted)">no peers yet — --peer host:port, peers.txt, or a tracker</div>';
     // §MESH-01d3: magnet v2 for this world (uses the first configured tracker)
-    const magnet = `r2h:?p=${encodeURIComponent(d.proto)}&ev=${encodeURIComponent(d.engineVer)}&wh=${encodeURIComponent(d.worldHash)}` +
+    const magnet = `coc:?p=${encodeURIComponent(d.proto)}&ev=${encodeURIComponent(d.engineVer)}&wh=${encodeURIComponent(d.worldHash)}` +
       (d.trackerUrls && d.trackerUrls[0] ? `&tr=${encodeURIComponent(d.trackerUrls[0])}` : '');
     el('mesh-identity').innerHTML += ` · <a href="#" style="color:var(--accent)" onclick="navigator.clipboard&&navigator.clipboard.writeText('${esc(magnet)}');this.textContent='🔗 copied';return false">🔗 copy magnet</a>`;
     // §MESH-01-FU 1: LAN/WAN reachability warnings (loopback bind / localhost advertise)

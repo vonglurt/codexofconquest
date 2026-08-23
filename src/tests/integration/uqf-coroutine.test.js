@@ -105,7 +105,7 @@ test.describe('§VM-01-A — the quest VM coroutine', () => {
       _uqfPump(gen);                                     // suspend mid-choice
       const parked = !!_uqfPending && typeof _uqfPending.gen.next === 'function';
       storyAutoSave();                                   // the REAL autosave, taken mid-suspension
-      const raw = localStorage.getItem('r2h_autosave');
+      const raw = localStorage.getItem('coc_autosave');
       let roundTrips = false, hasPending = false, hasGen = false;
       try {
         const parsed = JSON.parse(raw);

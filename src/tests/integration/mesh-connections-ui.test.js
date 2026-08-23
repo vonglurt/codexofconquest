@@ -78,7 +78,7 @@ test.describe('§MESH-02f — connection-center UI (hermetic, :1367 route-blocke
   test('mpParseServerList: txt — comments stripped, deduped, addr/url/magnet classified', async ({ page }) => {
     await loadHermetic(page);
     const p = await page.evaluate(() => window.__mesh02.mpParseServerList(
-      '# comment line\nhost1:1401\nhost1:1401\nhttp://tracker.example/\nr2h:?p=x&wh=y&tr=http://t.example\nnot!valid\nhost2:1402  # trailing comment\n'));
+      '# comment line\nhost1:1401\nhost1:1401\nhttp://tracker.example/\ncoc:?p=x&wh=y&tr=http://t.example\nnot!valid\nhost2:1402  # trailing comment\n'));
     expect(p.length).toBe(4);
     expect(p[0].addr).toBe('host1:1401');
     expect(p[1].url).toBe('http://tracker.example');
@@ -89,7 +89,7 @@ test.describe('§MESH-02f — connection-center UI (hermetic, :1367 route-blocke
   test('mpParseServerList: JSON strings + {addr,name} objects; garbage/bad JSON/empty → []', async ({ page }) => {
     await loadHermetic(page);
     const p = await page.evaluate(() => ({
-      json: window.__mesh02.mpParseServerList('["a:1401", {"addr":"b:1402","name":"Bee"}, "r2h:?tr=http://t.example", 42, "junk"]'),
+      json: window.__mesh02.mpParseServerList('["a:1401", {"addr":"b:1402","name":"Bee"}, "coc:?tr=http://t.example", 42, "junk"]'),
       badJson: window.__mesh02.mpParseServerList('[not json'),
       garbage: window.__mesh02.mpParseServerList('total nonsense\nnothing here'),
       empty: window.__mesh02.mpParseServerList(''),

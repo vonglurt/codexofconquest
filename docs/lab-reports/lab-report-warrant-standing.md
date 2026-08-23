@@ -2,7 +2,7 @@
 # Lab Report — §BOARD-01-FU7 *Warrant Standing*: reputation as a board-quality gate
 
 **Class:** design lock (IEEE-format spec written *before* implementation) · **Verified:** §DOC-02cu, 2026-08-22
-**Original date:** 2026-07-21 · **Measured against:** `play.html` @ `4878c3c` (`ENGINE_VER = r2h-3.104.0`, 37,422 lines) — *both figures re-checked exact*
+**Original date:** 2026-07-21 · **Measured against:** `play.html` @ `4878c3c` (`ENGINE_VER = coc-3.104.0`, 37,422 lines) — *both figures re-checked exact*
 **Shipped:** `e0051a8` 2026-07-21 12:51, **the same commit that added this report** · **Pinned parent:** `e0051a8^` = `4878c3c`
 **Parent item:** BACKLOG.md §BOARD-01-FU7 (promotes `potential.md` §POT-H4 / §POT-C5 / §POT-P3) · **Builds on:** `lab-report-warrants-board.md`, §BOARD-01-FU6 · **Superseded by:** §BOARD-01-FU8 (`lab-report-void-tide-bounties.md`)
 

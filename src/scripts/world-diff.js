@@ -216,7 +216,7 @@ function selftest() {
   const fails = [];
   const ok = (cond, msg) => { console.log(`  ${cond ? '✓' : '✗'} ${msg}`); if (!cond) fails.push(msg); };
   const mk = (o = {}) => `<html><script>
-const ENGINE_VER = '${o.ev || 'r2h-test.1'}';
+const ENGINE_VER = '${o.ev || 'coc-test.1'}';
 ${o.NODE_MAP || `const NODE_MAP = {
   AA: { name: 'alpha', label: 'Alpha', hook: (s) => { return 1; } },
   BB: { name: 'beta' },
@@ -281,7 +281,7 @@ ${o.CODE || `function engineTick() { return 42; }`}
     'code edit outside the data spans → exit 2, all parts identical');
 
   // an ENGINE_VER bump lives OUTSIDE the data spans — it is a code change
-  const rv = diffWorlds(A, mk({ ev: 'r2h-test.2' }));
+  const rv = diffWorlds(A, mk({ ev: 'coc-test.2' }));
   ok(rv.exit === 2 && rv.codeDiffers && rv.engineVer.a !== rv.engineVer.b,
     'ENGINE_VER bump is flagged by name AND trips the code-differs gate (exit 2)');
 

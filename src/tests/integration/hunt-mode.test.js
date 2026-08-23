@@ -58,7 +58,7 @@ test.describe('§KG-01 Hunt Mode', () => {
       return {
         mode: S_story.huntMode,
         lit: document.getElementById('btn-hunt').classList.contains('hunting'),
-        saved: JSON.parse(localStorage.getItem('r2h_autosave') || '{}').huntMode,
+        saved: JSON.parse(localStorage.getItem('coc_autosave') || '{}').huntMode,
       };
     });
     expect(after.mode).toBe(true);

@@ -122,7 +122,7 @@ const results = [];
 for (const shot of SHOTS) {
   const page = await browser.newPage({ viewport: { width: 1280, height: 900 }, deviceScaleFactor: 2 });
   try {
-    await page.addInitScript(s => { localStorage.clear(); localStorage.setItem('r2h_autosave', JSON.stringify(s)); }, SEED);
+    await page.addInitScript(s => { localStorage.clear(); localStorage.setItem('coc_autosave', JSON.stringify(s)); }, SEED);
     await page.goto(`${BASE}/play.html`, { waitUntil: 'domcontentloaded' });
     // The continue gate must be answered with "load", or the game starts a
     // NEW game and every shot shows default stats instead of the seed.

@@ -41,6 +41,20 @@ across 1,471 commits.
   by Paul Richeson; AI contributions were a contracted service performed under
   the author's direction, recorded in `CONTRIBUTING.md` and in the git history.
 
+### Breaking
+
+- **Existing saves are invalidated.** The `localStorage` keys `r2h_autosave` and
+  `r2h_checkpoint` are now `coc_autosave` and `coc_checkpoint`. Anyone with a
+  save from a pre-release build will find a fresh game; the old data is still in
+  their browser under the old keys but the game no longer looks there. Accepted
+  deliberately so the project carries one identifier, not two.
+- **`ENGINE_VER` is `coc-3.104.0`** (was `r2h-3.104.0`). This is one leg of the
+  mesh compatibility triple, so a server on the old string will not group with a
+  new one.
+- **The mesh magnet scheme is `coc:?…`** (was `r2h:?…`). Previously shared world
+  links will not resolve.
+- The CLI launcher `src/bin/r2h` is now `src/bin/coc`.
+
 ### Removed
 - 684 MB purged from git history: generated snapshots and logs, an imported book
   corpus, committed `node_modules`, and 36 one-off HTML backups. No `.md` of the

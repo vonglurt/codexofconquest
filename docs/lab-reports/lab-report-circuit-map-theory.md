@@ -46,7 +46,7 @@ verification, document-internal accuracy gradient
 
 ## I. Method
 
-Five measurements, all reproducible (`play.html`, 38,707 lines, r2h-3.104.0):
+Five measurements, all reproducible (`play.html`, 38,707 lines, coc-3.104.0):
 
 1. **Symbol census.** Every function, constant, state field, DOM id and CSS class the report names,
    batched through one `grep -c` loop — this partitions the document before a line of it is read.

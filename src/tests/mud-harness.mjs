@@ -138,7 +138,7 @@ async function main() {
   // it makes this "solo" server boot configured → [H] reachability-warning
   // check fails (same poisoning class as the [E]/[G] note below; found 2026-07-06
   // when a §MESH-02 connect test left localhost:1368 behind).
-  await startServer(PORT, { PEERS_CACHE_FILE: path.join(os.tmpdir(), `r2h-peers-${process.pid}-${PORT}.json`) });
+  await startServer(PORT, { PEERS_CACHE_FILE: path.join(os.tmpdir(), `coc-peers-${process.pid}-${PORT}.json`) });
 
   // ════════ (a/c) co-presence at the hub ════════
   console.log('\n[A] co-presence chat + who/look at the hub');
@@ -299,7 +299,7 @@ async function main() {
   // cache still persists per port, which is what the restart cases need.
   const mkEnv = (port, sid, extra = {}) => ({
     MESH_SERVER_ID: sid, ADVERTISE_ADDR: `localhost:${port}`, MESH_GOSSIP_MS: '120',
-    PEERS_CACHE_FILE: path.join(tmp, `r2h-peers-${process.pid}-${port}.json`), ...extra,
+    PEERS_CACHE_FILE: path.join(tmp, `coc-peers-${process.pid}-${port}.json`), ...extra,
   });
   const mA = await startServer(PORT + 2, mkEnv(PORT + 2, 'a'.repeat(32)));
   const mB = await startServer(PORT + 3, mkEnv(PORT + 3, 'b'.repeat(32), { MESH_PEERS: `localhost:${PORT + 2}` }));
@@ -362,7 +362,7 @@ async function main() {
   check(gBad.status === 409, 'gossip ingress refuses a mismatched worldHash with 409');
 
   // ACL: allowlist-mode server refuses even a compatible, unlisted peer.
-  const aclPath = path.join(tmp, `r2h-acl-${PORT}.json`);
+  const aclPath = path.join(tmp, `coc-acl-${PORT}.json`);
   fs.writeFileSync(aclPath, JSON.stringify({ mode: 'allowlist', allowServerIds: [] }));
   const mD = await startServer(PORT + 5, mkEnv(PORT + 5, 'd'.repeat(32), { MESH_ACL_FILE: aclPath }));
   const gAcl = await fetch(mD.base + '/api/mesh/gossip', {
@@ -373,7 +373,7 @@ async function main() {
 
   // ════════ (f) §MESH-01d — tracker discovery + world grouping + bootstrap URL ════════
   console.log('\n[F] §MESH-01d — tracker rendezvous, compat grouping, BOOTSTRAP_URLS');
-  const trk = await startServer(PORT + 6, { TRACKER_MODE: '1', MESH_SERVER_ID: 'e'.repeat(32), PEERS_CACHE_FILE: path.join(tmp, `r2h-peers-${PORT + 6}.json`), TRACKER_CACHE_FILE: path.join(tmp, `r2h-trkcache-${process.pid}-${PORT + 6}.json`) });
+  const trk = await startServer(PORT + 6, { TRACKER_MODE: '1', MESH_SERVER_ID: 'e'.repeat(32), PEERS_CACHE_FILE: path.join(tmp, `coc-peers-${PORT + 6}.json`), TRACKER_CACHE_FILE: path.join(tmp, `coc-trkcache-${process.pid}-${PORT + 6}.json`) });
   check((await jget('/ping', trk.base)).ok === true, 'tracker answers /api/ping');
   check((await jget('/session/who', trk.base)).ok === false, 'tracker-mode refuses non-tracker routes (rendezvous only, never a relay)');
 
@@ -424,8 +424,8 @@ async function main() {
   // B, which federates with A. J must still discover Ida — proof that manually
   // connecting two trackers implicitly shares both server lists.
   console.log('\n[G] §MESH-01d2 — tracker federation (announce tables merge)');
-  const trkA2 = await startServer(PORT + 11, { TRACKER_MODE: '1', MESH_SERVER_ID: '6'.repeat(32), MESH_ANNOUNCE_MS: '150', PEERS_CACHE_FILE: path.join(tmp, `r2h-peers-${PORT + 11}.json`), TRACKER_CACHE_FILE: path.join(tmp, `r2h-trkcache-${process.pid}-${PORT + 11}.json`) });
-  const trkB2 = await startServer(PORT + 12, { TRACKER_MODE: '1', MESH_SERVER_ID: '5'.repeat(32), MESH_ANNOUNCE_MS: '150', TRACKER_PEERS: trkA2.base, PEERS_CACHE_FILE: path.join(tmp, `r2h-peers-${PORT + 12}.json`), TRACKER_CACHE_FILE: path.join(tmp, `r2h-trkcache-${process.pid}-${PORT + 12}.json`) });
+  const trkA2 = await startServer(PORT + 11, { TRACKER_MODE: '1', MESH_SERVER_ID: '6'.repeat(32), MESH_ANNOUNCE_MS: '150', PEERS_CACHE_FILE: path.join(tmp, `coc-peers-${PORT + 11}.json`), TRACKER_CACHE_FILE: path.join(tmp, `coc-trkcache-${process.pid}-${PORT + 11}.json`) });
+  const trkB2 = await startServer(PORT + 12, { TRACKER_MODE: '1', MESH_SERVER_ID: '5'.repeat(32), MESH_ANNOUNCE_MS: '150', TRACKER_PEERS: trkA2.base, PEERS_CACHE_FILE: path.join(tmp, `coc-peers-${PORT + 12}.json`), TRACKER_CACHE_FILE: path.join(tmp, `coc-trkcache-${process.pid}-${PORT + 12}.json`) });
   const mI = await startServer(PORT + 13, mkEnv(PORT + 13, '4'.repeat(32), { TRACKER_URL: trkA2.base, MESH_ANNOUNCE_MS: '150' }));
   const mJ = await startServer(PORT + 14, mkEnv(PORT + 14, '3'.repeat(32), { TRACKER_URL: trkB2.base, MESH_ANNOUNCE_MS: '150' }));
   await jpost('/session/start', { name: 'Ida', seed: 61 }, mI.base);
@@ -443,7 +443,7 @@ async function main() {
   // ── §MESH-01d3 — world download endpoint ──
   const dl = await fetch(mI.base + '/api/world/download');
   check(dl.status === 200 && (dl.headers.get('content-type') || '').includes('text/html')
-    && dl.headers.get('x-r2h-worldhash') === manA.worldHash
+    && dl.headers.get('x-coc-worldhash') === manA.worldHash
     && /^attachment; filename="world-/.test(dl.headers.get('content-disposition') || ''),
     'world download serves the game file with identity headers + attachment filename');
   const dlTxt = await dl.text();
@@ -551,10 +551,10 @@ async function main() {
   // same 3-server topology.
   console.log('\n[L] §MESH-01e — partition heal (3 servers + tracker: converge · split · heal · exactly-once)');
   const idP = '1a'.repeat(16), idQ = '2b'.repeat(16), idR = '3c'.repeat(16);
-  const aclR = path.join(tmp, `r2h-acl-partition-${PORT}.json`);
+  const aclR = path.join(tmp, `coc-acl-partition-${PORT}.json`);
   fs.writeFileSync(aclR, JSON.stringify({ mode: 'open' }));           // deterministic start (tmp persists across runs)
-  for (const p of [17, 18, 19, 20, 21]) fs.rmSync(path.join(tmp, `r2h-peers-${PORT + p}.json`), { force: true }); // no stale bootstrap
-  const trkL = await startServer(PORT + 17, { TRACKER_MODE: '1', MESH_SERVER_ID: '4d'.repeat(16), PEERS_CACHE_FILE: path.join(tmp, `r2h-peers-${PORT + 17}.json`), TRACKER_CACHE_FILE: path.join(tmp, `r2h-trkcache-${process.pid}-${PORT + 17}.json`) });
+  for (const p of [17, 18, 19, 20, 21]) fs.rmSync(path.join(tmp, `coc-peers-${PORT + p}.json`), { force: true }); // no stale bootstrap
+  const trkL = await startServer(PORT + 17, { TRACKER_MODE: '1', MESH_SERVER_ID: '4d'.repeat(16), PEERS_CACHE_FILE: path.join(tmp, `coc-peers-${PORT + 17}.json`), TRACKER_CACHE_FILE: path.join(tmp, `coc-trkcache-${process.pid}-${PORT + 17}.json`) });
   const mP = await startServer(PORT + 18, mkEnv(PORT + 18, idP, { TRACKER_URL: trkL.base, MESH_ANNOUNCE_MS: '150' }));
   const mQ = await startServer(PORT + 19, mkEnv(PORT + 19, idQ, { TRACKER_URL: trkL.base, MESH_ANNOUNCE_MS: '150' }));
   const mR = await startServer(PORT + 20, mkEnv(PORT + 20, idR, { TRACKER_URL: trkL.base, MESH_ANNOUNCE_MS: '150', MESH_ACL_FILE: aclR }));
@@ -749,7 +749,7 @@ async function main() {
   // PUT /api/roads/lock; POST /api/layout/geo-seed must then keep a locked
   // city's coords through regeneration (dry-run asserted — no file writes).
   console.log('\n[N] §NAV-01g — roads-pins lock API + geo-seed keeps locked cities');
-  const pinsFile = path.join(os.tmpdir(), `r2h-roads-pins-${PORT}.json`);
+  const pinsFile = path.join(os.tmpdir(), `coc-roads-pins-${PORT}.json`);
   fs.rmSync(pinsFile, { force: true });
   const srvN = await startServer(PORT + 22, { ROADS_PINS_FILE: pinsFile });
   const pins0 = await jget('/roads/pins', srvN.base);
@@ -868,7 +868,7 @@ async function main() {
   // resolution, deterministic lowest-hash dupe-void, and durability across a
   // restart — the property presence deliberately lacks. Lab report §6.1–6.2.
   console.log('\n[I] §MESH-01i — no-dupe ledger (mint, provenance, trade, dupe-void, durability)');
-  const ledDir = fs.mkdtempSync(path.join(tmp, 'r2h-ledger-'));
+  const ledDir = fs.mkdtempSync(path.join(tmp, 'coc-ledger-'));
   const ledId = 'ab'.repeat(16);
   const ledEnv = { LEDGER_DIR: ledDir, MESH_SERVER_ID: ledId, LEDGER_TRADE_TTL_MS: '900' };
   let led = await startServer(PORT + 31, ledEnv);
@@ -953,7 +953,7 @@ async function main() {
   const verdict = await jget(`/ledger/owner?mintId=${X}:1`, led.base);
   check(verdict.owner === winner.body.transfers[0].to, `fork-choice: lowest event hash wins the double-spent item (${winner === branchA ? 'A' : 'B'})`);
   check(verdict.voided.includes(loser.hash) && !verdict.voided.includes(winner.hash), 'the losing branch is voided; the winner is not');
-  const led2 = await startServer(PORT + 32, { LEDGER_DIR: fs.mkdtempSync(path.join(tmp, 'r2h-ledger2-')), MESH_SERVER_ID: 'ef'.repeat(16) });
+  const led2 = await startServer(PORT + 32, { LEDGER_DIR: fs.mkdtempSync(path.join(tmp, 'coc-ledger2-')), MESH_SERVER_ID: 'ef'.repeat(16) });
   await jpost('/ledger/ingest', { events: [branchB, branchA, mintX] }, led2.base);   // different arrival order, same event set
   const verdict2 = await jget(`/ledger/owner?mintId=${X}:1`, led2.base);
   check(verdict2.owner === verdict.owner && verdict2.voided.includes(loser.hash), 'an independent server reaches the identical verdict from a different arrival order');
@@ -1009,7 +1009,7 @@ async function main() {
   // parallel durable channel (vv piggyback → anti-entropy), verdicts identical.
   const gid = (n) => String(n).repeat(32).slice(0, 32);
   const mkLedEnv = (port, sid, extra = {}) => ({
-    LEDGER_DIR: fs.mkdtempSync(path.join(tmp, 'r2h-ledgas-')), MESH_SERVER_ID: sid,
+    LEDGER_DIR: fs.mkdtempSync(path.join(tmp, 'coc-ledgas-')), MESH_SERVER_ID: sid,
     ADVERTISE_ADDR: `localhost:${port}`, MESH_GOSSIP_MS: '120', ...extra,
   });
   const gA = await startServer(PORT + 33, mkLedEnv(PORT + 33, gid(3)));
@@ -1232,7 +1232,7 @@ async function main() {
     'the walk-off resolves as a forfeit: the stayer wins on the record');
 
   // (7) TTL: a challenge nobody answers expires (fast-TTL throwaway server).
-  const dT = await startServer(PORT + 36, { LEDGER_DIR: fs.mkdtempSync(path.join(tmp, 'r2h-duelttl-')), MESH_SERVER_ID: '2e'.repeat(16), DUEL_TTL_MS: '250', PEERS_CACHE_FILE: path.join(tmp, `r2h-peers-${PORT + 36}-${process.pid}.json`) });
+  const dT = await startServer(PORT + 36, { LEDGER_DIR: fs.mkdtempSync(path.join(tmp, 'coc-duelttl-')), MESH_SERVER_ID: '2e'.repeat(16), DUEL_TTL_MS: '250', PEERS_CACHE_FILE: path.join(tmp, `coc-peers-${PORT + 36}-${process.pid}.json`) });
   const tia = await jpost('/session/start', { name: 'Tia', seed: 5, playerKey: '7c7c'.repeat(8) }, dT.base);
   const uri = await jpost('/session/start', { name: 'Uri', seed: 6, playerKey: '6d6d'.repeat(8) }, dT.base);
   const duT = await jpost('/duel/challenge', { sessionId: tia.sessionId, to: uri.ledgerPid }, dT.base);
@@ -1249,8 +1249,8 @@ async function main() {
   console.log('\n[P] §MESH-01-FU 8 — ingress rate limiting (per-IP token bucket before JSON parse)');
   const rl = await startServer(PORT + 37, {
     MESH_RATE_LIMIT: '5', MESH_RATE_BURST: '8', MESH_SERVER_ID: '3f'.repeat(16),
-    LEDGER_DIR: fs.mkdtempSync(path.join(tmp, 'r2h-rate-')),
-    PEERS_CACHE_FILE: path.join(tmp, `r2h-peers-${PORT + 37}-${process.pid}.json`),
+    LEDGER_DIR: fs.mkdtempSync(path.join(tmp, 'coc-rate-')),
+    PEERS_CACHE_FILE: path.join(tmp, `coc-peers-${PORT + 37}-${process.pid}.json`),
   });
   const g1 = await jpost('/mesh/gossip', { serverId: 'zz' }, rl.base);
   check(g1.ok === false && g1.reason !== 'rate', 'inside the burst budget a bad gossip is refused by the real gate (compat), not the bucket');
@@ -1285,7 +1285,7 @@ async function main() {
     && ['blockServerIds', 'blockIps', 'blockWorldHashes', 'allowServerIds', 'allowIps', 'allowWorldHashes']
       .every((k) => Array.isArray(aclEx[k]) && aclEx[k].length === 0),
     'mesh-acl.json.example is valid JSON: mode open + all six allow/block lists present and empty (safe to copy verbatim)');
-  const aclQ = path.join(tmp, `r2h-acl-example-${process.pid}.json`);
+  const aclQ = path.join(tmp, `coc-acl-example-${process.pid}.json`);
   fs.copyFileSync(path.join(ROOT, 'src', 'config', 'mesh-acl.json.example'), aclQ);
   const mQ2 = await startServer(PORT + 38, mkEnv(PORT + 38, '6f'.repeat(16), { MESH_ACL_FILE: aclQ }));
   check((await jget('/mesh/status', mQ2.base)).acl.mode === 'open', 'a server running the copied template reports acl mode open');
@@ -1297,10 +1297,10 @@ async function main() {
 
   // FU 12 — announce-table persistence: the announcer speaks exactly ONCE (600s
   // cadence), so anything served after the tracker restart can only be the cache.
-  const trkCache = path.join(tmp, `r2h-trkcache-${process.pid}-${PORT + 39}.json`);
+  const trkCache = path.join(tmp, `coc-trkcache-${process.pid}-${PORT + 39}.json`);
   fs.rmSync(trkCache, { force: true });
   const trkEnvQ = { TRACKER_MODE: '1', MESH_SERVER_ID: '7a'.repeat(16), TRACKER_PERSIST_MS: '100',
-    TRACKER_CACHE_FILE: trkCache, PEERS_CACHE_FILE: path.join(tmp, `r2h-peers-${process.pid}-${PORT + 39}.json`) };
+    TRACKER_CACHE_FILE: trkCache, PEERS_CACHE_FILE: path.join(tmp, `coc-peers-${process.pid}-${PORT + 39}.json`) };
   let trkQ = await startServer(PORT + 39, trkEnvQ);
   await startServer(PORT + 40, mkEnv(PORT + 40, '8b'.repeat(16), { TRACKER_URL: trkQ.base, MESH_ANNOUNCE_MS: '600000' }));
   await waitFor(() => { try { return (JSON.parse(fs.readFileSync(trkCache, 'utf8')).records || []).length >= 1; } catch { return false; } }, 5000, 50);
@@ -1316,12 +1316,12 @@ async function main() {
 
   // FU 12 — federation bootstrap: a tracker wired ONLY by a `tracker <url>`
   // text-file line (no --tracker-peer flag) still federates.
-  const bootSrv = http.createServer((_q, sres) => { sres.setHeader('Content-Type', 'text/plain'); sres.end(`# r2h bootstrap\ntracker ${trkQ.base}\n`); });
+  const bootSrv = http.createServer((_q, sres) => { sres.setHeader('Content-Type', 'text/plain'); sres.end(`# coc bootstrap\ntracker ${trkQ.base}\n`); });
   await new Promise((r) => bootSrv.listen(PORT + 42, '127.0.0.1', r));
   const trkR = await startServer(PORT + 41, { TRACKER_MODE: '1', MESH_SERVER_ID: '9c'.repeat(16), MESH_ANNOUNCE_MS: '150',
     BOOTSTRAP_URLS: `http://127.0.0.1:${PORT + 42}/boot.txt`,
-    TRACKER_CACHE_FILE: path.join(tmp, `r2h-trkcache-${process.pid}-${PORT + 41}.json`),
-    PEERS_CACHE_FILE: path.join(tmp, `r2h-peers-${process.pid}-${PORT + 41}.json`) });
+    TRACKER_CACHE_FILE: path.join(tmp, `coc-trkcache-${process.pid}-${PORT + 41}.json`),
+    PEERS_CACHE_FILE: path.join(tmp, `coc-peers-${process.pid}-${PORT + 41}.json`) });
   let fedSeen = false;
   for (let i = 0; i < 40 && !fedSeen; i++) {
     await sleep(150);
@@ -1362,7 +1362,7 @@ async function main() {
   // hot-reloads via mtime — no restart between the flip and the read). Design:
   // lab-reports/lab-report-mesh02-connections-ui.md §3.1.
   console.log('\n[R] §MESH-02a — mesh ACL GET/PUT + blocklist 403→200 share flip');
-  const aclR2 = path.join(tmp, `r2h-acl-mesh02-${process.pid}.json`);
+  const aclR2 = path.join(tmp, `coc-acl-mesh02-${process.pid}.json`);
   fs.rmSync(aclR2, { force: true });
   const mR2 = await startServer(PORT + 43, mkEnv(PORT + 43, '5a'.repeat(16), { MESH_ACL_FILE: aclR2 }));
   const ACL_LISTS = ['blockServerIds', 'blockIps', 'blockWorldHashes', 'allowServerIds', 'allowIps', 'allowWorldHashes'];

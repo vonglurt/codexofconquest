@@ -445,7 +445,7 @@ Long rest also:
 - Resets `shortRests = 3`
 - Resets `surgeCharges` (1 at Lv2–16; 2 at Lv17+)
 - Resets `indomitableCharges` (1 at Lv9+)
-- Saves checkpoint via `r2h_checkpoint`
+- Saves checkpoint via `coc_checkpoint`
 
 ---
 
@@ -570,7 +570,7 @@ Both defeat screens show a full **run summary**: level reached, XP earned, day r
 #### Combat Death — ☠ You Have Fallen
 - HP drops to 0 during battle → game over modal fires
 - **Respawn available** at last checkpoint (inn slept at), at half max HP
-- Checkpoint saves on every inn sleep via `r2h_checkpoint`
+- Checkpoint saves on every inn sleep via `coc_checkpoint`
 
 #### The Corpse-Run — Death, Loot & the Grave (§DEATH-01)
 When you fail your death saves in a Story Battle (`_storyDeathSaveFall`), a lighter loss than the
@@ -605,14 +605,14 @@ All state is persisted via `localStorage`. There is no server component.
 
 | Key | Written by | Read by | Content |
 |-----|-----------|---------|---------|
-| `r2h_autosave` | `storyAutoSave()` | `storyCheckContinue()` | Full `S_story` JSON snapshot; written on every move, battle end, level-up, and purchase |
-| `r2h_checkpoint` | `storySaveCheckpoint()` | `storyLoadSave('r2h_checkpoint')` | Full `S_story` JSON snapshot; written only on inn sleep (long rest) |
+| `coc_autosave` | `storyAutoSave()` | `storyCheckContinue()` | Full `S_story` JSON snapshot; written on every move, battle end, level-up, and purchase |
+| `coc_checkpoint` | `storySaveCheckpoint()` | `storyLoadSave('coc_checkpoint')` | Full `S_story` JSON snapshot; written only on inn sleep (long rest) |
 
-**Continue flow**: On page load, `storyCheckContinue()` reads `r2h_autosave`. If the save exists and `hp > 0`, the player is offered a **Continue** button that calls `storyLoadSave('r2h_autosave')`.
+**Continue flow**: On page load, `storyCheckContinue()` reads `coc_autosave`. If the save exists and `hp > 0`, the player is offered a **Continue** button that calls `storyLoadSave('coc_autosave')`.
 
-**Respawn flow**: On combat death (`hp === 0`), the respawn option calls `storyLoadSave('r2h_checkpoint')`, restoring the player to their last inn sleep at half max HP.
+**Respawn flow**: On combat death (`hp === 0`), the respawn option calls `storyLoadSave('coc_checkpoint')`, restoring the player to their last inn sleep at half max HP.
 
-**New Game / Wipe**: Both the Wipe Void Defeat screen and the explicit New Game path call `localStorage.removeItem('r2h_autosave')` and `localStorage.removeItem('r2h_checkpoint')` before resetting `S_story` to `_S_DEFAULTS()`.
+**New Game / Wipe**: Both the Wipe Void Defeat screen and the explicit New Game path call `localStorage.removeItem('coc_autosave')` and `localStorage.removeItem('coc_checkpoint')` before resetting `S_story` to `_S_DEFAULTS()`.
 
 **Format**: `JSON.stringify(S_story)` — a flat serialization of the entire `_S_DEFAULTS()` shape. No versioning field; forward compatibility relies on `Object.assign` merge (missing keys get default values from the running `_S_DEFAULTS()` call).
 
@@ -908,7 +908,7 @@ CodexOfConquest is single-player-first: multiplayer is a strictly **opt-in prese
 - **Chat**: `say` reaches players on your cell — exactly once, including across servers. The map pane's **📍 Local / 🌍 World toggle is both the view *and* the send channel** (§MP-CHAT-GLOBAL): 📍 Local is proximity chat (your cell); 🌍 World reaches **every connected player live**, here and across the mesh (like the worldwide `player_moved` presence event), and shows a 🌍 badge. World lines carry no cell coords, so they appear only in the World view, never a cell's proximity backlog. On connect/resume you also get "🕰 Earlier here:" — the last ~10 lines said at your cell before you joined (§MESH-01-FU 13), so you land mid-conversation instead of in silence. The **💬 toggle** in the mp-bar opens the full chat history panel (§MESH-02h): a persistent, timestamped log (cap 200, survives reloads) fed by live SSE, per-cell backlogs, and a global history fetch under one dedupe — cross-server lines carry an `@origin8` tag; an unread badge counts what you haven't opened.
 - **Footprints (§MESH-02j)**: every step stamps the arrival cell server-side (≤8 per cell, 30-min TTL). Arriving somewhere a player recently passed announces "👣 *Name* passed through here N min ago" — once per cell, self and co-present players excluded (prints are who you *missed*). Display-only; local-server only for now.
 - **Auto-reconnect**: reloading the page resumes the same session (sessionStorage id probed via the `pos` beacon); a dead id falls back to a fresh connect under the same tab opt-in.
-- **Server browser / magnet links**: Shift+🌐 (or a failed connect) opens the browser — paste an `r2h:?…` magnet, a tracker URL, or a server URL; rows show server name, 🌍 world tag, player count, ping, and a ⚠ build-mismatch flag. The same resolver also powers the map tab's Connect and Discover panes (below).
+- **Server browser / magnet links**: Shift+🌐 (or a failed connect) opens the browser — paste an `coc:?…` magnet, a tracker URL, or a server URL; rows show server name, 🌍 world tag, player count, ping, and a ⚠ build-mismatch flag. The same resolver also powers the map tab's Connect and Discover panes (below).
 - **Same display name never misattributes**: every presence surface is keyed by `pid` (`<serverId8>:<sessionId8>`), so two "Bob"s stay distinct (an `@server` suffix renders only on a name collision).
 
 ### Map sub-tabs (§MP-MAPTABS — Local · World · Full)
@@ -931,7 +931,7 @@ The Map sheet also carries connection sub-tabs — **🌐 Multiplayer · 🔭 Di
 - **🔭 Discover** — three ways to find servers: **🖥 local scan** (parallel manifest probes of `localhost:1360–1380` — a browser can only probe, never listen), **🔭 Find** (magnet/tracker/server input through the shared resolver), and **server-list sources** (subscribe to a plain-text or JSON list URL; one `host:port` / URL / magnet per line, `#` comments). Sources marked **auto** load when the pane opens — but **only if their host is on your whitelist** (D4); a non-whitelisted auto source shows ⚠ and is never fetched.
 - **🛡 Lists** — your client **blacklist** (matched by address, host, server id, or world hash — blacklisted servers vanish from every row list and Join refuses them) and **whitelist** (which hosts may auto-load, D4); the **server ACL editor** (mode, `shareBlocklist`, all six allow/block lists — a validated merge-write over `GET/PUT /api/mesh/acl`, offline → hint); and **peer blocklist preview** (D2/D3): fetch a peer's shared blocklist — 403 means they haven't opted in — see a counted preview, and merge into your own blacklist **only on an explicit click**. Nothing is ever auto-imported.
 
-**Quick-start — two players, one machine:** run one server (`./wbapi-toggle.sh start`), open `play.html` in **two browser windows** (two local clients = one server), click 🌐 in each, pick different names. You'll see each other in "Also here:", on the map dots, and in 💬. A friend on your LAN instead runs nothing: they open the game, map tab → 🌐 Connect, and enter `your-lan-ip:1367` (or you send them an `r2h:?…` magnet); serve them the world itself via `GET /api/world/download`. CLI parity for everything above: `./api.sh mesh status|peers|tracker|acl|blocklist|connect` (§MESH-02g).
+**Quick-start — two players, one machine:** run one server (`./wbapi-toggle.sh start`), open `play.html` in **two browser windows** (two local clients = one server), click 🌐 in each, pick different names. You'll see each other in "Also here:", on the map dots, and in 💬. A friend on your LAN instead runs nothing: they open the game, map tab → 🌐 Connect, and enter `your-lan-ip:1367` (or you send them an `coc:?…` magnet); serve them the world itself via `GET /api/world/download`. CLI parity for everything above: `./api.sh mesh status|peers|tracker|acl|blocklist|connect` (§MESH-02g).
 
 ### What multiplayer never does (invariants)
 

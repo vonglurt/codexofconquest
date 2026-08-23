@@ -92,8 +92,8 @@ S_story (localStorage)
 
 Two `localStorage` keys:
 ```
-r2h_autosave    ← storyAutoSave()         every move / battle / levelup / purchase
-r2h_checkpoint  ← storySaveCheckpoint()   on inn sleep only
+coc_autosave    ← storyAutoSave()         every move / battle / levelup / purchase
+coc_checkpoint  ← storySaveCheckpoint()   on inn sleep only
 ```
 
 No versioning field — `Object.assign` merge with `_S_DEFAULTS()` on load provides forward compatibility.

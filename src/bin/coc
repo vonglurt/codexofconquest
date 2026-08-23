@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# r2h — one launcher for CodexOfConquest. Run `./r2h help` for the menu.
+# coc — one launcher for CodexOfConquest. Run `./coc help` for the menu.
 # Everything the project needs, behind short verbs. Keep it obvious.
 set -euo pipefail
 DIR="$(cd "$(dirname "$0")/.." && pwd)"
@@ -22,17 +22,17 @@ case "$cmd" in
   toggle)   exec ./wbapi-toggle.sh "$@" ;;                 # start|stop|restart|status
   help|-h|--help|*)
     cat <<EOF
-r2h — CodexOfConquest launcher
+coc — CodexOfConquest launcher
 
-  ./r2h serve      start the WBAPI + game server (http://localhost:$PORT/)
-  ./r2h game       open the standalone game (play.html) in a browser
-  ./r2h world      open the world builder (run 'serve' first for live API)
-  ./r2h test       run the Playwright suite
-  ./r2h checks     run the walk/parity invariants (npm run check:walk)
-  ./r2h mud        run the MUD harness (npm run test:mud)
-  ./r2h api ...    WBAPI CLI passthrough (./bin/api)
-  ./r2h tracker    start the mesh tracker
-  ./r2h toggle ... server daemon control (start|stop|restart|status)
+  ./coc serve      start the WBAPI + game server (http://localhost:$PORT/)
+  ./coc game       open the standalone game (play.html) in a browser
+  ./coc world      open the world builder (run 'serve' first for live API)
+  ./coc test       run the Playwright suite
+  ./coc checks     run the walk/parity invariants (npm run check:walk)
+  ./coc mud        run the MUD harness (npm run test:mud)
+  ./coc api ...    WBAPI CLI passthrough (./bin/api)
+  ./coc tracker    start the mesh tracker
+  ./coc toggle ... server daemon control (start|stop|restart|status)
 
 Layout: runtime JS → js/ · data + config → config/ · docs at root.
 EOF

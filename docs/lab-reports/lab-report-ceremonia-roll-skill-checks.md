@@ -42,7 +42,7 @@ write-only state
 
 ## I. Method
 
-Four measurements, all from HEAD (`play.html`, 38,707 lines, r2h-3.104.0, 416 nodes / 2,853
+Four measurements, all from HEAD (`play.html`, 38,707 lines, coc-3.104.0, 416 nodes / 2,853
 quests):
 
 1. **Symbol census.** Every constant, field, function, quest id, item name, DOM id and CSS class the

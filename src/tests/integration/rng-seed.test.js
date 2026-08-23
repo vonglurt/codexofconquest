@@ -43,9 +43,9 @@ test.describe('§VM-01-B — the seeded client RNG', () => {
       const R = S_story.rngState;                     // live state after some draws
       const expectedNext = _ref(R)();                 // what the NEXT draw must be, from R
       storyAutoSave();
-      const savedRng = JSON.parse(localStorage.getItem('r2h_autosave')).rngState;
+      const savedRng = JSON.parse(localStorage.getItem('coc_autosave')).rngState;
       S_story.rngState = 999999;                      // dirty the live cell
-      const loaded = storyLoadSave('r2h_autosave');   // the REAL load path (defaults-in-the-middle)
+      const loaded = storyLoadSave('coc_autosave');   // the REAL load path (defaults-in-the-middle)
       const restored = S_story.rngState;
       const actualNext = _seededNext();               // must continue from R, not re-bootstrap
       return { R, savedRng, restored, expectedNext, actualNext, loaded, isInt: Number.isInteger(R) };
@@ -67,10 +67,10 @@ test.describe('§VM-01-B — the seeded client RNG', () => {
       // Build a legacy save snapshot, then STRIP rngState to mimic a pre-feature save.
       const legacy = JSON.parse(JSON.stringify(S_story));
       delete legacy.rngState;
-      localStorage.setItem('r2h_autosave', JSON.stringify(legacy));
+      localStorage.setItem('coc_autosave', JSON.stringify(legacy));
       // Wipe the live cell so we can prove the load path, not a leftover, seeds it.
       S_story.rngState = 12345;
-      const loaded = storyLoadSave('r2h_autosave');
+      const loaded = storyLoadSave('coc_autosave');
       const afterLoad = S_story.rngState;             // should be the _S_DEFAULTS sentinel (0)
       let threw = false; let firstDraw = null;
       try { firstDraw = _seededNext(); } catch (e) { threw = true; }

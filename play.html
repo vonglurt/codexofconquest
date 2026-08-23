@@ -4301,9 +4301,9 @@ body.act-three .npc-card-chip { filter: saturate(0.85); }
       <div id="mp-browser-modal">
         <div id="mp-browser-card">
           <h3>🌐 WORLD SERVERS</h3>
-          <div class="mp-hint">Paste a friend's magnet (<code>r2h:?…</code>), a tracker URL, or a server URL —
+          <div class="mp-hint">Paste a friend's magnet (<code>coc:?…</code>), a tracker URL, or a server URL —
             then join a same-world server. Joining only sets your multiplayer server; it never changes your game.</div>
-          <input id="mp-magnet-input" placeholder="r2h:?p=…&amp;ev=…&amp;wh=…&amp;tr=…  ·  or  http://host:1367"
+          <input id="mp-magnet-input" placeholder="coc:?p=…&amp;ev=…&amp;wh=…&amp;tr=…  ·  or  http://host:1367"
                  onkeydown="if(event.key==='Enter')mpResolveMagnet()">
           <div style="display:flex;gap:8px">
             <button id="mp-browser-resolve" onclick="mpResolveMagnet()">🔭 Find servers</button>
@@ -4614,10 +4614,10 @@ body.act-three .npc-card-chip { filter: saturate(0.85); }
             <div><span class="mc-k">World</span><span id="mc-world">—</span></div>
             <div><span class="mc-k">Build</span><span id="mc-build">—</span></div>
           </div>
-          <div class="mp-hint">Paste a server (<code>host:port</code> or URL) or a friend's magnet (<code>r2h:?…</code>).
+          <div class="mp-hint">Paste a server (<code>host:port</code> or URL) or a friend's magnet (<code>coc:?…</code>).
             Connect joins a server directly; Find servers asks a tracker for same-world servers.
             Joining only sets your multiplayer server — it never changes your game.</div>
-          <input id="mc-server-input" placeholder="http://host:1367  ·  host:1367  ·  r2h:?p=…&amp;wh=…&amp;tr=…"
+          <input id="mc-server-input" placeholder="http://host:1367  ·  host:1367  ·  coc:?p=…&amp;wh=…&amp;tr=…"
                  onkeydown="if(event.key==='Enter')mcConnect()">
           <div style="display:flex;gap:8px;flex-wrap:wrap">
             <button id="mc-btn-connect" onclick="mcConnect()">🔌 Connect</button>
@@ -4651,7 +4651,7 @@ body.act-three .npc-card-chip { filter: saturate(0.85); }
           <div class="mp-hint">Find servers three ways: scan this machine's ports (1360–1380), ask a tracker
             or magnet, or load a server list from a URL. A source marked <b>auto</b> loads when this pane
             opens — but only if its host is on your whitelist (🛡 Lists). Joining never changes your game.</div>
-          <input id="md-find-input" placeholder="tracker / server URL  ·  host:port  ·  r2h:?…"
+          <input id="md-find-input" placeholder="tracker / server URL  ·  host:port  ·  coc:?…"
                  onkeydown="if(event.key==='Enter')mdFind()">
           <div style="display:flex;gap:8px;flex-wrap:wrap">
             <button id="md-btn-scan" onclick="mdScanLocal()">🖥 Scan this machine</button>
@@ -4660,7 +4660,7 @@ body.act-three .npc-card-chip { filter: saturate(0.85); }
           <div id="md-note" class="mp-hint"></div>
           <div id="md-server-rows"></div>
           <div class="md-sec-hd">📜 SERVER-LIST SOURCES</div>
-          <input id="md-source-input" placeholder="https://example.com/servers.txt  — host:port / URL / r2h:?… per line, or a JSON array"
+          <input id="md-source-input" placeholder="https://example.com/servers.txt  — host:port / URL / coc:?… per line, or a JSON array"
                  onkeydown="if(event.key==='Enter')mdAddSource()">
           <div style="display:flex;gap:8px;flex-wrap:wrap">
             <button id="md-btn-addsrc" onclick="mdAddSource()">＋ Add source</button>
@@ -9904,7 +9904,7 @@ const GEO_PROJ = { ROWS: 90, COLS: 360 };   // §2.1 equirectangular 1° grid
 // §MESH-01b: game build identity — the mesh treats every version as a separate,
 // incompatible swarm. The server parses this const into the world manifest
 // (GET /api/manifest); bump it on any release that changes engine behavior.
-const ENGINE_VER = 'r2h-3.104.0';
+const ENGINE_VER = 'coc-3.104.0';
 
 // §MESH-01-FU: world DISPLAY name — rename your world/mod here. Shown across
 // the mesh as `<name>-<hash5>` (e.g. CodexOfConquest-131ea). Deliberately NOT part of
@@ -23803,11 +23803,11 @@ function _yaelEscortAction() {
 }
 
 function storyAutoSave() {
-  try { localStorage.setItem('r2h_autosave', JSON.stringify(S_story)); } catch(e) {}
+  try { localStorage.setItem('coc_autosave', JSON.stringify(S_story)); } catch(e) {}
 }
 
 function storySaveCheckpoint() {
-  try { localStorage.setItem('r2h_checkpoint', JSON.stringify(S_story)); } catch(e) {}
+  try { localStorage.setItem('coc_checkpoint', JSON.stringify(S_story)); } catch(e) {}
 }
 
 function storyLoadSave(key) {
@@ -23828,7 +23828,7 @@ function storyCheckContinue() {
   if (_continueChecked) return false;
   _continueChecked = true;
   try {
-    const raw = localStorage.getItem('r2h_autosave');
+    const raw = localStorage.getItem('coc_autosave');
     if (!raw) return false;
     const save = JSON.parse(raw);
     if (save.hp === 0) {
@@ -23924,7 +23924,7 @@ function storyRespawnFromCheckpoint() {
   const _survivingTattoos     = (S_story.tattoos || []).slice();
   const _survivingCareerStats = Object.assign({}, S_story.careerStats || {});
   document.getElementById('story-gameover-modal').classList.remove('visible');
-  if (!storyLoadSave('r2h_checkpoint')) Object.assign(S_story, _S_DEFAULTS());
+  if (!storyLoadSave('coc_checkpoint')) Object.assign(S_story, _S_DEFAULTS());
   if (_survivingTattoos.length > (S_story.tattoos || []).length) {
     S_story.tattoos = _survivingTattoos;
   }
@@ -23939,7 +23939,7 @@ function storyRespawnFromCheckpoint() {
 }
 
 function storyLoadContinue() {
-  storyLoadSave('r2h_autosave');
+  storyLoadSave('coc_autosave');
   S_story.active = true;
   document.getElementById('story-continue-modal').classList.remove('visible');
   storyUpdateStatus();
@@ -23950,7 +23950,7 @@ function storyLoadContinue() {
 
 function storyNewGame(startScores) {
   const scores = startScores || { str:10, dex:8, con:8, int:8, wis:8, cha:8 };
-  try { localStorage.removeItem('r2h_autosave'); localStorage.removeItem('r2h_checkpoint'); } catch(e) {}
+  try { localStorage.removeItem('coc_autosave'); localStorage.removeItem('coc_checkpoint'); } catch(e) {}
   Object.assign(S_story, _S_DEFAULTS());
   // Apply chosen starting scores
   S_story.abilityScores = Object.assign({}, scores);
@@ -24025,7 +24025,7 @@ function storyNewGamePlus() {
   const savedEntry42Written    = !!(S_story.entry42Written);
   const savedEntry42Text       = S_story.entry42Text || '';
   const savedPriorQuestMinus1  = !!(S_story.questMinusOne);
-  try { localStorage.removeItem('r2h_autosave'); localStorage.removeItem('r2h_checkpoint'); } catch(e) {}
+  try { localStorage.removeItem('coc_autosave'); localStorage.removeItem('coc_checkpoint'); } catch(e) {}
   Object.assign(S_story, _S_DEFAULTS());
   S_story.npcFavorability   = savedFavorability;
   S_story.pitPerks          = savedPitPerks;
@@ -29289,12 +29289,12 @@ function _mpRepaintMaps() {
 }
 
 // ── §MESH-01-FU 2 — join-by-magnet + server browser ─────────────────────────
-// The PARSE side of the magnet v2 the Mesh tab copies: r2h:?p=&ev=&wh=&tr=.
+// The PARSE side of the magnet v2 the Mesh tab copies: coc:?p=&ev=&wh=&tr=.
 // The tracker resolves wh (the "infohash") to live same-world servers; Join
 // only rewrites localStorage.mpServer and reconnects — game state untouched.
 const _mpEsc = s => String(s ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 function mpParseMagnet(str) {
-  const m = String(str || '').trim().match(/^r2h:\??(.*)$/i);
+  const m = String(str || '').trim().match(/^coc:\??(.*)$/i);
   if (!m) return null;
   const q = new URLSearchParams(m[1]);
   return { p: q.get('p'), ev: q.get('ev'), wh: q.get('wh'), tr: q.get('tr') };
@@ -29472,7 +29472,7 @@ function _mpClientLists() {
 }
 function _mpSaveList(key, arr) { try { localStorage.setItem(key, JSON.stringify(arr)); } catch {} }
 // One list format, two encodings (design §3.3): text = one entry per line
-// (host:port · http(s) URL · r2h:?… magnet; # comments), or a JSON array of
+// (host:port · http(s) URL · coc:?… magnet; # comments), or a JSON array of
 // strings / {addr,name} objects. → [{addr|url|magnet, name?}], deduped.
 function mpParseServerList(text) {
   const t = String(text || '').trim();
@@ -29490,7 +29490,7 @@ function mpParseServerList(text) {
   const out = [], seen = new Set();
   for (const { v, name } of raw) {
     let e = null;
-    if (/^r2h:/i.test(v)) e = { magnet: v };
+    if (/^coc:/i.test(v)) e = { magnet: v };
     else if (/^https?:\/\//i.test(v)) e = { url: v.replace(/\/+$/, '') };
     else if (/^[\w.-]+:\d+$/.test(v)) e = { addr: v };
     if (!e) continue;
@@ -29605,7 +29605,7 @@ async function mdLoadSource(i) {
   try { const r = await fetch(s.url); if (!r.ok) throw new Error(r.status); text = await r.text(); }
   catch { note.textContent = '🔴 Could not fetch ' + s.url + '.'; return; }
   const entries = mpParseServerList(text);
-  if (!entries.length) { note.textContent = 'No server entries in that list (host:port / URL / r2h:?… per line, or a JSON array).'; return; }
+  if (!entries.length) { note.textContent = 'No server entries in that list (host:port / URL / coc:?… per line, or a JSON array).'; return; }
   _mdShowRows((await Promise.all(entries.map(_mdResolveEntry))).flat(), s.url);
 }
 // Pane open: paint the source list, then auto-load every source that is BOTH

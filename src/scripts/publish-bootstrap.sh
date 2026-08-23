@@ -59,7 +59,7 @@ if [ "$HOWTO" = 1 ]; then
 #   gist:  scripts/publish-bootstrap.sh $TRACKER > bootstrap.txt
 #          → paste bootstrap.txt into a GitHub Gist, share the RAW url
 #   scp:   scripts/publish-bootstrap.sh $TRACKER > bootstrap.txt
-#          → scp bootstrap.txt you@host:/var/www/r2h-bootstrap.txt
+#          → scp bootstrap.txt you@host:/var/www/coc-bootstrap.txt
 #
 # Consumers (either works — same format):
 #   BOOTSTRAP_URLS=https://…/raw/…/bootstrap.txt ./wbapi-toggle.sh restart

@@ -20,13 +20,13 @@ const ROOT = path.resolve(__dirname, '..', '..', '..');
 test.beforeAll(async () => {
   tracker = spawn(process.execPath, [path.join(ROOT, 'src', 'js', 'wbapi-server.js'), '--tracker-mode'], {
     env: { ...process.env, PORT: String(TRK_PORT), MESH_SERVER_ID: 'b'.repeat(32),
-      PEERS_CACHE_FILE: `${TMP}/r2h-presence-trk-cache.json` },
+      PEERS_CACHE_FILE: `${TMP}/coc-presence-trk-cache.json` },
     stdio: 'ignore',
   });
   server = spawn(process.execPath, [path.join(ROOT, 'src', 'js', 'wbapi-server.js')], {
     env: { ...process.env, PORT: String(MP_PORT), MESH_SERVER_ID: 'a'.repeat(32),
       TRACKER_URL: `http://localhost:${TRK_PORT}`, MESH_ANNOUNCE_MS: '200',
-      SERVER_NAME: 'Hub Alpha', PEERS_CACHE_FILE: `${TMP}/r2h-presence-srv-cache.json` },
+      SERVER_NAME: 'Hub Alpha', PEERS_CACHE_FILE: `${TMP}/coc-presence-srv-cache.json` },
     stdio: 'ignore',
   });
   for (let i = 0; i < 100; i++) {
@@ -130,7 +130,7 @@ test.describe('§MESH-01a — multiplayer presence (two real clients)', () => {
     expect(await d.page.evaluate(() => ({ on: MP.on, session: MP.session }))).toEqual({ on: false, session: null });
 
     // Paste the magnet (as copied from the Mesh tab) and resolve via the tracker.
-    const magnet = `r2h:?p=${man.proto}&ev=${encodeURIComponent(man.engineVer)}&wh=${man.worldHash}&tr=http://localhost:${TRK_PORT}`;
+    const magnet = `coc:?p=${man.proto}&ev=${encodeURIComponent(man.engineVer)}&wh=${man.worldHash}&tr=http://localhost:${TRK_PORT}`;
     await d.page.fill('#mp-magnet-input', magnet);
     await d.page.click('#mp-browser-resolve');
     const row = d.page.locator('.mp-srv-row');

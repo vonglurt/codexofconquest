@@ -31,7 +31,7 @@ async function at(page, overrides = {}) {
   }, overrides);
   await page.addInitScript(s => {
     localStorage.clear();
-    localStorage.setItem('r2h_autosave', JSON.stringify(s));
+    localStorage.setItem('coc_autosave', JSON.stringify(s));
   }, state);
   // Stub armed on demand (NOT at load — load-time randomness must stay real so the arrival
   // render is the game's own): __armRand() replaces Math.random with a cycling fixed sequence.

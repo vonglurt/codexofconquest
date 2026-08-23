@@ -19,8 +19,8 @@
 > public repository never meets a name the project no longer uses. Two
 > consequences: a `git show <sha>:roll2hit-v3.html` quoted in an old report now
 > reads `play.html` and will not resolve — those SHAs were already invalidated
-> by the history rewrite — and the save keys `r2h_autosave` / `r2h_checkpoint`
-> and the engine version `r2h-3.104.0` were deliberately **not** renamed,
+> by the history rewrite — and the save keys `coc_autosave` / `coc_checkpoint`
+> and the engine version `coc-3.104.0` were deliberately **not** renamed,
 > because they are `localStorage` keys and a mesh compatibility field.
 
 ## Repository Structure
@@ -45,7 +45,7 @@ codexofconquest/
 │   ├── api/                wb.js — the WBAPI CLI
 │   ├── scripts/            the CI gates — anchors, invariants, parity, questgraph
 │   ├── tools/              layout solvers, node parser, region renderer
-│   ├── bin/                internal utilities — api.sh, say.sh, sayd.sh, r2h
+│   ├── bin/                internal utilities — api.sh, say.sh, sayd.sh, coc
 │   ├── tests/              80 Playwright files, 960 tests, plus the MUD harness
 │   ├── importers/          one-off source importers
 │   ├── config/             mesh ACL, road pins, geo gazetteer

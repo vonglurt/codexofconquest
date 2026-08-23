@@ -49,7 +49,7 @@ function cli(...args) {
 }
 
 test.beforeAll(async () => {
-  dir = fs.mkdtempSync(path.join(os.tmpdir(), 'r2h-dx02l-'));
+  dir = fs.mkdtempSync(path.join(os.tmpdir(), 'coc-dx02l-'));
   scratch = path.join(dir, 'play.html');
   fs.copyFileSync(GAME, scratch);
   server = spawn(process.execPath, [path.join(ROOT, 'src', 'js', 'wbapi-server.js')], {

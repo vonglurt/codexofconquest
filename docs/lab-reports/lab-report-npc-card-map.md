@@ -5,7 +5,7 @@
 > Originally filed 2026-07-23 as ⚠️ PLANNED (spec only, no HTML edited), per the Lab Report Policy
 > (`CONTRIBUTING.md`). It stopped being a plan **48 minutes later**.
 >
-> **Written:** 2026-07-23 against `play.html` at `ENGINE_VER = 'r2h-3.104.0'`, 37,812 lines.
+> **Written:** 2026-07-23 against `play.html` at `ENGINE_VER = 'coc-3.104.0'`, 37,812 lines.
 > **Ship commit:** `fed5ee4` (docs-only, so the parent build **is** the build it measured).
 > **Verified:** 2026-08-21 (§DOC-02cl) against parent build `fed5ee4^` **and** live HEAD, with the
 > engine driven in a real browser at both builds. The report has not drifted a byte in 29 days.
@@ -98,7 +98,7 @@ Verification instruments used (§DOC-02 programme):
 
 ## III. Measured facts — as written vs. re-measured
 
-Scored against the parent build `fed5ee4^` (r2h-3.104.0, 37,812 lines — **both exact**).
+Scored against the parent build `fed5ee4^` (coc-3.104.0, 37,812 lines — **both exact**).
 
 | # | Report claim | Value written | Re-measured | Verdict |
 |---|---|---|---|---|
@@ -366,5 +366,5 @@ should have counted with a parser.** Three of the fifteen census rows are wrong;
 profiles, one of whom — The Fisherman — the migration then rendered invisible for eleven days until
 §NPC-01-SF5 put him back. A census error became a shipping defect by the shortest possible route.
 
-*Locked 2026-07-23 at r2h-3.104.0. Verified 2026-08-21 (§DOC-02cl) at 38,712 lines.*
+*Locked 2026-07-23 at coc-3.104.0. Verified 2026-08-21 (§DOC-02cl) at 38,712 lines.*
 *© 2026 Paul Richeson — MIT License.*

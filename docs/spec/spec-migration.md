@@ -529,7 +529,7 @@ From FO (with Earthbind Root in inventory): click BATTLE chip. Verify PRE_BATT o
 
 ### X-B. Layer 6 — Save / Load
 
-`storyAutoSave()` writes `S_story` to `r2h_autosave` on every `storyRender()` call. `storySaveCheckpoint()` writes to `r2h_checkpoint` on inn sleep. `storyCheckContinue()` runs before `storyRender()` on `storyEnter()`: if autosave exists, shows Continue modal (Day/location/items); if autosave HP=0, shows GAME_OVER modal directly. `storyRespawnFromCheckpoint()` loads checkpoint save and teleports to last inn at ½ HP. `_S_DEFAULTS()` factory function returns fresh state for `storyNewGame()`.
+`storyAutoSave()` writes `S_story` to `coc_autosave` on every `storyRender()` call. `storySaveCheckpoint()` writes to `coc_checkpoint` on inn sleep. `storyCheckContinue()` runs before `storyRender()` on `storyEnter()`: if autosave exists, shows Continue modal (Day/location/items); if autosave HP=0, shows GAME_OVER modal directly. `storyRespawnFromCheckpoint()` loads checkpoint save and teleports to last inn at ½ HP. `_S_DEFAULTS()` factory function returns fresh state for `storyNewGame()`.
 
 Key design constraint: `storyCheckContinue()` must run and return `true` before any `storyRender()` call on first entry, or `storyRender()`'s own `storyAutoSave()` would overwrite the existing save.
 

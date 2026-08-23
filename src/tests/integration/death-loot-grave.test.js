@@ -22,7 +22,7 @@ test.describe('§DEATH-01 — death, loot & the grave', () => {
       S_story.pendingBattle = null;
       const mwBefore = S_story.equippedMainWeapon && S_story.equippedMainWeapon.name;
       const owBefore = S_story.equippedWeapon && S_story.equippedWeapon.name;
-      try { localStorage.removeItem('r2h_autosave'); } catch(e) {}
+      try { localStorage.removeItem('coc_autosave'); } catch(e) {}
 
       _storyDeathSaveFall();
 
@@ -36,7 +36,7 @@ test.describe('§DEATH-01 — death, loot & the grave', () => {
         corpseGold: corpse.goldDropped,
         invHasShard: S_story.inventory.some(i => i.type === 'shard'),
         goldZeroed: S_story.gold,
-        saved: (() => { try { return !!localStorage.getItem('r2h_autosave'); } catch(e){ return false; } })(),
+        saved: (() => { try { return !!localStorage.getItem('coc_autosave'); } catch(e){ return false; } })(),
       };
     });
     // Equipped slots untouched by death (they live outside inventory)

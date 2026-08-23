@@ -1,7 +1,7 @@
 <!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson -->
 # Lab Report — The JavaScript of `play.html`: Layers, Traces, and the MUD Client
 
-**Original:** 2026-07-16 · subject `play.html` @ `43bd09c` (37,271 lines · `ENGINE_VER = 'r2h-3.104.0'`)
+**Original:** 2026-07-16 · subject `play.html` @ `43bd09c` (37,271 lines · `ENGINE_VER = 'coc-3.104.0'`)
 **Verified & rewritten:** 2026-08-21 (§DOC-02cj) against HEAD (38,712 lines) — 623 → 352 lines
 **Class:** structural read (whole-file code map). Four execution traces: boot, UI, movement, quest acceptance.
 

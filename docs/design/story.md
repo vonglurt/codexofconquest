@@ -1588,7 +1588,7 @@ Appended to the victory modal. Variant determined by mission completion + curse 
 ### New Game+ (`storyNewGamePlus()`)
 
 **Preserved across reset:** `npcFavorability`, `pitPerks`, `ngPlusRun` (incremented by 1)  
-**Reset:** everything else via `_S_DEFAULTS()` (including saves — `r2h_autosave` and `r2h_checkpoint` wiped from localStorage)  
+**Reset:** everything else via `_S_DEFAULTS()` (including saves — `coc_autosave` and `coc_checkpoint` wiped from localStorage)  
 **Starting kit:** same as new game — Pointy Stick + Flint Dagger + 2× Minor Healing Potion  
 **`frobergerNoteNode`:** re-randomized from EB pool on NG+ start  
 

@@ -28,7 +28,7 @@ async function seedAndLoadViaStorage(page, overrides = {}) {
   await page.goto('/play.html');   // initial load to establish correct origin
   await page.evaluate(s => {
     localStorage.clear();
-    localStorage.setItem('r2h_autosave', JSON.stringify(s));
+    localStorage.setItem('coc_autosave', JSON.stringify(s));
   }, state);
   await page.reload();                    // reload picks up seed from localStorage
 }
@@ -51,7 +51,7 @@ test.describe('Autosave guarantee (§UNIFY-09)', () => {
     });
 
     const saved = await page.evaluate(() => {
-      const raw = localStorage.getItem('r2h_autosave');
+      const raw = localStorage.getItem('coc_autosave');
       return raw ? JSON.parse(raw) : null;
     });
     expect(saved).not.toBeNull();
@@ -71,7 +71,7 @@ test.describe('Autosave guarantee (§UNIFY-09)', () => {
     });
 
     const saved = await page.evaluate(() => {
-      const raw = localStorage.getItem('r2h_autosave');
+      const raw = localStorage.getItem('coc_autosave');
       return raw ? JSON.parse(raw) : null;
     });
     expect(saved).not.toBeNull();

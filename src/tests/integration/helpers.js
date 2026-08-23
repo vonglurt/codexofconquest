@@ -96,7 +96,7 @@ async function seedAndLoad(page, overrides = {}) {
   await patchGameHtml(page);
   await page.addInitScript(s => {
     localStorage.clear();
-    localStorage.setItem('r2h_autosave', JSON.stringify(s));
+    localStorage.setItem('coc_autosave', JSON.stringify(s));
   }, state);
   await page.goto('/play.html');
 }

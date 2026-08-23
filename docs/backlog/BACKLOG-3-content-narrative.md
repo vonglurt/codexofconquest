@@ -231,7 +231,7 @@
 >
 > On "continue", re-derived the ordering from `stat` first: the `2026-07-28 14:13:06` block held **11**, so the alphabetical tiebreak applied and `docs/lab-reports/lab-report-npc-card-map.md` was next — the §NPC-01 parent of §DOC-02ck's Talk-verb sibling, and their censuses overlap by design. **148 → 371 lines.**
 >
-> **PARENT BUILD PINNED FIRST (instrument 108).** `fed5ee4` is the ship commit and is **docs-only** (`play.html` untouched), so `git show fed5ee4^:play.html` reproduces the exact **37,812**-line, `r2h-3.104.0` file the author was reading — both figures byte-exact in the report. `git diff fed5ee4 HEAD` on the report: **empty**. Zero drift in 29 days.
+> **PARENT BUILD PINNED FIRST (instrument 108).** `fed5ee4` is the ship commit and is **docs-only** (`play.html` untouched), so `git show fed5ee4^:play.html` reproduces the exact **37,812**-line, `coc-3.104.0` file the author was reading — both figures byte-exact in the report. `git diff fed5ee4 HEAD` on the report: **empty**. Zero drift in 29 days.
 >
 > **12 OF 15 CENSUS ROWS EXACT, 18 OF 22 LINE NUMBERS BYTE-EXACT, AND EVERY STRUCTURAL THESIS HOLDS.** The 14-node map, the single call site, 205 profiles / 204 unique, 213 dialogues with 0 duplicate keys, 213 `meta.worldTruth`, 418 `NODE_MAP` codes, **121** distinct profile `.node` codes with **0 dead**, 203 renderable candidates, 16 favor bits and **5** hardcoded `_setNpcFavor` sites are all exact. The report's central architectural claim — that the NPC→node map did not need deriving from `QUEST_DB` because every profile already declares its own `node` — is correct and was the right call.
 >

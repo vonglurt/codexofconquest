@@ -187,7 +187,7 @@ somebody modded quests) — and per-part equality never licenses partial sync. T
 stated boundary: narrative tables are **not** hashed, so a pure-dialogue mod does not fork the swarm.
 *Hash what determines where players can stand and what they can fight; leave prose free.*
 
-> **⚠ Live finding (§DX-02cp).** `ENGINE_VER` has read `r2h-3.104.0` since `80526b1` (2026-07-02) —
+> **⚠ Live finding (§DX-02cp).** `ENGINE_VER` has read `coc-3.104.0` since `80526b1` (2026-07-02) —
 > the commit that introduced it — and has not moved across the 4,218 lines added since. *"Every
 > release is deliberately a separate, incompatible swarm"* is carried entirely by `worldHash`. The
 > triple works; one of its three legs is inert.
@@ -492,9 +492,9 @@ The most striking decision here is what a "bootstrap server" is: **any URL servi
 `peers.txt` format** —
 
 ```
-# r2h mesh bootstrap — one entry per line
+# coc mesh bootstrap — one entry per line
 tracker http://tracker.example.org:1368
-192.168.1.20:1367  r2h-3.104.0  131eabc131eabc00
+192.168.1.20:1367  coc-3.104.0  131eabc131eabc00
 ```
 
 — fetched once at boot and parsed with the *same* parser as the local file
@@ -524,7 +524,7 @@ Private by default, loud when it matters.
 ### D. The magnet link: the whole system in one line
 
 ```
-r2h:?p=1&ev=r2h-3.104.0&wh=131eabc131eabc00&tr=http://tracker.example:1368
+coc:?p=1&ev=coc-3.104.0&wh=131eabc131eabc00&tr=http://tracker.example:1368
 ```
 
 Modelled on BitTorrent magnet URIs [5]: `wh` plays the infohash role — it names the *world-swarm*,
@@ -737,7 +737,7 @@ days is a plan; one unfiled prediction ageing 26 days is a defect.*
 - **§DX-02co** 🟢 — the two figures this report copied are still wrong at source:
   `docs/notes/docs-dev-environment.md:55` says *"216+ monsters"* (live: 398);
   `docs/spec/spec-migration.md:46` says *"40 terrain types"* (live: 111).
-- **§DX-02cp** 🟡 — `ENGINE_VER` has not moved off `r2h-3.104.0` since the commit that introduced it,
+- **§DX-02cp** 🟡 — `ENGINE_VER` has not moved off `coc-3.104.0` since the commit that introduced it,
   so one leg of the compatibility triple is inert (§IV.A).
 
 ---

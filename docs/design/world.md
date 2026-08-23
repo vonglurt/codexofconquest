@@ -952,7 +952,7 @@ The condition is not a cheat. It is the player being smart. Reward it in the nar
 
 ## WORLD ENGINE — Function Reference (F3 Coverage)
 
-> **CS architecture note:** F3 contains the world-state layer — NPC favorability, quest progression, rest/void cycle, world events, and save/load. All NPC favorability is stored as integers 0–3 in `S_story.npcFavorability`; 0 = Impartial, 1 = Friendly, 2 = Dear Friend, 3 = Dear Friend+ (covenant ceremony). The void pressure system (`S_story.voidPressure` 0–10) is advanced by missed sleep and void tide events; at 10 it triggers game-over. Save/load uses two localStorage keys: `r2h_autosave` (written on every `storyAutoSave()` call) and `r2h_checkpoint` (written only on confirmed inn sleep). Checkpoint is the respawn point on death; autosave is the continue point on restart.
+> **CS architecture note:** F3 contains the world-state layer — NPC favorability, quest progression, rest/void cycle, world events, and save/load. All NPC favorability is stored as integers 0–3 in `S_story.npcFavorability`; 0 = Impartial, 1 = Friendly, 2 = Dear Friend, 3 = Dear Friend+ (covenant ceremony). The void pressure system (`S_story.voidPressure` 0–10) is advanced by missed sleep and void tide events; at 10 it triggers game-over. Save/load uses two localStorage keys: `coc_autosave` (written on every `storyAutoSave()` call) and `coc_checkpoint` (written only on confirmed inn sleep). Checkpoint is the respawn point on death; autosave is the continue point on restart.
 
 ---
 
@@ -971,7 +971,7 @@ MILEPOINT B  Player confirms → storyConfirmSleep() fires
              Long rest resets: shortRests → 3; surgeCharges → 1 (2 at Lv17+); indomitableCharges → 1 (Lv9+)
              roughWhiskeyActive cleared; missedSleeps + countedMissedInns reset
 
-MILEPOINT C  storySaveCheckpoint() — writes S_story to localStorage 'r2h_checkpoint'
+MILEPOINT C  storySaveCheckpoint() — writes S_story to localStorage 'coc_checkpoint'
              Sets checkpointNode = nodeCode (respawn point for next death)
 
 MILEPOINT D  _checkWorldProgressionEvents() — iterates WORLD_PROGRESSION_EVENTS array
@@ -1104,7 +1104,7 @@ MILEPOINT B  Preservation snapshot
              savedPitPerks = S_story.pitPerks.slice()
              savedNgRun = (S_story.ngPlusRun || 0) + 1
 
-MILEPOINT C  localStorage cleared: r2h_autosave + r2h_checkpoint removed
+MILEPOINT C  localStorage cleared: coc_autosave + coc_checkpoint removed
              Object.assign(S_story, _S_DEFAULTS()) resets all 107 fields to initial values
 
 MILEPOINT D  Saved fields restored: npcFavorability, pitPerks, ngPlusRun
@@ -1174,12 +1174,12 @@ All six are Birka city nodes. No other nodes have NIGHT_AMBIENT entries.
 | `storyConfirmSleep()` | 12920 | Executes long rest: HP heal, day++, resets, checkpoint | `node.sleepCost`, `abilityScores.con`, `hp/hpMax/level` | `hp`, `day`, `gameDay`, `shortRests`, `surgeCharges`, `indomitableCharges`, `sleptAtNodes`, `checkpointNode` |
 | `storyCheckVoidTide()` | 12970 | Shows void tide event modal for current day | `VOID_TIDE_EVENTS[day]` | `voidPressure + 1` |
 | `storyCheckMissedSleep()` | 12982 | Tracks skipped inns; applies exhaustion DIS + void pressure | `node.sleep`, `sleptAtNodes`, `countedMissedInns`, `missedSleeps` | `missedSleeps++`, `battleDis`, `voidPressure++` |
-| `storyAutoSave()` | 8066 | Writes S_story to localStorage 'r2h_autosave' | `S_story` | localStorage |
-| `storySaveCheckpoint()` | 8070 | Writes S_story to localStorage 'r2h_checkpoint' | `S_story` | localStorage |
+| `storyAutoSave()` | 8066 | Writes S_story to localStorage 'coc_autosave' | `S_story` | localStorage |
+| `storySaveCheckpoint()` | 8070 | Writes S_story to localStorage 'coc_checkpoint' | `S_story` | localStorage |
 | `storyLoadSave(key)` | 8074 | Loads JSON from localStorage key into S_story | localStorage[key] | `S_story` (Object.assign) |
-| `storyCheckContinue()` | 8086 | On startup: checks for autosave; shows continue or gameover modal | localStorage 'r2h_autosave', `save.hp` | DOM modals; `_continueChecked = true` |
-| `storyRespawnFromCheckpoint()` | 8146 | Loads checkpoint save; sets hp = max(1, hpMax/2); renders current node | localStorage 'r2h_checkpoint' | `S_story.hp`; calls `storyRender` |
-| `storyLoadContinue()` | 8155 | Loads autosave; renders at currentCode; resumes pending battle if any | localStorage 'r2h_autosave' | full `S_story`; calls `storyRender` |
+| `storyCheckContinue()` | 8086 | On startup: checks for autosave; shows continue or gameover modal | localStorage 'coc_autosave', `save.hp` | DOM modals; `_continueChecked = true` |
+| `storyRespawnFromCheckpoint()` | 8146 | Loads checkpoint save; sets hp = max(1, hpMax/2); renders current node | localStorage 'coc_checkpoint' | `S_story.hp`; calls `storyRender` |
+| `storyLoadContinue()` | 8155 | Loads autosave; renders at currentCode; resumes pending battle if any | localStorage 'coc_autosave' | full `S_story`; calls `storyRender` |
 | `storyNewGame()` | 8164 | Full reset: clears localStorage, `_S_DEFAULTS()`, starter loadout, renders CI | `_S_DEFAULTS()`, `STARTER_*` consts | full `S_story` reset |
 | `storyNewGamePlus()` | 8186 | NG+ reset: preserves npcFavorability + pitPerks + ngPlusRun; resets all else | `npcFavorability`, `pitPerks`, `ngPlusRun` | full `S_story` reset + preserved fields |
 

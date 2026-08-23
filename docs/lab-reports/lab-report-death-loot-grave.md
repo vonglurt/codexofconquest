@@ -273,7 +273,7 @@ named (§V).
 
 - Inc A — equipped slots unchanged post-death; message contains *"stayed with you"* / *"Your body
   lies there"* / *"You wake at"* and never the old lie; corpse holds 2 items + 100 gp; the shard
-  stays in inventory; gold zeroed; `r2h_autosave` written.
+  stays in inventory; gold zeroed; `coc_autosave` written.
 - Inc A — zero-loot death reads *"nothing of value"* and never *"0 item(s)"*.
 - Inc B — chip hidden at 0, names one place at 1, *"2 places"* at 2, click calls `storyMapToggle`.
 - Inc C — decline: one `confirm` call, corpse kept, sentinel field intact, nothing wiped; accept:

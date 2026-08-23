@@ -47,7 +47,7 @@ test.describe('§DX-02h — the terrain roster write path', () => {
   // The acceptance test for a write path is a ROUND TRIP: save, re-parse, assert the
   // change survived (CONTRIBUTING Hazard #5). Nothing throws when it does not.
   test('a roster write survives save() and re-parses from disk', () => {
-    const tmp = path.join(os.tmpdir(), `r2h-dx02h-${process.pid}.html`);
+    const tmp = path.join(os.tmpdir(), `coc-dx02h-${process.pid}.html`);
     fs.copyFileSync(GAME, tmp);
     try {
       const W = freshWorld(tmp);
@@ -75,7 +75,7 @@ test.describe('§DX-02h — the terrain roster write path', () => {
   });
 
   test('a bad roster is refused with the source untouched', () => {
-    const tmp = path.join(os.tmpdir(), `r2h-dx02h-neg-${process.pid}.html`);
+    const tmp = path.join(os.tmpdir(), `coc-dx02h-neg-${process.pid}.html`);
     fs.copyFileSync(GAME, tmp);
     try {
       const W = freshWorld(tmp);
@@ -121,7 +121,7 @@ test.describe('§DX-02h — the terrain roster write path', () => {
   });
 
   test('label and icon edits reach the source, not just the in-memory model', () => {
-    const tmp = path.join(os.tmpdir(), `r2h-dx02h-str-${process.pid}.html`);
+    const tmp = path.join(os.tmpdir(), `coc-dx02h-str-${process.pid}.html`);
     fs.copyFileSync(GAME, tmp);
     try {
       const W = freshWorld(tmp);

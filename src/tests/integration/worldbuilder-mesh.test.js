@@ -10,14 +10,14 @@ const { test, expect } = require('@playwright/test');
 
 const FIXTURE = {
   ok: true, trackerMode: false, serverId: 'a1b2c3d4', addr: 'localhost:1367',
-  proto: 1, engineVer: 'r2h-3.104.0', worldHash: 'feedfacefeedface',
+  proto: 1, engineVer: 'coc-3.104.0', worldHash: 'feedfacefeedface',
   worldName: 'CodexOfConquest', worldTag: 'CodexOfConquest-feedf',
   acl: { mode: 'open', file: 'mesh-acl.json' }, localPlayers: 2,
   reachability: { bind: '127.0.0.1', advertise: 'localhost:1367', warnings: [
     'bind is loopback (127.0.0.1) — remote machines cannot reach this server. Start with --bind 0.0.0.0 (or BIND_ADDR=0.0.0.0).',
   ] },
   trackerUrls: ['http://tracker.example:1368'],
-  trackerGroups: [{ engineVer: 'r2h-3.104.0', worldHash: 'feedfacefeedface', worldTag: 'CodexOfConquest-feedf', servers: 3, players: 7 }],
+  trackerGroups: [{ engineVer: 'coc-3.104.0', worldHash: 'feedfacefeedface', worldTag: 'CodexOfConquest-feedf', servers: 3, players: 7 }],
   peers: [
     { addr: 'localhost:2367', serverId: 'beefbeef', live: true, lastSeenMs: 900, lastErr: null },
     { addr: '10.0.0.9:1367', serverId: null, live: false, lastSeenMs: null, lastErr: 'unreachable' },
@@ -25,7 +25,7 @@ const FIXTURE = {
   remotePlayers: [{ name: 'Borys', r: 10, c: 198, server: 'beefbeef' }],
   traffic: [
     { ts: 1700000000000, dir: 'out', kind: 'gossip', peer: 'localhost:2367', ok: true, note: '⇄ 3 ev · snap 1 · 2 px' },
-    { ts: 1700000001000, dir: 'in', kind: 'gossip', peer: 'localhost:2367', ok: false, note: 'refused: incompatible (r2h-9/deadbeef)' },
+    { ts: 1700000001000, dir: 'in', kind: 'gossip', peer: 'localhost:2367', ok: false, note: 'refused: incompatible (coc-9/deadbeef)' },
   ],
 };
 
@@ -101,7 +101,7 @@ test.describe('🌐 Mesh tab (§MESH-01 UI)', () => {
     await page.click('.nav-tab[data-tab="mesh"]');
     await page.evaluate(() => window.__meshTest.renderMeshStatus({
       ok: true, trackerMode: false, serverId: 'a1b2c3d4', addr: 'localhost:1367',
-      proto: 1, engineVer: 'r2h-3.104.0', worldHash: 'feedfacefeedface',
+      proto: 1, engineVer: 'coc-3.104.0', worldHash: 'feedfacefeedface',
       acl: { mode: 'open' }, localPlayers: 0, trackerUrls: [], trackerGroups: [],
       peers: [], remotePlayers: [], traffic: [],
     }));

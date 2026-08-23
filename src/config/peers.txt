@@ -1,4 +1,4 @@
-# r2h mesh bootstrap — static peer list (§MESH-01 b/c)
+# coc mesh bootstrap — static peer list (§MESH-01 b/c)
 # One entry per line. Lines starting with # are ignored.
 #
 #   <host:port> [engineVer] [worldHash]     — a game server to gossip with

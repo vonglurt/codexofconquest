@@ -65,7 +65,7 @@ test.describe('§DX-02k — save() requires a destination', () => {
 
   // The actual defect: the destination followed the process, not the file.
   test('saveStamped() lands beside the SOURCE FILE, not the CWD', () => {
-    const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'r2h-dx02k-'));
+    const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'coc-dx02k-'));
     const src = path.join(dir, 'play.html');
     fs.copyFileSync(GAME, src);
     try {
@@ -90,7 +90,7 @@ test.describe('§DX-02k — save() requires a destination', () => {
   });
 
   test('save(dest) still round-trips an edit through disk', () => {
-    const tmp = path.join(os.tmpdir(), `r2h-dx02k-rt-${process.pid}.html`);
+    const tmp = path.join(os.tmpdir(), `coc-dx02k-rt-${process.pid}.html`);
     fs.copyFileSync(GAME, tmp);
     try {
       const W = freshWorld(tmp);
@@ -110,9 +110,9 @@ test.describe('§DX-02k — save() requires a destination', () => {
     const keep = W._rawSrc;
     W._rawSrc = '';
     try {
-      expect(W.save(path.join(os.tmpdir(), 'r2h-dx02k-never.html')).ok).toBe(false);
+      expect(W.save(path.join(os.tmpdir(), 'coc-dx02k-never.html')).ok).toBe(false);
       expect(W.saveStamped().ok).toBe(false);
-      expect(fs.existsSync(path.join(os.tmpdir(), 'r2h-dx02k-never.html'))).toBe(false);
+      expect(fs.existsSync(path.join(os.tmpdir(), 'coc-dx02k-never.html'))).toBe(false);
     } finally {
       W._rawSrc = keep;
     }

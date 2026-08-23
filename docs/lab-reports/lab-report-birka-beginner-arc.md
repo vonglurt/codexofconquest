@@ -42,7 +42,7 @@ identifier drift
 
 ## I. Method
 
-Four measurements, all from HEAD (`play.html`, 38,707 lines, r2h-3.104.0, 416 nodes / 2,853
+Four measurements, all from HEAD (`play.html`, 38,707 lines, coc-3.104.0, 416 nodes / 2,853
 quests / 204 NPC profiles):
 
 1. **Symbol census.** Every constant, state field, function, quest id, item name and DOM string the

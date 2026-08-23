@@ -61,7 +61,7 @@ what justify the work:
 ## 2. Method
 
 Every symbol, count and coordinate below was re-measured against the working tree at HEAD
-(`r2h-3.104.0`, 416 nodes, 38,712 lines): symbol census by `grep -c -F`; structural counts
+(`coc-3.104.0`, 416 nodes, 38,712 lines): symbol census by `grep -c -F`; structural counts
 by loading `src/js/wbapi-core.js` against `play.html` and walking `nodeMap`/`nodeCoords`
 directly; connectivity by re-implementing each of the three live BFS variants offline and
 running them on the real data. Line numbers in the original are superseded by

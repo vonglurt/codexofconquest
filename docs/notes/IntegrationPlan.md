@@ -22,11 +22,11 @@ Playwright gives all of this with minimal configuration.
 
 ## State Injection Strategy
 
-The game hydrates from `localStorage.getItem('r2h_autosave')` at page load, via `storyLoadSave()` → `Object.assign(S_story, JSON.parse(raw))`. Tests inject a seed state **before** page JS runs using `page.addInitScript()`:
+The game hydrates from `localStorage.getItem('coc_autosave')` at page load, via `storyLoadSave()` → `Object.assign(S_story, JSON.parse(raw))`. Tests inject a seed state **before** page JS runs using `page.addInitScript()`:
 
 ```js
 await page.addInitScript(state => {
-  localStorage.setItem('r2h_autosave', JSON.stringify(state));
+  localStorage.setItem('coc_autosave', JSON.stringify(state));
 }, SEED_STATE);
 await page.goto('/play.html');
 ```

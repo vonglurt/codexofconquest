@@ -89,7 +89,7 @@ Three sources, because HEAD alone cannot adjudicate a claim about an afternoon i
    measured against the *parent*; every "what was built" claim against the *birth*.
 2. **`git log -S <symbol> -- play.html`** on every symbol the census marked dead, to
    separate **RETIRED** (shipped, later removed) from **NOT SHIPPED** (never existed).
-3. **HEAD**, at `r2h-3.104.0`, 38,7xx lines, for what survives and what the successor did.
+3. **HEAD**, at `coc-3.104.0`, 38,7xx lines, for what survives and what the successor did.
 
 Object-literal entry counts were taken by brace-matching each object out of the file and
 counting keys at depth 1, not by grepping the key name. Line numbers in the original are

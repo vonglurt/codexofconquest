@@ -42,7 +42,7 @@ const HTML = path.join(ROOT, 'play.html');
 // Docs that may carry anchors. Directories are walked for *.md.
 const DOC_ROOTS = ['.', 'docs'];
 const SKIP_DIRS = new Set(['node_modules', '.git', 'test-results', 'playwright-report',
-  'archive', 'r2h', 'ledger', 'build', 'vendor', 'sources', 'importers']);
+  'archive', 'coc', 'ledger', 'build', 'vendor', 'sources', 'importers']);
 
 // `symbol@1234` — symbol is any run of non-backtick chars, number is the cached hint.
 const ANCHOR_RE = /`([^`\n]{1,100}?)@(\d{2,6})`/g;

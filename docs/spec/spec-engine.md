@@ -619,8 +619,8 @@ The game is designed to be built in vertical slices. Each layer adds one complet
 - Missing sleep tracking: `battleDis` flag adds DIS to next 2 battles after skipping an inn
 
 ### Layer 6 — ✅ IMPLEMENTED
-- `storyAutoSave()` — writes `S_story` to `r2h_autosave` on every node render
-- `storySaveCheckpoint()` — writes to `r2h_checkpoint` on inn sleep
+- `storyAutoSave()` — writes `S_story` to `coc_autosave` on every node render
+- `storySaveCheckpoint()` — writes to `coc_checkpoint` on inn sleep
 - Continue modal on load: shows Day/location/item count from autosave
 - Respawn from checkpoint: full HP restore at last inn node
 - `storyCheckContinue()` runs before `storyRender()` to prevent autosave overwrite
