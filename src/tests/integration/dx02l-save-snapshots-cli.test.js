@@ -33,11 +33,11 @@ const ROOT = path.resolve(__dirname, '..', '..', '..');
 const GAME = path.join(ROOT, 'play.html');
 const PORT = 13897;
 const BASE = `http://localhost:${PORT}`;
-const STAMPED = /^roll2hit-v3-\d{8}-\d{6}\.html$/;
+const STAMPED = /^play-\d{8}-\d{6}\.html$/;
 
 // A name the real patch chain already knows — `build/milepoints/patches/<stem>.patch`
 // exists — so `archived:true` can be exercised without writing into the repo.
-const ARCHIVED_NAME = 'roll2hit-v3-20260709-034151.html';
+const ARCHIVED_NAME = 'play-20260709-034151.html';
 
 let server, dir, scratch;
 
@@ -52,7 +52,7 @@ test.beforeAll(async () => {
   dir = fs.mkdtempSync(path.join(os.tmpdir(), 'r2h-dx02l-'));
   scratch = path.join(dir, 'play.html');
   fs.copyFileSync(GAME, scratch);
-  server = spawn(process.execPath, ['src/js/wbapi-server.js'], {
+  server = spawn(process.execPath, [path.join(ROOT, 'src', 'js', 'wbapi-server.js')], {
     cwd: ROOT,
     env: { ...process.env, PORT: String(PORT), ROLL2HIT_FILE: scratch,
       PEERS_CACHE_FILE: path.join(dir, 'peers.json') },
@@ -82,8 +82,8 @@ test.describe('§DX-02l — ./bin/api save + ./bin/api snapshots', () => {
 
     const out = cli('save');
     expect(out).not.toMatch(/Unknown command/);
-    expect(out).toMatch(/primary\s+.*roll2hit-v3\.html/);
-    expect(out).toMatch(/backup\s+.*roll2hit-v3-\d{8}-\d{6}\.html/);
+    expect(out).toMatch(/primary\s+.*play\.html/);
+    expect(out).toMatch(/backup\s+.*play-\d{8}-\d{6}\.html/);
 
     // …and the backup landed beside the SCRATCH game file, not in the repo
     // and not in the CWD the CLI happened to run from (§DX-02k).
@@ -165,9 +165,9 @@ test.describe('§DX-02l — ./bin/api save + ./bin/api snapshots', () => {
   // "delete the game". Decoys that merely start with the same stem must be
   // invisible to it, and a forced sweep is the strongest form of the question.
   test('only exact -YYYYMMDD-HHMMSS files are reachable; the game file never is', () => {
-    const decoys = ['roll2hit-v3-notes.html', 'roll2hit-v3-2026.html',
-                    'roll2hit-v3-20260709.html', 'roll2hit-v3-20260709-0341.html',
-                    'roll2hit-v3-20260709-034151.htm', 'roll2hit-v3-20260709-034151.html.bak'];
+    const decoys = ['play-notes.html', 'play-2026.html',
+                    'play-20260709.html', 'play-20260709-0341.html',
+                    'play-20260709-034151.htm', 'play-20260709-034151.html.bak'];
     for (const d of decoys) fs.writeFileSync(path.join(dir, d), 'decoy');
     cli('save');
     const real = stampedIn(dir);

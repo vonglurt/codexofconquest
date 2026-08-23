@@ -44,6 +44,14 @@
 
 ## §BACKLOG — Open Items (Phase 6)
 
+### §RELEASE-01 — public release of Codex of Conquest (NEW 2026-08-23, 🟡 tail items only, the spine is SHIPPED)
+
+- [x] **Phases 0–6 shipped 2026-08-23.** Vendor split (1,852 tracked files/127 MB → 367/18.2 MB) · one canonical MIT notice on all 348 publishable files · `roll2hit-v3.html` → `play.html` · `worldbuilder.html` → `edit.html` · root 33 → 9 tracked files with `src/ docs/ build/ vendor/` · history purge of 684 MB with all `.md` retained · author remap to `Paul Richeson <paulr@sdf.org>` across all 1,471 commits · landing page, Makefile, `bin/`, `src/NODE.md`.
+- [ ] **The landing page ships a placeholder.** `index.html` carries an inline-SVG schematic of the play screen with a `PLACEHOLDER` badge in its caption. **Replace with a real screenshot before announcing.** It must stay self-contained — inline SVG or a `data:` URI, not an external file, or the page stops being giveable. *Grep to disprove:* `grep -n 'PLACEHOLDER' index.html`.
+- [ ] **One history blob is 52,789,636 bytes (50.34 MB)** — an old bloated revision of the game file from before the spike fix. Over GitHub's 50 MB **warning** line, well under the 100 MB hard block, so the push succeeds with a warning. It is a revision of the one file the author asked to preserve completely, so removing it means accepting a hole in that history. **Decision deferred deliberately.**
+- [ ] **701 bare `Roll2Hit` mentions remain in HISTORY docs** (`docs/lab-reports/`, `docs/archive/`, `docs/backlog/plan-archive.md`). Left as written under annotate-don't-rewrite (§DX-02c/§AUDIT-03m); README's *A note on names* explains it to anyone who greps. **Open question:** is that the right call for a public repo, where the first reader has no context? 🟡 ONE DESIGN CALL.
+- [ ] **`make run` has never been executed end-to-end.** `make status`, `./bin/api help`, the server launcher and `run.sh` syntax are verified, but the full `run` target — two Terminal windows plus a browser open — has not been run in this environment. **Verify on a real desktop session before relying on it.**
+
 ### §DX-02fx — the anchor-convention suite repairs the docs it is auditing, so its own verdict depends on run order (NEW 2026-08-23 during §DX-01g, 🟡 ONE DESIGN CALL: assert or repair, not both)
 
 - [ ] **`src/tests/integration/dx01e-anchor-convention.test.js` has a write side-effect on tracked files.** Its third test runs the real gate with `--fix` against the repo root — `expect(run(['--fix']).code).toBe(0)` at `src/tests/integration/dx01e-anchor-convention.test.js:115` — and `--fix` rewrites stale `symbol@NNNN` hints **in place, in the working tree**. Running the suite is therefore a mutation of tracked documentation, not a read-only check.

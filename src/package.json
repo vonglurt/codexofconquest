@@ -1,9 +1,33 @@
 {
   "name": "codexofconquest",
   "version": "1.0.0",
-  "description": "Roll2Hit World Builder API server and CLI tools",
+  "description": "Codex of Conquest — a single-file, quest-driven MUD-style fighter RPG with D&D 5e mechanics. This package holds the world-builder API server, CLI and test suite.",
+  "keywords": [
+    "rpg",
+    "mud",
+    "dnd",
+    "d20",
+    "roguelike",
+    "interactive-fiction",
+    "game",
+    "single-file",
+    "html5",
+    "worldbuilder"
+  ],
+  "homepage": "https://codexofconquest.com",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vonglurt/codexofconquest.git"
+  },
+  "bugs": {
+    "url": "https://github.com/vonglurt/codexofconquest/issues"
+  },
+  "author": "Paul Richeson <paulr@sdf.org>",
   "license": "MIT",
   "private": true,
+  "engines": {
+    "node": ">=18"
+  },
   "type": "commonjs",
   "scripts": {
     "start": "node js/wbapi-server.js",

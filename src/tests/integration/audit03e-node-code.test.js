@@ -137,7 +137,7 @@ test.describe('§AUDIT-03e — NODE_MAP code backfill', () => {
   });
 
   test('source guard: the backfill is a runtime normalisation, not 287 authored fields, and the ending map is pinned', async () => {
-    const src = fs.readFileSync(path.join(__dirname, '../../play.html'), 'utf8');
+    const src = fs.readFileSync(path.join(__dirname, '../../../play.html'), 'utf8');
     const nodeMapSrc = src.slice(src.indexOf('WORLDBUILDER:NODE_MAP:START'), src.indexOf('WORLDBUILDER:NODE_MAP:END'));
     const authored = (nodeMapSrc.match(/\bcode:\s*['"]/g) || []).length;
     expect(authored, 'the data section keeps its 129 authored code fields — the fix is one loader line').toBe(129);

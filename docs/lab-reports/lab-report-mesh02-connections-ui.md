@@ -191,7 +191,7 @@ than a feature to postpone. A property has a test; a postponed feature has good 
    lock, unedited. Both halves are dated in the header above so a later reader cannot
    mistake the retrospective table for a prediction.
 3. **Instrument 70 (run the acceptance test).** `src/tests/integration/mesh-connections-ui.test.js:sub-tab shell: 6 tabs / 6 panes@48`
-   — **8/8 green** (4.7 s). Harness section `src/tests/mud-harness.mjs:const aclR2 = path.join(tmp,@1364`
+   — **8/8 green** (4.7 s). Harness section `src/tests/mud-harness.mjs:const aclR2 = path.join(tmp,@1365`
    — **18/18 green**, covering GET-defaults, PUT roundtrip, disk persistence, comment-key
    survival, five validation 400s, and the 403→200→403 share flip. `npm run test:mud` overall:
    **267 ✓ / 2 ✗**, both failures the carried §DX-02ca `[D]` idle-TTL reds — a different

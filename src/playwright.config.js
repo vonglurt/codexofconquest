@@ -5,14 +5,29 @@ const { defineConfig, devices } = require('@playwright/test');
 module.exports = defineConfig({
   testDir: './tests/integration',
 
+  // Generated output belongs in build/, not beside the source.
+  outputDir: '../build/test-results',
+
   // Serve the project root so play.html is at http://localhost:7654/play.html
   // Port 7654 avoids collision with the WBAPI server on 1367.
-  webServer: {
-    command: 'npx --yes serve . --listen tcp://localhost:7654',
-    url: 'http://localhost:7654',
-    reuseExistingServer: !process.env.CI,
-    timeout: 15_000,
-  },
+  // Two servers. The static host serves the repo root; the WBAPI server is
+  // required by the editor's CRUD tests, which click through a UI that stays
+  // behind the welcome overlay until a world has loaded. Without it those four
+  // tests fail on a bare checkout for reasons that look nothing like the cause.
+  webServer: [
+    {
+      command: 'npx --yes serve .. --listen tcp://localhost:7654',
+      url: 'http://localhost:7654',
+      reuseExistingServer: !process.env.CI,
+      timeout: 15_000,
+    },
+    {
+      command: 'node js/wbapi-server.js',
+      url: 'http://localhost:1367/api/ping',
+      reuseExistingServer: true,
+      timeout: 20_000,
+    },
+  ],
 
   use: {
     baseURL: 'http://localhost:7654',
@@ -32,5 +47,5 @@ module.exports = defineConfig({
   // Per-test timeout: fishing smoke test can take several seconds of DOM interaction
   timeout: 45_000,
 
-  reporter: [['list'], ['html', { open: 'never' }]],
+  reporter: [['list'], ['html', { open: 'never', outputFolder: '../build/playwright-report' }]],
 });

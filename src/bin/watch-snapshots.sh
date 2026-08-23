@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson
 # MIT License — Copyright (c) 2026 Paul Richeson
-# Watches for new roll2hit-v3-YYYYMMDD-HHMMSS.html files and archives them
+# Watches for new play-YYYYMMDD-HHMMSS.html files and archives them
 # once fully written (no open file handles).
 #
 # Usage: ./watch-snapshots.sh
@@ -67,7 +67,7 @@ handle_file() {
 trap 'echo; echo "Watcher stopped."; rm -f "$LOCK"' EXIT INT TERM
 
 echo "$(date '+%H:%M:%S') Watching $SCRIPT_DIR"
-echo "Pattern: roll2hit-v3-YYYYMMDD-HHMMSS.html"
+echo "Pattern: play-YYYYMMDD-HHMMSS.html"
 echo "Settle:  ${SETTLE_SECS}s after handles close"
 echo "Press Ctrl-C to stop."
 echo "---"
@@ -78,7 +78,7 @@ fswatch \
     --event Updated \
     --event Created \
     --event MovedTo \
-    --include 'roll2hit-v3-[0-9]{8}-[0-9]{6}\.html' \
+    --include 'play-[0-9]{8}-[0-9]{6}\.html' \
     --exclude '.*' \
     "$SCRIPT_DIR" \
 | while IFS= read -r -d '' file; do

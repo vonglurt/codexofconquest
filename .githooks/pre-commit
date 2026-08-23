@@ -40,7 +40,7 @@ fi
 # Errors are tolerated: a fresh clone may not have build/milepoints/ yet.
 git -C "$REPO_ROOT" add -A -- build/milepoints/ 2>/dev/null || true
 
-# Stamped HTML snapshots at repo root (roll2hit-v3-YYYYMMDD-HHMMSS.html)
+# Stamped HTML snapshots at repo root (play-YYYYMMDD-HHMMSS.html)
 shopt -s nullglob
 for f in "$REPO_ROOT"/play-[0-9]*.html; do
   git -C "$REPO_ROOT" add -A -- "$(basename "$f")" 2>/dev/null || true

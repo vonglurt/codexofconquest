@@ -21,7 +21,7 @@
 #   --patches N        keep most recent N  (default 20)  — build/milepoints/patches/*.patch[.log]
 #   --heatmaps N       keep most recent N  (default 10)  — build/milepoints/heatmap-*.txt
 #   --reweaves N       keep most recent N  (default 10)  — build/milepoints/reweave-maps-*.txt
-#   --snapshots N      keep most recent N  (default 3)   — roll2hit-v3-YYYYMMDD-HHMMSS.html
+#   --snapshots N      keep most recent N  (default 3)   — play-YYYYMMDD-HHMMSS.html
 #   --log-mb N         cap log files at N MB              (default 1)
 #   --archive-keep N   keep most recent N archives         (default 20)
 #   --no-archive       delete pruned files instead of archiving them

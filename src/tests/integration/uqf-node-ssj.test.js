@@ -20,7 +20,7 @@ const path = require('path');
 const { test, expect } = require('@playwright/test');
 const { SEED_STATE, dismissContinue } = require('./helpers');
 
-const HTML = fs.readFileSync(path.join(__dirname, '..', '..', 'play.html'), 'utf8');
+const HTML = fs.readFileSync(path.join(__dirname, '..', '..', '..', 'play.html'), 'utf8');
 
 const ROD = { name: 'Fishing Rod', icon: '🎣', type: 'weapon', atkBonus: 1, dmgDie: 4, dmgCount: 1, dmgFlat: 0, sell: 10, desc: 'Standard rod.' };
 

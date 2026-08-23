@@ -1,3 +1,4 @@
+const path = require('path');
 // SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson
 'use strict';
 // §MESH-01a — two-browser presence smoke: the REAL client flow end-to-end.
@@ -15,13 +16,14 @@ const TRK_PORT = 13892;   // §MESH-01-FU 2: tracker for the join-by-magnet flow
 let server, tracker;
 
 const TMP = require('os').tmpdir();
+const ROOT = path.resolve(__dirname, '..', '..', '..');
 test.beforeAll(async () => {
-  tracker = spawn(process.execPath, ['src/js/wbapi-server.js', '--tracker-mode'], {
+  tracker = spawn(process.execPath, [path.join(ROOT, 'src', 'js', 'wbapi-server.js'), '--tracker-mode'], {
     env: { ...process.env, PORT: String(TRK_PORT), MESH_SERVER_ID: 'b'.repeat(32),
       PEERS_CACHE_FILE: `${TMP}/r2h-presence-trk-cache.json` },
     stdio: 'ignore',
   });
-  server = spawn(process.execPath, ['src/js/wbapi-server.js'], {
+  server = spawn(process.execPath, [path.join(ROOT, 'src', 'js', 'wbapi-server.js')], {
     env: { ...process.env, PORT: String(MP_PORT), MESH_SERVER_ID: 'a'.repeat(32),
       TRACKER_URL: `http://localhost:${TRK_PORT}`, MESH_ANNOUNCE_MS: '200',
       SERVER_NAME: 'Hub Alpha', PEERS_CACHE_FILE: `${TMP}/r2h-presence-srv-cache.json` },
@@ -134,7 +136,7 @@ test.describe('§MESH-01a — multiplayer presence (two real clients)', () => {
     const row = d.page.locator('.mp-srv-row');
     await expect(row).toHaveCount(1);
     await expect(row).toContainText('Hub Alpha');                                  // server name
-    await expect(row).toContainText(`Roll2Hit-${man.worldHash.slice(0, 5)}`);      // world tag
+    await expect(row).toContainText(`CodexOfConquest-${man.worldHash.slice(0, 5)}`);      // world tag
     await expect(row.locator('[id^=mp-srv-ping]')).toHaveText(/\d+ ms/);           // real ping
 
     // Join: rewrites mpServer to the tracker-resolved addr and connects.

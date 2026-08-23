@@ -6,6 +6,7 @@ const fs = require('fs');
 const os = require('os');
 const path = require('path');
 const { seedAndLoad, dismissContinue } = require('./helpers');
+const ROOT = path.resolve(__dirname, '..', '..', '..');
 
 // ── §MESH-01j — client duel rung ─────────────────────────────────────────────
 //
@@ -116,7 +117,7 @@ let duelServer, duelDir;
 test.describe('§MESH-01j — end-to-end duel (two real clients)', () => {
   test.beforeAll(async () => {
     duelDir = fs.mkdtempSync(path.join(os.tmpdir(), 'r2h-duel-e2e-'));
-    duelServer = spawn(process.execPath, ['src/js/wbapi-server.js'], {
+    duelServer = spawn(process.execPath, [path.join(ROOT, 'src', 'js', 'wbapi-server.js')], {
       env: { ...process.env, PORT: String(DUEL_PORT), MESH_SERVER_ID: 'd'.repeat(32),
         LEDGER_DIR: duelDir, PEERS_CACHE_FILE: path.join(duelDir, 'peers-cache.json') },
       stdio: 'ignore',

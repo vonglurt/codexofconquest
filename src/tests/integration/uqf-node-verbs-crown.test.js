@@ -24,7 +24,7 @@ const path = require('path');
 const { test, expect } = require('@playwright/test');
 const { SEED_STATE, dismissContinue } = require('./helpers');
 
-const HTML = fs.readFileSync(path.join(__dirname, '..', '..', 'play.html'), 'utf8');
+const HTML = fs.readFileSync(path.join(__dirname, '..', '..', '..', 'play.html'), 'utf8');
 
 async function at(page, code, overrides = {}) {
   const state = Object.assign({}, SEED_STATE, {

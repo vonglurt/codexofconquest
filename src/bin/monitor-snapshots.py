@@ -4,7 +4,7 @@
 Monitor-Snapshots  —  TUI monitor for roll2hit snapshot archiving.
 paulr@sdf.org  MIT License
 
-Watches for new roll2hit-v3-YYYYMMDD-HHMMSS.html files, waits until all
+Watches for new play-YYYYMMDD-HHMMSS.html files, waits until all
 file handles close (lsof), shows a scrollable unified diff between
 consecutive snapshots, then saves a .patch file and advances _last.html.
 
@@ -12,7 +12,7 @@ Patch store layout (build/milepoints/patches/):
   _base.html.gz   — first snapshot, gzip-compressed (no previous to diff)
   _last.html      — most recent snapshot, kept plain for next diff
   _last.name      — filename of _last.html (for patch headers)
-  roll2hit-v3-YYYYMMDD-HHMMSS.patch  — unified diff: prev → this
+  play-YYYYMMDD-HHMMSS.patch  — unified diff: prev → this
 
 Replaces watch-snapshots.sh — don't run both at once.
 
@@ -50,7 +50,7 @@ SERVER_LOG  = ROOT / "milepoints" / "wbapi-server.log"
 SAY_LOCK_FILE = ROOT / "milepoints" / "say.lock"  # shared with sayd.sh
 LAST_HTML   = PATCHES_DIR / "_last.html"
 LAST_NAME_F = PATCHES_DIR / "_last.name"
-GLOB        = "roll2hit-v3-????????-??????.html"
+GLOB        = "play-????????-??????.html"
 SETTLE      = 0.0   # grace seconds after lsof shows no handles
 POLL        = 0.0   # directory scan interval
 

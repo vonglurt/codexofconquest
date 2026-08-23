@@ -3,7 +3,7 @@
 //
 // Why this test exists. `save(outputPath)` used to fall back to
 // `this.getStampedName()`, which returns a BARE FILENAME —
-// `roll2hit-v3-YYYYMMDD-HHMMSS.html`. `fs.writeFileSync` resolves a bare name
+// `play-YYYYMMDD-HHMMSS.html`. `fs.writeFileSync` resolves a bare name
 // against the PROCESS CWD, so every argless caller dropped a ~5.4 MB copy of the
 // whole game wherever it happened to be running, and nothing ever removed it.
 //
@@ -33,7 +33,7 @@ const path = require('path');
 
 const ROOT = path.resolve(__dirname, '..', '..', '..');
 const GAME = path.join(ROOT, 'play.html');
-const STAMPED = /^roll2hit-v3-\d{8}-\d{6}\.html$/;
+const STAMPED = /^play-\d{8}-\d{6}\.html$/;
 
 function freshWorld(file) {
   delete require.cache[require.resolve(path.join(ROOT, 'src', 'js', 'wbapi-core.js'))];

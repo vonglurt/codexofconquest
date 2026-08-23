@@ -11,7 +11,7 @@ const { test, expect } = require('@playwright/test');
 const FIXTURE = {
   ok: true, trackerMode: false, serverId: 'a1b2c3d4', addr: 'localhost:1367',
   proto: 1, engineVer: 'r2h-3.104.0', worldHash: 'feedfacefeedface',
-  worldName: 'Roll2Hit', worldTag: 'Roll2Hit-feedf',
+  worldName: 'CodexOfConquest', worldTag: 'CodexOfConquest-feedf',
   acl: { mode: 'open', file: 'mesh-acl.json' }, localPlayers: 2,
   reachability: { bind: '127.0.0.1', advertise: 'localhost:1367', warnings: [
     'bind is loopback (127.0.0.1) — remote machines cannot reach this server. Start with --bind 0.0.0.0 (or BIND_ADDR=0.0.0.0).',
@@ -43,7 +43,7 @@ test.describe('🌐 Mesh tab (§MESH-01 UI)', () => {
     // §MESH-01-FU 1: reachability warnings surface on the identity strip
     await expect(page.locator('#mesh-identity')).toContainText('⚠ bind is loopback');
     // §MESH-01-FU 2: world tag on the identity strip + per world group
-    await expect(page.locator('#mesh-identity')).toContainText('🌍 Roll2Hit-feedf');
+    await expect(page.locator('#mesh-identity')).toContainText('🌍 CodexOfConquest-feedf');
     await expect(page.locator('#mesh-trackers')).toContainText('Roll2Hit-feedf');
     await expect(page.locator('#mesh-trackers')).toContainText('http://tracker.example:1368');
     await expect(page.locator('#mesh-trackers')).toContainText('3 server(s), 7 player(s)');

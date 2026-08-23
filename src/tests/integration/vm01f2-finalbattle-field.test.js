@@ -22,7 +22,7 @@ const path = require('path');
 const { test, expect } = require('@playwright/test');
 const { seedAndLoad, dismissContinue } = require('./helpers');
 
-const GAME = path.join(__dirname, '..', '..', 'play.html');
+const GAME = path.join(__dirname, '..', '..', '..', 'play.html');
 
 test.describe('§VM-01-G-FU-f2 — finalBattle node field', () => {
 

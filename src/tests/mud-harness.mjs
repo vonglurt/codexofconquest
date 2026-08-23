@@ -1,3 +1,4 @@
+const path = require('path');
 #!/usr/bin/env node
 // SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson
 // §WALK-5 Inc 3 — MUD multi-client harness.
@@ -111,7 +112,7 @@ async function startServer(port, extraEnv = {}, extraArgs = []) {
     console.error(`✗ port ${port} is already in use — set MUD_HARNESS_PORT to a free port.`);
     stopAllServers(); process.exit(1);
   }
-  const proc = spawn('node', ['src/js/wbapi-server.js', ...extraArgs], {
+  const proc = spawn('node', [path.join(ROOT, 'src', 'js', 'wbapi-server.js'), ...extraArgs], {
     cwd: ROOT, env: { ...process.env, PORT: String(port), ...extraEnv }, stdio: ['ignore', 'ignore', 'pipe'],
   });
   const srv = { port, base, proc, stderr: '' };
@@ -475,8 +476,8 @@ async function main() {
   // ════════ (i) §MESH-01-FU 2 — world name/tag + server-browser data ════════
   console.log('\n[I] §MESH-01-FU 2 — WORLD_NAME tag + tracker server-browser rows');
   const manMain = await jget('/manifest');
-  check(manMain.worldName === 'Roll2Hit'
-    && manMain.worldTag === 'Roll2Hit-' + manMain.worldHash.slice(0, 5),
+  check(manMain.worldName === 'CodexOfConquest'
+    && manMain.worldTag === 'CodexOfConquest-' + manMain.worldHash.slice(0, 5),
     'manifest parses WORLD_NAME from the game file and derives worldTag <name>-<hash5>');
   // A named server announces → the tracker row carries name + worldName + worldTag.
   await startServer(PORT + 16, mkEnv(PORT + 16, '1'.repeat(32),
@@ -487,11 +488,11 @@ async function main() {
     hubRow = ((await jget(`/tracker/peers?wh=${manMain.worldHash}`, trk.base)).servers || [])
       .find((s) => s.name === 'Hub Alpha');
   }
-  check(!!hubRow && hubRow.worldName === 'Roll2Hit'
-    && hubRow.worldTag === 'Roll2Hit-' + manMain.worldHash.slice(0, 5),
+  check(!!hubRow && hubRow.worldName === 'CodexOfConquest'
+    && hubRow.worldTag === 'CodexOfConquest-' + manMain.worldHash.slice(0, 5),
     'tracker rows carry server name + worldName + worldTag (the server-browser data)');
   const stTrk = await jget('/mesh/status', trk.base);
-  check((stTrk.trackerGroups || []).some((g) => g.worldTag === 'Roll2Hit-' + manMain.worldHash.slice(0, 5)),
+  check((stTrk.trackerGroups || []).some((g) => g.worldTag === 'CodexOfConquest-' + manMain.worldHash.slice(0, 5)),
     'tracker world groups are tagged (mesh/status.trackerGroups[].worldTag)');
 
   // ════════ (j) §MESH-01-FU 3 — pid-keyed presence ════════

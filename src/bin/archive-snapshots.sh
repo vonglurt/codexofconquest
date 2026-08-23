@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 # SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson
 # MIT License — Copyright (c) 2026 Paul Richeson
-# Archive dated roll2hit-v3 snapshots as a patch chain.
+# Archive dated play.html snapshots as a patch chain.
 #
 # Usage: ./archive-snapshots.sh
 #
-# Picks up roll2hit-v3-YYYYMMDD-HHMMSS.html from:
+# Picks up play-YYYYMMDD-HHMMSS.html from:
 #   ./ (root)
 #   ./build/milepoints/ (uncompressed stragglers)
 #
@@ -29,8 +29,8 @@ LAST_NAME="$PATCHES/_last.name"
 mkdir -p "$PATCHES"
 
 shopt -s nullglob
-ROOT_SNAPS=("$ROOT_DIR"/roll2hit-v3-????????-??????.html)
-MP_SNAPS=("$MILEPOINTS"/roll2hit-v3-????????-??????.html)
+ROOT_SNAPS=("$ROOT_DIR"/play-????????-??????.html)
+MP_SNAPS=("$MILEPOINTS"/play-????????-??????.html)
 ALL_NEW=(
     "${ROOT_SNAPS[@]+"${ROOT_SNAPS[@]}"}"
     "${MP_SNAPS[@]+"${MP_SNAPS[@]}"}"

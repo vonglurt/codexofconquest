@@ -6,6 +6,7 @@ const fs = require('fs');
 const os = require('os');
 const path = require('path');
 const { seedAndLoad, dismissContinue } = require('./helpers');
+const ROOT = path.resolve(__dirname, '..', '..', '..');
 
 // ── §MESH-01i slice 2b — client ledger rung ──────────────────────────────────
 //
@@ -196,7 +197,7 @@ let server, ledgerDir;
 test.describe('§MESH-01i slice 2b — end-to-end trade (two real clients)', () => {
   test.beforeAll(async () => {
     ledgerDir = fs.mkdtempSync(path.join(os.tmpdir(), 'r2h-ledger-e2e-'));
-    server = spawn(process.execPath, ['src/js/wbapi-server.js'], {
+    server = spawn(process.execPath, [path.join(ROOT, 'src', 'js', 'wbapi-server.js')], {
       env: { ...process.env, PORT: String(MP_PORT), MESH_SERVER_ID: 'e'.repeat(32),
         LEDGER_DIR: ledgerDir, PEERS_CACHE_FILE: path.join(ledgerDir, 'peers-cache.json') },
       stdio: 'ignore',
@@ -286,7 +287,7 @@ test.describe('§MESH-01i last rung — cross-origin co-signed trade (two server
   test.beforeAll(async () => {
     const spawnSrv = (port, sid, extra = {}) => {
       const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'r2h-xo-'));
-      return spawn(process.execPath, ['src/js/wbapi-server.js'], {
+      return spawn(process.execPath, [path.join(ROOT, 'src', 'js', 'wbapi-server.js')], {
         env: { ...process.env, PORT: String(port), MESH_SERVER_ID: sid, LEDGER_DIR: dir,
           ADVERTISE_ADDR: `localhost:${port}`, MESH_GOSSIP_MS: '120',
           PEERS_CACHE_FILE: path.join(dir, 'peers-cache.json'), ...extra },

@@ -111,7 +111,7 @@ test.describe('§AUDIT-03m — legacy node codes in doc prose', () => {
     // The §AUDIT-03j/n house style: classification is explicit, because a heuristic is
     // blind to a doc that is *entirely* legacy-coded.
     expect(L.classify('docs/design/world.md')).toBe('SWEEP');
-    expect(L.classify('lab-reports/lab-report-ally-cat.md')).toBe('HISTORY');
+    expect(L.classify('docs/lab-reports/lab-report-ally-cat.md')).toBe('HISTORY');
     expect(L.classify('docs/backlog/plan-archive.md')).toBe('HISTORY');
     expect(L.classify('docs/story/story-flowchart.md')).toBe('SWEEP');   // §AUDIT-03m-FU promoted the last 7
     expect(L.classify('docs/notes/a-doc-nobody-has-classified.md')).toBe('UNCLASSIFIED');
