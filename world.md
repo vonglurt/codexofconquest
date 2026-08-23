@@ -1255,9 +1255,23 @@ A new NPC archetype — not fixed to a single node. Corelli appears at 5 nodes a
 
 ---
 
-## The Homecoming: Act VIII NPC Farewell Beats *(Layer 60 — ✅ Implemented)*
+## The Homecoming: Act VIII NPC Farewell Beats *(Layer 60 — ⚠️ SHIPPED BUT UNREACHABLE)*
 
 Six one-time beats fire in Act VIII (actNumber === 8) when a player with Friendly or Dear Friend favorability visits each NPC's node. Each fires from a parchment modal before the normal dialogue, then sets its flag and returns the NPC to standard rotation. Not preserved on NG+.
+
+> **🔴 MEASURED UNREACHABLE 2026-08-23 (§DOC-02db → §DX-02ft). Not one of these six beats can
+> fire.** `S_story.actNumber` is **not campaign progress** — it is the `act` field of the node you
+> are standing on, assigned at the top of `storyRender` (`S_story.actNumber = node.act || 1`), and
+> `_renderNpcCard()` — the sole caller of the beat — runs downstream of it in the same render. All
+> six NPCs are pinned to their `BIRKA_NPC_PROFILES` node, and `LHR` · `TLL` · `MHQ` · `LLA` ·
+> `HKG` are all **`act:1`**. The only `act:8` node in the game is `TLS`, the Convergence platform,
+> where none of them stands. The three gift items below have therefore never entered a save.
+> Same mechanism as the five dead beats in §VM-01-G2b-FU; **the fix is one design call for all
+> eleven.** Left annotated, not rewritten (§AUDIT-03m-FU).
+>
+> ⚠️ **The `Flags:` line below names `act8FarewellWeckmann`, which does not exist** (0 occurrences
+> in `roll2hit-v3.html`). `ACT8_FAREWELL_BEATS` is keyed by **profile key**, so the live flag is
+> **`act8FarewellCrov`** — the doc uses the character's name, the code uses the ledger key.
 
 > **⚠️ Node column corrected 2026-08-04 (§AUDIT-03m-FU).** `ACT8_FAREWELL_BEATS` is keyed by **NPC key**, not by node — the beat fires wherever that NPC stands, which the engine settles in `birkaNpcs` (`LHR:['yael'] · TLL:['brynn'] · MHQ:['quill'] · LLA:['pachelbel'] · HKG:['crov','auros']`). Four of these six rows named the wrong place: Quill was listed at `LLA` (Pachelbel's node), Pachelbel at `SH` (**a code that was never in `NODE_MAP` at all** — the §AUDIT-03p born-dead class), Weckmann at `KRN` and Auros at `VBY`, when both are at `HKG`. Annotating those codes in place would have turned four wrong claims into four confident-looking live ones.  *(historical: `BA`=`LLA` · `CR`=`KRN` · `BK`=`VBY` · `CY`=`HKG`)*
 

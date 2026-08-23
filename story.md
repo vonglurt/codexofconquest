@@ -1777,9 +1777,17 @@ Collecting all 7 fires journal reward: *"Seven people carried the pieces. Five o
 
 ---
 
-#### ✅ Implemented — The Homecoming: Act VIII Farewell Beats (plan-archive.md §XXV, Layer 60)
+#### ⚠️ SHIPPED BUT UNREACHABLE — The Homecoming: Act VIII Farewell Beats (plan-archive.md §XXV, Layer 60)
 
 `ACT8_FAREWELL_BEATS` const (6 keys). Fires via `_renderNpcCard()` when `actNumber === 8 + fav ≥ 1 + flag unset`. Renders via `storyMsg()` with 🌅 prefix. Gift items auto-pushed to inventory.
+
+> **🔴 MEASURED UNREACHABLE 2026-08-23 (§DOC-02db → §DX-02ft).** `actNumber` is the **act of the
+> node you stand on**, not campaign progress — `storyRender` assigns `S_story.actNumber = node.act
+> || 1` before `_renderNpcCard()` runs, and every one of the six home nodes (`LHR` `TLL` `MHQ`
+> `LLA` `HKG` ×2) is `act:1`. The game's only `act:8` node is `TLS`. So `actNumber === 8` is false
+> at every node where these NPCs stand, and the three gift items have never entered a save. Same
+> root cause as §VM-01-G2b-FU's five dead Birka beats — eleven beats, one design call. Annotated,
+> not rewritten (§AUDIT-03m-FU).
 
 > ⚠️ The `Node` column below is in retired 26×16 codes: `CI`=`LHR` · `IN`=`TLL` · `TV`=`MHQ` · `BA`=`LLA` · `CY`=`HKG`. Look codes up in `docs/maps/node-index.md`, never in a hand-maintained table (§AUDIT-03l).
 >
