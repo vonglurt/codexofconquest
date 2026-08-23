@@ -1523,7 +1523,7 @@ The ending is driven by `_curseScore()` — a measure of how many EB quest giver
 
 ### Curse Score Formula
 
-> **Source:** `_curseScore()`, HTML line 11102.
+> **Source:** `function _curseScore()@28191`.
 
 ```
 _curseScore():
@@ -1535,28 +1535,39 @@ _curseScore():
   Net range: −5 (all 20 returned) to +60 (all 20 started but abandoned)
 ```
 
+> **⚠️ MEASURED (§DOC-02cx, 2026-08-22) — the reachable set is `{ −5 } ∪ [1, 60]`.** Enumerated over all
+> 231 partitions of the 20 EB codes, through the engine's own `_curseScore()` in Chromium: **0 is not
+> reachable** (a score of 0 needs zero abandoned *and* zero untouched, which is the all-20 case, which
+> takes the −5 bonus), and **nothing reaches ≤ −6**. Read the two tables below against that set — one
+> tier row and one ending row are unreachable by one point. → §DX-02en.
+
 ### Covenant Standing Tiers
 
-> **Source:** `COVENANT_STANDING_LABELS`, HTML line 10480.
+> **Source:** `const COVENANT_STANDING_LABELS = [@27356`. (Home doc: this section. The HTML comment on that
+> line points at `docs/mechanics/mechanics-economy.md §Covenant Standing`, which does not exist — §DX-02er.)
 
-| Curse Score | Tier | Description |
-|---|---|---|
-| ≤ −6 | **Covenant Keeper** | "The people you helped are the reason this works." |
-| ≤ 0 | **Warden** | "You carry the work with you. It shows." |
-| ≤ 7 | **Keeper** | "The seal holds. The cost is visible." |
-| ≤ 14 | **Watcher** | "You know what needs doing. You're still learning to stay." |
-| > 14 | **Wanderer** | "The Void will open again. Not your fault. Not entirely." |
+| Curse Score | Tier | Description | Reachable? |
+|---|---|---|---|
+| ≤ −6 | **Covenant Keeper** | "The people you helped are the reason this works." | ❌ **never** — min score is −5 |
+| ≤ 0 | **Warden** | "You carry the work with you. It shows." | only at −5 → **all 20 returned** |
+| ≤ 7 | **Keeper** | "The seal holds. The cost is visible." | ≥ 13 returned, none abandoned |
+| ≤ 14 | **Watcher** | "You know what needs doing. You're still learning to stay." | ≥ 6 returned, none abandoned |
+| > 14 | **Wanderer** | "The Void will open again. Not your fault. Not entirely." | **the default** — 186 of 231 states |
+
+The sheet row unlocks at `(S_story.shards || 0) >= 1` — Act II, when the Trade Seal (Shard #1) is taken at
+`LCY` — and reads `Unknown` before that. A player who never engages the Epic Battlegrounds carries
+**Wanderer** from Act II to the end.
 
 ### Ending Variants
 
 | Condition | Variant | Description |
 |---|---|---|
 | `!_missionComplete() && curseScore >= 15` | **Cursed Seal Echo** | Groundhog Day text — Sweelinck has seen this 17 times. Mission failed but Void sealed. |
-| `_missionComplete() && curseScore <= -6` | **Covenant Keeper** | Full return. Sweelinck names every person the player helped. Epilogue scroll lists them. |
-| `_missionComplete() && curseScore <= 0` | **Warden** | Partial returns. Sweelinck acknowledges the work without judgment. |
+| `_missionComplete() && curseScore <= -6` | **Covenant Keeper (True)** | ❌ **Unreachable** — `const _isTrue = missionDone && curse <= -6@28229` has no satisfying state (§DX-02en). Kept for the record. |
+| `_missionComplete() && curseScore <= 0` | **Covenant Keeper (naming ceremony)** | Reachable **only at −5**, i.e. all 20 returned. Sweelinck names every person the player helped, one line at a time on the sigil overlay. |
 | Otherwise | **Standard** | Score-based tier; epilogue reflects breadth of engagement. |
 
-**Note:** The `_covenantStanding()` function maps curse score to label using `COVENANT_STANDING_LABELS`. The epilogue scroll (`_buildEpilogueScroll()`) builds a named list of all returned EB NPCs — or substitutes the Cursed Seal Echo text when `!missionComplete && score ≥ 15`.
+**Note:** `function _covenantStanding()@28032` maps curse score to label using `COVENANT_STANDING_LABELS`. `function _buildEpilogueScroll()@28120` builds the **per-NPC** epilogue lines (six keys, fav-gated) plus **one summary count line** for the Epic Battlegrounds when ≥ 10 are returned — *not* a named list of the returned EB NPCs (corrected §DOC-02cx). It substitutes the Cursed Seal Echo text wholesale when `!missionComplete && score ≥ 15`, which is also why `FROBERGER_EPILOGUE.cursed` has no selector (§DX-02eo). **No ending branch names the player's Covenant Standing** — the character-sheet label is never spoken back (§DX-02en).
 
 ### Covenant Ceremony
 

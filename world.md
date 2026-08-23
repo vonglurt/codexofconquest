@@ -525,7 +525,7 @@ These six NPCs are fully implemented with `npcFavorability` states, `NPC_DIALOGU
 
 ### Key Interactions
 
-**Rough Whiskey** (`LLA` vendor item) — buy and give to Brynn. Triggers one-time drunk pit fight event at `HKG`. `roughWhiskeyUsed` prevents repeat. At Brynn Dear Friend+, a daughter's letter appears at `TLL` (S2).  *(historical: `BA`=`LLA` · `CY`=`HKG` · `IN`=`TLL`)*
+**Rough Whiskey** (`LLA` (historical `BA`) vendor item) — buy and give to Brynn. Triggers one-time drunk pit fight event at `HKG`. `roughWhiskeyUsed` prevents repeat. At Brynn Dear Friend+, a daughter's letter appears at `TLL` (S2).  *(historical: `BA`=`LLA` · `CY`=`HKG` · `IN`=`TLL`)*
 
 **Blue Shutters Archive** (`LHR` (historical `CI`), gated by Yael letter) — three-state button: blocked → ask Yael → enter. Grants Entry 33, Undercity Survey (Partial) key item. Survey deliverable to Auros at `HKG` (historical `CY`).
 
@@ -539,7 +539,7 @@ These six NPCs are fully implemented with `npcFavorability` states, `NPC_DIALOGU
 
 **Weckmann Training Log** — available at `HKG` (historical `CY`) after Dear Friend. Shows pit fight history. `_buildWeckmannLog()` builds it dynamically. Contains personal combat philosophy.
 
-**Pit Training Perks** (`PIT_PERK_UNLOCKS`, HTML line 10457) — unlocked sequentially by `_checkPitPerkUnlock()` as `pitTrainingWins` accumulates. One perk per win threshold. Five total, in order:
+**Pit Training Perks** (`const PIT_PERK_UNLOCKS = {@27333`) — unlocked sequentially by `function _checkPitPerkUnlock()@28169` as `pitTrainingWins` accumulates. One perk per win threshold. Five total, in order:
 
 | # | Key | Title | Weckmann's line | Combat effect (`_applyPitPerks`) |
 |---|---|---|---|---|
@@ -550,6 +550,14 @@ These six NPCs are fully implemented with `npcFavorability` states, `NPC_DIALOGU
 | 5 | `crovsLesson` | Weckmann's Lesson | "When everything goes wrong — stop, breathe, start again." | `combatState.crovsLesson = true` |
 
 Perks persist through NG+. Character sheet shows "Weckmann's Student" badge when all 5 are held.
+
+> **⚠️ MEASURED (§DOC-02cx, 2026-08-22) — the "Combat effect" column above is the WRITE, and there is no
+> reader.** `function _applyPitPerks(combatState)@28181` sets the five booleans on the live combat state
+> at `_showBattleOverlay`, and each of the five names occurs **exactly twice in the whole file** — once in
+> `perkList`, once in that assignment. Nothing in the duel engine consults any of them, so all five
+> specified effects (+1 when flanking · pre-combat HP tier · free shove on a crit · 1d4 between rounds ·
+> once-per-rest Recompose) are **inert**. The unlock, the message, the persistence and the badge are all
+> real; the mechanics are not. → §DX-02eq. Design source: `lab-reports/lab-report-endings-and-echoes.md` §VIII/F8.
 
 **Room 6** — locked room at `HKG` (historical `CY`). `storyShowRoom6()`. Available at Weckmann Dear Friend. Contains Froberger's last fighting note.
 

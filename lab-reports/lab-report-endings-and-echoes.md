@@ -1,437 +1,258 @@
 <!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 paul@roll2hit.com -->
 
-# Lab Report — Endings and Echoes: Extended Mechanics for the Covenant Arc
+# Lab Report — Endings and Echoes: The Covenant Arc
 
-*roll2hit.com / Codex of Conquest — Layer 43 Design Document*
+*roll2hit.com / Codex of Conquest — Layer 43 design lock, re-verified against the live engine*
 
----
+| | |
+|---|---|
+| **Original** | Layer 43 design document, dated **2026-05-22** (report footer) |
+| **First commit** | `32c10c5` 2026-05-24 17:34:49 — the repository's **initial commit**; the whole feature set is already present in it |
+| **Ship build** | `32c10c5:roll2hit-v3.html` — **14,377 lines / 859,773 bytes** |
+| **HEAD build** | 2026-08-22 — the same nine subsystems, at **5.5×** the file |
+| **Verified** | §DOC-02cx, 2026-08-22 — source census + exhaustive arithmetic + Chromium (Playwright/`@playwright/test`, 5 measurement specs, 231 state partitions) |
+| **Status** | **HISTORY doc.** Legacy 26×16 node codes (`SQ`, `CY`, `DK`, `BA`, `CO`) are left as written — annotate, don't rewrite (§DX-02c / §AUDIT-03n) |
 
-> **⚠️ KEY-DRIFT NOTE (added 2026-07-31, §AUDIT-03n).** The code blocks below are the **design-time** shapes and key the per-NPC tables to the profiles' *surnames* — `couperin` / `weckmann` / `bruhns`. Those were never keys the favor ledger writes, so every one of those entries was unreachable in live play until §AUDIT-03n renamed them. Read them as **`quill`** (Bard Tomas Couperin, MHQ) · **`crov`** (Pit Master Weckmann, HKG) · **`auros`** (Cmdr Seraphine Bruhns, HKG). The six canonical favor keys are `yael` · `brynn` · `quill` · `pachelbel` · `crov` · `auros`; `check:npcregs` (`check:walk` gate #14) now enforces it. The report's design intent is unchanged — only the key spelling was wrong.
-
-
-## I. The Design Principle
-
-Everything in the game has been pointing toward one moment: the covenant at SQ. The seal is placed, the Void is closed, and someone walks out of the cave knowing what they did.
-
-The question the ending system answers is: **who are you when you walk out?**
-
-Not good or bad — the game doesn't grade character. But the ending knows who helped Yael and who didn't. The ending knows if Quill got to play his song. The ending knows how many EB NPCs were paid in coin instead of blood. These facts exist. The ending uses them.
-
-This lab report designs:
-1. The Covenant Ceremony animation
-2. Sweelinck's dynamic naming of the people the player helped
-3. NPC Epilogue sequences — what happens to each person after
-4. The Cursed Seal echo — the Groundhog Day epilogue for those who sealed alone
-5. Rough Whiskey as a social item — how every NPC reacts differently
-6. Covenant Standing — the curse score surfaced as a character sheet element
-7. Pit Training as a skill tree — Weckmann's lessons as permanent unlocks
-8. Froberger's Last Note — the item that exists purely to be found
-9. New Game+ memory hooks
+> **⚠️ KEY-DRIFT NOTE (2026-07-31, §AUDIT-03n).** The design-time tables below key their per-NPC entries to the profiles' **surnames** — `couperin` / `weckmann` / `bruhns`. The favor ledger never writes those, so every one of those entries was unreachable in live play until §AUDIT-03n renamed them. Read them as **`quill`** (Bard Tomas Couperin, MHQ) · **`crov`** (Pit Master Weckmann, HKG) · **`auros`** (Cmdr Seraphine Bruhns, HKG). The six canonical keys are `yael` · `brynn` · `quill` · `pachelbel` · `crov` · `auros`, fenced by `check:npcregs` (`check:walk` gate #14). *Re-confirmed 2026-08-22: `_checkRoughWhiskeyReaction('couperin' | 'weckmann' | 'bruhns')` returns `null` at HEAD; the three profile keys return their authored line.* The design intent was never wrong — only the spelling.
 
 ---
 
-## II. The Covenant Ceremony
+## Abstract
 
-### Visual Design
-
-The ceremony is 8 seconds. Not cinematic — precise.
-
-When `_curseScore()` is calculated and the ending branch is resolved, the SQ combat area fades to black. Then: a single SVG sigil traces itself over 3 seconds — a circle with four interior lines, drawn from center outward. The stroke is white against black.
-
-CSS animation:
-```css
-.covenant-sigil path {
-  stroke-dasharray: 600;
-  stroke-dashoffset: 600;
-  animation: sigil-draw 3s ease-in-out forwards;
-}
-@keyframes sigil-draw {
-  to { stroke-dashoffset: 0; }
-}
-```
-
-Then: Sweelinck speaks. The screen remains dark with the sigil glowing.
-
-Then: the sigil holds for 2 seconds, then slowly pulses — once — and fades. The victory screen resolves.
-
-The sigil does not change between endings. The ceremony is the same. The words change. The silence after changes.
+Layer 43 specifies nine subsystems that turn the game's *relationship* ledger — who you helped, who you came back for — into the text that closes the run: a covenant ceremony, a naming sequence, per-NPC epilogues, a Groundhog-Day echo for the player who sealed alone, a social consumable, a character-sheet standing, a pit-training perk tree, a found note, and New Game+ memory hooks. This re-verification finds the arc **shipped essentially whole**: **23 of 23** named symbols resolve at HEAD, every authored string block is **byte-identical** to the spec, and the ceremony renders in Chromium exactly as drawn. The value is in six deltas, and the largest is arithmetic. `_curseScore()`'s reachable minimum is **−5**; the top Covenant Standing label and the "Covenant Keeper (True)" ending both require **≤ −6**. Across all 231 reachable states, "Covenant Keeper" is returned **zero** times — the perfect 20-of-20 run is labelled *Warden*. Both `_curseScore` and `COVENANT_STANDING_LABELS` are byte-identical from the repository's first commit to HEAD, so **the game's best ending has been one point out of reach for its entire recorded history.** Four further deltas: the five pit perks write five flags that nothing reads; the eighteen Rough Whiskey reactions are reachable only by *losing* the fight that arms them; §VII's stated emotional payoff (Sweelinck speaking your standing back to you) is in no ending branch; and the spec's own named state field, `ebReturnsCompleted`, was created, written, and never read.
 
 ---
 
-## III. Sweelinck's Dynamic Naming
+## I. Introduction — what the feature is for
 
-In the Covenant Keeper ending (`_missionComplete() && _curseScore() <= 0`), Sweelinck names each person the player helped. A stricter "Covenant Keeper (True)" variant also exists in the implementation: `missionDone && curse <= -6 && pitTrainingWins >= 5 && ebNegotiatedPayments >= 5` — this is beyond the Layer 43 spec and activates the full ceremony with the covenant sigil animation. The list is generated at runtime from `npcFavorability`.
+Everything in the game points at one moment: the seal is placed, the Void is closed, and someone walks out. The question the ending system answers is **who are you when you walk out?**
 
-### Naming Lines by NPC and State
+Not good or bad — the game doesn't grade character. But the ending knows who helped Yael and who didn't. It knows if Quill got to play his song. It knows how many Epic Battleground people were paid in coin instead of blood. Those facts already exist in `S_story`; Layer 43 is the argument that they should be *spoken back*.
+
+**Why this matters for playability.** For most of a run the game measures you the way a combat engine measures: XP, shards, battles won, days remaining against a 49-day clock. Layer 43 is the only system that reads the other ledger. Concretely it adds **54 authored lines that exist for no mechanical purpose** — 12 naming lines, 18 epilogue lines, 18 whiskey reactions, 6 NG+ greetings — every one of them gated on `npcFavorability`, none of them reachable by fighting. It is the payoff that makes NPC favor a *system* rather than a dialogue tint. And it is cheap: no new opcodes, no new movement rules, no gate on the road (invariant #1 is untouched — nothing here ever refuses a step).
+
+The nine subsystems: **(II)** the Covenant Ceremony · **(III)** Sweelinck's dynamic naming · **(IV)** NPC epilogues · **(V)** the Cursed Seal echo · **(VI)** Rough Whiskey as a social item · **(VII)** Covenant Standing on the character sheet · **(VIII)** Pit Training as a perk tree · **(IX)** Froberger's Last Note · **(X)** New Game+ memory hooks.
+
+---
+
+## II. Method
+
+1. **Symbol census** — every construct the report names, grepped at HEAD and at the report's own build (`git show 32c10c5:roll2hit-v3.html`).
+2. **Byte-diff against the ship build** — the design-time text blocks compared line for line across 90 days.
+3. **Exhaustive arithmetic** — `_curseScore()`'s reachable range enumerated over all 231 partitions of the 20 Epic Battlegrounds into `returned` / `started-not-returned` / `never-started`.
+4. **Chromium proof** — five measurement specs run through the repo's own Playwright harness (`seedAndLoad` + `dismissContinue`), asserting the arithmetic *through the engine's own functions* rather than a re-implementation, plus a rendered screenshot of the ceremony overlay.
+5. **Reader trace** — for every state field and flag the spec introduces, the write sites and the read sites counted separately. A field with writers and no readers is the finding.
+
+---
+
+## III. Result — spec → shipped delta
+
+**23 of 23 named symbols resolve at HEAD.** No section of this report failed as a description of the engine.
+
+| § | Subsystem | Shipped? | Delta |
+|---|---|---|---|
+| II | Covenant Ceremony | ✅ | Sigil is **amber `#FEA712`**, not "white against black"; **no pulse** keyframe; duration is 6.5 s / 13.2 s, not "8 seconds" (**F6**). Spec's CSS would have mis-drawn it (**F7**) |
+| III | Sweelinck's naming | ✅ byte-identical | Gate `missionDone && curse <= 0` is reachable **only at −5** — i.e. it silently requires **all 20** EB returns |
+| IV | NPC epilogues | ✅ byte-identical | EB block ships as **one summary count line**, not "one line each"; the gate field the spec names is the dead twin (**F4**) |
+| V | Cursed Seal echo | ✅ byte-identical | Predicate `!mc && cs >= 15` shipped exactly as written; `FROBERGER_EPILOGUE.cursed` has no selector (**F5**) |
+| VI | Rough Whiskey | ✅ 18/18 lines | **NOT SHIPPED: the use path.** `roughWhiskeyActive` has one writer, and the fight that sets it clears it on victory (**F3**) |
+| VII | Covenant Standing | ✅ sheet row | Unlock is `shards >= 1` (**Act II**), not "after Act III"; **NOT SHIPPED: the payoff** — no ending speaks the label (**F2**); the top rung is dead (**F1**) |
+| VIII | Pit Training perks | ⚠️ half | Unlock, message, persistence, badge all ship. **NOT SHIPPED: all five combat effects** (**F8**) |
+| IX | Froberger's Last Note | ✅ | Item, seeding, loot injection, read panel, 5-line body — all present; seeded with `Math.random()` (**F9**) |
+| X | NG+ memory hooks | ✅ greetings + overlay | **NOT SHIPPED:** "the tree resets and unlocks one win faster each run." Perks are *carried over* instead; the spec contradicts itself on this in adjacent sentences |
+
+Anchors at HEAD: `const SWEELINCK_NAMING_LINES = {@27237` · `const NPC_EPILOGUES = {@27274` · `const FROBERGER_EPILOGUE = {@27307` · `const NPC_NG_PLUS_GREETINGS = {@27314` · `const PIT_PERK_UNLOCKS = {@27333` · `const COVENANT_STANDING_LABELS = [@27356` · `const ROUGH_WHISKEY_REACTIONS = {@27364` · `function _covenantStanding()@28032` · `function _buildSweelinckNamingSequence()@28037` · `function _buildEpilogueScroll()@28120` · `function _checkRoughWhiskeyReaction(npcKey)@28159` · `function _checkPitPerkUnlock()@28169` · `function _applyPitPerks(combatState)@28181` · `function _curseScore()@28191` · `function storyCheckVictory(node)@28207`.
+
+---
+
+## IV. Findings
+
+### F1 — "Covenant Keeper" is unreachable, and always has been ⚠️ *the headline*
 
 ```js
-const SWEELINCK_NAMING_LINES = {
-  yael: {
-    2: "Yael, who keeps the city honest with her own hands.",
-    3: "Yael, who told you about the report she wishes she hadn't filed — and filed a second one because of you."
-  },
-  brynn: {
-    2: "Brynn, who runs the inn because someone has to and because she is very good at it.",
-    3: "Brynn, who remembered, at the end, what she was running toward."
-  },
-  couperin: {
-    2: "Tomas Couperin, who is still in debt and still playing.",
-    3: "Quill, who wrote a song for you. Who plays it every Friday."
-  },
-  pachelbel: {
-    2: "Pachelbel, who paid a debt he didn't owe because his code required it.",
-    3: "Pachelbel, who went to see the family. After. He didn't tell you."
-  },
-  weckmann: {
-    2: "Weckmann, who teaches because Bruna needed a teacher and there wasn't one.",
-    3: "Weckmann, who said, when you asked: 'You're the best student I've had since him. I needed you to know that.'"
-  },
-  bruhns: {
-    2: "Seraphine Bruhns, who keeps filing the reports.",
-    3: "Auros, who finished the theory Froberger started. She's going to submit it."
-  }
-};
+// function _curseScore()@28191 — byte-identical at 32c10c5 and at HEAD
+return (startedNotReturned * 3) + (neverStarted * 1) - (allComplete ? 5 : 0);
 ```
 
-### Rendering
+The bonus for returning to all twenty Epic Battleground contacts is **−5**. A run with any contact unreturned scores ≥ +1. So the reachable set is `{ −5 } ∪ [1, 60]` — **0 is not reachable either.**
 
 ```js
-function _buildSweelinckNamingSequence() {
-  const lines = [];
-  for (const [key, states] of Object.entries(SWEELINCK_NAMING_LINES)) {
-    const fav = S_story.npcFavorability[key] ?? 0;
-    if (fav >= 3 && states[3]) lines.push(states[3]);
-    else if (fav >= 2 && states[2]) lines.push(states[2]);
-    // Impartial NPCs are not named
-  }
-  return lines;
-}
+// const COVENANT_STANDING_LABELS = [@27356 — also byte-identical since 32c10c5
+{ maxScore: -6, label: "Covenant Keeper", desc: "The people you helped are the reason this works." },
 ```
 
-The naming sequence is spoken one line at a time, fading in and out. If the player helped everyone at Dear Friend level, Sweelinck names six people. If they helped no one, Sweelinck says:
+`_covenantStanding()` returns the first bracket satisfying `score <= maxScore`. Nothing satisfies `≤ −6`. The same threshold gates the "Covenant Keeper (True)" ending: `const _isTrue = missionDone && curse <= -6@28229`.
 
-*"The covenant holds. You sealed it yourself."*
+**Measured in Chromium over all 231 partitions, through the engine's own `_curseScore()` and `_covenantStanding()`:**
 
-Beat.
+| Label reached | Partitions | Requires |
+|---|---|---|
+| **Covenant Keeper** | **0** | score ≤ −6 — *unreachable* |
+| Warden | 1 | score = −5 → **all 20 returns** |
+| Keeper | 14 | ≥ 13 returns, none abandoned |
+| Watcher | 30 | ≥ 6 returns, none abandoned |
+| Wanderer | 186 | everything else — **including the default** |
 
-*"That is what the last one did too."*
+The player who does the hardest thing the game asks — twenty return journeys, no one left waiting — is handed *"You carry the work with you. It shows."* The line written for them, *"The people you helped are the reason this works,"* is in the file, unreachable, and has been since the first commit. **A design lock whose numbers were correct on the day and whose arithmetic was never run.** → **§DX-02en** 🟡
 
----
+### F2 — §VII's payoff is in no ending branch
 
-## IV. NPC Epilogues
+The report's argument for Covenant Standing is explicit and it is the best sentence in the document:
 
-After the naming sequence, a scroll-style panel appears: **What happened after.**
+> *"The player sees 'Warden' in their character sheet for 40 hours, then Sweelinck says 'you were a Warden' in the final scene — and they understand. The game never explains the connection. The player makes it."*
 
-Each entry is one or two sentences, populated based on `npcFavorability`. The entries appear in order: Yael, Brynn, Quill, Pachelbel, Weckmann, Auros. Then: EB NPCs who were returned to (one line each, if `ebReturnsCompleted >= 10`). Then: Froberger.
+`storyCheckVictory` writes four ending texts. **None of them names the player's standing.** The word *Warden* is spoken in exactly one branch — the Cursed Seal echo, *"the Warden who arrived here was capable, dedicated, and efficient"* — as a generic role noun, and that branch fires at `curse >= 15`, where the player's sheet reads **Wanderer**. The connection the player was meant to make cannot be made. → **§DX-02en**
 
-### Epilogue Text by NPC and State
+### F3 — 18 whiskey reactions, reachable only by losing ⚠️
+
+`S_story.roughWhiskeyActive` has exactly **one** writer and **two** clearers:
+
+| | Site | Effect |
+|---|---|---|
+| set `true` | `if (_pb41 && _pb41.nodeCode === 'HKG' && !S_story.roughWhiskeyUsed@24688` | entering the pit fight at HKG (historical `CY`), once per run |
+| set `false` | `S_story.roughWhiskeyActive = false;@25282` | **battle victory** |
+| set `false` | `storyConfirmSleep` | resting |
+
+The spec's opening — *"consuming Rough Whiskey before visiting any named NPC triggers a unique response"* — has no code. There is no use-item path; the bottle is consumed by walking into one specific fight. Win that fight and the window closes in the same function call that opened it. `_storyFleeClean` / `_storyFleeMutual` do **not** clear the flag, so the only way to hear any of the eighteen authored lines is to **flee or lose the drunk pit fight and then go talk to someone.**
+
+The vendor even promises otherwise, in the game's own voice: `storyMsg('🥃 Bought Rough Whiskey. ★ Social — each NPC reacts differently if you visit them@24383`.
+
+What *did* ship is exact: disadvantage on every attack roll (`if (S_story._drunkFight) adv = 'dis';@25044`), `const drunkBonus = S_story._drunkFight ? 3 : 0;@25071`, and Weckmann delighted — *"You absolute idiot. I'm counting it."* — with a favor bump to Friendly on the win. → **§DX-02ep** 🟡
+
+### F4 — the spec's own state field was created, written, and never read
+
+§IV gates the EB epilogue block on `ebReturnsCompleted >= 10`. The implementer created that field (`journalEntriesRead: [], ebReturnsCompleted: {},@23086`), writes it on every return (`S_story.ebReturnsCompleted[ebCode] = true;@30365`) — and then gated **every** consumer on the sibling `ebReturnDone`, which has nine live readers. `ebReturnsCompleted` has **zero**. A perfect parallel ledger, maintained for 90 days, that nothing has ever consulted.
+
+*(The block itself also ships as one summary line — `${ebReturns} of 20 EB contracts fulfilled. The people who sent you those contracts know your name.` — not "one line each" as §IV specifies.)* → **§DX-02eo** 🟢
+
+### F5 — a fourth epilogue key with no selector
+
+`FROBERGER_EPILOGUE` authors four states. `_buildEpilogueScroll` selects three:
 
 ```js
-const NPC_EPILOGUES = {
-  yael: {
-    0: "You passed through. She's still there.",
-    2: "Yael filed the second report under her own name. It was acted on.",
-    3: "Yael filed the second report. She kept three copies. The city commissioned an inquiry. She testified. The commissioner resigned. She went back to the corner."
-  },
-  brynn: {
-    0: "Brynn doesn't know your name.",
-    2: "Brynn's daughter came home for two weeks. They stayed up late.",
-    3: "Brynn's daughter came home. She sat in the kitchen and watched her mother run the inn and said, finally: 'You're very good at this.' Brynn said: 'I know. I'm figuring out what else I am.'"
-  },
-  couperin: {
-    0: "Quill is still in debt. He's still playing.",
-    2: "Quill settled the debt. He's playing without counting the reach now.",
-    3: "Quill settled the debt. He plays the song every Friday. He's working on a second one. It's about staying."
-  },
-  pachelbel: {
-    0: "Pachelbel is still there. He still has a code.",
-    2: "Pachelbel sent coin to Raison's family. Anonymous. He didn't go see them.",
-    3: "Pachelbel went to see the family. Raison's kid is eight. He sat with them for an hour. He didn't say who he was. He said he knew Raison. The kid asked what Raison was like. Pachelbel said: 'Better at the work than me.'"
-  },
-  weckmann: {
-    0: "Weckmann is still running the pit.",
-    2: "Weckmann trains three fighters now. The illegal operation didn't come back.",
-    3: "Weckmann started a second class on Thursdays. Younger fighters, twelve to sixteen. He teaches them the rules first, before anything else. He says it's because someone taught him that way. He knows that's not true. He does it anyway."
-  },
-  bruhns: {
-    0: "Auros submitted another report. It was reclassified.",
-    2: "Auros completed the structural survey. She submitted it through a different channel.",
-    3: "Auros finished the theory. She submitted it jointly with a Scholar King archivist who had independent data. The city planning office acted on it. Not everything — half. She says half is how it starts."
-  }
-};
+if (mc && cs <= 0) lines.push(FROBERGER_EPILOGUE.covenant);
+else if (mc)       lines.push(FROBERGER_EPILOGUE.imperfect);
+else               lines.push(FROBERGER_EPILOGUE.efficient);
 ```
 
-### Froberger's Epilogue (Always Last)
+`.cursed` — *"Froberger never finished his last entry… That someone was also very good at their work. They did not stay long either."* — is unreachable, because the state it was written for (`!mc && cs >= 15`) returns the Groundhog block earlier in the same function, before the Froberger append. The best line in the set is fenced off by the branch it belongs to. → **§DX-02eo**
+
+### F6 — the ceremony is not eight seconds, and it does not pulse
+
+§II: *"The ceremony is 8 seconds. Not cinematic — precise… the sigil holds for 2 seconds, then slowly pulses — once — and fades."*
+
+Measured: `const sigilDelay = missionDone && curse <= 0@28325` is `4000 + names × 1200 + 2000` ms in the naming branch (**13,200 ms** at six names) and a flat **6,500 ms** otherwise, then an 800 ms fade, then 8,800 ms of final-map render before the victory modal — **16.1 s / 22.8 s** from boss defeat to modal. The stylesheet defines `@keyframes sigil-fade-in@2031`, `@keyframes sigil-draw@2037` and `name-fade`; enumerated at runtime, **there is no pulse rule**. And the stroke has been amber (`#FEA712`) since `32c10c5`, never white.
+
+In the non-naming branches this reads as **~7 seconds of black screen with nothing on it but a sigil** — the ceremony's whole text surface is the naming block, and the naming block only renders at `curse <= 0`.
+
+### F7 — a credit: the implementer fixed the spec's CSS
+
+§II specifies `stroke-dasharray: 600` on every path. The shipped markup carries a per-element custom property instead — `--d:251` on the circle, `--d:80` on each of the four lines. Those are the actual path lengths: 2π·40 = 251.3 for the `r=40` circle, exactly 80 for the two axials, 79.2 for the diagonals. A flat 600 would have drawn the five strokes at five different rates over the same 3 s. *A design lock can be wrong in a way only the geometry can tell you.*
+
+**Rendered proof** (Chromium, animations pinned to their end state, six Dear-Friend names): amber sigil, circle + four interior lines, six italic lines beneath on black. §II and §III render exactly as designed.
+
+### F8 — five perks, five flags, zero readers
 
 ```js
-const FROBERGER_EPILOGUE = {
-  covenant: "Froberger's last entry was Entry 41: Come back. He wrote it in the same ink as the others. He left it where you'd find it. He did not come back. But he wrote it down so you would know it was possible.",
-  imperfect: "Froberger's last entry was a warning. You read it. You almost heeded it. Almost is how most things start.",
-  efficient: "Froberger's last entry was a warning. You did not read it, or read it and did not stop. The warning is still there. The next one will find it.",
-  cursed:    "Froberger never finished his last entry. Someone found it and left it where you found it. That someone was also very good at their work. They did not stay long either."
-};
+// function _applyPitPerks(combatState)@28181 — called from _showBattleOverlay
+if (perks.includes('readTheRoom'))          combatState.readTheRoom = true;
+if (perks.includes('cornerWork') && ['HKG','LCY'].includes(...)) combatState.cornerWork = true;
+if (perks.includes('controlledAggression')) combatState.controlledAggression = true;
+if (perks.includes('groundGame'))           combatState.groundGame = true;
+if (perks.includes('crovsLesson'))          combatState.crovsLesson = true;
 ```
+
+Each of the five names occurs **exactly twice in the whole file** — once in `perkList`, once in the assignment above. **Nothing reads any of them.** So all five §VIII effects are NOT SHIPPED:
+
+| # | Perk | Specified effect | At HEAD |
+|---|---|---|---|
+| 1 | Controlled Aggression | +1 to attack when flanking | flag only |
+| 2 | Read the Room | pre-combat enemy HP tier | flag only |
+| 3 | Ground Game | free shove on a crit | flag only |
+| 4 | Corner Work | 1d4 HP between rounds at DK/CY | flag only (node gate ships correctly as `['HKG','LCY']`) |
+| 5 | Weckmann's Lesson | once per rest, cancel disadvantage | flag only |
+
+What *does* ship: sequential unlock at one win per perk, the unlock message in Weckmann's voice, persistence through NG+, and the `Weckmann's Student` badge on the character sheet at 5/5. So the tree is a fully-built ceremony around five no-ops — the player earns it, is told about it, sees it on their sheet, and it changes nothing. `world.md`'s perk table faithfully documents the *write* (`combatState.groundGame = true`) as the effect, which is honest and is also why nobody noticed. → **§DX-02eq** 🟡
+
+### F9 — the note is seeded off the unseeded stream
+
+`S_story.frobergerNoteNode = _ebPool[Math.floor(Math.random() * _ebPool.length)];@23980` (and again in the NG+ path). Invariant #6 requires that randomness affecting game state draw the seeded stream (`_seededNext()`). Which of twenty nodes holds a key item is game state. The value is persisted at new-game time, so a *save* still determines the future — the violation is narrow, but it is a violation of a fence the repo enforces elsewhere. → **§DX-02er** 🟢
+
+### F10 — §I names the wrong node, and it was wrong on the build it was written against
+
+§I opens: *"the covenant at SQ… someone walks out of the cave."*
+
+At `32c10c5`, `storyCheckVictory` reads `if (node.code !== 'CO') return;`. `SQ` (→ `NUE`) is the **Scholar's Quarter — Weimar**, Sweelinck's library. `CO` (→ `TLS`) is the **Cosmic Realm — The Convergence**, an open spire platform where the NPC on station is Commander Bruhns, not Sweelinck. The covenant has never happened at SQ, and it has never happened in a cave.
+
+The error survived 90 days because §I is prose and no gate reads prose. It is also exactly the shape §AUDIT-03m-FU warned about: a legacy-code sweep would have rewritten `SQ` into a tidy, confident `` `NUE` `` — **annotation without verification launders a wrong claim into a live one.** This file is classified HISTORY, and the tool refuses to annotate HISTORY, so the fence saved it by construction rather than by anyone noticing.
+
+### F11 — two bare doc anchors that were exact when written
+
+| Doc | Anchor as written | At `32c10c5` | At HEAD |
+|---|---|---|---|
+| `world.md` §Pit Training Perks | `PIT_PERK_UNLOCKS`, HTML line **10457** | **10457** ✔ exact | 27333 |
+| `story.md` §Covenant Standing Tiers | `COVENANT_STANDING_LABELS`, HTML line **10480** | **10480** ✔ exact | 27356 |
+
+Both were *correct measurements* that decayed by ~16,880 lines. `check:anchors` (gate #15) cannot see them: they are prose (`HTML line 10480`), not the `` `symbol@line` `` form the gate resolves. Both corrected to anchor form in this increment.
 
 ---
 
-## V. The Cursed Seal Echo (Groundhog Day Epilogue)
+## V. Playability assessment
 
-When `!_missionComplete() && _curseScore() >= 15`, the epilogue panel reads differently.
+**What the arc adds, and it is real.** The covenant ceremony is the only place in ~2,850 quests where the game stops measuring and starts *reporting*. Six people are named by what they did rather than what they gave you; six epilogues say what happened after; a note left by a dead man tells you to go ask someone who knew you before. Rendered in Chromium it lands exactly as drawn — a slow amber sigil on black, then six italic sentences, one at a time. It is the payoff that retroactively justifies every `favor` bit in the game.
 
-No names. No people. Just:
+**What the player actually experiences, measured on the character sheet in Chromium:**
 
----
+| Run | Curse | Standing shown |
+|---|---|---|
+| Act I, no shards | — | `Unknown` |
+| First shard, EBs untouched | **20** | **Wanderer** — *"The Void will open again. Not your fault. Not entirely."* |
+| All 20 EBs started, none returned | 60 | Wanderer |
+| All 20 returned | −5 | **Warden** |
 
-*The Void is sealed.*
+The scale has **no neutral**. A player who beats the main story without engaging a system the report never names as mandatory carries *"The Void will open again"* on their character sheet from Act II onward. The first rung above Wanderer (**Watcher**) already costs six completed return chains; **Keeper** costs thirteen; **Warden** costs all twenty — and the rung above that, written to be the reward for exactly that run, cannot be reached.
 
-*You sealed it alone, or nearly alone. The work is complete. The covenant holds.*
+The same threshold gates §III: `missionDone && curse <= 0` is satisfiable **only at −5**, so the naming ceremony — the best thing in this report — is a 20-of-20 all-or-nothing prize the spec presents as a soft "curse score ≤ 0". Six lines of authored text per NPC sit behind the hardest gate in the game, and 186 of 231 reachable states get the Wanderer text instead.
 
-*Sweelinck has seen this pattern seventeen times. In seventeen runs of the cycle, the Warden who arrived here was capable, dedicated, and efficient. They knew what needed doing. They did it.*
-
-*In sixteen of those runs, the Void opened again within a generation.*
-
-*In the seventeenth — not yet. That one is still running.*
-
-*He believes the eighteenth will be different.*
-
-*He believes that about all of them, until the evidence arrives.*
+**The three fixes are all small.** Moving one threshold from `-6` to `-5` makes the top label and the True ending live. Wiring five booleans that are already computed makes an entire perk tree do something. Adding a use-item path for a 5gp bottle makes eighteen authored lines reachable without losing a fight. None of them touches the road, the mover, the VM, or the save format.
 
 ---
 
-Then: the victory screen. Same as Covenant. The Void is sealed. You win. The game does not deny you the win. It asks you to sit with what kind of win it was.
+## VI. Doc corrections applied in this increment
+
+- **`story.md` §Covenant Standing Tiers** — the section stated *"Net range: −5 (all 20 returned) to +60"* six lines above a tier table whose top row is `≤ −6`. The contradiction sat in one screen for 90 days. Tier table and the Ending Variants table now carry the measured note; the `≤ −6` rows are marked unreachable rather than deleted.
+- **`story.md`** — *"The epilogue scroll builds a named list of all returned EB NPCs"* is false; it appends one summary count line. Corrected.
+- **`story.md` / `world.md`** — the two bare `HTML line NNNN` anchors of **F11** converted to `` `symbol@line` `` form so gate #15 can see them.
+- **`world.md` §Pit Training Perks** — the "Combat effect" column documented the *write*; it now states that the flag has no reader, with a pointer to §DX-02eq.
+- **NOT applied, filed instead:** `const COVENANT_STANDING_LABELS = [@27356` carries `→ doc: docs/mechanics/mechanics-economy.md §Covenant Standing`, and that file contains **zero** occurrences of the string; the live home is `story.md §Covenant Standing Tiers`. Fixing it edits `roll2hit-v3.html`, whose working tree carries the user's uncommitted CSS recolor. → **§DX-02er**
 
 ---
 
-## VI. Rough Whiskey as Social Item
+## VII. Rows filed
 
-Currently: Rough Whiskey (5gp, BA vendor) triggers drunk fight at CY — disadvantage + +3 flat damage, Weckmann delighted. 
+| Row | Weight | Premise |
+|---|---|---|
+| **§DX-02en** | 🟡 one design call | "Covenant Keeper" and the True ending are unreachable by one point; §VII's payoff line is in no branch |
+| **§DX-02eo** | 🟢 | `ebReturnsCompleted` is a write-only twin of `ebReturnDone`; `FROBERGER_EPILOGUE.cursed` has no selector |
+| **§DX-02ep** | 🟡 one design call | The whiskey window is opened and closed by the same fight; 18 lines reachable only on a loss |
+| **§DX-02eq** | 🟡 implement-or-retire | Five pit perks set five flags nothing reads |
+| **§DX-02er** | 🟢 | `Math.random()` seeds the note node; one dead `→ doc:` pointer |
 
-Extension: consuming Rough Whiskey before visiting any named NPC triggers a unique response. The item is consumed on use (or on entering a combat). If the player uses it and then visits an NPC before the combat effect expires, the NPC reacts.
-
-The effect window: until the player rests or completes one combat.
-
-### NPC Responses to Rough Whiskey
-
-```js
-const ROUGH_WHISKEY_REACTIONS = {
-  yael: {
-    impartial: "You've been drinking. Come back when you haven't.",
-    friendly:  "I'm going to pretend I don't smell that. Walk with me — the cold'll fix it by second check.",
-    dearFriend: "Oh, that's Weckmann's Rough Whiskey. I know the smell. What happened?"
-  },
-  brynn: {
-    impartial: "Water's free. You need water. Sit down.",
-    friendly:  "[She pours water without asking. Sets it in front of you. Says nothing. Watches until you drink it.]",
-    dearFriend: "Was it the pit or was it something else? Either way — water first. Talk after if you want."
-  },
-  couperin: {
-    impartial: "Ha! The lute strings are sensitive and I can smell everything from up here. Come back sober.",
-    friendly:  "You showed up like this once before. Different kind of night, I think. The request list is still on the board.",
-    dearFriend: "[Quill plays something slow without being asked. Doesn't make eye contact. Plays until the song ends.] Better?"
-  },
-  pachelbel: {
-    impartial: "Come back when you can track your decisions. I'm not dealing with this.",
-    friendly:  "I don't deal with people in altered states. Not a moral thing — a precision thing. Come back tomorrow.",
-    dearFriend: "Sit down. Not for business. Just — sit down. There's a chair."
-  },
-  weckmann: {
-    impartial: "I know that bottle. You're not fighting tonight. Come back straight.",
-    friendly:  "[Weckmann looks at you for a long moment.] You want to fight like this again? I'm not stopping you. I'm also not impressed.",
-    dearFriend: "[Weckmann pours his own glass. Sets it on the counter. Doesn't drink it.] I keep this one for after. Sit."
-  },
-  bruhns: {
-    impartial: "The depth survey requires a clear head. Come back when you have one.",
-    friendly:  "Rough Whiskey before a research briefing. Bold choice. What's going on?",
-    dearFriend: "Froberger used to do that. Before the hard caves. I asked him once why. He said: 'so I don't overthink it.' Did it work for you?"
-  }
-};
-```
-
-### Rendering Logic
-
-```js
-function _checkRoughWhiskeyReaction(npcKey) {
-  if (!S_story.roughWhiskeyActive) return null;
-  const reactions = ROUGH_WHISKEY_REACTIONS[npcKey];
-  if (!reactions) return null;
-  const fav = S_story.npcFavorability[npcKey] ?? 0;
-  if (fav >= 2) return reactions.dearFriend || reactions.friendly;
-  if (fav >= 1) return reactions.friendly;
-  return reactions.impartial;
-}
-```
-
-If a reaction exists, it replaces the normal NPC dialogue for this visit (does not consume a visit-count cycle — the player doesn't lose a regular quote slot). After the reaction, the whiskey effect can still trigger combat at CY.
-
-The item teaches you who these people are. You see their care — or their professionalism — or their concern — in four sentences.
+**No test covers the ending system.** `grep -rl` across `tests/` finds no spec touching `_curseScore`, `_covenantStanding`, `_buildEpilogueScroll` or the perk tree. The cheapest possible fence is a five-line spec pinning the reachable bounds of `_curseScore()` and asserting every `COVENANT_STANDING_LABELS` entry is returned by at least one state — it would have failed on the day this report was written. Folded into §DX-02en.
 
 ---
 
-## VII. Covenant Standing — Character Sheet Element
+## VIII. Conclusion
 
-`_curseScore()` is never displayed as a number. Instead, after Act III, the character sheet gains a new row: **Covenant Standing**.
+Layer 43 is the strongest design lock the verification program has scored on *fidelity*: nine subsystems, 23 of 23 symbols live, every authored string block byte-identical across 90 days and a 5.5× file growth, and the centrepiece rendering in the browser exactly as specified. Its failures are all of a single kind — **claims the document could not check about itself.** The arithmetic of its own scoring function; the readers of the flags it defines; the second writer of a state field it names; the node its first paragraph names. Every one of those is a five-minute measurement, and none of them was made, because the report is a *design* document and design documents are graded on whether the code matches the spec, never on whether the spec closes.
 
-The value is one of five strings, mapped to score brackets:
+> *"He believes the eighteenth will be different. He believes that about all of them, until the evidence arrives."*
 
-```js
-const COVENANT_STANDING_LABELS = [
-  { maxScore: -6,  label: "Covenant Keeper",  desc: "The people you helped are the reason this works." },
-  { maxScore:  0,  label: "Warden",            desc: "You carry the work with you. It shows." },
-  { maxScore:  7,  label: "Keeper",            desc: "The seal holds. The cost is visible." },
-  { maxScore: 14,  label: "Watcher",           desc: "You know what needs doing. You're still learning to stay." },
-  { maxScore: Infinity, label: "Wanderer",     desc: "The Void will open again. Not your fault. Not entirely." }
-];
-
-function _covenantStanding() {
-  const score = _curseScore();
-  return COVENANT_STANDING_LABELS.find(b => score <= b.maxScore);
-}
-```
-
-The character sheet row:
-
-```
-Covenant Standing:  Warden
-                    "You carry the work with you. It shows."
-```
-
-The labels appear in Sweelinck's ending speech. The player sees "Warden" in their character sheet for 40 hours, then Sweelinck says "you were a Warden" in the final scene — and they understand. The game never explains the connection. The player makes it.
-
-The label unlocks at Act III rather than immediately, because before that, there's not enough data to meaningfully evaluate. Before Act III, the sheet shows: `Covenant Standing: Unknown`.
+The evidence has now arrived, for the first time in ninety days, and the finding is that the game's kindest ending was always one point away.
 
 ---
 
-## VIII. Pit Training as Skill Tree
-
-Weckmann's training (tracked via `pitTrainingWins`) unlocks a 5-perk tree. The perks are permanent — they live in `S_story.pitPerks: []` and are applied at combat start.
-
-### The Five Perks
-
-| Visits | Perk Name | Effect |
-|--------|-----------|--------|
-| 1st | Controlled Aggression | +1 to attack rolls when flanking (adjacent ally or terrain advantage) |
-| 2nd | Read the Room | Before combat begins, see the enemy HP tier (Low / Mid / High / Dread) |
-| 3rd | Ground Game | On critical hit, bonus action: shove attempt (no action cost) |
-| 4th | Corner Work | At DK or CY nodes: recover 1d4 HP between combat rounds |
-| 5th | Weckmann's Lesson | Once per rest: when HP drops below 20%, bonus action: Recompose — cancel disadvantage on next attack |
-
-### Unlock Flow
-
-```js
-function _checkPitPerkUnlock() {
-  const wins = S_story.pitTrainingWins;
-  const perks = S_story.pitPerks ?? [];
-  const perkList = ['controlledAggression','readTheRoom','groundGame','cornerWork','crovsLesson'];
-  const nextPerk = perkList[perks.length];
-  if (wins > perks.length && nextPerk) {
-    S_story.pitPerks = [...perks, nextPerk];
-    _showPerkUnlock(nextPerk); // overlay: "CROV'S LESSON UNLOCKED — [description]"
-  }
-}
-```
-
-### The Unlock Overlay Text
-
-```js
-const PIT_PERK_UNLOCKS = {
-  controlledAggression: {
-    title: "Controlled Aggression",
-    crov:  "You're not swinging harder. You're swinging when it counts. That's the difference."
-  },
-  readTheRoom: {
-    title: "Read the Room",
-    crov:  "Bruna could tell a fighter's gas tank by the third exchange. You're getting there."
-  },
-  groundGame: {
-    title: "Ground Game",
-    crov:  "When you put them down, keep them down. First rule of the pit."
-  },
-  cornerWork: {
-    title: "Corner Work",
-    crov:  "The corner is where you recover. Go to the corner. Let the corner do what the corner does."
-  },
-  crovsLesson: {
-    title: "Weckmann's Lesson",
-    crov:  "When everything goes wrong — and it will — you stop, you breathe, you start again. That's the whole lesson."
-  }
-};
-```
-
-Each unlock is voiced by Weckmann. The last one — Weckmann's Lesson — is the perk that most directly saves your life. It's also the one that sounds the most like something Weckmann needed to hear himself.
-
----
-
-## IX. Froberger's Last Note — The Item That Is Only Found
-
-**Item:** `froberger_last_note`  
-**Icon:** 📜  
-**Type:** `key_item` (no sell value, cannot be dropped)  
-**Description:** *A scrap of parchment. Froberger's handwriting — but lighter than the journal. Like it was written carefully. Like it was meant to last.*
-
-**Text (rendered in full when inspected):**
-
----
-
-*If you find this — you're somewhere difficult.*
-
-*The person you're becoming is visible from outside. People can see the shape of it before you can.*
-
-*Check in with someone who knew you before you got good at this. Ask them what's different.*
-
-*They'll tell you something true. It might not be comfortable. That's how you know it's true.*
-
-*Whatever they say — stay long enough to hear the second sentence.*
-
-*— F*
-
----
-
-**Where it's found:** One EB node, chosen at save-seed initialization. Different each run. Cannot be in an EB node the player has already visited (so it's always reachable, always discoverable). Located in the loot of that node's combat — not a quest drop, not a vendor purchase. Just there, in the chest.
-
-If the player inspects it before speaking to any NPC: Froberger's warning predates the relationships. The player is told to check in before they have anyone to check in with.
-
-If the player inspects it after reaching Dear Friend with anyone: they have someone to ask. The parchment means something different.
-
-The game doesn't track which moment the player reads it. Froberger didn't design the timing. He just left it.
-
----
-
-## X. New Game+ Memory Hooks
-
-NG+ preserves `npcFavorability`, `pitPerks`, and `ngPlusRun`. On first visit to relevant nodes, NPCs have alternate first lines that acknowledge the return.
-
-### NG+ First-Visit Lines
-
-```js
-const NPC_NG_PLUS_GREETINGS = {
-  yael:      "You again. I wondered if you'd come back. I set the patrol route to account for it.",
-  brynn:     "Oh. You're back. The corner room's been ready. I don't know why I kept it.",
-  couperin:  "I thought you might. I've been working on something new. It's not done. Come back when you've been to the pit.",
-  pachelbel: "I know what you're here for. The code hasn't changed. Neither have I. That's not a bad thing.",
-  weckmann:  "Back for more. Good. The tree starts over — we build what you've earned again, right.",
-  bruhns:    "The depths are different this run. I have new data. I need your eyes again."
-};
-```
-
-The pit perk tree resets on NG+ (the perks were earned in a different life) but unlocks faster — each perk requires one fewer training win than the previous run. By the third run, Weckmann's Lesson unlocks after one session.
-
-The game says nothing about why. Weckmann doesn't explain. He just nods when you arrive and says: "Faster this time. That happens."
-
-### The Title Screen — NG+ Overlay
-
-On NG+ run start, before the title animation completes:
-
-```
-Sweelinck is waiting.
-```
-
-Fades before the title appears. Can't be paused or screenshot. It's there for one breath.
-
----
-
-*lab-report-endings-and-echoes.md — Layer 43 design document*  
-*Generated 2026-05-22 — roll2hit.com / Codex of Conquest*
-
+*lab-report-endings-and-echoes.md — Layer 43 design lock · original 2026-05-22 · verified §DOC-02cx 2026-08-22*
 
 ---
 *© 2026 Paul Richeson — MIT License. See [LICENSE](LICENSE) for full text.*
