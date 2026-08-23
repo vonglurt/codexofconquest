@@ -1,4 +1,4 @@
-<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude -->
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson -->
 
 # GAME ENGINE — Step 2: Design Specification
 ### roll2hit.com — The Shattered Codex
@@ -959,4 +959,4 @@ All 37 layers are implemented in `index.html` (~143,000 lines). The single-file,
 
 
 ---
-*© 2026 Paul Richeson — MIT License. See [LICENSE](LICENSE) for full text.*
+*© 2026 Paul Richeson — MIT License. See [LICENSE](../../LICENSE) for full text.*

@@ -1,5 +1,5 @@
 #!/bin/bash
-# SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude
+# SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson
 # MIT License — Copyright (c) 2026 Paul Richeson
 
 # Function to process input stream

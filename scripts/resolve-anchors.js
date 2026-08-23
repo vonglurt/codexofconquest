@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude
+// SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson
 // §DX-01e — a doc anchor names a SYMBOL; the line number is a refreshable hint.
 //
 // THE DEFECT THIS RETIRES. The docs pointed into `index.html` with bare line

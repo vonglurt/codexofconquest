@@ -1,4 +1,4 @@
-<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude -->
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson -->
 
 # Hierarchical Map Visualization and Coordinate Mesh Organization for a Medieval World Graph
 

@@ -1,4 +1,4 @@
-<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude -->
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson -->
 # Lab Report — §PLAY-01-A *The Courier's Map*: goal legibility
 
 **Parent:** `lab-reports/lab-report-play-review.md` §PLAY-01-A · **Track:** BACKLOG.md §PLAY-01 (archived → `plan-archive.md`)
@@ -47,7 +47,7 @@ them read as one.
 
 **2. It makes progress countable at a glance, in the world's own vocabulary.** Seven symbols is not
 a progress bar. The prologue already put a stained map with *"four towns and seven symbols in faded
-ink"* into the player's hand (`story.md:The map shows four towns and seven symbols@163`); the chip
+ink"* into the player's hand (`docs/design/story.md:The map shows four towns and seven symbols@163`); the chip
 is that map, drawn in the status bar, and it fills in as the fiction says it should. The player
 learns their position from an object they were given in the story rather than from a UI widget
 bolted onto it. That is the whole argument for diegetic UI in one line, and it is why this slice

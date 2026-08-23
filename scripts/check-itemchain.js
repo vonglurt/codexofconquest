@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude
+// SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson
 'use strict';
 // §EDITOR-01-D — declarative itemChain guard.
 // (1) Extracts _flagToLabel/_grantMissionBit/_takeMissionBit/_applyItemChain

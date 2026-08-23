@@ -1,4 +1,4 @@
-<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude -->
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson -->
 
 # Layer 18 — Character Progression, the Flashbang, and the Condition Gold Economy
 
@@ -350,4 +350,4 @@ Kept because no maintained doc carries it and this report is its only copy:
 *Verified and rewritten 2026-08-12 under §DOC-02t against `roll2hit-v3.html` at 38,712 lines.*
 
 ---
-*© 2026 Paul Richeson — MIT License. See [LICENSE](LICENSE) for full text.*
+*© 2026 Paul Richeson — MIT License. See [LICENSE](../LICENSE) for full text.*

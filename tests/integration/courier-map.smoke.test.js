@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude
+// SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson
 // §PLAY-01-A The Courier's Map — goal legibility smoke test.
 // Fresh game: the opening frame appears + the persistent objective chip surfaces
 // the win condition (7 shards · Lv 20 · Day 49) and the seven symbols darken as

@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude
+// SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson
 'use strict';
 const { test, expect } = require('@playwright/test');
 const {

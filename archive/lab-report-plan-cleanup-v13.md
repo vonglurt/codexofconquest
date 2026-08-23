@@ -1,4 +1,4 @@
-<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude -->
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson -->
 
 # Architectural Cleanup Report: plan.md Compaction — Layer 9 through Layer 13
 
@@ -255,4 +255,4 @@ When a layer is complete, run this compaction process:
 
 
 ---
-*© 2026 Paul Richeson — MIT License. See [LICENSE](LICENSE) for full text.*
+*© 2026 Paul Richeson — MIT License. See [LICENSE](../LICENSE) for full text.*

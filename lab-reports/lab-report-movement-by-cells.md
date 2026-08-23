@@ -1,4 +1,4 @@
-<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude -->
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson -->
 # Cell-Grid Navigation: Architecture, Program Flow, and Validation Design
 
 **Technical Report TR-2026-CELL** · roll2hit.com · MIT License · Paul Richeson

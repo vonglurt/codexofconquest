@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude
+# SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson
 # MIT License — Copyright (c) 2026 Paul Richeson
 # Archive dated roll2hit-v3 snapshots as a patch chain.
 #
@@ -19,7 +19,7 @@
 
 set -euo pipefail
 
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 ROOT_DIR="$SCRIPT_DIR"
 MILEPOINTS="$ROOT_DIR/milepoints"
 PATCHES="$MILEPOINTS/patches"

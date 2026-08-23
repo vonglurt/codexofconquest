@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude
+// SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson
 'use strict';
 // mover.js — §WALK-2 unified mover kernel: the single source of movement truth
 // shared by the SP client (inlined into index.html) and the MUD server

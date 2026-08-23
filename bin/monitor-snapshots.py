@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-# SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude
+# SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson
 """
 Monitor-Snapshots  —  TUI monitor for roll2hit snapshot archiving.
 PaulRicheson@Roll2hit.com  MIT License
@@ -43,7 +43,7 @@ _VOICES = [
 ]
 _RATE = "190"
 
-ROOT        = Path(__file__).resolve().parent
+ROOT        = Path(__file__).resolve().parent.parent
 PATCHES_DIR = ROOT / "milepoints" / "patches"
 SAY_LOG     = ROOT / "milepoints" / "say.log"
 SERVER_LOG  = ROOT / "milepoints" / "wbapi-server.log"

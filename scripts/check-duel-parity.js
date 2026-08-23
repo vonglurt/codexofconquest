@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude
+// SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson
 // §MESH-01j — structural duel-parity: assert the DUEL:CORE block inlined in
 // index.html is byte-identical to the same block in duel.js (the
 // mover.js / rooms.js precedent). A duel outcome must replay identically on

@@ -1,4 +1,4 @@
-<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude -->
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson -->
 # Lab Report — §BOARD-01-FU8: Void-Tide Bounties (tie the board to the clock)
 
 > **Status: SHIPPED and VERIFIED.** Design lock written 2026-07-21; implementation shipped the same

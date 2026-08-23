@@ -1,4 +1,4 @@
-<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude -->
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson -->
 
 # quest.md — The Shattered Codex: Master Quest Register
 
@@ -931,4 +931,4 @@ Gate spine (W→E, listing only): `{}` → `kgEnlisted` → `kgManifestDelivered
 6. The object must arrive changed by Act V.
 
 ---
-*© 2026 Paul Richeson — MIT License. See [LICENSE](LICENSE) for full text.*
+*© 2026 Paul Richeson — MIT License. See [LICENSE](../../LICENSE) for full text.*

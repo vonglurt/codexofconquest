@@ -1,4 +1,4 @@
-<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude -->
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson -->
 
 # Extending a Browser-Based Combat Tracker Into a Full Narrative Game Engine: A Layered Migration Architecture
 
@@ -589,4 +589,4 @@ The world of *The Shattered Codex* — 42 nodes, 8 acts, 49 days, 7 Shards, and 
 
 
 ---
-*© 2026 Paul Richeson — MIT License. See [LICENSE](LICENSE) for full text.*
+*© 2026 Paul Richeson — MIT License. See [LICENSE](../../LICENSE) for full text.*

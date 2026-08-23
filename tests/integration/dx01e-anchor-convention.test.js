@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude
+// SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson
 // §DX-01e — a doc anchor names a SYMBOL; the line number is a refreshable hint.
 //
 // The defect: the docs pointed into index.html with bare line numbers, and every
@@ -31,17 +31,17 @@ const ANCHOR_RE = /`([^`\n]{1,80}?)@(\d{2,6})`/g;
 // The legacy form both rows retire: a bare backticked 4–5 digit line number.
 const LEGACY_RE = /`(\d{4,5})`/g;
 // The live docs migrated in this increment — every anchor in them must resolve.
-const MIGRATED = ['CONTRIBUTING.md', 'BACKLOG.md', 'mechanics.md',
-                  'BACKLOG-1-playable-truth.md', 'BACKLOG-2-engine-systems.md',
-                  'BACKLOG-3-content-narrative.md', 'BACKLOG-4-world-navigation.md',
-                  'BACKLOG-5-platform-tooling.md', 'BACKLOG-6-verification-docs.md',
+const MIGRATED = ['CONTRIBUTING.md', 'docs/backlog/BACKLOG.md', 'docs/design/mechanics.md',
+                  'docs/backlog/BACKLOG-1-playable-truth.md', 'docs/backlog/BACKLOG-2-engine-systems.md',
+                  'docs/backlog/BACKLOG-3-content-narrative.md', 'docs/backlog/BACKLOG-4-world-navigation.md',
+                  'docs/backlog/BACKLOG-5-platform-tooling.md', 'docs/backlog/BACKLOG-6-verification-docs.md',
                   path.join('docs', 'mechanics', 'mechanics-combat.md')];
 // §DX-01e-FU — potential.md is the live SEED INBOX: its anchors are read to build FROM,
 // so a rotted one sends a future session to build against the wrong code. It was the last
 // live doc still on the bare form (36 anchors; 35 of them pointed somewhere else by the
 // time they were measured). Everything still bare after this is HISTORY — plan-archive.md
 // and the lab reports — which is annotated, never rewritten (§DX-02c/§AUDIT-03m).
-const SEED_INBOX = 'potential.md';
+const SEED_INBOX = 'docs/design/potential.md';
 
 function run(args) {
   // stdout AND stderr — the gate warns on stderr and reports findings there too.

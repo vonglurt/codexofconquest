@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude
+// SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson
 // §DX-02g — a monster's `tier` is one of five values, and every tier-keyed engine
 // map covers all five.
 //

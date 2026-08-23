@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude
+# SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson
 # MIT License — Copyright (c) 2026 Paul Richeson
 # wbapi-toggle.sh — manage wbapi-server.js
 #
@@ -18,7 +18,7 @@
 # (exit 0); this script does NOT auto-relaunch on that.
 
 SCRIPT="js/wbapi-server.js"
-DIR="$(cd "$(dirname "$0")" && pwd)"
+DIR="$(cd "$(dirname "$0")/.." && pwd)"
 CMD="${1:-toggle}"
 
 # ── Load .env if present (secrets — gitignored) ───────────────────────────────

@@ -1,4 +1,4 @@
-<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude -->
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson -->
 # Quest Data–Code Separation: Enforcing the Boundary in a Single-File Engine
 
 **Technical Report TR-2026-ARCH02** · roll2hit.com · MIT License · Paul Richeson

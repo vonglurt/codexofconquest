@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude
+// SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson
 // §XP-01 Universal Effort XP — a missed attack and a failed skill-check still earn XP
 // (all action earns XP; you never lose XP). Combat misses = 2% of the kill value, capped
 // per encounter at the flee value (25% of the kill). Failed skill-checks = 25% of the

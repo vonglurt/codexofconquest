@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude
+// SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson
 // §NAV-01b — road-net invariant guard (CI-gated, stdlib-only, read-only).
 //
 //   R1  every settlement cell (distinct occupied CELL_GRID cell) touches the road

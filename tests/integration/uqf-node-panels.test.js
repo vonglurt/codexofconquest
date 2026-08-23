@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude
+// SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson
 // §VM-01-G1 — NODE_PANELS: the data-driven flavor/arrival panel table.
 // Guards the migration of 12 former per-node special-case blocks out of storyRender into
 // NODE_PANELS + _renderNodePanels (proven a byte-identical no-op at ship time by a 24-combo

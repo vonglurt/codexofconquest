@@ -1,4 +1,4 @@
-<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude -->
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson -->
 
 # Cell-Grid Navigation Architecture for Text-Based Role-Playing Game Worlds: A MUD-Inspired Design Framework
 

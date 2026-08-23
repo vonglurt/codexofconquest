@@ -1,4 +1,4 @@
-<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude -->
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson -->
 
 # Roll2Hit — Combat System Reference
 **File:** `index.html` · **Layers:** 11–17 (battle engine), 21 (level-up), 23 (notoriety), 36–37 (features, d-pad, Boyscout)  
@@ -526,4 +526,4 @@ MILEPOINT D  3 failures → _storyDeathSaveFall()
 
 
 ---
-*© 2026 Paul Richeson — MIT License. See [LICENSE](LICENSE) for full text.*
+*© 2026 Paul Richeson — MIT License. See [LICENSE](../../LICENSE) for full text.*

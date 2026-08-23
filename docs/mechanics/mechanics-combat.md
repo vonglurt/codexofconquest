@@ -1,4 +1,4 @@
-<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude -->
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson -->
 
 # Roll2Hit — The Shattered Codex: Combat Mechanics
 **Last synced:** 2026-05-26 · 17,762 lines · All line numbers re-verified (SP4 annotation pass)
@@ -691,7 +691,7 @@ Locked buttons show `🔒`, opacity 0.45, `disabled`, and a tooltip hint. The `b
 
 ---
 
-*© 2026 roll2hit.com — MIT License. See [LICENSE](LICENSE) for full text.*
+*© 2026 roll2hit.com — MIT License. See [LICENSE](../../LICENSE) for full text.*
 
 ---
-*© 2026 Paul Richeson — MIT License. See [LICENSE](LICENSE) for full text.*
+*© 2026 Paul Richeson — MIT License. See [LICENSE](../../LICENSE) for full text.*

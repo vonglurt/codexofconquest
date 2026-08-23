@@ -1,4 +1,4 @@
-<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude -->
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson -->
 # Lab Report — §MESH-02: Map-Tab Connection Center (sub-tabs · discovery · ACL UI · shared blocklists)
 
 **Date:** 2026-07-06 · **Status:** ✅ SHIPPED 2026-07-07 (increments a–j)

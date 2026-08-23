@@ -1,4 +1,4 @@
-<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude -->
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson -->
 # Lab Report — §BOARD-01-FU7 *Warrant Standing*: reputation as a board-quality gate
 
 **Class:** design lock (IEEE-format spec written *before* implementation) · **Verified:** §DOC-02cu, 2026-08-22

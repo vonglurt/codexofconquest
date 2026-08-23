@@ -1,4 +1,4 @@
-<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude -->
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson -->
 
 # CODEX OF CONQUEST — a single-file adventure RPG
 
@@ -236,11 +236,15 @@ MIT. Fork it. Extend it. Write Level 21. See [LICENSE](LICENSE) for full text.
 
 ---
 
-## Authors
+## Author
 
-**Paul Richeson** and **Claude** — see [LICENSE](LICENSE). The project was built
-across 1,472 commits between 2026-05-24 and 2026-08-23; 1,377 of them carry a
-`Co-Authored-By:` trailer naming the Claude model that worked on them.
+**Paul Richeson** — sole copyright holder; see [LICENSE](LICENSE).
+
+Built across 1,472 commits between 2026-05-24 and 2026-08-23. Much of the drafting
+was done by Anthropic's Claude models, engaged as a contracted service and working
+under the author's direction — a sub-contractor relationship that carries no
+independent authorship claim. See
+[CONTRIBUTING.md](CONTRIBUTING.md#authorship-and-ai-contribution).
 
 ## A note on names
 

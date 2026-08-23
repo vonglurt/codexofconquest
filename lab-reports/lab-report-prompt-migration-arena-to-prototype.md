@@ -1,4 +1,4 @@
-<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude -->
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson -->
 
 # From Arena to Prototype: The Architectural Evolution of *The Shattered Codex*
 
@@ -274,4 +274,4 @@ The report's 17-row inventory, adjudicated:
 *Philosophy: the Cooperative DM Principle — three of its four invariants still bind*
 
 ---
-*© 2026 Paul Richeson — MIT License. See [LICENSE](LICENSE) for full text.*
+*© 2026 Paul Richeson — MIT License. See [LICENSE](../LICENSE) for full text.*

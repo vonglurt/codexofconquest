@@ -1,4 +1,4 @@
-<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude -->
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson -->
 # Lab Report — §NAV-01 Navigable World: MUD-Coherent Map + Fungal Road Net
 
 **Date closed:** 2026-07-03 · **Increments:** a–h, all shipped (plan `01c5187` → final `0b341d1`)

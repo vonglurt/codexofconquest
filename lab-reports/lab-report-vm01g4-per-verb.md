@@ -1,4 +1,4 @@
-<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude -->
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson -->
 # Lab Report — §VM-01-G4: Class D per-verb (the migration front's last slice)
 
 > **Status: CLOSED — design locked `f340143` 2026-08-04 · ask answered (refuse-at-click) ·

@@ -1,4 +1,4 @@
-<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude -->
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson -->
 
 # Migrating `index.html` Onto the Cell-Grid Architecture
 ### A practical companion to `ieee-paper-cell-grid-navigation.md`

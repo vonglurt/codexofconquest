@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude
+// SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson
 'use strict';
 // world-diff.js — §MESH-01d3 modification-set inspector (§MESH-01-FU 9: deep diff).
 //

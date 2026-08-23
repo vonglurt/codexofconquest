@@ -1,4 +1,4 @@
-<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude -->
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson -->
 
 # Lab Report — WBAPI Architecture
 
@@ -421,4 +421,4 @@ from in-process harness runs. It did not re-derive §5.2's browser/Node boundary
 *End of verified report. Original 659 lines; verified 2026-08-23 (§DOC-02da).*
 
 ---
-*© 2026 Paul Richeson — MIT License. See [LICENSE](LICENSE) for full text.*
+*© 2026 Paul Richeson — MIT License. See [LICENSE](../LICENSE) for full text.*

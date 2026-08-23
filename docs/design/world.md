@@ -1,4 +1,4 @@
-<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude -->
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson -->
 
 # WORLD BUILDERS REFERENCE
 ### roll2hit.com — Campaign Setting, NPCs, Conditions & Quest Architecture
@@ -1356,4 +1356,4 @@ The four coastal harbor-courts are fortresses on a southward littoral chain west
 **Cross-references:** `lab-report-littoral-courts.md` (SIREN-01) — full source analysis, arc architecture tables, Overseer design rationale, five non-obvious decisions. `story.md` Layer 104b — quest mechanics, NPC quoteFn table, storyRender injection specs.
 
 ---
-*© 2026 Paul Richeson — MIT License. See [LICENSE](LICENSE) for full text.*
+*© 2026 Paul Richeson — MIT License. See [LICENSE](../../LICENSE) for full text.*

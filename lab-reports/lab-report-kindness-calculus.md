@@ -1,4 +1,4 @@
-<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude -->
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson -->
 
 # On the Asymptotic Kindness of Quest Graphs: Prosocial Mechanics as the Dominant Resolution Path
 
@@ -328,4 +328,4 @@ in these arcs was still its own cell.
 **Source of truth:** `roll2hit-v3.html`. Where this document and the file disagree, the file is right.
 
 ---
-*© 2026 Paul Richeson — MIT License. See [LICENSE](LICENSE) for full text.*
+*© 2026 Paul Richeson — MIT License. See [LICENSE](../LICENSE) for full text.*

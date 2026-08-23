@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude
+// SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson
 // §VM-01-B — server↔client seeded-PRNG PARITY guard (CI-gated).
 //
 // The client rolls encounters / skill checks / loot from a seeded mulberry32

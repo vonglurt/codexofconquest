@@ -1,4 +1,4 @@
-<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude -->
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson -->
 
 # MAPS — The Shattered Codex
 ### Island World Grid Map & Node Network Reference
@@ -12,7 +12,7 @@
 >
 > | Question | Live source |
 > |----------|-------------|
-> | What is this node's code / cell / act / terrain? | **[`docs/maps/node-index.md`](docs/maps/node-index.md)** · `npm run nodes` · `./api.sh get node <CODE>` |
+> | What is this node's code / cell / act / terrain? | **[`docs/maps/node-index.md`](../maps/node-index.md)** · `npm run nodes` · `./api.sh get node <CODE>` |
 > | What does the grid actually look like here? | `node scripts/render-region.js <r0> <r1> <c0> <c1>` |
 > | Is the world connected? | `./api.sh reachability` (100% from LHR) · `./api.sh broken` (0) |
 > | What does a legacy code (`SF`, `CQ`, `CI`…) mean? | the **LEGACY CODE MAP** at the bottom of `docs/maps/node-index.md` |
@@ -30,7 +30,7 @@
 *Each cell represents a broad geographic zone. Use for orientation only.*
 
 > **⚠️ The zone letters below are 26×16-era node codes and are not `NODE_MAP` keys (§AUDIT-03l).**
-> Kept as the record of that era. Live: [`docs/maps/node-index.md`](docs/maps/node-index.md) (`npm run nodes`).
+> Kept as the record of that era. Live: [`docs/maps/node-index.md`](../maps/node-index.md) (`npm run nodes`).
 
 ```
      W  CE  C  E  ME
@@ -51,7 +51,7 @@
 > **⚠️ Not the live world (§AUDIT-03l).** The live grid is 90×360 with nodes at r 2–73 / c 154–249,
 > and none of the two-letter codes below is a `NODE_MAP` key. Kept as the record of the 26×16 era.
 > **To see the real grid: `node scripts/render-region.js <r0> <r1> <c0> <c1>`** (ASCII window over the
-> live sea/lane/road/settlement layers); node codes + live cells: [`docs/maps/node-index.md`](docs/maps/node-index.md).
+> live sea/lane/road/settlement layers); node codes + live cells: [`docs/maps/node-index.md`](../maps/node-index.md).
 
 *Two-letter node codes. `WW` = water. Non-node land cells shown as `..`. Epic Battleground nodes (E*) appear at WW cells only where the terrain has a logical override (deep forest, underwater cave, frozen waste, sky-adjacent spire). Mythic-east nodes shown at far right; reach by walking east via sky road.*
 
@@ -77,7 +77,7 @@ R16: WW  WW  WW  WW  WW  WW  WW  WW  WW  WW  WW  WW  WW  WW  WW  WW  WW  WW  WW 
 
 ---
 
-## NODE CODE REFERENCE → **[`docs/maps/node-index.md`](docs/maps/node-index.md)** (generated)
+## NODE CODE REFERENCE → **[`docs/maps/node-index.md`](../maps/node-index.md)** (generated)
 
 **To look up a node code, read the generated index — never a table in this file.**
 
@@ -241,7 +241,7 @@ game, so it cannot go stale the way the historical legend below did.
 ## NODE NETWORK — Travel Connections ⚠️ **HISTORICAL codes (the topology note still holds)**
 
 > **⚠️ The `XX(nn)` codes below are 26×16-era names, not `NODE_MAP` keys (§AUDIT-03l)** — the `(nn)`
-> `Node #` is the recovery key; resolve it in [`docs/maps/node-index.md`](docs/maps/node-index.md)'s
+> `Node #` is the recovery key; resolve it in [`docs/maps/node-index.md`](../maps/node-index.md)'s
 > LEGACY CODE MAP. The *statement* this section makes — that connections are derived from grid
 > adjacency and no stored edge data exists — is still true and is why the codes were never updated.
 > Live reachability: `./api.sh reachability` (100% from LHR) and `./api.sh broken` (0).
@@ -375,7 +375,7 @@ LITTORAL COURTS (§SIREN-01 — extended south from DS, Act IV)
 
 > **⚠️ Both columns are retired (§AUDIT-03l):** the codes are 26×16-era names and the `Row`/`Col`
 > values are the 26×16 projection, while live `NODE_COORDS` runs r 2–73 / c 154–249. The live
-> per-node cell is the `Cell (r,c)` column of [`docs/maps/node-index.md`](docs/maps/node-index.md).
+> per-node cell is the `Cell (r,c)` column of [`docs/maps/node-index.md`](../maps/node-index.md).
 
 | Code | Node | Row | Col | Connects To |
 |------|------|-----|-----|-------------|
@@ -482,7 +482,7 @@ LITTORAL COURTS (§SIREN-01 — extended south from DS, Act IV)
 
 > **⚠️ Stale and incomplete (§AUDIT-03l):** the game has **38** `sleep:true` checkpoint nodes today,
 > not the 8 listed, and these codes are 26×16-era names. The live set is the 🛏 column of
-> [`docs/maps/node-index.md`](docs/maps/node-index.md). Kept as the record of the original inn beats.
+> [`docs/maps/node-index.md`](../maps/node-index.md). Kept as the record of the original inn beats.
 
 | Night | Code | Location | Cost |
 |-------|------|----------|------|
@@ -822,4 +822,4 @@ When the player opts in via the 🌐 toggle, other players appear on every map s
 - During a network split between servers, remote dots freeze at their last known cell (up to 90 s) and snap to true positions when the mesh heals.
 
 ---
-*© 2026 Paul Richeson — MIT License. See [LICENSE](LICENSE) for full text.*
+*© 2026 Paul Richeson — MIT License. See [LICENSE](../../LICENSE) for full text.*

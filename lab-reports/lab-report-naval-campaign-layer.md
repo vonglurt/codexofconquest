@@ -1,4 +1,4 @@
-<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude -->
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson -->
 
 # Lab Report: The Naval Campaign Layer — Ports, Intercepts, Hunts, and the Harmony Chain at Sea
 
@@ -255,4 +255,4 @@ The cheapest repair is also the smallest: **`SEN`, `HFT`, `VAW` and `ATH` are `l
 **Ship commit:** `e339aeb` (2026-05-28) · **Verified:** 2026-08-12 at `2b6c33e`
 
 ---
-*© 2026 Paul Richeson — MIT License. See [LICENSE](LICENSE) for full text.*
+*© 2026 Paul Richeson — MIT License. See [LICENSE](../LICENSE) for full text.*

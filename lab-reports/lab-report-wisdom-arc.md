@@ -1,4 +1,4 @@
-<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude -->
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson -->
 
 # Lab Report: §WISDOM-01 — The Book of Human Nature
 
@@ -345,4 +345,4 @@ hierarchy), 48L-6 (too antagonistic for the tone), LHN-2 (already enacted in §A
 BACKLOG §AUDIT-03x · §AUDIT-03y · §AUDIT-03ad · §DX-02n · §DX-02q · §DX-02w
 
 ---
-*© 2026 Paul Richeson — MIT License. See [LICENSE](LICENSE) for full text.*
+*© 2026 Paul Richeson — MIT License. See [LICENSE](../LICENSE) for full text.*

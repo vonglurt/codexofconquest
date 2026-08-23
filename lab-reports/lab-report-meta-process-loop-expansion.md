@@ -1,4 +1,4 @@
-<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude -->
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson -->
 
 # Lab Report — The Meta Process: Prompt-Loop Expansion and Design Iteration
 
@@ -359,4 +359,4 @@ That is §DX-02w, and it is open.
 `plan-archive.md` §DESIGN-03 / §DUNGEON-01 / §DUNGEON-02 / §GR · `lab-report-documentation-system-design.md`
 
 ---
-*© 2026 Paul Richeson — MIT License. See [LICENSE](LICENSE) for full text.*
+*© 2026 Paul Richeson — MIT License. See [LICENSE](../LICENSE) for full text.*

@@ -1,4 +1,4 @@
-<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude -->
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson -->
 # Lab Report — Highway Mesh-Entry Selection & Same-Component Skip
 
 **Subsystem:** `buildHighway`, the corridor builder inside `POST /api/graph/reweave-all` (MegaReWeave P2/P3)

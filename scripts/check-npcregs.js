@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude
+// SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson
 // §AUDIT-03n — every NPC reference in the engine must resolve in the npc vocabulary.
 //
 // The npc-key mirror of §AUDIT-03j's check:noderegs. Same defect class, other dimension:

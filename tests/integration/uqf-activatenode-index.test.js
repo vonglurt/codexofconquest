@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude
+// SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson
 // §VM-01-F-FU — the activateNode index. storyCheckQuests' per-render O(2,850) scan over
 // all of QUEST_DB is replaced by a size-guarded activateNode → [quests] Map (_questsByNode).
 // These prove: (1) the index returns exactly the non-epic quests at a node, matching a

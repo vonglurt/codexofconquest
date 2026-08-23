@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude
+// SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson
 'use strict';
 // duel.js — §MESH-01j unified duel-resolution kernel: the single source of
 // "who won this duel" shared by the SP client (inlined into index.html)

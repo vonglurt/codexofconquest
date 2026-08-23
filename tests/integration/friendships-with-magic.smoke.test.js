@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude
+// SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson
 // §PLAY-01-D Friendships With Magic — signpost the magic path through a person.
 // Yael's turn-one onboarding monologue (yael.impartial[0], the line shown on the
 // FIRST meeting) must personally point the player to the Fisherman / Yugurt Lake as

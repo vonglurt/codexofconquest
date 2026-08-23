@@ -1,4 +1,4 @@
-<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude -->
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson -->
 # Lab Report — §WALK-5: MUD Multi-Client Harness (instanced encounters, v1)
 
 **Track:** §WALK-5 (Inc 1–4) + §WALK-5-FU · closes the §WALK series

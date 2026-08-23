@@ -1,4 +1,4 @@
-<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude -->
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson -->
 # Lab Report — §VM-01-E: Prove the World Is Finishable (the Soft-Lock Prover)
 
 **Increment:** §VM-01-E · **Status:** ✅ SHIPPED (Option A), `354b20a` 2026-07-22 15:00 · **Author session:** 2026-07-22

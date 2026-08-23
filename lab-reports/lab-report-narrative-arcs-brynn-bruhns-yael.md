@@ -1,4 +1,4 @@
-<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude -->
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson -->
 
 # Lab Report — Companion Narrative Arcs, Layers 70 · 72 · 74
 
@@ -371,4 +371,4 @@ that sixty-four days later by noticing two lists disagreed. The report had simpl
 §Commander Bruhns CO Scene · `plan-archive.md` §XXXII · BACKLOG §AUDIT-03af / §AUDIT-03x / §AUDIT-03n
 
 ---
-*© 2026 Paul Richeson — MIT License. See [LICENSE](LICENSE) for full text.*
+*© 2026 Paul Richeson — MIT License. See [LICENSE](../LICENSE) for full text.*

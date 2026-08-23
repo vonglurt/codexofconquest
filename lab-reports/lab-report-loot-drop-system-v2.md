@@ -1,4 +1,4 @@
-<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude -->
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson -->
 
 # Loot Drop System Redesign and API Formalization in *The Shattered Codex*
 
@@ -322,4 +322,4 @@ The freed 36 points went to consumable variety as specified. See §V-F5 for the 
 *Codebase: `roll2hit-v3.html` · `js/wbapi-server.js`*
 
 ---
-*© 2026 Paul Richeson — MIT License. See [LICENSE](LICENSE) for full text.*
+*© 2026 Paul Richeson — MIT License. See [LICENSE](../LICENSE) for full text.*

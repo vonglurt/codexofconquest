@@ -1,4 +1,4 @@
-<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude -->
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson -->
 
 # Lab Report — 5thOrgan: Polyphonic Pipe Organ Additive Synthesis in the Browser
 ### Design, Mathematics, and As-Built Verification of `sources/5thOrgan.html`
@@ -484,4 +484,4 @@ The one that matters is not in the file at all. This was designed as background 
 
 ---
 
-*© 2026 Paul Richeson — MIT License. See [LICENSE](LICENSE) for full text.*
+*© 2026 Paul Richeson — MIT License. See [LICENSE](../LICENSE) for full text.*

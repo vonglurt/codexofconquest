@@ -1,4 +1,4 @@
-<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude -->
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson -->
 
 # Lab Report — Roll2Hit Architecture: A Full Technical Review
 
@@ -180,4 +180,4 @@ This pass verified structure, counts, formulas and symbol liveness. It did **not
 *End of verified report. Original 1,009 lines; verified 2026-08-11 (§DOC-02b).*
 
 ---
-*© 2026 Paul Richeson — MIT License. See [LICENSE](LICENSE) for full text.*
+*© 2026 Paul Richeson — MIT License. See [LICENSE](../LICENSE) for full text.*

@@ -1,4 +1,4 @@
-<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude -->
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson -->
 # Lab Report — §PLAY-01 *The Honest Floor*: systems and play review
 
 **Track:** BACKLOG.md §PLAY-01, the **parent review** of a seven-face program (A–G) ·
@@ -319,4 +319,4 @@ a scope word (*"exclusive"*) applied to a set with no members. Three sit in the 
   re-pinned to HEAD (38,712 lines).
 
 ---
-*© 2026 Paul Richeson — MIT License. See [LICENSE](LICENSE) for full text.*
+*© 2026 Paul Richeson — MIT License. See [LICENSE](../LICENSE) for full text.*

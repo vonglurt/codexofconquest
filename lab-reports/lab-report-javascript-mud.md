@@ -1,4 +1,4 @@
-<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude -->
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson -->
 # Lab Report — The JavaScript of `roll2hit-v3.html`: Layers, Traces, and the MUD Client
 
 **Original:** 2026-07-16 · subject `roll2hit-v3.html` @ `43bd09c` (37,271 lines · `ENGINE_VER = 'r2h-3.104.0'`)

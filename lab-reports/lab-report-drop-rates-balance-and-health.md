@@ -1,4 +1,4 @@
-<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude -->
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson -->
 
 # Drop Rate Calibration, Health Economy, and the Rest Architecture in *The Shattered Codex*
 
@@ -306,4 +306,4 @@ live 50 gp price.
 *Design intent preserved verbatim; every measured claim re-scored against the live file.*
 
 ---
-*© 2026 Paul Richeson — MIT License. See [LICENSE](LICENSE) for full text.*
+*© 2026 Paul Richeson — MIT License. See [LICENSE](../LICENSE) for full text.*

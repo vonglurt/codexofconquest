@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude
+// SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson
 // §WALK-4 Inc 1 — terrain-field invariant proof (CI-gated, no server needed).
 //
 // Parses the committed index.html (same approach as check-mover-*.js) and

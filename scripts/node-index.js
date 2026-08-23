@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude
+// SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson
 //
 // scripts/node-index.js — the LIVE node reference for index.html  (§AUDIT-03l)
 //
@@ -30,7 +30,7 @@ const path = require('path');
 
 const ROOT = path.resolve(__dirname, '..');
 const HTML = path.join(ROOT, 'index.html');
-const MAPS = path.join(ROOT, 'maps.md');
+const MAPS = path.join(ROOT, 'docs/design/maps.md');
 const OUT  = path.join(ROOT, 'docs', 'maps', 'node-index.md');
 const WBAPI = require(path.join(ROOT, 'js', 'wbapi-core.js'));
 

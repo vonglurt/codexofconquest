@@ -1,4 +1,4 @@
-<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude -->
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson -->
 
 ## GRIEF AND CORRUPTION: THE VIGNETTE LAYER
 
@@ -2990,4 +2990,4 @@ Ten-node sequential ocean arc. Entry via `SID` east probe (`SID` at r:25,c:10; `
 **State flags:** `aurelTideRead`, `betrayalThought`, `caliceBridgeCrossed`, `betrayalWord`, `mireilleAmiNamed`, `betrayalDeed`, `solenSoonRead`, `littorialComplete`, `seaOverseerMet`, `charmResisted` — all in `S_story` defaults, `§SIREN-01` comment block.
 
 ---
-*© 2026 Paul Richeson — MIT License. See [LICENSE](LICENSE) for full text.*
+*© 2026 Paul Richeson — MIT License. See [LICENSE](../../LICENSE) for full text.*

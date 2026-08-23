@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude
+// SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson
 // §VM-01-G4c — the D1 button verbs, and the first prices the player ever pays through `cost`.
 //
 // G4a built the driver + the `cost` leaf and moved nothing. G4b added `NODE_VERBS` and migrated

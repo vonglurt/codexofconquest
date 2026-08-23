@@ -1,4 +1,4 @@
-<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude -->
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson -->
 
 # roll2hit.com — Monster Reference
 
@@ -790,4 +790,4 @@ MILEPOINT E  [Battle Mode] resolves; fish drops from MONSTER_DROPS[fish.key]
 MIT License — roll2hit.com — Copyright (c) 2026 — Free to use, modify, and share.
 
 ---
-*© 2026 Paul Richeson — MIT License. See [LICENSE](LICENSE) for full text.*
+*© 2026 Paul Richeson — MIT License. See [LICENSE](../../LICENSE) for full text.*

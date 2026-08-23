@@ -1,4 +1,4 @@
-<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude -->
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson -->
 # Lab Report — §XP-01 *Universal Effort XP*: misses and failed skill-checks
 
 **Parent:** `lab-reports/lab-report-play-review.md` §PLAY-01, spun off from §PLAY-01-B · **Track:** BACKLOG.md §XP-01 (Mechanics & Systems)

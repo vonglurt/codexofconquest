@@ -1,4 +1,4 @@
-<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude -->
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson -->
 
 # Dynamic NPC Speech Generation via the Anthropic Claude SDK: A First Exploration in Lightweight Character Instantiation
 

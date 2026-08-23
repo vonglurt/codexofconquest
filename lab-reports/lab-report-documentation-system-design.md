@@ -1,4 +1,4 @@
-<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude -->
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson -->
 
 # Lab Report — The roll2hit.com Documentation System
 
@@ -383,4 +383,4 @@ against the archive and HEAD; five recommendations adjudicated; FC02 closed by m
 filed. Claims that did not ship are marked **NOT SHIPPED** and kept.*
 
 ---
-*© 2026 Paul Richeson — MIT License. See [LICENSE](LICENSE) for full text.*
+*© 2026 Paul Richeson — MIT License. See [LICENSE](../LICENSE) for full text.*

@@ -1,4 +1,4 @@
-<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude -->
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson -->
 
 # Story Flowchart — The Shattered Codex
 
@@ -284,4 +284,4 @@ Nodes where two or more named arcs cross. These are the most structurally loaded
 | `story-flowchart.md` | This file — flowchart + arc overlays + intersection points | — |
 
 ---
-*© 2026 Paul Richeson — MIT License. See [LICENSE](LICENSE) for full text.*
+*© 2026 Paul Richeson — MIT License. See [LICENSE](../../LICENSE) for full text.*

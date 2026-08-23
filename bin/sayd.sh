@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude
+# SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson
 # sayd.sh — say daemon; speaks queued messages one at a time
 # Started automatically by say.sh; exits after ~10s of idle queue.
 # Kill cleanly: kill $(cat milepoints/sayd.pid)
@@ -22,7 +22,7 @@ VOICES=(
 RATE=190
 MAX_IDLE=34   # polls before exit: 34 × 0.3s ≈ 10s of silence
 
-ROOT="$(cd "$(dirname "$0")" && pwd)"
+ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 QUEUE_DIR="$ROOT/milepoints/say.queue.d"
 PID_FILE="$ROOT/milepoints/sayd.pid"
 LOCK_FILE="$ROOT/milepoints/say.lock"

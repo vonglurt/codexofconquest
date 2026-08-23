@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude
+// SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson
 // §WALK-2 — behavioural walk-parity: replay the REAL geo-grid (CELL_GRID +
 // IMPASSABLE_CELLS extracted from index.html) through both the OLD inline
 // cellMove decision logic and the NEW shared mover.js kernel, and assert they

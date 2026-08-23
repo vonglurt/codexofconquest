@@ -1,4 +1,4 @@
-<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude -->
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson -->
 
 # Story Arc — NG+ Remembrance (§XV)
 
@@ -243,4 +243,4 @@ A player who reached NG+ without finding Quest -1's door is not asked to write E
 | `lab-report-endings-and-echoes.md` | §NG+ | `storyNewGamePlus()` base preservation fields |
 
 ---
-*© 2026 Paul Richeson — MIT License. See [LICENSE](LICENSE) for full text.*
+*© 2026 Paul Richeson — MIT License. See [LICENSE](../../LICENSE) for full text.*

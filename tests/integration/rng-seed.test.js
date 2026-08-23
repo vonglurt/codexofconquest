@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude
+// SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson
 // §VM-01-B — One stream, two machines: seed the client RNG.
 // Proves the client's game-state rolls now draw a seeded mulberry32 stream backed by
 // a persisted S_story.rngState — so a save fully determines future encounter/skill/loot

@@ -1,4 +1,4 @@
-<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude -->
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson -->
 <!-- §VM-01-C child lab report — locked BEFORE the HTML edit (CONTRIBUTING.md Lab Report Policy). -->
 <!-- Parent structural read: lab-report-javascript-mud.md. Siblings: -vm01a-execbits-coroutine.md, -vm01b-client-rng-seed.md. -->
 

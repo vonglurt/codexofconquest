@@ -1,9 +1,9 @@
-<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude -->
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson -->
 # BACKLOG — Outstanding Work (routing index)
 
 > **This file was split into six phase backlogs on 2026-08-23.** It no longer carries rows itself — it carries the directive, the routing table, and the cross-phase §RESUME chronology. Every row, track record, theme bucket and history entry from the former single file lives verbatim in exactly one of the six; the split was verified line-exact (0 lines lost, 0 duplicated).
 
-> **This file is the list of outstanding activities.** The *how-we-work* rules live in **[CONTRIBUTING.md](CONTRIBUTING.md)**; closed/shipped work is archived in **[plan-archive.md](plan-archive.md)**. Split out of the former `plan.md` on 2026-07-09.
+> **This file is the list of outstanding activities.** The *how-we-work* rules live in **[CONTRIBUTING.md](../../CONTRIBUTING.md)**; closed/shipped work is archived in **[plan-archive.md](plan-archive.md)**. Split out of the former `plan.md` on 2026-07-09.
 >
 > **⚠️ Before starting ANY row — Existing-Work-First (CONTRIBUTING.md § Existing-Work-First Policy):** `git status` + `git log` first (uncommitted/fresh work matching the row = it's done or in progress — finish it, don't redo it); check for a second live session (`ps aux | grep claude`) before editing shared files; grep to *disprove* the row's premise (rows go stale — four rows have closed as ALREADY SHIPPED). A §RESUME entry says where the last session *stopped*, not what the tree looks like *now*.
 >

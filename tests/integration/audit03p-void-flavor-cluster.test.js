@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude
+// SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson
 // §AUDIT-03p — the Void's "first crack" line renders at every place it was authored for.
 //
 // `_voidFlavorLine(nodeCode)` (Layer 59) appends a cluster-keyed flavor line to

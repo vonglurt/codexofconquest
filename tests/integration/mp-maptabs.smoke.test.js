@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude
+// SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson
 'use strict';
 // §MP-MAPTABS smoke — the map sheet's Local/World/Full sub-tabs: tab bar wiring,
 // responsive Local grid fit, World/Full canvas render + click→cell mapping, the

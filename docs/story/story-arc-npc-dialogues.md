@@ -1,4 +1,4 @@
-<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude -->
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson -->
 
 # Story Arc — Birka NPC Dialogues
 **Source:** Extracted from `story.md` — canonical NPC content
@@ -259,4 +259,4 @@ At **Dear Friend** (`npcFavorability` = **2**, not 3 — the ledger stores three
 4. "The relay will hold now. Not indefinitely — nothing holds indefinitely. But long enough. That's all infrastructure ever does: hold long enough for the next person to figure out the rest."
 
 ---
-*© 2026 Paul Richeson — MIT License. See [LICENSE](LICENSE) for full text.*
+*© 2026 Paul Richeson — MIT License. See [LICENSE](../../LICENSE) for full text.*

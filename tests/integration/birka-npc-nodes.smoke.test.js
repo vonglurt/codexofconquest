@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude
+// SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson
 // §PLAY-01-G Friendships With Magic follow-up — the Birka NPC cards must render at
 // REAL nodes. Before this fix the birkaNpcs render map keyed five start-city NPCs to
 // dead pre-§WALK sublocation codes (CI/IN/TV/BA/CY) that have no NODE_MAP entry, so

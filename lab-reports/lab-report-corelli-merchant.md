@@ -1,4 +1,4 @@
-<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude -->
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson -->
 
 # Lab Report — Layer 61, §XXVI: Corelli the Wandering Merchant
 
@@ -193,4 +193,4 @@ Two design decisions verify exactly and remain sound: favorability derives from 
 *Layer 61, §XXVI — Corelli the Wandering Merchant. Verified against `roll2hit-v3.html` at HEAD, 2026-08-11.*
 
 ---
-*© 2026 Paul Richeson — MIT License. See [LICENSE](LICENSE) for full text.*
+*© 2026 Paul Richeson — MIT License. See [LICENSE](../LICENSE) for full text.*

@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude
+// SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson
 // §VM-01-G-FU-c — the §ALCHEMY-01/§WISDOM-01 (Roen arc) stack: six panel blocks to NODE_HOOKS
 // verbatim (G2's method) and the two button-less 2-state panels (PDL oracle, MLA stone) to
 // NODE_PANELS. The plan's "staged verbs + the second `choice` consumer" corrected by measurement

@@ -1,4 +1,4 @@
-<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude -->
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson -->
 
 # Lab Report — §DUNGEON-01: Ten Dungeon Themes Applied to The Shattered Codex
 
@@ -292,4 +292,4 @@ Retained verbatim in intent so no reader mistakes absence for success:
 *Verified 2026-08-11 (§DOC-02k) against `roll2hit-v3.html` @ `4eb1dc6`. 326 → 295 lines.*
 
 ---
-*© 2026 Paul Richeson — MIT License. See [LICENSE](LICENSE) for full text.*
+*© 2026 Paul Richeson — MIT License. See [LICENSE](../LICENSE) for full text.*

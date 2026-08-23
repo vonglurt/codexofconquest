@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude
+// SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson
 // §VM-01-D — QUEST:CORE, the fourth kernel (host-injected).
 // The quest VM (opcode table + gate evaluators + bit-chain executor) is extracted
 // into js/quest.js behind createQuestRuntime({getState, effects}) and inlined

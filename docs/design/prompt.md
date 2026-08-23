@@ -1,9 +1,9 @@
-<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude -->
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson -->
 # prompt.md — Operating Directive for Building roll2hit.com
 
 > **What this file is.** The one-page onboarding + operating prompt for an agent (human or model) picking up work on this repo. It tells you **how to take a work item from BACKLOG.md, build it with the game's own mechanics through the API, sync the docs, and close it** — without re-learning the project from scratch or breaking a load-bearing invariant.
 >
-> **This file is orientation, not law.** The binding rules live in **[CONTRIBUTING.md](CONTRIBUTING.md)** (how we work) and the outstanding work lives in **[BACKLOG.md](BACKLOG.md)**. Read those two first; this file wires them together and points at the rest. Where this file and CONTRIBUTING.md ever disagree, CONTRIBUTING.md wins.
+> **This file is orientation, not law.** The binding rules live in **[CONTRIBUTING.md](../../CONTRIBUTING.md)** (how we work) and the outstanding work lives in **[BACKLOG.md](../backlog/BACKLOG.md)**. Read those two first; this file wires them together and points at the rest. Where this file and CONTRIBUTING.md ever disagree, CONTRIBUTING.md wins.
 
 ---
 

@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude
+// SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson
 /**
  * §AUDIT-03m — find (and annotate) 26x16-era node codes still living in doc prose.
  *
@@ -64,8 +64,8 @@ function loadLegacyMap(indexText) {
  *   own ship records, and the quarantined tables in maps.md). Annotate, don't rewrite.
  */
 const SWEEP = [
-  'world.md',
-  'story.md',
+  'docs/design/world.md',
+  'docs/design/story.md',
   'docs/notes/docs-dev-environment.md',
   // §AUDIT-03m-FU (2026-08-04) — the last seven PENDING docs, swept and promoted.
   'docs/story/story-arc-coastal.md',
@@ -88,11 +88,11 @@ const SWEEP = [
  */
 const PENDING = [];
 
-const HISTORY_DIRS = ['lab-reports/', 'archive/', 'docs/spec/', '1367-sources/', 'milepoints/', 'maps/'];
+const HISTORY_DIRS = ['lab-reports/', 'archive/', 'docs/spec/', 'vendor/', 'milepoints/', 'maps/', 'docs/backlog/'];
 const HISTORY_FILES = [
-  'plan-archive.md', 'BACKLOG.md', 'maps.md', 'docs/maps/node-index.md',
-  'backlog-cleanup-plan.html', 'potential.md', 'CONTRIBUTING.md', 'prompt.md',
-  'index.md', 'quest.md', 'mechanics.md', 'monsters.md', 'README.md',
+  'docs/backlog/plan-archive.md', 'docs/backlog/BACKLOG.md', 'docs/design/maps.md', 'docs/maps/node-index.md',
+  'docs/notes/backlog-cleanup-plan.html', 'docs/design/potential.md', 'CONTRIBUTING.md', 'docs/design/prompt.md',
+  'docs/design/index.md', 'docs/design/quest.md', 'docs/design/mechanics.md', 'docs/design/monsters.md', 'README.md',
   'docs/mechanics/mechanics-combat.md', 'docs/mechanics/mechanics-economy.md',
   'docs/api/api-faq.md', 'docs/api/api-user-guide.md', 'docs/api/API-README.md',
   'docs/api/wbapi-help.md', 'docs/README.md', 'docs/notes/brainstorm-one-liners.md',

@@ -1,4 +1,4 @@
-<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude -->
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson -->
 
 # Lab Report — La Riva: Grief as a Causal Mechanic, and the Vignette Layer
 
@@ -310,4 +310,4 @@ Three of four deferred items closed. **The one that did not is the arc's own sta
 **Measured against:** HEAD, 38,712 lines. Where this document and `roll2hit-v3.html` disagree, the file is right.
 
 ---
-*© 2026 Paul Richeson — MIT License. See [LICENSE](LICENSE) for full text.*
+*© 2026 Paul Richeson — MIT License. See [LICENSE](../LICENSE) for full text.*

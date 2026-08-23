@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude
+// SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson
 'use strict';
 // mesh.js — §MESH-01 server↔server mesh layer, extracted from wbapi-server.js
 // (§MESH-01-REVIEW; the mover.js/rooms.js precedent). ACL · ingress rate

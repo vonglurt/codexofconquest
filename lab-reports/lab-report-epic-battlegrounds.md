@@ -1,4 +1,4 @@
-<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude -->
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson -->
 
 # Lab Report — Epic Battlegrounds
 ### Layer 39 — Dead-End Boss Nodes with NPC Contract Framing
@@ -341,4 +341,4 @@ that held.
 (`lab-reports/` is HISTORY under `scripts/legacy-codes.js`).*
 
 ---
-*© 2026 Paul Richeson — MIT License. See [LICENSE](LICENSE) for full text.*
+*© 2026 Paul Richeson — MIT License. See [LICENSE](../LICENSE) for full text.*

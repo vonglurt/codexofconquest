@@ -1,4 +1,4 @@
-<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude -->
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson -->
 
 # Lab Report — Endings and Echoes: The Covenant Arc
 
@@ -255,4 +255,4 @@ The evidence has now arrived, for the first time in ninety days, and the finding
 *lab-report-endings-and-echoes.md — Layer 43 design lock · original 2026-05-22 · verified §DOC-02cx 2026-08-22*
 
 ---
-*© 2026 Paul Richeson — MIT License. See [LICENSE](LICENSE) for full text.*
+*© 2026 Paul Richeson — MIT License. See [LICENSE](../LICENSE) for full text.*

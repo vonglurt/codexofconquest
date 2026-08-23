@@ -1,11 +1,30 @@
-<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude -->
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson -->
 # Contributing — Development Policies & Directives
 
-> **This file holds the *how-we-work* rules.** The list of outstanding work lives in **[BACKLOG.md](BACKLOG.md)**. Reference material lives in **[index.md](index.md)**. This file + BACKLOG.md were split out of the former `plan.md` on 2026-07-09.
+> **This file holds the *how-we-work* rules.** The list of outstanding work lives in **[BACKLOG.md](docs/backlog/BACKLOG.md)**. Reference material lives in **[index.md](docs/design/index.md)**. This file + BACKLOG.md were split out of the former `plan.md` on 2026-07-09.
+
+## Authorship and AI contribution
+
+**Copyright in this project is held solely by Paul Richeson.** The MIT grant in
+[LICENSE](LICENSE) is made by him as the publishing author and sole rights holder.
+
+Substantial portions of the code and documentation were drafted by Anthropic's Claude
+models, engaged as a **paid contracted service** and working **under the direction of the
+publishing author**. That is a sub-contractor relationship: the author sets the brief,
+directs the work, reviews and accepts it, and holds the resulting copyright. Work produced
+in that capacity carries **no independent authorship claim and no separate licence grant**,
+and no AI system is named as a copyright holder in `LICENSE` or in any per-file SPDX header.
+
+The record of the collaboration lives where provenance belongs — in the git history, where
+1,377 commits carry a `Co-Authored-By:` trailer naming the model that worked on them. That
+trailer is an attribution of labour, not of ownership.
+
+Outside contributions are accepted on the same terms: by opening a pull request you agree
+your contribution is licensed under the MIT terms in `LICENSE`.
 
 ## Directive
 
-> You are an expert prompt interpreter with an electrical engineering / computer science background. Follow the policies below: implement ideas from **[BACKLOG.md](BACKLOG.md)**, or append new ideas to the end of that list when told about them. **Before implementing any row, verify the work doesn't already exist — see the Existing-Work-First Policy below.** Work incrementally — present one step at a time and wait for "continue."
+> You are an expert prompt interpreter with an electrical engineering / computer science background. Follow the policies below: implement ideas from **[BACKLOG.md](docs/backlog/BACKLOG.md)**, or append new ideas to the end of that list when told about them. **Before implementing any row, verify the work doesn't already exist — see the Existing-Work-First Policy below.** Work incrementally — present one step at a time and wait for "continue."
 
 ### Existing-Work-First Policy (learned 2026-07-28 — two live sessions independently started §VM-01-G2)
 
@@ -78,7 +97,7 @@ The rules that keep those true:
 - **Shared client/server logic uses the parity pattern or it does not ship.** Sentinel comments + a `js/*.js` twin + a `scripts/check-*-parity.js` wired into `npm run check:walk`. In a single file with no build step there is no fourth way to share code. **Never edit an inlined copy** — edit `js/<mod>.js`, then re-run the checker.
 - **Purity claims must be true.** `_rollSkill` is labelled *"Pure roll"* (`Pure roll@22235`) and consumes the one-shot iodine buff and reads the live sheet through `getState` — the label was never true, and §VM-01-B moving its d20 off `Math.random()` onto the injected seeded stream did not make it so. If a comment says pure, the function takes its inputs as arguments and returns its outputs — no exceptions, no "pure means single-source-of-the-math."
 
-> **Diagnosis + evidence:** `lab-reports/lab-report-javascript-mud.md` (structural read: five layers, four execution traces) plus the verification recorded in the §VM-01 track in **[BACKLOG.md](BACKLOG.md)**. One-line summary: *the VM has an opcode table and no jump instruction.*
+> **Diagnosis + evidence:** `lab-reports/lab-report-javascript-mud.md` (structural read: five layers, four execution traces) plus the verification recorded in the §VM-01 track in **[BACKLOG.md](docs/backlog/BACKLOG.md)**. One-line summary: *the VM has an opcode table and no jump instruction.*
 
 ### Loop vs. Ask Rule
 

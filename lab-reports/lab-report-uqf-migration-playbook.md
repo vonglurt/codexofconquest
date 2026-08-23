@@ -1,4 +1,4 @@
-<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude -->
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson -->
 
 # Lab Report: The UQF Migration Playbook (§ARCH-01)
 
@@ -484,4 +484,4 @@ predicate into a variable no one consumes. *A conditional in a language with no 
 *§ARCH-01 — UQF Migration Playbook. Companion to `lab-report-quest-api-architecture.md`.
 Author: World Builder — roll2hit.com. Verified and rewritten 2026-08-17 under §DOC-02bu.*
 
-*© 2026 Paul Richeson — MIT License. See [LICENSE](LICENSE) for full text.*
+*© 2026 Paul Richeson — MIT License. See [LICENSE](../LICENSE) for full text.*

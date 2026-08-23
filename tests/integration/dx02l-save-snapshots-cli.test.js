@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude
+// SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson
 // §DX-02l — the dated-backup surface is reachable from ./api.sh.
 //
 // Why this test exists. `POST /api/save` — the one surface that stamps a dated
@@ -215,7 +215,7 @@ test.describe('§DX-02l — ./api.sh save + ./api.sh snapshots', () => {
   test('no author-facing doc reaches /api/save with raw curl', () => {
     const SURFACE = /\/api\/(save|snapshots)\b/;   // both wrappers now exist
     for (const rel of ['docs/api/api-user-guide.md', 'docs/api/API-README.md',
-                       'prompt.md', 'CONTRIBUTING.md']) {
+                       'docs/design/prompt.md', 'CONTRIBUTING.md']) {
       const src = fs.readFileSync(path.join(ROOT, rel), 'utf8');
       expect(curlInstructions(src, SURFACE),
         `${rel} still tells authors to curl the dated-backup surface`).toEqual([]);

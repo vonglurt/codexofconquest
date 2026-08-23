@@ -1,4 +1,4 @@
-<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude -->
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson -->
 
 # Story Arc — Epic Battlegrounds (Q52–Q71)
 **Source:** Extracted from `story.md` — canonical EB quest-giver dialogue
@@ -444,4 +444,4 @@
 > Mordus reads Kazrath's journal for a long time. "He was writing to someone in Birka. Someone in a position of authority. When I've thought about it, I'll find you." He pays. "The extra 100gp is for the journal. That's worth money in my line of work."
 
 ---
-*© 2026 Paul Richeson — MIT License. See [LICENSE](LICENSE) for full text.*
+*© 2026 Paul Richeson — MIT License. See [LICENSE](../../LICENSE) for full text.*

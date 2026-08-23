@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude
+// SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson
 // §VM-01-G-FU-d — the harbor chains (§SPARK-01/02 · §WHODUNIT-01 · §NAVAL-01 · §PORT-01/02 at
 // LCY/SEN/GCI/DNF/MME): six blocks to NODE_HOOKS verbatim, the stack's only button-less block
 // (the SEN Clot/Warmth panel) to NODE_PANELS ×3 states, ZERO verbs. The §11 slice plan's "GCI

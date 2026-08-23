@@ -1,4 +1,4 @@
-<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude -->
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson -->
 # Lab Report — §EDITOR-01-D-FU(b): Reward-Ladder → `itemChain` Migration
 
 **Track:** §EDITOR-01-D-FU item (b) · **Original date:** 2026-06-27 · **Status:** ✅ CLOSED (Inc 1–5)

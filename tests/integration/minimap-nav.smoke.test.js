@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude
+// SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson
 'use strict';
 // §MAP-NAV smoke — click-to-travel on the three story-bottom-bar mini maps:
 //   • LOCAL  (#mini-map-grid, 11×17 .mmc divs)   → real DOM click steps the player

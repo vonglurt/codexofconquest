@@ -1,4 +1,4 @@
-<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude -->
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson -->
 # BACKLOG — Phase 2: Engine & Systems — mechanics, economy, progression, the quest VM
 
 > **Phase 2 of 6.** Split out of `BACKLOG.md` on 2026-08-23; `BACKLOG.md` is now the routing index and holds the chronological §RESUME map across all six files.
@@ -9,7 +9,7 @@
 
 ## The Backlog Directive — restated in full
 
-> **This file is the list of outstanding activities for Phase 2 (Engine & Systems).** The *how-we-work* rules live in **[CONTRIBUTING.md](CONTRIBUTING.md)**; closed/shipped work is archived in **[plan-archive.md](plan-archive.md)**. Split out of the former `plan.md` on 2026-07-09.
+> **This file is the list of outstanding activities for Phase 2 (Engine & Systems).** The *how-we-work* rules live in **[CONTRIBUTING.md](../../CONTRIBUTING.md)**; closed/shipped work is archived in **[plan-archive.md](plan-archive.md)**. Split out of the former `plan.md` on 2026-07-09.
 >
 > **⚠️ Before starting ANY row — Existing-Work-First (CONTRIBUTING.md § Existing-Work-First Policy):** `git status` + `git log` first (uncommitted/fresh work matching the row = it's done or in progress — finish it, don't redo it); check for a second live session (`ps aux | grep claude`) before editing shared files; grep to *disprove* the row's premise (rows go stale — four rows have closed as ALREADY SHIPPED). A §RESUME entry says where the last session *stopped*, not what the tree looks like *now*.
 >
@@ -521,7 +521,7 @@
 
 ### §VM-01 — The Quest VM → *No Word for Wait* (NEW 2026-07-16)
 
-> **Diagnostic (parent) lab report:** `lab-reports/lab-report-javascript-mud.md` — a structural read of the entire `<script>` block (five layers, four execution traces: program/UI/movement/quest-acceptance), plus the follow-up verification recorded below. **Not** a quest-by-quest audit. **Inc A child lab report LOCKED 2026-07-21:** `lab-reports/lab-report-vm01a-execbits-coroutine.md` (design-review-before-implementation; locks the `execBits`→generator transformation, the `ask` envelope, the driver, the five call-site wraps, the three design calls, and the test plan — see §RESUME NEWEST banner above). Policy: **Host/Script Separation Policy** in [CONTRIBUTING.md](CONTRIBUTING.md).
+> **Diagnostic (parent) lab report:** `lab-reports/lab-report-javascript-mud.md` — a structural read of the entire `<script>` block (five layers, four execution traces: program/UI/movement/quest-acceptance), plus the follow-up verification recorded below. **Not** a quest-by-quest audit. **Inc A child lab report LOCKED 2026-07-21:** `lab-reports/lab-report-vm01a-execbits-coroutine.md` (design-review-before-implementation; locks the `execBits`→generator transformation, the `ask` envelope, the driver, the five call-site wraps, the three design calls, and the test plan — see §RESUME NEWEST banner above). Policy: **Host/Script Separation Policy** in [CONTRIBUTING.md](../../CONTRIBUTING.md).
 >
 > **The unifying theme (matched to `story.md`): the engine tells, and cannot ask.** `story.md` is about a man who saw the Void and never managed to *ask anyone for help* — Froberger fixed it alone and it destroyed him. The quest engine commits the same act on the player: **you are told (`📋 <title>`), never asked.** Arrival + gate = `'active'`, announced in a `·`-joined message strip. There is no accept button — and the reason is not that nobody added one. **There is no state in which the VM is waiting for an answer.** (§PLAY-01 found the engine *knows what it won't transmit*; §VM-01 finds it **cannot receive**. Same sin, opposite direction.)
 >
@@ -1136,7 +1136,7 @@
 
 ---
 
-> **Archive:** closed / completed work is archived in [plan-archive.md](plan-archive.md); the *how-we-work* rules live in [CONTRIBUTING.md](CONTRIBUTING.md).
+> **Archive:** closed / completed work is archived in [plan-archive.md](plan-archive.md); the *how-we-work* rules live in [CONTRIBUTING.md](../../CONTRIBUTING.md).
 
 ---
 

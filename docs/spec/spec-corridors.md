@@ -1,4 +1,4 @@
-<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude -->
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson -->
 
 # spec-corridors.md — Layer 9 Circuit Corridors
 
@@ -146,4 +146,4 @@ Records `S_story.lastExitCode`, `lastExitDir`, and `lastCorridorCells` for the m
 ---
 
 *Last updated: 2026-06-13 — marked SUPERSEDED after §CELL-03/04 completion*  
-*© 2026 Paul Richeson — MIT License. See [LICENSE](LICENSE) for full text.*
+*© 2026 Paul Richeson — MIT License. See [LICENSE](../../LICENSE) for full text.*

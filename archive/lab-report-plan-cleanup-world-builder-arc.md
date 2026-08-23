@@ -1,4 +1,4 @@
-<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude -->
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson -->
 
 # Lab Report — Documentation Phase Transition: plan.md Archaeology and the World Builder Arc
 
@@ -224,4 +224,4 @@ Roll2hit started as a dice roller, became a quest engine, built a world that rem
 | `lab-report-documentation-system-design.md` | Full document | IEEE analysis of the two-way sync architecture |
 
 ---
-*© 2026 Paul Richeson — MIT License. See [LICENSE](LICENSE) for full text.*
+*© 2026 Paul Richeson — MIT License. See [LICENSE](../LICENSE) for full text.*

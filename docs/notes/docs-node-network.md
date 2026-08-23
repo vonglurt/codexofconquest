@@ -1,4 +1,4 @@
-<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude -->
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson -->
 
 # roll2hit.com — Node Network Technical Reference
 
@@ -477,4 +477,4 @@ The game's Map sheet carries the multiplayer UI as sub-tabs (🗺 Map · 🌐 Co
 **Guard-rails:** mover.js untouched (refusals stay exactly `'oob'`/`'sea'`) · roads are terrain, never permissions · no stored node-to-node edge lists · never hand-edit `ROAD_RUNS` — always ♻ Reweave.
 
 ---
-*© 2026 Paul Richeson — MIT License. See [LICENSE](LICENSE) for full text.*
+*© 2026 Paul Richeson — MIT License. See [LICENSE](../../LICENSE) for full text.*

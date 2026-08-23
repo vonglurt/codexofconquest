@@ -1,4 +1,4 @@
-<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude -->
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson -->
 
 # The Four Courts of the Littoral Sea — §SIREN-01
 
@@ -299,4 +299,4 @@ Kept because no maintained doc carries it and this report is its only copy:
 *Four courts, five quests, ten flags, every string intact — and a sea that is no longer there.*
 
 ---
-*© 2026 Paul Richeson — MIT License. See [LICENSE](LICENSE) for full text.*
+*© 2026 Paul Richeson — MIT License. See [LICENSE](../LICENSE) for full text.*

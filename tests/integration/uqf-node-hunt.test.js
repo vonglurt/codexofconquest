@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude
+// SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson
 // §VM-01-G-FU-b — the §HUNT-01/02 stack: four panel blocks to NODE_HOOKS verbatim (G2's method)
 // and the three pure-text panels (HFT done, KSU hull ×2 states, ALF trail ×2 states) to
 // NODE_PANELS. The plan's "2 combat verbs" (BN hag, LD drowners) corrected by measurement the

@@ -2,7 +2,7 @@
 # r2h — one launcher for Roll2Hit. Run `./r2h help` for the menu.
 # Everything the project needs, behind short verbs. Keep it obvious.
 set -euo pipefail
-DIR="$(cd "$(dirname "$0")" && pwd)"
+DIR="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$DIR"
 
 PORT="${PORT:-1367}"

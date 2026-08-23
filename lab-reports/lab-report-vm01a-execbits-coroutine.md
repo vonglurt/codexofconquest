@@ -1,4 +1,4 @@
-<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude -->
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson -->
 # Lab Report — §VM-01-A · *Give the VM a `yield`*: `execBits` → coroutine
 
 > **Status:** ✅ **SHIPPED IN FULL** — the mechanism, the driver, the envelope and the acceptance

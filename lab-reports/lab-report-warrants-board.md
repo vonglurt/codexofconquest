@@ -1,4 +1,4 @@
-<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude -->
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson -->
 # Lab Report — §BOARD-01 *The Warrant's Board*: rumor/bounty discovery
 
 **Class:** design lock (IEEE-format spec written *before* implementation) · **Verified:** §DOC-02cv, 2026-08-22

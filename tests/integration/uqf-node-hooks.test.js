@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude
+// SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson
 // §VM-01-G2 — NODE_HOOKS: registered per-node render hooks (Class E bespoke UIs).
 // Guards the migration of 7 former storyRender blocks (Void Archaeology, Void Shaman Warden,
 // Corelli Merchant, Codex Core Chamber, La Riva row, Scholar Workshop, Mimic Meadows) into

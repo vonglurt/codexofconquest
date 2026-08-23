@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude
+// SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson
 'use strict';
 // §VM-01-F — gate expression AST + compile-once.
 // The gate evaluators became a compiled boolean tree — {all}/{any}/{not} over the

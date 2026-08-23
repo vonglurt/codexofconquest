@@ -1,4 +1,4 @@
-<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude -->
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson -->
 ## §PAUL-01 — The Escort of the Apostle: Revised Arc Design (✅ Implemented 2026-06-11)
 
 **Status:** ✅ Implemented 2026-06-11. All §PAUL-01-I checklist items resolved. Two Malta quests added: `quest_shipwreck_melta` (STR DC 12) + `quest_snake_melta` (witness, auto-complete via `maltaSnakeEvent`). `shipwreckSurvived` flag added to `_S_DEFAULTS`. 0 errors audit clean. Fighter presence layer live in all Paul arc nodes (DAM/KVA/MLA). Thorn tooltip live. Real quotes exact. See `archive/plan-archive-verbatim-2026-06-12.md §FUTURE-01` for node map reference.

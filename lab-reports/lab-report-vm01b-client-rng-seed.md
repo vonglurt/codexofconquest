@@ -1,7 +1,7 @@
-<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude -->
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson -->
 # Lab Report — §VM-01-B · *One stream, two machines*: seed the client RNG
 
-> **Type:** design review before implementation (Lab Report Policy row 4). **Child of** `lab-reports/lab-report-javascript-mud.md` and the §VM-01 track in **[BACKLOG.md](../BACKLOG.md)**. **Shipped** 2026-07-22, committed **`c22f4f0`** (the combined §VM-01-A/B/C landing).
+> **Type:** design review before implementation (Lab Report Policy row 4). **Child of** `lab-reports/lab-report-javascript-mud.md` and the §VM-01 track in **[BACKLOG.md](../docs/backlog/BACKLOG.md)**. **Shipped** 2026-07-22, committed **`c22f4f0`** (the combined §VM-01-A/B/C landing).
 >
 > **§DOC-02cn verification pass — 2026-08-21.** Re-measured against live `roll2hit-v3.html` (**38,712** lines) and `js/wbapi-server.js` (**11,671** lines), 30 days after the ship. Original text 211 lines, this rewrite 160; it is the same lock, shortened, with a spec→shipped delta table and an errata section. **Nothing was deleted for being wrong** — a claim that did not hold is marked and kept.
 

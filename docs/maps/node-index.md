@@ -1,4 +1,4 @@
-<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude -->
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 paul@roll2hit.com -->
 <!-- GENERATED FILE — do not hand-edit. Regenerate with: npm run nodes  (scripts/node-index.js, §AUDIT-03l) -->
 # NODE INDEX — the live `NODE_MAP`
 

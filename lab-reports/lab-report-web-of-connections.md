@@ -1,4 +1,4 @@
-<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude -->
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson -->
 
 # Lab Report — The Web of Connections: Froberger's Traces, NPC Cross-Relationships, and Hidden Histories
 
@@ -255,4 +255,4 @@ Five sixths of it, at present. The sixth needs one bit.
 *lab-report-web-of-connections.md — Layer 45 design lock · original 2026-05-22 · verified §DOC-02cz 2026-08-23*
 
 ---
-*© 2026 Paul Richeson — MIT License. See [LICENSE](LICENSE) for full text.*
+*© 2026 Paul Richeson — MIT License. See [LICENSE](../LICENSE) for full text.*

@@ -1,4 +1,4 @@
-<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude -->
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson -->
 
 # Battleground Architecture, Circuit Corridors, and Quest-Coupled Terrain
 
@@ -211,4 +211,4 @@ Pirate Caves · `MC` Zeugl's Den · `SC` Scholar Kings' Sea Cavern · `FO` Aldri
 
 ---
 
-*© 2026 Paul Richeson — MIT License. See [LICENSE](LICENSE) for full text.*
+*© 2026 Paul Richeson — MIT License. See [LICENSE](../LICENSE) for full text.*

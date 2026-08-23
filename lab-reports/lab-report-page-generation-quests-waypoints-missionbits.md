@@ -1,4 +1,4 @@
-<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude -->
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson -->
 
 # Lab Report — Page Generation: Quests, Waypoints, and Mission Bits
 ### Architectural review of the Story-Mode rendering pipeline in `roll2hit-v3.html`

@@ -1,4 +1,4 @@
-<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude -->
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson -->
 # Lab Report — §WBAPI-01 ph3: Source-Level PATCH for Structured Fields
 
 **Track:** §WBAPI-01 phase 3 · **Status:** SHIPPED (`a105e0e`) · **Filed:** 2026-06-27 (UTC) = 2026-06-26 17:48 PDT

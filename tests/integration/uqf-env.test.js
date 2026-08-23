@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude
+// SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson
 // §VM-01-C — Pass the state, don't close over it: the _ENV fix.
 // The effect handlers no longer name the S_story global; they write/read ctx.state,
 // an env threaded in by execBits that DEFAULTS to the live S_story. On the live path

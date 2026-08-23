@@ -1,4 +1,4 @@
-<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude -->
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson -->
 
 # Lab Report — §FUTURE-01 Source Reference: Paul of Tarsus, a Designer's Node Map
 
@@ -244,4 +244,4 @@ The scholarship below is the arc's writing bible and the only surviving record o
 *Historical note: this document carried no header block, no date and no `§` tag. Those are supplied above from the arc's birth commit and its sibling; the body's scriptural citations are preserved as written and were not adjudicated — see §I.*
 
 ---
-*© 2026 Paul Richeson — MIT License. See [LICENSE](LICENSE) for full text.*
+*© 2026 Paul Richeson — MIT License. See [LICENSE](../LICENSE) for full text.*

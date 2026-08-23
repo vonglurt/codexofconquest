@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude
+// SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson
 'use strict';
 // ═══════════════════════════════════════════════════════════════════════════
 // check-questgraph.js — §VM-01-E: the soft-lock prover (dynamic effect-prober +

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude
+# SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson
 # MIT License — Copyright (c) 2026 Paul Richeson
 # Watches for new roll2hit-v3-YYYYMMDD-HHMMSS.html files and archives them
 # once fully written (no open file handles).
@@ -16,7 +16,7 @@
 
 set -euo pipefail
 
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 LOCK="$SCRIPT_DIR/.archive-lock"
 SETTLE_SECS=2   # grace period after handles close
 MAX_WAIT_SECS=30

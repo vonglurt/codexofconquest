@@ -1,4 +1,4 @@
-<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude -->
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson -->
 # Brainstorm One-Liners — Idea Generator Output
 
 > Process (§IDEA-01 in BACKLOG.md): take a found-text list, dedupe, turn **every** line into a

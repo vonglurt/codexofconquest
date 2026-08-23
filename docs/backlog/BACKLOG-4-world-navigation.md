@@ -1,4 +1,4 @@
-<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude -->
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson -->
 # BACKLOG — Phase 4: World & Navigation — nodes, terrain, geography, movement
 
 > **Phase 4 of 6.** Split out of `BACKLOG.md` on 2026-08-23; `BACKLOG.md` is now the routing index and holds the chronological §RESUME map across all six files.
@@ -9,7 +9,7 @@
 
 ## The Backlog Directive — restated in full
 
-> **This file is the list of outstanding activities for Phase 4 (World & Navigation).** The *how-we-work* rules live in **[CONTRIBUTING.md](CONTRIBUTING.md)**; closed/shipped work is archived in **[plan-archive.md](plan-archive.md)**. Split out of the former `plan.md` on 2026-07-09.
+> **This file is the list of outstanding activities for Phase 4 (World & Navigation).** The *how-we-work* rules live in **[CONTRIBUTING.md](../../CONTRIBUTING.md)**; closed/shipped work is archived in **[plan-archive.md](plan-archive.md)**. Split out of the former `plan.md` on 2026-07-09.
 >
 > **⚠️ Before starting ANY row — Existing-Work-First (CONTRIBUTING.md § Existing-Work-First Policy):** `git status` + `git log` first (uncommitted/fresh work matching the row = it's done or in progress — finish it, don't redo it); check for a second live session (`ps aux | grep claude`) before editing shared files; grep to *disprove* the row's premise (rows go stale — four rows have closed as ALREADY SHIPPED). A §RESUME entry says where the last session *stopped*, not what the tree looks like *now*.
 >
@@ -327,7 +327,7 @@
 
 ---
 
-> **Archive:** closed / completed work is archived in [plan-archive.md](plan-archive.md); the *how-we-work* rules live in [CONTRIBUTING.md](CONTRIBUTING.md).
+> **Archive:** closed / completed work is archived in [plan-archive.md](plan-archive.md); the *how-we-work* rules live in [CONTRIBUTING.md](../../CONTRIBUTING.md).
 
 ---
 

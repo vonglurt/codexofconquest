@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude
+// SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson
 // §DX-01d/i — deleting an entity actually removes it from the file.
 //
 // Why this test exists: every `WBAPI.<collection>.delete()` used to be one line —

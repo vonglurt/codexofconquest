@@ -1,4 +1,4 @@
-<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude -->
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson -->
 
 # Lab Report — Layer 52: Void Archaeology, "The Architecture"
 
@@ -311,4 +311,4 @@ And the arc is still waiting. She sealed the tunnel from the inside; we sealed i
 the outside — once with a missing key, once with a flag that grants itself.
 
 ---
-*© 2026 Paul Richeson — MIT License. See [LICENSE](LICENSE) for full text.*
+*© 2026 Paul Richeson — MIT License. See [LICENSE](../LICENSE) for full text.*

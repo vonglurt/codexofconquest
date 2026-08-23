@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude
+// SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson
 // §NAV-01c — structural rooms-parity: assert the ROOMS:CORE block inlined in
 // index.html is byte-identical to the same block in rooms.js.
 'use strict';

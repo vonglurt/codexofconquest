@@ -1,4 +1,4 @@
-<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude -->
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson -->
 
 # Lab Report — Layer 49: Quest −1 "The Open Door" + the World Creator Wizard
 
@@ -171,4 +171,4 @@ Three correct recommendations, zero converted into tracked rows, zero shipped. �
 *Historical note: the original's own citations — lines 8423, 8426, 8902–8910, 14261, 14732 — are **all exact against `0a131f5`** and are preserved here as history. Per §DOC-02 policy, lab-report line numbers are never trusted and never rewritten; the `symbol@line` anchors above are the live pointers.*
 
 ---
-*© 2026 Paul Richeson — MIT License. See [LICENSE](LICENSE) for full text.*
+*© 2026 Paul Richeson — MIT License. See [LICENSE](../LICENSE) for full text.*

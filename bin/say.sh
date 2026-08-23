@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
-# SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude
+# SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson
 # say.sh — enqueue text for speech and return immediately
 # Usage: say.sh "some text"  OR  echo "some text" | say.sh
 #
 # Voice and rate are configured in sayd.sh (the daemon that does the speaking).
 
-ROOT="$(cd "$(dirname "$0")" && pwd)"
+ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 LOG="$ROOT/milepoints/say.log"
 QUEUE_DIR="$ROOT/milepoints/say.queue.d"
 DAEMON="$ROOT/sayd.sh"

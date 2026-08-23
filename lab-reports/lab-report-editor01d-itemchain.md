@@ -1,4 +1,4 @@
-<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude -->
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson -->
 # Lab Report — §EDITOR-01-D: declarative `itemChain` (token item manager)
 
 **Original status:** DESIGN LOCKED → implementing · **Original date:** 2026-06-27

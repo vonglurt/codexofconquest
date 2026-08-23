@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude
+// SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson
 // §AUDIT-03m — the live docs stop speaking 26×16.
 //
 // Why this test exists: §AUDIT-03l generated the node reference and quarantined `maps.md`'s
@@ -110,9 +110,9 @@ test.describe('§AUDIT-03m — legacy node codes in doc prose', () => {
   test('every doc carrying legacy codes is classified — an unlisted one fails the gate', () => {
     // The §AUDIT-03j/n house style: classification is explicit, because a heuristic is
     // blind to a doc that is *entirely* legacy-coded.
-    expect(L.classify('world.md')).toBe('SWEEP');
+    expect(L.classify('docs/design/world.md')).toBe('SWEEP');
     expect(L.classify('lab-reports/lab-report-ally-cat.md')).toBe('HISTORY');
-    expect(L.classify('plan-archive.md')).toBe('HISTORY');
+    expect(L.classify('docs/backlog/plan-archive.md')).toBe('HISTORY');
     expect(L.classify('docs/story/story-flowchart.md')).toBe('SWEEP');   // §AUDIT-03m-FU promoted the last 7
     expect(L.classify('docs/notes/a-doc-nobody-has-classified.md')).toBe('UNCLASSIFIED');
     // PENDING is empty but must remain a live class — the next doc to grow legacy codes
@@ -180,7 +180,7 @@ test.describe('§AUDIT-03m — legacy node codes in doc prose', () => {
     for (const [npc, node] of [['yael', 'LHR'], ['brynn', 'TLL'], ['quill', 'MHQ'], ['pachelbel', 'LLA']]) {
       expect(roster[0], `${npc} must be rostered at ${node}`).toMatch(new RegExp(`${node}:\\['?${npc}`));
     }
-    const world = fs.readFileSync(path.join(ROOT, 'world.md'), 'utf8');
+    const world = fs.readFileSync(path.join(ROOT, 'docs/design/world.md'), 'utf8');
     for (const [npc, node] of [['Quill', 'MHQ'], ['Pachelbel', 'LLA'], ['Weckmann', 'HKG'], ['Auros', 'HKG']]) {
       expect(world, `world.md's Homecoming row for ${npc} must name ${node}`)
         .toContain(`| ${npc} (\`${node}\``);
@@ -286,7 +286,7 @@ test.describe('§AUDIT-03m — legacy node codes in doc prose', () => {
     expect(html, "the lute is handed over from Pachelbel's card, not at a node")
       .toMatch(/key === 'pachelbel'[\s\S]{0,200}Quill's Lute/);
     expect(html.match(/const birkaNpcs = \{[^}]*\}/)[0]).toMatch(/LLA:\['?pachelbel/);
-    const world = fs.readFileSync(path.join(ROOT, 'world.md'), 'utf8');
+    const world = fs.readFileSync(path.join(ROOT, 'docs/design/world.md'), 'utf8');
     expect(world, 'Beat 1 must name the node Pachelbel actually stands at')
       .toMatch(/\*\*Beat 1:\*\* Player asks Pachelbel at `LLA`/);
     expect(world, 'and must not still offer the born-dead alternative').not.toMatch(/at `LLA` or SH/);
@@ -295,7 +295,7 @@ test.describe('§AUDIT-03m — legacy node codes in doc prose', () => {
   test('history is annotated, never rewritten — the tool refuses to write one', () => {
     let err = null;
     try {
-      execFileSync(process.execPath, [TOOL, '--annotate', 'plan-archive.md', '--write'], { encoding: 'utf8', stdio: 'pipe' });
+      execFileSync(process.execPath, [TOOL, '--annotate', 'docs/backlog/plan-archive.md', '--write'], { encoding: 'utf8', stdio: 'pipe' });
     } catch (e) { err = e; }
     expect(err, 'the tool must refuse to rewrite a HISTORY doc').not.toBeNull();
     expect(String(err.stderr)).toMatch(/refusing/);

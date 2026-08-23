@@ -1,4 +1,4 @@
-<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude -->
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson -->
 
 # Lab Report — The Living World: Off-Screen Life, World Progression, and Map Memory
 
@@ -277,4 +277,4 @@ It shows 129 cells, warm where you were kind. It just needs to be told to cover 
 *lab-report-living-world.md — Layer 44 design lock · original 2026-05-22 · verified §DOC-02cy 2026-08-23*
 
 ---
-*© 2026 Paul Richeson — MIT License. See [LICENSE](LICENSE) for full text.*
+*© 2026 Paul Richeson — MIT License. See [LICENSE](../LICENSE) for full text.*

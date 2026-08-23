@@ -1,4 +1,4 @@
-<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude -->
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson -->
 
 # Story Arc — Coastal Underground (§XIX + §XX)
 
@@ -300,4 +300,4 @@ The Harrow Manifest's `wmFirstResearcherKnown` gate creates a direct connection 
 | `lab-report-weimar-scholar-gate.md` | §II.G | `tlLedgerRead` cross-reference; archiveLetterObtained path |
 
 ---
-*© 2026 Paul Richeson — MIT License. See [LICENSE](LICENSE) for full text.*
+*© 2026 Paul Richeson — MIT License. See [LICENSE](../../LICENSE) for full text.*

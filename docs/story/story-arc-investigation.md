@@ -1,4 +1,4 @@
-<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude -->
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson -->
 
 # Story Arc — The Investigation Chain (§XVI → §XVII → §XXI)
 
@@ -456,4 +456,4 @@ The callback fires only on the persuasion path because the persuasion path left 
 | `lab-report-tilbury-visby-arcs.md` | §II.C | `vsShamanKnown` origin — §XX prerequisite for §XXI |
 
 ---
-*© 2026 Paul Richeson — MIT License. See [LICENSE](LICENSE) for full text.*
+*© 2026 Paul Richeson — MIT License. See [LICENSE](../../LICENSE) for full text.*

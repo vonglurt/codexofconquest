@@ -1,4 +1,4 @@
-<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude -->
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson -->
 <!-- §VM-01-F child lab report — design LOCKED before the HTML edit (CONTRIBUTING.md Lab Report Policy), committed with the ship. -->
 <!-- Parent structural read: lab-report-javascript-mud.md. Prior increments: -vm01a-execbits-coroutine.md, -vm01b-client-rng-seed.md, -vm01c-env-state-passing.md, -vm01d-quest-core-parity.md. -->
 <!-- VERIFIED 2026-08-22 (§DOC-02cs). The 2026-07-22 design text is preserved; every measured claim now carries a ledger row. Claims that did not ship are marked NOT SHIPPED and kept. -->

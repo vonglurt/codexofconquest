@@ -1,4 +1,4 @@
-<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude -->
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson -->
 # importers/ — Historical content importers ⚠️ ARCHAIC
 
 One-shot Python scripts that POSTed narrative content (books, node maps, NPC

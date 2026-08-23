@@ -1,4 +1,4 @@
-<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude -->
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson -->
 
 # Lab Report — Layer 42: The NPC Dialogue System (World Truth · 4-State Speech · Groundhog Day)
 
@@ -689,4 +689,4 @@ difference between this game's thesis and its opposite.**
 *Verified and rewritten 2026-08-12 (§DOC-02ab).*
 
 ---
-*© 2026 Paul Richeson — MIT License. See [LICENSE](LICENSE) for full text.*
+*© 2026 Paul Richeson — MIT License. See [LICENSE](../LICENSE) for full text.*

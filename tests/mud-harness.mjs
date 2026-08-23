@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude
+// SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson
 // §WALK-5 Inc 3 — MUD multi-client harness.
 //
 // Spins a THROWAWAY wbapi-server (PORT env, default 13679 — never touches the

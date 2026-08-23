@@ -1,4 +1,4 @@
-<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude -->
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson -->
 
 # Lab Report — Tattoo Progression & Chronicle: Persisting Character Identity Across the Death Boundary
 
@@ -489,4 +489,4 @@ Original claimed 30 of 30 ✅. Re-measured: **26 ✅ · 2 ⚠ · 2 ❌**.
 publication venue. IEEE formatting applied for structural clarity.*
 
 ---
-*© 2026 Paul Richeson — MIT License. See [LICENSE](LICENSE) for full text.*
+*© 2026 Paul Richeson — MIT License. See [LICENSE](../LICENSE) for full text.*

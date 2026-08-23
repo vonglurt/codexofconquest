@@ -1,4 +1,4 @@
-<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude -->
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson -->
 
 # Architectural Cleanup Report: plan.md Compaction — Layers 14 through 17
 
@@ -279,4 +279,4 @@ When starting Layer 18, add a new `## Layer 18 — [Name]` section to `plan.md`.
 MIT License — roll2hit.com — Copyright (c) 2026 — Free to use, modify, and share.
 
 ---
-*© 2026 Paul Richeson — MIT License. See [LICENSE](LICENSE) for full text.*
+*© 2026 Paul Richeson — MIT License. See [LICENSE](../LICENSE) for full text.*

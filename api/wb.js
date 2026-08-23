@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude
+// SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson
 // Copyright (c) 2026 Paul Richeson <paul@roll2hit.com> — Roll2Hit.com
 'use strict';
 // api/wb.js — Roll2Hit WBAPI CLI wrapper

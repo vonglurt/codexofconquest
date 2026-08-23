@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude
+// SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson
 // §PLAY-01-B The Conqueror's Hand — low-HP enemy behavior driving the REAL
 // _storyEnemyTurn: Void-touched enemies press (one-time enrage), mundane beasts
 // flee (earning effort XP). Full-HP enemies behave exactly as before.

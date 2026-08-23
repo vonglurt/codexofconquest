@@ -1,4 +1,4 @@
-<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude -->
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson -->
 # Lab Report — §MESH-01: Multiuser MUD
 
 **Presence rendering · self-discovering server mesh · tracker rendezvous · no-dupe economy · consensual duels**

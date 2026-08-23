@@ -1,4 +1,4 @@
-<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude -->
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson -->
 # api-data-audit.md — Quest Text Backfill Loop
 
 **Self-referential procedure.** Read this file to know what to do next.
@@ -436,4 +436,4 @@ curl http://localhost:1367/api/list/node
 ```
 
 ---
-*© 2026 Paul Richeson — MIT License. See [LICENSE](LICENSE) for full text.*
+*© 2026 Paul Richeson — MIT License. See [LICENSE](../../LICENSE) for full text.*

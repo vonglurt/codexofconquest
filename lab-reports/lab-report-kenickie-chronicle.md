@@ -1,4 +1,4 @@
-<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude -->
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson -->
 
 # Lab Report — Layers 75 + 77: Kenickie's Black Market · The Chronicle System
 
@@ -215,4 +215,4 @@ The report filed one explicit maintenance risk — that hardcoding the 10% disco
 | `_statTally('sleeps', 1);@36297` · `_statTally('daysAdventuring', 1);@36298` | The permanently-equal pair |
 
 ---
-*© 2026 Paul Richeson — MIT License. See [LICENSE](LICENSE) for full text.*
+*© 2026 Paul Richeson — MIT License. See [LICENSE](../LICENSE) for full text.*

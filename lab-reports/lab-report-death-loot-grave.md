@@ -1,4 +1,4 @@
-<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude -->
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson -->
 # Lab Report — §DEATH-01: Death, Loot & the Grave
 
 **Design lock:** 2026-07-12 · **Shipped:** `a52f9cd`, same day, Inc A/B/C in one commit.

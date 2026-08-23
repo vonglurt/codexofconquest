@@ -1,4 +1,4 @@
-<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude -->
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson -->
 
 # Lab Report — §KG Increment 2: The St. Petersburg → Moscow Corridor
 ### A second beginner ramp — low-level "kindergarten" zones, Soviet-cyberpunk cover story, honor-central
@@ -433,4 +433,4 @@ Only opening the game did.
 *Increment 3 (the quest chain) is a separate lab-report-gated block: `lab-report-kg-corridor-quest-chain.md`.*
 
 ---
-*© 2026 Paul Richeson — MIT License. See [LICENSE](LICENSE) for full text.*
+*© 2026 Paul Richeson — MIT License. See [LICENSE](../LICENSE) for full text.*

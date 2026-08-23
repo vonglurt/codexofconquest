@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude
+// SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson
 // §AUDIT-03l — the node reference an author reads is GENERATED, and it cannot drift.
 //
 // Why this test exists: `maps.md`'s hand-maintained legend was the doc you consulted to
@@ -89,7 +89,7 @@ test.describe('§AUDIT-03l — the generated node index', () => {
   });
 
   test('maps.md sends readers to the generated index, and marks its own tables historical', () => {
-    const maps = fs.readFileSync(path.join(ROOT, 'maps.md'), 'utf8');
+    const maps = fs.readFileSync(path.join(ROOT, 'docs/design/maps.md'), 'utf8');
     expect(maps).toContain('docs/maps/node-index.md');
     // every section that still carries 26×16-era codes or coordinates must say so
     for (const heading of ['## TINY MAP', '## FULL MAP', '## LEGEND', '## NODE NETWORK',

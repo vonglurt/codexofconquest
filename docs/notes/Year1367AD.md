@@ -1,4 +1,4 @@
-<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude -->
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson -->
 
 # Year 1367 AD — Historical Events, Source Material & Quest Vignettes
 
@@ -741,4 +741,4 @@ The jester sits back down. The coin resumes its arc. He never asked you to come 
 **Gate answered:** All 8 clarification questions resolved in `plan-archive.md §1367-D`. Integration in progress.
 
 ---
-*© 2026 Paul Richeson — MIT License. See [LICENSE](LICENSE) for full text.*
+*© 2026 Paul Richeson — MIT License. See [LICENSE](../../LICENSE) for full text.*

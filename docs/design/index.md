@@ -1,4 +1,4 @@
-<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude -->
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson -->
 
 # Roll2Hit — The Shattered Codex: Document Index
 
@@ -471,7 +471,7 @@ All 54 source books are marked `[x]` in `books.md` — all have been processed t
 | **Visby** | VS | V | `NAS` 🛏 | `SFT` · `VBY` · `TRD` · `FEZ` · `VIE` · `CLJ` 🛏 | Warlord Mordus |
 | **Weimar** | WM | VI | `NUE` 🛏 | `ERF` 🛏 · `EGE` → `HER` · `LYR` · `GVA` | Archivus Sweelinck |
 
-> **Codes remapped to live `NODE_MAP` keys 2026-07-29 (§AUDIT-03l)** — this table had carried the retired 26×16 names (`CI`/`SF`/`CQ`/`SQ`…). Two corrections beyond the rename: the **Inn** column had named `SF`/`IS`, neither of which is a `sleep:true` node — the real checkpoints are `SEN` (Aboard the Tilbury Star) and `NAS` (Pirate Cave); and Visby's `BK` was the *Broken Tooth Tavern* = **`VBY`**, not the live `BK` (Birka Shore), one of the two code collisions the generated LEGACY CODE MAP flags. The `Two-letter hub` column is a *town* label, not a node code. Live per-node detail incl. all 38 🛏 checkpoints: [`docs/maps/node-index.md`](docs/maps/node-index.md).
+> **Codes remapped to live `NODE_MAP` keys 2026-07-29 (§AUDIT-03l)** — this table had carried the retired 26×16 names (`CI`/`SF`/`CQ`/`SQ`…). Two corrections beyond the rename: the **Inn** column had named `SF`/`IS`, neither of which is a `sleep:true` node — the real checkpoints are `SEN` (Aboard the Tilbury Star) and `NAS` (Pirate Cave); and Visby's `BK` was the *Broken Tooth Tavern* = **`VBY`**, not the live `BK` (Birka Shore), one of the two code collisions the generated LEGACY CODE MAP flags. The `Two-letter hub` column is a *town* label, not a node code. Live per-node detail incl. all 38 🛏 checkpoints: [`docs/maps/node-index.md`](../maps/node-index.md).
 
 > See `docs/story/story-flowchart.md` for full node-to-node movement graph and arc overlays.
 
@@ -804,4 +804,4 @@ This rule applies to `docs/api/api-data-audit.md`, `plan-archive.md §TTS`, and 
 *MIT License — roll2hit.com — Copyright (c) 2026 — Free to use, modify, and share.*
 
 ---
-*© 2026 Paul Richeson — MIT License. See [LICENSE](LICENSE) for full text.*
+*© 2026 Paul Richeson — MIT License. See [LICENSE](../../LICENSE) for full text.*

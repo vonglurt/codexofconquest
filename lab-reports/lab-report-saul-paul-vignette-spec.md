@@ -1,4 +1,4 @@
-<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude -->
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson -->
 
 # Lab Report: §FUTURE-01 Vignette Writing Spec — The Road to Kesra
 
@@ -370,4 +370,4 @@ person-mixing *outside* the §FUTURE-01 arc was not censused.
 **Plan reference:** `plan.md §FUTURE-01` *(deleted `5e48dd7`; this file and its sibling are the record)*
 
 ---
-*© 2026 Paul Richeson — MIT License. See [LICENSE](LICENSE) for full text.*
+*© 2026 Paul Richeson — MIT License. See [LICENSE](../LICENSE) for full text.*

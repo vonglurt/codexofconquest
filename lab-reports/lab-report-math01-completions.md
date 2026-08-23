@@ -1,4 +1,4 @@
-<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude -->
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson -->
 # Lab Report — §MATH-01: Completion Design for the Mathematical World Arc
 
 **Designed:** 2026-07-07 08:58 (design lock, pre-implementation) · **Shipped:** 2026-07-07 09:22 `32d7bb0`
@@ -189,7 +189,7 @@ This is a design-lock document, so its measurements belong to the tree it was wr
 | 2 | Five `PUT /api/quest` migrations, prose untouched | Same; every `desc`/`hint`/`failText` preserved | ✅ |
 | 3 | Legacy `reward` field kept "for display parity" | Kept, values mirror the `onComplete` gold exactly | ✅ |
 | 4 | Test plan: flip the pins, add a §MATH-01 describe | Shipped as **5 tests**, including the D5 edge and an `atNode`-holds negative | ✅ exceeded |
-| 5 | Docs plan: `quest.md` rows + `index.md` registry/test/report rows | All shipped — `` `quest.md:The Mathematics Pocket (EHZ, ZERO, MONS, CNTR)@343` `` carries five `[✅ LIVE §MATH-01]` rows with gold and XP correct | ✅ |
+| 5 | Docs plan: `quest.md` rows + `index.md` registry/test/report rows | All shipped — `` `docs/design/quest.md:The Mathematics Pocket (EHZ, ZERO, MONS, CNTR)@343` `` carries five `[✅ LIVE §MATH-01]` rows with gold and XP correct | ✅ |
 | 6 | — | **A WBAPI defect surfaced mid-flight**: `PUT` routed plain-object fields (`gate`, `completion`) to a memory-only path that a file-watch reload discarded. Fixed the same commit as `editStructuredField` source-level persistence | ➕ undocumented in the report; recorded here |
 | 7 | — | The ship commit also carried an **unrelated road-editor pin** into `config/roads-pins.json` at `(36,176)`. Benign: `ROAD_RUNS` was not regenerated in that commit, and when it later was, the cell attached to an existing highway | ➕ stray, no defect |
 | 8 | "No sequencing" (D4) | Four `unlock` edges added 14 days later | ⟳ superseded, in the player's favour |

@@ -1,4 +1,4 @@
-<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude -->
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson -->
 # Lab Report — §VM-01-D: `QUEST:CORE`, the Fourth Kernel (host-injected)
 
 **Track:** §VM-01 — The Quest VM → *No Word for Wait*

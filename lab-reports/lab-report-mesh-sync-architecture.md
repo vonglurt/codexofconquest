@@ -1,4 +1,4 @@
-<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude -->
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson -->
 # Presence Without Consensus: Synchronization, Discovery, and Bootstrap in a Single-File Multiplayer World
 
 **Roll2Hit Lab Report — §MESH-01 architecture retrospective**

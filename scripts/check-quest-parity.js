@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude
+// SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson
 // §VM-01-D — structural quest-parity: assert the QUEST:CORE block inlined in
 // index.html is byte-identical to the same block in js/quest.js. The quest
 // VM (opcode table + gate evaluators + bit-chain executor) is a host-injected

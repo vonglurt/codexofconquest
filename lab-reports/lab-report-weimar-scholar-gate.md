@@ -1,4 +1,4 @@
-<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude -->
+<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson -->
 
 # Lab Report — Layer 51: Weimar Scholar Gate
 
@@ -374,4 +374,4 @@ and `world.md` §Weimar Scholar Gate. Cross-reference: `lab-report-ng-plus-remem
 (`wmFirstResearcherKnown` as the Entry 42 prerequisite — see Finding 2b before relying on it).
 
 ---
-*© 2026 Paul Richeson — MIT License. See [LICENSE](LICENSE) for full text.*
+*© 2026 Paul Richeson — MIT License. See [LICENSE](../LICENSE) for full text.*

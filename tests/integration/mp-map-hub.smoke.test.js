@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude
+// SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson
 // §MP-MAP smoke — the Multiplayer hub on the map's Multiplayer pane:
 // advertise toggle (persist + beacon gate), Local/World chat filter, presence.
 const { test, expect } = require('@playwright/test');

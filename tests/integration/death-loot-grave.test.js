@@ -1,4 +1,4 @@
-// SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson and Claude
+// SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson
 // §DEATH-01 — Death, Loot & the Grave. Drives the REAL death/NG+/chip surfaces:
 //  Inc A — honest respawn message (equipped gear survives) + finding #5 atomic-save pin
 //  Inc B — persistent corpse signal chip (names where the body is; click opens the map)
