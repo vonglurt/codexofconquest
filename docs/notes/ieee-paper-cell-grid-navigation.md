@@ -4,7 +4,7 @@
 
 **Paul Richeson**  
 *roll2hit.com · Independent Game Research*  
-*ubermicrouser@gmail.com*
+*paulr@sdf.org*
 
 ---
 
@@ -531,4 +531,4 @@ The architecture is well-suited to any text-based role-playing game that require
 ---
 
 *© 2026 Paul Richeson — MIT License.*  
-*Correspondence: ubermicrouser@gmail.com*
+*Correspondence: paulr@sdf.org*
