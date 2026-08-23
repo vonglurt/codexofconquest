@@ -71,7 +71,7 @@ adjustment, and the arc-close at LCA reads the count back without judgement:
    des serpents*, **"not as a warning but as a classification."**
 4. **A final check that is harder for being transparent.** After three courts, the thing that built
    them offers help. It costs *"nothing"* — one word, one framing, at Port Solen. DC 15, matching the
-   Succubus charm save (MM p.349). *"The most effective intervention is the one that appears to be
+   Succubus charm save. *"The most effective intervention is the one that appears to be
    assistance."*
 
 **The register.** Compressed present-tense French vignette, inherited from the grief arc (§GR) and the
