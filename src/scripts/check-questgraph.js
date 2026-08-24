@@ -43,8 +43,8 @@
 // result into both pools (see its comment). The 114 "written-by-nothing" collapsed
 // to 48 — all genuine: the bulk-imported waw/crl/nwi/mla arcs whose act/chapter
 // gates read a flag the prior step never writes (a systemic naming mismatch:
-// gates say `waw001a2`, acts write `waw001Act2Passed`), plus voidFluxCleared +
-// innDeparted (documented-but-unimplemented mechanics). Unreachable 202 → ~53 the
+// gates say `waw001a2`, acts write `waw001Act2Passed`), plus voidFluxCleared
+// (a documented-but-unimplemented mechanic). Unreachable 202 → ~53 the
 // same way. Fixing that quest CONTENT is a separate triage pass (BACKLOG §VM-01-E).
 //
 // EXIT: hard-fails (1) ONLY on residual nondeterminism in quest data — the sound,
@@ -388,7 +388,6 @@ const KNOWN_SELF_DEADLOCK = {
 // its repair. A flag belongs here only while a real authoring decision is pending;
 // anything not listed fails the gate (§AUDIT-03bj).
 const KNOWN_UNWRITTEN_FLAG = {
-  innDeparted: '§AUDIT-03bk',
   voidFluxCleared: '§DX-02u',
 };
 

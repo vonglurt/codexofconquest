@@ -8330,7 +8330,7 @@ test.describe('§ARCH-01 Wave 3a — side-quest declarative completion (61 migra
     expect(r).toEqual({ gatedOut:'(not listed)', listed:'active', beforeBattle:'active', afterBattle:'complete' });
   });
 
-  test('atNode (quest_shore_01, gate battles) + flag∧atNode (quest_inn_05) + items-only (sq_1 fuzzy)', async ({ page }) => {
+  test('atNode (quest_shore_01, gate battles) + flagsPath∧atNode (quest_inn_05) + items-only (sq_1 fuzzy)', async ({ page }) => {
     await page.goto('/play.html');
     const r = await page.evaluate(() => {
       const out = {};
@@ -8345,7 +8345,7 @@ test.describe('§ARCH-01 Wave 3a — side-quest declarative completion (61 migra
       S_story.quests.quest_inn_05 = 'active';
       S_story.currentCode = 'INN';
       out.innFlagUnset = QuestRuntime.canComplete('quest_inn_05');               // at node but not departed
-      S_story.innDeparted = true; S_story.currentCode = 'LHR';
+      S_story.departedNodes.INN = true; S_story.currentCode = 'LHR';
       out.innWrongNode = QuestRuntime.canComplete('quest_inn_05');               // departed but elsewhere
       S_story.currentCode = 'INN';
       out.innBoth = QuestRuntime.canComplete('quest_inn_05');

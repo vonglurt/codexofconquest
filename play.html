@@ -11941,7 +11941,7 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     disposition:'"You named it. I was not expecting to be named." — The Innmother\'s Hall',
     npc:"the_innmother",
   },
-  quest_inn_05: { id:'quest_inn_05', type:'side', schema:'UQF-1.0', gate:{ sleptAt:['INN'] }, bits:[], completion:{ flags:['innDeparted'], atNode:'INN' }, title:'The Return',
+  quest_inn_05: { id:'quest_inn_05', type:'side', schema:'UQF-1.0', gate:{ sleptAt:['INN'] }, bits:[], completion:{flagsPath:['departedNodes.INN'],atNode:'INN'}, title:'The Return',
     desc:'You left the hall. You came back. She notes this.',
     hint:'Leave The Innmother\'s Hall and return.',
     activateNode:'INN', 
@@ -23010,6 +23010,7 @@ let S_story = {
   defeatedBattles: {},
   pendingBattle: null,
   sleptAtNodes: {},
+  departedNodes: {},
   shortRestedAtNodes: {},
   countedMissedInns: {},
   missedSleeps: 0,
@@ -23062,7 +23063,7 @@ const _S_DEFAULTS = () => ({
   hp: 9, hpMax: 9, gold: 150, day: 1, shards: 0, voidPressure: 0,
   log: [], inventory: [], visited: {}, quests: {}, journalRead: {},
   defeatedBattles: {}, pendingBattle: null,
-  sleptAtNodes: {}, shortRestedAtNodes: {}, countedMissedInns: {}, missedSleeps: 0, battleDis: 0, dropsCollected: 0,
+  sleptAtNodes: {}, departedNodes: {}, shortRestedAtNodes: {}, countedMissedInns: {}, missedSleeps: 0, battleDis: 0, dropsCollected: 0,
   checkpointNode: 'LHR',
   lastExitDir: null, lastExitCode: null,
   battleTurn: 'player', battlePRoll: 0, battleERoll: 0, battleRound: 1,
@@ -23193,7 +23194,6 @@ const _S_DEFAULTS = () => ({
   croneMarks: 0,
   croneMarksBanked: false,
   glut_gift_held: false,
-  innDeparted: false,
   whisperSaintSeen: false,
   glutGiftReturned: false,
   // §CROWN-01 Amendment A: Monster encounters, iodine track
@@ -28361,6 +28361,8 @@ function cellMove(dir) {
   storyCheckMissedSleep();
   S_story.log.push(S_story.currentCode);
   if (S_story.log.length > 20) S_story.log.shift();
+  if (!S_story.departedNodes) S_story.departedNodes = {};
+  if (S_story.currentCode) S_story.departedNodes[S_story.currentCode] = true;
   S_story.playerR = nr;
   S_story.playerC = nc;
   if (!S_story.visitedCells) S_story.visitedCells = {};  // defensive: never throw here again (§STATE-INIT)
