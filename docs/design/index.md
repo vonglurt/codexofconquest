@@ -3,7 +3,7 @@
 # Codex of Conquest — The Shattered Codex: Document Index
 
 **Project:** `play.html` — a single-file, quest-driven MUD-style fighter RPG
-**Live counts:** 416 nodes · 398 monsters · 111 terrains · 2,853 quests · 204 NPC profiles · 8 acts · 38,686 lines · 5.51 MB
+**Live counts:** 416 nodes · 398 monsters · 111 terrains · 2,853 quests · 204 NPC profiles · 8 acts · 38,698 lines · 5.51 MB
 **Last updated:** 2026-08-24 — §DX-02aj deferred the NG+ memory line to the second visit, as specified
 
 > **📁 Repository restructured 2026-08-23 for the first public release.** The
@@ -48,9 +48,12 @@ codexofconquest/
 │   │                       `completion.flags` ∩ own `onComplete` `flag_write.set`, fatal unless
 │   │                       another writer exists; survivors named in `KNOWN_SELF_DEADLOCK`
 │   │                       `scanFlagWrites` folds the host writer classes — `S_story.X =`,
-│   │                       `_grantMissionBit`, `missionBit:`, `once:` (§DX-02bs), `set:[…]` —
-│   │                       into the write pool before the reachability verdict:
-│   │                       `npm run check:questgraph --prefix src` → `written-by-nothing : 48`
+│   │                       `_grantMissionBit`, `once:` (§DX-02bs), `set:[…]` — into the write
+│   │                       pool before the reachability verdict (`missionBit:` was dropped by
+│   │                       §AUDIT-03bj: the NPC data field has no engine reader). A gate flag
+│   │                       nothing writes now FAILS the build unless `KNOWN_UNWRITTEN_FLAG`
+│   │                       names the row that owns it:
+│   │                       `npm run check:questgraph --prefix src` → `written-by-nothing : 2`
 │   ├── tools/              layout solvers, node parser, region renderer
 │   ├── bin/                internal utilities — api.sh, say.sh, sayd.sh, coc
 │   ├── tests/              80 Playwright files, 960 tests, plus the MUD harness
@@ -86,7 +89,7 @@ node server. To only play, open `play.html` — nothing else is required.
 
 | Metric | Value | Status |
 |--------|-------|--------|
-| HTML line count | 38,698 | ✅ 2026-08-24 (`wc -l play.html`) — ±0 from §AUDIT-03bh (four `completion` objects rewritten in place); ±0 from §DX-02gl (one act-table entry out, one comment line in); +12 from §DX-02gk: the ending scorer reads `DEAR_FRIEND_BITS` instead of respelling its six acts (`MISSION_ACT_BITS` + `_missionBits` cost more lines than the six predicates saved). Prior: −9 §DX-02gb, +1 §DX-02aj, +1 §DX-02gd, −19 §DX-02cm |
+| HTML line count | 38,698 | ✅ 2026-08-24 (`wc -l play.html`) — ±0 from §AUDIT-03bj (53 gate/bit edits, all in place through `./bin/api`); ±0 from §AUDIT-03bh (four `completion` objects rewritten in place); ±0 from §DX-02gl (one act-table entry out, one comment line in); +12 from §DX-02gk: the ending scorer reads `DEAR_FRIEND_BITS` instead of respelling its six acts (`MISSION_ACT_BITS` + `_missionBits` cost more lines than the six predicates saved). Prior: −9 §DX-02gb, +1 §DX-02aj, +1 §DX-02gd, −19 §DX-02cm |
 | Lab reports on disk | 116 | ✅ 2026-08-24 (`ls docs/lab-reports/*.md \| wc -l`) |
 | Lab reports in index | 81 | ⚠️ 35 on disk are unlisted → §DX-01j |
 | Node text rewrites (noir register) | 121 / 121 | ✅ +33 nodes: Med arc (91–110) + Littoral Courts (111–120) Layer 104 |
