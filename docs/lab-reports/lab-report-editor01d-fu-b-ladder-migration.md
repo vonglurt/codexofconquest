@@ -71,7 +71,7 @@ scores + a narrative line, with an inventory push as one ingredient among severa
 |--------|------:|-------------|---------|
 | Expressible now — `grant` over `name/icon/type/sell/desc` | 7 | ✅ wave b2a | `couperin_lute` (Cipher Scrap; also a take), `pit_training`, `cat_03`, `cat_04`, `cat_05`, `cat_06`, `night_eel` |
 | Take-only — name-based removal → `take` | 3 | ✅ 2 shipped b2a; `wm_01` **dropped to residue** | `brynn_ledger`, `pachelbel_shipment`, ~~`wm_01`~~ |
-| Needs grammar ext (b1) — literal push w/ rich fields | 14 | ✅ 13 shipped b2b; `fishing_guide` **dropped to residue** | `readText`×7, `bonus`+`description`×3 (`wm_02/03/04`), weapon stats (`guide_06`), `readText`+`passive` (`scar_04`), `uses` (`void_below`), `readableKey` (`va_02`) |
+| Needs grammar ext (b1) — literal push w/ rich fields | 14 | ✅ 13 shipped b2b; `fishing_guide` **dropped to residue** | `readText`×7, `bonus`+`description`×3 (`wm_02/03/04`), weapon stats (`guide_06`), `readText`+`passive` (`scar_04`), `uses` (`void_below`), `readableKey` (`va_02` — the field was deleted repo-wide by §DX-02ge, 2026-08-24; `va_02` now carries `readable` only) |
 | Dynamic/computed item | 2 | ❌ never — stays code | `tl_01`, `tl_03` |
 | No inventory op — gold/favor/XP/flag only | 19 | ❌ out of scope | `slums_cleanup`, `cat_01/02/void`, `city_watch_patrol`, `pit_debut`, `fish_01`, `horned_shark`, `ng_01/03`, `wm_05`, `va_03/04`, `vs_01/02/03/warden`, `lame_lystra`, `brynn_firewood` |
 | Message-only | 16 | ❌ nothing to migrate | the Damascus/Lystra/Antioch §LIX–LXIV beats, `va_01`, `tl_02`, `ng_02`, `d0206_a5`, `d0208_a4/a5`, `antecedent_01` |
@@ -89,7 +89,7 @@ by `a79c76a`'s own subject line: *"the 61-id hardcoded effects block in storyChe
 
 **4.1 — `grant` was too thin; b1 is a hard prerequisite.** The ladder's 26 pushed item objects used
 `readText`×8, `description`×7 (a *different key* from the grammar's `desc`), `bonus`×3, plus
-`passive`, `readableKey`/`readable`, `uses`, `minLevel`, and four weapon stats. **LOCKED:** an explicit
+`passive`, `readableKey`/`readable`, `uses`, `minLevel`, and four weapon stats — `readableKey` left the allow-list under §DX-02ge (2026-08-24), reader count zero. **LOCKED:** an explicit
 allow-list, not arbitrary passthrough — anything off-list is dropped, because a stray field the codec
 and widget cannot author would silently diverge. Four sites kept in lockstep: the runtime, the text
 codec, the (a) widget schema, and `check:itemchain`.

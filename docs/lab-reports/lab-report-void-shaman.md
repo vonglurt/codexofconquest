@@ -247,7 +247,7 @@ The report filed no risks. Three appear in hindsight; all three closed or are fi
 | Risk | Outcome |
 |---|---|
 | `tier:'rare'` outside the five-value contract | **CLOSED and gated.** Every tier reader falls back silently — `_voidEnrage` gives the boss `{atk:1,dmg:1}`, initiative `+0` instead of `+3`, encounter weight a flat 10, and the threat badge renders `RARE`. `dx02g-monster-tier-contract.test.js` was written **because of this monster** and names it in its own header comment. *The single wrong value in this report is now the founding case of a CI gate.* |
-| Exact name matching on `i.name === "The Constructor's Log"` (the report's own §IV worry) | **Still true, still fragile** — and now *two* grant sites push the item (`readableKey:'constructors_log'@11138` and `27868`). A rename in either breaks the persuasion path silently. Low risk while both are literal. |
+| Exact name matching on `i.name === "The Constructor's Log"` (the report's own §IV worry) | **Still true, still fragile** — and now *two* grant sites push the item (`type:'readable',sell:0,readable:true@11138` and `27868`). A rename in either breaks the persuasion path silently. Low risk while both are literal. |
 | Intro fires once and never re-fires | **Verified as designed** (`if (!S_story.vshamanFound)`). A player who dismisses the render sees only the buttons afterwards. Cosmetic while the arc is unreachable; worth a re-read affordance if D-5/D-6 are fixed. |
 
 ---
