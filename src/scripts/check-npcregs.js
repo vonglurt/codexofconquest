@@ -73,6 +73,7 @@ const NPC_KEYED = [
   'FROBERGER_TRACES',        // npc → "Froberger passed through" memory
   'NPC_CROSS_REFS',          // npc → cross-reference lines about other NPCs
   'DEAR_FRIEND_BITS',        // npc → the second personal act that grants the Dear-Friend step
+  'MISSION_ACT_BITS',        // npc → the ending-scorer label for that act's mission bit
 ];
 // Nested npc-keyed groups, addressed by path.
 const NPC_KEYED_PATHS = [

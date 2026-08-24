@@ -23634,14 +23634,21 @@ function _hasActiveQuestFor(npcKey) {
   const ids = npcQuests[npcKey] || [];
   return ids.some(id => S_story.quests[id] === 'active');
 }
-function _missionComplete() {
-  const bits = {
-    yaelEscortUsed: !!(S_story.yaelEscortUsed),
-    brynnsJournalRead: !!(S_story.journalEntriesRead && S_story.journalEntriesRead.includes(7)),
-    couperiSongReceived: !!(S_story.couperiSongReceived),
-    pachelbelPaidBack: !!(S_story.quests['quest_pachelbel_shipment'] === 'complete'),
-    crovPitTrainingWins: (S_story.pitTrainingWins || 0) >= 3,
-    bruhnsDepthsReported: !!(S_story.bruhnsDepthsReported),
+// Six of the twelve ending bits ARE the six Dear-Friend acts, under the labels the
+// ending has always called them by. The predicates live once, in DEAR_FRIEND_BITS.
+const MISSION_ACT_BITS = {
+  yael: 'yaelEscortUsed',
+  brynn: 'brynnsJournalRead',
+  quill: 'couperiSongReceived',
+  pachelbel: 'pachelbelPaidBack',
+  crov: 'crovPitTrainingWins',
+  auros: 'bruhnsDepthsReported',
+};
+function _missionBits() {
+  const acts = {};
+  for (const k in DEAR_FRIEND_BITS) acts[MISSION_ACT_BITS[k] || k] = !!DEAR_FRIEND_BITS[k]();
+  return {
+    ...acts,
     allEbReturns: Object.keys(NPC_DIALOGUES).length > 0 && (Object.values(S_story.ebReturnDone || {}).filter(Boolean).length >= 5),
     journalHalf: (S_story.journalEntriesRead || []).length >= 9,
     sealedVoid: !!(S_story.defeatedBattles && S_story.defeatedBattles['TLS']),
@@ -23649,6 +23656,9 @@ function _missionComplete() {
     noHighCurse: _curseScore() < 10,
     returnedToCI: !!(S_story.visited && S_story.visited['LHR'] && S_story.level >= 5),
   };
+}
+function _missionComplete() {
+  const bits = _missionBits();
   return Object.values(bits).filter(Boolean).length >= 8;
 }
 // §NPC-01-B: the NPC card render map is DERIVED, not hand-listed. Every BIRKA_NPC_PROFILES entry

@@ -61,7 +61,7 @@ blocks.** Concretely, the layer adds four things to play.
    than never meeting them. That is a legible moral rule a player can learn from one playthrough and
    act on in the next.
 3. **It gives the journal a mechanical reason to be read.** Reading is otherwise unrewarded, so the
-   engine attaches consequences: `brynnsJournalRead: !!(S_story.journalEntriesRead@23652` unlocks a
+   engine attaches consequences: `brynn: () => (S_story.journalEntriesRead||[]).includes(7)@23465` unlocks a
    Brynn beat from Entry 7, and a half-journal milestone (nine entries) is one of the twelve mission
    bits. The fragments are placed at nodes the route already crosses, so the reward for slowing down
    is content, not a detour.
