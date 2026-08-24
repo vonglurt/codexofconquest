@@ -53,7 +53,9 @@ const LEGACY_RE = /`(\d{4,5})`/g;
 // word "symbol" does occur in the game file, so it resolves, which is worse than dead).
 
 // ── doc discovery ─────────────────────────────────────────────────────────────
-function docFiles() {
+// `scope` narrows discovery to one .md file or one directory. --fix writes in place, so
+// any caller that is not the whole repo — a test, a probe — must be able to say where.
+function docFiles(scope) {
   const out = [];
   const walk = (dir, depth) => {
     for (const ent of fs.readdirSync(dir, { withFileTypes: true })) {
@@ -65,6 +67,13 @@ function docFiles() {
       } else if (ent.name.endsWith('.md')) out.push(p);
     }
   };
+  if (scope) {
+    const p = path.resolve(ROOT, scope);
+    if (!fs.existsSync(p)) { console.error(`✗ --docs ${scope} does not exist`); process.exit(1); }
+    if (fs.statSync(p).isDirectory()) walk(p, 0);
+    else if (p.endsWith('.md')) out.push(p);
+    return out.sort();
+  }
   for (const r of DOC_ROOTS) {
     const dir = path.join(ROOT, r);
     if (!fs.existsSync(dir)) continue;
@@ -239,7 +248,12 @@ const argv = process.argv.slice(2);
 if (argv.includes('--selftest')) process.exit(selftest() ? 0 : 1);
 
 const lines = fs.readFileSync(HTML, 'utf8').split('\n');
-const query = argv.find(a => !a.startsWith('--'));
+const docsFlag = argv.findIndex(a => a === '--docs');
+const scopeArg = docsFlag === -1 ? -1 : docsFlag + 1;
+if (scopeArg !== -1 && !argv[scopeArg]) { console.error('✗ --docs needs a path'); process.exit(1); }
+const scope = scopeArg !== -1 ? argv[scopeArg]
+  : (argv.find(a => a.startsWith('--docs=')) || '').slice(7) || null;
+const query = argv.find((a, i) => !a.startsWith('--') && i !== scopeArg);
 
 if (query) {                                    // lookup mode — the grep -n replacement
   const t = targetFor(query, lines, new Map());
@@ -252,7 +266,7 @@ if (query) {                                    // lookup mode — the grep -n r
   process.exit(0);
 }
 
-const docs = docFiles().map(f => ({ file: f, text: fs.readFileSync(f, 'utf8') }));
+const docs = docFiles(scope).map(f => ({ file: f, text: fs.readFileSync(f, 'utf8') }));
 
 if (argv.includes('--legacy')) {
   const rows = legacyCounts(docs);

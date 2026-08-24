@@ -49,6 +49,13 @@ function run(args) {
   return { code: r.status, out: (r.stdout || '') + (r.stderr || '') };
 }
 
+// The gate's split, applied to a live doc: the SYMBOL must resolve, and the drifted
+// number must not fail — `check:anchors` warns on drift precisely so an HTML edit is not
+// a doc edit. Asserting the cached line here would re-impose that tax (§DX-02gm).
+function resolves(lines, sym) {
+  return lines.some(l => l.includes(sym));
+}
+
 function anchorsIn(file) {
   const text = fs.readFileSync(path.join(ROOT, file), 'utf8');
   const out = [];
@@ -68,7 +75,7 @@ test('§DX-01e — the gate is green, and its selftest proves each phase catches
   expect(audit.out).toContain('✓ check:anchors');
 });
 
-test('§DX-01e — every anchor in the migrated docs resolves at its cached line', () => {
+test('§DX-01e — every anchor in the migrated docs names a symbol that still exists', () => {
   const lines = fs.readFileSync(GAME, 'utf8').split('\n');
   const total = [];
   for (const file of MIGRATED) {
@@ -79,7 +86,7 @@ test('§DX-01e — every anchor in the migrated docs resolves at its cached line
       // A file-qualified anchor (`src/js/x.js:sym@N`) is covered by the gate; this test
       // pins the game-file ones, which are the class that rotted.
       if (/^[\w./-]+\.(?:js|mjs|html|md):/.test(a.sym)) continue;
-      expect(lines[a.line - 1], `${file}: \`${a.sym}@${a.line}\``).toContain(a.sym);
+      expect(resolves(lines, a.sym), `${file}: \`${a.sym}@${a.line}\` is DEAD`).toBe(true);
     }
   }
   // The migration moved every bare anchor out of the OPEN rows; if this count collapses,
@@ -88,36 +95,59 @@ test('§DX-01e — every anchor in the migrated docs resolves at its cached line
 });
 
 test('§DX-01e — a dead symbol FAILS the gate; a merely drifted number does not', () => {
+  // The probe lives in its own directory and every run is scoped to it with `--docs`:
+  // `--fix` writes in place, so an unscoped run would rewrite every drifted hint in the
+  // repo as a side effect of one probe assertion (§DX-02gm).
   const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'dx01e-'));
-  const doc = path.join(ROOT, `dx01e-probe-${path.basename(tmp)}.md`);
+  const doc = path.join(tmp, 'dx01e-probe.md');
+  const scoped = args => run([...args, '--docs', tmp]);
   try {
     // drifted-but-resolvable → warns, exit 0
     fs.writeFileSync(doc, 'probe `const WORLD_DB@11` here\n');
-    let r = run([]);
+    let r = scoped([]);
     expect(r.code).toBe(0);
     expect(r.out).toMatch(/stale line hint/);
 
     // symbol absent from the HTML → exit 1, and the finding names the anchor
     fs.writeFileSync(doc, 'probe `_thisSymbolWasRenamedAway@11` here\n');
-    r = run([]);
+    r = scoped([]);
     expect(r.code).toBe(1);
     expect(r.out).toContain('_thisSymbolWasRenamedAway');
 
     // a rename that EXTENDS the old identifier is still dead — substring alone would
     // have let `XP_BY_TIER` → `XP_BY_TIER_RETIRED` slip through silently.
     fs.writeFileSync(doc, 'probe `const WORLD_D@11` here\n');
-    r = run([]);
+    r = scoped([]);
     expect(r.code).toBe(1);
     expect(r.out).toContain('const WORLD_D');
 
     // --fix repairs the hint in place and leaves the doc otherwise byte-identical
     fs.writeFileSync(doc, 'probe `const WORLD_DB@11` here\n');
-    expect(run(['--fix']).code).toBe(0);
+    expect(scoped(['--fix']).code).toBe(0);
     const fixed = fs.readFileSync(doc, 'utf8');
     const real = fs.readFileSync(GAME, 'utf8').split('\n').findIndex(l => l.includes('const WORLD_DB')) + 1;
     expect(fixed).toBe(`probe \`const WORLD_DB@${real}\` here\n`);
   } finally {
     fs.rmSync(doc, { force: true });
+    fs.rmSync(tmp, { recursive: true, force: true });
+  }
+});
+
+test('§DX-02gm — a scoped --fix touches nothing outside its scope', () => {
+  const status = () => spawnSync('git', ['status', '--porcelain'],
+    { cwd: ROOT, encoding: 'utf8' }).stdout;
+  const tmp = fs.mkdtempSync(path.join(os.tmpdir(), 'dx02gm-'));
+  const doc = path.join(tmp, 'probe.md');
+  try {
+    fs.writeFileSync(doc, 'probe `const WORLD_DB@11` here\n');
+    const before = status();
+    const r = run(['--fix', '--docs', tmp]);
+    expect(r.code).toBe(0);
+    // the probe's own hint WAS repaired — otherwise this passes vacuously
+    expect(r.out).toMatch(/refreshed 1 stale line hint/);
+    expect(fs.readFileSync(doc, 'utf8')).not.toContain('@11');
+    expect(status()).toBe(before);
+  } finally {
     fs.rmSync(tmp, { recursive: true, force: true });
   }
 });
@@ -138,7 +168,7 @@ test('§DX-01e-FU — the seed inbox carries no bare anchors, and every symbol i
   // dead-opcode count. A collapse here means someone stripped the anchors instead.
   expect(anchors.length).toBeGreaterThanOrEqual(36);
   for (const a of anchors)
-    expect(lines[a.line - 1], `${SEED_INBOX}: \`${a.sym}@${a.line}\``).toContain(a.sym);
+    expect(resolves(lines, a.sym), `${SEED_INBOX}: \`${a.sym}@${a.line}\` is DEAD`).toBe(true);
 });
 
 test('§DX-01e — lookup mode answers where a symbol lives now, and refuses to invent one', () => {
