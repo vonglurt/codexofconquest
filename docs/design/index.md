@@ -47,6 +47,10 @@ codexofconquest/
 │   │                       `check-questgraph.js` runs the self-deadlock phase (§AUDIT-03bh):
 │   │                       `completion.flags` ∩ own `onComplete` `flag_write.set`, fatal unless
 │   │                       another writer exists; survivors named in `KNOWN_SELF_DEADLOCK`
+│   │                       `scanFlagWrites` folds the host writer classes — `S_story.X =`,
+│   │                       `_grantMissionBit`, `missionBit:`, `once:` (§DX-02bs), `set:[…]` —
+│   │                       into the write pool before the reachability verdict:
+│   │                       `npm run check:questgraph --prefix src` → `written-by-nothing : 48`
 │   ├── tools/              layout solvers, node parser, region renderer
 │   ├── bin/                internal utilities — api.sh, say.sh, sayd.sh, coc
 │   ├── tests/              80 Playwright files, 960 tests, plus the MUD harness
