@@ -317,6 +317,74 @@ function scanFlagWrites(html) {
   return out;
 }
 
+
+// ── §AUDIT-03bh — the self-deadlock phase. ────────────────────────────────────
+// QuestRuntime completes a quest when completion.flags are all true, so a
+// flag_write in that same quest's onComplete can only ever run AFTER the flag is
+// already true. The write is inert residue when some other quest or host code
+// provides the flag, and FATAL when nothing else does: the quest can never
+// complete, and everything gated behind the flag is stranded.
+function selfDeadlocks(db, html, extrSection) {
+  const questBody = extrSection(html, 'QUEST_DB');
+  const outside = html.split(questBody).join('\n');
+  // Deliberately NARROWER than scanFlagWrites: that scanner over-approximates on
+  // purpose (a larger write pool keeps `unreachable` sound), and it counts
+  // `flag:'X'` — which is how the textVariants / conditionals tables READ a flag.
+  // Over-approximating here would hide a fatal, so this phase matches only forms
+  // that actually assign.
+  const hostOnly = new Set();
+  for (const re of [
+    /S_story\.([A-Za-z_][A-Za-z0-9_]*)\s*=(?![=>])/g,
+    /S_story\[\s*['"]([A-Za-z_][A-Za-z0-9_]*)['"]\s*\]\s*=(?![=>])/g,
+    /_grantMissionBit\(\s*['"]([A-Za-z_][A-Za-z0-9_]*)['"]/g,
+    /missionBit:\s*['"]([A-Za-z_][A-Za-z0-9_]*)['"]/g,
+  ]) { let m; while ((m = re.exec(outside))) hostOnly.add(m[1]); }
+  { const arr = /\b(?:set|clear):\s*\[([^\]]*)\]/g; let m;
+    while ((m = arr.exec(outside))) { let x; const sr = /['"]([A-Za-z_][A-Za-z0-9_]*)['"]/g;
+      while ((x = sr.exec(m[1]))) hostOnly.add(x[1]); } }
+  const ownWrites = id => {
+    const out = new Set();
+    for (const b of (Array.isArray(db[id].onComplete) ? db[id].onComplete : []))
+      if (b && b.kind === 'flag_write') (b.set || []).forEach(f => out.add(f));
+    return out;
+  };
+  const otherQuestWriters = flag => Object.keys(db).filter(id => {
+    const q = db[id], seen = new Set();
+    const walk = bits => { for (const b of bits || []) {
+      if (!b) continue;
+      if (b.kind === 'flag_write') (b.set || []).forEach(f => seen.add(f));
+      else if (b.kind === 'mission_bit' && b.flag) seen.add(b.flag);
+      else if (b.kind === 'skill_check') { walk(b.onPass); walk(b.onFail); }
+      else if (b.kind === 'choice') (b.options || []).forEach(o => walk(o.bits));
+    } };
+    walk(q.bits); walk(Array.isArray(q.onComplete) ? q.onComplete : []);
+    return seen.has(flag);
+  });
+  const fatal = [], inert = [];
+  for (const id of Object.keys(db)) {
+    const q = db[id];
+    const cf = (q.completion && Array.isArray(q.completion.flags)) ? q.completion.flags : [];
+    if (!cf.length) continue;
+    const own = ownWrites(id);
+    for (const flag of cf) {
+      if (!own.has(flag)) continue;
+      const others = otherQuestWriters(flag).filter(x => x !== id);
+      const byHost = hostOnly.has(flag);
+      if (others.length || byHost) inert.push({ quest: id, flag, by: others.length ? ('quest ' + others.join(',')) : 'host code' });
+      else fatal.push({ quest: id, flag });
+    }
+  }
+  return { fatal, inert };
+}
+
+// Each surviving self-deadlock, named with the backlog row that owns its repair.
+// A quest belongs here only while its fix needs an authoring change no completion
+// term expresses; anything not listed fails the gate.
+const KNOWN_SELF_DEADLOCK = {
+  quest_wm_04: '\u00A7AUDIT-03au',
+  quest_tl_01: '\u00A7AUDIT-03bh-FU',
+};
+
 // ── the analyser: pure over (db, startFlags, legacyClosures, hostWrites). ──────
 // hostWrites (a Set of flag names written by non-quest code) is folded into BOTH
 // the written-flag pool (cross-ref) AND the reachability start pool — a gate flag
@@ -442,6 +510,8 @@ function main() {
   const startFlags = startFlagsFromDefaults(html);
   const hostWrites = scanFlagWrites(html);
   const r = analyse(db, startFlags, legacy, hostWrites);
+  const dl = selfDeadlocks(db, html, CORE.extrSection);
+  const dlUnexpected = dl.fatal.filter(x => !KNOWN_SELF_DEADLOCK[x.quest]);
 
   const report = {
     quests: r.ids.length,
@@ -452,8 +522,10 @@ function main() {
     hostWrittenFlags: hostWrites.size,
     writtenByNothing: r.writtenByNothing.length,
     readByNothing: r.readByNothing.length,
+    selfDeadlockFatal: dl.fatal.length,
+    selfDeadlockInert: dl.inert.length,
   };
-  if (args.includes('--json')) { console.log(JSON.stringify({ ...report, ND: r.ND, ERR: r.ERR, unreachable: r.unreachable, writtenByNothing: r.writtenByNothing, readByNothing: r.readByNothing }, null, 2)); return; }
+  if (args.includes('--json')) { console.log(JSON.stringify({ ...report, ND: r.ND, ERR: r.ERR, unreachable: r.unreachable, writtenByNothing: r.writtenByNothing, readByNothing: r.readByNothing, selfDeadlockFatal: dl.fatal, selfDeadlockInert: dl.inert }, null, 2)); return; }
 
   console.log('§VM-01-E — quest-graph soft-lock report');
   console.log('  quests analysed        :', report.quests);
@@ -475,6 +547,17 @@ function main() {
     for (const f of r.writtenByNothing) { const k = (f.match(/^([a-z]+)/) || [null, f])[1]; (fam[k] = fam[k] || []).push(f); }
     console.log('\n  written-by-nothing — genuine candidates by family:');
     Object.keys(fam).sort().forEach(k => console.log('     ·', (k + ' ×' + fam[k].length).padEnd(10), fam[k].join(', ')));
+  }
+
+  console.log('\n  self-deadlock (completion.flags ∩ own onComplete flag_write):');
+  console.log('     fatal (no other writer):', dl.fatal.length, dlUnexpected.length ? '' : '✓ (each one accounted for)');
+  dl.fatal.forEach(x => console.log('     ✗', x.quest, '/', x.flag,
+    KNOWN_SELF_DEADLOCK[x.quest] ? '— known, owned by ' + KNOWN_SELF_DEADLOCK[x.quest] : '— UNACCOUNTED: this quest can never complete'));
+  console.log('     inert (flag has an independent writer):', dl.inert.length, '— each classified, not tolerated by threshold:');
+  dl.inert.forEach(x => console.log('       ·', (x.quest + ' / ' + x.flag).padEnd(46), 'written by', x.by));
+  if (dlUnexpected.length) {
+    console.error('\ncheck:questgraph FAILED — ' + dlUnexpected.length + ' quest(s) wait on a flag only their own onComplete sets, with no other writer: they can never complete (§AUDIT-03bh).');
+    process.exit(1);
   }
 
   // Hard invariant: zero residual NONDETERMINISM in quest data (Option A's binary

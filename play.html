@@ -11167,7 +11167,7 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     npc:"benedikt_rasp",
   },
   // ── Layer 54: Tilbury Harbor Arc quests ──
-  quest_tl_01: { id:'quest_tl_01', type:'side', schema:'UQF-1.0', gate:{}, bits:[], completion:{ flags:['tlLedgerRead'] }, title:'Rennau: The Ledger',
+  quest_tl_01: { id:'quest_tl_01', type:'side', schema:'UQF-1.0', gate:{}, bits:[], completion:{flags:['tlLedgerRead']}, title:'Rennau: The Ledger',
     onComplete:[ // §ARCH-01 W7c — manifest item built at runtime (description branches on wmFirstResearcherKnown) → _legacy_fn
       { kind:'flag_write', set:['tlLedgerRead'] },
       { kind:'favor', npc:"rennau", set:1 },
@@ -11268,12 +11268,12 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     npc:"auros",
   },
   // ── §LIV: The Warrant ──
-  quest_signal_01: { id:'quest_signal_01', type:'side', schema:'UQF-1.0', gate:{ flags:['station7LogRead'] }, bits:[], completion:{ flags:['suppressorLogRead'] }, title:'The Warrant',
+  quest_signal_01: { id:'quest_signal_01', type:'side', schema:'UQF-1.0', gate:{ flags:['station7LogRead'] }, bits:[], completion:{atNode:'HKG'}, title:'The Warrant',
     onComplete:[ { kind:'reward', gold:300 }, { kind:'flag_write', set:['suppressorLogRead'] }, { kind:'narrative', msg:'💰 +300gp. 📡 Warrant Suppressor Log recovered — three suppressions, Day 14 cut mid-transmission. Source at bearing 047°, depth 18m. Source has not repeated.' } ], // §ARCH-01 W7c
     itemChain:[{action:'grant',name:'Warrant Suppressor Log', icon:'📡', type:'readable', sell:0, readText:"WARRANT SUPPRESSOR — AUTOMATIC SIGNAL LOG\nDevice ID: WSP-CY-04 (Neon Undercity, Station Corridor)\nOperator: Commander S. Bruhns (unaware of logging function)\n\n[Months 1–41: 14.225 monitored. No structured transmission detected. Log: confirmed absent. Cross-reference with Frequency Row Vol. 1–41: consistent.]\n\nDay 3, Vol. 41: Auto-suppression fired. Signal on 14.225, duration 0.4s, character: non-mechanical, subsurface origin — depth est. 18m, bearing 047° from HM. Suppression effective. Signal terminated.\nDay 9, Vol. 41: Auto-suppression fired. Signal on 14.225, duration 1.1s, character: non-mechanical, partial internal structure. Suppression effective. Signal terminated.\nDay 14, Vol. 41: Auto-suppression fired. Signal on 14.225, duration 3.1s, character: non-mechanical, structured content, transmission in progress at suppression. Suppression effective. Signal terminated mid-transmission.\n\n[Post-Day 14: 14.225 monitored. No structured transmission detected. Source remains at bearing 047°, depth 18m.]\n\nAuto-assessment: Signal suppression achieved. Source has not repeated transmission.\n\nNote: Either source ceased voluntarily, or source is aware of suppression.\n\n[End of log. Device continues active monitoring.]",silent:true}], // §EDITOR-01-D-FU(b) b2b
     desc:"Station 7's log ends mid-entry. Bearing 047° points at the Neon Undercity. Seraphine Bruhns has been running a Warrant suppressor at CY since before you arrived. The suppressor fires automatically on structured transmissions. It keeps a log. She did not know it kept a log.",
     hint:'Return to Commander Seraphine Bruhns at the Neon Undercity and ask about the suppressor log.',
-    activateNode:'HKG', 
+    activateNode:"SVO", 
     xpAward:250, waypointNode:'HKG', reward:300,
     disposition:'"Either the source ceased voluntarily, or the source is aware of suppression." — Warrant Suppressor Log, auto-entry, Day 14',
     passText:"Seraphine reads the log entry twice. She did not know it kept records. The entry says: either source ceased voluntarily, or source is aware of suppression.",
@@ -11281,7 +11281,7 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     npc:"auros",
   },
   // ── §LIII: Station 7 ──
-  quest_muffat_03: { id:'quest_muffat_03', type:'side', schema:'UQF-1.0', gate:{ flags:['muffatManifestRead'] }, bits:[], completion:{ flags:['station7LogRead'] }, title:'The Dark Station',
+  quest_muffat_03: { id:'quest_muffat_03', type:'side', schema:'UQF-1.0', gate:{ flags:['muffatManifestRead'] }, bits:[], completion:{atNode:'SVO'}, title:'The Dark Station',
     onComplete:[ { kind:'reward', gold:350 }, { kind:'flag_write', set:['station7LogRead'] }, { kind:'narrative', msg:'💰 +350gp. 📡 Station 7 Transmission Log recovered — three detections, bearing 047°, log ends mid-entry.' } ], // §ARCH-01 W7c
     itemChain:[{action:'grant',name:'Station 7 Transmission Log', icon:'📡', type:'readable', sell:0, readText:"STATION 7 — AUTOMATED TRANSMISSION LOG\nFrequency 14.225 — Scholar Kings Monitoring Annex (Class 3)\nOperator: [field redacted per Class 3 protocol]\n\n[Volumes 1–40: confirmed absence. Cross-referenced with Frequency Row Vol. 1–40. Consistent.]\n\nVol. 41, Day 3: SIGNAL DETECTED — 14.225 — Duration: 0.4s — Character: non-mechanical — Source: subsurface, bearing 047° — Repeat: none. Logged per protocol. Notified Class 3 oversight. No response from oversight.\nVol. 41, Day 4: Absence confirmed.\nVol. 41, Day 9: SIGNAL DETECTED — 14.225 — Duration: 1.1s — Character: non-mechanical — Source: subsurface, bearing 047° — Repeat: none. Signal contains partial structure. Not noise. Logged. No response from oversight.\nVol. 41, Day 14: SIGNAL DETECTED — 14.225 — Duration: 3.1s — Character: non-mechanical — Source: subsurface, bearing 047° — Signal contains—\n\n[Log ends. The entry is incomplete. The pen is in the output tray. The receiver is still active. Bearing 047° from Station 7 points toward the Neon Undercity access corridor.]",silent:true}], // §EDITOR-01-D-FU(b) b2b
     desc:"Station 7 is listed in the manifest as the delivery terminus. The station that went dark. The manifest has an address. Bertha's logs have a changed absence. The station has a transmission log that ends mid-entry.",
@@ -11294,7 +11294,7 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     npc:"magistra_elara_muffat",
   },
   // ── §LII: Muffat — The Distribution Pattern ──
-  quest_muffat_02: { id:'quest_muffat_02', type:'side', schema:'UQF-1.0', gate:{ flags:['muffatBerthReached'] }, bits:[], completion:{ flags:['muffatManifestRead'] }, title:'The Distribution Pattern',
+  quest_muffat_02: { id:'quest_muffat_02', type:'side', schema:'UQF-1.0', gate:{ flags:['muffatBerthReached'] }, bits:[], completion:{atNode:'DUS'}, title:'The Distribution Pattern',
     onComplete:[ { kind:'reward', gold:300 }, { kind:'flag_write', set:['muffatManifestRead'] }, { kind:'narrative', msg:'💰 +300gp. 📦 Shipping Manifest (Intercepted) obtained — Station 7, 14.225, six-week schedule. The pattern is complete.' } ], // §ARCH-01 W7c
     itemChain:[{action:'grant',name:'Shipping Manifest (Intercepted)', icon:'📦', type:'readable', sell:0, readText:"SCHOLAR KINGS DISTRIBUTION — INTERNAL ROUTING\nStamp: Non-Standard Clearance (Class 3 Seal)\nOrigin: Tilbury Harbor, Third Berth\nDestination: Station 7 (Frequency Row Monitoring Annex)\nDelivery Frequency: Every 6 weeks\nContents: Monitoring equipment, Category 4 (no itemisation required)\nDistribution Reference: Frequency 14.225 — passive reception array maintenance\n\n[Handwritten annotation, margin:]\nStation 7 last confirmed operational — see Freq. Row log, Vol. 38.\nStation 7 status as of Vol. 41: no confirmation received.\nField note: Station may have been decommissioned without notice to monitoring staff.\n\n[Second annotation, different hand:]\nStation 7 was not decommissioned.\n—M.E.M.",silent:true}], // §EDITOR-01-D-FU(b) b2b
     desc:"The crate Muffat has on her shelf has a distribution stamp and a frequency reference: 14.225. That is Bertha No-Bank's frequency. The one with nothing on it. Forty-one volumes of nothing.",
