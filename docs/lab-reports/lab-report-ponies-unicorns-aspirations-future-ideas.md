@@ -64,7 +64,7 @@ Two program instruments carried this pass in particular:
 | Monsters | 370 | 370 ✅ | **398** |
 | Terrains | (66, §III.B) | 66 ✅ | **111** |
 | Froberger journal entries | 41 | 41 ✅ | **41** — unmoved in 80 days |
-| Codex Shards | 7 | 7 ✅ | 7 ✅ (`SHARD_GOAL = 7@36157`) |
+| Codex Shards | 7 | 7 ✅ | 7 ✅ (`SHARD_GOAL = 7@36158`) |
 | `_S_DEFAULTS()` fields | 107 (§III.B) | 107 ✅ | 104 of 107 survive |
 | HTML source lines | 14,377 | 14,377 ✅ | **38,712** |
 
@@ -82,8 +82,8 @@ Two program instruments carried this pass in particular:
 |---|---|---|---|---|
 | 1 | DM's Companion Guide, 80–120 pp | §I | **NOT SHIPPED** | no `codexofconquest-gm-guide` artefact; 0 occurrences repo-wide |
 | 2 | Fishing Guide, standalone 20–30 pp document | §II | **NOT SHIPPED** | superseded by row 3 |
-| 3 | Fishing Guide **as an in-game readable item** | §V | ✅ **SHIPPED** | `name:'Fishing Guide', icon:'📖', type:'readable'@13820` · `const FISHING_GUIDE_TEXT =@26660` |
-| 4 | …and it gates a mechanic, not just flavour | — | ✅ **exceeded** | `const hasGuide = (S_story.inventory@30407` reveals zone DCs |
+| 3 | Fishing Guide **as an in-game readable item** | §V | ✅ **SHIPPED** | `name:'Fishing Guide', icon:'📖', type:'readable'@13820` · `const FISHING_GUIDE_TEXT =@26661` |
+| 4 | …and it gates a mechanic, not just flavour | — | ✅ **exceeded** | `const hasGuide = (S_story.inventory@30408` reveals zone DCs |
 | 5 | Mission Explorer, a second HTML data browser | §III | ✅ **SHIPPED** `2d42ea2`, 2026-05-29 | `edit.html`, 10,685 lines, 17 tabs |
 | 6 | …read-only; C/U/D "intentionally excluded" | §III.D | ⚠️ **INVERTED** | 29 `POST` · 32 `PUT` · 4 `DELETE` call sites |
 | 7 | …cost: must externalize the data constants | §III.E | ❌ **cost never paid** | `<script src=` = **0** in `play.html`; the one-file invariant held |
@@ -92,11 +92,11 @@ Two program instruments carried this pass in particular:
 | 10 | …Export as JSON, the "middle path" | §III.D | ✅ **SHIPPED + exceeded** | `edit.html:/api/export/all?format=json@2656`, `Export JS`, `Export Patched` |
 | 11 | …State Flag Browser ("which quest sets it") | §III.B | ◐ **HALF SHIPPED** | `edit.html:this._flagToQuests[f].writes.push(id)@1735` indexes reads/writes — **over `QUEST_DB` source only**, so the "which render functions read it" half is absent |
 | 12 | Yugurt Lake at nodes `YL`, `YC` | §II.1 | ✅ **RIGHT WHEN WRITTEN**, renamed since | archive `YL:{num:75, yugurt_lake}` → `BOO:{ num:75, code:'BOO'@8782`; `YC:{num:76}` → `SSJ:{ num:76, code:'SSJ'@8786` — `num`, terrain and label all preserved |
-| 13 | 20-rank fish pool | §II.2 | ✅ **exact** | `const FISH_POOL = [@26505`, 20 entries; plus `const NIGHT_FISH_POOL = [@26527` (5, §XLVIII) |
+| 13 | 20-rank fish pool | §II.2 | ✅ **exact** | `const FISH_POOL = [@26506`, 20 entries; plus `const NIGHT_FISH_POOL = [@26528` (5, §XLVIII) |
 | 14 | The Hooked condition | §II.1 | ✅ SHIPPED | `condition:'Hooked'` in the catch resolver |
 | 15 | 2d20 cast roll table | §II.1 | **RETIRED**, not never-shipped | archive carries the *"🎣 Cast Line (2d20)"* button; Layer 47 replaced it with a four-phase Catch system (§DOC-02m) |
 | 16 | `BAIT_FISH_POOL` apex predators | §II.3 | **NOT SHIPPED under that name** | 0 commits ever; apex predator shipped as `name:'Horned Shark'@5511` in `yugurt_lake:      { label:'Yugurt Lake'@6283` |
-| 17 | "Master of Yugurt" tournament, five rounds | §II.4 | ✅ **SHIPPED, six** | `title:'Master of Yugurt'@26720`; `const TOUR_TITLES = {@26723` names six ranks |
+| 17 | "Master of Yugurt" tournament, five rounds | §II.4 | ✅ **SHIPPED, six** | `title:'Master of Yugurt'@26721`; `const TOUR_TITLES = {@26724` names six ranks |
 | 18 | The Fisherman: *"no quest, no connection to the main arc"* | §II.5 | ⚠️ **REVERSED** | he gives the rod, keeps a free-sleep cabin, and is named in Yael's Level-1 tutorial monologue |
 | 19 | Organ: 12 voices × 6 harmonics = 72 oscillators | §VI.B/H | ✅ **exact** | `src/sources/5thOrgan.html:const N_HARM   = 6;@142` · `src/sources/5thOrgan.html:const MAX_VOX  = 12;@143` |
 | 20 | Organ: `f = 440 × 2^((n−69)/12)` | §VI.C | ✅ **byte-exact** | `src/sources/5thOrgan.html:function midiHz(m)@185` |
@@ -223,7 +223,7 @@ This is instrument 12 in a form worth keeping, because it defeats the older inst
 | 2 | Fishing Guide (document) | ❌ not shipped in 80 days | — |
 | 3 | Mission Explorer | ✅ shipped +5 days, inverted on 3 axes | `edit.html` |
 | 4 | Pipe Organ Synthesizer | ✅ shipped +33 minutes | `src/sources/5thOrgan.html` — **not embedded** (§AUDIO-01) |
-| 5 | Fishing Guide **as an in-game item** (§V aside) | ✅ shipped | `const FISHING_GUIDE_TEXT =@26660` |
+| 5 | Fishing Guide **as an in-game item** (§V aside) | ✅ shipped | `const FISHING_GUIDE_TEXT =@26661` |
 
 **Three of five, and the ranking got them in the wrong order.** The one-paragraph aside outperformed the section it was an aside to. The concept given the most pages (the DM's Guide, six subsections and a nine-row field table) is the one with the least code behind it — which is not a coincidence but the same finding again: **pages are what you produce when the deliverable is pages.**
 

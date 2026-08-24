@@ -35,7 +35,7 @@ The proof obligation is two-part: **differential** — for every real gate × a 
 | `{not:…}` | kernel `_compileGate` | the child node must fail (¬) |
 | `_matchActivationLeaf` / `_matchCompletionLeaf` | kernel | the pre-F term logic, extracted verbatim — the AST leaves |
 | `_gateCache` (WeakMap) + `_gatePred` | kernel scope | compiled-predicate memo, keyed by the gate object (immutable key → never invalidated) |
-| ~~`_activateIndex` (Map), host, lazy~~ | — | **NOT SHIPPED.** Built and reverted this increment (§4.5). The name never existed in code; the follow-on shipped it as `function _questsByNode(nodeCode)@36997`. |
+| ~~`_activateIndex` (Map), host, lazy~~ | — | **NOT SHIPPED.** Built and reverted this increment (§4.5). The name never existed in code; the follow-on shipped it as `function _questsByNode(nodeCode)@36998`. |
 
 **Deleted:** the `itemsMinAny` completion term — single-use, superseded by `itemsAll` under `{any}`. **No new leaf term**: the point of the increment is that new OR shapes go in the grammar, not the vocabulary.
 
@@ -90,13 +90,13 @@ completion:{ any:[ { flagsAny:['archiveLetterObtained'] }, { itemsAll:[{ name:"S
 
 `itemsAll` already matched exact-name/≥min in AND position; `{any}` lifts it into OR position. The two forms are provably equivalent — old = `flag OR (≥3 seals)`; new = `{any:[(flag), (≥3 seals)]}` = `flag OR (≥3 seals)` — and the differential asserts it over an inventory/flag matrix. **Waypoint safety:** the host waypoint reader does `q.completion.atNode`, now `undefined` for an AST completion, and falls back to `q.waypointNode`, which `quest_wm_01` carries (`'NUE'`); no regression.
 
-Both lines verified byte-exact against `completion:{ any:[ { flagsAny:['archiveLetterObtained']@11071` (ship and HEAD) and against the parent build's pre-F line. The fallback path is `q.waypointNode || (q.completion && q.completion.atNode)@28803`, unchanged.
+Both lines verified byte-exact against `completion:{ any:[ { flagsAny:['archiveLetterObtained']@11071` (ship and HEAD) and against the parent build's pre-F line. The fallback path is `q.waypointNode || (q.completion && q.completion.atNode)@28804`, unchanged.
 
 ### 4.5 The byproduct — the `activateNode` index — **DEFERRED, and the deferral was honoured in 2 h 07 min**
 
 The lazy `activateNode → [quests]` index that would retire the parent report's finding #9 was built and then **reverted** in this increment. The `quest-runtime-uqf` regression surfaced a real staleness: the index is first built during initial page render, and a test that **injects a synthetic quest into `QUEST_DB` at runtime** then finds the cache already frozen without it. In the shipped game `QUEST_DB` is an immutable `const`, so the index would be correct there — but the harness (and any future runtime-injection consumer) mutates it, so a built-once index is **not transparent**. That is precisely the *"cache to invalidate"* the spec set out to avoid; doing it correctly is its own small increment.
 
-**Verified.** The regression is `quest-runtime-uqf.test.js:257` at the pinned parent, *"storyCheckQuests honors a UQF declarative gate on activation"*, and it injects `QUEST_DB.__uqf_gate` at runtime — the line number is exact and the mechanism is exactly as described. The HTML diff carries **three hunks and none of them touch `function storyCheckQuests(node)@30167`**, so §10's *"byte-identical"* claim is confirmed at the diff level. **§VM-01-F-FU shipped the index at `549d6b4`, 2 h 07 min later**, and its inlined comment names this report by §ID: *"This is why §VM-01-F reverted the built-once version."* A deferral that leaves its §ID in the destination file is a real deferral; this is the fastest one in the §VM-01 track.
+**Verified.** The regression is `quest-runtime-uqf.test.js:257` at the pinned parent, *"storyCheckQuests honors a UQF declarative gate on activation"*, and it injects `QUEST_DB.__uqf_gate` at runtime — the line number is exact and the mechanism is exactly as described. The HTML diff carries **three hunks and none of them touch `function storyCheckQuests(node)@30168`**, so §10's *"byte-identical"* claim is confirmed at the diff level. **§VM-01-F-FU shipped the index at `549d6b4`, 2 h 07 min later**, and its inlined comment names this report by §ID: *"This is why §VM-01-F reverted the built-once version."* A deferral that leaves its §ID in the destination file is a real deferral; this is the fastest one in the §VM-01 track.
 
 ## 5. Why this answers the parent report's open questions
 
@@ -118,7 +118,7 @@ Activation and completion have different leaf vocabularies but the same boolean 
 A gate with no combinator key is a single leaf, dispatched to the unchanged matcher. **Rejected axis:** requiring every gate to be wrapped in `{all:[…]}` — a corpus-wide data migration with no behavioural gain and a large no-op-proof surface. *Held: the corpus was never touched, and the differential proves the equivalence rather than asserting it.*
 
 ### 6.3 Compile-once via a kernel-scope WeakMap — not an eager load pass. (flagged for veto)
-Memoised lazily, keyed by the immutable gate object. This keeps the compiler **inside the parity-fenced kernel** and matches the file's own lazy-built-once idiom (`function _questNodes()@36977`, `let _gateFlagCache = null@26133`). An eager "walk `QUEST_DB` at load" pass would have to live in the host and either call into the kernel or duplicate compile logic. Runtime effect is identical. **Rejected axes:** interpret-per-render; eager host pass.
+Memoised lazily, keyed by the immutable gate object. This keeps the compiler **inside the parity-fenced kernel** and matches the file's own lazy-built-once idiom (`function _questNodes()@36978`, `let _gateFlagCache = null@26134`). An eager "walk `QUEST_DB` at load" pass would have to live in the host and either call into the kernel or duplicate compile logic. Runtime effect is identical. **Rejected axes:** interpret-per-render; eager host pass.
 
 ### 6.4 The `activateNode` index — DEFERRED to a follow-on. (decided during implementation)
 Originally locked as in-scope. Implementation plus the regression showed a built-once index is not transparent under runtime `QUEST_DB` mutation (§4.5). Rather than reintroduce the cache the spec wanted to avoid, the index was removed from F. **Rejected axis:** *"ship the index with a size-guard now — a size-guard rebuild costs an `Object.keys().length` per render."*
@@ -148,7 +148,7 @@ Measured on the **pinned parent build** `4f56816b` (the file as it stood when th
 
 **18 of 21 exact; the three misses are exactly the three the author marked `~`.** Every unhedged number is right to the line; every tilde is a confession. The worst, `itemsAll` at `~21876` (actual 21896), is repeated verbatim in §4.4 — and 21876 in the parent is a live `g.notFlags` line, so an existence check passes while the pointer is wrong. *A tilde in an anchor table is not rounding; it is the author telling you which number he did not paste.*
 
-At HEAD the same symbols live at `function _matchActivationLeaf(g, st)@22049`, `function _matchCompletionLeaf(g, st)@22108`, `function _gatePred(node, mode)@22168`, `const _gateCache = new WeakMap()@22167`, `function _gateFlagSet()@26134`.
+At HEAD the same symbols live at `function _matchActivationLeaf(g, st)@22049`, `function _matchCompletionLeaf(g, st)@22108`, `function _gatePred(node, mode)@22168`, `const _gateCache = new WeakMap()@22167`, `function _gateFlagSet()@26135`.
 
 ## 8. Invariants preserved
 
@@ -158,7 +158,7 @@ At HEAD the same symbols live at `function _matchActivationLeaf(g, st)@22049`, `
 - **§VM-01-B seeded rng** — untouched; `check:rng` green on the rebuilt tree. ✅
 - **§VM-01-C `_ENV` / §VM-01-D `getState()`** — the compiled predicate takes `st` as a parameter and both methods still call `S()` at evaluation time. ✅
 - **Free-Movement / Mission-Gating** — no movement code; gate *logic* is relocated, not changed. ✅
-- **Known latent (documented, not triggered).** `function _gateFlagSet()@26134` structurally walks `q.gate.flags/flagsAny/notFlags` and would not see flags nested under an AST *activation* gate. F introduces none, so it is not triggered; when activation gates adopt the AST, that walker must recurse.
+- **Known latent (documented, not triggered).** `function _gateFlagSet()@26135` structurally walks `q.gate.flags/flagsAny/notFlags` and would not see flags nested under an AST *activation* gate. F introduces none, so it is not triggered; when activation gates adopt the AST, that walker must recurse.
   > **Verified 2026-08-22 and still latent — because nobody ever authored one.** AST activation gates: **0 at ship, 0 at HEAD**. `_gateFlagSet` is still non-recursive at HEAD. The report calls the fix *"tracked as a §VM-01-F follow-on"*; **no such row was ever filed**, in BACKLOG.md or plan-archive.md. Filed now as **§DX-02ed**. *A report can diagnose a latent defect perfectly, name the fix, and still be the only place it is written down.*
 
 ## 9. Test plan (as shipped) — and what re-running it found
@@ -307,7 +307,7 @@ That is the shape of the whole increment. F's headline — *"teach the gate to s
 | § | Sev | Summary |
 |---|---|---|
 | **§DX-02ec** | 🟢 NEW | `check:duelparity` is in `package.json` and in neither `check:walk` nor CI — `DUEL:CORE`, a named hard invariant, has no automated parity fence (§12.2) |
-| **§DX-02ed** | 🟢 NEW | `function _gateFlagSet()@26134` does not recurse `{all}`/`{any}`/`{not}`; latent since 2026-07-22, named here as a follow-on and never filed (§8) |
+| **§DX-02ed** | 🟢 NEW | `function _gateFlagSet()@26135` does not recurse `{all}`/`{any}`/`{not}`; latent since 2026-07-22, named here as a follow-on and never filed (§8) |
 | §DX-02dy | 🟡 | *appended*: `dayMin`/`dayMax` is the grammar growing a comparison term because it has none — the corroborating measurement for the general `counterMin` leaf (§12.4) |
 | §DX-02ea | 🟢 | *cited*: the size guard this report priced and declined, shipped 127 minutes later and never re-measured (§6.4) |
 | §DX-02dz | 🟢 | *cited*: `check:questparity`'s "bytes" are UTF-16 code units — 4th instance, and this report is where 21,909 entered the record (§12, row 10) |

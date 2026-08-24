@@ -72,10 +72,10 @@ the three §WALK gates run live; and a cross-check against the sibling report th
 | §2.2 locale lists (`CELL_GRID` → array) | exact | `` `const CELL_GRID = (() =>@9852` ``, `` `const cellCodes  = (key) => CELL_GRID[key] || []@9862` `` |
 | §2.3 sea mask | `SEA_RUNS` (run-length), 4,790 cells / 286 runs, rows 0–85 × cols 140–255 | `` `const IMPASSABLE_CELLS = (() =>@9871` `` |
 | §2.3 water crossings | **`SEA_LANES`** — 59 walkable channel cells, *not* ferry edges | `` `const SEA_LANES = new Set@9870` `` |
-| §2.4 `terrainAt` / `inferTerrain` | `_inferTerrain` — lanes→`ocean`, roads→`road`, else 4-neighbour majority, fallback `midlands` | `` `function _inferTerrain(r, c)@28384` `` |
+| §2.4 `terrainAt` / `inferTerrain` | `_inferTerrain` — lanes→`ocean`, roads→`road`, else 4-neighbour majority, fallback `midlands` | `` `function _inferTerrain(r, c)@28385` `` |
 | §4.1 `move(world,pos,dir) → MoveResult` | exact signature, pure, dual-export | `` `src/js/mover.js:function moverMove(world, pos, dir)@44` `` |
 | §4.2 inline-and-verify | `MOVER:CORE` sentinels, 1,847 bytes byte-identical | `src/scripts/check-mover-parity.js` |
-| §4.3 client caller | thin: kernel → `storyBlock` or side effects | `` `function cellMove(dir)@28346` `` |
+| §4.3 client caller | thin: kernel → `storyBlock` or side effects | `` `function cellMove(dir)@28347` `` |
 | §4.3 server caller | thin: kernel → session mutation + SSE | `` `src/js/wbapi-server.js:const Mover     = require('./mover')@37` `` |
 | §5 reachability | land-flood, sole surviving graph tool | `` `src/js/wbapi-server.js:GET /api/graph/reachability ─@5493` `` |
 | §6.1 invariant proof I1/I2/I3 | `check:invariants`, CI gate #1 | `src/scripts/check-invariants.js` |

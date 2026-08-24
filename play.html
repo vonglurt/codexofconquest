@@ -23726,13 +23726,14 @@ function _renderNpcCard(key, container) {
   let displayQuote = whiskyReaction || dlg.quote;
   let quoteColor = whiskyReaction ? '#7a5a10' : '#6A4A28';
   const ngGreetedKey = key + 'NgGreeted';
+  const ngGreetedBefore = !!S_story[ngGreetedKey];
   if ((S_story.ngPlusRun || 0) > 0 && !S_story[ngGreetedKey] && NPC_NG_PLUS_GREETINGS[key]) {
     displayQuote = NPC_NG_PLUS_GREETINGS[key];
     quoteColor = '#3D6E7A';
     S_story[ngGreetedKey] = true;
   }
   // Layer 50: §XV — Dear Friend memory line on second NG+ visit
-  if ((S_story.ngPlusRun || 0) > 0 && S_story[ngGreetedKey] && fav >= 2
+  if ((S_story.ngPlusRun || 0) > 0 && ngGreetedBefore && fav >= 2
       && NPC_NG_MEMORY_LINES[key] && !((S_story.ngMemoryDelivered || {})[key])) {
     if (!S_story.ngMemoryDelivered) S_story.ngMemoryDelivered = {};
     S_story.ngMemoryDelivered[key] = true;

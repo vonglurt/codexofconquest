@@ -44,7 +44,7 @@ what justify the work:
 
 - **The space between cities became real.** Under an edge list, everything that is not a
   city does not exist; you jump from node to node. Under a grid, the ~27,600 walkable land
-  cells are places you can stand — `function _enterEmptyCell(r, c)@28421` gives each one
+  cells are places you can stand — `function _enterEmptyCell(r, c)@28422` gives each one
   prose, terrain, signposts and an encounter roll. *Distance became travel instead of a
   menu.*
 - **Terrain became a real trade-off.** `const TERRAIN_ENCOUNTER_RATE@9892` prices the
@@ -87,7 +87,7 @@ running them on the real data. Line numbers in the original are superseded by
 | 5.4 | `IMPASSABLE_CELLS` populated at §CELL-10 | ⚠️ Derived from `SEA_RUNS` — **4,790** sea cells, 286 runs |
 | 5.5 | Encounter-rate table, roads/junctions at 0 | ✅ verbatim (`junction:0` is unreachable — §DX-02bm) |
 | 6.1 | `hoursElapsed` incremented on every `cellMove()` | ❌ Removed by §TIMELESS-01 — movement is free of the clock |
-| 6.3 | `storyRender` syncs `playerR/C` from `NODE_COORDS` | ✅ `function storyRender(node, prefix)@34549` |
+| 6.3 | `storyRender` syncs `playerR/C` from `NODE_COORDS` | ✅ `function storyRender(node, prefix)@34550` |
 | 6.4 | The `type === 'shard'` branch is the **only** write to `S_story.shards` | ✅ **Still true** — one write site in 38,712 lines |
 | 7.1 | D-pad element ids `#dpad-N/S/E/W` | ❌ `#btn-N/S/E/W` |
 | 7.2 | `cellMove` bounds-checks, then applies eight narrative gate-locks | ⚠️ Thin caller over `Mover.move`; **all eight gate-locks deleted** (§7) |
@@ -183,11 +183,11 @@ Five load-bearing claims re-measured true, and they are the ones that matter:
    them on create and `src/js/wbapi-server.js:const _badPutFields@11043` on update, both HTTP
    400. §CELL-01 emptied the fields; §CELL-08 shipped the guard that stops anything
    writing them back. Only one of those two was ever listed as a feature.
-2. **`storyRender` is the reconciliation point** (I3). `function storyRender(node, prefix)@34549`
+2. **`storyRender` is the reconciliation point** (I3). `function storyRender(node, prefix)@34550`
    still snaps `playerR/C` to `NODE_COORDS[node.code]` on every named-node arrival, so
    logical state and grid state cannot drift.
 3. **`storyCollectLoot` remains the sole shard writer** (I6). One write to `S_story.shards`
-   exists in the entire file — `function storyCollectLoot(node)@30093` — behind the
+   exists in the entire file — `function storyCollectLoot(node)@30094` — behind the
    `S_story.visited[node.code]` guard. A claim of *uniqueness* is the easiest kind to
    falsify and this one held at 5.5 MB.
 4. **`TERRAIN_ENCOUNTER_RATE` is byte-identical** to the excerpt, three months on.
@@ -206,7 +206,7 @@ it was **deleted the following day** by `1872896` (2026-06-16). Zero occurrences
 This report is therefore the last surviving description of a mechanic that contradicted
 the project's first invariant. *No quest, flag, item, or mission bit may ever refuse a
 step.* If a place must feel impassable, the terrain becomes sea; the mover never reads
-quest state. Today `function cellMove(dir)@28346` is a thin caller over the shared
+quest state. Today `function cellMove(dir)@28347` is a thin caller over the shared
 `Mover.move` kernel, and the only refusals it can produce are off-grid and impassable.
 
 Also gone, with the reason:
@@ -343,7 +343,7 @@ The §10 walkthrough is structurally intact and numerically obsolete. Corrected:
   | #7 | `NUE` | 6 | Weimar Fragment (Shard #7) |
 
   The mechanism the report describes is right; the string it searched for belongs to shard
-  **#6**. `const SHARD_NOTES@27160` covers all seven (its own comment says five — stale).
+  **#6**. `const SHARD_NOTES@27161` covers all seven (its own comment says five — stale).
 
 ---
 

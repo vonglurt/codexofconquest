@@ -72,15 +72,15 @@ shipped only in its subtractive half. Point 4 shipped in full. All four are then
 
 **Live, under the specified name**
 `tackleboxZoneUnlocks: {shore:true@23108` · `baitFishingActive: false@23108` (inert — see §V-D) ·
-`fishingCatchLog` (13 sites; sole writer `S_story.fishingCatchLog.unshift@30615`) ·
-`isFishingLake` (`BOO:{ num:75@8782`, read at `const hasFish = node.isFishingLake;@35348`) ·
-`_rollMonsterWeaponDrop` · `storyFishing` (`function storyFishing() {@30393`).
+`fishingCatchLog` (13 sites; sole writer `S_story.fishingCatchLog.unshift@30616`) ·
+`isFishingLake` (`BOO:{ num:75@8782`, read at `const hasFish = node.isFishingLake;@35349`) ·
+`_rollMonsterWeaponDrop` · `storyFishing` (`function storyFishing() {@30394`).
 
 **Live, under a different name**
-`getLuck()` → **`_calcLuck()@23439`** + **`_luckMod()@23445`** · `BAIT_FISH_POOL` → **`BAIT_TABLES = {@26633`**
+`getLuck()` → **`_calcLuck()@23439`** + **`_luckMod()@23445`** · `BAIT_FISH_POOL` → **`BAIT_TABLES = {@26634`**
 (3 zones × 6 foraged items) · `equippedBait` → `_getSessionBait()` · `_checkTackleboxZoneUnlocks()` →
-inlined at `_zoneUnlocks.reeds && _catchLog.length >= 1@30472` · `predatorRank` →
-`tDie + bait.type + _luckMod()@30557`.
+inlined at `_zoneUnlocks.reeds && _catchLog.length >= 1@30473` · `predatorRank` →
+`tDie + bait.type + _luckMod()@30558`.
 
 **Not shipped — 0 occurrences and 0 commits ever**
 `BAIT_FISH_POOL` · all 20 bait species (sampled: `fathead_minnow`, `mummichog`, `blacknose_dace`) ·
@@ -88,8 +88,8 @@ inlined at `_zoneUnlocks.reeds && _catchLog.length >= 1@30472` · `predatorRank`
 `predatorRank` · `baitBonus` · the prefix `Salvaged`.
 
 **Present at HEAD, absent from the spec**
-`LAKE_MAGIC_DB = {@26537` (§DROP-03 — rank-gated passive items, granted at `if (_fishRank >= 11@7073`) ·
-`FISHING_GUIDE_TEXT@26660` · `FISH_SIZE_TIERS` · `FISH_GOLD_VALUES` · `NIGHT_FISH_POOL` · `FISHING_RODS` ·
+`LAKE_MAGIC_DB = {@26538` (§DROP-03 — rank-gated passive items, granted at `if (_fishRank >= 11@7073`) ·
+`FISHING_GUIDE_TEXT@26661` · `FISH_SIZE_TIERS` · `FISH_GOLD_VALUES` · `NIGHT_FISH_POOL` · `FISHING_RODS` ·
 the four-phase cast that replaced `2d20` (§DOC-02m).
 
 ---
@@ -104,23 +104,23 @@ Two-way. **STALE** = the report aged. **NOT SHIPPED** = specified, absent at HEA
 | 1 | `BAIT_FISH_POOL`, 20 species × 5 tiers, caught as ammunition | 0 occurrences, 0 commits ever | **NOT SHIPPED** |
 | 2 | Bait fish have AC/HP, one hit catches them, XP on catch | No bait combat exists; bait is foraged on a WIS check | **NOT SHIPPED** |
 | 3 | Bait sourced from a tackle box (`tacklebox: {}`) | Bait lives in `S_story.inventory` as `type:'bait'` | **NOT SHIPPED** (replaced) |
-| 4 | 3 zones: Shore / Reeds / Deep | Shipped as `bank` / `reeds` / `shallows`, bridged by `_zoneMap = { bank:'shore'@30474` | **SHIPPED, renamed** |
+| 4 | 3 zones: Shore / Reeds / Deep | Shipped as `bank` / `reeds` / `shallows`, bridged by `_zoneMap = { bank:'shore'@30475` | **SHIPPED, renamed** |
 | 5 | Zone gate = Tier 2 / Tier 4 bait held | Gate = catch-log progress (≥1 catch; a Large+ catch) | **SHIPPED, different mechanism** |
-| 6 | Per-zone find DC 8 / 12 / 16 | Flat `S_story.fishingBaitSatchel ? 8 : 10@30492` in all three zones | **NOT SHIPPED** → §AUDIT-03v/w |
-| 7 | Effective DC = zoneDC − Luck Mod | `- _luckMod()@30492` | **SHIPPED** |
-| 8 | Bare Hook = −3 to Catch Roll | `catch:_luckMod()@30527` — **+1** at the default statline | **NOT SHIPPED** (sign inverted) |
-| 9 | `predatorRank = clamp(2d20 + baitBonus + LuckMod, 1, 20)` | 4-phase cast; `tDie + bait.type + _luckMod()@30557` | **RETIRED** (§DOC-02m) |
+| 6 | Per-zone find DC 8 / 12 / 16 | Flat `S_story.fishingBaitSatchel ? 8 : 10@30493` in all three zones | **NOT SHIPPED** → §AUDIT-03v/w |
+| 7 | Effective DC = zoneDC − Luck Mod | `- _luckMod()@30493` | **SHIPPED** |
+| 8 | Bare Hook = −3 to Catch Roll | `catch:_luckMod()@30528` — **+1** at the default statline | **NOT SHIPPED** (sign inverted) |
+| 9 | `predatorRank = clamp(2d20 + baitBonus + LuckMod, 1, 20)` | 4-phase cast; `tDie + bait.type + _luckMod()@30558` | **RETIRED** (§DOC-02m) |
 | 10 | Condition ladder by rank (Poisoned→Paralyzed→Cursed, CON DC 12–20) | No rank→condition map; conditions are player-applied from `CONDITION_ITEMS = [@22410` | **NOT SHIPPED** |
 | 11 | Rank-20 predator "Yugurt's Dread" | Shipped as a **monster name**, `fish_20: { key:'fish_20'@5376` (AC 20 — matches) | **SHIPPED, as data not mechanic** |
 | 12 | Every predator drops a magic weapon | No weapon is minted in the fishing path | **NOT SHIPPED** |
 | 13 | `weaponMagicBonus = floor(fish.ac / 4) + max(0, LuckMod)` | `ac / 4` — 0 occurrences in the file | **NOT SHIPPED** |
-| 14 | Monster drop nerf to `[−3, 0]` on a d4 | `deg = Math.min(0, d6 - 5)@24593` → **[−4, 0]** on a d6, plus a `w.magicBonus === 0 && !ownedTiers@24588` pool filter | **SHIPPED, stronger** |
+| 14 | Monster drop nerf to `[−3, 0]` on a d4 | `deg = Math.min(0, d6 - 5)@24594` → **[−4, 0]** on a d6, plus a `w.magicBonus === 0 && !ownedTiers@24589` pool filter | **SHIPPED, stronger** |
 | 15 | Prefixes Rusted/Chipped/Worn/Salvaged | `Wrecked/Rusted/Chipped/Worn/—`; `Salvaged` 0 commits ever | **NOT SHIPPED** (renamed set) |
 | 16 | Luck = `⌈(∏ scores)^(1/6)⌉`, edge case product ≤ 0 | `_calcLuck()@23439` — byte-exact, including the guard | **SHIPPED, exact** |
 | 17 | `Luck Mod = floor((Luck − 10) / 2)` | `_luckMod()@23445` — byte-exact | **SHIPPED, exact** |
 | 18 | Luck never stored, computed on demand | Correct — no `S_story` field | **SHIPPED, exact** |
 | 19 | Luck at 7 roll points | 4 shipped, 3 not (see §V-C); **2 unspecified additions** | **PARTIAL / EXTENDED** |
-| 20 | Luck on fishing death saves only | `Math.ceil(Math.random() * 20) + _luckMod()@25897` applies to **all** death saves | **EXTENDED** |
+| 20 | Luck on fishing death saves only | `Math.ceil(Math.random() * 20) + _luckMod()@25898` applies to **all** death saves | **EXTENDED** |
 | 21 | Tournament tiebreaker: higher Luck Mod, **coin flip on equal** | Higher Luck Mod shipped; equal Luck Mod leaves `'tie'` — no coin flip | **PARTIAL** |
 | 22 | Q-FISH-00 … Q-FISH-05 (6 quests) | Only `quest_fish_01` exists | **1 of 6** |
 | 23 | Q-TOUR-01 … Q-TOUR-06 (6 quests) | `quest_tour_01`–`06` all live | **6 of 6 SHIPPED** |
@@ -142,36 +142,36 @@ The report's economic thesis was a trade: **take** positive bonuses away from mo
 them back through fishing. Only the taking side exists.
 
 - **Taking, shipped and stronger than specified.** `_rollMonsterWeaponDrop` filters its pool to
-  `w.magicBonus === 0 && !ownedTiers@24588` and degrades the result by `deg = Math.min(0, d6 - 5)@24593`
+  `w.magicBonus === 0 && !ownedTiers@24589` and degrades the result by `deg = Math.min(0, d6 - 5)@24594`
   (−4 … 0). A monster kill can never yield a positive weapon.
 - **Giving, never built.** `_fishingMagicWeaponDrop` and `ac / 4` have **0 occurrences and 0 commits
   ever**. The fishing victory path only overrides the drop's *sell* value with size×rarity gold; the
-  reward that did ship is §DROP-03's `LAKE_MAGIC_DB = {@26537`, a different class — passive stat items,
+  reward that did ship is §DROP-03's `LAKE_MAGIC_DB = {@26538`, a different class — passive stat items,
   not weapons.
-- **The third path closed silently.** `_rollD100Loot` still branches on `w.magicBonus === row._magic@24568`
-  and on a `dagger` type — but `const _D100_TABLE = [@24517` holds **seven rows** (potions, scroll,
-  flashbang, gold) totalling `]; // total weight = 100@24525` and contains **neither `mainweapon` nor
-  `dagger`**. Both branches are unreachable, and `_magicTierAllowed(magic) {@24510` — whose only two
+- **The third path closed silently.** `_rollD100Loot` still branches on `w.magicBonus === row._magic@24569`
+  and on a `dagger` type — but `const _D100_TABLE = [@24518` holds **seven rows** (potions, scroll,
+  flashbang, gold) totalling `]; // total weight = 100@24526` and contains **neither `mainweapon` nor
+  `dagger`**. Both branches are unreachable, and `_magicTierAllowed(magic) {@24511` — whose only two
   callers sit inside them — is a dead function.
 
-**Net:** `WEAPON_ITEMS = [0, 1, 2, 3, 4]@24495` generates 5 magic tiers × 12 base weapons = 60 items.
+**Net:** `WEAPON_ITEMS = [0, 1, 2, 3, 4]@24496` generates 5 magic tiers × 12 base weapons = 60 items.
 The 48 with `magicBonus` 1–4 have **no live grant path**, and no positive `magicBonus` literal exists
 anywhere in the file. A player's main-hand weapon is permanently capped at base tier or degraded.
 
-The engine asserts otherwise in its own source: `// FC06: monster drops capped at base tier@24587`
+The engine asserts otherwise in its own source: `// FC06: monster drops capped at base tier@24588`
 continues *"fishing is the only source of +bonus weapons."* Per §DOC-02g, **an engine comment is a
 claim, not authority** — this one names a compensating mechanism with zero commits.
 
 ### B. One readable item carries two unimplemented mechanical promises (**§AUDIT-03v/w cluster, 8th instance**)
 
-`const FISHING_GUIDE_TEXT@26660` is the reward readable of `quest_fishing_guide`. It tells the player
+`const FISHING_GUIDE_TEXT@26661` is the reward readable of `quest_fishing_guide`. It tells the player
 two things the engine does not do:
 
 1. *"Shore (The Bank) — DC 8. Reeds — DC 12. Deep (The Shallows) — DC 16."* The find DC is computed
-   once, without reference to the zone, at `S_story.fishingBaitSatchel ? 8 : 10@30492`. Because deeper
+   once, without reference to the zone, at `S_story.fishingBaitSatchel ? 8 : 10@30493`. Because deeper
    zones carry strictly better bait at an **identical** cost, the Bank is strictly dominated the moment
    the Reeds unlock — the inverse of the risk/reward gradient the guide describes.
-2. `Weapon bonus = floor(fish AC / 4) + max(0, Luck Mod).@26680` — the §V-A formula that was never built.
+2. `Weapon bonus = floor(fish AC / 4) + max(0, Luck Mod).@26681` — the §V-A formula that was never built.
 
 This is the first instance in the cluster where a **single string** carries two distinct unbacked
 promises, and both are this report's own specifications surviving as player-facing prose only.
@@ -180,8 +180,8 @@ promises, and both are this report's own specifications surviving as player-faci
 
 `_calcLuck()@23439` reproduces the specified formula byte-for-byte, including the `product <= 0`
 guard, over the exact default statline. Of the seven specified roll points: **shipped** — zone DC
-(`- _luckMod()@30492`), type roll (`tDie + bait.type + _luckMod()@30557`), death save
-(`Math.ceil(Math.random() * 20) + _luckMod()@25897`), tournament tiebreak (minus the coin flip);
+(`- _luckMod()@30493`), type roll (`tDie + bait.type + _luckMod()@30558`), death save
+(`Math.ceil(Math.random() * 20) + _luckMod()@25898`), tournament tiebreak (minus the coin flip);
 **not shipped** — bait catch roll (no bait combat), predator hit roll, weapon drop quality.
 **Unspecified additions:** a Luck term in the d100 loot roll, and `luckScale` in `LAKE_MAGIC_DB`.
 
@@ -195,9 +195,9 @@ by §DOC-02m's fishing cluster.
   earned; the find DC is permanently `10 − LuckMod`. This is §DX-02u's **read-only** class, 2nd instance.
 - `baitFishingActive: false@23108` — **1 occurrence**, its own declaration. It was specified to
   suppress node re-render during bait combat, which was never built.
-- `fishingQuestFlags['searched_'+loc]@30513` — write-only, **0 readers**, and its key is *computed*,
+- `fishingQuestFlags['searched_'+loc]@30514` — write-only, **0 readers**, and its key is *computed*,
   so a literal grep for a gate name would never find it either (the §EPIC-01 hazard in miniature).
-- `fishingQuestFlags.q01 = true;@30612` — write-only, **0 readers**.
+- `fishingQuestFlags.q01 = true;@30613` — write-only, **0 readers**.
 
 `fishingYugurtFavour` is the healthy counterexample: one writer (a quest `flag_write`), two readers.
 
@@ -219,8 +219,8 @@ AC 20 it shares with a real monster statline.
 `LYR:{ num:41@8723` (Arctic Wastes, act 7) is declared **59 lines before** `BOO:{ num:75@8782`
 (Yugurt Lake, act 3), and both occupy the same cell — `BOO:{r:2,c:194}@9422`, `LYR:{r:2,c:194}@9423`.
 `CELL_GRID` builds each cell in `NODE_MAP` declaration order and only `list[0]` can become
-`currentCode`, so `const hasFish = node.isFishingLake;@35348` is never true and
-`function storyFishing() {@30393` has never run in production. The cabin `SSJ:{ num:76@8786` sits alone
+`currentCode`, so `const hasFish = node.isFishingLake;@35349` is never true and
+`function storyFishing() {@30394` has never run in production. The cabin `SSJ:{ num:76@8786` sits alone
 in its own cell, so the Fisherman, the free bed and the six-quest tournament still render — which is
 why the gap reads as missing content rather than as a bug.
 
@@ -229,9 +229,9 @@ does not wait on §AUDIT-03x's design call.
 
 ### G. Method note — a vocabulary split that is *not* a defect
 
-`BAIT_TABLES = {@26633` is keyed `bank`/`reeds`/`shallows` while `tackleboxZoneUnlocks: {shore:true@23108`
+`BAIT_TABLES = {@26634` is keyed `bank`/`reeds`/`shallows` while `tackleboxZoneUnlocks: {shore:true@23108`
 is keyed `shore`/`reeds`/`deep`. This reads as a guaranteed `undefined` lookup and is not one: an
-explicit `_zoneMap = { bank:'shore'@30474` reconciles them. Recorded because it was nearly filed as a
+explicit `_zoneMap = { bank:'shore'@30475` reconciles them. Recorded because it was nearly filed as a
 crash — **check for a translation layer before scoring a key mismatch.**
 
 ---
@@ -276,7 +276,7 @@ points at this report for its contents, and so this table is the specification o
   `fishingQuestFlags.q01`; plus `_magicTierAllowed` as a **live function reachable only from dead
   branches**, which a reader/writer census scores as live.
 - **§DX-02m, named instance outside the fishing block** — unseeded `Math.random()` on story death
-  saves at `Math.ceil(Math.random() * 20) + _luckMod()@25897`.
+  saves at `Math.ceil(Math.random() * 20) + _luckMod()@25898`.
 - **§DX-02v extended** — `monsters.md:317` (370 vs 398 monsters), `monsters.md:645` (retired `YL`).
 
 **Blocked on §FISH-01.** Every defect above except §FISH-02's d100 half and the death-save roll sits

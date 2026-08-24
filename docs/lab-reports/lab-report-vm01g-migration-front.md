@@ -5,7 +5,7 @@
 ## Retiring per-node special cases from `storyRender` into three small registries
 
 **Authored:** 2026-07-28 (design lock) · **Ship addenda:** 2026-07-28 → 2026-08-05 · **Re-verified against `play.html` @ `a66119f` on 2026-08-23 (§DOC-02db)**
-**System:** `` `function storyRender(node, prefix) {@34549` `` and the registries `` `const NODE_PANELS = [@31320` ``, `` `const NODE_HOOKS = [@34172` ``, `` `const NODE_VERBS = [@34273` ``
+**System:** `` `function storyRender(node, prefix) {@34550` `` and the registries `` `const NODE_PANELS = [@31321` ``, `` `const NODE_HOOKS = [@34173` ``, `` `const NODE_VERBS = [@34274` ``
 **Status:** ✅ Design held · ✅ 11 slices shipped · ⚠️ 2 censused blocks unclaimed · ⚠️ 2 design asks still open
 
 > **This is a HISTORY document.** It records what was *designed* on 2026-07-28, what each slice
@@ -222,7 +222,7 @@ predates it; §7's C3 describes only "D becomes live `choice` renders."
 INN sleep pricing (×3) and patrol ordered-visit (×3) as design calls. All three were answered
 2026-08-06 (`9c9fe42`): TLS → node field, INN → **DECIDED-STAY**, patrol → **DECIDED-STAY**. TLS
 now authors `` `finalBattle:{minLevel:20,minShards:7},@8727` `` read by the single helper
-`` `function _finalBattleReady(code) {@27999` `` at three call sites. The other six sites survive
+`` `function _finalBattleReady(code) {@28000` `` at three call sites. The other six sites survive
 by decision, and are visible at HEAD as the only remaining comparisons outside `storyRender`.
 
 **D4 — the four double-pays this report filed were fixed.** §SPARK-01-FU and §LXX-01-FU shipped
@@ -276,11 +276,11 @@ vocabulary holds. The thesis gets its real test on the next content arc.
 
 **F1 🔴 — The Homecoming cannot happen. Six Act VIII farewell beats, three gift items and ~11 KB
 of authored prose are unreachable, and the reason is the mechanism §VM-01-G3 already named.**
-`` `const ACT8_FAREWELL_BEATS = {@26884` `` fires from
+`` `const ACT8_FAREWELL_BEATS = {@26885` `` fires from
 `` `function _renderNpcCard(key, container) {@23684` `` when `` `const beat = ACT8_FAREWELL_BEATS[key];@23687` ``
-and `(S_story.actNumber || 1) === 8`. But `` `  S_story.actNumber = node.act || 1;@34555` `` is the
+and `(S_story.actNumber || 1) === 8`. But `` `  S_story.actNumber = node.act || 1;@34556` `` is the
 **only** writer of that field, it runs at the top of `storyRender`, and `_renderNpcCard` is called
-from exactly one place — `` `      keys.forEach(k => _renderNpcCard(k, npcRowDiv));@35161` `` —
+from exactly one place — `` `      keys.forEach(k => _renderNpcCard(k, npcRowDiv));@35162` `` —
 downstream of it. The six NPCs are pinned to their profile nodes: yael `LHR`, brynn `TLL`, quill
 `MHQ`, pachelbel `LLA`, crov and auros `HKG`. **Every one of those nodes is `act:1`.** And
 `act:8` occurs exactly **once in the entire game — `TLS`, the Convergence platform**, where none
@@ -306,9 +306,9 @@ helped. → **§DX-02ft**
 
 **F3 — §VM-01-G2b-FU's "only writer" claim is literally wrong, and the correction strengthens
 it.** `brynnKeeperStoryTold` has **two** writers: the dead Beat 1 at
-`` `            S_story.brynnKeeperStoryTold = true;@32811` `` and a second inside
+`` `            S_story.brynnKeeperStoryTold = true;@32812` `` and a second inside
 `ACT8_FAREWELL_BEATS.brynn.text()` at
-`` `        S_story.brynnKeeperStoryTold = true;@26895` ``. The second is dead by F1, so the
+`` `        S_story.brynnKeeperStoryTold = true;@26896` ``. The second is dead by F1, so the
 cascade holds — but it holds for a different reason than the row states, and the second writer is
 itself a hazard worth naming: **a text getter that mutates persisted save state.** A display path
 with a side effect is invisible to every reader who greps for assignments in logic. → **§DX-02ft**

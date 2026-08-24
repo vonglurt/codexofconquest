@@ -117,11 +117,11 @@ that can rot; the measurement that it did *not* rot is recorded here instead.
 
 | Surface | Shipped as | Anchor |
 |---------|-----------|--------|
-| HG1 first-visit gift | `NODE_PANELS` entry, `once:'glut_gift_held'` | `` `id:'story-hg1-gift'@31453` `` |
-| HCA mark conversion | `NODE_PANELS` entry, `once:'croneMarksBanked'` | `` `id:'story-hca-marks'@31462` `` |
-| WG0 gate trial | `NODE_HOOKS` block | `` `_wg0Div.id = 'story-wg0-trial'@33072` `` |
-| HCA Leviathan | `_nodeHookHcaLeviathan@33089` | — |
-| INN free sleep | inline cost override | `` `node.code === 'INN' && S_story.freeBookingUnlocked@36195` `` |
+| HG1 first-visit gift | `NODE_PANELS` entry, `once:'glut_gift_held'` | `` `id:'story-hg1-gift'@31454` `` |
+| HCA mark conversion | `NODE_PANELS` entry, `once:'croneMarksBanked'` | `` `id:'story-hca-marks'@31463` `` |
+| WG0 gate trial | `NODE_HOOKS` block | `` `_wg0Div.id = 'story-wg0-trial'@33073` `` |
+| HCA Leviathan | `_nodeHookHcaLeviathan@33090` | — |
+| INN free sleep | inline cost override | `` `node.code === 'INN' && S_story.freeBookingUnlocked@36196` `` |
 
 The conversion tiers are exact against §VII: **≥6** WIS +1; **≥10** WIS +1 + Crone
 Bead into `S_story.knowledge`; **≥15** WIS +1 + Crone Bead + Crone Staff
@@ -148,7 +148,7 @@ nine classified in `` `src/scripts/check-noderegs.js:WG0_TRIAL:@113` `` and fenc
 | 4 | III.D | Flat quest shape: `checkAbility`/`checkLabel`/`checkDC`/`checkPassFlag`/`checkFailFlag`/`xpAward`/`completeItems`/`onPass` closure | All seven survive **only inside §ARCH-01 migration comments**; re-expressed as `bits:[{kind:'skill_check', stat, skill, dc, onPass, onFail}]` | RETIRED (shape), thesis intact |
 | 5 | III.D, IV | Progression gate `activateCond: () => (quests['prev']\|\|'') !== ''` — "attempted, pass or fail both qualify" | Shipped as `gate:{ questsAttempted:[…] }`; the compiler is **`(QS[id] \|\| '') !== ''`**, `` `g.questsAttempted@22061` `` — the same predicate, verbatim | SHIPPED (renamed) |
 | 6 | III.E | INN `quoteFn`, five states, name reveal fires once inside the fn | **Byte-identical**, including `"Mère Boudine. Since you'll keep coming back anyway."` | SHIPPED |
-| 7 | III.G | HG1 gift block "fires once (guarded by `!S_story.visited['HG1']`)" | The guard **never worked**: `storyCollectLoot` flips `visited[code]` earlier in the same render, so the block was dead from `00fe35c` until §VM-01-G-FU-a repointed it to `!glut_gift_held && !glutGiftReturned`. The engine records this in its own comment above `` `id:'story-hg1-gift'@31453` `` | **WRONG WHEN WRITTEN** — transcription exact, behaviour claim false |
+| 7 | III.G | HG1 gift block "fires once (guarded by `!S_story.visited['HG1']`)" | The guard **never worked**: `storyCollectLoot` flips `visited[code]` earlier in the same render, so the block was dead from `00fe35c` until §VM-01-G-FU-a repointed it to `!glut_gift_held && !glutGiftReturned`. The engine records this in its own comment above `` `id:'story-hg1-gift'@31454` `` | **WRONG WHEN WRITTEN** — transcription exact, behaviour claim false |
 | 8 | III.H | `storyCorridorTravel` hook sets `innDeparted` when `fromCode === 'INN'` | `storyCorridorTravel` = **0 occurrences** (deleted by §CELL-11A); `innDeparted` survives as a completion flag on `quest_inn_05` | RETIRED (host), flag intact |
 | 9 | VI | `quest_whisper_06` / `quest_wane_06` set the Crown-complete flag when "all 6 resolved" | Both compute `…filter(complete).length >= 5` — a **five**-quest threshold | SHIPPED, threshold differs |
 | 10 | VI | `quest_glut_06` sets `glutCrownComplete` | Set **unconditionally** by `onComplete`, not by a count — asymmetric with 9 | SHIPPED, mechanism differs |
@@ -162,7 +162,7 @@ nine classified in `` `src/scripts/check-noderegs.js:WG0_TRIAL:@113` `` and fenc
 | 18 | A.5 | Marsh Seaweed 🪸 — a second gathered reagent | The item drops (`` `name:'Marsh Seaweed'@7061` ``, 5 monsters) and its `desc` says *"Burns to trace iodine salt at the inn hearth."* **It occurs exactly once in the file. No quest, craft or handler consumes it** | **SHIPPED HALF** → §DX-02n / §AUDIT-03v cluster |
 | 19 | A.5 | Swamp Kelp drops from `sea_serpent`, `giant_eel`, `sea_witch` | Shipped for those three **plus** `sea_demon`, `kraken_spawn`, `sea_hag` — and `sea_hag` is in the `hag_swamp` roster, so kelp is obtainable from an ordinary swamp encounter | SHIPPED (expanded) |
 | 20 | A.7 | Leviathan iodine burn → "+2 ATK and +3 flat damage for the duration of the fight" | The button consumes the item and sets `iodineBuffActive` (`@33131`); **the only reader is `_rollSkill`.** No combat code reads it. Its own label says *"(+5 ATK this fight)"* | **NOT SHIPPED** → §AUDIT-03v cluster; see §V.2 |
-| 21 | A.7 | Leviathan defeat is the precondition for the conversion | Exact: `` `id:'story-hca-marks'@31462` `` requires `defeatedBattles['HCA_BOSS']` | SHIPPED |
+| 21 | A.7 | Leviathan defeat is the precondition for the conversion | Exact: `` `id:'story-hca-marks'@31463` `` requires `defeatedBattles['HCA_BOSS']` | SHIPPED |
 | 22 | A.2 | HJ2 battle "Grave Hag × 2 + Crone Witch" | Label only — `battle.key` is `grave_hag`. The Crone Witch exists as **`crones_witch`** (ac:17 hp:143 hard) and is in the `hag_swamp` roster, but is not in this fight | SHIPPED as specified (the report calls `count` display-only) |
 | 23 | III.C | INN sleep 8gp, waived by `node.code === 'INN' && freeBookingUnlocked` | Exact, at two sites (preview `@36213` and charge `@36250`) | SHIPPED |
 
@@ -189,8 +189,8 @@ At HEAD the nine cells are two:
 `` `const CELL_GRID = (() => {@9852` `` builds each cell as an **array** in `NODE_MAP`
 declaration order, and `` `CELL_GRID[key]?.[0]@9861` `` — the primary — is what the
 browser reads. `S_story.currentCode` is assigned at exactly two sites in the file
-(`` `S_story.currentCode = destCode@28374` ``, where `destCode = res.destCodes[0]`,
-and `` `S_story.currentCode = S_story.checkpointNode@26010` ``), both yielding the
+(`` `S_story.currentCode = destCode@28375` ``, where `destCode = res.destCodes[0]`,
+and `` `S_story.currentCode = S_story.checkpointNode@26011` ``), both yielding the
 primary. WG0 is first in `NODE_MAP` at `@8556`, so it takes cell `25,206`; INN
 precedes KTM, so it takes `22,191`.
 
@@ -198,7 +198,7 @@ precedes KTM, so it takes `22,191`.
 
 Consequences, measured:
 
-- `_uqfActivateAtNode@30138` keys on `node.code`. **HW1 carries 8 quests, HG1 8 and
+- `_uqfActivateAtNode@30139` keys on `node.code`. **HW1 carries 8 quests, HG1 8 and
   HN1 8 — 24 of the arc's 34 cannot activate.** The 10 that can are all at INN.
   A 35th `activateNode` sits on HCA and belongs to §LXX (see below).
 - The 18-quest Crone Mark supply is entirely at HW1/HG1/HN1, so `croneMarks` cannot

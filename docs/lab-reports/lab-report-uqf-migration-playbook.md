@@ -369,8 +369,8 @@ gate terms (§BOARD-01 Void-tide windows), the `any`/`not` expression AST (§VM-
   `checkPassFlag`/`checkFailFlag`/`bitLabel`/`goldAward` = **0**. `activateCond` = **44**, still
   exactly 14 UQF `_legacyFn` gates + the 30 stubs — the same number, 51 days later. `xpAward` = **45**
   and still **100 % `type:'side'`** (the figure drifted from 50; the invariant did not).
-- **Wave 8c's ordering claim holds.** `_runNodeHook('la-riva-row', node);@35101` runs before
-  `const questMsgs = storyCheckQuests(node);@36023`, so inline hooks still precede the engine's
+- **Wave 8c's ordering claim holds.** `_runNodeHook('la-riva-row', node);@35102` runs before
+  `const questMsgs = storyCheckQuests(node);@36024`, so inline hooks still precede the engine's
   completion pass — through an entire §VM-01 hook migration that rewrote the region around it.
 - **The report's own acceptance suite: 303 passed / 0 failed** (`quest-runtime-uqf.test.js`, 4.1 min).
   It was 288 at close; §MATH-01 and §VM-01-F added the rest.
@@ -446,7 +446,7 @@ Wave 8c named it the sole inline exception and deferred the fix to §GR; §GR cl
 it. At HEAD the quest carries `completion:{countMin, itemsAll}` and **no `onComplete`, no
 `xpAward`**, while all six of its effects — +500 gp, the Old Tuna Account Book, Aldo's favour, the
 activation of `quest_la_riva_03`, and two narration beats — live in an **AMS-only** hook
-(`function _nodeHookLaRivaRow(node) {@31889`) guarded on `status === 'active'`. Ordering
+(`function _nodeHookLaRivaRow(node) {@31890`) guarded on `status === 'active'`. Ordering
 saves it today: the hook runs before the engine's pass in the same render. But the completion gate
 carries **no `atNode` term**, so any `storyCheckQuests` that fires while the two conditions hold and
 the player is not rendering AMS flips the quest to `'complete'` and the hook's `'active'` test can
@@ -463,7 +463,7 @@ exception *is* test-pinned, so this is a design debt rather than a silent rot.
 > `storyCheckQuests(NODE_MAP.CDG)` with both preconditions held flipped the quest to `'complete'`
 > paying **0 gp, no account book, `aldo_sardino` 0, `quest_la_riva_03` never activated**, and a
 > subsequent AMS render recovered none of it. Player-reachability of that state is still not
-> demonstrated — `storyEnter@24387` re-renders `S_story.currentCode` (= `AMS`) on every return from the
+> demonstrated — `storyEnter@24388` re-renders `S_story.currentCode` (= `AMS`) on every return from the
 > corridor battle, so the hook did win the ordinary race. What the fix removes is the dependence on
 > the race. Acceptance: `dx02cm-la-riva-completion-fence.test.js` 4/4, with a negative control (drop
 > `atNode`, the fence case goes red and pays at `CDG`).

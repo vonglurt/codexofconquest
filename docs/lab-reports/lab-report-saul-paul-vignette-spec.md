@@ -289,7 +289,7 @@ the Fishing Guide, they will know how to read a stat line and will notice it.
 This is not a puzzle. There is no quest to remove it. The answer has already been given.
 
 > **Δ — 4 of 5 details exact, and the section corrects a sibling report.**
-> ✅ `Thorn (Permanent)@37658` renders under `S_story.saulConverted`, on the character sheet, with the
+> ✅ `Thorn (Permanent)@37659` renders under `S_story.saulConverted`, on the character sheet, with the
 > specified label byte-exact · ✅ **no mechanical penalty** · ✅ no tooltip · ✅ `Fishing Guide@13817`
 > exists (Q-BAIT-00), so the cross-reference still holds 77 days on · ❌ **HEAD supplies the
 > explanation the spec forbade** — a 2 Cor 12:9 subtitle under the label, in a modern rendering
@@ -309,8 +309,8 @@ This is not a puzzle. There is no quest to remove it. The answer has already bee
 
 Census across all **2,824** UQF quests: **2,454** are `type:'skill_check'`, and **all 2,454 carry no
 `completion` block**. That is by design — `S_story.quests[questId] = 'done'@6990` is the skill-check
-terminal state, written on the pass path, while `q.completion && QuestRuntime.canComplete@30188` inside
-`function storyCheckQuests@30167` is the *only* route to `'complete'`.
+terminal state, written on the pass path, while `q.completion && QuestRuntime.canComplete@30189` inside
+`function storyCheckQuests@30168` is the *only* route to `'complete'`.
 
 The residue: **exactly 8 skill-check quests in the file carry an `onComplete[]` chain that can
 therefore never run**, and the migration author flagged all eight in place (*"⚠ dead in legacy too"*).

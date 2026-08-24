@@ -174,11 +174,11 @@ removals; all five §KG nodes are still present.
 | Report claim | Live | Verdict |
 |---|---|---|
 | road cells return `road`, encounter rate 0 | `const TERRAIN_ENCOUNTER_RATE = {@9892` holds `road:0` | ✓ |
-| off-road cell adjacent to a node inherits that terrain | `function _inferTerrain(r, c) {@28384` — orthogonal-neighbour majority | ✓ |
-| Hunt Mode 80/20 at-or-below bias | `if (S_story.huntMode && _seededNext() < 0.8) {@38227` | ✓ |
-| Hunt Mode roughly doubles the rate | `if (S_story.huntMode) baseRate = Math.min(0.8, baseRate * 2);@28441` | ✓ |
-| battle XP = AC · maxHP | `const xpAward = Math.round((S.enemy.ac@25293` | ✓ |
-| Level 6 costs 5,500 XP | `const XP_LEVELS = [@24419` — index 5 is 5,500 | ✓ **exact** |
+| off-road cell adjacent to a node inherits that terrain | `function _inferTerrain(r, c) {@28385` — orthogonal-neighbour majority | ✓ |
+| Hunt Mode 80/20 at-or-below bias | `if (S_story.huntMode && _seededNext() < 0.8) {@38228` | ✓ |
+| Hunt Mode roughly doubles the rate | `if (S_story.huntMode) baseRate = Math.min(0.8, baseRate * 2);@28442` | ✓ |
+| battle XP = AC · maxHP | `const xpAward = Math.round((S.enemy.ac@25294` | ✓ |
+| Level 6 costs 5,500 XP | `const XP_LEVELS = [@24420` — index 5 is 5,500 | ✓ **exact** |
 | all six at or below Techno-Thug, *"mLevel ~4"* | Techno-Thug is **exactly** 4; band max is 4 | ✓ |
 | node prose ≤ the HKG/SVO exemplars | §KG 635–739 chars; HKG 953, SVO 1,192 | ✓ |
 
@@ -236,8 +236,8 @@ the leg through the row-8 TUO corridor.
 ### F3 — The five signature lines shipped mute, for twenty days ⚠ proven in a browser at both builds
 
 §5's whole contribution is *"name + one signature line"* per node. At ship, none of them could be heard.
-The render path is `const _npcDial = NPC_DIALOGUE[node.code];@35800`, the d-pad gate is
-`!(node.npc && NPC_DIALOGUE[node.code])@35906` — and none of the five NODE_MAP
+The render path is `const _npcDial = NPC_DIALOGUE[node.code];@35801`, the d-pad gate is
+`!(node.npc && NPC_DIALOGUE[node.code])@35907` — and none of the five NODE_MAP
 entries carries a `code:` field. `NPC_DIALOGUE[undefined]` is `undefined`.
 
 Measured in Chromium, seeded at each node:
@@ -367,10 +367,10 @@ be met.
 177.5, so the band is roughly **31 average kills**, or 123 Sparring Droids, or 15 Trainer-Bots for
 someone who can survive one. At 0.30 hunting, with node arrivals not rolling, that is about one fight per
 6.7 steps — call it **~200 steps of deliberate oscillation** between a zone node and the cell beside it.
-Exploration XP (`const EXPLORE_XP = 10;@24436`) and effort XP (`const EFFORT_XP_PCT = 0.25;@24427`, added
+Exploration XP (`const EXPLORE_XP = 10;@24437`) and effort XP (`const EFFORT_XP_PCT = 0.25;@24428`, added
 four days later) both shorten it; neither existed on the day this was designed.
 
-**Hunt Mode does what the report says.** `function _weightedMonsterPick(terrain) {@38219` filters to
+**Hunt Mode does what the report says.** `function _weightedMonsterPick(terrain) {@38220` filters to
 monsters at or below the player level on 80% of picks. At the Zavod a Level-1 player therefore meets the
 Spar-Bot far more often than the Trainer-Bot, while the 20% full-pool draw still surfaces the mLevel-4
 capstone for a genuine fight. Notoriety weighting is flat inside the band — trivial 40 / easy 35 — because

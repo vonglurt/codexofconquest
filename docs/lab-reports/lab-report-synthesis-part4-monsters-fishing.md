@@ -56,7 +56,7 @@ that intent, and all three shipped:
 - **Fishing is the only positive-magic vector in the economy.** Monster kills were deliberately
   nerfed to *degraded* gear — `Wrecked`/`Rusted`/`Chipped`/`Worn` — so a `+2` blade has exactly one
   origin. The engine says so in its own margin:
-  `// FC06: monster drops capped at base tier; fishing is the only source of +bonus weapons@24587`.
+  `// FC06: monster drops capped at base tier; fishing is the only source of +bonus weapons@24588`.
   Grinding orcs makes you rich. It does not make you *equipped*.
 - **Luck prices breadth.** `⌈(STR·DEX·CON·INT·WIS·CHA)^(1/6)⌉` is a geometric mean, so one neglected
   stat drags the whole thing down and a min-maxed Fighter is unlucky at the lake by construction.
@@ -74,19 +74,19 @@ relationship you earn by doing, and the game never once tells you that is what i
 
 | Structure | Anchor | Census | Status |
 |---|---|---|---|
-| `FISH_POOL` | `const FISH_POOL = [@26505` | **20** ranks, `{rank,key,name,desc}` | SHIPPED |
-| `NIGHT_FISH_POOL` | `const NIGHT_FISH_POOL = [@26527` | **5**, ranks 6/8/10/12/14 | SHIPPED §XLVIII |
-| `LAKE_MAGIC_DB` | `const LAKE_MAGIC_DB = {@26537` | **8**, all `sell:0`, minRank 11–20 | SHIPPED §DROP-03 |
-| `BAIT_TABLES` | `const BAIT_TABLES = {@26633` | **3 × 6 = 18** | SHIPPED |
-| `FISHING_GUIDE_TEXT` | `const FISHING_GUIDE_TEXT =@26660` | readable, 1 reader | SHIPPED (see F6) |
-| `FISH_SIZE_TIERS` | `const FISH_SIZE_TIERS = [@26686` | **5** bands, 1–4/5–9/10–14/15–19/20 | SHIPPED |
-| `FISHING_RODS` | `const FISHING_RODS = [@26701` | **4** tiers, 20/75/200/600gp | SHIPPED |
-| `NPC_TOUR_OPPONENTS` | `const NPC_TOUR_OPPONENTS = [@26709` | **6**, Pip −1/50gp → The Fisherman +8/1500gp | SHIPPED §XLV |
-| Four-phase cast | `function storyFishing() {@30393` | DEX → Catch → Type → select | SHIPPED |
+| `FISH_POOL` | `const FISH_POOL = [@26506` | **20** ranks, `{rank,key,name,desc}` | SHIPPED |
+| `NIGHT_FISH_POOL` | `const NIGHT_FISH_POOL = [@26528` | **5**, ranks 6/8/10/12/14 | SHIPPED §XLVIII |
+| `LAKE_MAGIC_DB` | `const LAKE_MAGIC_DB = {@26538` | **8**, all `sell:0`, minRank 11–20 | SHIPPED §DROP-03 |
+| `BAIT_TABLES` | `const BAIT_TABLES = {@26634` | **3 × 6 = 18** | SHIPPED |
+| `FISHING_GUIDE_TEXT` | `const FISHING_GUIDE_TEXT =@26661` | readable, 1 reader | SHIPPED (see F6) |
+| `FISH_SIZE_TIERS` | `const FISH_SIZE_TIERS = [@26687` | **5** bands, 1–4/5–9/10–14/15–19/20 | SHIPPED |
+| `FISHING_RODS` | `const FISHING_RODS = [@26702` | **4** tiers, 20/75/200/600gp | SHIPPED |
+| `NPC_TOUR_OPPONENTS` | `const NPC_TOUR_OPPONENTS = [@26710` | **6**, Pip −1/50gp → The Fisherman +8/1500gp | SHIPPED §XLV |
+| Four-phase cast | `function storyFishing() {@30394` | DEX → Catch → Type → select | SHIPPED |
 | Luck | `function _calcLuck() {@23439` | 6th-root, `product <= 0` guard | SHIPPED |
-| Drop nerf | `function _rollMonsterWeaponDrop@24582` | `const deg = Math.min(0, d6 - 5);@24593` | SHIPPED (see F2) |
-| Lake gate | `const hasFish = node.isFishingLake;@35348` | **1** flagged node (`BOO:{ num:75@8782`) | SHIPPED, unreachable (F1) |
-| Zone alias map | `const _zoneMap = { bank:'shore'@30474` | reconciles 2 vocabularies | SHIPPED |
+| Drop nerf | `function _rollMonsterWeaponDrop@24583` | `const deg = Math.min(0, d6 - 5);@24594` | SHIPPED (see F2) |
+| Lake gate | `const hasFish = node.isFishingLake;@35349` | **1** flagged node (`BOO:{ num:75@8782`) | SHIPPED, unreachable (F1) |
+| Zone alias map | `const _zoneMap = { bank:'shore'@30475` | reconciles 2 vocabularies | SHIPPED |
 
 Quest surface: **8** quests declare `activateNode:'SSJ'` (the six-round §XLV tournament plus
 `quest_fish_01` and `quest_fishing_guide`); **3** declare `activateNode:'BOO'`
@@ -108,7 +108,7 @@ Special statlines, all exact as reported: `horned_shark` AC 15 / HP 120 / 2d8+8 
 | 3 | 18 bait rows with catch/type/ADV/SizeUp | **18/18 byte-exact** | **EXACT** |
 | 4 | 8 lake relics, "no sell value", minRank 11–20 | 8, all `sell:0`, minRank 11–20 | **EXACT** |
 | 5 | Relic effects "AC, ATK, firstStrike, **catch**, nightType, allAbility" | `ac_bonus · atk_bonus · first_strike · **fishing_dc** · night_type · all_ability` | **WRONG** — no `catch` effect; `Yugurt's Eye` cuts the search **DC** |
-| 6 | Phase 1 "d20 + DEX mod **vs DC 12**" | `const castMod = dexTot@30535` is a **three-band** test: `<12 → −2`, `≥17 → +2`, else 0 | **INCOMPLETE** — the perfect-cast threshold (17) is unstated; there is no pass/fail |
+| 6 | Phase 1 "d20 + DEX mod **vs DC 12**" | `const castMod = dexTot@30536` is a **three-band** test: `<12 → −2`, `≥17 → +2`, else 0 | **INCOMPLETE** — the perfect-cast threshold (17) is unstated; there is no pass/fail |
 | 7 | "Global monster drop nerf **not implemented**" | implemented **at the cited line**, comment included | **INVERTED** → F2 |
 | 8 | Fish ranks 3–19 "renamed" from the original report | 7/7 original names: **0 commits ever** | **NEVER EXISTED** → F3 |
 | 9 | Rod shop and tournament "at **YC**" | both gate on `node.code === 'SSJ'`; `YC` died 2026-05-29 | **FOSSIL** → F4 |
@@ -134,7 +134,7 @@ structurally true right then, and still is, is that **no player can reach Yugurt
 `CELL_GRID` iterates `Object.keys(NODE_MAP)` and only `list[0]` can become `currentCode`.
 `LYR:{ num:41@8723` (Arctic Wastes, act 7) and `BOO:{ num:75@8782` (Yugurt Lake, act 3) both
 occupy cell `2,194` — and `LYR` is declared **59 lines earlier**. Arriving at that cell renders the
-arctic node, `const hasFish = node.isFishingLake;@35348` is never true, and `storyFishing` has
+arctic node, `const hasFish = node.isFishingLake;@35349` is never true, and `storyFishing` has
 exactly one call site: that chip. `BOO` has `sleep:false`, so respawn cannot reach it either.
 
 Stranded: 11 quests, ~100 authored data rows, two flag writers, one key event — and the four
@@ -155,7 +155,7 @@ needs a reachability check of its own (instrument 19).*
 At line 22,533 of the reference build: `const deg = Math.floor(Math.random() * 4) - 3; // −3 to 0`,
 prefixed `['Rusted ','Chipped ','Worn ','']`, three lines under a comment reading *"fishing is the
 only source of +bonus weapons."* The trade the source report specified had shipped in full. At HEAD
-it has shipped **harder** — `const deg = Math.min(0, d6 - 5);@24593` widens the floor to −4, adds a
+it has shipped **harder** — `const deg = Math.min(0, d6 - 5);@24594` widens the floor to −4, adds a
 `Wrecked` tier, and draws from the seeded stream (§VM-01-B).
 
 The author pasted a correct pointer and wrote the opposite sentence beside it. The one real delta
@@ -242,7 +242,7 @@ carrying it. ***A dead `||` branch naming a plausible data shape reads exactly l
 
 The third zone is `shallows` in `BAIT_TABLES`, `deep` in `tackleboxZoneUnlocks`, *"The Deep 🌊"* on
 the button and *"Deep (The Shallows)"* in the guide; the first is `bank`/`shore`/*"The Bank"*.
-`const _zoneMap = { bank:'shore', reeds:'reeds', shallows:'deep' };@30474` holds it together. The
+`const _zoneMap = { bank:'shore', reeds:'reeds', shallows:'deep' };@30475` holds it together. The
 report transcribes **both** vocabularies correctly and never notices they name the same three
 places. Not a defect — but a new zone must be added in three places and mapped in a fourth.
 

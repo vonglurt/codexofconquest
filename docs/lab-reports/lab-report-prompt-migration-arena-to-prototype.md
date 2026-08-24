@@ -77,10 +77,10 @@ Per §DOC-02 (26 instruments; the 27th is filed here):
 | Symbol | Removed by | Tombstone |
 |---|---|---|
 | `HUNTING_GROUNDS` | §TIMELESS-01 | `§TIMELESS-01: HUNTING_GROUNDS removed@10392` |
-| `storyStalk` · `_stalkedMonsterPick` · `_getQuestTargetKeys` | §TIMELESS-01 | `§TIMELESS-01: Stalk Helpers@38251` |
+| `storyStalk` · `_stalkedMonsterPick` · `_getQuestTargetKeys` | §TIMELESS-01 | `§TIMELESS-01: Stalk Helpers@38252` |
 | `CORRIDOR_CELLS` · `buildCorridorMap` · `#story-corridor-overlay` | §CELL-05 / §CELL-11A / §CELL-14 | superseded by §WALK/§NAV-01 |
-| `storyPortal` · `hearthHome` · `storyUseTransmort` | §CELL-13 | `storyPortal removed@28458` |
-| `XP_BY_TIER` | §DX-02i | `XP_BY_TIER = { trivial:25@24404` |
+| `storyPortal` · `hearthHome` · `storyUseTransmort` | §CELL-13 | `storyPortal removed@28459` |
+| `XP_BY_TIER` | §DX-02i | `XP_BY_TIER = { trivial:25@24405` |
 | `GATE_LOCKS` | §CELL-05 (gate removal) | 2 commits, no tombstone |
 
 **Dead — NEVER SHIPPED, 4 (0 commits in the file's entire history):** `rollAttack` · `rollDamage` · `rollEnemyAttack` · `DGQR` / *"Double Good Quality Rest"*.
@@ -93,13 +93,13 @@ Per §DOC-02 (26 instruments; the 27th is filed here):
 
 | # | Report claim (2026-05-21) | HEAD (2026-08-12) | Verdict |
 |---|---|---|---|
-| 1 | `reward = floor(0.1 × AC × maxHP)` | `Math.floor((S.enemy.ac@25310`, identical | ✅ **exact, 83 days** |
+| 1 | `reward = floor(0.1 × AC × maxHP)` | `Math.floor((S.enemy.ac@25311`, identical | ✅ **exact, 83 days** |
 | 2 | `XP = AC × maxHP` | `(S.enemy.ac\|\|10) * (S.opp.maxHp\|\|10)`; `XP_BY_TIER` deleted as never-read | ✅ exact |
 | 3 | `healAmt = reward` | `healAmt = reward` | ✅ exact |
-| 4 | "HP recovered = gold looted, **always equal**" | `reward * partyMult@25312` — gold only | ❌ **half-retired** (Finding 3) |
-| 5 | Short rest = `floor(hpMax × 0.25)` | `Math.floor(S_story.hpMax * 0.25)@25839` | ✅ exact |
-| 6 | Off-inn = `× 2` | `Boy Scouts Award — doubled!@25859` | ✅ exact, message included |
-| 7 | 3 short rests/day, reset at inn | `shortRests: 3`, `restEl.textContent = S_story.shortRests@36094` | ✅ exact |
+| 4 | "HP recovered = gold looted, **always equal**" | `reward * partyMult@25313` — gold only | ❌ **half-retired** (Finding 3) |
+| 5 | Short rest = `floor(hpMax × 0.25)` | `Math.floor(S_story.hpMax * 0.25)@25840` | ✅ exact |
+| 6 | Off-inn = `× 2` | `Boy Scouts Award — doubled!@25860` | ✅ exact, message included |
+| 7 | 3 short rests/day, reset at inn | `shortRests: 3`, `restEl.textContent = S_story.shortRests@36095` | ✅ exact |
 | 8 | Short rests are **free** (no gold, no day) | `+1h` each; ≥24h awake ⇒ **disadvantage** | ❌ **invariant reversed** (Finding 4) |
 | 9 | Inn message *"Double Good Quality Rest"* | 0 hits, **0 commits ever** | ❌ NOT SHIPPED |
 | 10 | `LOOT_TABLE` = d20, 50/25/15/10 | d20, **40/10/25/15/10** — 2 Spell Scroll rows dropped | ❌ inherited (Finding 1) |
@@ -107,7 +107,7 @@ Per §DOC-02 (26 instruments; the 27th is filed here):
 | 12 | `encounterChance = min(0.9, 0.1 + activeQuestCount × 0.05)` | never shipped in that form | ❌ inherited (Finding 1) |
 | 13 | Stalk quest boost `6×` | `BOOST = 6` shipped (since retired) — **and the cited source says `3`** | ✅ **corrects its own source** |
 | 14 | Necklace beads: display-only, no cost, no limit | `sell:0`, no carry cap, purely additive | ✅ **invariant holds** |
-| 15 | Bead record `{name, icon, node, type:'knowledge'}` | `function _maybeAddKnowledgeBead@25809`, byte-exact | ✅ exact |
+| 15 | Bead record `{name, icon, node, type:'knowledge'}` | `function _maybeAddKnowledgeBead@25810`, byte-exact | ✅ exact |
 | 16 | `S_story.knowledge` = the bead array | 14 of 15 writers push a **bare string** | ❌ **§DX-02aq** (Finding 2) |
 | 17 | Goblin AC 11 / HP 7 → reward 7 | `ac:15, hp:7` at HEAD **and archive** → 10 | ❌ wrong when written |
 | 18 | Ancient Dragon AC 22 / HP 367 → reward 807 | `ac:22, hp:546` at HEAD **and archive** → 1,201 | ❌ wrong when written |
@@ -141,11 +141,11 @@ This also refines instrument 12 (copy-vs-illustration): a **copy of the wrong so
 
 ### Finding 2 → **§DX-02aq NEW (🟡): the Necklace of Knowledge is a minority writer into its own array.**
 
-Layer 13's centrepiece shipped exactly as specified — `function _maybeAddKnowledgeBead@25809` writes `{ name, icon, node, type:'knowledge' }`, byte-exact to the spec.
+Layer 13's centrepiece shipped exactly as specified — `function _maybeAddKnowledgeBead@25810` writes `{ name, icon, node, type:'knowledge' }`, byte-exact to the spec.
 
 It is now **1 of 15 writers.** The other fourteen push a **bare string** — investigation lore notes accumulated across the Warmth arc, the Relay Road, the Lake, Ardley's Laws, the Crone Bead, the Cycle-4 archive note — plus the UQF `reward` bit's `knowledge` field, which forwards whatever the quest author wrote.
 
-The inventory renderer at `S_story.knowledge.forEach(bead@31233` has no type test:
+The inventory renderer at `S_story.knowledge.forEach(bead@31234` has no type test:
 
 ```js
 S_story.knowledge.forEach(bead => {          // @31231
@@ -168,13 +168,13 @@ const healAmt  = reward;                              // heal stays at base
 const goldDrop = Math.floor(reward * partyMult);      // §MESH-01f
 ```
 
-`function _partyLootMult@28657` returns +10 % per ally, capped +20 %. With any ally present the two legs diverge by design — the engine comment even explains why (*"party bonus is loot, not survivability"*). The decision is defensible; what is missing is that **a stated invariant was retired and nothing recorded the retirement.** The report is the only surviving statement of the original contract.
+`function _partyLootMult@28658` returns +10 % per ally, capped +20 %. With any ally present the two legs diverge by design — the engine comment even explains why (*"party bonus is loot, not survivability"*). The decision is defensible; what is missing is that **a stated invariant was retired and nothing recorded the retirement.** The report is the only surviving statement of the original contract.
 
 ### Finding 4 — "short rests are free" is no longer true, and what made it untrue is a combat penalty.
 
 §IX and Theme 5 both assert it, the second as prohibition: *"Charging gold or days for short rests would mean that rest is a resource the game controls against the player. The Cooperative DM Principle prohibits this."*
 
-`function storyShortRest@25818` now advances `hoursElapsed` and `hoursSinceSlept` by 1, and:
+`function storyShortRest@25819` now advances `hoursElapsed` and `hoursSinceSlept` by 1, and:
 
 ```js
 if (S_story.battleDis > 0 || (S_story.hoursSinceSlept || 0) >= 24) {   // @25046
@@ -257,10 +257,10 @@ The report's 17-row inventory, adjudicated:
 | Formula | Report | HEAD | |
 |---|---|---|---|
 | `XP = AC × maxHP` | ✔ | `(S.enemy.ac\|\|10) * (S.opp.maxHp\|\|10)` | ✅ |
-| `reward = floor(0.1 × AC × maxHP)` | ✔ | `Math.floor((S.enemy.ac@25310` | ✅ |
+| `reward = floor(0.1 × AC × maxHP)` | ✔ | `Math.floor((S.enemy.ac@25311` | ✅ |
 | `healAmt = reward` | ✔ | identical | ✅ |
-| `goldDrop = reward` | ✔ | `reward * partyMult@25312` | ⚠️ diverges with allies |
-| `shortRestHeal = floor(hpMax × 0.25)` | ✔ | `Math.floor(S_story.hpMax * 0.25)@25839` | ✅ |
+| `goldDrop = reward` | ✔ | `reward * partyMult@25313` | ⚠️ diverges with allies |
+| `shortRestHeal = floor(hpMax × 0.25)` | ✔ | `Math.floor(S_story.hpMax * 0.25)@25840` | ✅ |
 | `shortRestHeal = floor(hpMax × 0.50)` off-inn | ✔ | `base * 2` | ✅ |
 | `encounterChance = min(0.9, 0.1 + aq × 0.05)` | ✘ | never shipped in that form | ❌ inherited |
 | Stalk boost `6×` | ✔ | `BOOST = 6` (retired with the mechanic) | ✅ beat its source |

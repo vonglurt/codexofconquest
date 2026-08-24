@@ -72,11 +72,11 @@ loot = Fuzzy Tribble). Terrain `mimic_meadow:  { label:@6365`, roster `[ P.mimic
 `_a1`–`_a5`. §D02-02 (Inquisitor) and §D02-03 (Prior Carrier) shipped **not** as chains but as
 node-woven story-render surfaces, which is what §1 predicted for them.
 
-**Hooks.** `function _nodeHookCodexCoreChamber@31812` · `function _nodeHookBirkaCyMadnessGate@32511`
+**Hooks.** `function _nodeHookCodexCoreChamber@31813` · `function _nodeHookBirkaCyMadnessGate@32512`
 · the CY maintenance plate and NG+ line · the Prior Carrier three-branch block at `NUE` ·
-the Inquisitor button · `§D01-01: Themed Dungeon Doctrine@31419` as `NODE_PANELS` entries
-(IST/TBS/MCT) plus one inline at BK · three §D01-04 gates: `§D01-04: Class Gate@34698`,
-`§D01-04: Secret Gate@34749`, and the Memory Gate at `S_story.memorGateBypassUsed = true;@34966`.
+the Inquisitor button · `§D01-01: Themed Dungeon Doctrine@31420` as `NODE_PANELS` entries
+(IST/TBS/MCT) plus one inline at BK · three §D01-04 gates: `§D01-04: Class Gate@34699`,
+`§D01-04: Secret Gate@34750`, and the Memory Gate at `S_story.memorGateBypassUsed = true;@34967`.
 
 ---
 
@@ -89,9 +89,9 @@ broken. **CONTRADICTED** = HEAD does the opposite of the locked decision.
 | # | § | Specified | At HEAD | Verdict |
 |---|---|---|---|---|
 | 1 | §1 P1 | §D01-01 flavor gated by `!defeatedBattles[ebCode]` | `NODE_PANELS`, `when:st => !st.defeatedBattles['IST']` | **SHIPPED**, gate shape byte-exact |
-| 2 | §1 P1 | §D01-07 CY WIS save on first visit, 3 new flags | `function _nodeHookBirkaCyMadnessGate@32511`, DC 12, d10 table, actor `'VOID'` | **SHIPPED** |
+| 2 | §1 P1 | §D01-07 CY WIS save on first visit, 3 new flags | `function _nodeHookBirkaCyMadnessGate@32512`, DC 12, d10 table, actor `'VOID'` | **SHIPPED** |
 | 3 | §1 P1 | gated by `!S_story.visited?.['CY']` | gated by `!S_story.cyMadnessRoll` | **EXPANDED** — self-latching, strictly better |
-| 4 | §1 P1 | §D01-10 pre-boss roll at CO, `codexCoreChosen` + 3 branches | `_nodeHookCodexCoreChamber@31812`, `shards >= 6`, 3 buttons | **SHIPPED** |
+| 4 | §1 P1 | §D01-10 pre-boss roll at CO, `codexCoreChosen` + 3 branches | `_nodeHookCodexCoreChamber@31813`, `shards >= 6`, 3 buttons | **SHIPPED** |
 | 5 | §1 P1 | §D01-03 Prior Carrier, text/state only, no NPC profile | 3 branches at `NUE`; 0 hits in `BIRKA_NPC_PROFILES`/`NPC_DIALOGUES` | **SHIPPED** exactly |
 | 6 | §1 P1 | §D01-09 `voidFluxActive` in the combat damage loop | 2 sites, **both healing**; no combat-loop site | **NOT SHIPPED** (damage half) |
 | 7 | §1 P2 | §D01-02 Inquisitor 3-question chain, `wmLowerArchiveUnlocked` gate | live, migrated to UQF-1.0 by §ARCH-01 W1l | **SHIPPED** |
@@ -120,11 +120,11 @@ broken. **CONTRADICTED** = HEAD does the opposite of the locked decision.
 | 30 | §5 | `hp = max(1, hp - floor(heal*0.5))` — heal becomes damage | `hp + heal - half - half` → nets **+0/+1** | **DEFECT** — inversion is a nullification |
 | 31 | §6 | Prior Carrier distinct; no profile, no dialogue entry | 0 hits in either registry | **SHIPPED** exactly |
 | 32 | §6 | three branches Yes/No/Ignore; Ignore leaves `priorCarrierSpoke` false | all three; `priorCarrierSpoke = false` on Ignore | **SHIPPED** byte-exact |
-| 33 | §6 | Token is `flavor` type — unsellable, unusable | `type:'flavor', sell:0` (`Prior Carrier's Token@35017`) | **SHIPPED** byte-exact |
+| 33 | §6 | Token is `flavor` type — unsellable, unusable | `type:'flavor', sell:0` (`Prior Carrier's Token@35018`) | **SHIPPED** byte-exact |
 | 34 | §7 | `sealedVoid: !!(defeatedBattles['CO'])` is the only CO check | `sealedVoid: !!(S_story.defeatedBattles && S_story.defeatedBattles['TLS'])@23659` | **SHIPPED** |
 | 35 | §7 | 12 conditions, 8 required | 12 keys, `>= 8` | **SHIPPED**, exact |
 | 36 | §7 | neither `catKingDefeated` nor `sevenShards` is checked | correct — `sevenShards` 0 hits; `catKingDefeated` live elsewhere, absent here | **claim VERIFIED** |
-| 37 | §7 | Destroy sets `defeatedBattles['CO']`, `codexCoreChosen`, `curseScore += 5` | all three, at `S_story.defeatedBattles['TLS'] = true;@31847` and the two lines under it | **SHIPPED** byte-exact |
+| 37 | §7 | Destroy sets `defeatedBattles['CO']`, `codexCoreChosen`, `curseScore += 5` | all three, at `S_story.defeatedBattles['TLS'] = true;@31848` and the two lines under it | **SHIPPED** byte-exact |
 | 38 | §7 | Claim keeps the Auros fight | keeps it, **plus** CHA DC 17, surge +2, voidPressure +3 | **EXPANDED** |
 | 39 | §7 | Stabilize unchanged | unchanged | **SHIPPED** |
 | 40 | §Phases | `cyMadnessDecoded` | **0 commits ever**; `cyMaintenanceDecoded` is live | **Finding 1** |
@@ -201,7 +201,7 @@ invented statblocks were not.
 
 `aurosBlueprintKnown` occurs 4 times: the default, one writer, and **two readers that only render
 the promise back at the player** — Act IV's passText (*"In the CO boss fight, Auros's left pauldron
-has -4 AC"*) and a persistent node panel, `_wkHint.textContent = '📜 Blueprint known@31946`, that
+has -4 AC"*) and a persistent node panel, `_wkHint.textContent = '📜 Blueprint known@31947`, that
 repeats it for the whole run. **No combat code reads the field.** Auros's AC is never reduced.
 
 First instance in the cluster where the same unbacked mechanic is stated **twice**, once in a
@@ -209,7 +209,7 @@ surface that persists until the fight it names.
 
 ### Finding 5 — invariant #6 broken in the two hand-built hooks, correct three registries away
 
-`const _cyRoll = Math.ceil(Math.random()@32516` and both Codex Core rolls draw the **unseeded**
+`const _cyRoll = Math.ceil(Math.random()@32517` and both Codex Core rolls draw the **unseeded**
 stream and write persisted state: `cyMadnessRoll`, `cyMadnessTable`, `codexCoreChosen`,
 `defeatedBattles['TLS']`, `curseScore`. The UQF `skill_check` path used by all eight chains draws
 the seeded one — `const d20  = Math.ceil(E.rng() * 20)@22249`.

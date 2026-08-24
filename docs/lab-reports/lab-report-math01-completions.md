@@ -83,10 +83,10 @@ increment is four coordinates and one field per quest, which is why it took 23 m
 
 ## III. As-built findings at design time (2026-07-07) — all verified
 
-**1. The collection mechanism already existed.** `` `function storyCollectLoot(node) {@30093` `` splits
+**1. The collection mechanism already existed.** `` `function storyCollectLoot(node) {@30094` `` splits
 `node.loot` on ` · ` and pushes each entry into `S_story.inventory` under its exact name. It is a
 strict once-ever grant, guarded by
-`` `if (S_story.visited[node.code] || !node.loot)@30095` ``. All five documents were already on the
+`` `if (S_story.visited[node.code] || !node.loot)@30096` ``. All five documents were already on the
 nodes:
 
 | Node | `loot` | Verified |
@@ -97,18 +97,18 @@ nodes:
 | CNTR — Cantor's Attic | `Moonshine Memo · ∞-Fragment` | ✅ |
 
 **2. Evaluation order supports same-visit completion.** `storyRender` calls
-`` `const lootMsg  = storyCollectLoot(node);@34556` `` before
-`` `const questMsgs = storyCheckQuests(node);@36023` ``, and inside `storyCheckQuests` activation is
-the *first* statement — `` `msgs.push(..._uqfActivateAtNode(node));@30169` `` — ahead of the
+`` `const lootMsg  = storyCollectLoot(node);@34557` `` before
+`` `const questMsgs = storyCheckQuests(node);@36024` ``, and inside `storyCheckQuests` activation is
+the *first* statement — `` `msgs.push(..._uqfActivateAtNode(node));@30170` `` — ahead of the
 completion loop. Arrive, receive the loot, complete on the same render. **Verified at HEAD**, and it
 survived the §VM-01-F-FU refactor that replaced the per-render activation scan with an index.
 
 **3. Three of the four nodes were unreachable.** At the design-lock build, `EHZ`, `MONS` and `ZERO`
 all sat at `(38,215)` — a copy of Jerusalem's cell — alongside `JRS`, `PKR`, `JAR`, `OLN` and `JER`,
 eight codes on one cell. `CELL_GRID` treats `list[0]` as the arrival code, and the client has exactly
-one walking entry point: `` `const destCode = res.destCodes[0] || null;@28356` `` feeding
-`` `S_story.currentCode = destCode;@28374` ``. The only other writer in the whole file is the death
-respawn, `` `S_story.currentCode = S_story.checkpointNode || 'LHR';@26010` ``. **A non-primary code on
+one walking entry point: `` `const destCode = res.destCodes[0] || null;@28357` `` feeding
+`` `S_story.currentCode = destCode;@28375` ``. The only other writer in the whole file is the death
+respawn, `` `S_story.currentCode = S_story.checkpointNode || 'LHR';@26011` ``. **A non-primary code on
 a shared cell is therefore unreachable, permanently** — so `quest_math_02` (activates at EHZ) and
 `quest_math_05` (activates at MONS) could never fire, and three nodes' loot could never be granted.
 `CNTR` alone at `(37,215)` was reachable. *Corrected:* the report calls this a "copy-paste of
@@ -222,7 +222,7 @@ designed. (`` `410 road cells, 89 junctions.@9881` `` — the generator stamps i
 data it writes, which is why that figure can be trusted.)
 
 **The documents cannot be lost.** `storyCollectLoot` mints them without a `sell` field, and both sell
-paths filter on `` `S_story.inventory.filter(i => i.sell > 0 && !_isLastWeapon(i))@24276` ``. A player
+paths filter on `` `S_story.inventory.filter(i => i.sell > 0 && !_isLastWeapon(i))@24277` ``. A player
 cannot accidentally vendor a quest document into a soft-lock — a real hazard for a once-ever grant,
 closed by accident rather than by design, but closed.
 
@@ -247,7 +247,7 @@ false at the design-lock build. EHZ already carried `` `npc:"Johannes von Weishe
 him four paragraphs of node text: *"He looks like a man who has been calculating the exact probability
 of your arrival and found it satisfying."* CNTR carries `npc:"Cantor's Shade"`. Both render an NPC
 chip; **neither can be talked to**, because the Talk button is gated on
-`` `!(node.npc && NPC_DIALOGUE[node.code])@35906` `` and neither code is a key in that table. Measured
+`` `!(node.npc && NPC_DIALOGUE[node.code])@35907` `` and neither code is a key in that table. Measured
 through the project's parser: **71 of 416 nodes carry an `npc` chip; 6 have no dialogue entry, and two
 of the six are this arc's.** The design decision (no delivery step) may still be the right one — but
 it was made on a wrong fact, and the visible result is a named scholar in a room full of documents
@@ -263,7 +263,7 @@ real JS engine. The 15 mis-counted entries are single lines of 1,436–2,655 cha
 near the *end*. **The newer measurement was not the better one.** Row corrected in place, not re-filed.
 
 **(c) Two engine comments still describe the world this increment ended** (→ appended to §DX-02as).
-`` `q.schema === 'UQF-1.0' && q.completion && QuestRuntime.canComplete(id)@30188` `` sits directly
+`` `q.schema === 'UQF-1.0' && q.completion && QuestRuntime.canComplete(id)@30189` `` sits directly
 beneath a comment stating that *"the remaining non-UQF entries (quest_math_01–05 §MATH-01 gap …) never
 had a completion mechanism and stay activate-only"* — three lines above the code that completes them.
 The `adaptLegacyQuest` copy of the same sentence is already tracked as §DX-02as (e); this is its

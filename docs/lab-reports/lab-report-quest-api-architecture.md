@@ -345,7 +345,7 @@ The report's most valuable section, because it names five things its author knew
 
 | # | Question | Outcome |
 |---|---|---|
-| 1 | Named templates vs `choice` bits for multi-state nodes | **Neither.** `template` never shipped; multi-state node surfaces became `NODE_PANELS`/`NODE_HOOKS`/`NODE_VERBS` (§VM-01-G4b–d). `story-wis-vs`'s 5-branch block still renders from `const _wisVsOld = document.getElementById('story-wis-vs')@33432` — the one §1.2 fragmentation the migration never reached |
+| 1 | Named templates vs `choice` bits for multi-state nodes | **Neither.** `template` never shipped; multi-state node surfaces became `NODE_PANELS`/`NODE_HOOKS`/`NODE_VERBS` (§VM-01-G4b–d). `story-wis-vs`'s 5-branch block still renders from `const _wisVsOld = document.getElementById('story-wis-vs')@33433` — the one §1.2 fragmentation the migration never reached |
 | 2 | `checkPassFlag` → `flag_write.set` mapping | **Refined:** it became `mission_bit{flag,label}` (a *kept receipt*), not `flag_write`. Usage proves the call: 2,449 `mission_bit` vs 58 `flag_write` |
 | 3 | `completeItems` → `gate.items` or a new `item_check` bit? | **Both were built; only the gate term is used.** `completeItems` retired W7d. See Finding 5 |
 | 4 | `retryable` at the quest root, not in the bit | **Shipped exactly as proposed.** 0 bits carry it |

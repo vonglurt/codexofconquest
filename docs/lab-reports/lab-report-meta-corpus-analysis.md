@@ -178,7 +178,7 @@ later. The paragraph was not measured; it was inherited.
 
 This is the finding worth the whole pass, because the number is load-bearing.
 
-`FROBERGER_JOURNAL@27185` runs `entryNum:1` through `entryNum:41@27226` — **41 entries, unchanged
+`FROBERGER_JOURNAL@27186` runs `entryNum:1` through `entryNum:41@27227` — **41 entries, unchanged
 since `32c10c5`, the earliest surviving build.** The report says 17, twice: once in §I.A and once in
 §I.B, where it becomes the document's central structural parallel — *"Froberger left 17 journal
 entries. Each entry is a lab report."*
@@ -220,7 +220,7 @@ builds, and it is inside a comment: `(CO — Loop Heart / Codex Core Chamber)@21
 **`CY` — "CY madness".** `CY` is likewise never a `NODE_MAP` key. `// ── Layer 41: Drunk Pit Fight (CY
 only)@24686` sits **two lines above** `_pb41.nodeCode === 'HKG'`. `CY` is `HKG:{ num:6,  code:'HKG', name:'cyberpunk_streets', label:'Neon Undercity'@8439`.
 
-The engine settles both, and three more, in exactly one place — `const birkaNpcs@35121`:
+The engine settles both, and three more, in exactly one place — `const birkaNpcs@35122`:
 
 > *"dead pre-§WALK sublocation codes remapped to real nodes … IN→TLL … TV→MHQ … BA→LLA … CY→HKG. No
 > NODE_MAP entry ever existed for CI/IN/TV/BA/CY."*
@@ -435,8 +435,8 @@ contains none of these terms. All four verified at `89fa13b`.
    shadow state. ✅
 2. **Renders are idempotent.** `storyRender()` can be called any number of times and produces the same
    result from the same state; it destroys and rebuilds its DOM targets. ✅
-3. **One BFS.** `function _bfsGridPath@37741` is the single pathfinding primitive;
-   `function _bfsGridDir@37785` is a four-line wrapper that calls it and reads the first step. There is
+3. **One BFS.** `function _bfsGridPath@37742` is the single pathfinding primitive;
+   `function _bfsGridDir@37786` is a four-line wrapper that calls it and reads the first step. There is
    no second pathfinder. ✅
 4. **Modes are booleans.** Battle Mode and Story Mode are not states of a state machine — `S_story.active`
    is set `true`/`false` at six sites. The game is always in both modes, with one suppressed. ✅

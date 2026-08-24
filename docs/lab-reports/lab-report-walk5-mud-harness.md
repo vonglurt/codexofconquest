@@ -91,7 +91,7 @@ document had invented on paper.
 | Kernel encounter block | `` `src/js/mover.js:encounter: { eligible: destKind === 'empty', baseRate }@65` `` | ✅ unchanged — **no kernel change was ever required** |
 | Sea-lane parse | `` `src/js/wbapi-server.js:function getSeaLanes()@1018` `` | ✅ from `_rawSrc`, cached by source ref |
 | Rate-table parse | `` `src/js/wbapi-server.js:function getEncounterRateTable()@1074` `` | ✅ **stronger than spec** (§5) |
-| Server terrain inference | `` `src/js/wbapi-server.js:function terrainAt(r, c)@1091` `` | ✅ mirrors `` `function _inferTerrain(r, c)@28384` `` |
+| Server terrain inference | `` `src/js/wbapi-server.js:function terrainAt(r, c)@1091` `` | ✅ mirrors `` `function _inferTerrain(r, c)@28385` `` |
 | World inputs wired | `` `src/js/wbapi-server.js:function getMoverWorld()@1113` `` | ✅ `terrainAt` + `encounterRate`; **no `ferryEdges`** |
 | Per-session PRNG | `` `src/js/wbapi-server.js:function seededNext(s)@1147` `` | ✅ mulberry32 over `s.rngState` |
 | Flat tier weights | `` `src/js/wbapi-server.js:const BASE_TIER_WEIGHTS@1158` `` | ✅ `{trivial:40, easy:35, medium:20, hard:4, deadly:1}` — byte-exact to Inc 2 |
@@ -141,7 +141,7 @@ report produced.
 | `s.encounter` is additive; nothing changes type | **Correct** — `who` still serialises `state` as the lifecycle string |
 | 409 block path is right; leave it alone | **Correct** — untouched through §MESH-01/02 and §NAV-01f/g |
 | Ferry server-only would be an undetectable parity break | **Correct in principle, moot in fact** — the branch was deleted rather than fed |
-| Named cells are not encounter-eligible | **Correct** — `` `function _enterEmptyCell(r, c)@28421` `` is still the only client site rolling against the terrain rate |
+| Named cells are not encounter-eligible | **Correct** — `` `function _enterEmptyCell(r, c)@28422` `` is still the only client site rolling against the terrain rate |
 
 Six calls, six correct. The report's weakest passages are not judgements but a blanket sentence (§3) and a
 timing constant (§7).
@@ -193,8 +193,8 @@ written to prove one design decision became the repo's entire multiplayer test r
   (`BACKLOG.md`, `potential.md`, `plan-archive.md`) still record the harness as **269/269**.
 - **§AUDIT-03bg** 🟡 — **§4.3 logged one SP/MP encounter divergence; there are now four**, and none of the
   three new ones is written down anywhere. The client's roll at
-  `` `function _enterEmptyCell(r, c)@28421` `` applies, in order: `_partyEncounterRate` (§MESH-01f — **×0.5
-  with a co-present ally**, 0 with a sentry), then §KG-01's `` `if (S_story.huntMode) baseRate = Math.min(0.8, baseRate * 2);@28441` ``,
+  `` `function _enterEmptyCell(r, c)@28422` `` applies, in order: `_partyEncounterRate` (§MESH-01f — **×0.5
+  with a co-present ally**, 0 with a sentry), then §KG-01's `` `if (S_story.huntMode) baseRate = Math.min(0.8, baseRate * 2);@28442` ``,
   then a monster draw that is both notoriety-weighted *and* §KG-01 level-biased. The server applies none of
   them. `check:terrain` fences the *inputs* — the table and `terrainAt` — and nothing fences the **applied
   rate**, which is exactly where three later tracks widened the gap. The row also carries a stale cross-file

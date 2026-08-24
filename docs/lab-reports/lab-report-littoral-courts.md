@@ -112,8 +112,8 @@ totals reconciled against `check:dupkeys`' node count before any delta was deriv
 `LCA: { name:'Harbor Keeper', quoteFn:() => S_story.littorialComplete@22560` ·
 `LSO: { name:'The Overseer', quoteFn:() => S_story.charmResisted@22563`.
 
-**Panels — 2 of 2.** `{ id:'story-lso-trigger', nodes:['LSO'],@31347` (repointed — Finding 3) ·
-`{ id:'story-lca-close', nodes:['LCA'],@31352` with `const _bc = (st.betrayalThought ? 1 : 0)@31355`.
+**Panels — 2 of 2.** `{ id:'story-lso-trigger', nodes:['LSO'],@31348` (repointed — Finding 3) ·
+`{ id:'story-lca-close', nodes:['LCA'],@31353` with `const _bc = (st.betrayalThought ? 1 : 0)@31356`.
 
 ---
 
@@ -144,7 +144,7 @@ totals reconciled against `check:dupkeys`' node count before any delta was deriv
 
 `const CELL_GRID = (() => {@9852` groups nodes by cell in `NODE_MAP` **declaration order**, and only
 `list[0]` can ever be reached: `S_story.currentCode` is assigned at exactly two sites, and the one
-that matters is `S_story.currentCode = destCode;@28374`, which always yields the primary. Measured
+that matters is `S_story.currentCode = destCode;@28375`, which always yields the primary. Measured
 closure over all 416 nodes (**244 cells, 172 non-primary** — exact against §AUDIT-03x's recorded
 figures):
 
@@ -158,7 +158,7 @@ figures):
 | LCA Southern Anchorage | `35,213` | 2nd of 2 | ❌ `list[0]` = `CI2` |
 
 `LC4:{r:32,c:203},@9773` and `LCA:{r:35,c:213},@9812` are the coordinates that did it. Since
-`function _uqfActivateAtNode(node) {@30138` keys on `node.code`, **all five quests are stranded**;
+`function _uqfActivateAtNode(node) {@30139` keys on `node.code`, **all five quests are stranded**;
 since the arc-close is a node panel, **the ending cannot render either**.
 
 **This is the largest proportional casualty §AUDIT-03x has produced.** §CROWN-01 lost 24 of 34 quests
@@ -195,7 +195,7 @@ commit message. Read the diff, not the subject line.***
 
 ### Finding 3 → §AUDIT-03af — the engine's own comment is wrong about the past, and the wrong diagnosis produced the wrong fix
 
-Live at `§VM-01-G1-FIX: originally keyed to 'LJ3', a dead@31343`, the comment reads:
+Live at `§VM-01-G1-FIX: originally keyed to 'LJ3', a dead@31344`, the comment reads:
 
 > *"originally keyed to `'LJ3'`, a dead node code **no NODE_MAP entry ever carried**, so this panel
 > had **NEVER rendered**; remapped to LSO … the quest's own `activateNode`."*

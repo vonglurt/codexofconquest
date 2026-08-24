@@ -115,16 +115,16 @@ inlining pushes, filters, gold, favor and `msgs.push`.
 
 | Surface | Anchor at HEAD |
 |---|---|
-| Runtime applier | `` `function _applyItemChain(q) {@26170` `` |
-| Idempotent grant (`once`) | `` `if (s.once !== false && inv.some(i => i.name === s.name)) break@26177` `` |
-| Rich-field allow-list (FU-b1) | `` `for (const f of ['desc', 'readText', 'readableKey'@26183` `` |
-| Silent-grant suppression (FU-b) | `` `if (!s.silent) msgs.push(item.icon@26190` `` |
-| `take all` — spliced in place | `` `if (s.all) { for (let i = inv.length - 1@26196` `` |
-| `takeBit` dispatch | `` `case 'takeBit':  _takeMissionBit(s.flag); break@26200` `` |
-| Mission-bit removal | `` `function _takeMissionBit(flagName) {@26154` `` |
-| §MBIT-02-E gate safety | `` `kept gate-referenced flag@26161` `` |
-| The one live hook | `` `msgs.push(..._applyItemChain(q)); // §EDITOR-01-D@30199` `` |
-| Ladder's obituary, in the engine | `` `W7c folded the per-id hardcoded effects block (61 ids@30194` `` |
+| Runtime applier | `` `function _applyItemChain(q) {@26171` `` |
+| Idempotent grant (`once`) | `` `if (s.once !== false && inv.some(i => i.name === s.name)) break@26178` `` |
+| Rich-field allow-list (FU-b1) | `` `for (const f of ['desc', 'readText', 'readableKey'@26184` `` |
+| Silent-grant suppression (FU-b) | `` `if (!s.silent) msgs.push(item.icon@26191` `` |
+| `take all` — spliced in place | `` `if (s.all) { for (let i = inv.length - 1@26197` `` |
+| `takeBit` dispatch | `` `case 'takeBit':  _takeMissionBit(s.flag); break@26201` `` |
+| Mission-bit removal | `` `function _takeMissionBit(flagName) {@26155` `` |
+| §MBIT-02-E gate safety | `` `kept gate-referenced flag@26162` `` |
+| The one live hook | `` `msgs.push(..._applyItemChain(q)); // §EDITOR-01-D@30200` `` |
+| Ladder's obituary, in the engine | `` `W7c folded the per-id hardcoded effects block (61 ids@30195` `` |
 | Pipe codec (parse) | `` `edit.html:function parseItemChainText(txt) {@8533` `` |
 | `desc` re-join — the limitation that dissolved | `` `edit.html:if (p[5]) step.desc = p.slice(5)@8542` `` |
 | CRUD field declaration | `` `edit.html:arr:'itemchain',ta:true@6146` `` |

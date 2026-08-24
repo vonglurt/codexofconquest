@@ -592,7 +592,7 @@ All 54 source books are marked `[x]` in `books.md` — all have been processed t
 | `VENDOR_NODES` | Set of node codes with vendor access (5 nodes: `LLA`/`LGW`/`STN`/`PDL`/`BK`) |
 | `XP_LEVELS` | 20-entry array; max 195,000 XP at L20 |
 | `LOOT_TABLE` | 20-entry d20 drop table (dead code — replaced by `_D100_TABLE`) |
-| `_applyItemChain` allow-list | **The item field vocabulary.** `for (const f of ['desc', 'readText'@26183` names every key a declarative grant may copy into `S_story.inventory`; anything off-list is dropped. `desc` is the row tooltip (`div.title = item.desc@30868`), `readText` the 📖 Read text (`let txt = it.readText@31175`), and the item's `type` decides which one a string belongs in. `description` was retired by §DX-02gd (2026-08-24) after 15 sites resolved to no reader. Kept in lockstep with `edit.html:const GRANT_RICH@8607`, `src/scripts/check-itemchain.js` and `check-ladder-migration.js`'s `GRANT_FIELDS` — nothing gates that lockstep (§DX-02cj) |
+| `_applyItemChain` allow-list | **The item field vocabulary.** `for (const f of ['desc', 'readText'@26184` names every key a declarative grant may copy into `S_story.inventory`; anything off-list is dropped. `desc` is the row tooltip (`div.title = item.desc@30869`), `readText` the 📖 Read text (`let txt = it.readText@31176`), and the item's `type` decides which one a string belongs in. `description` was retired by §DX-02gd (2026-08-24) after 15 sites resolved to no reader. Kept in lockstep with `edit.html:const GRANT_RICH@8607`, `src/scripts/check-itemchain.js` and `check-ladder-migration.js`'s `GRANT_FIELDS` — nothing gates that lockstep (§DX-02cj) |
 
 ---
 

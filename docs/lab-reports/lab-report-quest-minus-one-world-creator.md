@@ -15,7 +15,7 @@ Layer 49 is the game's answer to its own level cap. At Level 20 the Fighter Cham
 
 This rewrite re-measures every claim. The mechanism is intact: the state fields, the New-Game-Plus carry-over, the trigger, the styling and the Entry 42 pairing all survive under their original names across 79 days, a total quest-format migration (§ARCH-01) and a world-coordinate migration (§WALK/§NAV-01). What has failed is the **content of the disclosure itself** — the panel whose entire rhetorical premise is *"here are the exact facts about this file"* now states three facts about the file, of which **one is off by 22,688 lines, one names a file that no longer exists, and one describes a quest schema that was retired in June.** And the wizard the report declined to build shipped anyway, in a medium the document never enumerated.
 
-> *"Level 21 is undefined. That is not a bug. That is the door."* — still verbatim at `` `That is not a bug. That is the door.@31399` ``, 79 days on. The line survived. The numbers around it did not.
+> *"Level 21 is undefined. That is not a bug. That is the door."* — still verbatim at `` `That is not a bug. That is the door.@31400` ``, 79 days on. The line survived. The numbers around it did not.
 
 ---
 
@@ -33,16 +33,16 @@ Nine instruments from the §DOC-02 program were applied. Three did the work here
 
 ### A. The Level 20 problem
 
-`const XP_LEVELS = [@24419` has twenty entries. `const FIGHTER_FEATURES = {@25505` is keyed 2 → 20. There is no L21 threshold and no `FIGHTER_FEATURES[21]` — verified absent at HEAD. A player at L20 has a live doom clock (Day 49) and a dead reward loop.
+`const XP_LEVELS = [@24420` has twenty entries. `const FIGHTER_FEATURES = {@25506` is keyed 2 → 20. There is no L21 threshold and no `FIGHTER_FEATURES[21]` — verified absent at HEAD. A player at L20 has a live doom clock (Day 49) and a dead reward loop.
 
-The obvious patch — a "You Win" banner — was rejected because the game already has a victory screen: `function storyCheckVictory@28208`, fired at the same node. A second congratulation would compete with the real ending.
+The obvious patch — a "You Win" banner — was rejected because the game already has a victory screen: `function storyCheckVictory@28209`, fired at the same node. A second congratulation would compete with the real ending.
 
 ### B. Why this is a playability feature and not a developer's aside
 
 Three concrete contributions, all measurable in the shipped file:
 
 1. **It gives the cap a terminal beat that is not a second ending.** The victory screen answers *"did you save the world?"*. Quest −1 answers a different question — *"what is this world made of?"* — so the two never fight for the same moment even though they occupy the same node.
-2. **It is diegetic, and that is the load-bearing choice.** The panel renders with `el.className = 'sweelinck-variant';@31604` — the same olive-bordered treatment as Sweelinck's dialogue variants and the Froberger journal. A fourth-wall break styled as a UI element reads as a bug report; styled as a found document it reads as the last page of the journal. That decision is why the layer survives as fiction.
+2. **It is diegetic, and that is the load-bearing choice.** The panel renders with `el.className = 'sweelinck-variant';@31605` — the same olive-bordered treatment as Sweelinck's dialogue variants and the Froberger journal. A fourth-wall break styled as a UI element reads as a bug report; styled as a found document it reads as the last page of the journal. That decision is why the layer survives as fiction.
 3. **It seeds New Game Plus with content only a completionist can reach.** `priorQuestMinusOne` is the one flag in `_S_DEFAULTS()` that means *"this player has been to the end of the source."* It is the mechanical bridge to Layer 50's Entry 42, and it is the reason the game's final authored beat is the player writing a page rather than reading one.
 
 The layer's actual thesis: **the MIT License is a game mechanic.** Quest −1 opens the door; Entry 42 asks what you found behind it.
@@ -54,20 +54,20 @@ The layer's actual thesis: **the MIT License is a game mechanic.** Quest −1 op
 | Element | Anchor | Verdict |
 |---|---|---|
 | Trigger node | `` `TLS:{ num:42, code:'TLS'@8726` `` — *Cosmic Realm — The Convergence*, `act:8` | ✅ same node, renamed from `CO` |
-| Panel registration | `` `Layer 49: §XIV Quest -1@31382` `` — a `NODE_PANELS` entry, `nodes:['TLS']` | ✅ migrated by §VM-01-G1 |
-| Trigger condition | `` `>= 20 && !st.questMinusOne@31384` `` | ✅ contract preserved |
-| Styling | `` `el.className = 'sweelinck-variant';@31604` `` + `css:'border-left-color:#556b2f'` | ✅ verbatim intent |
+| Panel registration | `` `Layer 49: §XIV Quest -1@31383` `` — a `NODE_PANELS` entry, `nodes:['TLS']` | ✅ migrated by §VM-01-G1 |
+| Trigger condition | `` `>= 20 && !st.questMinusOne@31385` `` | ✅ contract preserved |
+| Styling | `` `el.className = 'sweelinck-variant';@31605` `` + `css:'border-left-color:#556b2f'` | ✅ verbatim intent |
 | Run-once flag | `` `questMinusOne: false@23124` `` | ✅ specified name |
 | NG+ carry flag | `` `priorQuestMinusOne: false@23127` `` | ✅ specified name |
-| NG+ capture | `` `const savedPriorQuestMinus1@24028` `` | ✅ byte-identical to reference build |
-| NG+ restore | `` `S_story.priorQuestMinusOne = savedPriorQuestMinus1@24036` `` | ✅ byte-identical |
-| Completion path | `` `S_story.questMinusOne = true; storyAutoSave();@31412` `` — console only | ✅ by design |
+| NG+ capture | `` `const savedPriorQuestMinus1@24029` `` | ✅ byte-identical to reference build |
+| NG+ restore | `` `S_story.priorQuestMinusOne = savedPriorQuestMinus1@24037` `` | ✅ byte-identical |
+| Completion path | `` `S_story.questMinusOne = true; storyAutoSave();@31413` `` — console only | ✅ by design |
 | NG+ pairing | `` `quest_ng_02: { id:'quest_ng_02'@11048` `` | ✅ now declarative UQF-1.0 |
-| Victory screen | `` `if (!S_story.defeatedBattles['TLS']) return;@28210` `` | ✅ the guard §VII.1 wants, three thousand lines away |
+| Victory screen | `` `if (!S_story.defeatedBattles['TLS']) return;@28211` `` | ✅ the guard §VII.1 wants, three thousand lines away |
 
 **Census: 18 of 18 named identifiers resolve — 100 %.** That is the program's first clean sweep, though the census is small (the report names 18 symbols, against §DOC-02b's 197). **Node codes: 0 of 2.**
 
-Two mechanical details in the disclosure prose were checked and are **exact**: *"The crit window is 17–20"* matches `` `const critMin = _lv >= 20 ? 17@25028` ``, and *"Indomitable has been yours for eleven levels"* matches `FIGHTER_FEATURES[9] = Indomitable I` (20 − 9 = 11). The author counted.
+Two mechanical details in the disclosure prose were checked and are **exact**: *"The crit window is 17–20"* matches `` `const critMin = _lv >= 20 ? 17@25029` ``, and *"Indomitable has been yours for eleven levels"* matches `FIGHTER_FEATURES[9] = Indomitable I` (20 − 9 = 11). The author counted.
 
 ---
 
@@ -82,7 +82,7 @@ Two mechanical details in the disclosure prose were checked and are **exact**: *
 | 5 | Disclosure states `MONSTER_POOL` size | States **423**; live **398** | 🔴 See §V — and it was never 423. |
 | 6 | Disclosure states `WORLD_DB` size | States **67**; live **111** | 🔴 Exact when written, stale now. |
 | 7 | *"QUEST_DB has a completion function for each quest"* | **Zero** quests have one | 🔴 **RETIRED, not never-shipped.** At `0a131f5`, 67 of 76 quests carried `completeFn` — an honest ~88 %. §ARCH-01 replaced all of it with declarative UQF-1.0; `completeFn` and `completionCheck` are both 0× at HEAD. |
-| 8 | *"plan.md §XIV describes the World Creator Wizard"* | `plan.md` **does not exist** | 🔴 Deleted by `5e48dd7` (split into `CONTRIBUTING.md` + `BACKLOG.md`). The pointer is in a **player-facing string** at `` `plan.md §XIV describes the World Creator@31409` ``. |
+| 8 | *"plan.md §XIV describes the World Creator Wizard"* | `plan.md` **does not exist** | 🔴 Deleted by `5e48dd7` (split into `CONTRIBUTING.md` + `BACKLOG.md`). The pointer is in a **player-facing string** at `` `plan.md §XIV describes the World Creator@31410` ``. |
 | 9 | Grep recipe `grep -c "key:'"` handed to the player | Returns **565**, meaning nothing | 🔴 §DOC-02i already recorded this recipe unreliable — it mixes items, nodes and monsters. `npm run stats` is the answer. The other two recipes still work. |
 | 10 | `sweelinck-variant` styling | Applied by the renderer, not the block | ✅ Survived the migration intact. |
 | 11 | State flags `questMinusOne` / `priorQuestMinusOne` | Both live, `@23123` and `@23126` | ✅ **Still exactly three lines apart, 79 days later.** |
@@ -139,7 +139,7 @@ The report closes with three self-criticisms. Instrument 10 says a post-mortem's
 
 | # | Original recommendation | Status @ HEAD |
 |---|---|---|
-| 1 | Guard the disclosure on `defeatedBattles['CO']` so it cannot pre-empt the story climax | 🔴 **OPEN, and cheaper than stated.** `TLS` is the final-battle node; `storyCheckVictory` already tests `` `if (!S_story.defeatedBattles['TLS']) return;@28210` ``. Because movement is free (invariant #1), an L20 player can walk to `TLS` and read the developer disclosure before ever fighting the Void Warlord. The fix is one clause copied from a function in the same file. |
+| 1 | Guard the disclosure on `defeatedBattles['CO']` so it cannot pre-empt the story climax | 🔴 **OPEN, and cheaper than stated.** `TLS` is the final-battle node; `storyCheckVictory` already tests `` `if (!S_story.defeatedBattles['TLS']) return;@28211` ``. Because movement is free (invariant #1), an L20 player can walk to `TLS` and read the developer disclosure before ever fighting the Void Warlord. The fix is one clause copied from a function in the same file. |
 | 2 | The grep commands assume the source is on disk; a browser player cannot run them | 🔴 **OPEN.** No view-source surface exists (`grep -c "view-source"` → 0). |
 | 3 | Link the repository URL to make *"the markdown files in this directory"* concrete | 🔴 **OPEN.** No `github.com` URL occurs anywhere in the game file. |
 
@@ -150,7 +150,7 @@ Three correct recommendations, zero converted into tracked rows, zero shipped. �
 ## VIII. Defects filed
 
 - **§AUDIT-03u (extended)** — the stale-player-facing-literal class. That row already flagged two *"forty-two nodes"* strings and noted the wider class was unmeasured; the Quest −1 disclosure is the measurement. Four literals in one panel: `16,024 lines`, `423 entries`, `67 terrain entries`, and `plan.md §XIV`. Same fix discipline: **describe scale without a literal, or compute it** — a fresh hardcoded 38,712 rots by the next commit.
-- **§AUDIT-03ai (NEW, 🟡)** — `quest_ng_02` can activate into a state it cannot leave. The quest gates on `ngPlusRun ≥ 1 && priorQuestMinusOne` and completes on `` `completion:{ flags:['entry42Written'] }@11048` ``. The **only** writer of `entry42Written` is the inline LHR journal surface, which carries an *additional* undeclared condition — `` `const _e42Dear@34620` ``, three of six named NPCs at favour ≥ 2. A qualifying NG+ player below that threshold sees the quest listed, is told *"Visit the City Inn to find the open page,"* arrives, and finds nothing. Gate and completion surface disagree.
+- **§AUDIT-03ai (NEW, 🟡)** — `quest_ng_02` can activate into a state it cannot leave. The quest gates on `ngPlusRun ≥ 1 && priorQuestMinusOne` and completes on `` `completion:{ flags:['entry42Written'] }@11048` ``. The **only** writer of `entry42Written` is the inline LHR journal surface, which carries an *additional* undeclared condition — `` `const _e42Dear@34621` ``, three of six named NPCs at favour ≥ 2. A qualifying NG+ player below that threshold sees the quest listed, is told *"Visit the City Inn to find the open page,"* arrives, and finds nothing. Gate and completion surface disagree.
 - **§DX-02au (NEW, 🟢)** — the three recommendations in §VII, filed as tracked work so they stop being prose.
 
 ---
@@ -161,8 +161,8 @@ Three correct recommendations, zero converted into tracked rows, zero shipped. �
 |---|---|---|
 | `play.html` | `` `questMinusOne: false@23124` `` | run-once flag in `_S_DEFAULTS()` |
 | `play.html` | `` `priorQuestMinusOne: false@23127` `` | NG+ carry flag |
-| `play.html` | `` `const savedPriorQuestMinus1@24028` `` | NG+ capture |
-| `play.html` | `` `Layer 49: §XIV Quest -1@31382` `` | the disclosure panel |
+| `play.html` | `` `const savedPriorQuestMinus1@24029` `` | NG+ capture |
+| `play.html` | `` `Layer 49: §XIV Quest -1@31383` `` | the disclosure panel |
 | `play.html` | `` `quest_ng_02: { id:'quest_ng_02'@11048` `` | the Entry 42 pairing |
 | `edit.html` · `src/js/wbapi-server.js` · `api.sh` | — | the World Creator Wizard, as shipped |
 | ~~`plan.md` §XIV~~ | — | **NOT SHIPPED / DELETED** by `5e48dd7`; superseded by `CONTRIBUTING.md` + `BACKLOG.md` |

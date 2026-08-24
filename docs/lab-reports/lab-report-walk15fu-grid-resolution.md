@@ -59,7 +59,7 @@ three things a player feels directly:
   (`` `src/js/mover.js:function moverMove(world, pos, dir)@44` ``) and timeless (§TIMELESS-01). Quartering the
   cell quadruples the keypresses between any two places without adding a single new place to visit.
 - **How dangerous the road is.** Each step on an unnamed cell rolls against the terrain's base rate
-  (`` `function _enterEmptyCell(r, c)@28421` ``, `` `midlands:0.15@9893` ``). Four times the steps is four
+  (`` `function _enterEmptyCell(r, c)@28422` ``, `` `midlands:0.15@9893` ``). Four times the steps is four
   times the encounters over the same journey — a combat-density change disguised as a coordinate change.
 - **Whether two real places feel like two places.** This is the honest half of the ask. London and its
   four neighbours genuinely occupy distinct ground; the 1° grid says otherwise.
@@ -188,7 +188,7 @@ dependency.
 > The locale list is real: `` `const CELL_GRID = (() => {@9852` `` maps `"r,c"` to an **array**, and its
 > own comment states the contract — *"`primaryOf = list[0]` is the node you arrive at, the rest are
 > intra-cell sub-locations"* (`` `primaryOf = list[0]@9850` ``). But the single-player client reads only
-> the head of that array: `` `const destCode = res.destCodes[0]@28356` ``, on this report's own tree as
+> the head of that array: `` `const destCode = res.destCodes[0]@28357` ``, on this report's own tree as
 > well as at HEAD. `` `const cellCodes  = (key) => CELL_GRID[key]@9862` `` — the full list — had exactly
 > **one** consumer on 2026-06-26, the mover kernel that computes `destCodes` and hands back a list nobody
 > unpacks. Its first real reader, the MUD room describer, shipped **five days later** (§NAV-01c,

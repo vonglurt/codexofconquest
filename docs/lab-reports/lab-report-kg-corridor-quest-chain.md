@@ -116,9 +116,9 @@ labels are the report's prose taxonomy, not engine values.
 
 - **Default** — ✅ verbatim: `catKills: {}, monsterKills: {}, catKingDefeated: false,@23121`
 - **Increment** — ✅ verbatim, and inert (§IV):
-  `S_story.monsterKills[S.enemy.key] = (S_story.monsterKills[S.enemy.key] || 0) + 1;@25346`
+  `S_story.monsterKills[S.enemy.key] = (S_story.monsterKills[S.enemy.key] || 0) + 1;@25347`
 - **HUD read** — ✅ verbatim, back-compat preserved:
-  `const k = S_story[q.killCounter || 'catKills'] || {};@30760`
+  `const k = S_story[q.killCounter || 'catKills'] || {};@30761`
 
 `catKills` is untouched behind its eight-key whitelist. The structural claim — *one generic counter,
 not a per-arc clone* — is architecturally sound and remains the right call.
@@ -131,7 +131,7 @@ not a per-arc clone* — is architecturally sound and remains the right call.
 combat loader assigns the monster key to the other half of the pair —
 `S.enemy.key      = m.key;@8148`. Across the whole file `S.opp.key` has **four read sites and zero
 write sites**, and `git log -S "catKills[S.enemy.key]" --all` returns **no commit, ever**. The guard
-at `if (S.enemy && S.enemy.key) {@25343` read `S.opp.key` when this report was written, and had been false since the line was authored.
+at `if (S.enemy && S.enemy.key) {@25344` read `S.opp.key` when this report was written, and had been false since the line was authored.
 
 > ⚠️ **ANNOTATION 2026-08-23 — §DX-02cy CLOSED.** The finding in §IV was acted on: the four sites were re-pointed from `S.opp.key` to `S.enemy.key`, and the anchors above were repaired to match the live code. **The measurements in this section describe the file as it stood on 2026-08-18** — `monsterKills`, `catKills` and `frCatKillCount` all move on a real victory now, pinned by `src/tests/integration/dx02cy-kill-counter-writer.test.js`.
 
@@ -189,7 +189,7 @@ proves `QuestRuntime.canComplete` honours it. The reader was verified; the write
 | 7 | Six item grants incl. Field Ration as heal consumable | all six as `itemChain grant`; Field Ration `heal:20` | ✅ exact |
 | 8 | Bout Token (kg_05) · Prime Core (kg_09) tabled as **items** | shipped as `mission_bit` **labels** | ⚠ form differs — kg_01's papers were correctly marked mission_bit; these two were not |
 | 9 | skill_check `bits` with `onPass[…]` / `onFail[…]` | `onPass` populated, **`onFail:[]` on both** | ⚠ narrowed — a failed check is silent |
-| 10 | *"the entire mechanical footprint of Inc 3"* | ship also widened the itemChain grant allow-list with `'dmgFlat', 'heal']) {@26184`, in lockstep across `edit.html:const GRANT_RICH = ['readText','readableKey'@8607` and `check-itemchain.js`, and repaired a pre-existing `_gateFlagSet` crash in that harness | ⚠ **understated at ship** — 5 sites tabled, 6 engine sites + 2 support files needed |
+| 10 | *"the entire mechanical footprint of Inc 3"* | ship also widened the itemChain grant allow-list with `'dmgFlat', 'heal']) {@26185`, in lockstep across `edit.html:const GRANT_RICH = ['readText','readableKey'@8607` and `check-itemchain.js`, and repaired a pre-existing `_gateFlagSet` crash in that harness | ⚠ **understated at ship** — 5 sites tabled, 6 engine sites + 2 support files needed |
 | 11 | §6 XP model → *"≈5,697, just past L6"* | **5,301** — 199 short of 5,500 | ❌ **wrong when written** (§VI) |
 | 12 | *"Gold ≈ 550 across the chain"* | **450** | ❌ wrong when written |
 | 13 | *"winning a node card battle … increments the kill counter"* | nothing increments the kill counter | ❌ **NOT SHIPPED** (§IV) |
@@ -202,8 +202,8 @@ proves `QuestRuntime.canComplete` honours it. The reader was verified; the write
 
 ## VI. THE XP MODEL, RE-DERIVED
 
-`0, 400, 1000, 2000, 3500, 5500, 8000, 11000, 15000, 20000,@24420` — Level 6 = **5,500**, unchanged.
-Kill XP is `const xpAward = Math.round((S.enemy.ac || 10) * (S.opp.maxHp || 10)@25293` × `partyMult`,
+`0, 400, 1000, 2000, 3500, 5500, 8000, 11000, 15000, 20000,@24421` — Level 6 = **5,500**, unchanged.
+Kill XP is `const xpAward = Math.round((S.enemy.ac || 10) * (S.opp.maxHp || 10)@25294` × `partyMult`,
 which is 1.0 solo: the report's `AC·maxHP` metric was and is correct. All six per-monster products
 are exact as tabled — sparring_droid **45** · komsomol_cadet **96** · gladiator_bot **196** ·
 zavod_sparbot **130** · fabrika_enforcer **208** · trainer_bot_prime **390**. Three errors follow
@@ -221,7 +221,7 @@ kg_11 500→600)."* That is **+150**, reaching 5,451 — **still 49 short.** The
 against the wrong total, so it could not have worked either.
 
 Two later mitigations, neither of them tuning and neither available on 2026-07-08: §XP-01 added
-effort XP for misses and failed checks (`const EFFORT_XP_PCT = 0.25;@24427`, 2026-07-12) and §XP-02-A
+effort XP for misses and failed checks (`const EFFORT_XP_PCT = 0.25;@24428`, 2026-07-12) and §XP-02-A
 added flat first-arrival exploration XP. A player walking the corridor today would clear Level 6 on
 those grants plus incidental encounters. **The pacing survives by accident, not by design** — and it
 is moot until §IV is fixed.

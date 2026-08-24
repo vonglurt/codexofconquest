@@ -64,7 +64,7 @@ The eleven subsystems: **(II)** the off-screen character · **(III)** world prog
 | X | The Void's First Sign | ❌ | Not shipped, in any form (**F3b**) |
 | XI | Final map | ✅ + ⚠️ | 129 cells, timings matched to the millisecond. **Overlay is not full-screen** (**F3**); §XI's "no text on the map" superseded by Layer 66b's caption |
 
-Anchors at HEAD: `const PETRA_STALL_STATES = [@27399` · `const WORLD_PROGRESSION_EVENTS = [@27405` · `const NODE_NPC_KEYS = {@27414` · `const NPC_FAREWELLS = {@27428` · `const NPC_ACT_THREE_LINES = {@27470` · `const BRYNN_MAINTENANCE_TASKS = [@27499` · `const QUIET_RETURN_RECEIPTS = {@27520` · `const DEACON_CODE_TEXT =@27547` · `function _getGigaultState()@27559` · `function _getNodeMapColor(nodeSlug)@27563` · `function _getFarewell(fromCode, toCode)@27576` · `function _checkWorldProgressionEvents()@27585` · `function _applyActThreeWeight()@27599` · `function _renderFinalMap()@27606` · `function _storyEbReturnBeat(ebCode)@30359` · `function _nodeHookBirkaGigaultStall(node,@32099` · `function _nodeHookBirkaDeaconCode(node,@32108` · `function _nodeHookBirkaBrynnMaintenance(node,@32136`.
+Anchors at HEAD: `const PETRA_STALL_STATES = [@27400` · `const WORLD_PROGRESSION_EVENTS = [@27406` · `const NODE_NPC_KEYS = {@27415` · `const NPC_FAREWELLS = {@27429` · `const NPC_ACT_THREE_LINES = {@27471` · `const BRYNN_MAINTENANCE_TASKS = [@27500` · `const QUIET_RETURN_RECEIPTS = {@27521` · `const DEACON_CODE_TEXT =@27548` · `function _getGigaultState()@27560` · `function _getNodeMapColor(nodeSlug)@27564` · `function _getFarewell(fromCode, toCode)@27577` · `function _checkWorldProgressionEvents()@27586` · `function _applyActThreeWeight()@27600` · `function _renderFinalMap()@27607` · `function _storyEbReturnBeat(ebCode)@30360` · `function _nodeHookBirkaGigaultStall(node,@32100` · `function _nodeHookBirkaDeaconCode(node,@32109` · `function _nodeHookBirkaBrynnMaintenance(node,@32137`.
 
 ---
 
@@ -84,7 +84,7 @@ Two smaller drifts ride along. The constant is named for **Petra**, a character 
 
 ### F2 — six world-progression notes are written into the movement breadcrumb array ⚠️
 
-`S_story.log` has exactly eight consumers in the file. Six treat it as an array of node-code **strings** — the trail: `S_story.log.push(S_story.currentCode)@28360`, capped at twenty by the next line, and read back as `new Set((S_story.log || []).slice(-20))` in three separate minimap renders.
+`S_story.log` has exactly eight consumers in the file. Six treat it as an array of node-code **strings** — the trail: `S_story.log.push(S_story.currentCode)@28361`, capped at twenty by the next line, and read back as `new Set((S_story.log || []).slice(-20))` in three separate minimap renders.
 
 The other two are Layer 44 and its descendant, and they `unshift` an **object**:
 
@@ -140,7 +140,7 @@ Measured exhaustively: `_getFarewell` swept over all ordered pairs of `NODE_MAP`
 
 ### F5 — five receipts with no lookup, and one return met with silence
 
-`QUIET_RETURN_RECEIPTS` holds **24** keys. Its only consumer is `const receipt = QUIET_RETURN_RECEIPTS[ebCode];` inside `function _storyEbReturnBeat(ebCode)@30359`, where `ebCode` is always an Epic Battleground node code. Nineteen keys are EB codes. The other five — `yael_ghetto`, `quill_debt`, `deacon_redd`, `crov_pit`, `auros_depths` — are the Birka arc returns the spec listed alongside them, and no call site can ever produce those strings as an argument. *"[Pachelbel holds the receipt for a long time. Then puts it in his coat.]"* has never been held by anyone. (`deacon_redd` also preserves the retired `deacon` prefix in a line that names Pachelbel — harmless, since it is unreachable.)
+`QUIET_RETURN_RECEIPTS` holds **24** keys. Its only consumer is `const receipt = QUIET_RETURN_RECEIPTS[ebCode];` inside `function _storyEbReturnBeat(ebCode)@30360`, where `ebCode` is always an Epic Battleground node code. Nineteen keys are EB codes. The other five — `yael_ghetto`, `quill_debt`, `deacon_redd`, `crov_pit`, `auros_depths` — are the Birka arc returns the spec listed alongside them, and no call site can ever produce those strings as an argument. *"[Pachelbel holds the receipt for a long time. Then puts it in his coat.]"* has never been held by anyone. (`deacon_redd` also preserves the retired `deacon` prefix in a line that names Pachelbel — harmless, since it is unreachable.)
 
 Separately, the file defines **20** EB return quests. Exactly one has no receipt: **`INV`** (`quest_eh_return` — *Return: Shepherd Rona*). This is not remap damage — the ship build authored 19 legacy keys too, so Rona has been returning to silence since the initial commit while her nineteen colleagues each get a sentence.
 
@@ -190,7 +190,7 @@ A player who reaches Act IV having **never started** Quill's quest triggers Laye
 
 The event table says *"Act V reached + Quill quest never started."* The code block four paragraphs later says `const actThreshold = 4; // Act IV`. Shipped: `actNumber >= 4`. The implementer followed the code, which is the right instinct, but the lock contradicted itself in the same section — the exact failure mode a design lock exists to prevent. (The other five rows match their table entries exactly, including `weckmann_class`'s `actNumber >= 6 && _npcFavor('crov') >= 3`.)
 
-Relatedly, §III opens *"these are state transitions that trigger at game milestones **regardless of player action**"*, and the constant's `→ doc:` comment says *"run per node visit."* Both are wrong: `_checkWorldProgressionEvents()` has exactly one call site, inside `function storyConfirmSleep()@36226`. A player who never sleeps never advances the world. Given F2, they would not have noticed.
+Relatedly, §III opens *"these are state transitions that trigger at game milestones **regardless of player action**"*, and the constant's `→ doc:` comment says *"run per node visit."* Both are wrong: `_checkWorldProgressionEvents()` has exactly one call site, inside `function storyConfirmSleep()@36227`. A player who never sleeps never advances the world. Given F2, they would not have noticed.
 
 ### F10 — credit where it is due: the implementer finished the spec's homework
 

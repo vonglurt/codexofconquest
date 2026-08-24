@@ -128,7 +128,7 @@ between three slices. Recorded so neither is quietly dropped a fourth time.
 **F6 — the act-leg thread closes for this region.** One act comparison remains, `node.code === 'NUE'
 && (S_story.actNumber || 1) >= 3`. **`NUE` is `act:6`**, so the leg is not dead — it is **vacuously
 true**, and has been since it shipped. Nothing to fix; recorded so the next reader need not
-re-derive it. *(§DOC-02db later proved the general case: `S_story.actNumber = node.act || 1@34555` is
+re-derive it. *(§DOC-02db later proved the general case: `S_story.actNumber = node.act || 1@34556` is
 the field's only writer, so every such test asks "am I standing on an act-N tile." → §DX-02ft.)*
 
 **The ASK — one open knob.** *When a verb is unaffordable, show-and-refuse or hide/disable?*
@@ -150,8 +150,8 @@ handler and broken on by `execBits`; the flag is **deliberately never cleared in
 `function _verbBits(verb, st)@6908` · `function _uqfRunVerb(verb, mount)@6914` ·
 `function _uqfRunChain(bits)@6949` · `function _mkAmbientLine(text)@6878`.
 
-**The registry:** `const NODE_VERBS@34273`, rendered by
-`function _renderNodeVerbs(node, st, group, container)@34495`, dispatched **in place** at each
+**The registry:** `const NODE_VERBS@34274`, rendered by
+`function _renderNodeVerbs(node, st, group, container)@34496`, dispatched **in place** at each
 block's former source position — 12 call sites, one per group, so LIFO stacking is preserved by
 construction.
 
@@ -186,7 +186,7 @@ them identical until a screenshot disagreed. The bounding box is now part of the
 | 3 | `cost` is not single-use (bar: 2 consumers) | **3**, at three prices in three surfaces: Yva 50gp@34356 · junction 10gp@35257 · `MME` hull 200gp@33924 (§VM-01-G-FU-d) | ✅ **cleared** |
 | 4 | Refuse-at-click, byte-identical | `src/js/quest.js:cost` sets `_halt` + `_refused` and emits `refuse`; never contributes to `when` | ✅ |
 | 5 | `combat`'s `nodeCode` covers D3; no new grammar | 3 boss verbs share `group:'cdg-boss-menu'` into one container | ✅ |
-| 6 | Free text stays inline (§3-F3) | `entry42Text@34647` block live at 34634; `_voidTollSecret` block at 34768 | ✅ **deliberate** |
+| 6 | Free text stays inline (§3-F3) | `entry42Text@34648` block live at 34634; `_voidTollSecret` block at 34768 | ✅ **deliberate** |
 | 7 | Kenickie + Lower Archive → `NODE_HOOKS` verbatim | `nue-lower-archive` before `void-archaeology`; `cdg-kenickie-market` between `codex-core-chamber` and `la-riva-row` — **both orderings exact** | ✅ |
 | 8 | `NUE` act-leg vacuously true, not dead | at 34696 (was 34691); `NUE` is `act:6`@8705 | ✅ **drifted 5 lines, unchanged** |
 | 9 | 13 D1 surfaces migrate as one unit (§10) | measured down to **4** in-slice; 9 blocked by three unnamed gaps → §VM-01-G4c-FU | ⚠ **self-corrected at ship** |
@@ -315,10 +315,10 @@ about the numbers it takes from the file and casual about the ones it takes from
 
 ## 10. Anchors
 
-`function storyRender(node, prefix)@34549` · `function _mkSection(id, icon, label)@35302` ·
-`const NODE_PANELS@31320` · `function _renderNodePanels(node, st)@31595` · `const NODE_HOOKS@34172` ·
-`function _runNodeHook(id, node, ctx)@34235` · `const NODE_VERBS@34273` ·
-`function _renderNodeVerbs(node, st, group, container)@34495` · `let _uqfPending@6824` ·
+`function storyRender(node, prefix)@34550` · `function _mkSection(id, icon, label)@35303` ·
+`const NODE_PANELS@31321` · `function _renderNodePanels(node, st)@31596` · `const NODE_HOOKS@34173` ·
+`function _runNodeHook(id, node, ctx)@34236` · `const NODE_VERBS@34274` ·
+`function _renderNodeVerbs(node, st, group, container)@34496` · `let _uqfPending@6824` ·
 `function _uqfPump(gen, answer)@6827` · `function _uqfRunToCompletion(gen)@6840` ·
 `function _mkAmbientLine(text)@6878` · `function _uqfRenderAsk(gen, ask, mount, step)@6885` ·
 `function _verbBits(verb, st)@6908` · `function _uqfRunVerb(verb, mount)@6914` ·

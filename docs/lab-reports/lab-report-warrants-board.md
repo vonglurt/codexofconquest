@@ -52,7 +52,7 @@ line; only 26105 carries the literal phrase. ***State which you counted.***
 **Proof 3 overshoots by 40.** `if (q.type === 'epic') return;` sits three lines below the guard the
 report quotes, commented *"epic quests activate explicitly via modal/defeat"* — so epics already had
 a non-geographic vector. The thesis holds (2,810 of 2,850 is still the whole world); the sentence
-does not. Survives at HEAD as `q.type === 'epic' || !q.activateNode@37002`.
+does not. Survives at HEAD as `q.type === 'epic' || !q.activateNode@37003`.
 
 **The primitive was already built, and inert.** This is the part that held up perfectly:
 
@@ -90,12 +90,12 @@ Sibling of §PLAY-01's Curse of Knowledge, and the same shape.
 
 | # | Concept | Extends / reuses | Shipped as | Status at HEAD |
 |---|---|---|---|---|
-| C1 | remote quest activation as a player verb | the dead `unlock` opcode — **first live consumer** | `function _acceptBounty(id)@37209` | ✔ **20 `unlock` authors** |
-| C2 | `NODE_MAP[code].board` opt-in host flag | `node.isFishingLake` (32965) | `function _boardHost(node)@37020` | ⚠ **0 authors, ever** |
+| C1 | remote quest activation as a player verb | the dead `unlock` opcode — **first live consumer** | `function _acceptBounty(id)@37210` | ✔ **20 `unlock` authors** |
+| C2 | `NODE_MAP[code].board` opt-in host flag | `node.isFishingLake` (32965) | `function _boardHost(node)@37021` | ⚠ **0 authors, ever** |
 | C3 | `QUEST_DB[id].rumor` one-line hook | falls back to synthesis; never to `hint` | `rumor: q.rumor \|\| null` in the selector | 0 at ship → **30 at HEAD** |
-| C4 | postable-bounty predicate | `_questNodes()` scan + `canActivate` | `function _boardBounties(node, limit)@37165` | ✔ split out as `function _bountyPostable(q, node)@37131` |
-| C5 | deterministic board rotation | the Town Crier's `gameDay % n` (26151) | `function _boardSeed(str)@37022` | ✔ unchanged |
-| C6 | the board surface | `_mkSection`/`_mkCard` (32919/32932) | `story-board-section@35686` | ✔ unchanged |
+| C4 | postable-bounty predicate | `_questNodes()` scan + `canActivate` | `function _boardBounties(node, limit)@37166` | ✔ split out as `function _bountyPostable(q, node)@37132` |
+| C5 | deterministic board rotation | the Town Crier's `gameDay % n` (26151) | `function _boardSeed(str)@37023` | ✔ unchanged |
+| C6 | the board surface | `_mkSection`/`_mkCard` (32919/32932) | `story-board-section@35687` | ✔ unchanged |
 
 **Not added (deliberately):** no new opcode, no new gate term, no new `S_story` execution field, no new
 `Math.random` site, no movement gate, no jump travel. **All six abstentions verified against the diff**
@@ -124,7 +124,7 @@ BOUNTY_TYPES = { 'side', 'skill_check', 'craft',                        // "the 
                  'combat', 'hunt', 'delivery', 'escort', 'dialogue' }   // "0 today; future-proofed"
 ```
 
-Shipped **byte-identical** as `const BOUNTY_TYPES@37018`, and byte-identical at HEAD.
+Shipped **byte-identical** as `const BOUNTY_TYPES@37019`, and byte-identical at HEAD.
 
 > ⚠ **THE CENSUS THIS CALL RESTS ON MEASURED HALF THE CORPUS, AND EVERY NUMBER IN IT IS REPRODUCIBLE.**
 > All **fourteen** of §4's counts are exactly `grep -o "type:'X'" | wc -l` over the whole file — 14 for
@@ -159,7 +159,7 @@ Shipped **byte-identical** as `const BOUNTY_TYPES@37018`, and byte-identical at 
 
 > ⚠ **AND THE COUNTEREXAMPLE IS ON THE CITED LINE.** §4 dismisses the four types with *"the `_flav`
 > map at 33178 is defensive for types that could exist but don't."* Line 33178 is
-> `const _flav = ({ combat:@35561` — `combat: FIGHT · delivery: DELIVER · escort: ESCORT · dialogue:
+> `const _flav = ({ combat:@35562` — `combat: FIGHT · delivery: DELIVER · escort: ESCORT · dialogue:
 > TALK` — a labelled button already built for each of the four, because the engine drew them every day
 > for 164 quests. **Instrument 135, third consecutive sighting in this family**: §DOC-02cu found it 17
 > lines above FU7's anchor; here it is *inside* the anchor. ***Absence is the one claim a citation
@@ -227,13 +227,13 @@ commit's claim. Both hunk headers name a function §7 named.
 
 | §7 block | Specified | Shipped at `8dcca67` | Delta |
 |---|---|---|---|
-| `BOUNTY_TYPES` | 8-type `Set` | `const BOUNTY_TYPES@37018` | **byte-identical** |
-| `_boardHost` | `return node && (…)` | `function _boardHost(node)@37020` | `!!node` coercion added |
-| `_boardSeed` | `_boardSeed(code, day)`, builds `code+'\|'+day` inside | `function _boardSeed(str)@37022` | ⚠ **signature narrowed to one arg**; callers build the string; output identical |
-| `_rewardStr(q)` | 8-line body | `function _boardReward(q)@37035` | ⚠ **renamed**; body byte-identical |
+| `BOUNTY_TYPES` | 8-type `Set` | `const BOUNTY_TYPES@37019` | **byte-identical** |
+| `_boardHost` | `return node && (…)` | `function _boardHost(node)@37021` | `!!node` coercion added |
+| `_boardSeed` | `_boardSeed(code, day)`, builds `code+'\|'+day` inside | `function _boardSeed(str)@37023` | ⚠ **signature narrowed to one arg**; callers build the string; output identical |
+| `_rewardStr(q)` | 8-line body | `function _boardReward(q)@37036` | ⚠ **renamed**; body byte-identical |
 | `_boardBounties` — 6 guards | schema · type · distant `activateNode` · not started · dest exists · `canActivate` | all six present, reordered by one | **exact** |
 | `_boardBounties` — sort + slice | `a._k - b._k \|\| (a.id<b.id?-1:1)`; `slice(0, limit \|\| 4)` | identical | **byte-identical** |
-| `_acceptBounty` | 8-line body incl. `execBits` + toast + re-render | `function _acceptBounty(id)@37209` | `String()` coercion on the label; else identical |
+| `_acceptBounty` | 8-line body incl. `execBits` + toast + re-render | `function _acceptBounty(id)@37210` | `String()` coercion on the label; else identical |
 | render block | after QUESTS (33293), before LOOT (33295) | inserted at **33295**, immediately above `// ── LOOT section` | **exact — the insertion point was predicted to the line** |
 | render block — binding | `(function(id){ return () => _acceptBounty(id); })(b.id)` | `((id) => () => _acceptBounty(id))(b.id)` | arrow form; `bounties` → `_bounties` |
 | — | *(not specified)* | **the `activateCond` guard** | ⚠ **an edit §7 does not contain** |
@@ -247,7 +247,7 @@ commit's claim. Both hunk headers name a function §7 named.
 > catch (e) { ok = false; } if (!ok) continue; }` — commented with the arrival lines **29361–29362**,
 > which resolve exactly. At the pinned parent **14 board-eligible quests carry an `activateCond`**, so
 > §7-as-written would have posted up to fourteen bounties arrival itself refuses. The guard survives
-> verbatim at HEAD in `function _bountyPostable(q, node)@37131`. ***A predicate that must mirror
+> verbatim at HEAD in `function _bountyPostable(q, node)@37132`. ***A predicate that must mirror
 > another predicate is not specified until BOTH gates are named.***
 
 > ⚠ **THE SECOND MISSING EDIT IS WHAT MAKES §9 RUNNABLE AT ALL.** §7's functions are plain declarations

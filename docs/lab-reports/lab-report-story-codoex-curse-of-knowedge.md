@@ -86,10 +86,10 @@ at the earliest surviving build (`32c10c5`, 2026-05-24 — two days *after* this
 
 | # | Claim / proposal | Measured | Verdict |
 |---|-----------------|----------|---------|
-| 1 | Retitle to **Codex of Conquest** | live as the **starting node's tagline** — `story-ci-tagline@31321` on `LHR`, *"LETS GO — Codex of Conquest: Curse of Knowledge"* — present already at `32c10c5` | ✅ **shipped, fastest** |
+| 1 | Retitle to **Codex of Conquest** | live as the **starting node's tagline** — `story-ci-tagline@31322` on `LHR`, *"LETS GO — Codex of Conquest: Curse of Knowledge"* — present already at `32c10c5` | ✅ **shipped, fastest** |
 | 2 | Magistra Elara **Voss** | **0 occurrences, 0 commits ever**; engine ships `LCY: { name:'Magistra Elara Muffat'@22465` — the name the report's *own body* uses | ❌ **never shipped** (Finding 2) |
 | 3 | Archivus Ptolemy **Crane** | **0 occurrences, 0 commits ever**; engine ships **Sweelinck** (632 hits) — the name the report's *own body* uses | ❌ **never shipped** (Finding 2) |
-| 4 | §IV *"**Finn's** Journal"* | **0 occurrences, 0 commits ever**; engine ships `const FROBERGER_JOURNAL@27185` — the name the report's *own body* uses | ❌ **never shipped** (Finding 2) |
+| 4 | §IV *"**Finn's** Journal"* | **0 occurrences, 0 commits ever**; engine ships `const FROBERGER_JOURNAL@27186` — the name the report's *own body* uses | ❌ **never shipped** (Finding 2) |
 | 5 | Aldric · Draketide · Kael Mordus · Izador al-Rashun · Kassiphane | all live (11 · 18 · 6 · 16 · 6 hits) | ✅ 5/5 |
 | 6 | Trade Seal · Grove Token · Cipher Scrap · Sand Cipher · Olympian Key | all live (10 · 2 · 3 · 3 · 2) | ✅ 5/5 |
 | 7 | "Warrant coin" | 0 | ❌ |
@@ -99,7 +99,7 @@ at the earliest surviving build (`32c10c5`, 2026-05-24 — two days *after* this
 | 11 | 8 act epigraphs | **0 of 8**; the pre-existing one-line epigraphs survive unchanged and were already present at `32c10c5` | ❌ 0/8 |
 | 12 | 8-line incidental quote table | **0 of 8** | ❌ |
 | 13 | Revised premise passage | 0 | ❌ |
-| 14 | *"thirty-eight months"* (Muffat revision) | **live** — but inside `entryNum:14, nodeCode:'LCY'@27199` as **reported speech in the journal**, one clause dropped | ⚠️ **shipped, transposed** (Finding 3) |
+| 14 | *"thirty-eight months"* (Muffat revision) | **live** — but inside `entryNum:14, nodeCode:'LCY'@27200` as **reported speech in the journal**, one clause dropped | ⚠️ **shipped, transposed** (Finding 3) |
 | 15 | Entry 41, quoted as "current" and praised | byte-exact at `NUE: { num:41@22430` — inside `const JOURNAL_ENTRIES@22425`, which the engine's own comment calls **dead code**, **0 readers** | ⚠️ **preserved, unreachable** (Finding 4) |
 | 16 | *"I wrote that riddle door when I still had good knees"* — called "the best line in the document," marked **keep** | live, as `NUE`'s **node text**, not as dialogue (`label:"Scholar's Quarter — Weimar"@8705`) | ✅ kept, re-channelled |
 | 17 | Prescribed style (concrete detail over category) | node text with a concrete numeral **28 % → 62 %**; mean length **166 → 572 chars** | ✅ **adopted** (Finding 5) |
@@ -160,7 +160,7 @@ The report's revised Muffat dialogue:
 > *"He was careful. Couriers who are careful last three years on this route; the ones who aren't last three
 > weeks. He lasted thirty-eight months."*
 
-HEAD, at `entryNum:14, nodeCode:'LCY'@27199`:
+HEAD, at `entryNum:14, nodeCode:'LCY'@27200`:
 
 > *"Magistra Muffat said: He was careful. Couriers who are careful last three years on this route. He
 > lasted thirty-eight months."*
@@ -187,7 +187,7 @@ That entry is at HEAD, byte-exact, at `NUE: { num:41@22430`. It sits inside
 
 **One occurrence in 38,712 lines — its declaration. Zero readers.** No player can reach it.
 
-The live entry 41 (`entryNum:41, nodeCode:'TLS'@27226`) is a complete rewrite. It keeps exactly one thing
+The live entry 41 (`entryNum:41, nodeCode:'TLS'@27227`) is a complete rewrite. It keeps exactly one thing
 from the passage the report praised — the clause *"Your sibling will find seven"* — and rebuilds the rest
 around a new thesis:
 

@@ -125,16 +125,16 @@ manifest, so every later wave was gated by a harness already proven to read the 
 | 1 | 61-branch ladder at `play.html` **25875–26094** | Exact at `27956e4`: first branch 25875, last 26094, count 61 | ✅ **EXACT, both ends** |
 | 2 | Grant builder at **23549**, `once` guard at **23548** | Exact at `27956e4` | ✅ **EXACT** |
 | 3 | `_applyItemChain` call site at **25869**, before the ladder body | Exact at `27956e4` | ✅ **EXACT** |
-| 4 | `FISHING_GUIDE_TEXT` at line **24017** | 23997 at `27956e4` (**−20**) | ⚠ hint drifted; the *argument* holds — `const FISHING_GUIDE_TEXT@26660` is still declared after `const QUEST_DB = {@10615`, so the TDZ objection is live today |
+| 4 | `FISHING_GUIDE_TEXT` at line **24017** | 23997 at `27956e4` (**−20**) | ⚠ hint drifted; the *argument* holds — `const FISHING_GUIDE_TEXT@26661` is still declared after `const QUEST_DB = {@10615`, so the TDZ objection is live today |
 | 5 | 22 branches migrated (9 b2a + 13 b2b) | `check:laddermigration`: **22 quests, 148/148 checks** | ✅ **EXACT** |
-| 6 | b1 allow-list: 13 optional fields | `for (const f of ['desc', 'readText'@26183` carries all 13 **plus `heal`** | ✅ 13/13 shipped; ➕ grown to 14 |
-| 7 | `silent:true` added | `if (!s.silent) msgs.push@26190`; all 22 migrated grants carry it | ✅ SHIPPED |
+| 6 | b1 allow-list: 13 optional fields | `for (const f of ['desc', 'readText'@26184` carries all 13 **plus `heal`** | ✅ 13/13 shipped; ➕ grown to 14 |
+| 7 | `silent:true` added | `if (!s.silent) msgs.push@26191`; all 22 migrated grants carry it | ✅ SHIPPED |
 | 8 | Four sites in lockstep | Runtime ✓ · `edit.html:const GRANT_RICH = [@8607` ✓ · widget `edit.html:{f:'silent',chk:true}@8598` ✓ · `src/scripts/check-itemchain.js:grant passes heal@82` ✓ — and all four carry `heal` | ✅ held through a later widening by a different track |
 | 9 | Never emit `once:false` | 0 occurrences file-wide | ✅ HELD |
-| 10 | 3 named load-bearing names survive | `const KEY_EVENTS = [@26208` holds 7 items; all three named ones grant through `itemChain` | ✅ VERIFIED |
+| 10 | 3 named load-bearing names survive | `const KEY_EVENTS = [@26209` holds 7 items; all three named ones grant through `itemChain` | ✅ VERIFIED |
 | 11 | Guard wired into CI beside `check:itemchain` | `walk-invariants.yml` runs both on the same push paths | ✅ EXACT |
-| 12 | "Both completion paths unchanged" | The second call site (legacy `_rollCeremonia`) was **retired** by §ARCH-01 W7d `f8691c1`; one call site remains — `msgs.push(..._applyItemChain(q))@30199` | ⚠ STALE by design, not a defect |
-| 13 | The ladder shrinks but survives | **Deleted.** `a79c76a` (§ARCH-01 W7c, 2026-07-03) folded all 61 ids into per-quest `onComplete` bit chains — `W7c folded the per-id hardcoded effects block@30194` | ⚠ **SUPERSEDED — 0 branches since 2026-07-03** |
+| 12 | "Both completion paths unchanged" | The second call site (legacy `_rollCeremonia`) was **retired** by §ARCH-01 W7d `f8691c1`; one call site remains — `msgs.push(..._applyItemChain(q))@30200` | ⚠ STALE by design, not a defect |
+| 13 | The ladder shrinks but survives | **Deleted.** `a79c76a` (§ARCH-01 W7c, 2026-07-03) folded all 61 ids into per-quest `onComplete` bit chains — `W7c folded the per-id hardcoded effects block@30195` | ⚠ **SUPERSEDED — 0 branches since 2026-07-03** |
 | 14 | "The larger lever remains §DATA-01-REVERTED" | Right in substance, wrong in vehicle — the effects layer arrived as UQF `onComplete` chains, not `QUEST_EFFECTS`/`HOOKS` | ⚠ SUPERSEDED |
 
 ### 5.1 The successor, measured
@@ -202,7 +202,7 @@ check:anchors           3,162 anchors / 76 docs, 0 dead (117 stale hints = stand
   was applied to one assertion instead of the file.
 - **§DX-02cj** 🟢 — the four-place lockstep is enforced by a **comment**. Nothing in `src/scripts/` or
   `src/tests/` mentions `GRANT_RICH`; no gate compares the widget's list to the runtime allow-list at
-  `for (const f of ['desc', 'readText'@26183`, so the two can diverge silently. It
+  `for (const f of ['desc', 'readText'@26184`, so the two can diverge silently. It
   survived one widening (`heal`, added by §KG Inc 3 `d6aeefd`, 11 days later, by an author on a
   different track) purely on discipline. The §DX-02at class, one layer down.
 

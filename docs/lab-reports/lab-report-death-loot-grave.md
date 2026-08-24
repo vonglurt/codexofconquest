@@ -118,34 +118,34 @@ are two errors. Three citations off by +46, +47, +46 are one *build*.
 
 ## IV. As-built inventory @ HEAD
 
-**Death path (Inc A).** `` `function _storyDeathSaveFall()@25951` `` — protects
-`` `const critTypes = new Set(['shard', 'key']);@25966` ``, bags the remainder plus
-`` `goldDropped: S_story.gold@25975` `` into a corpse record and
-`` `S_story.corpsesQuests.push(corpseQuest);@25977` ``, writes the death tattoo with its
+**Death path (Inc A).** `` `function _storyDeathSaveFall()@25952` `` — protects
+`` `const critTypes = new Set(['shard', 'key']);@25967` ``, bags the remainder plus
+`` `goldDropped: S_story.gold@25976` `` into a corpse record and
+`` `S_story.corpsesQuests.push(corpseQuest);@25978` ``, writes the death tattoo with its
 `corpseQuestId` back-link, zeroes gold, reduces inventory to `critItems + STARTER_DAGGER`, respawns
 at `checkpointNode || 'LHR'` at 1 HP, and renders the honest message at
-`` `storyRender(NODE_MAP[S_story.currentCode],@26024` ``. The equipped slots
+`` `storyRender(NODE_MAP[S_story.currentCode],@26025` ``. The equipped slots
 (`` `equippedMainWeapon: null,@23050` `` and siblings) appear in the routine exactly once — inside the
-sentence `` `stayed with you@26023` `` that tells the player they survived.
+sentence `` `stayed with you@26024` `` that tells the player they survived.
 
 **Signal (Inc B).** `` `<div id="corpse-chip" style="display:none" onclick="storyMapToggle()">@4268` ``
 in the location card, styled by `` `#corpse-chip {@1759` ``; rendered by
-`` `function _renderCorpseChip()@36140` ``, called from `storyUpdateStatus` at
-`` `_renderCorpseChip();      // §DEATH-01 Inc B@36133` ``. Text escapes through
-`` `+ ' at ' + _mpEsc(where);@36148` ``; the `` `el.title = 'Your remains lie out in the world@36149` ``
+`` `function _renderCorpseChip()@36141` ``, called from `storyUpdateStatus` at
+`` `_renderCorpseChip();      // §DEATH-01 Inc B@36134` ``. Text escapes through
+`` `+ ' at ' + _mpEsc(where);@36149` ``; the `` `el.title = 'Your remains lie out in the world@36150` ``
 tooltip itemises each grave. Local-grid marker at
-`` `const _graveHere = (S_story.corpsesQuests || []).filter@36706` `` →
-`` `cell.classList.add('mc-grave');@36709` `` inside `` `function _renderMapGrid()@36654` ``.
+`` `const _graveHere = (S_story.corpsesQuests || []).filter@36707` `` →
+`` `cell.classList.add('mc-grave');@36710` `` inside `` `function _renderMapGrid()@36655` ``.
 
-**NG+ guard (Inc C).** `` `function storyNewGamePlus()@24002` `` opens with
-`` `const bodies = S_story.corpsesQuests;@24007` `` and `` `const ok = window.confirm(@24011` `` —
+**NG+ guard (Inc C).** `` `function storyNewGamePlus()@24003` `` opens with
+`` `const bodies = S_story.corpsesQuests;@24008` `` and `` `const ok = window.confirm(@24012` `` —
 still the only `window.confirm` in 38,712 lines — placed before the NG-title overlay so a decline is
 a clean no-op.
 
 **The four "where is my body" surfaces at HEAD**, two pre-existing and two added here: journal
-`` `hd.textContent = '☠ Fallen Hero — Corpse Retrieval';@30820` `` · node card
-`` `_mkSection(null, '🦴', 'Remains')@35714` `` · the chip · the grid marker. Recovery runs through
-`` `function _storyRetrieveCorpse(questId)@26036` ``, which calls `storyUpdateStatus()` and therefore
+`` `hd.textContent = '☠ Fallen Hero — Corpse Retrieval';@30821` `` · node card
+`` `_mkSection(null, '🦴', 'Remains')@35715` `` · the chip · the grid marker. Recovery runs through
+`` `function _storyRetrieveCorpse(questId)@26037` ``, which calls `storyUpdateStatus()` and therefore
 re-renders the chip — **the signal cannot outlive the body it points at.**
 
 ---
@@ -177,8 +177,8 @@ re-renders the chip — **the signal cannot outlive the body it points at.**
 
 The report argues the death is persisted atomically because *"`storyRender` … ends in
 `storyAutoSave()`."* **It does not end in it.** At HEAD `storyRender` spans 34567–36056 and
-`` `storyCheckJournal(node);@36029` `` is followed by the save, then by **seven more calls** —
-`` `storyCheckVictory(node);@36031` ``, `_renderMiniMap`, `_renderWorldMiniMap`, `_renderGlobeMap`,
+`` `storyCheckJournal(node);@36030` `` is followed by the save, then by **seven more calls** —
+`` `storyCheckVictory(node);@36032` ``, `_renderMiniMap`, `_renderWorldMiniMap`, `_renderGlobeMap`,
 `_updateExitLinks`, `_updateWaypointBtn`, `_updateHuntBtn`. The same loose phrasing was copied into
 the shipped code comment and into `mechanics.md`.
 
@@ -234,7 +234,7 @@ coverage — which is how both blind spots survived 37 days.
 
 | Invariant | Verdict |
 |---|---|
-| **§CELL-13 — no jump travel, ever** | ✅ the chip's only action is `storyMapToggle()`; `checkpointNode` respawn remains the sole warp. `` `function storyMapToggle()@36641` `` opens a tab and moves nothing |
+| **§CELL-13 — no jump travel, ever** | ✅ the chip's only action is `storyMapToggle()`; `checkpointNode` respawn remains the sole warp. `` `function storyMapToggle()@36642` `` opens a tab and moves nothing |
 | **DUEL:CORE untouched** | ✅ every edit is single-player `S_story` |
 | **Free-Movement — no gate or mover reads corpse state** | ✅ all 14 `corpsesQuests` sites are defaults, death, retrieval, or render |
 | **Shards + gate keys protected** | ✅ `critTypes` unchanged — but see §DX-02ax: the set filters on `type`, so two items carrying the ornamental `drop:false` and no `type` are **not** protected |

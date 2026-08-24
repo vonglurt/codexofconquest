@@ -92,7 +92,7 @@ compiles.
 Both claims in the original §1 are **CORRECT**, and the second is stronger than it was stated.
 
 - **Missed attacks earned nothing.** `_overlayPlayerAttack` rolls `n = _extraAttackCount()` swings
-  (`function _extraAttackCount@24996`); at the parent build both miss branches set `logMsg` and
+  (`function _extraAttackCount@24997`); at the parent build both miss branches set `logMsg` and
   granted no XP, while `_statTally('attacksAttempted', 1)` already fired per swing. Counted, never
   rewarded. ✅ verified at `8ae9e8c^:24290/24295/24297`.
 - **Failed skill-checks earned nothing.** The report hedged this as *"`onFail:[]` on the
@@ -104,8 +104,8 @@ Baselines, both exact at the reference build and both still live:
 
 | Grant | Formula | Site at HEAD |
 |---|---|---|
-| Full kill | `round(AC × maxHp × partyMult)` | `const xpAward = Math.round@25293` |
-| Flee / prior effort | `round(AC × maxHp × EFFORT_XP_PCT)` | `function _storyEnemyFlees@25171` |
+| Full kill | `round(AC × maxHp × partyMult)` | `const xpAward = Math.round@25294` |
+| Flee / prior effort | `round(AC × maxHp × EFFORT_XP_PCT)` | `function _storyEnemyFlees@25172` |
 
 ---
 
@@ -115,18 +115,18 @@ Every symbol below resolves at HEAD. Line numbers are refreshable hints; the sym
 
 | Component | Anchor | Verdict |
 |---|---|---|
-| New dial | `const EFFORT_MISS_PCT@24431` | ✅ live, value `0.02` |
-| Existing dial (reused) | `const EFFORT_XP_PCT@24427` | ✅ live, value `0.25` |
-| Miss-grant helper | `function _grantMissEffortXp@25010` | ✅ live |
-| Cap arithmetic | `const cap  = Math.round@25012` · `const remaining = cap@25013` | ✅ live |
-| Accumulator write | `S.effortXpEarned = (S.effortXpEarned@25016` | ✅ live |
-| Per-encounter reset | `capped; transient, never saved@24641` | ✅ live, in `function _storyRollInit@24625` |
-| Miss branch, NAT 1 | `NAT 1 — Auto Miss@25065` | ✅ calls the helper |
-| Miss branch, ordinary | `function _overlayPlayerAttack@25021` | ✅ calls the helper (25066) |
+| New dial | `const EFFORT_MISS_PCT@24432` | ✅ live, value `0.02` |
+| Existing dial (reused) | `const EFFORT_XP_PCT@24428` | ✅ live, value `0.25` |
+| Miss-grant helper | `function _grantMissEffortXp@25011` | ✅ live |
+| Cap arithmetic | `const cap  = Math.round@25013` · `const remaining = cap@25014` | ✅ live |
+| Accumulator write | `S.effortXpEarned = (S.effortXpEarned@25017` | ✅ live |
+| Per-encounter reset | `capped; transient, never saved@24642` | ✅ live, in `function _storyRollInit@24626` |
+| Miss branch, NAT 1 | `NAT 1 — Auto Miss@25066` | ✅ calls the helper |
+| Miss branch, ordinary | `function _overlayPlayerAttack@25022` | ✅ calls the helper (25066) |
 | Failed-check grant | `a failed check still earns effort XP@7003` | ✅ live |
 | Reward extraction | `const rewardXp = ((sc.onPass@7007` · `const effXp = Math.round@7008` | ✅ live |
 | Once-per-quest guard | `effortXpQuests: {}@23151` in `_S_DEFAULTS` | ✅ live |
-| Sibling dial (§XP-02-A) | `const EXPLORE_XP@24436` | ✅ later work, same family |
+| Sibling dial (§XP-02-A) | `const EXPLORE_XP@24437` | ✅ later work, same family |
 
 **Transience holds.** `storyAutoSave` persists `S_story` and nothing else, so `S.effortXpEarned`
 is genuinely per-encounter and never enters a save file — the §MESH-01f convention the report cited
@@ -221,16 +221,16 @@ already does. **Risk:** low.
 ### 7.2 The off-hand miss is counted and unrewarded → **§DX-02df** 🟢
 
 Story mode has exactly **two** `_statTally('attacksAttempted', 1)` sites: the main attack
-(`function _overlayPlayerAttack@25021`, granted) and the off-hand bonus-action swing
-(`function _overlayOffhandAttack@25103`, **not** granted). Its miss branch
-(`Offhand NAT 1 — Miss@25120`) sets a log line and returns. Live probe: main-attack miss **+20 XP**,
+(`function _overlayPlayerAttack@25022`, granted) and the off-hand bonus-action swing
+(`function _overlayOffhandAttack@25104`, **not** granted). Its miss branch
+(`Offhand NAT 1 — Miss@25121`) sets a log line and returns. Live probe: main-attack miss **+20 XP**,
 off-hand miss **+0 XP**, same encounter, same enemy.
 
 The report's §3 *did* say the helper touches "only `_overlayPlayerAttack`'s two miss branches," so
 this is **stated scope, not an oversight** — but §1 opened by declaring that *missed attacks earn
 nothing* and the directive says *all* action earns XP. A dual-wielding player is left with the one
 swing in the game that the engine counts and refuses to pay for, and the report never flags the
-gap. The free swing inside `function _storyFleeMutual@25700` (`const pHit  = pRoll@25705`) is a
+gap. The free swing inside `function _storyFleeMutual@25701` (`const pHit  = pRoll@25706`) is a
 third such surface, untallied as well as unrewarded.
 
 **Blast radius is small by construction** — main-attack misses usually reach the per-encounter cap
@@ -258,7 +258,7 @@ majority**.
 
 > *"A carved bone token. Glyph: … . Mark of a witnessed moment."*
 
-— granted by `function _grantMissionBit@26110`, which awards **no XP** (`Token received: @26126`).
+— granted by `function _grantMissionBit@26111`, which awards **no XP** (`Token received: @26127`).
 So §XP-01 did not miss them; the *game* pays them in a different currency, and the XP economy
 simply does not reach there. Verified live: failing `quest_spark_01` (mission-bit only) grants 0.
 
@@ -272,7 +272,7 @@ quests are calibrated against the current curve.
 ### 7.4 Corroborated, not re-filed
 
 **§DX-02p** already records that a level earned by *passing* a skill check delivers no level-up
-while the §XP-01 fail branch does it correctly three lines away (`function _checkLevelUp@25672`;
+while the §XP-01 fail branch does it correctly three lines away (`function _checkLevelUp@25673`;
 the queue drain at `7015`). That asymmetry is a §XP-01 artefact and is filed; this pass confirms it
 rather than duplicating it.
 

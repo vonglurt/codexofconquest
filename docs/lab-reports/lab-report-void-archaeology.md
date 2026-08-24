@@ -62,7 +62,7 @@ as a survival trait — the third measured instance in the corpus.*
    because the chain genuinely has only three links. Self-authorship is a *mechanical*
    precondition, not a flourish.
 3. **It answers a question the game has been asking since Act I.** The Pilgrim on the road has been
-   saying `Someone sealed that tunnel before the Scholar Kings existed@26582` — *"I've been trying
+   saying `Someone sealed that tunnel before the Scholar Kings existed@26583` — *"I've been trying
    to find out who for forty years."* Layer 52 makes a piece of ambient furniture answerable.
 4. **It pays out.** +200gp for the tunnel, +500gp and two permanent items for the chain, plus a
    lore annotation appended to a tome the player already owns.
@@ -87,14 +87,14 @@ All anchors verified at HEAD, 2026-08-17.
 
 | Element | Anchor | Note |
 |---|---|---|
-| Hook body | `_nodeHookVoidArchaeology(node) {@31622` | **Migrated out of `storyRender` by §VM-01-G2** (2026-07-28), verbatim |
-| Registration | `id:'void-archaeology', nodes:['LHR','BMA','ZRH','NUE','GVA']@34174` | `nodes` is tooling metadata; the hook body owns the real gate |
-| Call site | `_runNodeHook('void-archaeology', node)@34748` | In place, so DOM order is preserved by construction |
-| Gate | `const _vaReady = (S_story.ngPlusRun || 0) >= 1@31625` | `ngPlusRun ≥ 1` **and** `wmFirstResearcherKnown` **and** `entry42Written` |
+| Hook body | `_nodeHookVoidArchaeology(node) {@31623` | **Migrated out of `storyRender` by §VM-01-G2** (2026-07-28), verbatim |
+| Registration | `id:'void-archaeology', nodes:['LHR','BMA','ZRH','NUE','GVA']@34175` | `nodes` is tooling metadata; the hook body owns the real gate |
+| Call site | `_runNodeHook('void-archaeology', node)@34749` | In place, so DOM order is preserved by construction |
+| Gate | `const _vaReady = (S_story.ngPlusRun || 0) >= 1@31626` | `ngPlusRun ≥ 1` **and** `wmFirstResearcherKnown` **and** `entry42Written` |
 
 ### B. The five sites
 
-`const _vaSites = {@31626` — five entries, byte-identical to the 2026-05-25 birth commit `194a810`;
+`const _vaSites = {@31627` — five entries, byte-identical to the 2026-05-25 birth commit `194a810`;
 only the keys were ever edited.
 
 | Node | Flag | Mark |
@@ -105,8 +105,8 @@ only the keys were ever edited.
 | `NUE` | `vaWM` | Document 3's project codename: ANTECEDENT CONTAINMENT PROTOCOL |
 | `GVA` | `vaMT` | A sealed access tunnel. *"The seal is intact. It is waiting."* |
 
-Completion fires on `['vaCI','vaSL','vaDF','vaWM','vaMT'].every(f => S_story[f])@31644` → 600 ms →
-`Five marks. One pattern.@31648` and `quest_va_02` activates. The button is created with
+Completion fires on `['vaCI','vaSL','vaDF','vaWM','vaMT'].every(f => S_story[f])@31645` → 600 ms →
+`Five marks. One pattern.@31649` and `quest_va_02` activates. The button is created with
 `.inv-investigate-glow {@1939` (gold pulse, added by the 2026-07-07 fix) and self-removes on click.
 
 ### C. Quest chain — `QUEST_DB`, UQF-1.0
@@ -123,8 +123,8 @@ All four carry `activateNode:null`; the hook activates them imperatively rather 
 
 ### D. Constructor's Log as Document 4
 
-`_storyWmArchiveModal(wrap) {@27810` renders a fourth document once `vaAllMarksFound` is set:
-`Document 4: The Constructor@27889`. Reading it runs `S_story.vaLogFound = true;@27866`,
+`_storyWmArchiveModal(wrap) {@27811` renders a fourth document once `vaAllMarksFound` is set:
+`Document 4: The Constructor@27890`. Reading it runs `S_story.vaLogFound = true;@27867`,
 pushes both items, and activates `quest_va_03`. Entry 7 is quoted verbatim in the modal:
 
 > *"If someone is reading this, the sealing mechanism has activated. The cage is closed. Whatever
@@ -132,7 +132,7 @@ pushes both items, and activates `quest_va_03`. Entry 7 is quoted verbatim in th
 
 ### E. The `GVA` tunnel — two keys
 
-`i.name === 'Antecedent Seal' || i.name === "Froberger's Field Notes"@31665`. Either opens it: the
+`i.name === 'Antecedent Seal' || i.name === "Froberger's Field Notes"@31666`. Either opens it: the
 Seal is the artifact, the Field Notes (the §XVI tome) are the intellectual key. Opening sets
 `vaLastWardVisited` and prints the chamber — cut stone, air still for two hundred years, six
 sentences of operational notes on the far wall, then: *"The Antecedent was here. It is not anymore.
@@ -140,10 +140,10 @@ You know where it is now."*
 
 ### F. Closure and ending
 
-`S_story.vaArchitectureKnown = true;@31691` fires at `NUE` when `vaLastWardVisited && entry42Written`,
+`S_story.vaArchitectureKnown = true;@31692` fires at `NUE` when `vaLastWardVisited && entry42Written`,
 with Benedikt's line on a 700 ms delay so the node text lands first; the flag is set *before* the
 timer resolves, which is what prevents a double-fire on rapid navigation. Downstream:
-`sweelinckQ = '"What was inside the cage?"'@28271` (overriding all other ending questions) and the
+`sweelinckQ = '"What was inside the cage?"'@28272` (overriding all other ending questions) and the
 addendum *"Froberger wrote 41 entries. You wrote one. She wrote 7, and no one counted them for 200
 years… The story has four authors now."* The flag is also read as an inn-dream conditional at `TLL`
 and `NUE`.
@@ -184,13 +184,13 @@ Both directions. A claim that did not hold is corrected here and kept, not delet
 |---|---|---|---|
 | 1 | `quest_va_04` reward: *"narrative only"* | `{ kind:'reward', gold:500 }` plus a `_legacy_fn` annotating *Benedikt's Annotated Copy* | **Wrong when written.** `reward:500` is present at the birth commit `194a810` and unchanged since. `story.md:1640` had it right the whole time |
 | 2 | *"Quest_va_04 has no explicit completion message beyond Benedikt's line"* | `onComplete` ends with `📙 +500gp. The Architecture is known. The chain holds.` | **Wrong when written** — same line, same tree |
-| 3 | *"The Constructor's Log is discoverable in two ways… both paths converge"* | One discovery path. `quest_va_02` completes **on** `vaLogFound`, whose only writer is the archive modal, so its `itemChain` can only run after the Log is already in inventory — and `if (s.once !== false && inv.some(i => i.name === s.name)) break;@26177` makes the re-grant a no-op | **Corrected.** Harmless, but it is one path with an idempotent echo, not two |
-| 4 | The block lives *"inside `storyRender`"* | `_nodeHookVoidArchaeology(node) {@31622`, a registered `NODE_HOOKS` entry | **Stale, by design** — §VM-01-G2 moved it verbatim 2026-07-28 |
+| 3 | *"The Constructor's Log is discoverable in two ways… both paths converge"* | One discovery path. `quest_va_02` completes **on** `vaLogFound`, whose only writer is the archive modal, so its `itemChain` can only run after the Log is already in inventory — and `if (s.once !== false && inv.some(i => i.name === s.name)) break;@26178` makes the re-grant a no-op | **Corrected.** Harmless, but it is one path with an idempotent echo, not two |
+| 4 | The block lives *"inside `storyRender`"* | `_nodeHookVoidArchaeology(node) {@31623`, a registered `NODE_HOOKS` entry | **Stale, by design** — §VM-01-G2 moved it verbatim 2026-07-28 |
 | 5 | *"read… in the dream/shard-note systems"* | Both reads are `INN_DREAMS` conditionals (`TLL` and `NUE`); the shard-note flag is a neighbouring row, not a reader | **Corrected** |
 | 6 | §VI: four keys survived *"because the site text was re-authored"* | The texts were **never** re-authored — all five are byte-identical from birth to HEAD | **Corrected.** See §VI |
 | 7 | §IV: the sites *"do not highlight"* | Fixed 2026-07-07; `.inv-investigate-glow` is live at HEAD | **Closed** |
 | 8 | §IV: *"a cross-reference table… would help"* | `index.md` State Fields lists all nine flags; `story.md:1632–1642` carries the full layer record | **Closed** (with a caveat — §VIII row 3) |
-| 9 | §E: *"NG+ **is** supported"* | `const savedPriorQuestMinus1@24028` and neighbours: `ngPlusRun` is incremented, six fields survive the reset | **Holds** |
+| 9 | §E: *"NG+ **is** supported"* | `const savedPriorQuestMinus1@24029` and neighbours: `ngPlusRun` is incremented, six fields survive the reset | **Holds** |
 
 ---
 
@@ -237,11 +237,11 @@ hint says where the grant belongs). `_vaReady` inherits the block whole.
 
 | # | Requirement | Where it comes from |
 |---|---|---|
-| 1 | Level 20 at `TLS` | `when:st => (st.level || 1) >= 20 && !st.questMinusOne@31384` — Layer 49's "Quest −1" disclosure panel |
-| 2 | `questMinusOne` | **The player types `S_story.questMinusOne = true; storyAutoSave();@31412` into a browser console.** That string literal is the flag's only writer in 38,712 lines |
-| 3 | Start NG+ | `ngPlusRun` +1; `questMinusOne` carries over as `const savedPriorQuestMinus1@24028` |
-| 4 | ≥3 preserved Dear Friends | `if (_e42Dear >= 3) {@34622` — an undocumented fourth gate (**§AUDIT-03ah**) |
-| 5 | Stand at `LHR`, click either button | `S_story.entry42Written    = savedEntry42Written;@24034` then keeps it forever |
+| 1 | Level 20 at `TLS` | `when:st => (st.level || 1) >= 20 && !st.questMinusOne@31385` — Layer 49's "Quest −1" disclosure panel |
+| 2 | `questMinusOne` | **The player types `S_story.questMinusOne = true; storyAutoSave();@31413` into a browser console.** That string literal is the flag's only writer in 38,712 lines |
+| 3 | Start NG+ | `ngPlusRun` +1; `questMinusOne` carries over as `const savedPriorQuestMinus1@24029` |
+| 4 | ≥3 preserved Dear Friends | `if (_e42Dear >= 3) {@34623` — an undocumented fourth gate (**§AUDIT-03ah**) |
+| 5 | Stand at `LHR`, click either button | `S_story.entry42Written    = savedEntry42Written;@24035` then keeps it forever |
 | 6 | Re-earn `wmFirstResearcherKnown` in the new run | blocked by (1) |
 
 Step 2 is deliberate *for Quest −1* — *"Level 21 is undefined. That is not a bug. That is the
@@ -249,7 +249,7 @@ door… The game will not know whether you earned it. That is also intentional."
 was meant to become the load-bearing precondition of an entire NG+ layer and the game's best ending.
 **That transitive consequence is the design call in §VIII row 1.**
 
-Downstream of this arc, `node.code === 'GVA' && S_story.vsShamanKnown@31698` — Layer 56's Warden
+Downstream of this arc, `node.code === 'GVA' && S_story.vsShamanKnown@31699` — Layer 56's Warden
 encounter — needs `vaLastWardVisited`, so it is blocked here *and* separately by §AUDIT-03x/§DOC-02an.
 
 ---
@@ -264,7 +264,7 @@ encounter — needs `vaLastWardVisited`, so it is blocked here *and* separately 
 
 **Corroborated, not re-filed** (instrument 7): §AUDIT-03au · §AUDIT-03ah · §AUDIT-03u (the Quest −1
 panel's stale literals — 16,024 lines, 423 monsters, 67 terrains, and a `plan.md` that no longer
-exists) · §DX-02m (`S_story.frobergerNoteNode = _ebPool@24044` draws the unseeded stream) ·
+exists) · §DX-02m (`S_story.frobergerNoteNode = _ebPool@24045` draws the unseeded stream) ·
 §AUDIT-03x/§DOC-02an (Layer 56, and `quest_tl_01`'s `STN` non-primacy).
 
 **Doc sync in this increment:** `world.md`'s Void Archaeology section still read ⚠️ PLANNED while
@@ -278,12 +278,12 @@ exists) · §DX-02m (`S_story.frobergerNoteNode = _ebPool@24044` draws the unsee
 
 | Location | Content |
 |---|---|
-| `_nodeHookVoidArchaeology(node) {@31622` | The whole hook: gate, five sites, tunnel, quest activation, Benedikt |
-| `id:'void-archaeology', nodes:['LHR','BMA','ZRH','NUE','GVA']@34174` | `NODE_HOOKS` registration |
+| `_nodeHookVoidArchaeology(node) {@31623` | The whole hook: gate, five sites, tunnel, quest activation, Benedikt |
+| `id:'void-archaeology', nodes:['LHR','BMA','ZRH','NUE','GVA']@34175` | `NODE_HOOKS` registration |
 | `quest_va_02: { id:'quest_va_02'@11136` | Quest chain, UQF-1.0 (`quest_va_01`–`_04`) |
 | `vaCI: false, vaSL: false, vaDF: false, vaWM: false, vaMT: false,@23134` | The nine state flags |
-| `_storyWmArchiveModal(wrap) {@27810` | Document 4 |
-| `sweelinckQ = '"What was inside the cage?"'@28271` | Fifth ending question + addendum |
+| `_storyWmArchiveModal(wrap) {@27811` | Document 4 |
+| `sweelinckQ = '"What was inside the cage?"'@28272` | Fifth ending question + addendum |
 | `.inv-investigate-glow {@1939` | Button highlight (2026-07-07) |
 | `story.md:1632` · `world.md:241` | Maintained home docs — the layer record and the arc summary |
 | `lab-report-weimar-scholar-gate.md` | `wmFirstResearcherKnown` origin — §XVI, the prerequisite |

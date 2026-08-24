@@ -60,7 +60,7 @@ from the same line.
    staged escalation anywhere in combat, and §EPIC-01 cites it **by name** as the safe pattern to generalise:
    *"§PLAY-01-B added its AI branch in `_storyEnemyTurn` — outside the kernel. Do the same here."*
 4. **It minted the dial that carries a whole other track.** The flee had to pay *something*, and the answer the
-   user gave — *effort XP* — was not one of the three options this report offered. `const EFFORT_XP_PCT@24427`
+   user gave — *effort XP* — was not one of the three options this report offered. `const EFFORT_XP_PCT@24428`
    ships here and now has **three read sites**: this report's flee grant, §XP-01's failed-skill-check grant, and
    §XP-01's miss cap. **The constant reaches more of the game than the feature that minted it.**
 
@@ -109,19 +109,19 @@ The ship added **77 lines in four regions**, none of them inside the kernel:
 
 | Symbol | Anchor | Role |
 |---|---|---|
-| the effort dial | `const EFFORT_XP_PCT@24427` | `0.25` — fraction of a full success a partial action earns |
-| per-encounter reset | `S.opp.enraged                = false@24640` | inside `_storyRollInit`, the guard's only writer-to-false |
-| Void vocabulary | `const _VOID_ENEMY_RE@25144` | 24 alternatives matched against monster name + key |
-| terrain vocabulary | `const _VOID_TERRAIN_RE@25145` | 10 alternatives matched against node terrain and `_inferTerrain` |
-| the classifier | `function _isVoidEnemy@25146` | name-or-terrain heuristic; the only caller of both regexes |
-| press magnitude | `function _voidEnrage@25155` | trivial +1/+1 … deadly +4/+4 and an extra damage die |
-| flee probability | `function _fleeChance@25165` | trivial 0.6 · easy 0.5 · medium 0.35 · hard 0.2 · deadly 0.1 |
-| the escape | `function _storyEnemyFlees@25171` | closes the overlay, grants effort XP, no loot, node not cleared |
-| the effort grant | `const xp = Math.max(1, Math.round((S.enemy.ac@25172` | `round(AC × maxHp × 0.25)`, floor 1 |
-| the branch | `if (S.opp.hp > 0 && S.opp.hp <= Math.ceil((S.opp.maxHp@25209` | the whole feature, at the top of `_storyEnemyTurn@25192` |
-| guard set | `S.opp.enraged = true@25212` | the one-time latch |
-| the press line | `⚫ The Void presses in — the wound only makes it worse@25217` | player-visible, proved painted |
-| the flee line | `🏃 The beast breaks and bolts@25186` | player-visible |
+| the effort dial | `const EFFORT_XP_PCT@24428` | `0.25` — fraction of a full success a partial action earns |
+| per-encounter reset | `S.opp.enraged                = false@24641` | inside `_storyRollInit`, the guard's only writer-to-false |
+| Void vocabulary | `const _VOID_ENEMY_RE@25145` | 24 alternatives matched against monster name + key |
+| terrain vocabulary | `const _VOID_TERRAIN_RE@25146` | 10 alternatives matched against node terrain and `_inferTerrain` |
+| the classifier | `function _isVoidEnemy@25147` | name-or-terrain heuristic; the only caller of both regexes |
+| press magnitude | `function _voidEnrage@25156` | trivial +1/+1 … deadly +4/+4 and an extra damage die |
+| flee probability | `function _fleeChance@25166` | trivial 0.6 · easy 0.5 · medium 0.35 · hard 0.2 · deadly 0.1 |
+| the escape | `function _storyEnemyFlees@25172` | closes the overlay, grants effort XP, no loot, node not cleared |
+| the effort grant | `const xp = Math.max(1, Math.round((S.enemy.ac@25173` | `round(AC × maxHp × 0.25)`, floor 1 |
+| the branch | `if (S.opp.hp > 0 && S.opp.hp <= Math.ceil((S.opp.maxHp@25210` | the whole feature, at the top of `_storyEnemyTurn@25193` |
+| guard set | `S.opp.enraged = true@25213` | the one-time latch |
+| the press line | `⚫ The Void presses in — the wound only makes it worse@25218` | player-visible, proved painted |
+| the flee line | `🏃 The beast breaks and bolts@25187` | player-visible |
 
 **Zero drift.** `_storyEnemyFlees` and the low-HP branch both `diff` **identical** from `8eb909e` to HEAD, 37
 days and roughly 1,600 file-lines of unrelated growth later.
@@ -139,11 +139,11 @@ still holding.
 | new branch at the top of `_storyEnemyTurn` | ✅ | `@25208`, first statement after the ally strikes |
 | gated on ≤30 % HP | ✅ | `S.opp.hp <= Math.ceil(S.opp.maxHp * 0.3)` |
 | gated on `S.opp.hp / S.opp.hpMax` | ⚠ **name never existed** | see §7 defect D0 |
-| gated on the monster kind tag | ✅ | `_isVoidEnemy@25146` |
+| gated on the monster kind tag | ✅ | `_isVoidEnemy@25147` |
 | gated on `S.opp.tier` | ✅ | field is real and written at `S.opp.tier       = m.tier@8158` |
 | press = one-time escalation | ✅ | latched by `S.opp.enraged`, proved once-per-fight |
-| press = enrage `+atk` / extra die | ✅ | `_voidEnrage@25155`; the debuff alternative was not taken |
-| flee = per-turn chance, ends the fight | ✅ | `_fleeChance@25165` → `_storyEnemyFlees@25171` |
+| press = enrage `+atk` / extra die | ✅ | `_voidEnrage@25156`; the debuff alternative was not taken |
+| flee = per-turn chance, ends the fight | ✅ | `_fleeChance@25166` → `_storyEnemyFlees@25172` |
 | tier scales press magnitude | ✅ | five-value table, all five contract tiers covered |
 | tier scales flee-resistance | ◐ **for mundane beasts only** | a Void enemy never flees at *any* tier — the branch is `else if`, so classification decides flee and tier only modulates it |
 | everything else in the turn unchanged | ✅ | pure insertion; nothing removed or reordered |
@@ -161,7 +161,7 @@ answered in the 29 minutes between `0883fa9` and `8eb909e`. Two answers came off
 "the ~30–40 Void-aligned entries", (b) infer from name and terrain, (c) tier-only. The user chose (b)
 explicitly to avoid the data pass.
 
-> **The estimate was excellent.** `_VOID_ENEMY_RE@25144` classifies **34 of 398 monsters (8.5 %)** — dead centre
+> **The estimate was excellent.** `_VOID_ENEMY_RE@25145` classifies **34 of 398 monsters (8.5 %)** — dead centre
 > of the report's own "~30–40" guess for the field it decided not to build. Measured through
 > `src/js/wbapi-core.js`, confirmed live in a browser at a neutral node.
 
@@ -208,8 +208,8 @@ atk 5 → 9, dmgFlat 3 → 7, dmgCount 1 → 2, exactly `_voidEnrage('deadly')`.
 **Instrument 124 — the guard fires AND it resets, and the reset is in the object the branch reads.** Two
 consecutive live encounters: `S.opp.enraged` **false** after `_storyRollInit`, **true** after the first press,
 **false** again after the next `_storyRollInit`, and the second Void enemy pressed normally. All three combat
-entry paths call it — `_startPitChampionBattle@27915`, the pre-battle overlay commit, and
-`_startStoryBattle@38241` — so there is no encounter that skips the reset.
+entry paths call it — `_startPitChampionBattle@27916`, the pre-battle overlay commit, and
+`_startStoryBattle@38242` — so there is no encounter that skips the reset.
 
 **No pool contamination.** The enrage mutates `S.enemy.atk/dmgFlat/dmgCount` in place, which would be
 catastrophic if `S.enemy` aliased the pool entry. It does not: `function loadWorldMonster@8147` copies
@@ -226,8 +226,8 @@ terrain half never fires. No test in the file can distinguish a working terrain 
 
 ### D1 — the terrain half of the classifier has never returned true (§DX-02di 🟡)
 
-`_isVoidEnemy@25146` has two terrain call sites: `_VOID_TERRAIN_RE.test(node.name)` and the same regex over
-`_inferTerrain@28384`. Both draw from one vocabulary — `NODE_MAP[*].name` is the **terrain key** (repo rule:
+`_isVoidEnemy@25147` has two terrain call sites: `_VOID_TERRAIN_RE.test(node.name)` and the same regex over
+`_inferTerrain@28385`. Both draw from one vocabulary — `NODE_MAP[*].name` is the **terrain key** (repo rule:
 `name` is the terrain key, `label` is the display name), plus the three literals `ocean`, `road`, `midlands`
 that `_inferTerrain` can return directly.
 
@@ -277,7 +277,7 @@ a taxonomic job.
 
 `fish_19` and `fish_20` are ranks 19 and 20 of the twenty-rank lake progression — the **apex of the fishing
 ladder**, which §FC06 makes the *sole* source of +1..+4 gear, so every player who wants magic weapons fights
-them. `function _startFishBattle@30628` routes through the pre-battle overlay, i.e. straight into
+them. `function _startFishBattle@30629` routes through the pre-battle overlay, i.e. straight into
 `_storyEnemyTurn`. **Proved live at `BOO` (terrain `yugurt_lake`)**, driving the real loader:
 
 > `⚔ Enemy hit! 26 vs your AC 16 — 47 dmg taken!`

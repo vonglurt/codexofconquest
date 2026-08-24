@@ -309,8 +309,8 @@ one unguarded effect call in the kernel this report's port routes through).
 `_legacy_fn(bit, ctx)@22328` · `_legacy_fn:  { required:@22000` ·
 `const d20  = Math.ceil(E.rng() * 20)@22249` · `function _innKindness(n)@23530` ·
 `function _addCroneMark()@23540` · `function _setNpcFavor(key, level)@23463` ·
-`function _checkDearFriendUpgrade(key)@23490` · `const WM_ARCHIVE_DOCS = [@27788` ·
-`seaStrangenessNoticed@12491` · `is not expressible in canActivate@13974` · `S_story[ngEbKey] = true;@35290`
+`function _checkDearFriendUpgrade(key)@23490` · `const WM_ARCHIVE_DOCS = [@27789` ·
+`seaStrangenessNoticed@12491` · `is not expressible in canActivate@13974` · `S_story[ngEbKey] = true;@35291`
 (the eleventh computed-key writer, omitted from the original §9-FU list of ten) ·
 `src/js/quest.js:resolveSkillCheck(bit, ctx)@322` · `src/js/quest.js:const d20  = Math.ceil(E.rng() * 20)@314` ·
 `src/scripts/check-questgraph.js:const Q = require@63` · `src/scripts/check-questgraph.js:function matchBrace@66` ·

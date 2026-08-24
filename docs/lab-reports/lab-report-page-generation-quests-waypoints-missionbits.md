@@ -176,15 +176,15 @@ namespace is an *implicit global coupling surface* between quests (§X.B.2, §XI
 `cellMove(dir)` delegates the bounds/wrap/sea decision to the shared kernel `Mover.move()`
 (`mover.js`, which also drives the MUD harness), applies the single-player side effects, and —
 crucially — **only re-renders when the destination cell carries a named node**. Empty cells route
-to `function _enterEmptyCell(@28421`, which paints the *same* slots via
-`function _renderNodeShell(@28409` so the shell is uniform. Movement is "timeless"
+to `function _enterEmptyCell(@28422`, which paints the *same* slots via
+`function _renderNodeShell(@28410` so the shell is uniform. Movement is "timeless"
 (§TIMELESS-01): only battle, sleep, fishing and rest advance the day clock.
 
 ### C. The renderer is an in-place DOM mutator
 
 `storyRender` never returns markup. It reads DOM nodes by fixed `id`, overwrites
 `.textContent`/`.innerHTML`, then *removes and rebuilds* the dynamic sibling range between
-`#story-text-box` and `#story-info-row` (`// Clear all stale dynamic siblings@34607`) — manual
+`#story-text-box` and `#story-info-row` (`// Clear all stale dynamic siblings@34608`) — manual
 double-buffering, static shell as frame, dynamic cards as swap. `textContent` carries author prose
 (XSS-safe, §DATA-01 residual); `innerHTML` only engine-authored markup.
 
@@ -196,7 +196,7 @@ double-buffering, static shell as frame, dynamic cards as swap. `textContent` ca
 ### D. The tail synthesis block is the real contract
 
 Everything narratively *live* happens in eighteen lines, beginning at
-`const questMsgs = storyCheckQuests(node);@36023`. This is where the page stops being "prose in a
+`const questMsgs = storyCheckQuests(node);@36024`. This is where the page stops being "prose in a
 slot" and becomes "a state machine's current frame": the quest scan runs, its messages merge into
 the log stream, the quest panel and exits repaint, the world autosaves. **Every subsystem in this
 report converges here, on every step.** Verified unchanged in composition at 42 days.
@@ -219,7 +219,7 @@ declarative and the runtime is the only code path.
 
 ### B. The per-arrival scanner
 
-`function storyCheckQuests(node) {@30167` runs two passes inside the tail synthesis:
+`function storyCheckQuests(node) {@30168` runs two passes inside the tail synthesis:
 
 1. **Activation** — for each not-yet-started quest with `activateNode === node.code`, activate iff
    the declarative gate passes. Emits `📋 {title}`.
@@ -292,7 +292,7 @@ The worldbuilder mirrors the registry so the editor can only author real, execut
 
 ### A. Dual ontology on grant
 
-`function _grantMissionBit(@26110` makes a mission bit two things at once, deliberately:
+`function _grantMissionBit(@26111` makes a mission bit two things at once, deliberately:
 
 1. **The event** — `S_story[flag] = true`. This is what quest gates read: the fact that something
    happened.
@@ -309,9 +309,9 @@ The worldbuilder mirrors the registry so the editor can only author real, execut
 
 ### B. Asymmetric spend
 
-`function _takeMissionBit(@26154` is not the inverse of granting. The token always leaves inventory;
+`function _takeMissionBit(@26155` is not the inverse of granting. The token always leaves inventory;
 the flag is cleared **only if no quest gate depends on it**, determined by
-`function _gateFlagSet() {@26134`, a lazily-cached scan of every `QUEST_DB` gate's
+`function _gateFlagSet() {@26135`, a lazily-cached scan of every `QUEST_DB` gate's
 `flags`/`flagsAny`/`notFlags`. The rationale (§MBIT-02-E) is that a witnessed event which unlocks a
 downstream mission can never be *un*-witnessed, or spending a token could silently re-close an arc.
 
@@ -332,22 +332,22 @@ reader and no writer.
 
 ### A. Publication
 
-`function storyRenderQuests() {@30708` renders, for each active quest carrying a `waypointNode`,
+`function storyRenderQuests() {@30709` renders, for each active quest carrying a `waypointNode`,
 either a **Battle** button if the destination is a combat node or a **Navigate →** button wired to
 `storySetWaypoint(code)`, annotated with a live distance/bearing tag —
-`const distTag = _wpDistTag(q.waypointNode);@30752`, whose own comment gives the format as
+`const distTag = _wpDistTag(q.waypointNode);@30753`, whose own comment gives the format as
 *"(12 steps, NE)"*. The quest *publishes* a target; the player *subscribes* by clicking. **161
 quests carry a `waypointNode` at HEAD** (150 at the author's build).
 
 ### B. Target state
 
-`S_story.waypoint` — a single node code, or `null`. `function storySetWaypoint(@38128` sets it,
+`S_story.waypoint` — a single node code, or `null`. `function storySetWaypoint(@38129` sets it,
 surfaces the story sheet and calls `_travelStart()`.
 
 ### C. The auto-travel loop
 
-`function _travelStart() {@38007` → `function _travelTick() {@38016` is a **non-blocking
-setTimeout chain** — `_travelTimer = setTimeout(_travelTick, 120);@38043` — never a blocking loop,
+`function _travelStart() {@38008` → `function _travelTick() {@38017` is a **non-blocking
+setTimeout chain** — `_travelTimer = setTimeout(_travelTick, 120);@38044` — never a blocking loop,
 which is the only correct pattern on a single-threaded UI. Each tick:
 
 1. **Arrival test** — standing on the waypoint's *cell* (co-located locale nodes share a cell, so
@@ -475,7 +475,7 @@ prose is a reliable witness to code it could see and an unreliable one to arithm
 | 2 | the flag namespace is an unbounded implicit coupling surface | **LIVE, AND IT HAS A BILL** — see §XII |
 | 3 | full re-scan of the quest DB per cell step | **RETIRED** — §VM-01-F-FU, `549d6b4`; the activation pass is now O(quests-at-node) |
 | 4 | idempotency is load-bearing but ambient | **PARTLY FENCED** — `once:` is now a declared field, and a re-render test pins it |
-| 5 | presentation/logic interleave: `DAM` sets `saulConverted` during paint | **RETIRED** — the write is now `once:'saulConverted'@31334`, a declared property of the panel |
+| 5 | presentation/logic interleave: `DAM` sets `saulConverted` during paint | **RETIRED** — the write is now `once:'saulConverted'@31335`, a declared property of the panel |
 
 ### C. Quality attributes
 
@@ -496,10 +496,10 @@ None of the five required a framework or a build step, and that was the point.
 
 | # | Recommendation | Outcome | Shipped as |
 |---|---|---|---|
-| 1 | Extract a `nodeCards` data schema — `{when, html\|text, onShow}` evaluated by one loop | ✅ **SHIPPED** (+21 d) | §VM-01-G1/G2 — `const NODE_PANELS = [@31320` (**29 entries**: `when`/`once`/`css`/`html`/`text`) + `const NODE_HOOKS = [@34172` (**61 entries**) behind `function _runNodeHook(@34235` |
-| 2 | Index quest activation by node, mirroring the editor's `_questsByNode` | ✅ **SHIPPED** (+15 d) | §VM-01-F-FU `549d6b4` — `function _questsByNode(@36997`, consumed by `function _uqfActivateAtNode(node) {@30138` |
+| 1 | Extract a `nodeCards` data schema — `{when, html\|text, onShow}` evaluated by one loop | ✅ **SHIPPED** (+21 d) | §VM-01-G1/G2 — `const NODE_PANELS = [@31321` (**29 entries**: `when`/`once`/`css`/`html`/`text`) + `const NODE_HOOKS = [@34173` (**61 entries**) behind `function _runNodeHook(@34236` |
+| 2 | Index quest activation by node, mirroring the editor's `_questsByNode` | ✅ **SHIPPED** (+15 d) | §VM-01-F-FU `549d6b4` — `function _questsByNode(@36998`, consumed by `function _uqfActivateAtNode(node) {@30139` |
 | 3 | A flag registry `FLAG_OWNERS` + collision assertion | ❌ **NOT SHIPPED** — 0 commits, any path, ever | see §XII |
-| 4 | Move state mutation out of `storyRender` into a declarative hook | ✅ **SHIPPED IN SUBSTANCE** (+21 d) | the `once:` field; the report's named example (`DAM`) is now `once:'saulConverted'@31334` |
+| 4 | Move state mutation out of `storyRender` into a declarative hook | ✅ **SHIPPED IN SUBSTANCE** (+21 d) | the `once:` field; the report's named example (`DAM`) is now `once:'saulConverted'@31335` |
 | 5 | A renderer idempotency test | ✅ **SHIPPED** (+21 d) | `src/tests/integration/uqf-node-panels.test.js:gone on re-render@28`, guarded at ship by a 24-combo golden-DOM diff |
 
 **None of the four shipped under the name the report proposed.** `nodeCards`, `FLAG_OWNERS`,
@@ -619,25 +619,25 @@ and it is not architectural. **Make the prover fail.**
 
 | Concern | Anchor |
 |---|---|
-| Navigation kernel | `function cellMove(dir) {@28346` |
-| Empty-cell shell | `function _renderNodeShell(@28409` · `function _enterEmptyCell(@28421` |
-| The page generator | `function storyRender(node, prefix) {@34549` |
-| Dynamic-sibling clear | `// Clear all stale dynamic siblings@34607` |
-| Tail synthesis (the clock edge) | `const questMsgs = storyCheckQuests(node);@36023` |
-| Per-arrival quest scan | `function storyCheckQuests(node) {@30167` |
-| Activation pass (indexed) | `function _uqfActivateAtNode(node) {@30138` · `function _questsByNode(@36997` |
+| Navigation kernel | `function cellMove(dir) {@28347` |
+| Empty-cell shell | `function _renderNodeShell(@28410` · `function _enterEmptyCell(@28422` |
+| The page generator | `function storyRender(node, prefix) {@34550` |
+| Dynamic-sibling clear | `// Clear all stale dynamic siblings@34608` |
+| Tail synthesis (the clock edge) | `const questMsgs = storyCheckQuests(node);@36024` |
+| Per-arrival quest scan | `function storyCheckQuests(node) {@30168` |
+| Activation pass (indexed) | `function _uqfActivateAtNode(node) {@30139` · `function _questsByNode(@36998` |
 | Activation / completion gates | `canActivate(questId) {@22194` · `canComplete(questId) {@22206` |
 | The `atNode` term | `if (g.atNode && st.currentCode !== g.atNode) return false;@22125` |
 | Bit interpreter | `*execBits(bits, ctx) {@22224` · `HANDLERS: {@22265` |
 | Bit contract registry | `const BIT_CONTRACTS = {@21971` |
 | Opcodes added after the report | `cost(bit, ctx) {@22289` · `*choice(bit, ctx) {@22320` |
-| Mission-bit grant | `function _grantMissionBit(@26110` |
-| Mission-bit spend (guarded) | `function _takeMissionBit(@26154` · `function _gateFlagSet() {@26134` |
-| Quest panel (waypoint publish) | `function storyRenderQuests() {@30708` · `const distTag = _wpDistTag(q.waypointNode);@30752` |
-| Waypoint set | `function storySetWaypoint(@38128` |
-| Auto-travel loop | `function _travelStart() {@38007` · `function _travelTick() {@38016` · `_travelTimer = setTimeout(_travelTick, 120);@38043` |
-| Presentation registries (Rec 1) | `const NODE_PANELS = [@31320` · `const NODE_HOOKS = [@34172` · `function _runNodeHook(@34235` |
-| Declared render-time write (Rec 4) | `once:'saulConverted'@31334` |
+| Mission-bit grant | `function _grantMissionBit(@26111` |
+| Mission-bit spend (guarded) | `function _takeMissionBit(@26155` · `function _gateFlagSet() {@26135` |
+| Quest panel (waypoint publish) | `function storyRenderQuests() {@30709` · `const distTag = _wpDistTag(q.waypointNode);@30753` |
+| Waypoint set | `function storySetWaypoint(@38129` |
+| Auto-travel loop | `function _travelStart() {@38008` · `function _travelTick() {@38017` · `_travelTimer = setTimeout(_travelTick, 120);@38044` |
+| Presentation registries (Rec 1) | `const NODE_PANELS = [@31321` · `const NODE_HOOKS = [@34173` · `function _runNodeHook(@34236` |
+| Declared render-time write (Rec 4) | `once:'saulConverted'@31335` |
 | Data sections | `const NODE_MAP = {@8425` · `const QUEST_DB = {@10615` · `const WORLD_DB = {@6279` · `const _S_DEFAULTS = () => ({@23063` |
 | Broken chain / working twin | `waw001_act2: {@14901` · `cph001_act2: {@15541` |
 | Inert NPC grant field | `rinaldo_sau: {@10461` |

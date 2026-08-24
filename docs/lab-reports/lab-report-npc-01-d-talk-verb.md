@@ -74,7 +74,7 @@ multiplying the way to earn either tier. The content existed; the verb did not.
 | `meta.enemy` declared by **202** NPCs | **202** of 213 dialogue entries | ✅ exact |
 | `meta.worldTruth` declared by **219** NPCs | **213** | ❌ **wrong when written** |
 | `onTalk` / `talkVerb` / `giftNpc` / `downtimeVerb` = 0 | **0** at both builds | ✅ exact |
-| doom clock runs `S_story.day` 1 → 49 | `DAY_DEADLINE = 49@36157` | ✅ exact |
+| doom clock runs `S_story.day` 1 → 49 | `DAY_DEADLINE = 49@36158` | ✅ exact |
 
 **The one bad number hides a better fact.** `NPC_DIALOGUES` holds 213 entries and **all 213** declare
 `worldTruth` — universal, not merely common. The report invented six NPCs rather than noticing that the ✦
@@ -88,11 +88,11 @@ dialogues**, *"~190 stuck at Impartial"* against **191**. Both tildes land; neit
 
 All four locked shapes shipped under their specified names and are byte-live today: `npcTalk: {}@23089` in
 the defaults factory, the tunable `TALK_TO_FRIENDLY = 3@23514`, the handler `_talkToNpc@23515`, and the chip
-`tb.className@23789` — gated on fav < 1 so it retires at Friendly, wired by `tb.addEventListener@23792`
+`tb.className@23790` — gated on fav < 1 so it retires at Friendly, wired by `tb.addEventListener@23793`
 rather than an inline onclick exactly as §3 required. The ceiling holds: `function _setNpcFavor@23463` is
-called at level 1 and never higher, so `dlg.meta.enemy@23756` became earnable while `dlg.meta.worldTruth@23763`
+called at level 1 and never higher, so `dlg.meta.enemy@23757` became earnable while `dlg.meta.worldTruth@23764`
 did not move. The report was also right about the surface it *rejected*: the d-pad 🧙 is gated on the node-keyed
-`const NPC_DIALOGUE = {@22445` (singular) routing to `function storyShowNpc@30228` — a far smaller map than
+`const NPC_DIALOGUE = {@22445` (singular) routing to `function storyShowNpc@30229` — a far smaller map than
 the npcKey-keyed cards in `function _renderNpcCard@23684`. §DX-02cv has since measured that map's cost.
 
 ---
@@ -137,8 +137,8 @@ that do nothing at all. Filed as §DX-02dq.
 ## VII. Defects filed
 
 - **§DX-02dq — the Talk verb advances the passive-visit counter it was designed not to touch.** 🟢 no design
-  call. `function _checkFrobergerTrace@27649` gates six one-time memory texts on
-  `const visits = (S_story.npcVisitCounts@27655` against `const FROBERGER_TRACES = {@27686`, so Talk clicks
+  call. `function _checkFrobergerTrace@27650` gates six one-time memory texts on
+  `const visits = (S_story.npcVisitCounts@27656` against `const FROBERGER_TRACES = {@27687`, so Talk clicks
   accelerate content meant to reward genuine revisits, and an already-Friendly NPC can be clicked forever for
   free increments. Two-line fix: hoist the favor and same-day guards above the `_getNPCDialogue` call.
 - **§AUDIT-03bo — one NPC has a name, a node, an occupation and two quests, and renders nothing.**

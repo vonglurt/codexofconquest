@@ -109,22 +109,22 @@ transcription in the original §II-A is exact, `product <= 0` guard included.
 
 | Site | Anchor | Behaviour at HEAD |
 |---|---|---|
-| d100 loot roll | `Math.max(0, _luckMod())); // Layer 48: Luck bonus@24547` | `min(99, u + max(0, L))`; now on the seeded stream (§VM-01-B) |
-| Death saves | `let d20 = Math.ceil(Math.random() * 20) + _luckMod();@25897` | flat `+L`; **unseeded** — §DX-02m's named instance |
-| Tournament tie-break | `outcome = _luckMod() > 0 ? 'win'@34112` | undocumented; added after this report; hosted at `SSJ:{r:4,c:192},@9430` |
-| Character sheet | `✦ LUCK@37670` | `${_calcLuck()} [${m(_luckMod())}]` + the italic note, verbatim |
+| d100 loot roll | `Math.max(0, _luckMod())); // Layer 48: Luck bonus@24548` | `min(99, u + max(0, L))`; now on the seeded stream (§VM-01-B) |
+| Death saves | `let d20 = Math.ceil(Math.random() * 20) + _luckMod();@25898` | flat `+L`; **unseeded** — §DX-02m's named instance |
+| Tournament tie-break | `outcome = _luckMod() > 0 ? 'win'@34113` | undocumented; added after this report; hosted at `SSJ:{r:4,c:192},@9430` |
+| Character sheet | `✦ LUCK@37671` | `${_calcLuck()} [${m(_luckMod())}]` + the italic note, verbatim |
 
 **Live but unreachable consumers (4)** — all behind **§FISH-01**
 
-`Luck reduces Survival DC@30492` (and its title twin) · `bare hook uses LuckMod@30527` ·
-`typeTotal  = tDie + bait.type + _luckMod()@30557` · `const lm = _luckMod();@23424` (§DROP-03
+`Luck reduces Survival DC@30493` (and its title twin) · `bare hook uses LuckMod@30528` ·
+`typeTotal  = tDie + bait.type + _luckMod()@30558` · `const lm = _luckMod();@23424` (§DROP-03
 `luckScale`, added later).
 
-`const hasFish = node.isFishingLake;@35348` is the only gate on the Fish button, and
+`const hasFish = node.isFishingLake;@35349` is the only gate on the Fish button, and
 `isFishingLake:true@8782` occurs on exactly one node — `BOO` (Yugurt Lake). `const CELL_GRID = (() => {@9852`
 builds each cell in `NODE_MAP` declaration order and only `list[0]` can become `currentCode`;
 `LYR` is declared 59 lines above `BOO`, and `BOO:{r:2,c:194},@9422` / `LYR:{r:2,c:194},@9423` share
-a cell. `function storyFishing() {@30393` therefore never draws.
+a cell. `function storyFishing() {@30394` therefore never draws.
 
 **Deleted consumer (1)**
 
@@ -208,7 +208,7 @@ three different games, and **none of them describes this one.**
 ### B. The balance incentive is not expressible in the shipped point-buy — a new instrument
 
 The stat exists to reward balance. Whether it *can* is a closed question, because character creation
-is a finite space: `const _CC_COST = [0,1,2,3,4,5,7,9];@38546` with `const CC_BUDGET = 27;@38547` and
+is a finite space: `const _CC_COST = [0,1,2,3,4,5,7,9];@38547` with `const CC_BUDGET = 27;@38548` and
 scores clamped to 8–15. Enumerating it exhaustively (191,587 legal allocations):
 
 | Population | Luck Mod −1 | Luck Mod 0 | Luck Mod +1 | +2 or better |
@@ -234,7 +234,7 @@ a level-20 corner case, not a build choice.
 
 **And the sign is inverted at the default.** Both no-input paths — Hard mode
 (`const scores = _cc_mode === 'hard'` → `{str:10, dex:8, con:8, int:8, wis:8, cha:8}`) and the
-untouched custom panel (`let _cc_scores = { str:10, dex:10, con:10, int:8, wis:8, cha:8 };@38549`) —
+untouched custom panel (`let _cc_scores = { str:10, dex:10, con:10, int:8, wis:8, cha:8 };@38550`) —
 yield **Luck 9, Mod −1**: a point *off* every death save, a point *onto* the fishing find DC, and an
 automatic **loss** on every tournament tie. A player who clicks straight through is not un-lucky by
 neglect; they are penalised by default. *A hidden reward for balance that hands the least engaged
@@ -274,7 +274,7 @@ Two details make this the cleanest instrument-12 instance in the corpus:
 `const s = S_story.abilityScores || { str:16, dex:12, con:14, int:10, wis:12, cha:8 };@23440`
 
 That `||` branch is unreachable: `abilityScores: { str:10, dex:8, con:8, int:8, wis:8, cha:8 },@23047`
-is declared in `_S_DEFAULTS()`, and `const scores = startScores || { str:10, dex:8, con:8, int:8, wis:8, cha:8 };@23953`
+is declared in `_S_DEFAULTS()`, and `const scores = startScores || { str:10, dex:8, con:8, int:8, wis:8, cha:8 };@23954`
 re-asserts it on every new game. The `16/12/14/10/12/8` statline **has never been a starting
 character.** The same dead literal appears **8 times** across the file as a `||` fallback.
 
@@ -353,7 +353,7 @@ range was too narrow and guessed the wrong bound in the safe direction.
   cha:8 }` fallback literals. Unreachable since before this report, and the direct cause of a wrong
   claim in four documents. Sixth widening of the proposed `check:deadconsts`: a **dead alternative
   in a fallback chain that names a plausible data shape** is a documentation hazard, not inert.
-- **§DX-02m (existing, +confirmation)** — `let d20 = Math.ceil(Math.random() * 20) + _luckMod();@25897`
+- **§DX-02m (existing, +confirmation)** — `let d20 = Math.ceil(Math.random() * 20) + _luckMod();@25898`
   and the Indomitable reroll three lines below remain the highest-stakes unseeded rolls in the file.
   Already filed by §DOC-02n; no new row.
 - **§FISH-01 (existing, +4 stranded consumers)** — this row now gates **four** of Luck's nine call
@@ -371,19 +371,19 @@ range was too narrow and guessed the wrong bound in the safe direction.
 | `function _luckMod() { return Math.floor((_calcLuck() - 10) / 2); }@23445` | standard modifier |
 | `const s = S_story.abilityScores || { str:16, dex:12, con:14, int:10, wis:12, cha:8 };@23440` | the dead fallback (§V-D) |
 | `abilityScores: { str:10, dex:8, con:8, int:8, wis:8, cha:8 },@23047` | the real default |
-| `const scores = startScores || { str:10, dex:8, con:8, int:8, wis:8, cha:8 };@23953` | `storyNewGame` |
-| `const _CC_COST = [0,1,2,3,4,5,7,9];@38546` · `const CC_BUDGET = 27;@38547` | the space enumerated in §V-B |
-| `let _cc_scores = { str:10, dex:10, con:10, int:8, wis:8, cha:8 };@38549` | untouched-panel default → Mod −1 |
-| `Math.max(0, _luckMod())); // Layer 48: Luck bonus@24547` | loot roll |
-| `const _D100_TABLE = [@24517` · `const gp = Math.floor(_seededNext() * 200) + 50;@24557` | what luck's 1 pp actually moves |
-| `let d20 = Math.ceil(Math.random() * 20) + _luckMod();@25897` | death saves |
-| `outcome = _luckMod() > 0 ? 'win'@34112` · `SSJ:{r:4,c:192},@9430` | tournament tie-break (undocumented) |
-| `Luck reduces Survival DC@30492` · `bare hook uses LuckMod@30527` · `typeTotal  = tDie + bait.type + _luckMod()@30557` | stranded fishing trio |
+| `const scores = startScores || { str:10, dex:8, con:8, int:8, wis:8, cha:8 };@23954` | `storyNewGame` |
+| `const _CC_COST = [0,1,2,3,4,5,7,9];@38547` · `const CC_BUDGET = 27;@38548` | the space enumerated in §V-B |
+| `let _cc_scores = { str:10, dex:10, con:10, int:8, wis:8, cha:8 };@38550` | untouched-panel default → Mod −1 |
+| `Math.max(0, _luckMod())); // Layer 48: Luck bonus@24548` | loot roll |
+| `const _D100_TABLE = [@24518` · `const gp = Math.floor(_seededNext() * 200) + 50;@24558` | what luck's 1 pp actually moves |
+| `let d20 = Math.ceil(Math.random() * 20) + _luckMod();@25898` | death saves |
+| `outcome = _luckMod() > 0 ? 'win'@34113` · `SSJ:{r:4,c:192},@9430` | tournament tie-break (undocumented) |
+| `Luck reduces Survival DC@30493` · `bare hook uses LuckMod@30528` · `typeTotal  = tDie + bait.type + _luckMod()@30558` | stranded fishing trio |
 | `const lm = _luckMod();@23424` | §DROP-03 `luckScale`, also stranded |
-| `function storyFishing() {@30393` · `const hasFish = node.isFishingLake;@35348` | the single entry point |
+| `function storyFishing() {@30394` · `const hasFish = node.isFishingLake;@35349` | the single entry point |
 | `BOO:{r:2,c:194},@9422` · `LYR:{r:2,c:194},@9423` · `const CELL_GRID = (() => {@9852` | §FISH-01 |
-| `✦ LUCK@37670` | character sheet |
-| `_rarityFromRoll = (r) => r <= 5@30430` | rarity thresholds — home docs exact |
+| `✦ LUCK@37671` | character sheet |
+| `_rarityFromRoll = (r) => r <= 5@30431` | rarity thresholds — home docs exact |
 | `3f11e5b` · `0a131f5` · `3f74596` · `88d41d1` · `85cc43e` | birth · the report's tree · §DROP-02 · the revert · the deletion |
 
 ---

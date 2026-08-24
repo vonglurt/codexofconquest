@@ -86,7 +86,7 @@ the report's own figure, exact) and against HEAD:
 | `WORLD_DB` terrains (`const WORLD_DB = {@6279`) | 66 (46 base + 20 epic) | **66** | 111 | ✅ exact when written |
 | Story nodes (`const NODE_MAP = {@8425`) | 76 | **76** | 416 | ✅ exact when written · 5.5× |
 | State fields (`const _S_DEFAULTS = () => ({@23063`) | 107 | **107** | 318 | ✅ exact when written |
-| Froberger entries (`const FROBERGER_JOURNAL = [@27185`) | 41 | **41** | **41** | ✅ **unchanged in 79 days** |
+| Froberger entries (`const FROBERGER_JOURNAL = [@27186`) | 41 | **41** | **41** | ✅ **unchanged in 79 days** |
 | Named Birka NPCs (`const NPC_DIALOGUES = {@10396`) | 6 | **6** | 204 profiles / 213 dialogues | ✅ exact when written |
 | Acts (`node.act`) | 8 | **1–8** | **0–8 plus `NaN`** | ⚠️ see below |
 
@@ -179,12 +179,12 @@ measured and wrong about the number it inherited.
 
 ### Finding 2 — A bijection guarantees a link, not a truth *(→ §AUDIT-03z (b))*
 
-FC05's shipped half works exactly as specified. `const S29_AUROS_THEORY =@27051` carries
+FC05's shipped half works exactly as specified. `const S29_AUROS_THEORY =@27052` carries
 `// → doc: world.md §S29`, and `world.md` §S29 exists and describes the scene. The pointer is correct.
 
 Both ends state the trigger as `frobergerLastEntryRead && fav_auros >= 2`. **`fav_auros` occurs exactly
 once in 38,712 lines — in that comment.** It is not a `_S_DEFAULTS()` field and nothing reads it. The
-live guard reads the favor ledger: `s29LineDelivered) {@32651` gates on `_npcFavor('auros') >= 2`.
+live guard reads the favor ledger: `s29LineDelivered) {@32652` gates on `_npcFavor('auros') >= 2`.
 `world.md` repeats `fav_auros >= 2` at three separate lines, having inherited it from the comment the
 pointer connects it to.
 
@@ -217,7 +217,7 @@ The file is additionally **invisible to every gate in the repo**. `src/scripts/l
 headers still carry retired 26×16 codes (`CI`, `TV`, `CR`, `BA`, `SE`, `SL`, `MI`, `IS`, …) while the
 HTML uses the live ones (`LHR`, `MHQ`, `KRN`, `LLA`, `SFT`, `BMA`, `MAN`, `PDL`), and nothing reports it.
 This file is not history: the HTML names it as a home doc in its own FC05 pointer,
-`const FROBERGER_JOURNAL = [@27185`.
+`const FROBERGER_JOURNAL = [@27186`.
 
 *(Corroboration for §DOC-02d: the header remap `CI→LHR`, `TV→MHQ`, `CR→KRN`, `BA→LLA`, `SL→BMA` is
 exactly the list the engine's `birkaNpcs` note records, recovered here independently from the journal.)*
@@ -232,7 +232,7 @@ half of this to `lab-report-birka-beginner-arc.md`.
 
 But the `fav_<npc>` shape is not absent — it is live for exactly one character.
 `fav_corelli: 0@23144` is a real `_S_DEFAULTS()` field, read at two sites and written at
-`S_story.fav_corelli = Math.min@31794` as `min(3, corelli_purchase_count)` (§DOC-02g verified this
+`S_story.fav_corelli = Math.min@31795` as `min(3, corelli_purchase_count)` (§DOC-02g verified this
 mechanism at 19 of 20 identifiers). It is a private scalar: **`favorMin` cannot see it**, so no quest
 gate can ever depend on Corelli's favor without a `_legacy_fn` closure — invariant-#4 pressure with a
 declarative alternative already in the grammar. The report's Category D therefore describes a shape that

@@ -52,15 +52,15 @@ the entire payment/return-beat layer is unreachable**: no gold, no reward items,
 
 | Structure | Anchor | Shipped |
 |---|---|---|
-| Boss statlines | `const EPIC_BOSS_POOL = {@26258` | 20 entries, all `tier:'deadly'` |
-| Quest-giver dialogue | `const EB_NPC_DIALOGUE = {@26300` | 20 entries × 10 fields |
-| Reward items | `const EB_STORY_ITEMS = {@26284` | 11 declared, 10 referenced |
+| Boss statlines | `const EPIC_BOSS_POOL = {@26259` | 20 entries, all `tier:'deadly'` |
+| Quest-giver dialogue | `const EB_NPC_DIALOGUE = {@26301` | 20 entries × 10 fields |
+| Reward items | `const EB_STORY_ITEMS = {@26285` | 11 declared, 10 referenced |
 | Epic node records | `PRN:{ num:52@8736` | 20 records, `num:` 52–71 contiguous |
 | Epic terrain pools | `label:'Epic Battleground — Forest'@6343` | 20 `epic_*` terrains, 3 monsters each |
 | Danger banner | `sbo-epic-danger">⚠ DANGER: EPIC@5060` | markup + `pulse-red` animation |
-| Pre-battle trigger | `function storyEpicPreBattle(node) {@36400` | synthesises the battle from `bossKey` |
-| Return/payment beat | `function _storyEbReturnBeat(ebCode) {@30359` | gold + item + beat |
-| Node-code roster | `const _EB_CODES = [@28031` | live codes `PRN`…`TBS` |
+| Pre-battle trigger | `function storyEpicPreBattle(node) {@36401` | synthesises the battle from `bossKey` |
+| Return/payment beat | `function _storyEbReturnBeat(ebCode) {@30360` | gold + item + beat |
+| Node-code roster | `const _EB_CODES = [@28032` | live codes `PRN`…`TBS` |
 | Primary quests | `quest_ef_primary: { id:'quest_ef_primary'@10715` | 20, `type:'epic'`, UQF-1.0 |
 | Return quests | `quest_ef_return: { id:'quest_ef_return'@10876` | 20, `type:'epic'`, UQF-1.0 |
 
@@ -143,9 +143,9 @@ Read both ways. A row marked **ENGINE-ROT** is a specified behaviour HEAD fails 
 
 Seven sites derive an epic quest id from a node code by string concatenation:
 
-- `const primaryId = 'quest_' + ebCode.toLowerCase() + '_primary';@30347` (contract accept)
-- `'quest_' + node.code.toLowerCase() + '_primary';@35874` (battle chip)
-- `const returnId = 'quest_' + pb.nodeCode.toLowerCase() + '_return';@36594` (victory)
+- `const primaryId = 'quest_' + ebCode.toLowerCase() + '_primary';@30348` (contract accept)
+- `'quest_' + node.code.toLowerCase() + '_primary';@35875` (battle chip)
+- `const returnId = 'quest_' + pb.nodeCode.toLowerCase() + '_return';@36595` (victory)
 - plus four more at 28196, 30382, 35864, 35865.
 
 At the archive these sites resolved: `EB_NPC_DIALOGUE` was keyed `EF`, so `'quest_' + 'EF'.toLowerCase()
@@ -157,10 +157,10 @@ the prose inside `failText` — but **not the forty `QUEST_DB` ids**, which are 
 So the runtime now computes `quest_prn_primary`, which does not exist. Consequences, in order of severity:
 
 1. **All forty authored epic quests are orphaned.** `_questsByNode` excludes them by design —
-   `if (!q || q.type === 'epic' || !q.activateNode) continue;@37002` — so arrival never activates them,
+   `if (!q || q.type === 'epic' || !q.activateNode) continue;@37003` — so arrival never activates them,
    and the chip handlers address a different namespace. Forty titles, descs, hints, passTexts, failTexts
    and twenty `reward` values are unreachable content.
-2. **The entire payment layer is unreachable.** `function _storyEbReturnBeat(ebCode) {@30359` has exactly
+2. **The entire payment layer is unreachable.** `function _storyEbReturnBeat(ebCode) {@30360` has exactly
    one caller, gated on `S_story.quests['quest_prn_return']` being active. The only writer of that key is
    line 36612, guarded by `if (QUEST_DB[returnId])` — which is falsy, so it silently does nothing.
    **No gold is ever paid, no reward item is ever granted, and no return beat ever renders, for any of the
@@ -209,14 +209,14 @@ derived from it.***
 
 ### Finding 3 — ten reward items promise a named permanent mechanic and nothing reads any of them (→ §AUDIT-03v/w cluster)
 
-`const EB_STORY_ITEMS = {@26284` declares eleven items. Ten are referenced as a `specialItem`; each
+`const EB_STORY_ITEMS = {@26285` declares eleven items. Ten are referenced as a `specialItem`; each
 carries a `desc` naming a specific mechanical effect — swamp surprise immunity, waived river tolls, free
 sea passage, three days of suppressed desert encounters, advantage on Shard rolls, an upgraded Stunned
 condition, unlimited advantage against Void creatures, a free pirate restock, Warrant-territory passage.
 
 **Each item name occurs exactly once in 38,712 lines: its own declaration.** No item carries an `effect`
 field and no code path consumes any of them. The grant site,
-`S_story.inventory.push({ name: si.name, desc: si.desc, icon: si.icon || '✨' });@30379`, additionally
+`S_story.inventory.push({ name: si.name, desc: si.desc, icon: si.icon || '✨' });@30380`, additionally
 drops `type` and `sell` — and the vendor filters on `i.sell > 0`, so the seven items carrying a sell value
 (200/180/150/80/75/60/220 gp) **cannot even be sold.** This is the widest single instance of the
 §AUDIT-03v/w/y(b)/aa detector class yet measured: ten player-facing promises, zero implementations.
@@ -226,13 +226,13 @@ item name Shard #4 completes on (`'Crimson Warrant (Shard #4)'`), and the name o
 faction; `Sand Cipher` is both an EB reward and Shard #5's item name. Neither breaks a mechanic — the
 completion strings differ — but the player's inventory carries two things by each name.
 
-And `kazrath_journal:@26295` has **one occurrence in the whole file and zero consumers** — the
+And `kazrath_journal:@26296` has **one occurrence in the whole file and zero consumers** — the
 §DOC-02h *Marsh Seaweed* shape exactly (→ §DX-02n).
 
 ### Finding 4 — negotiation is strictly dominated, and its failure branch inverts the spec on both halves
 
-`const accepted = _ebNpcNegotiated ? d.paymentCeiling : d.paymentFloor;@30344`. The CHA check
-(`S_story.abilityScores || {}).cha) || 8;@30291`, DC 17) gates only the *damage*, not the gold:
+`const accepted = _ebNpcNegotiated ? d.paymentCeiling : d.paymentFloor;@30345`. The CHA check
+(`S_story.abilityScores || {}).cha) || 8;@30292`, DC 17) gates only the *damage*, not the gold:
 
 | Player action | CHA result | Gold | Cost |
 |---|---|---|---|
@@ -247,7 +247,7 @@ is cosmetic.
 
 Two further defects in that branch:
 
-- `Math.max(1, Math.floor(Math.random() * 4) + 1)@30311` and the d20 roll three lines above are
+- `Math.max(1, Math.floor(Math.random() * 4) + 1)@30312` and the d20 roll three lines above are
   **unseeded** `Math.random()` writing to persisted state (`S_story.hp`) — invariant #6, → §DX-02m.
 - The shared failure panel is hardcoded masculine (*"Then **he** moves…"*, *"Then **he** crouches down"*)
   and is rendered for whichever of the twenty NPCs was asked. **Ten of the twenty are women.**

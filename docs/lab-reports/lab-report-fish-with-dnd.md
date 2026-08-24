@@ -97,19 +97,19 @@ after the report's own date.
 
 | Structure | Anchor | Size | Status |
 |---|---|---|---|
-| `FISH_POOL` | `const FISH_POOL = [@26505` | 20 ranks | As specified, **byte-identical to the archive** |
-| `NIGHT_FISH_POOL` | `const NIGHT_FISH_POOL = [@26527` | 5 species, ranks 6–14 | **NEW** §XLVIII |
+| `FISH_POOL` | `const FISH_POOL = [@26506` | 20 ranks | As specified, **byte-identical to the archive** |
+| `NIGHT_FISH_POOL` | `const NIGHT_FISH_POOL = [@26528` | 5 species, ranks 6–14 | **NEW** §XLVIII |
 | Fish statlines | `fish_01: { key:'fish_01'@5357` | 20 + 5 night | **NEW to the report's table** — see §V |
-| `FISH_SIZE_TIERS` | `const FISH_SIZE_TIERS = [@26686` | 5 tiers | **NEW** §Layer 47 |
-| `FISH_GOLD_VALUES` | `const FISH_GOLD_VALUES = {@26693` | 5 × 5 = 25 values | **NEW** |
-| `BAIT_TABLES` | `const BAIT_TABLES = {@26633` | 3 zones × 6 baits | **NEW** |
-| `FISHING_RODS` | `const FISHING_RODS = [@26701` | 4 tiers, +0…+3 | **NEW** |
-| `LAKE_MAGIC_DB` | `const LAKE_MAGIC_DB = {@26537` | 8 items | **NEW** §DROP-03 |
-| `NPC_TOUR_OPPONENTS` | `const NPC_TOUR_OPPONENTS = [@26709` | 6 rivals | **NEW** §XLV |
-| Cast driver | `function storyFishing() {@30393` | 4 phases | **REPLACES** the 2d20 mechanic |
-| Battle entry | `function _startFishBattle(fish, hasRod, rodName)@30628` | — | As specified, +1 parameter |
+| `FISH_SIZE_TIERS` | `const FISH_SIZE_TIERS = [@26687` | 5 tiers | **NEW** §Layer 47 |
+| `FISH_GOLD_VALUES` | `const FISH_GOLD_VALUES = {@26694` | 5 × 5 = 25 values | **NEW** |
+| `BAIT_TABLES` | `const BAIT_TABLES = {@26634` | 3 zones × 6 baits | **NEW** |
+| `FISHING_RODS` | `const FISHING_RODS = [@26702` | 4 tiers, +0…+3 | **NEW** |
+| `LAKE_MAGIC_DB` | `const LAKE_MAGIC_DB = {@26538` | 8 items | **NEW** §DROP-03 |
+| `NPC_TOUR_OPPONENTS` | `const NPC_TOUR_OPPONENTS = [@26710` | 6 rivals | **NEW** §XLV |
+| Cast driver | `function storyFishing() {@30394` | 4 phases | **REPLACES** the 2d20 mechanic |
+| Battle entry | `function _startFishBattle(fish, hasRod, rodName)@30629` | — | As specified, +1 parameter |
 | Node lock exemption | `!pb.corridor && !pb.fish@36591` | — | As specified, minus `!pb.stalk` |
-| The chip | `main: 'Cast a Line',@35352` behind `const hasFish = node.isFishingLake;@35348` | 1 call site | As specified |
+| The chip | `main: 'Cast a Line',@35353` behind `const hasFish = node.isFishingLake;@35349` | 1 call site | As specified |
 | Lake magic aggregator | `function _lakeMagicBonuses() {@23421` | 6 effects | **NEW**; all six have readers |
 
 ### III.C The current cast — four phases, not two dice
@@ -143,7 +143,7 @@ report's wording aged.
 | 8 | Rank 1 = Needle Minnow AC 5 HP 4; rank 20 = Yugurt's Dread AC 20 HP 220 4d12+9 | exact, both | **SHIPPED** — the only two fully exact rows |
 | 9 | `FISH_POOL` entry shape `{rank, key, name, desc}` | exact | **SHIPPED** |
 | 10 | The two quoted `desc` strings | paraphrased — live rank 1 reads `'Tiny. Barbed. Bites above its weight class.'` | **NOT SHIPPED** as quoted |
-| 11 | Rod grants **Hooked** = advantage for that battle | `condition:'Hooked',@30641` | **SHIPPED**, verbatim |
+| 11 | Rod grants **Hooked** = advantage for that battle | `condition:'Hooked',@30642` | **SHIPPED**, verbatim |
 | 12 | Rod has no sell value, does not break | `sell:10, price:20`, plus three upgrade tiers | **SUPERSEDED** — true when written |
 | 13 | `_startFishBattle(fish, hasRod)` builds a synthetic `_preBattNode` with `_isFishBattle:true` | same, plus a `rodName` parameter | **SHIPPED** |
 | 14 | Lock check `!pb.corridor && !pb.stalk && !pb.fish` | `!pb.corridor && !pb.fish` | **SHIPPED**; `!pb.stalk` **RETIRED** by §TIMELESS-01 |
@@ -200,12 +200,12 @@ renamed; they never existed.
 
 `CELL_GRID` is built by iterating `Object.keys(NODE_MAP)` (`const CELL_GRID = (() => {@9852`) and
 only `list[0]` — the primary — can become `S_story.currentCode`
-(`S_story.currentCode = destCode;@28374`, where `destCode = res.destCodes[0]`). Both
+(`S_story.currentCode = destCode;@28375`, where `destCode = res.destCodes[0]`). Both
 `LYR:{r:2,c:194}@9423` and `BOO:{r:2,c:194}@9422` occupy cell `2,194`, and `LYR:{ num:41@8723`
 (Arctic Wastes — Detour, act 7) is declared **59 lines before** `BOO:{ num:75@8782`.
 
 Therefore `CELL_GRID['2,194'] = ['LYR','BOO']`, arriving at that cell renders the *arctic* node,
-and `const hasFish = node.isFishingLake;@35348` is never true. `storyFishing` has **exactly one
+and `const hasFish = node.isFishingLake;@35349` is never true. `storyFishing` has **exactly one
 call site**, that chip. `BOO` has `sleep:false`, so the `checkpointNode` path cannot reach it
 either.
 
@@ -213,14 +213,14 @@ Stranded by this one ordering:
 
 - **11 quests.** Three cannot activate (`activateNode:'BOO'` — `quest_horned_shark`,
   `quest_shale_drop`, `quest_night_eel`). Eight cannot complete, because their `completion` reads
-  `fishingCatchLog` or `fishingQuestFlags`, and `S_story.fishingCatchLog.unshift@30615` is the
+  `fishingCatchLog` or `fishingQuestFlags`, and `S_story.fishingCatchLog.unshift@30616` is the
   **only writer** in the file: `quest_fishing_guide`, `quest_fish_01`, and the whole six-part
   Emmer Finch arc `quest_guide_01`–`quest_guide_06`.
 - **~100 authored data rows**: 20 fish + 5 night fish (and their 25 `MONSTER_POOL` statlines and
   20 trophy drops), 8 lake magic items, 18 baits, 4 rod tiers, 25 gold values, 5 size tiers.
 - **Two flag writers** that only a fish battle can reach: `hornedSharkSlain = true;@7051` and
   `lanternEelLanded = true;@7052`.
-- **One key event**, `id:'ke_eel_pouch'@26229`, whose `node` is `BOO`.
+- **One key event**, `id:'ke_eel_pouch'@26230`, whose `node` is `BOO`.
 
 The cabin survives — `SSJ` is alone in cell `4,192` — so the Fisherman, the free bed and the
 six-quest §XLV tournament still render. **The player can meet the Fisherman and never fish.**
@@ -269,7 +269,7 @@ single-feature cluster yet found).
 
 ### F6 — Two small engine-text errors
 
-`const FISH_POOL = [@26505` carries the comment *"20 ranks, Needle Minnow → Yugurt's Leviathan"*;
+`const FISH_POOL = [@26506` carries the comment *"20 ranks, Needle Minnow → Yugurt's Leviathan"*;
 rank 20 is `Yugurt's Dread` and no fish is named *Yugurt's Leviathan* (rank 17 is
 `Barbed Leviathan Trout`). `monsters.md:780` anchors `storyFishing()` at bare line **11537**,
 which is its *archive* line — the function is at 30392 — an anchor shape `check:anchors` cannot

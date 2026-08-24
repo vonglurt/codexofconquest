@@ -104,22 +104,22 @@ GET  /api/session/chat      ?limit=1..200 (default 100), optional &r=&c= cell fi
 
 ### B. Client surface (`play.html`)
 
-- Shell: `<div id="map-subtab-bar">@4585` + `function msubSwitch(id) {@36620`, which is a
+- Shell: `<div id="map-subtab-bar">@4585` + `function msubSwitch(id) {@36621`, which is a
   pure pane toggle plus one `on-open` hook per pane. 25 test hooks are exported at
-  `window.__mesh02 = Object.assign@38348`.
-- Connect: status card from `/api/manifest`, reusing `async function mpResolveMagnet(ui) {@29363`
+  `window.__mesh02 = Object.assign@38349`.
+- Connect: status card from `/api/manifest`, reusing `async function mpResolveMagnet(ui) {@29364`
   — the one resolver, parameterised by container ids, shared with the modal and Discover.
-- Discover: `async function _mdProbeManifest(base, ms) {@29504` fired in parallel across
-  `const _MD_SCAN_PORTS = [1360, 1380];@29513`; list parsing in
-  `function mpParseServerList(text) {@29478`; D4 gate in `function _mdHostApproved(url) {@29533`.
-- Lists: `const _ML_ACL_LISTS = ['blockServerIds'@29640` drives six textareas; the D2 flow is
-  fetch → preview → `function mlPeerMerge() {@29744`, which is unreachable except from the
+- Discover: `async function _mdProbeManifest(base, ms) {@29505` fired in parallel across
+  `const _MD_SCAN_PORTS = [1360, 1380];@29514`; list parsing in
+  `function mpParseServerList(text) {@29479`; D4 gate in `function _mdHostApproved(url) {@29534`.
+- Lists: `const _ML_ACL_LISTS = ['blockServerIds'@29641` drives six textareas; the D2 flow is
+  fetch → preview → `function mlPeerMerge() {@29745`, which is unreachable except from the
   button the preview renders.
 - Enforcement is two lines, and they are the reason the blacklist feels absolute:
-  `rows = rows.filter(s => !_mpBlacklisted(s));@29349` on every rendered server list, and
-  `if (_mpBlacklisted(addr))@29403` inside Join. Matching is by addr, bare host, serverId or
-  world hash — `function _mpBlacklisted(s) {@29644`.
-- Presence: `const MP_CHAT_CAP = 200;@28504` ring, and `function _mpFootprints(look) {@29170`,
+  `rows = rows.filter(s => !_mpBlacklisted(s));@29350` on every rendered server list, and
+  `if (_mpBlacklisted(addr))@29404` inside Join. Matching is by addr, bare host, serverId or
+  world hash — `function _mpBlacklisted(s) {@29645`.
+- Presence: `const MP_CHAT_CAP = 200;@28505` ring, and `function _mpFootprints(look) {@29171`,
   which announces **once per cell arrival**, excluding yourself and anyone standing there —
   prints are for who you *missed*.
 

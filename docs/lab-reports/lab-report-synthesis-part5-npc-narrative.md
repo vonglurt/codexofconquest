@@ -54,19 +54,19 @@ Anchors resolve at HEAD unless a reference-build line is named explicitly.
 | State selection | `function _getNPCDialogue(npcKey) {@23561` | `questActive` from `_hasActiveQuestFor` |
 | Card renderer | `function _renderNpcCard(key, container) {@23684` | reads both structures |
 | Mission ledger | `function _missionComplete() {@23649` | 12 bits, returns `>= 8` |
-| Off-screen character | `const PETRA_STALL_STATES = [@27399` · `function _getGigaultState() {@27559` | cycles on `gameDay % 3` |
-| Corridor farewells | `const NPC_FAREWELLS = {@27428` · `function _getFarewell(fromCode, toCode) {@27576` | Friendly+ only |
-| Act III one-liners | `const NPC_ACT_THREE_LINES = {@27470` | priority injection, additive |
-| Node→NPC routing | `const NODE_NPC_KEYS = {@27414` | read by colour *and* farewell |
-| Map warmth gradient | `function _getNodeMapColor(nodeSlug) {@27563` | **live** — see §IV-A |
-| Final map render | `function _renderFinalMap() {@27606` | **live** — see §IV-A |
-| Brynn's chores | `const BRYNN_MAINTENANCE_TASKS = [@27499` | `{label, cost_gold, flag, action, narration}` |
-| Romance layer | `const ROMANCE_QUOTES = [@22380` (21) · `const NPC_ROMANCE_PREAMBLES = {@27480` (6) · `const NPC_ROMANCE_VIGNETTES = {@27490` (6) · `const INN_DREAMS = {@27132` | counts verified |
-| Preamble delivery | `const _preamble = (fav >= 2 && NPC_ROMANCE_PREAMBLES[key])@23741` | italic line before the card |
-| Companion scenes | `const BRYNN_KEEPER_STORY = {@27038` · `const BRUHNS_CO_SCENE = {@28063` · `const YAEL_NAMED_REPORT_SCENE = {@28049` | three arcs, five flags |
-| Corelli arc | `const CORELLI_ITEMS = {@26587` · `const CORELLI_APPEARANCES = [@26609` | 5 items, 5 stops |
+| Off-screen character | `const PETRA_STALL_STATES = [@27400` · `function _getGigaultState() {@27560` | cycles on `gameDay % 3` |
+| Corridor farewells | `const NPC_FAREWELLS = {@27429` · `function _getFarewell(fromCode, toCode) {@27577` | Friendly+ only |
+| Act III one-liners | `const NPC_ACT_THREE_LINES = {@27471` | priority injection, additive |
+| Node→NPC routing | `const NODE_NPC_KEYS = {@27415` | read by colour *and* farewell |
+| Map warmth gradient | `function _getNodeMapColor(nodeSlug) {@27564` | **live** — see §IV-A |
+| Final map render | `function _renderFinalMap() {@27607` | **live** — see §IV-A |
+| Brynn's chores | `const BRYNN_MAINTENANCE_TASKS = [@27500` | `{label, cost_gold, flag, action, narration}` |
+| Romance layer | `const ROMANCE_QUOTES = [@22380` (21) · `const NPC_ROMANCE_PREAMBLES = {@27481` (6) · `const NPC_ROMANCE_VIGNETTES = {@27491` (6) · `const INN_DREAMS = {@27133` | counts verified |
+| Preamble delivery | `const _preamble = (fav >= 2 && NPC_ROMANCE_PREAMBLES[key])@23742` | italic line before the card |
+| Companion scenes | `const BRYNN_KEEPER_STORY = {@27039` · `const BRUHNS_CO_SCENE = {@28064` · `const YAEL_NAMED_REPORT_SCENE = {@28050` | three arcs, five flags |
+| Corelli arc | `const CORELLI_ITEMS = {@26588` · `const CORELLI_APPEARANCES = [@26610` | 5 items, 5 stops |
 | Death-save bonus | `const _kingsSealBonus@7502` | `kings_seal` grants +1 |
-| La Riva arc | `AMS:{ num:79@8801` · `quest_la_riva_01: { id:'quest_la_riva_01'@13785` · `S_story.frCatKillCount = (S_story.frCatKillCount || 0) + 1;@25356` | node code is `AMS`, never `FR` |
+| La Riva arc | `AMS:{ num:79@8801` · `quest_la_riva_01: { id:'quest_la_riva_01'@13785` · `S_story.frCatKillCount = (S_story.frCatKillCount || 0) + 1;@25357` | node code is `AMS`, never `FR` |
 | NPC speak endpoint | `src/js/wbapi-server.js:SPEAK_LOG_FILE@815` | moved from repo root since |
 
 State fields cluster in `_S_DEFAULTS`: `brynThirdStepFixed: false,@23096` · `s29LineDelivered:@23100` ·
@@ -105,14 +105,14 @@ State fields cluster in `_S_DEFAULTS`: `brynThirdStepFixed: false,@23096` · `s2
 The report marks three living-world features unbuilt. Its own hedge is the tell: *"no confirming
 grep."* That is accurate. None was run.
 
-**Map warmth gradient.** `function _getNodeMapColor(nodeSlug) {@27563` — reference build line
+**Map warmth gradient.** `function _getNodeMapColor(nodeSlug) {@27564` — reference build line
 25,232, which is **four lines** after `_getGigaultState()`, cited correctly on the previous page.
 It reads `NODE_NPC_KEYS`, then returns progressively warmer browns at fav ≥ 1 / 2 / 3. Two live
-call sites: the minimap render loop (`const warmColor = _getNodeMapColor(code);@37324`, applied to
-every visited or trail cell) and `cell.style.background = _getNodeMapColor(slug);@27621`.
+call sites: the minimap render loop (`const warmColor = _getNodeMapColor(code);@37325`, applied to
+every visited or trail cell) and `cell.style.background = _getNodeMapColor(slug);@27622`.
 
-**Final map render.** `function _renderFinalMap() {@27606` — reference line 25,275, forty-three
-lines from the same neighbourhood — invoked at `_renderFinalMap();@28337`, inside the victory
+**Final map render.** `function _renderFinalMap() {@27607` — reference line 25,275, forty-three
+lines from the same neighbourhood — invoked at `_renderFinalMap();@28338`, inside the victory
 ceremony, under the comment `// L44-S: final map render before victory modal`.
 
 **Void's First Sign.** At the reference build, lines 32,789–32,800: a real `r === 4 && c === 3`
@@ -164,10 +164,10 @@ The 12-bit table was checked row for row against `function _missionComplete() {@
 `allEbReturns:@23657` is the exception, and the error is not in the number:
 
 - The bit needs five `ebReturnDone` flags.
-- `ebReturnDone` has exactly one writer, `function _storyEbReturnBeat(ebCode) {@30359`.
+- `ebReturnDone` has exactly one writer, `function _storyEbReturnBeat(ebCode) {@30360`.
 - Its only caller is the RETURN chip, built from
-  `const returnId   = 'quest_' + ebCode.toLowerCase() + '_return';@35847`.
-- `ebCode` iterates `const EB_NPC_DIALOGUE = {@26300`, whose keys are three-letter node codes
+  `const returnId   = 'quest_' + ebCode.toLowerCase() + '_return';@35848`.
+- `ebCode` iterates `const EB_NPC_DIALOGUE = {@26301`, whose keys are three-letter node codes
   (`PRN`, `INV`, `SDR`, …), producing `quest_prn_return`.
 - `QUEST_DB` holds twenty return quests keyed by the **legacy two-letter** codes —
   `quest_ef_return`, `quest_eh_return`, … `quest_prn_return` has **0 occurrences at the
@@ -210,12 +210,12 @@ appears to be — the two registries do not share a state vocabulary (§DX-02al)
 ### F. Where the report is right and the engine is wrong
 
 The Yael Named Report gate, from the report's "what still applies": `fav >= 2` **and Act VI+** and
-`yaelEscortUsed`. The live gate agrees exactly — `yaelNamedReportDelivered) {@32473`, guarded by
+`yaelEscortUsed`. The live gate agrees exactly — `yaelNamedReportDelivered) {@32474`, guarded by
 `_npcFavor('yael') >= 2 && (S_story.actNumber || 1) >= 6`, at node `LHR`.
 
 Both other sources disagree with the code:
 
-- `const YAEL_NAMED_REPORT_SCENE = {@28049` — its own header comment says *"fav >= 2 Act IV+"*.
+- `const YAEL_NAMED_REPORT_SCENE = {@28050` — its own header comment says *"fav >= 2 Act IV+"*.
 - `world.md:617` says the scene fires *"at a `LLA` or `HKG` visit (fav_yael ≥ 2, Act IV+,
   `yaelNamedReportFired` not set)"* — wrong node, wrong act, and `yaelNamedReportFired` is a
   **phantom flag with 0 occurrences in the engine**.
