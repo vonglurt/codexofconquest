@@ -80,8 +80,8 @@ node server. To only play, open `play.html` — nothing else is required.
 | Metric | Value | Status |
 |--------|-------|--------|
 | HTML line count | 38,712 | ✅ 2026-08-23 (`wc -l play.html`) |
-| Lab reports on disk | 115 | ✅ 2026-08-23 (`ls docs/lab-reports/*.md \| wc -l`) |
-| Lab reports in index | 80 | ⚠️ 35 on disk are unlisted → §DX-01j |
+| Lab reports on disk | 116 | ✅ 2026-08-23 (`ls docs/lab-reports/*.md \| wc -l`) |
+| Lab reports in index | 81 | ⚠️ 35 on disk are unlisted → §DX-01j |
 | Node text rewrites (noir register) | 121 / 121 | ✅ +33 nodes: Med arc (91–110) + Littoral Courts (111–120) Layer 104 |
 | FC items pending | 0 (FC01–FC08 all ✅) | ✅ 2026-05-26 |
 | Layers implemented | 0–104 | ✅ |
@@ -292,9 +292,9 @@ All 54 source books are marked `[x]` in `books.md` — all have been processed t
 
 ---
 
-## Lab Report Index (86 rows — 80 of the 115 reports on disk, plus 6 moved to `docs/archive/`)
+## Lab Report Index (87 rows — 81 of the 116 reports on disk, plus 6 moved to `docs/archive/`)
 
-> **⚠️ 35 reports on disk are not listed below** — measured 2026-08-23, filed as **§DX-01j** (Phase 6). `index.html` carries the complete list of all 115; this table is the annotated subset. Recount with `ls docs/lab-reports/*.md | wc -l`.
+> **⚠️ 35 reports on disk are not listed below** — measured 2026-08-23, filed as **§DX-01j** (Phase 6). `index.html` carries the complete list of all 116; this table is the annotated subset. Recount with `ls docs/lab-reports/*.md | wc -l`.
 
 > Six historical reports moved to `docs/archive/` (plan-cleanup v13/v17/world-builder-arc, timeline-history, api-01-02 review, loot-drop-weapon-economy) — rows below point there.
 
@@ -428,6 +428,7 @@ All 54 source books are marked `[x]` in `books.md` — all have been processed t
 | File | Topic |
 |------|-------|
 | `docs/lab-reports/lab-report-ieee-dns-apex-github-pages-community.md` | §RELEASE-01 — apex DNS migration to GitHub Pages: locating the authoritative nameserver (registrar ≠ zone operator), the hosting-enrollment apex lock, why the apex cannot take a `CNAME`, ACME ordering, and the MIT single-file contribution model. Carries a third-party redeployment runbook (§10) and a retained measurement error (§4.2 — burst-query rate limiting misread as record instability). **Its §7 remedy is NOT shipped here — no root `CNAME` file exists and `pages.yml` neither copies one nor triggers on it → §RELEASE-01 tail item.** |
+| `docs/lab-reports/lab-report-ieee-prompt-resumption-context-architecture.md` | **Method** — how a session with no history re-enters the loop over a corpus 3.4 M tokens wide: a 51 k-token core read whole, a routing tier that turns searches into lookups, situated reads bounded in **bytes per line** (one backlog line is **234,650 bytes**), and the **100 k refresh** cadence. Carries this session's own read trace, including two spilled unbounded greps → **§DX-01k**. |
 
 ---
 
