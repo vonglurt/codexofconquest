@@ -9,14 +9,86 @@
 >
 > **This file is a procedure, not a record.** It does not track which rows are
 > done — the six `docs/backlog/BACKLOG-*.md` files and `docs/backlog/plan-archive.md`
-> do that. Written 2026-08-23.
+> do that. Written 2026-08-23; **§0 replaced the one-row-per-`continue` handshake
+> with a budget-paced loop on 2026-08-24** — read §0 first, and treat §1 as the
+> record of what it replaced.
 
 ---
 
-## 1. The prompt — paste this to resume
+## 0. THE LOOP PROMPT — paste this to resume (supersedes §1 where they differ)
 
-The directive in full. Everything below §1 is the same instruction expanded; this
-block is the whole of it, and a cold session needs nothing else to start.
+> **This is the standing directive as of 2026-08-24, and it replaces the
+> one-row-per-`continue` handshake §1 was written under.** Where §1, §2.2 or §4
+> step 11 still say *"take one row and stop"*, **this section wins** — they now
+> say *"stop on the budget in §0"*, and the paragraphs below are the whole rule.
+> The loop no longer pauses at every row boundary; it pauses when the budget says
+> to.
+
+```
+Read resume.md, docs/design/index.md and docs/backlog/BACKLOG.md, then work the backlog
+as a LOOP. This is a loop, not a single errand.
+
+TAKE THE FIRST BACKLOG ITEM. Select it by §3: an unfinished increment first (git status
+dirty, or the newest §RESUME entry names a row still open), then a gating row, then phase
+order 1→6 and top-to-bottom within the file, preferring 🟢 over 🟡 over 🟠/🔴.
+
+PROPOSE THE PLAN FIRST, THEN STATE THE GOAL. Before changing anything, write the plan for
+that row — what changes, through which write path, what number gets measured before and
+after, and how it will be verified — and then say, in one sentence, what the goal is.
+Then implement that plan. If the ground disproves the plan, say so and replan; do not
+implement a plan you have already stopped believing.
+
+THEN KEEP GOING. Close the row properly, commit, push, announce it, and take the next
+one. Do not stop and ask at the row boundary. The loop continues.
+
+STOP ON THE BUDGET, NOT ON A ROW:
+  • Past ~100k tokens OR ~30 minutes in this session → finish the row you are on, then
+    stop and ask to continue. Stopping earlier at a clean boundary is fine.
+  • NEVER run past ~300k tokens or ~1 hour without asking. That is the hard ceiling,
+    not a target.
+  • When you stop, say roughly where the budget stands, so the next decision is informed.
+
+NEW ROWS GO AT THE TOP. Anything found on the path that is not the current row becomes a
+NEW ROW, written at the START of that phase file's open-items section — newest first, so
+the next pass meets it before the old ones. It is not done inline and it is not dropped.
+
+Everything else is unchanged and still binding: prove the ground before touching it and
+grep to DISPROVE the row; measure the number the row claims, re-derived at HEAD; 🟢 do it,
+🟡 decide and record the evidence, 🟠/🔴/ASK present options with a recommendation; write
+world data through ./bin/api only and add the endpoint first if the API cannot express it;
+verify by round trip and then the gates, tests in the foreground, never piped; measure the
+same number again and show it moved; read docs/design/index.md before the row and update it
+with the row; close the row in place, mark it [x] ✅ SHIPPED <date> <sha>, cut it into
+plan-archive.md, add the §RESUME entry and the BACKLOG.md pointer row.
+
+AFTER EVERY COMMIT: git push, then announce what you committed with src/bin/say.sh —
+never raw macOS say. Write the announcement for the ear, not the eye.
+
+THEN ASK TO REPEAT. When the budget says stop, hand off with a numbered next-steps list
+and ask whether to run the loop again.
+
+No background processes. No subagents. Everything synchronous, in this conversation.
+```
+
+Shorter form, once a session is warm:
+
+```
+next
+```
+
+That word means: **finish the increment you are on if it is open, then run the loop from
+§0 — first row by §3, plan, goal, implement, close, commit, push, speak, next row — until
+the budget in §0 says stop.**
+
+---
+
+## 1. The prompt — paste this to resume (HISTORICAL — superseded by §0)
+
+**Kept for the record; §0 is what a session runs.** This was the directive from
+2026-08-23 to 2026-08-24, and everything below §1 is still the same instruction
+expanded — except the handshake. Where this block says *one row per "continue", then
+stop*, §0 says *keep going until the budget says stop*, and §0 wins. Read this one to
+understand why the procedure has the shape it does; run §0.
 
 ```
 Read resume.md, docs/design/index.md and docs/backlog/BACKLOG.md, then resume the
@@ -86,7 +158,7 @@ not permission to start three rows, and it is not permission to skip the hand-of
 
 ### 2.1 The shape of the work
 
-This repository is a single-file game — **`play.html`**, 5.5 MB, 38,712 lines, 416
+This repository is a single-file game — **`play.html`**, 5.5 MB, 38,694 lines (`wc -l play.html`, 2026-08-24), 416
 nodes, 2,853 quests, 398 monsters, 111 terrains, 204 NPC profiles, no build step,
 no server at runtime. Everything else in the repo exists to *author*, *verify*, or
 *describe* that one file. `edit.html` is the visual editor; the WBAPI server on
@@ -111,11 +183,15 @@ named in the right-hand column for the entry in full.
 
 ### 2.2 The loop
 
-**One increment per "continue."** Not two. Not a sweep. The user says `next` or
-`continue`; I take exactly one row, take it as far as it goes, and stop with a
-hand-off. Every increment must survive a context switch — if the session were
-killed the moment I stopped, the next session must be able to pick up from the
-committed tree, the edited row, and the §RESUME entry alone.
+**A loop, paced by a budget — not one increment per "continue" (changed 2026-08-24,
+§0).** The user says `next` or `continue`; I take the first row by §3, propose the plan,
+state the goal, implement it, close it, commit, push, speak — **and then take the next
+row**. I stop and ask only when the budget in §0 is reached: past ~100k tokens or ~30
+minutes, and never past ~300k tokens or ~1 hour. **What has not changed is the unit of
+work.** Each row is still closed whole before the next begins, and every increment must
+survive a context switch — if the session were killed the moment one row closed, the next
+session must be able to pick up from the committed tree, the edited row, and the §RESUME
+entry alone. The loop is a sequence of complete increments, never a sweep.
 
 **Decisions are mine to make where the backlog authorizes it.** Rows are tagged:
 
@@ -337,14 +413,18 @@ Run all eleven steps, in order, every time.
 10. ARCHIVE               mark [x] ✅ SHIPPED <date> <sha>; cut the row out of the
                           phase file and paste it into plan-archive.md; add the
                           §RESUME entry and the BACKLOG.md pointer row
-11. COMMIT + PUSH        git commit; git push; src/bin/say.sh "<subject>"; then
-    + SPEAK + STOP        HAND OFF: a numbered next-steps list in the reply, and
-                          STOP — ask the user before taking the next row. One row
-                          per "continue", removed from the phase file as it ships.
+11. COMMIT + PUSH        git commit; git push; src/bin/say.sh "<subject>" — written
+    + SPEAK + LOOP        for the ear. Then CHECK THE BUDGET (§0): under ~100k tokens
+                          and ~30 min → take the next row and run these eleven steps
+                          again. Over it → HAND OFF with a numbered next-steps list,
+                          say where the budget stands, and ask whether to repeat.
+                          Never run past ~300k tokens or ~1 hour without asking.
 ```
 
-New findings from step 3, 4, 7 or 8 that are not this row become **new rows**,
-appended to the phase file whose subsystem they belong to.
+New findings from step 3, 4, 7 or 8 that are not this row become **new rows**, written
+at the **TOP** of the open-items section of the phase file whose subsystem they belong to
+(§0, changed 2026-08-24) — newest first, so the next pass through the loop meets them
+before the older rows.
 
 ---
 
