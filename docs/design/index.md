@@ -79,9 +79,9 @@ node server. To only play, open `play.html` — nothing else is required.
 
 | Metric | Value | Status |
 |--------|-------|--------|
-| HTML line count | 36,933 | ✅ |
-| Lab reports on disk | 85 | ✅ |
-| Lab reports in index | 85 | ✅ |
+| HTML line count | 38,712 | ✅ 2026-08-23 (`wc -l play.html`) |
+| Lab reports on disk | 115 | ✅ 2026-08-23 (`ls docs/lab-reports/*.md \| wc -l`) |
+| Lab reports in index | 80 | ⚠️ 35 on disk are unlisted → §DX-01j |
 | Node text rewrites (noir register) | 121 / 121 | ✅ +33 nodes: Med arc (91–110) + Littoral Courts (111–120) Layer 104 |
 | FC items pending | 0 (FC01–FC08 all ✅) | ✅ 2026-05-26 |
 | Layers implemented | 0–104 | ✅ |
@@ -292,7 +292,9 @@ All 54 source books are marked `[x]` in `books.md` — all have been processed t
 
 ---
 
-## Lab Report Index (All 78 Reports)
+## Lab Report Index (86 rows — 80 of the 115 reports on disk, plus 6 moved to `docs/archive/`)
+
+> **⚠️ 35 reports on disk are not listed below** — measured 2026-08-23, filed as **§DX-01j** (Phase 6). `index.html` carries the complete list of all 115; this table is the annotated subset. Recount with `ls docs/lab-reports/*.md | wc -l`.
 
 > Six historical reports moved to `docs/archive/` (plan-cleanup v13/v17/world-builder-arc, timeline-history, api-01-02 review, loot-drop-weapon-economy) — rows below point there.
 
@@ -420,6 +422,12 @@ All 54 source books are marked `[x]` in `books.md` — all have been processed t
 | `docs/lab-reports/lab-report-saul-paul-vignette-spec.md` | §FUTURE-01 vignette — **13** node texts (the "14" here was wrong), 9 quest descriptions, 7 NPC voice lines, 8 voice rules, object inventory, thorn mechanic · **✅ verified 2026-08-12 (§DOC-02aj)** — a pre-implementation lock, 3 h 15 m before the arc opened; **6 of 9 titles + 5 of 9 quest ids byte-exact, 0 of 13 node texts shipped**, POV inverted (player written as Paul → player as his companion); withdrew §DOC-02ai's Thorn finding |
 | `docs/lab-reports/lab-report-kindness-calculus.md` | Prosocial mechanics — asymptotic kindness in quest graphs, token automata, the probabilistic case against combat. **✅ VERIFIED 2026-08-12 (§DOC-02r):** thesis holds and all 51 arc quests resolve, but **28 of 51 (55 %) are unreachable** (§AUDIT-03x co-location + single-writer entry flags) and W6's advertised WIS 14 is not a roll (§AUDIT-03ad) |
 | `docs/lab-reports/lab-report-wisdom-arc.md` | Wisdom Arc — Robert Greene's Laws of Human Nature as quest mechanics, WIS progression design |
+
+### Infrastructure & Release
+
+| File | Topic |
+|------|-------|
+| `docs/lab-reports/lab-report-ieee-dns-apex-github-pages-community.md` | §RELEASE-01 — apex DNS migration to GitHub Pages: locating the authoritative nameserver (registrar ≠ zone operator), the hosting-enrollment apex lock, why the apex cannot take a `CNAME`, ACME ordering, and the MIT single-file contribution model. Carries a third-party redeployment runbook (§10) and a retained measurement error (§4.2 — burst-query rate limiting misread as record instability). **Its §7 remedy is NOT shipped here — no root `CNAME` file exists and `pages.yml` neither copies one nor triggers on it → §RELEASE-01 tail item.** |
 
 ---
 

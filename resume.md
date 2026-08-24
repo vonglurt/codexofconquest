@@ -109,6 +109,35 @@ The world is 1367 AD, historically anchored, with a Void/Codex-Shard fantasy spi
 over it. New content must sound like it belongs to the region and the book its
 node was imported from.
 
+### 2.3a Read the index, and write references the way this repo reads them
+
+> **Reiterated by the user 2026-08-23, and binding on every increment.**
+
+**Read `docs/design/index.md` at the start of every session, before touching a
+row.** It is the master index: the Doc Health Badge (recount it — `wc -l play.html`,
+`ls docs/lab-reports/*.md | wc -l`), the Repository Structure map, the Lab Report
+Index, the Reverse Lookup keyword table, the Design Constants and the `S_story`
+field table. Almost every "where does this live" question is answered there in one
+lookup, and a session that skips it re-derives what the file already knows.
+
+**Maintain the references it holds — concise, and keyed the way you would reach for
+them.** A reference here is a *noun with the verb intended on it*: name the thing,
+then say what is done to it. `` `symbol@1234` `` names the noun and the line is a
+refreshable hint; `./bin/api get quest <id>` names the verb on the noun; a Lab
+Report Index row names the file and then what the report *does*. Write new
+references in that shape and keep them short enough to scan:
+
+- **Noun first, verb on it.** *"`storyCheckQuests` reads `gate`"*, not *"gating is
+  read in one place"*. The grep target belongs in the sentence.
+- **One line per reference.** If it needs a paragraph, the paragraph belongs in the
+  row or the lab report, and the index keeps the pointer.
+- **Every count is measured, and the command that measured it is beside it.** A bare
+  number in the index rots silently; a number with its command is re-checkable in
+  one keystroke.
+- **Update the index in the same increment that invalidates it.** New lab report →
+  its Lab Report Index row and the badge, in the same commit. This is the two-way
+  sync rule applied to the index itself.
+
 ### 2.4 What "done" means
 
 A row is not done when the code works. A row is done when **all six** are true:
@@ -261,8 +290,10 @@ Run all eleven steps, in order, every time.
 10. ARCHIVE               mark [x] ✅ SHIPPED <date> <sha>; cut the row out of the
                           phase file and paste it into plan-archive.md; add the
                           §RESUME entry and the BACKLOG.md pointer row
-11. COMMIT + SPEAK        git commit; src/bin/say.sh "<subject>"; then HAND OFF:
-                          a numbered next-steps list in the reply, and stop.
+11. COMMIT + PUSH        git commit; git push; src/bin/say.sh "<subject>"; then
+    + SPEAK + STOP        HAND OFF: a numbered next-steps list in the reply, and
+                          STOP — ask the user before taking the next row. One row
+                          per "continue", removed from the phase file as it ships.
 ```
 
 New findings from step 3, 4, 7 or 8 that are not this row become **new rows**,
@@ -334,7 +365,7 @@ here and in `docs/api/API-README.md`.
 | 2 | `docs/backlog/BACKLOG.md` | the routing index + §RESUME chronology |
 | 3 | the phase file the next row lives in | the row itself, in full |
 | 4 | `CONTRIBUTING.md` | the policies, verbatim and binding |
-| 5 | `docs/design/index.md` | the master doc index, design constants, `S_story` fields |
+| 5 | `docs/design/index.md` | the master doc index, design constants, `S_story` fields — **read it before the row, update it with the row** (§2.3a) |
 | 6 | `docs/api/API-README.md` | the write path |
 | 7 | `vendor/1367-sources/index.md` + `All Phases Imported/` | where story answers come from |
 
