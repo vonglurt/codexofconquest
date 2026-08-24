@@ -13792,7 +13792,7 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     failText:"Fishmonger Row east of the Cat Quarter has not been visited. Connie Tuna is still there.",
     npc:"kenickie",
   },
-  quest_la_riva_02: { id:'quest_la_riva_02', type:'side', schema:'UQF-1.0', gate:{}, bits:[], completion:{ countMin:[{ path:'frCatKillCount', min:5 }], itemsAll:["Vincenzo's Net"] }, title:"Connie: The Weight of a Net",
+  quest_la_riva_02: { id:'quest_la_riva_02', type:'side', schema:'UQF-1.0', gate:{}, bits:[], completion:{countMin:[{path:'frCatKillCount',min:5}],itemsAll:['Vincenzo\'s Net'],atNode:'AMS'}, title:"Connie: The Weight of a Net",
     desc:"The Corrupted Cats have settled into the rubble of Fishmonger's Row. They're not just feral — they're holding something. Five of them. Find what they're carrying.",
     hint:"Kill 5 Corrupted Cats at Fishmonger's Row. Find what's in the rubble.",
     targetMonsterKeys:['corrupted_cat'],
@@ -13802,6 +13802,7 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     passText:"He built that rack himself, the second season. The rubble has been cleared. The Corrupted Cats are gone.",
     failText:"Five Corrupted Cats are still holding the rubble at Fishmonger Row. Clear them to find what they carry.",
     npc:"connie_tuna",
+    onComplete:[{kind:'reward',gold:500,items:[{name:'Old Tuna Account Book',icon:'📒',type:'key_item',sell:0,description:'A worn ledger. Every vendor on Fishmonger\'s Row — who owed what, who paid forward. Vincenzo\'s page is the last completed entry. The pages after it are blank.'}]},{kind:'favor',npc:'aldo_sardino',add:1},{kind:'unlock',quests:['quest_la_riva_03']},{kind:'narrative',msg:'💰 +500gp. The rubble is quieter now.\n\nAldo Sardino steps out from between two collapsed stalls. He has been here the whole time.\n\n"I found the net in the rubble of my stall. Three days after. I folded it." He does not look at Connie. "I\'ve been carrying it since."\n\nHe reaches inside his coat. He puts the folded net down on the nearest intact piece of counter. Then he reaches under his arm and draws out a ledger — battered, squared, the handwriting on the cover formal.\n\n"Every vendor on the row. Who owed what. Who paid. Vincenzo\'s page is the last one." He holds it out to you. "Take it to Kenickie. He\'s the one who knew Vincenzo\'s operation. He should hold it."\n\n📒 Old Tuna Account Book obtained.\n📋 Quest: The Account Book — accepted.'}],
   },
   quest_la_riva_03: { id:'quest_la_riva_03', type:'side', schema:'UQF-1.0', gate:{}, bits:[], completion:{ flags:['laRivaComplete'] }, title:"Aldo: The Account Book",
     desc:"Aldo Sardino has kept the account book since the row came down. Vincenzo's page is the last completed entry. He wants it to go to someone who knew Vincenzo.",
@@ -31895,26 +31896,6 @@ function _nodeHookLaRivaRow(node) {
       S_story.connieMet = true;
       setTimeout(() => storyMsg('The woman at the end of the path turns when she hears you.\n\nConnie Tuna. Tortoiseshell apron, hands that know what work looks like. She does not look surprised. She looks like someone who has been here long enough that new arrivals have stopped surprising her.\n\n"You came." Not a question. A registration.\n\n"The Corrupted Cats showed up after the Cat-King went down. Thinner now. But they\'re still here. They\'re in the rubble where the south stall was. I can\'t clear them myself."\n\nShe does not ask why you came. She seems to have decided that you being here is enough.\n\n📋 Quest: The Weight of a Net — accepted.'), 500);
       S_story.quests['quest_la_riva_02'] = 'active';
-    }
-    // la_riva_02 complete — Aldo gives account book
-    if (qs['quest_la_riva_02'] === 'active'
-        && (S_story.frCatKillCount || 0) >= 5
-        && (S_story.inventory || []).some(i => i.name === "Vincenzo's Net")
-        && !qs['quest_la_riva_03']) {
-      S_story.quests['quest_la_riva_02'] = 'complete';
-      S_story.quests['quest_la_riva_03'] = 'active';
-      if (!S_story.npcFavorability) S_story.npcFavorability = {};
-      S_story.npcFavorability['aldo_sardino'] = (S_story.npcFavorability['aldo_sardino'] || 0) + 1;
-      S_story.gold = (S_story.gold || 0) + 500;
-      setTimeout(() => {
-        storyMsg('💰 +500gp. The rubble is quieter now.\n\nAldo Sardino steps out from between two collapsed stalls. He has been here the whole time.\n\n"I found the net in the rubble of my stall. Three days after. I folded it." He does not look at Connie. "I\'ve been carrying it since."\n\nHe reaches inside his coat. He puts the folded net down on the nearest intact piece of counter. Then he reaches under his arm and draws out a ledger — battered, squared, the handwriting on the cover formal.\n\n"Every vendor on the row. Who owed what. Who paid. Vincenzo\'s page is the last one." He holds it out to you. "Take it to Kenickie. He\'s the one who knew Vincenzo\'s operation. He should hold it."\n\n📒 Old Tuna Account Book obtained.\n📋 Quest: The Account Book — accepted.');
-        const _book = { name:'Old Tuna Account Book', icon:'📒', type:'key_item', sell:0,
-          description:"A worn ledger. Every vendor on Fishmonger's Row — who owed what, who paid forward. Vincenzo's page is the last completed entry. The pages after it are blank." };
-        S_story.inventory = S_story.inventory || [];
-        S_story.inventory.push(_book);
-        updateGold();
-        storyAutoSave();
-      }, 600);
     }
     const frDiv = document.createElement('div');
     frDiv.id = 'fr-quest-div';

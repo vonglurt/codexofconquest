@@ -9397,11 +9397,10 @@ test.describe('§ARCH-01 W7d / §VM-01-F — legacy branches retired; wm_01 in t
 // (completion:{flagsPath|flags} + xpAward). The two xp values are identical for
 // every act (opp.xp === xpAward: pip 100 … master 1000; coupon +50 === xpAward:50),
 // so deleting the inline shortcut is behaviour-preserving and leaves the engine the
-// single completion authority. quest_la_riva_02 is the sole documented exception —
-// its inline AMS hook grants +500g / the account book / +Aldo favor / activates
-// la_riva_03, rewards its engine completion:{countMin,itemsAll} gate does NOT carry
-// (no onComplete / no xpAward), so formalising it is deferred §GR work (lab-report
-// gated); it stays inline-authoritative by design.
+// single completion authority. There is no exception: quest_la_riva_02's six AMS
+// effects (+500g, the account book, +Aldo favor, la_riva_03, the narration) are an
+// onComplete bit chain, and its completion gate carries atNode:'AMS' so the chain
+// can only fire where the scene is staged.
 test.describe('§ARCH-01 W8c — storyRender audit: engine is the sole completer', () => {
   test('tour + no_fishing_sign are engine-completable, and opp.xp === xpAward for every act (no divergence)', async ({ page }) => {
     await page.goto('/play.html');
@@ -9446,12 +9445,13 @@ test.describe('§ARCH-01 W8c — storyRender audit: engine is the sole completer
     expect(r.fish).toEqual({ status: 'complete', xpDelta: 50 });
   });
 
-  test('the two inline completion shortcuts are gone from source; la_riva_02 remains the documented inline exception', async ({ page }) => {
+  test('no inline completion shortcut survives in source — the engine is the sole completer', async ({ page }) => {
     await page.goto('/play.html');
     const src = await page.evaluate(() => document.documentElement.outerHTML);
     expect(src.includes("S_story.quests[qId] = 'complete'")).toBe(false);                     // tournament win — engine now
     expect(src.includes("S_story.quests['quest_no_fishing_sign'] = 'complete'")).toBe(false); // coupon redeem — engine now
-    expect(src.includes("S_story.quests['quest_la_riva_02'] = 'complete'")).toBe(true);       // §GR inline reward — deferred by design
+    expect(src.includes("S_story.quests['quest_la_riva_02'] = 'complete'")).toBe(false);      // §DX-02cm — engine now
+    expect(src.match(/S_story\.quests\['[a-z_0-9]+'\] = 'complete'/g)).toBe(null);
   });
 });
 
