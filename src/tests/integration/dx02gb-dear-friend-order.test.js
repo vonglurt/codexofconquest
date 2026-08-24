@@ -110,7 +110,9 @@ test.describe('§DX-02gb — both orderings reach Dear Friend, for all six NPCs'
       inlineCopies: (_setNpcFavor.toString().match(/yaelEscortUsed/g) || []).length,
     }));
 
-    expect(out.keys.sort()).toEqual(['auros', 'brynn', 'crov', 'pachelbel', 'quill', 'yael']);
+    // auros is absent by construction (§DX-02gl): quest_void_below writes his favor
+    // as an absolute set:2, so no entry here could ever grant him the step.
+    expect(out.keys.sort()).toEqual(['brynn', 'crov', 'pachelbel', 'quill', 'yael']);
     expect(out.inlineCopies).toBe(0);
   });
 

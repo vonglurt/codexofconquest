@@ -70,7 +70,7 @@ multiplying the way to earn either tier. The content existed; the verb did not.
 |---|---|---|
 | `kind:'favor'` bits in the whole quest corpus = 16 | **16** | ✅ exact |
 | distinct NPCs those bits reach = 13 | **13** | ✅ exact |
-| `dearFriendBits` auto-upgrade for ~6 NPCs | **exactly 6** (`const DEAR_FRIEND_BITS = {@23463`) | ✅ exact |
+| `dearFriendBits` auto-upgrade for ~6 NPCs | **6 when written; 5 since §DX-02gl** (`const DEAR_FRIEND_BITS = {@23463`) — auros's act never granted the step, because `quest_void_below` sets his favor to 2 absolutely | ✅ exact when written |
 | `meta.enemy` declared by **202** NPCs | **202** of 213 dialogue entries | ✅ exact |
 | `meta.worldTruth` declared by **219** NPCs | **213** | ❌ **wrong when written** |
 | `onTalk` / `talkVerb` / `giftNpc` / `downtimeVerb` = 0 | **0** at both builds | ✅ exact |

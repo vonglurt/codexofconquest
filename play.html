@@ -23466,7 +23466,6 @@ const DEAR_FRIEND_BITS = {
   quill: () => S_story.couperiSongReceived,
   pachelbel: () => S_story.quests['quest_pachelbel_shipment'] === 'complete',
   crov: () => (S_story.pitTrainingWins||0) >= 3,
-  auros: () => S_story.bruhnsDepthsReported,
 };
 const NPC_FAVOR_CAP = 3;
 function _setNpcFavor(key, level) {
@@ -23634,8 +23633,9 @@ function _hasActiveQuestFor(npcKey) {
   const ids = npcQuests[npcKey] || [];
   return ids.some(id => S_story.quests[id] === 'active');
 }
-// Six of the twelve ending bits ARE the six Dear-Friend acts, under the labels the
-// ending has always called them by. The predicates live once, in DEAR_FRIEND_BITS.
+// Six of the twelve ending bits are the six second personal acts, under the labels the
+// ending calls them by. Five are also Dear-Friend steps and their predicates live once,
+// in DEAR_FRIEND_BITS; auros's is the flag quest_void_below writes beside its own set:2.
 const MISSION_ACT_BITS = {
   yael: 'yaelEscortUsed',
   brynn: 'brynnsJournalRead',
@@ -23645,7 +23645,7 @@ const MISSION_ACT_BITS = {
   auros: 'bruhnsDepthsReported',
 };
 function _missionBits() {
-  const acts = {};
+  const acts = { [MISSION_ACT_BITS.auros]: !!S_story.bruhnsDepthsReported };
   for (const k in DEAR_FRIEND_BITS) acts[MISSION_ACT_BITS[k] || k] = !!DEAR_FRIEND_BITS[k]();
   return {
     ...acts,

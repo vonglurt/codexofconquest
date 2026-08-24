@@ -1169,7 +1169,7 @@ All six are Birka city nodes. No other nodes have NIGHT_AMBIENT entries.
 | `storyRenderQuests()` | 11733 | Renders active/done/failed quest list | `S_story.quests`, `QUEST_DB` | DOM quest list |
 | `storyCreateCustomQuest()` | 13804 | Creates player-defined custom quest entry | player input | `S_story.quests` + DOM |
 | `_missionComplete()` | 7990 | Returns true if ≥8 of 12 mission bits are set | `_missionBits()` | none (read-only) |
-| `_missionBits()` | — | Builds the 12 labelled mission bits; the six act bits are `DEAR_FRIEND_BITS[k]()` relabelled through `MISSION_ACT_BITS` (§DX-02gk) | `DEAR_FRIEND_BITS`, 6 S_story fields + `_lubeckFriends()`, `_curseScore()` | none (read-only) |
+| `_missionBits()` | — | Builds the 12 labelled mission bits; five act bits are `DEAR_FRIEND_BITS[k]()` relabelled through `MISSION_ACT_BITS` (§DX-02gk), and the sixth is `S_story.bruhnsDepthsReported` read directly, because auros's act grants no Dear-Friend step (§DX-02gl) | `DEAR_FRIEND_BITS`, 7 S_story fields + `_lubeckFriends()`, `_curseScore()` | none (read-only) |
 | `_curseScore()` | 11100 | Curse engagement score from EB audit | `_EB_CODES`, `defeatedBattles`, `ebReturnDone`, `S_story.quests` | none (read-only) |
 | `storySleep(node)` | 12882 | Shows sleep preview modal; guards gold/day checks | `node.sleep`, `node.sleepCost`, `S_story.gold/day/hp/hpMax` | DOM sleep-overlay |
 | `storyConfirmSleep()` | 12920 | Executes long rest: HP heal, day++, resets, checkpoint | `node.sleepCost`, `abilityScores.con`, `hp/hpMax/level` | `hp`, `day`, `gameDay`, `shortRests`, `surgeCharges`, `indomitableCharges`, `sleptAtNodes`, `checkpointNode` |

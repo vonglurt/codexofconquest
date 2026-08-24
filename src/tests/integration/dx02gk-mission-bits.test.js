@@ -3,11 +3,13 @@
 /**
  * §DX-02gk — the ending scorer and the Dear-Friend contract read one table.
  *
- * Six of `_missionBits()`'s twelve bits are the six second personal acts, and the
- * predicate for each lives once, in `DEAR_FRIEND_BITS`. The scorer keeps its own
- * labels (`yaelEscortUsed`, `crovPitTrainingWins`, …) because the design docs name
- * them, but it no longer spells the tests out: re-author an act and the ending gate
- * moves with it.
+ * Six of `_missionBits()`'s twelve bits are the six second personal acts. Five of
+ * them are also Dear-Friend steps and their predicate lives once, in
+ * `DEAR_FRIEND_BITS`; auros's act is `bruhnsDepthsReported`, which `quest_void_below`
+ * writes beside its own absolute `set:2`, so it scores for the ending without ever
+ * granting a step (§DX-02gl). The scorer keeps its own labels (`yaelEscortUsed`,
+ * `crovPitTrainingWins`, …) because the design docs name them, but it does not spell
+ * the five tests out: re-author an act and the ending gate moves with it.
  *
  * The bits are planted here rather than earned — `dx02gb-dear-friend-order.test.js`
  * is the case that drives the real paths. What this file asserts is the wiring.
@@ -36,7 +38,7 @@ const SIX_NON_ACTS = `() => {
   S_story.level = 5;
 }`;
 
-// Each act's underlying state, at the field DEAR_FRIEND_BITS reads.
+// Each act's underlying state, at the field its predicate reads.
 const PLANT = {
   yael: `() => { S_story.yaelEscortUsed = true; }`,
   brynn: `() => { S_story.journalEntriesRead = (S_story.journalEntriesRead||[]).concat([7]); }`,
@@ -48,7 +50,7 @@ const PLANT = {
 
 test.describe('§DX-02gk — the six act bits are read, not re-implemented', () => {
 
-  test('the scorer names the same six acts as the act table, and spells none of them', async ({ page }) => {
+  test('the scorer names six acts, the act table names the five that grant a step, and the five are not respelled', async ({ page }) => {
     await seedAndLoad(page, SEED);
     await dismissContinue(page);
 
@@ -58,16 +60,20 @@ test.describe('§DX-02gk — the six act bits are read, not re-implemented', () 
       labels: Object.values(MISSION_ACT_BITS),
       bitKeys: Object.keys(_missionBits()),
       inlineCopies: (_missionBits.toString()
-        .match(/yaelEscortUsed:|couperiSongReceived|pitTrainingWins|bruhnsDepthsReported|quest_pachelbel_shipment/g) || []).length,
+        .match(/yaelEscortUsed:|couperiSongReceived|pitTrainingWins|quest_pachelbel_shipment/g) || []).length,
+      aurosFlagReads: (_missionBits.toString().match(/bruhnsDepthsReported/g) || []).length,
     }));
 
-    expect(out.labelKeys).toEqual(out.actKeys);
+    expect(out.labelKeys).toEqual(['auros', 'brynn', 'crov', 'pachelbel', 'quill', 'yael']);
+    expect(out.actKeys).toEqual(['brynn', 'crov', 'pachelbel', 'quill', 'yael']);
+    expect(out.labelKeys.filter(k => !out.actKeys.includes(k))).toEqual(['auros']);
     expect(out.bitKeys.length).toBe(12);
     for (const label of out.labels) expect(out.bitKeys).toContain(label);
     expect(out.inlineCopies).toBe(0);
+    expect(out.aurosFlagReads).toBe(1);
   });
 
-  test('every act bit equals its DEAR_FRIEND_BITS predicate, before and after the act', async ({ page }) => {
+  test('every act bit equals its own predicate, before and after the act', async ({ page }) => {
     await seedAndLoad(page, SEED);
     await dismissContinue(page);
 
@@ -75,7 +81,8 @@ test.describe('§DX-02gk — the six act bits are read, not re-implemented', () 
       const read = () => {
         const bits = _missionBits();
         const r = {};
-        for (const k in DEAR_FRIEND_BITS) r[k] = { bit: bits[MISSION_ACT_BITS[k]], act: !!DEAR_FRIEND_BITS[k]() };
+        for (const k in MISSION_ACT_BITS) r[k] = { bit: bits[MISSION_ACT_BITS[k]],
+          act: !!(DEAR_FRIEND_BITS[k] ? DEAR_FRIEND_BITS[k]() : S_story[MISSION_ACT_BITS[k]]) };
         return r;
       };
       const before = read();
@@ -95,18 +102,19 @@ test.describe('§DX-02gk — the six act bits are read, not re-implemented', () 
   for (const key of Object.keys(PLANT)) {
     const baseline = key === 'yael' ? 'brynn' : 'yael';
 
-    test(`${key}: the eighth bit is that act, and the act table is what decides it`, async ({ page }) => {
+    test(`${key}: the eighth bit is that act, and the act's own predicate is what decides it`, async ({ page }) => {
       await seedAndLoad(page, SEED);
       await dismissContinue(page);
 
       const out = await page.evaluate(([k, nonActs, basePlant, plant]) => {
         eval(nonActs)();
         eval(basePlant)();
+        const actOf = () => !!(DEAR_FRIEND_BITS[k] ? DEAR_FRIEND_BITS[k]() : S_story[MISSION_ACT_BITS[k]]);
         const seven = { count: Object.values(_missionBits()).filter(Boolean).length,
-                        complete: _missionComplete(), act: !!DEAR_FRIEND_BITS[k]() };
+                        complete: _missionComplete(), act: actOf() };
         eval(plant)();
         const eight = { count: Object.values(_missionBits()).filter(Boolean).length,
-                        complete: _missionComplete(), act: !!DEAR_FRIEND_BITS[k]() };
+                        complete: _missionComplete(), act: actOf() };
         return { seven, eight };
       }, [key, SIX_NON_ACTS, PLANT[baseline], PLANT[key]]);
 

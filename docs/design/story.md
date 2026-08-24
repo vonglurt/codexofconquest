@@ -2604,11 +2604,15 @@ MILEPOINT F  _renderNpcCard() builds DOM card
              Whiskey reaction: _checkRoughWhiskeyReaction(key) overrides displayQuote if roughWhiskeyActive
              Badge text: 💛 Dear Friend | 🤝 Friendly | 📋 Quest Active | 👤 Impartial
 
-MILEPOINT G  _checkDearFriendUpgrade(key) — fires if fav === 1 and NPC-specific bit is met
+MILEPOINT G  _checkDearFriendUpgrade(key) — fires if fav >= 1, fav < 3 and the NPC's bit is met
              Upgrade conditions per NPC: yael→yaelEscortUsed, brynn→journalEntry7,
              quill→couperiSongReceived, pachelbel→shipment quest complete,
-             crov→pitTrainingWins≥3, auros→bruhnsDepthsReported
-             On upgrade: npcFavorability[key] = 2; storyMsg fires "says your name" line
+             crov→pitTrainingWins>=3
+             auros is NOT here (§DX-02gl): quest_void_below's onComplete sets his favor
+             to 2 outright, so the step is authored, not earned through this check.
+             bruhnsDepthsReported stays one of the ending's twelve mission bits.
+             On upgrade: a one-time +1 recorded in dearFriendGranted[key] (§DX-02gb);
+             storyMsg fires "says your name" line
 ```
 
 ---
