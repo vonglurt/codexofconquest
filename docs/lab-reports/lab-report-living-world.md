@@ -54,7 +54,7 @@ The eleven subsystems: **(II)** the off-screen character · **(III)** world prog
 | § | Subsystem | Shipped? | Delta |
 |---|---|---|---|
 | II | Gigault, off-screen | ⚠️ half | 3 stall strings byte-identical and cycling. **NOT SHIPPED: the two NPC lines that name her** (**F1**). Renders at `LLA` — *The Rough Bar*, not a market |
-| III | World progression | ⚠️ half | 6 events live; **5 of 6 can fire** — `weckmann_class` asks `_npcFavor('crov') >= 3` and crov's ceiling is **2** (§DOC-02cz F1). **NOT SHIPPED: the rendering** — notes go to the breadcrumb array (**F2**); flag polarity collides with Layer 69 (**F8**); fires on sleep, not visit (**F9**) |
+| III | World progression | ⚠️ half | 6 events live; **6 of 6 can fire** — `weckmann_class` asks `_npcFavor('crov') >= 3`, and crov's ceiling of **2** (§DOC-02cz F1) was lifted to 3 by §DX-02fb ✅ 2026-08-23. **NOT SHIPPED: the rendering** — notes go to the breadcrumb array (**F2**); flag polarity collides with Layer 69 (**F8**); fires on sleep, not visit (**F9**) |
 | IV | Map warmth | ✅ | All five tiers exact (`#222`/`#555`/`#5a4a3a`/`#6a5a3a`/`#8a6a3a`/`#3a7a5a`). Spec's dead `warmth = fav * 20` line correctly dropped (**F10**). EB green is ending-map-only in practice |
 | V | Corridor farewells | ✅ 16/18 | Route lookup the spec punted on was **finished** by the implementer (**F10**). Threshold is `fav >= 1`, not the spec's `>= 2` (**F7**). Auros's 2 lines unreachable (**F4**) |
 | VI | Third Act weight | ✅ byte-identical | 6/6 lines; `body.act-three .npc-card-chip { filter: saturate(0.85); }` shipped exactly as written, chip class applied at `card.className@23722` |

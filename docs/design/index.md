@@ -79,8 +79,8 @@ node server. To only play, open `play.html` — nothing else is required.
 
 | Metric | Value | Status |
 |--------|-------|--------|
-| HTML line count | 38,712 | ✅ 2026-08-23 (`wc -l play.html`) |
-| Lab reports on disk | 116 | ✅ 2026-08-23 (`ls docs/lab-reports/*.md \| wc -l`) |
+| HTML line count | 38,712 | ✅ 2026-08-24 (`wc -l play.html`) — unchanged by §DX-02fb: the API edited `quest_pit_training.onComplete` in place |
+| Lab reports on disk | 116 | ✅ 2026-08-24 (`ls docs/lab-reports/*.md \| wc -l`) |
 | Lab reports in index | 81 | ⚠️ 35 on disk are unlisted → §DX-01j |
 | Node text rewrites (noir register) | 121 / 121 | ✅ +33 nodes: Med arc (91–110) + Littoral Courts (111–120) Layer 104 |
 | FC items pending | 0 (FC01–FC08 all ✅) | ✅ 2026-05-26 |
@@ -210,6 +210,7 @@ Run with `npm test`. Tests serve the project at `localhost:7654` (no WBAPI serve
 | `src/tests/integration/multiplayer-presence.test.js` | **§MESH-01a** two-browser presence smoke — spawns a throwaway wbapi-server; connect via 🌐, "Also here:", exactly-once SSE chat, player_left on departure, strict opt-in | 2 tests |
 | `src/tests/integration/worldbuilder-mesh.test.js` | **§MESH-01 UI** 🌐 Mesh tab — fixture-driven render (identity/trackers/peers/remotes/packet log) + offline fallback | 2 tests |
 | `src/tests/integration/mesh-connections-ui.test.js` | **§MESH-02f** map-tab connection center, hermetic (`:1367` route-blocked before goto) — sub-tab switching, `mpParseServerList` txt/JSON/garbage, `_mpBlacklisted` matrix + row-filter + `mpJoin` refusal, D4 `_mdHostApproved` + auto-load gating, via `window.__mesh02` | 8 tests |
+| `src/tests/integration/dx02fb-crov-favor-ceiling.test.js` | **§DX-02fb** the `crov` favor ceiling — drives `storyCheckQuests` (not a planted ledger value) to prove `quest_pit_training`'s `add:2` reaches 3 from every prior level, and that `_checkFrobergerTrace('crov')` + `weckmann_class` both fire | 5 tests |
 | `src/tests/integration/quest-runtime-uqf.test.js` | **§ARCH-01** UQF runtime (canActivate/canComplete/execBits, wave-by-wave parity, census pins) + **§MATH-01** completions (shapes, HKG-pocket node cells, same-visit collect completion, atNode hold) | 303 tests |
 
 ### Completed Work Registry
@@ -385,8 +386,8 @@ All 54 source books are marked `[x]` in `books.md` — all have been processed t
 | `docs/lab-reports/lab-report-npc-dialogue-system.md` | 42 | 4-state dialogue system, `NPC_DIALOGUES` (6×4×5), `_missionComplete()` |
 | `docs/lab-reports/lab-report-npc-speak-sdk.md` | — | Dynamic NPC speech via LLM API — lightweight character instantiation, voice consistency, first-person vignette register |
 | `docs/lab-reports/lab-report-friendships-with-magic.md` | 41–42 | Session postmortem — waypoint BFS highlight, Hunt Mode, EB negotiation |
-| `docs/lab-reports/lab-report-living-world.md` | 44 | World progression events, Gigault stall, NPC farewells, Act III desaturation |
-| `docs/lab-reports/lab-report-web-of-connections.md` | 45 | `FROBERGER_TRACES`, `NPC_CROSS_REFS` (17), Room 6, Yael patrol, cross-item triggers |
+| `docs/lab-reports/lab-report-living-world.md` | 44 | World progression events, Gigault stall, NPC farewells, Act III desaturation. **§III corrected 2026-08-23 (§DX-02fb): 6 of 6 events can fire** — `weckmann_class` reads `_npcFavor('crov') >= 3`, unreachable until `quest_pit_training` gained an `add:2` favor bit |
+| `docs/lab-reports/lab-report-web-of-connections.md` | 45 | `FROBERGER_TRACES`, `NPC_CROSS_REFS` (17), Room 6, Yael patrol, cross-item triggers. **§II corrected 2026-08-23 (§DX-02fb): 6 of 6 traces deliverable**, and the report's own proposed remedy (`add:1` on `quest_pit_debut`) is annotated as the wrong one — measured, it lands `crov` on 1 |
 | `docs/lab-reports/lab-report-ally-cat.md` | 44 | §IX Cat Quarter — 7-quest arc (6 + `quest_cat_void`), Ally Cat hierarchy, Kenickie unlock. **Re-verified against HEAD 2026-08-11** — carries the spec→shipped delta table and the two defects it found (§AUDIT-03r/s) |
 | `docs/lab-reports/lab-report-narrative-arcs-brynn-bruhns-yael.md` | 70+72+74 | §XXXV Brynn's Vigil + §XXXVII Bruhns CO scene + §XXXIX Yael Named Report |
 

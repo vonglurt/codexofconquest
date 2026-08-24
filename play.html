@@ -21294,7 +21294,7 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     rumor:"A scholar's box came through sealed with a mark no one at the docks can read. The Warrant wants it carried to someone who can.",
   },
   quest_pit_training: { id:'quest_pit_training', type:'side', schema:'UQF-1.0', gate:{}, bits:[], completion:{ countMin:[{ path:'pitTrainingWins', min:3 }] }, npc:'crov', title:'Weckmann: Pit Training',
-    onComplete:[ { kind:'favor', npc:'crov', set:1 }, { kind:'narrative', msg:'🏆 Pit Legend Token earned. Weckmann is impressed.' } ], // §ARCH-01 W7c
+    onComplete:[{kind:'favor',npc:'crov',set:1},{kind:'favor',npc:'crov',add:2},{kind:'narrative',msg:'🏆 Pit Legend Token earned. Weckmann is impressed.'}], // §ARCH-01 W7c
     itemChain:[{action:'grant',name:'Pit Legend Token',icon:'🏆',type:'token',sell:30,silent:true}], // §EDITOR-01-D-FU(b) b2a
     desc:"Weckmann trains whoever survives the floor. Not whoever asks. Not whoever pays. Whoever survives. He will be watching. He will correct what he sees. He will not encourage, because encouragement is for people who need to be told they are doing it right. He corrects because he believes you can do it right. Three fights in the Neon Undercity.",
     hint:'Win 3 battles at the Neon Undercity.',

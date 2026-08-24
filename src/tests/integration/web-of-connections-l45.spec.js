@@ -16,7 +16,11 @@ const BIRKA = ['yael', 'brynn', 'quill', 'pachelbel', 'crov', 'auros'];
 test.describe('Layer 45 — Web of Connections', () => {
 
   // ── F1: the favor ceiling, per NPC, from the engine's own write paths ──
-  test('only yael can reach favor 3; crov tops out at 2 and one trace needs 3', async ({ page }) => {
+  // §DX-02fb: the AUTO-UPGRADE ceiling is 2 and still is — that is a fact about
+  // _setNpcFavor, not about crov. What changed is that crov now has a quest bit
+  // that carries him past it. See dx02fb-crov-favor-ceiling.test.js for the
+  // driven-through-storyCheckQuests proof that the ledger reaches 3.
+  test('the auto-upgrade tops out at 2; only a quest bit carries crov to 3', async ({ page }) => {
     await seedAndLoad(page, {});
     await dismissContinue(page);
 
@@ -49,8 +53,9 @@ test.describe('Layer 45 — Web of Connections', () => {
       };
     });
 
-    // crov has exactly one declarative favor write, and it is `set: 1`.
-    expect(out.crovBits).toEqual([{ set: 1 }]);
+    // crov's ledger entry is `set: 1`; §DX-02fb added the `add` that clears the
+    // auto-upgrade's hardcoded 2. Both ride quest_pit_training's onComplete.
+    expect(out.crovBits).toEqual([{ set: 1 }, { add: 2, cap: 3 }]);
     // The auto-upgrade tops out at 2 and cannot be re-entered.
     expect(out.crovAfterAuto).toBe(2);
     expect(out.crovAfterRepeat).toBe(2);
@@ -63,8 +68,8 @@ test.describe('Layer 45 — Web of Connections', () => {
     expect(out.yaelBits.some(b => b.set === 3)).toBe(false);
   });
 
-  // ── F1b: the trace is unreachable at the ceiling, measured, not reasoned ──
-  test('crov\'s Froberger trace returns null at his maximum reachable favor', async ({ page }) => {
+  // ── F1b: the trace is unreachable from the auto-upgrade alone, measured, not reasoned ──
+  test('crov\'s Froberger trace returns null at the auto-upgrade ceiling', async ({ page }) => {
     await seedAndLoad(page, {});
     await dismissContinue(page);
 
@@ -75,7 +80,7 @@ test.describe('Layer 45 — Web of Connections', () => {
       S_story.npcVisitCounts = { crov: 99 };   // visitTrigger amply satisfied
       S_story.frobergerTrace_crov_delivered = false;
       const atCeiling = _checkFrobergerTrace('crov');
-      S_story.npcFavorability.crov = 3;        // the level no game path reaches
+      S_story.npcFavorability.crov = 3;        // §DX-02fb: quest_pit_training now grants this
       const atThree = _checkFrobergerTrace('crov');
       return { ceiling, atCeiling, atThree };
     });
@@ -269,8 +274,8 @@ test.describe('Layer 45 — Web of Connections', () => {
     expect(out.flag).toBe(true);
   });
 
-  // ── F9: cross-layer — Layer 44's weckmann_class event asks for a favor no path grants ──
-  test('the Layer 44 weckmann_class world event can never fire, because crov cannot reach 3', async ({ page }) => {
+  // ── F9: cross-layer — Layer 44's weckmann_class event asks for more than the auto-upgrade ──
+  test('the Layer 44 weckmann_class world event needs the favor 3 that §DX-02fb grants', async ({ page }) => {
     await seedAndLoad(page, {});
     await dismissContinue(page);
 
@@ -282,7 +287,7 @@ test.describe('Layer 45 — Web of Connections', () => {
       S_story.worldEventsFired = [];
       const ev = WORLD_PROGRESSION_EVENTS.find(e => e.id === 'weckmann_class');
       const atCeiling = ev.condition();
-      S_story.npcFavorability.crov = 3;
+      S_story.npcFavorability.crov = 3;        // §DX-02fb: quest_pit_training now grants this
       const atThree = ev.condition();
       return { ceiling, atCeiling, atThree, note: ev.journalNote };
     });

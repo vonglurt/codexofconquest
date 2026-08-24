@@ -54,7 +54,7 @@ The eight subsystems: **(II)** Froberger's traces · **(III)** NPC cross-referen
 
 | § | Subsystem | Shipped? | Delta |
 |---|---|---|---|
-| II | Froberger's traces | ⚠️ 5 of 6 deliverable | 6/6 present, byte-identical, tiers exact. **`crov`'s asks for favor 3 and crov's ceiling is 2** (**F1**). **NOT SHIPPED:** *"added to the NPC's permanent pool so it can resurface"* — delivered once, then never again (**F6**) |
+| II | Froberger's traces | ✅ 6 of 6 deliverable | 6/6 present, byte-identical, tiers exact. **`crov`'s asks for favor 3; his ceiling was 2 until §DX-02fb** (**F1**, ✅ SHIPPED 2026-08-23 — `{kind:'favor',npc:'crov',add:2}` on `quest_pit_training`). **NOT SHIPPED:** *"added to the NPC's permanent pool so it can resurface"* — delivered once, then never again (**F6**) |
 | III | Cross-references | ✅ 17/17 | Distributed over all six NPCs, byte-identical. Delivered as a **consumed sequence** every 3rd visit, not the specified cycling pool (**F4**). Two declared relationships have **no lines** (**F3**) |
 | IV | Nivers | ✅ | `const NIVERS_DIALOGUE = "Evening."` live and rendered. Sits **at `LHR`**, not the specified intersection between CI and IN. Yael's follow-up gated at fav ≥ 2, not the specified Dear Friend. Her journal note hits the §DX-02et breadcrumb bug (**F7**) |
 | V | Yael's patrol | ⚠️ 4 of 5 usable | 5 entries (4 from the lock + 1 from Layer 74). **First-match-wins over non-exclusive conditions, loosest first** → four lines are even-day-only (**F2**). The lock's `ER`/Redwater row never shipped. Yael is **not removed** from her home node while "on patrol" |
@@ -86,14 +86,16 @@ if (check && check()) { S_story.npcFavorability[key] = 2; /* "says your name whe
 | `brynn` | `set:1`, `add:1` (cap 3) | — | **3**, order-dependent | Froberger trace ⚠️ · Room 6 ⚠️ |
 | `quill` | `set:1` | — | **2** | — |
 | `pachelbel` | `set:1` | — | **2** | — |
-| `crov` | `set:1` | `_setNpcFavor('crov',1)@25400` | **2** | Froberger trace ❌ · Layer 44 `weckmann_class` ❌ |
+| `crov` | `set:1` + `add:2` (§DX-02fb) | `_setNpcFavor('crov',1)@25400` | **3** | Froberger trace ✅ · Layer 44 `weckmann_class` ✅ |
 | `auros` | `set:2` | — | **2** | — |
 
-Measured in Chromium: with `pitTrainingWins = 5` (crov's own Dear-Friend condition) and his single `set:1` bit applied, `_npcFavor('crov')` is **2**, and a second `_setNpcFavor('crov', 2)` is a no-op. With visit counts amply satisfied, `_checkFrobergerTrace('crov')` returns **`null`**. Force the ledger to 3 and it returns the authored line — *"You still grieve it, don't you. That's why you run it clean."* — which is, by some distance, the best of the six.
+Measured in Chromium: with `pitTrainingWins = 5` (crov's own Dear-Friend condition) and his single `set:1` bit applied, `_npcFavor('crov')` is **2**, and a second `_setNpcFavor('crov', 2)` is a no-op. With visit counts amply satisfied, `_checkFrobergerTrace('crov')` returned **`null`**. Force the ledger to 3 and it returns the authored line — *"You still grieve it, don't you. That's why you run it clean."* — which is, by some distance, the best of the six.
+
+> **✅ SHIPPED 2026-08-23 (§DX-02fb), and the remedy this report proposed was the wrong one.** The fix landed as a second bit on **`quest_pit_training`**, not on `quest_pit_debut`, and as **`add:2`**, not `add:1`. Both corrections were forced by measurement. The two pit quests share one counter and complete in the *opposite* order to the one assumed here: `quest_pit_debut` completes at `pitTrainingWins >= 1`, `quest_pit_training` at `>= 3`, so the debut is **first**. An `add:1` there is applied while the ledger is still 0, lands crov on 1, and then makes `quest_pit_training`'s `set:1` a monotonic no-op — measured final favor **1**, *below* the 2 that doing nothing produces, with the Dear-Friend message lost as well. And `add:1` on the training quest is not enough either, because a player who has won the drunk fight (`_setNpcFavor('crov',1)@25400`) or taken three Talk actions arrives at 1, where `set:1` no-ops and `add:1` reaches only 2. `add:2` clamped to the default cap of 3 lands on exactly 3 from every reachable prior level — 0, 1, 2 and 3 — which is what `src/tests/integration/dx02fb-crov-favor-ceiling.test.js` asserts by driving `storyCheckQuests` rather than planting a ledger value.
 
 So **§II's central claim is arithmetically false**: *"The player who talks to every NPC enough times will reconstruct Froberger from the outside."* Five sixths of him. The missing panel is precisely the one §II's own Composite Picture lists as *"He could see grief from the outside (Weckmann)"* — the trace in which Froberger reads a man's twelve-year-old bereavement off the way he watches fighters. It has never been read by anyone.
 
-**The same ceiling reaches back a layer.** §DOC-02cy scored `WORLD_PROGRESSION_EVENTS` as *"all 6 events live and correctly gated."* One is not: `weckmann_class` requires `S_story.actNumber >= 6 && _npcFavor('crov') >= 3`. Measured at act 8 with crov at his ceiling, the condition is **`false`**; forced to 3 it is `true`. That report has been corrected, and the cross-layer case is pinned in this increment's suite. *A ceiling in a shared ledger is invisible from inside any single layer that reads it — which is exactly why it survived two verification passes.*
+**The same ceiling reaches back a layer.** §DOC-02cy scored `WORLD_PROGRESSION_EVENTS` as *"all 6 events live and correctly gated."* One is not: `weckmann_class` requires `S_story.actNumber >= 6 && _npcFavor('crov') >= 3`. Measured at act 8 with crov at his ceiling, the condition was **`false`**; at the 3 §DX-02fb now grants it is `true`. That report has been corrected, and the cross-layer case is pinned in this increment's suite. *A ceiling in a shared ledger is invisible from inside any single layer that reads it — which is exactly why it survived two verification passes.*
 
 ### F1b — Room 6 exists, and whether you can open it depends on quest order
 
@@ -194,7 +196,7 @@ Worth stating plainly. All eight subsystems shipped. All 17 cross-references, al
 
 **What the player experiences vs. what was designed.** Six subsystems land whole. Two are diminished by the shared ledger rather than by their own code — which is the finding worth carrying forward: **§II and §VII are not broken, they are out of range.** Every line of them is correct, present, and byte-identical to a design document written the same week the repository was created. They simply ask the favor system for a number it stopped being able to produce.
 
-**The fixes, in order of value per character changed.** One line — give `crov` an `add:1` bit on any existing quest — restores the sixth Froberger trace *and* revives Layer 44's `weckmann_class` event. One reorder — move the parity entry to the end of `YAEL_PATROL_NODES` — makes four patrol lines reachable every day instead of half of them. One decision — reconcile the two favor scales — retires an entire class of off-by-one gate. One string replaces the training log's stage direction. Two strings give Gigault the mentions that two separate design locks both promised. None of them touches the road, the mover, the VM, or the save format.
+**The fixes, in order of value per character changed.** One line — give `crov` an `add:2` bit on `quest_pit_training` (§DX-02fb, ✅ shipped 2026-08-23; *not* `add:1`, and *not* on `quest_pit_debut` — see §II) — restores the sixth Froberger trace *and* revives Layer 44's `weckmann_class` event. One reorder — move the parity entry to the end of `YAEL_PATROL_NODES` — makes four patrol lines reachable every day instead of half of them. One decision — reconcile the two favor scales — retires an entire class of off-by-one gate. One string replaces the training log's stage direction. Two strings give Gigault the mentions that two separate design locks both promised. None of them touches the road, the mover, the VM, or the save format.
 
 **What should not be "fixed."** F4's consumed sequence is better than the specified cycling pool for a collection this good; record the divergence and keep the behavior. Nivers at `LHR` rather than a sub-node intersection is a sensible adaptation to an engine that has no sub-node intersections.
 
@@ -215,7 +217,7 @@ Worth stating plainly. All eight subsystems shipped. All 17 cross-references, al
 
 | Row | Premise | Size |
 |---|---|---|
-| **§DX-02fb** | `crov`'s favor ceiling is 2; his Froberger trace and Layer 44's `weckmann_class` both need 3 — one `add:1` bit fixes both | 🟢 one bit, no design call |
+| **§DX-02fb** ✅ SHIPPED 2026-08-23 | `crov`'s favor ceiling is 2; his Froberger trace and Layer 44's `weckmann_class` both need 3 — one `add:2` bit on `quest_pit_training` fixes both | 🟢 one bit, no design call |
 | **§DX-02fc** | Room 6 is reachable only if journal entry 7 is read before the firewood quest — silent, order-dependent lockout of a whole section | 🟡 one design call |
 | **§DX-02fd** | `_getYaelLocation()` is first-match-wins with its loosest condition first; four patrol lines are even-day-only and Yael is never actually away from home | 🟡 reorder + one design call |
 | **§DX-02fe** | Two favor scales (0–2 and 0–3) in circulation, with the engine's own comments asserting both; ~8 gates split between them | 🟡 reconcile centrally |
