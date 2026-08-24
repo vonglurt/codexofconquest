@@ -44,6 +44,9 @@ codexofconquest/
 │   ├── server/             start-wbapi.sh — announces where node runs, then execs
 │   ├── api/                wb.js — the WBAPI CLI
 │   ├── scripts/            the CI gates — anchors, invariants, parity, questgraph
+│   │                       `check-questgraph.js` runs the self-deadlock phase (§AUDIT-03bh):
+│   │                       `completion.flags` ∩ own `onComplete` `flag_write.set`, fatal unless
+│   │                       another writer exists; survivors named in `KNOWN_SELF_DEADLOCK`
 │   ├── tools/              layout solvers, node parser, region renderer
 │   ├── bin/                internal utilities — api.sh, say.sh, sayd.sh, coc
 │   ├── tests/              80 Playwright files, 960 tests, plus the MUD harness
@@ -79,7 +82,7 @@ node server. To only play, open `play.html` — nothing else is required.
 
 | Metric | Value | Status |
 |--------|-------|--------|
-| HTML line count | 38,698 | ✅ 2026-08-24 (`wc -l play.html`) — ±0 from §DX-02gl (one act-table entry out, one comment line in); +12 from §DX-02gk: the ending scorer reads `DEAR_FRIEND_BITS` instead of respelling its six acts (`MISSION_ACT_BITS` + `_missionBits` cost more lines than the six predicates saved). Prior: −9 §DX-02gb, +1 §DX-02aj, +1 §DX-02gd, −19 §DX-02cm |
+| HTML line count | 38,698 | ✅ 2026-08-24 (`wc -l play.html`) — ±0 from §AUDIT-03bh (four `completion` objects rewritten in place); ±0 from §DX-02gl (one act-table entry out, one comment line in); +12 from §DX-02gk: the ending scorer reads `DEAR_FRIEND_BITS` instead of respelling its six acts (`MISSION_ACT_BITS` + `_missionBits` cost more lines than the six predicates saved). Prior: −9 §DX-02gb, +1 §DX-02aj, +1 §DX-02gd, −19 §DX-02cm |
 | Lab reports on disk | 116 | ✅ 2026-08-24 (`ls docs/lab-reports/*.md \| wc -l`) |
 | Lab reports in index | 81 | ⚠️ 35 on disk are unlisted → §DX-01j |
 | Node text rewrites (noir register) | 121 / 121 | ✅ +33 nodes: Med arc (91–110) + Littoral Courts (111–120) Layer 104 |
