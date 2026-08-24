@@ -290,6 +290,7 @@ function gateSat(node, pool) {
 //    code sets it — a combat kill (`S_story.hornedSharkSlain = true`), a node
 //    arrival (`S_story.dunfallAccessed`), a fishing catch, a Town-Crier event, an
 //    NPC `missionBit:` grant (→ `_grantMissionBit` → `S_story[flag]=true`), a
+//    `NODE_PANELS` stanza's `once:` flag (→ `if (p.once) st[p.once] = true`), a
 //    readable-doc registry written by computed key (`S_story[doc.key]=`). Without
 //    this the cross-ref over-reported 114 "written-by-nothing" gate reads, ~58% of
 //    them false. This is a deliberately BROAD textual over-approximation: a flag
@@ -308,6 +309,7 @@ function scanFlagWrites(html) {
     /S_story\[\s*['"]([A-Za-z_][A-Za-z0-9_]*)['"]\s*\]\s*=(?![=>])/g,        // S_story['flag'] = …
     /missionBit:\s*['"]([A-Za-z_][A-Za-z0-9_]*)['"]/g,                       // NPC/data mission-bit grant
     /_grantMissionBit\(\s*['"]([A-Za-z_][A-Za-z0-9_]*)['"]/g,                // direct grant call
+    /\bonce:\s*['"]([A-Za-z_][A-Za-z0-9_]*)['"]/g,                            // NODE_PANELS once-flag, set by `if (p.once) st[p.once] = true`
     /\b(?:flag|key|flagBought):\s*['"]([A-Za-z_][A-Za-z0-9_]*)['"]/g,        // record fields consumed by S_story[rec.flag|key|flagBought]=
   ];
   for (const re of single) while ((m = re.exec(html))) out.add(m[1]);
