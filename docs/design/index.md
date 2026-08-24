@@ -3,8 +3,8 @@
 # Codex of Conquest — The Shattered Codex: Document Index
 
 **Project:** `play.html` — a single-file, quest-driven MUD-style fighter RPG
-**Live counts:** 416 nodes · 398 monsters · 111 terrains · 2,853 quests · 204 NPC profiles · 8 acts · 38,694 lines · 5.51 MB
-**Last updated:** 2026-08-24 — §DX-02gd moved eleven items' authored strings onto the surface each type reads
+**Live counts:** 416 nodes · 398 monsters · 111 terrains · 2,853 quests · 204 NPC profiles · 8 acts · 38,695 lines · 5.51 MB
+**Last updated:** 2026-08-24 — §DX-02aj deferred the NG+ memory line to the second visit, as specified
 
 > **📁 Repository restructured 2026-08-23 for the first public release.** The
 > game was renamed *Roll2Hit* → **Codex of Conquest**; `roll2hit-v3.html` →
@@ -79,7 +79,7 @@ node server. To only play, open `play.html` — nothing else is required.
 
 | Metric | Value | Status |
 |--------|-------|--------|
-| HTML line count | 38,694 | ✅ 2026-08-24 (`wc -l play.html`) — +1 from §DX-02gd: `makeItemRow` gained the `div.title = item.desc` tooltip every item section renders through. Prior: −19 from §DX-02cm |
+| HTML line count | 38,695 | ✅ 2026-08-24 (`wc -l play.html`) — +1 from §DX-02aj: `_renderNpcCard` captures `ngGreetedBefore` above the greeting branch. Prior: +1 §DX-02gd, −19 §DX-02cm |
 | Lab reports on disk | 116 | ✅ 2026-08-24 (`ls docs/lab-reports/*.md \| wc -l`) |
 | Lab reports in index | 81 | ⚠️ 35 on disk are unlisted → §DX-01j |
 | Node text rewrites (noir register) | 121 / 121 | ✅ +33 nodes: Med arc (91–110) + Littoral Courts (111–120) Layer 104 |

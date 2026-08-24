@@ -139,16 +139,6 @@
 > **Where it was found, and why it is not obviously a bug.** §BOARD-01-FU8 gave all three Void-tide hunts `retryable:true, retryGateDays:0`, intending an immediate retry. What shipped is a one-day gate — and because the doom clock advances at exactly one site, `S_story.day = Math.min(49, S_story.day + 1)@36253` inside `function storyConfirmSleep()@36227`, a retry costs one sleep and therefore one day of a closing window. **For that increment the accident is a better threat model than the design**, which is precisely why the row needs a decision rather than a patch.
 > **DESIGN CALL — honour the zero, or delete it.** (a) **Honour it:** change `||` to `??`. One character-pair, and it makes **42 quests** newly retryable on the day they fail — a real difficulty change across the corpus, unreviewed. (b) **Delete the field** from all 42 entries and keep the coercion, so the data says what the engine does; zero behaviour change, and `retryGateDays` keeps exactly one meaning. (c) **Honour it selectively** — `??` plus an audit that re-authors any of the 42 whose difficulty depended on the accidental gate. **Recommend (b)**, on the §DX-02c annotate-do-not-erase principle applied to data: a field that cannot express one of its two written values is worse than no field. **Verify:** after (b), `grep -c "retryGateDays: *0"` is 0 · `warrants-board.test.js` 25/25 and `quest-runtime-uqf` 303/303 unchanged · a browser probe of any former-zero quest still blocks the same-day retry.
 
-### §DX-02aj — the "second NG+ visit" is unreachable: one flag is written and read eleven lines apart in the same pass (NEW 2026-08-12 during §DOC-02aa, 🟢 no design call)
-
-- [ ] **§DX-02aj — Layer 50's NPC memory lines fire on the FIRST NG+ visit, or never.** `_renderNpcCard`'s NG+ block has two branches. The greeting branch runs `S_story[ngGreetedKey] = true;@23733`; the memory branch, eleven lines below with **no `return` between them**, requires `S_story[ngGreetedKey]` before delivering `setTimeout(() => storyMsg(NPC_NG_MEMORY_LINES[key]), 800);@23740`. The latch is therefore *always already set* by the time it is read, so:
->   - **key in both tables** → the greeting lands in the card and the memory line lands 800 ms later, on the **same** visit. The design's escalation ("come back and they'll say more") never happens.
->   - **key in `NPC_NG_MEMORY_LINES` only** → nothing else in the file writes that latch, so the line is **permanently mute**.
-> **Both cases were live at birth.** At `e594848` (2026-05-25) `const NPC_NG_PLUS_GREETINGS = {@27316` was keyed to the profiles' surnames (`couperin`/`weckmann`/`bruhns`) while `const NPC_NG_MEMORY_LINES = {@27326` — written in the same commit, ten lines below — was keyed to the canonical `quill`/`crov`/`auros`. **Three of six memory lines were unreachable for 67 days**, until §AUDIT-03n re-keyed the greeting table (2026-07-31). That makes this the cheapest reproduction in the repo of §AUDIT-03n's whole 21-entry outage: *two sibling tables, one commit, one author, ten lines apart, disagreeing on three of six keys.*
-> **Fix (two lines, no design call):** hoist the read above the write — `const _wasGreeted = !!S_story[ngGreetedKey];` before the greeting branch, and test `_wasGreeted` in the memory branch. Then the specified second-visit behaviour is what ships.
-> **Second-order:** while there, decide whether an NPC may have a memory line with no greeting. Today that combination is silently mute; the honest shapes are either "require both" (assert in a test) or "latch on any NG+ card render regardless of greeting".
-> **Risk:** low, one function. **Verify:** a Playwright pin that a fav ≥ 2 NPC's card in NG+ shows the greeting and **no** `storyMsg` on visit 1, and the memory line on visit 2; plus a grep asserting the two tables' key sets are equal. **Player impact:** it restores the only reward in the game that is deliberately deferred by a whole playthrough, and it un-mutes `quest_ng_01`'s stated six-NPC pool (measured §DOC-02aa).
-
 ---
 
 ## Track records (Phase 1)
@@ -342,7 +332,24 @@
 
 ## §RESUME — Phase 1 history (newest first)
 
-> **3 entries.** The pre-split log carried none to this phase; the entries below were written here. Order within this file is newest-first, as in the original. **The full cross-phase chronology — every entry in original order, with the file that now holds it — is the §RESUME index in [BACKLOG.md](BACKLOG.md).** Read that first when you need "what happened last", regardless of subsystem.
+> **4 entries.** The pre-split log carried none to this phase; the entries below were written here. Order within this file is newest-first, as in the original. **The full cross-phase chronology — every entry in original order, with the file that now holds it — is the §RESUME index in [BACKLOG.md](BACKLOG.md).** Read that first when you need "what happened last", regardless of subsystem.
+
+### 2026-08-24 — §DX-02aj ✅ SHIPPED `1222d8d` — the latch that was always already set, and the harness that was always already rendered
+
+**What shipped.** `_renderNpcCard` wrote `S_story[key + 'NgGreeted']` in the greeting branch and read it three lines below in the memory branch with no `return` between them, so the NG+ Dear-Friend memory line landed on the **same** render as the greeting. `const ngGreetedBefore = !!S_story[ngGreetedKey];` now captures the value before the write, and the memory branch tests that. **Two lines.**
+
+**Measured before at `539749d`, after at `1222d8d`,** by driving `_renderNpcCard` per NPC and draining the 800 ms timer between renders so each visit is attributable: memory line on **visit 1 for 6 of 6 → 0 of 6**, on **visit 2 for 0 of 6 → 6 of 6**. `play.html` **38,694 → 38,695**.
+
+**The row's second failure mode was already dead.** *"Key in `NPC_NG_MEMORY_LINES` only → permanently mute"* held for 67 days; §AUDIT-03n re-keyed the greeting table on 2026-07-31 and both tables carry the same six keys today. The row's open second-order question — may an NPC have a memory line with no greeting? — is settled **require both**, because the greeting is the latch's only writer, so that combination is unreachable by construction and belongs in a failing assertion rather than a silence.
+
+**Gate:** `dx02aj-ngplus-memory-latch.test.js` **6/6**, negative control **3 red at `539749d`** — and the three that go red are the three that resolve *which* visit fires. 18/18 `check:*`; full suite **986/987** (§DX-02fx's `dx01e:71`, third reproduction).
+
+**The harness lied first, and an aggregate assertion would have let it.** Seeded at `TLL`, `dismissContinue` renders the Birka cards before the test does, so `brynn`'s "visit 1" was her visit 2 while `yael` passed — the fix looked broken. Filed as **§DX-02gj**; §DX-02gb is the same cause in a second subsystem.
+
+**Found en route:** **§DX-02gj** (Phase 6). **§DX-02gf corrected by its own author** — the mesh case passed this run, so it is intermittent at ~2-in-3, not deterministic. Full entry: [plan-archive.md](plan-archive.md).
+
+---
+
 
 ### 2026-08-24 — §DX-02gd ✅ SHIPPED `898c692` — eleven items, three spellings of one field, and a tooltip that was never rendered
 
