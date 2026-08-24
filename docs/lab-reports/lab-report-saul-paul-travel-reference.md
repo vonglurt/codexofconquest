@@ -45,11 +45,11 @@ Every other track in the game resolves through the same three motions: fight it,
 
 ### B. What it buys the player, concretely
 
-1. **A conversion the engine actually models.** `` `of Tarsus fell.@31334` `` is a `NODE_PANELS` entry with `once:'saulConverted'` — it fires exactly once, on arrival, and every downstream surface in the arc reads that flag. The player does not choose it and cannot repeat it. That is the only irreversible identity change in the game.
-2. **The name change as a diegetic event.** `` `He is called Paul here for the first time.@31329` `` fires on the first post-commission arrival at Antioch and never again. The panel's own closing line — *"He will be called Saul again once, by someone who does not know the road. It will not fit."* — is the whole character design in one sentence, delivered as UI.
+1. **A conversion the engine actually models.** `` `of Tarsus fell.@31336` `` is a `NODE_PANELS` entry with `once:'saulConverted'` — it fires exactly once, on arrival, and every downstream surface in the arc reads that flag. The player does not choose it and cannot repeat it. That is the only irreversible identity change in the game.
+2. **The name change as a diegetic event.** `` `He is called Paul here for the first time.@31331` `` fires on the first post-commission arrival at Antioch and never again. The panel's own closing line — *"He will be called Saul again once, by someone who does not know the road. It will not fit."* — is the whole character design in one sentence, delivered as UI.
 3. **Two real day-clock mechanics in a game that mostly ignores time.** Three sleeps blind at Damascus; fifteen at Jerusalem. The doom clock is normally a background pressure; here it is the mechanic. (Whether fifteen is the *right* number is §VII.)
-4. **A failure state that is not death.** `` `story-lt-stoning@31336` `` sets HP to 1 and refuses healing above 1 while in Lystra. The player is not killed and is not restored — they are left at the floor and asked to walk out. *"He got up and went back into the city."*
-5. **A permanent status the player carries to the end screen.** `` `Thorn (Permanent)@37676` `` on the character sheet, gated on `saulConverted`, quoting 2 Cor 12:9. What it does is §VI.
+4. **A failure state that is not death.** `` `story-lt-stoning@31338` `` sets HP to 1 and refuses healing above 1 while in Lystra. The player is not killed and is not restored — they are left at the floor and asked to walk out. *"He got up and went back into the city."*
+5. **A permanent status the player carries to the end screen.** `` `Thorn (Permanent)@37658` `` on the character sheet, gated on `saulConverted`, quoting 2 Cor 12:9. What it does is §VI.
 
 ### C. The arc's own thesis, restated
 
@@ -86,8 +86,8 @@ So the shipped world is one in which **Saul of Tarsus walks the road from Jerusa
 | Register | Fossil | Live target |
 |---|---|---|
 | Engine comments | `// ── §LIX: Jerusalem + Damascus`, and the `KS`/`LT`/`AO` shorthand around it | `DAM` · `KYA` · `HTY` |
-| DOM element ids | `` `story-ks-conversion@31331` `` · `` `story-lt-stoning@31336` `` · `` `story-ao-namechange@31326` `` | same |
-| State field names | `` `saulConverted: false, blindDaysKS: 0@23174` `` · `barnachVouchedHR` · `hrHellenistDays` | `DAM` · `JRS` |
+| DOM element ids | `` `story-ks-conversion@31333` `` · `` `story-lt-stoning@31338` `` · `` `story-ao-namechange@31328` `` | same |
+| State field names | `` `saulConverted: false, blindDaysKS: 0@23175` `` · `barnachVouchedHR` · `hrHellenistDays` | `DAM` · `JRS` |
 | Quest ids | `quest_shipwreck_melta` · `quest_snake_melta` | Malta |
 
 None is a defect — `KS`, `HR`, `LT`, `AO` were never `NODE_MAP` keys after `c1d5a94`, so nothing resolves wrongly; `check:noderegs` phase 6 is comment-aware **by design** and DOM ids are not node references. They are recorded because a future reader will otherwise reconstruct a node map that does not exist.
@@ -141,7 +141,7 @@ This is **already on the books** — `ATH`←`SEA` was recorded by §DOC-02r and
 
 `quest_road_damascus` · `quest_anath` · `quest_basket_damascus` · `quest_hellenists_jerusalem` · `` `quest_barnach_finds: { id:'quest_barnach_finds'@11345` `` · `quest_antioch_commission` · `quest_ezzir` · `quest_governor_cyprus` · `quest_lame_lystra` · `quest_stoning_lystra` · `quest_philippi` · `quest_prison_phillam` · `` `quest_areopagus: { id:'quest_areopagus'@11461` `` · `quest_corinth_letters` · `quest_ephesus_riot` · `quest_shipwreck_melta` · `quest_snake_melta` · `quest_rome_arrest`
 
-**23 state flags** in one contiguous `_S_DEFAULTS()` block (`` `saulConverted: false, blindDaysKS: 0@23174` ``), split §LIX–§LXIII / §LXV–§LXIX. **Every one has at least one reader except `silarJoined`** — see §IX.
+**23 state flags** in one contiguous `_S_DEFAULTS()` block (`` `saulConverted: false, blindDaysKS: 0@23175` ``), split §LIX–§LXIII / §LXV–§LXIX. **Every one has at least one reader except `silarJoined`** — see §IX.
 
 **14 terrains** under `` `Mediterranean Real-World Locations (§FUTURE-01 Saul to Paul arc)@6366` ``, each with its own monster roster (Damascus draws djinn/ifrit/genie; Tarsus draws boar/panther/basilisk).
 
@@ -153,7 +153,7 @@ This is the only section of the original that makes claims the repo can adjudica
 
 | Promise | Original wording | HEAD |
 |---|---|---|
-| **The Thorn in the Flesh** | *"a mechanical debuff that cannot be removed — three prayer attempts failed"* | 🔴 **A CAPTION.** `` `Thorn (Permanent)@37676` `` renders on the character sheet under `saulConverted` with the 2 Cor 12:9 quote beneath it. **There is no debuff.** No stat penalty, no roll modifier, no reader anywhere in 38,712 lines. |
+| **The Thorn in the Flesh** | *"a mechanical debuff that cannot be removed — three prayer attempts failed"* | 🔴 **A CAPTION.** `` `Thorn (Permanent)@37658` `` renders on the character sheet under `saulConverted` with the 2 Cor 12:9 quote beneath it. **There is no debuff.** No stat penalty, no roll modifier, no reader anywhere in 38,712 lines. |
 | **Roman citizenship** | *"a key mechanical asset"*, invoked three times, the third consuming it | 🔴 **NOT SHIPPED.** No citizenship flag, no invocation, no legal-protection effect. `quest_prison_phillam` resolves the Philippi jail on a skill check with no appeal to status. |
 | **Tentmaking** | five source references; economic independence as policy | ⚠️ **PARTIAL — flavour, not economy.** `` `loot:'Tentmaking Tools'@8465` `` at Tarsus, plus the Corinth workshop scene. It never earns gold and never offsets a cost. |
 | **Meals and food** (6 catalogued) | the Eucharistic echo at the shipwreck; the jailer's midnight meal | ⚠️ **Narrative only.** Present in prose; no food, hunger or shared-meal mechanic. |
@@ -171,8 +171,8 @@ This is the only section of the original that makes claims the repo can adjudica
 
 Two of this document's most quotable numbers were implemented literally, as sleeps:
 
-- **§NODE 03, Acts 9:9 — *"Three days without sight, eating nothing, drinking nothing."*** → `` `S_story.blindDaysKS = (S_story.blindDaysKS || 0) + 1;@36290` ``, incremented on each sleep at `DAM` while converted and unhealed. Anath arrives on day 3. `DAM` is `sleepCost:3`. **Cost: 3 days, 9 gold.**
-- **§NODE 04, Gal 1:18 — *"he abode with him fifteen days."*** → `` `if (S_story.hrHellenistDays >= 15) S_story.hellenistsThreaten = true;@36293` ``, incremented on each sleep at `JRS`. `JRS` is `sleepCost:5`. **Cost: 15 days, 75 gold.**
+- **§NODE 03, Acts 9:9 — *"Three days without sight, eating nothing, drinking nothing."*** → `` `S_story.blindDaysKS = (S_story.blindDaysKS || 0) + 1;@36272` ``, incremented on each sleep at `DAM` while converted and unhealed. Anath arrives on day 3. `DAM` is `sleepCost:3`. **Cost: 3 days, 9 gold.**
+- **§NODE 04, Gal 1:18 — *"he abode with him fifteen days."*** → `` `if (S_story.hrHellenistDays >= 15) S_story.hellenistsThreaten = true;@36275` ``, incremented on each sleep at `JRS`. `JRS` is `sleepCost:5`. **Cost: 15 days, 75 gold.**
 
 `quest_barnach_finds` gates on `flags:['hellenistsThreaten']`, and it is the hinge: it opens Tarsus, which opens the Antioch commissioning, which opens the first journey. **Sixteen of the arc's eighteen quests sit behind those fifteen sleeps.**
 
@@ -222,8 +222,8 @@ The scholarship below is the arc's writing bible and the only surviving record o
 
 - **§AUDIT-03aj (NEW, 🟡)** — the fifteen-sleep Jerusalem wall (§VII). 16 of 18 arc quests behind 18 mandatory sleeps = 37 % of the 49-day clock, plus 84 gold. **Design call, three options:** (a) reduce `>= 15` to a playable figure and keep the fifteen days in the prose where they cost nothing; (b) let any sleep anywhere advance `hrHellenistDays` once `barnachVouchedHR` is set, so the wait runs concurrently with other play; (c) accept the price and **tell the player**, since nothing currently states that the gate is a day count. **Recommend (b)** — it preserves the number exactly, keeps the doom clock honest, and costs one condition.
 - **§FUTURE-01-FU (NEW, 🟡)** — finish or reverse the naming reversion (§III). Places and the protagonist are historical; seven person-names are not; the authorising document is deleted. **Design call**, plus one mechanical sub-item that needs no call: the `Lythros` straggler in `quest_stoning_lystra`'s `passText`. **Recommend finishing the reversion** — 14 of 21 proper nouns already went that way and a half-applied policy is the only outcome that cannot be defended.
-- **§DX-02n extended** — `` `S_story.silarJoined = true;@22534` `` is **write-only**: one writer, zero readers. Silas is the source's second-journey partner and the structural replacement for Barnabas; the player recruits him and the engine never consults it. Same class as `ebReturnsCompleted` — it saves, reloads, and is never read, so a round-trip test passes it green.
-- **§AUDIT-03v/w/y(b) cluster extended** — `` `Thorn (Permanent)@37676` `` is the cluster's first **penalty** with nothing behind it (§VI). Widens the wanted detector past unpaid rewards to unapplied costs.
+- **§DX-02n extended** — `` `S_story.silarJoined = true;@22535` `` is **write-only**: one writer, zero readers. Silas is the source's second-journey partner and the structural replacement for Barnabas; the player recruits him and the engine never consults it. Same class as `ebReturnsCompleted` — it saves, reloads, and is never read, so a round-trip test passes it green.
+- **§AUDIT-03v/w/y(b) cluster extended** — `` `Thorn (Permanent)@37658` `` is the cluster's first **penalty** with nothing behind it (§VI). Widens the wanted detector past unpaid rewards to unapplied costs.
 - **§AUDIT-03x — consequence recorded, not a new row.** `ATH`←`SEA` was already filed by §DOC-02r/§DOC-02z. This pass names what it costs (`quest_areopagus`, an unreachable `sleep:true` checkpoint) and notes it is the **cheapest instance in the row** — both nodes are in one block, ten lines apart, so a declaration-order swap fixes it without touching the locale design call.
 
 ---
@@ -234,10 +234,10 @@ The scholarship below is the arc's writing bible and the only surviving record o
 |---|---|---|
 | `play.html` | `` `Mediterranean Real-World Locations (§FUTURE-01 Saul to Paul arc)@6366` `` | the 14 arc terrains |
 | `play.html` | `` `JRS:{ num:84, code:'JRS'@8443` `` … `` `SEA:{ num:97, code:'SEA'@8477` `` | the 14 arc nodes |
-| `play.html` | `` `saulConverted: false, blindDaysKS: 0@23174` `` | the 23 arc state flags |
-| `play.html` | `` `if (S_story.hrHellenistDays >= 15) S_story.hellenistsThreaten = true;@36293` `` | the fifteen-day gate |
-| `play.html` | `` `of Tarsus fell.@31334` `` · `` `He is called Paul here for the first time.@31329` `` | conversion + name change |
-| `play.html` | `` `Thorn (Permanent)@37676` `` | the character-sheet caption |
+| `play.html` | `` `saulConverted: false, blindDaysKS: 0@23175` `` | the 23 arc state flags |
+| `play.html` | `` `if (S_story.hrHellenistDays >= 15) S_story.hellenistsThreaten = true;@36275` `` | the fifteen-day gate |
+| `play.html` | `` `of Tarsus fell.@31336` `` · `` `He is called Paul here for the first time.@31331` `` | conversion + name change |
+| `play.html` | `` `Thorn (Permanent)@37658` `` | the character-sheet caption |
 | `lab-report-saul-paul-vignette-spec.md` | — | the fictionalized twin — voice rules and node texts |
 | ~~`plan.md` §FUTURE-01 Name Translation Table~~ | — | **DELETED** by `5e48dd7`; these two reports are the only surviving record |
 

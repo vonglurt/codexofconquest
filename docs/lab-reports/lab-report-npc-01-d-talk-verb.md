@@ -52,15 +52,15 @@ back.** §NPC-01-C built the payoff as a two-tier card reveal — Friendly shows
 their *worldTruth* — and §NPC-01-A/B/SF2/SF5/SF6 then multiplied the cards from ~20 to 204 without
 multiplying the way to earn either tier. The content existed; the verb did not.
 
-- **Patient, not transactional.** `TALK_TO_FRIENDLY = 3@23513` talks on distinct `S_story.day` values reach
+- **Patient, not transactional.** `TALK_TO_FRIENDLY = 3@23514` talks on distinct `S_story.day` values reach
   Friendly, and no day is *spent* — the cost is the days that pass while you travel and rest near someone.
   The ⚔ footer then reads as what it is: they opened up because you kept coming back.
-- **It refuses to sell the whole ladder.** `_talkToNpc@23514` calls `_setNpcFavor@23462` at level **1** and
+- **It refuses to sell the whole ladder.** `_talkToNpc@23515` calls `_setNpcFavor@23463` at level **1** and
   never higher, so talk can never buy the ✦ line. The game keeps something that cannot be ground for.
 - **It scales to the world, not to Birka.** Measured live at HEAD: **203 of the 204** NPCs in the derived
   render map get a Talk button. Before it, favor was authored for **13**. Second-order effects measured
   benign at ship: `favorMin` side quests become listable by befriending (mission gating, never movement
-  gating), and talk-friends count toward `_lubeckFriends@23461`.
+  gating), and talk-friends count toward `_lubeckFriends@23462`.
 
 ---
 
@@ -70,11 +70,11 @@ multiplying the way to earn either tier. The content existed; the verb did not.
 |---|---|---|
 | `kind:'favor'` bits in the whole quest corpus = 16 | **16** | ✅ exact |
 | distinct NPCs those bits reach = 13 | **13** | ✅ exact |
-| `dearFriendBits` auto-upgrade for ~6 NPCs | **exactly 6** (`const dearFriendBits = {@23472`) | ✅ exact |
+| `dearFriendBits` auto-upgrade for ~6 NPCs | **exactly 6** (`const dearFriendBits = {@23473`) | ✅ exact |
 | `meta.enemy` declared by **202** NPCs | **202** of 213 dialogue entries | ✅ exact |
 | `meta.worldTruth` declared by **219** NPCs | **213** | ❌ **wrong when written** |
 | `onTalk` / `talkVerb` / `giftNpc` / `downtimeVerb` = 0 | **0** at both builds | ✅ exact |
-| doom clock runs `S_story.day` 1 → 49 | `DAY_DEADLINE = 49@36175` | ✅ exact |
+| doom clock runs `S_story.day` 1 → 49 | `DAY_DEADLINE = 49@36157` | ✅ exact |
 
 **The one bad number hides a better fact.** `NPC_DIALOGUES` holds 213 entries and **all 213** declare
 `worldTruth` — universal, not merely common. The report invented six NPCs rather than noticing that the ✦
@@ -86,14 +86,14 @@ dialogues**, *"~190 stuck at Impartial"* against **191**. Both tildes land; neit
 
 ## IV. As-built inventory — every locked shape, at HEAD
 
-All four locked shapes shipped under their specified names and are byte-live today: `npcTalk: {}@23088` in
-the defaults factory, the tunable `TALK_TO_FRIENDLY = 3@23513`, the handler `_talkToNpc@23514`, and the chip
-`tb.className@23788` — gated on fav < 1 so it retires at Friendly, wired by `tb.addEventListener@23791`
-rather than an inline onclick exactly as §3 required. The ceiling holds: `function _setNpcFavor@23462` is
-called at level 1 and never higher, so `dlg.meta.enemy@23755` became earnable while `dlg.meta.worldTruth@23762`
+All four locked shapes shipped under their specified names and are byte-live today: `npcTalk: {}@23089` in
+the defaults factory, the tunable `TALK_TO_FRIENDLY = 3@23514`, the handler `_talkToNpc@23515`, and the chip
+`tb.className@23789` — gated on fav < 1 so it retires at Friendly, wired by `tb.addEventListener@23792`
+rather than an inline onclick exactly as §3 required. The ceiling holds: `function _setNpcFavor@23463` is
+called at level 1 and never higher, so `dlg.meta.enemy@23756` became earnable while `dlg.meta.worldTruth@23763`
 did not move. The report was also right about the surface it *rejected*: the d-pad 🧙 is gated on the node-keyed
-`const NPC_DIALOGUE = {@22444` (singular) routing to `function storyShowNpc@30227` — a far smaller map than
-the npcKey-keyed cards in `function _renderNpcCard@23683`. §DX-02cv has since measured that map's cost.
+`const NPC_DIALOGUE = {@22445` (singular) routing to `function storyShowNpc@30228` — a far smaller map than
+the npcKey-keyed cards in `function _renderNpcCard@23684`. §DX-02cv has since measured that map's cost.
 
 ---
 
@@ -104,7 +104,7 @@ the npcKey-keyed cards in `function _renderNpcCard@23683`. §DX-02cv has since m
 | 1 | Escalating talk lines from `dlg.impartial[]` in order by `count` | **NOT SHIPPED** | every talk prints the same *warms to you a little (n/3)* line — Appendix A |
 | 2 | `storyRender();` inside the handler | moved to the click site, with an argument | the spec form **threw** on the `node.act` read; the end-to-end test caught it pre-commit |
 | 3 | Chip below the quote, **above** the footers | appended **below** them | moot: the chip needs fav < 1 and the footers fav ≥ 1, so they never co-render |
-| 4 | Chip border `#8B4A2A` | `#7c4a1a` | the spec took the colour from the **card** border (`card.style.cssText@23723`); the code copied the Yael escort button |
+| 4 | Chip border `#8B4A2A` | `#7c4a1a` | the spec took the colour from the **card** border (`card.style.cssText@23724`); the code copied the Yael escort button |
 | 5 | Constant sited "~23144, near the favor helpers" | sited beside the handler | improved; both are outside every fence |
 | 6 | Verify item 5 — a `connie_tuna` un-gating guard | not added | non-risk; Appendix A |
 | 7 | Verify items 1–4 | all four, plus a live-click end-to-end test | that extra test is what found delta 2 |
@@ -119,16 +119,16 @@ letters for nothing* — the §DOC-02e node-code lesson, in a report that never 
 
 ## VI. Invariant analysis — re-verified mechanically
 
-**Free-Movement (#1) ✅** — `_talkToNpc@23514` makes no mover call and refuses no step; talking is not
+**Free-Movement (#1) ✅** — `_talkToNpc@23515` makes no mover call and refuses no step; talking is not
 movement. **Parity fences (#5) ✅** — the four `:CORE` blocks span 9914–9961, 9985–10217, 10238–10390 and
-`QUEST:CORE:START@21965`–22334, and every symbol this increment touched sits above 22400; no `src/js/*.js` twin.
+`QUEST:CORE:START@21966`–22334, and every symbol this increment touched sits above 22400; no `src/js/*.js` twin.
 **Host/Script separation (#4) ✅** — no new bit kind, no `_legacy_fn`, no `QUEST_DB` opcode. **Seeded RNG (#6)
 ✅, but vacuously** — the clearance reasons *"lines are read in order by `count`, so no RNG"*; those lines
 were never built, so the conclusion is right and its stated reason describes absent code.
 
 One §3 argument did **not** survive contact. The report refuses to reuse `npcVisitCounts` because *"looking
-at a card would raise favor"* — and the separate map does hold for favor. But `_talkToNpc@23514` opens by
-calling `function _getNPCDialogue@23560`, which bumps `npcVisitCounts` as a side effect **including on both
+at a card would raise favor"* — and the separate map does hold for favor. But `_talkToNpc@23515` opens by
+calling `function _getNPCDialogue@23561`, which bumps `npcVisitCounts` as a side effect **including on both
 early-return paths**: the passive counter it was protecting is advanced by the deliberate act, and by clicks
 that do nothing at all. Filed as §DX-02dq.
 
@@ -137,19 +137,19 @@ that do nothing at all. Filed as §DX-02dq.
 ## VII. Defects filed
 
 - **§DX-02dq — the Talk verb advances the passive-visit counter it was designed not to touch.** 🟢 no design
-  call. `function _checkFrobergerTrace@27648` gates six one-time memory texts on
-  `const visits = (S_story.npcVisitCounts@27654` against `const FROBERGER_TRACES = {@27685`, so Talk clicks
+  call. `function _checkFrobergerTrace@27649` gates six one-time memory texts on
+  `const visits = (S_story.npcVisitCounts@27655` against `const FROBERGER_TRACES = {@27686`, so Talk clicks
   accelerate content meant to reward genuine revisits, and an already-Friendly NPC can be clicked forever for
   free increments. Two-line fix: hoist the favor and same-day guards above the `_getNPCDialogue` call.
 - **§AUDIT-03bo — one NPC has a name, a node, an occupation and two quests, and renders nothing.**
-  `watcher_gvw: { key@22992` is The Greenwood Watcher, quest-giver for `clr_01_act3@21941` and `clr_01_act4`,
+  `watcher_gvw: { key@22993` is The Greenwood Watcher, quest-giver for `clr_01_act3@21942` and `clr_01_act4`,
   listed in the derived render map at `GVW`, with **no `NPC_DIALOGUES` entry** — so `function
   _renderNpcCard@23683` early-returns and the card is empty. **Verified in a browser: 203 of 204 derived NPCs
   render and get a Talk button; this one does neither.** §NPC-01-SF2 fixed the mirror case (dialogue without
   profile); this one has stayed open. Fix is one short dialogue entry with a `meta`.
-- **Verified benign, recorded so it is not re-found:** `let S_story = {@23001` omits `npcTalk` while
-  `const _S_DEFAULTS = () => ({@23062` declares it (both call sites guard), and
-  `const dearFriendBits = {@23472` is duplicated verbatim inside `function _checkDearFriendUpgrade@23489` —
+- **Verified benign, recorded so it is not re-found:** `let S_story = {@23002` omits `npcTalk` while
+  `const _S_DEFAULTS = () => ({@23063` declares it (both call sites guard), and
+  `const dearFriendBits = {@23473` is duplicated verbatim inside `function _checkDearFriendUpgrade@23490` —
   two copies of one six-entry table, so any Dear Friend contract change must touch both.
 
 ---
@@ -170,5 +170,5 @@ report set out to buy: not just to *reach* Friendly, but to be told something on
 > unaffected — no un-gating (guards the SF6 invariant)."*
 
 Not added under §NPC-01-D. The risk is real but structurally impossible here — Talk mutates favor, never the
-key list `function _renderNpcCard@23683` is called with — and the §NPC-01-SF6 AMS gating tests in the same
+key list `function _renderNpcCard@23684` is called with — and the §NPC-01-SF6 AMS gating tests in the same
 file assert it directly.

@@ -60,26 +60,26 @@ author **composed**; every passage the author could **copy** is exact.
 ## III. As-Built Inventory
 
 **Kill reward** — `_storyBattleVictory`, one block:
-`const reward` is `Math.floor(...)` over `S.opp.maxHp || 10) * 0.1@25309`;
-`// heal stays at base@25310`; `const goldDrop = Math.floor(reward * partyMult)@25311`.
+`const reward` is `Math.floor(...)` over `S.opp.maxHp || 10) * 0.1@25310`;
+`// heal stays at base@25311`; `const goldDrop = Math.floor(reward * partyMult)@25312`.
 XP is `S.enemy.ac` × `S.opp.maxHp` × `partyMult`, rounded, one line above.
 
-**Loot** — `const _D100_TABLE =@24516` (7 weighted rows, total 100),
-`function _rollD100Loot@24533`, `const POTION_TIERS = {@24306`.
-`const LOOT_TABLE =@24441` — the 20-entry d20 array this report documents — is still
+**Loot** — `const _D100_TABLE =@24517` (7 weighted rows, total 100),
+`function _rollD100Loot@24534`, `const POTION_TIERS = {@24307`.
+`const LOOT_TABLE =@24442` — the 20-entry d20 array this report documents — is still
 declared and has **no reader**.
 
-**Rest (Layer 13)** — `function storyShortRest@25817`, `const base  = Math.floor(S_story.hpMax * 0.25)@25838`,
-`const heal  = isInn ? base : base * 2@25839`, `if (_lv >= 2) S_story.surgeCharges@25844`,
-`Boy Scouts Award — doubled!@25858`.
-**Necklace** — `function _knowledgeIcon@25788`, `function _maybeAddKnowledgeBead@25808`,
-`S_story.knowledge.push({ name, icon@25814`, defaults `shortRests: 3, knowledge: []@23075`,
-render `makeSection('🔮 Necklace of Knowledge')@31230`.
-**Long rest** — `const _rollCount = _isFirstSleep ? 2 : 1@36255`,
-`_healTotal = Math.max(_healTotal@36263`, `S_story.day = Math.min(49, S_story.day + 1)@36270`,
-`S_story.shortRests = 3@36306`, `Boyscout Night! Double rolls@36317`.
-**Gate leaf** — `if (g.restedAtMin)@22074`, consumed by exactly one quest:
-`quest_d0206_a3: { id:@21790`, `restedAtMin:{ SZG:1 }@21793`.
+**Rest (Layer 13)** — `function storyShortRest@25818`, `const base  = Math.floor(S_story.hpMax * 0.25)@25839`,
+`const heal  = isInn ? base : base * 2@25840`, `if (_lv >= 2) S_story.surgeCharges@25845`,
+`Boy Scouts Award — doubled!@25859`.
+**Necklace** — `function _knowledgeIcon@25789`, `function _maybeAddKnowledgeBead@25809`,
+`S_story.knowledge.push({ name, icon@25815`, defaults `shortRests: 3, knowledge: []@23076`,
+render `makeSection('🔮 Necklace of Knowledge')@31232`.
+**Long rest** — `const _rollCount = _isFirstSleep ? 2 : 1@36237`,
+`_healTotal = Math.max(_healTotal@36245`, `S_story.day = Math.min(49, S_story.day + 1)@36252`,
+`S_story.shortRests = 3@36288`, `Boyscout Night! Double rolls@36299`.
+**Gate leaf** — `if (g.restedAtMin)@22075`, consumed by exactly one quest:
+`quest_d0206_a3: { id:@21791`, `restedAtMin:{ SZG:1 }@21794`.
 
 ---
 
@@ -133,7 +133,7 @@ render `makeSection('🔮 Necklace of Knowledge')@31230`.
 
 Appendix A lists seven Layer-13 mechanics as *"described in this report but not yet
 implemented."* **Six shipped and the seventh shipped in altered form.** The whole layer
-exists under `LAYER 13: Short Rests & Necklace of Knowledge@25785`, and the specified
+exists under `LAYER 13: Short Rests & Necklace of Knowledge@25786`, and the specified
 bead record shipped **byte-exact** to the field list in §III-D-1.
 
 This is the first report in the program whose **own status block** is its stalest
@@ -166,7 +166,7 @@ long rest instead**: `2 × d10 + CON` on a first visit, `1 × d10 + CON` on a re
 floored at 50% `hpMax`. The specified `S_story.hp = S_story.hpMax` never shipped.
 
 The consequence is player-facing. The sleep overlay states
-`full HP recovery@35759` and `heal to full & advance a day@35758` — **a promise the code
+`full HP recovery@35741` and `heal to full & advance a day@35740` — **a promise the code
 does not keep.** This is the §AUDIT-03v/w/y(b) class (a player-facing string naming a
 mechanical effect with nothing behind it), and the **sixth instance in six increments**,
 confirming §DOC-02h's finding that the class is not confined to gold. → **§AUDIT-03v/w
@@ -176,9 +176,9 @@ cluster**
 
 The award shipped **twice**:
 
-- **Short rest** — `Boy Scouts Award — doubled!@25858`, fired when `!isInn`. This is the
+- **Short rest** — `Boy Scouts Award — doubled!@25859`, fired when `!isInn`. This is the
   spec's rationale exactly: sleeping rough is harder, so the game doubles the heal.
-- **Long rest** — `Boyscout Night! Double rolls@36317`, fired when `_isFirstSleep`. This
+- **Long rest** — `Boyscout Night! Double rolls@36299`, fired when `_isFirstSleep`. This
   is a **first-visit** bonus that fires **at an inn** — inverting the spec's own framing
   (*"a ranger sleeps better under stars than in a tavern"*).
 
@@ -188,7 +188,7 @@ Award"* — has **0 commits ever**. → **§AUDIT-03aa**
 
 ### F5 — The short rest is implemented twice, and the copies have already diverged
 
-`storyShortRest@25817` is the canonical Layer-13 path. A second, independent copy lives
+`storyShortRest@25818` is the canonical Layer-13 path. A second, independent copy lives
 in the post-battle return row at `const _rests = () => S_story.shortRests@7133`, with
 `const base = Math.floor(S_story.hpMax * 0.25)@7145` and
 `const heal = isInn ? base : base * 2@7146` — the heal math byte-identical.
@@ -198,15 +198,15 @@ Everything else diverges. The battle-return copy spends the same allowance but d
 
 - grant the Necklace bead (`_maybeAddKnowledgeBead` uncalled) — **so resting here builds no necklace**;
 - set `shortRestedAtNodes`, so no Necklace Token is earned **and no `restedAtMin` gate credit accrues** —
-  `quest_d0206_a3` (`restedAtMin:{ SZG:1 }@21793`) cannot be opened by this path;
-- restore Action Surge charges (`if (_lv >= 2) S_story.surgeCharges@25844` has no twin);
+  `quest_d0206_a3` (`restedAtMin:{ SZG:1 }@21794`) cannot be opened by this path;
+- restore Action Surge charges (`if (_lv >= 2) S_story.surgeCharges@25845` has no twin);
 - print the Boy Scouts message, **though it applies the 2× multiplier anyway**.
 
 Two copies of one formula, silently disagreeing on four consequences. → **§DX-02t**
 
 ### F6 — §II-B documents a table no surviving build has ever read
 
-`const LOOT_TABLE =@24441` is a 20-entry d20 array, exactly as described, and the
+`const LOOT_TABLE =@24442` is a 20-entry d20 array, exactly as described, and the
 transcription is near-exact: **all four sell values (25/75/200/500) and three of four
 slot counts (5 Healing, 3 Greater, 2 Superior) are correct.** The single error is an
 **edit** — the array's 2 Spell Scroll slots are dropped and folded into Minor Healing

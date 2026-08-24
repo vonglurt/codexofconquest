@@ -330,9 +330,9 @@ monster keys). **Sequencing lesson, learned twice:** always `--dry` and read the
 ## 6. The grammar as built
 
 Every term below was produced by a quest that needed it, and every one is live at HEAD.
-Host: `const SCHEMA_VERSION = 'UQF-1.0';@21966` · `const BIT_CONTRACTS = {@21970` ·
-`function validateQuest(q) {@22004` · `canActivate(questId) {@22193` · `canComplete(questId) {@22205` ·
-`*execBits(bits, ctx) {@22223` · `function _resolveQuestUQF(questId) {@6962`.
+Host: `const SCHEMA_VERSION = 'UQF-1.0';@21967` · `const BIT_CONTRACTS = {@21971` ·
+`function validateQuest(q) {@22005` · `canActivate(questId) {@22194` · `canComplete(questId) {@22206` ·
+`*execBits(bits, ctx) {@22224` · `function _resolveQuestUQF(questId) {@6962`.
 
 | Surface | Terms (HEAD carrier counts) | Born in |
 |---|---|---|
@@ -364,13 +364,13 @@ gate terms (§BOARD-01 Void-tide windows), the `any`/`not` expression AST (§VM-
   `mq_1`–`7` alive on `completeItems`, 7 of 7. `if (q.type !== 'skill_check') return;` is verbatim
   in the archive.
 - **Wave 7d is verbatim at HEAD.** `function _rollCeremonia(questId) {@7024` is the warned no-op;
-  `function adaptLegacyQuest(id, q) {@22026` is the identity; `activateCond:"` string-duplicates = 0.
+  `function adaptLegacyQuest(id, q) {@22027` is the identity; `activateCond:"` string-duplicates = 0.
 - **Wave 8a's field census holds as a property.** Root `completeItems`/`completeFn`/`check*`/
   `checkPassFlag`/`checkFailFlag`/`bitLabel`/`goldAward` = **0**. `activateCond` = **44**, still
   exactly 14 UQF `_legacyFn` gates + the 30 stubs — the same number, 51 days later. `xpAward` = **45**
   and still **100 % `type:'side'`** (the figure drifted from 50; the invariant did not).
-- **Wave 8c's ordering claim holds.** `_runNodeHook('la-riva-row', node);@35119` runs before
-  `const questMsgs = storyCheckQuests(node);@36041`, so inline hooks still precede the engine's
+- **Wave 8c's ordering claim holds.** `_runNodeHook('la-riva-row', node);@35101` runs before
+  `const questMsgs = storyCheckQuests(node);@36023`, so inline hooks still precede the engine's
   completion pass — through an entire §VM-01 hook migration that rewrote the region around it.
 - **The report's own acceptance suite: 303 passed / 0 failed** (`quest-runtime-uqf.test.js`, 4.1 min).
   It was 288 at close; §MATH-01 and §VM-01-F added the rest.
@@ -446,7 +446,7 @@ Wave 8c named it the sole inline exception and deferred the fix to §GR; §GR cl
 it. At HEAD the quest carries `completion:{countMin, itemsAll}` and **no `onComplete`, no
 `xpAward`**, while all six of its effects — +500 gp, the Old Tuna Account Book, Aldo's favour, the
 activation of `quest_la_riva_03`, and two narration beats — live in an **AMS-only** hook
-(`function _nodeHookLaRivaRow(node) {@31887`) guarded on `status === 'active'`. Ordering
+(`function _nodeHookLaRivaRow(node) {@31889`) guarded on `status === 'active'`. Ordering
 saves it today: the hook runs before the engine's pass in the same render. But the completion gate
 carries **no `atNode` term**, so any `storyCheckQuests` that fires while the two conditions hold and
 the player is not rendering AMS flips the quest to `'complete'` and the hook's `'active'` test can
@@ -469,8 +469,8 @@ exception *is* test-pinned, so this is a design debt rather than a silent rot.
 > `atNode`, the fence case goes red and pays at `CDG`).
 
 **Not filed — already open.** The `item_check` bit kind is **§DX-02as item (d)**, and that row
-already credits this document: the contract at `item_check:  { required:['name'],@21989` carries the
-comment *"lab Open-Q #3"*, and the handler `item_check(bit, ctx) {@22311` writes `ctx._itemCheck`,
+already credits this document: the contract at `item_check:  { required:['name'],@21990` carries the
+comment *"lab Open-Q #3"*, and the handler `item_check(bit, ctx) {@22312` writes `ctx._itemCheck`,
 which nothing in the file reads. **Zero authored uses across 2,853 quests.** It is the report's §4
 follow-up landing twice — once correctly as `completion.items`, once as an opcode that evaluates a
 predicate into a variable no one consumes. *A conditional in a language with no `if`.*
@@ -488,7 +488,7 @@ predicate into a variable no one consumes. *A conditional in a language with no 
 - **The line numbers in the original prose (`~L6308`, `L6355`) are historical** and should not be
   trusted; the `symbol@line` anchors added in this revision are current as of 2026-08-17.
 - **The 30 `blq_05`–`blq_10` book-stubs are deliberately unmigrated.** They are the Decameron
-  "Falcon's Inventory" placeholders: `reward:NaN, activateCond:() => !!S_story.null,@14126` — thirty
+  "Falcon's Inventory" placeholders: `reward:NaN, activateCond:() => !!S_story.null,@14127` — thirty
   quests offering a reward that is not a number, gated on the falsiness of nothing. They would have
   crashed the migrator's well-formedness guard, so Wave 2ad used an explicit id-list and a permanent
   test pins them as legacy. They are the residue the format is allowed to have.

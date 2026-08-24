@@ -168,7 +168,7 @@ identifier, string template or operator, so it is unambiguously a marker and nev
 token. Nine sections carried anchors at filing; **twelve do now** (`NPC_DIALOGUES`,
 `ITEM_DB`, `D100_TABLE` were added later). The pair is also the last-resort escape
 hatch: with the server down, `grep -n "◆◆◆" play.html` still prints every
-section boundary. Anchor `` `◆◆◆ WORLDBUILDER:BIRKA_NPC:START@22711` ``.
+section boundary. Anchor `` `◆◆◆ WORLDBUILDER:BIRKA_NPC:START@22712` ``.
 
 A write finds the `:START`/`:END` pair, reconstructs the whole block from in-memory
 state, and splices. **Every save is a full-section rewrite, never a surgical line

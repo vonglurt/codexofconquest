@@ -85,8 +85,8 @@ the report's own figure, exact) and against HEAD:
 | Monsters (`const MONSTER_POOL = {@5355`) | 370 | **370** | 398 | ✅ exact when written |
 | `WORLD_DB` terrains (`const WORLD_DB = {@6279`) | 66 (46 base + 20 epic) | **66** | 111 | ✅ exact when written |
 | Story nodes (`const NODE_MAP = {@8425`) | 76 | **76** | 416 | ✅ exact when written · 5.5× |
-| State fields (`const _S_DEFAULTS = () => ({@23062`) | 107 | **107** | 318 | ✅ exact when written |
-| Froberger entries (`const FROBERGER_JOURNAL = [@27184`) | 41 | **41** | **41** | ✅ **unchanged in 79 days** |
+| State fields (`const _S_DEFAULTS = () => ({@23063`) | 107 | **107** | 318 | ✅ exact when written |
+| Froberger entries (`const FROBERGER_JOURNAL = [@27185`) | 41 | **41** | **41** | ✅ **unchanged in 79 days** |
 | Named Birka NPCs (`const NPC_DIALOGUES = {@10396`) | 6 | **6** | 204 profiles / 213 dialogues | ✅ exact when written |
 | Acts (`node.act`) | 8 | **1–8** | **0–8 plus `NaN`** | ⚠️ see below |
 
@@ -179,12 +179,12 @@ measured and wrong about the number it inherited.
 
 ### Finding 2 — A bijection guarantees a link, not a truth *(→ §AUDIT-03z (b))*
 
-FC05's shipped half works exactly as specified. `const S29_AUROS_THEORY =@27050` carries
+FC05's shipped half works exactly as specified. `const S29_AUROS_THEORY =@27051` carries
 `// → doc: world.md §S29`, and `world.md` §S29 exists and describes the scene. The pointer is correct.
 
 Both ends state the trigger as `frobergerLastEntryRead && fav_auros >= 2`. **`fav_auros` occurs exactly
 once in 38,712 lines — in that comment.** It is not a `_S_DEFAULTS()` field and nothing reads it. The
-live guard reads the favor ledger: `s29LineDelivered) {@32669` gates on `_npcFavor('auros') >= 2`.
+live guard reads the favor ledger: `s29LineDelivered) {@32651` gates on `_npcFavor('auros') >= 2`.
 `world.md` repeats `fav_auros >= 2` at three separate lines, having inherited it from the comment the
 pointer connects it to.
 
@@ -217,7 +217,7 @@ The file is additionally **invisible to every gate in the repo**. `src/scripts/l
 headers still carry retired 26×16 codes (`CI`, `TV`, `CR`, `BA`, `SE`, `SL`, `MI`, `IS`, …) while the
 HTML uses the live ones (`LHR`, `MHQ`, `KRN`, `LLA`, `SFT`, `BMA`, `MAN`, `PDL`), and nothing reports it.
 This file is not history: the HTML names it as a home doc in its own FC05 pointer,
-`const FROBERGER_JOURNAL = [@27184`.
+`const FROBERGER_JOURNAL = [@27185`.
 
 *(Corroboration for §DOC-02d: the header remap `CI→LHR`, `TV→MHQ`, `CR→KRN`, `BA→LLA`, `SL→BMA` is
 exactly the list the engine's `birkaNpcs` note records, recovered here independently from the journal.)*
@@ -227,12 +227,12 @@ exactly the list the engine's `birkaNpcs` note records, recovered here independe
 §VII-E specifies Category D as *"one int per named NPC — `fav_yael`, `fav_brynn`"*. Neither field exists
 and **neither has any commit in the file's history** (instrument 2): **NOT SHIPPED**. The favor system
 shipped as a map, `npcFavorability`, written by `_setNpcFavor` and read by the gate grammar at
-`if (g.favorMin)@22064` — a different *shape*, not merely different names. §DOC-02d traced the naming
+`if (g.favorMin)@22065` — a different *shape*, not merely different names. §DOC-02d traced the naming
 half of this to `lab-report-birka-beginner-arc.md`.
 
 But the `fav_<npc>` shape is not absent — it is live for exactly one character.
-`fav_corelli: 0@23143` is a real `_S_DEFAULTS()` field, read at two sites and written at
-`S_story.fav_corelli = Math.min@31792` as `min(3, corelli_purchase_count)` (§DOC-02g verified this
+`fav_corelli: 0@23144` is a real `_S_DEFAULTS()` field, read at two sites and written at
+`S_story.fav_corelli = Math.min@31794` as `min(3, corelli_purchase_count)` (§DOC-02g verified this
 mechanism at 19 of 20 identifiers). It is a private scalar: **`favorMin` cannot see it**, so no quest
 gate can ever depend on Corelli's favor without a `_legacy_fn` closure — invariant-#4 pressure with a
 declarative alternative already in the grammar. The report's Category D therefore describes a shape that
@@ -240,7 +240,7 @@ half-exists, for one NPC, unreachable from the gate language.
 
 ### Finding 5 — A dead fallback for a field that never existed *(→ §DX-02n)*
 
-The activation-gate reader contains `st.visited || st.visitedNodes@22055`. `visitedNodes` occurs
+The activation-gate reader contains `st.visited || st.visitedNodes@22056`. `visitedNodes` occurs
 **once** in the file — in that expression — has **one commit ever**, and is not a `_S_DEFAULTS()` field
 in the archive build or at HEAD. The live field is `visited`. The right-hand branch is unreachable and
 always was: defensive code written for a field that was never declared. Same class as the §DX-02n

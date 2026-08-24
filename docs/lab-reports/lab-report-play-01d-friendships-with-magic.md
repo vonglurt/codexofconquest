@@ -44,7 +44,7 @@ would become the one durable edge — a reward for patience rather than for grin
 good intent, and it created a bad shape: the single most important power vector in the game
 sat behind a sub-system a player could complete the entire campaign without ever noticing.
 A player who never finds it is capped at base gear all the way to Commander Bruhns
-(`const BOSS_COMMANDER_AUROS = {@26246`, AC 22 / HP 300) and never learns why the fight feels
+(`const BOSS_COMMANDER_AUROS = {@26247`, AC 22 / HP 300) and never learns why the fight feels
 impossible. Nothing on screen is lying, but nothing on screen is telling, either — the
 signature §PLAY-01 failure: *the engine knows things it will not transmit.*
 
@@ -95,20 +95,20 @@ character every player meets on turn one *choose* to hand it over.
 | Artefact | Anchor (HEAD) | State |
 |---|---|---|
 | The rewritten monologue | `yael: { meta: { name:"Yael Scheidemann"@10397` | byte-exact to spec |
-| One-time delivery guarantee | `!(S_story.ngPlusRun > 0) && !S_story.yaelOnboardingSeen) {@23579` | byte-identical ship → HEAD |
-| Its state field | `yaelOnboardingSeen: false,@23171` | declared in `_S_DEFAULTS()` |
-| Pool selection it overrides | `function _getNPCDialogue(npcKey) {@23560` | unchanged |
-| Cycling rule cited in §1 | `return { quote: pool[count % pool.length], meta: d.meta, fav };@23639` | unchanged |
-| The card key that was remapped | `const birkaNpcs = { LHR:['yael'], TLL:['brynn']@35139` | remapped again by §PLAY-01-G |
-| Card renderer | `function _renderNpcCard(key, container) {@23683` | unchanged |
-| The alternate discovery, preserved | `quest_no_fishing_sign: {@13878` | live |
-| Its lamppost hook | `function _nodeHookBirkaNoFishingSign(node, { npcRowDiv }) {@32417` | live at LHR |
-| The second person in the chain | `the_fisherman: { key:"the_fisherman"@22950` | profile live; card fixed later |
-| The drop nerf the thesis rests on | `function _rollMonsterWeaponDrop(monsterDmgDie) {@24581` | byte-exact to §1 |
-| Its degrade term | `const deg = Math.min(0, d6 - 5);@24592` | −4…0 on a d6 |
-| The loot table §1 calls empty | `const _D100_TABLE = [@24516` | 7 rows, weight 100, no weapons |
-| The weapon set | `const WEAPON_ITEMS = [0, 1, 2, 3, 4].flatMap(magic =>@24494` | 70 items, 56 unreachable |
-| The lake reward that did ship | `const LAKE_MAGIC_DB = {@26536` | 8 passive items, 0 weapons |
+| One-time delivery guarantee | `!(S_story.ngPlusRun > 0) && !S_story.yaelOnboardingSeen) {@23580` | byte-identical ship → HEAD |
+| Its state field | `yaelOnboardingSeen: false,@23172` | declared in `_S_DEFAULTS()` |
+| Pool selection it overrides | `function _getNPCDialogue(npcKey) {@23561` | unchanged |
+| Cycling rule cited in §1 | `return { quote: pool[count % pool.length], meta: d.meta, fav };@23640` | unchanged |
+| The card key that was remapped | `const birkaNpcs = { LHR:['yael'], TLL:['brynn']@35121` | remapped again by §PLAY-01-G |
+| Card renderer | `function _renderNpcCard(key, container) {@23684` | unchanged |
+| The alternate discovery, preserved | `quest_no_fishing_sign: {@13879` | live |
+| Its lamppost hook | `function _nodeHookBirkaNoFishingSign(node, { npcRowDiv }) {@32399` | live at LHR |
+| The second person in the chain | `the_fisherman: { key:"the_fisherman"@22951` | profile live; card fixed later |
+| The drop nerf the thesis rests on | `function _rollMonsterWeaponDrop(monsterDmgDie) {@24582` | byte-exact to §1 |
+| Its degrade term | `const deg = Math.min(0, d6 - 5);@24593` | −4…0 on a d6 |
+| The loot table §1 calls empty | `const _D100_TABLE = [@24517` | 7 rows, weight 100, no weapons |
+| The weapon set | `const WEAPON_ITEMS = [0, 1, 2, 3, 4].flatMap(magic =>@24495` | 70 items, 56 unreachable |
+| The lake reward that did ship | `const LAKE_MAGIC_DB = {@26537` | 8 passive items, 0 weapons |
 
 ---
 
@@ -119,7 +119,7 @@ character every player meets on turn one *choose* to hand it over.
 | 1 | `_rollMonsterWeaponDrop` filters `magicBonus === 0` | **EXACT** | filter and the −4…0 prefix ladder byte-identical parent → HEAD |
 | 2 | `_D100_TABLE` carries no mainweapon/dagger rows | **EXACT** | 7 rows at both builds; 20,000 live rolls at L20 returned 0 weapons, 0 daggers |
 | 3 | Monster kills cannot drop positive magic | **PROVED BY EXECUTION** | 20,000 drops across every damage die: 0 positive, 13,369 degraded (66.8 %, the d6 predicts 66.7 %) |
-| 4 | Final fight is AC 22 / HP 300 | **EXACT** | `const BOSS_COMMANDER_AUROS = {@26246` |
+| 4 | Final fight is AC 22 / HP 300 | **EXACT** | `const BOSS_COMMANDER_AUROS = {@26247` |
 | 5 | The lamppost coupon is the first touch of the path | **EXACT** | hook live at LHR; grants a Free Rod Coupon redeemable at SSJ |
 | 6 | The Fisherman is at Yugurt Cabin | **EXACT** | `SSJ` = Yugurt Cabin; profile `node:'SSJ'` |
 | 7 | The old line was geographically loose | **UNDERSTATED** | 15 dock/river labels in the world, 1 fishable node |
@@ -189,7 +189,7 @@ scope promise was kept — this increment did not sprawl.
   fairy-tale chancery; the remap incidentally prevented that.
 
 **Why this is worth recording rather than scolding.** The file itself teaches the wrong lesson.
-In the same render layer, the comment `// ── No Fishing Sign at CI ──@32418` sits directly
+In the same render layer, the comment `// ── No Fishing Sign at CI ──@32400` sits directly
 above `if (node.code === 'LHR')` — a rename that moved the code and left the comment. And
 `src/scripts/legacy-codes.js` opens by stating that codes like `CI` *"name nodes that no longer
 exist under those names"*, carries `CI` in its ambiguity set, and offers an `--annotate` mode
@@ -252,9 +252,9 @@ what no shop stocks."*
   1–4 and have no live grant path.** `DAGGER_ITEMS` holds 4 entries, all with a positive
   `atkBonus`, and its **only** reader is the unreachable `_D100_TABLE` branch — the whole
   table is dead.
-- `const LAKE_MAGIC_DB = {@26536` holds **8** items, all `type:'lake_magic'`, **none** a
+- `const LAKE_MAGIC_DB = {@26537` holds **8** items, all `type:'lake_magic'`, **none** a
   weapon: AC, first-strike, fishing-DC, attack, night-type and all-ability trinkets.
-- `function _magicTierAllowed(magic) {@24509` has two call sites, both inside branches the
+- `function _magicTierAllowed(magic) {@24510` has two call sites, both inside branches the
   table can never select.
 
 So the trade §FC06 describes is one-sided: the taking shipped, the giving did not. This is

@@ -75,7 +75,7 @@ the entire §LIX–§LXIV corridor shut.**
 
 That is what this pass bought the player: not an architecture, but a cast that talks and
 a story that advances. The architecture was gone by dinner. The one-line fix at
-`d.quoteFn ? d.quoteFn() : d.quote@30234` is still there, two months later, and is the
+`d.quoteFn ? d.quoteFn() : d.quote@30235` is still there, two months later, and is the
 single most durable thing this report produced.
 
 ---
@@ -164,9 +164,9 @@ ternary. Three consumers read it: a quest `completeFn`, an `activateNode` condit
 the movement block that holds the player at Damascus. Read-only-never-written; permanently
 `false`; the arc shut.
 
-At HEAD the same pattern stands, load-bearing, at `DAM: { name:'Anath'@22510` — still the
+At HEAD the same pattern stands, load-bearing, at `DAM: { name:'Anath'@22511` — still the
 sole writer, now feeding `quest_anath`'s completion, one UQF gate, and the block at line
-36289. The fix survives at `d.quoteFn ? d.quoteFn() : d.quote@30234`, simplified from the
+36289. The fix survives at `d.quoteFn ? d.quoteFn() : d.quote@30235`, simplified from the
 report's `typeof … === 'function'` form.
 
 **What does not verify is the evidence.** The report states:
@@ -367,7 +367,7 @@ at parent line 26700 became DOM construction with `_titleSpan.textContent = q.ti
 the badge — code-generated, not data — kept `insertAdjacentHTML`. That reasoning is sound
 and the distinction is the right one.
 
-It survives at HEAD as `titleRow.className = 'quest-title'@30769`, but by a **second**
+It survives at HEAD as `titleRow.className = 'quest-title'@30770`, but by a **second**
 implementation: `120d617` took this with everything else, and the textContent renderer was
 rebuilt on 2026-07-06 as the last live residual of §DATA-01. The report's §2 audit result
 also still holds — **0 `label:` and 0 `title:` values in the file contain `<`**.
@@ -376,9 +376,9 @@ also still holds — **0 `label:` and 0 `title:` values in the file contain `<`*
 the same function that were left on string-concatenated `innerHTML`, and both interpolate
 **data-originated** strings, not code-generated ones:
 
-- `<span>Hunt: '@30805` — interpolates `customWp.label` twice and `dest.label` from
+- `<span>Hunt: '@30806` — interpolates `customWp.label` twice and `dest.label` from
   `NODE_MAP`. Node labels are authorable through the WBAPI worldbuilder.
-- `<span>🦴 Your body at '@30824` — interpolates `q.nodeName` from
+- `<span>🦴 Your body at '@30825` — interpolates `q.nodeName` from
   `S_story.corpsesQuests`, which is **persisted in the player's save file** and read back
   on load.
 
@@ -388,7 +388,7 @@ applies to both without modification: *the guarantee should not depend on the cu
 content of the data.* Filed as **§DX-02bt**.
 
 A related nuisance worth naming while in the file: `const NPC_DIALOGUES = {@10396` and
-`const NPC_DIALOGUE = {@22444` are two distinct live objects one character apart, with 5
+`const NPC_DIALOGUE = {@22445` are two distinct live objects one character apart, with 5
 and 9 readers respectively. `storyShowNpc` reads the singular.
 
 ---
@@ -396,12 +396,12 @@ and 9 readers respectively. `storyShowNpc` reads the singular.
 ## 11. Findings Filed
 
 - **§DX-02bs** 🟢 — `check:questgraph`'s host-flag-writer scan does not know the `once:`
-  idiom. `if (p.once) st[p.once] = true;@31599` is a real writer for 5 flags; one of them,
+  idiom. `if (p.once) st[p.once] = true;@31601` is a real writer for 5 flags; one of them,
   `saulConverted`, is gate-read and is therefore reported in the gate's `written-by-nothing`
   list as a soft-lock that does not exist. A gate reporting 50 candidates with a known
   blind spot understates its own confidence.
 - **§DX-02bt** 🟡 — two quest-panel renderers still concatenate data-originated strings
-  into `innerHTML` (`<span>Hunt: '@30805`, `<span>🦴 Your body at '@30824`); `q.nodeName`
+  into `innerHTML` (`<span>Hunt: '@30806`, `<span>🦴 Your body at '@30825`); `q.nodeName`
   arrives from the save file. This is this report's §2 thesis, unfinished. Includes the
   `NPC_DIALOGUE`/`NPC_DIALOGUES` near-name collision as a sub-item.
 - **§DX-02bu** 🟢 — doc correction: the BACKLOG's §DATA-01-REVERTED row asserts UQF has

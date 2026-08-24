@@ -61,7 +61,7 @@ The nine subsystems: **(II)** the Covenant Ceremony · **(III)** Sweelinck's dyn
 | IX | Froberger's Last Note | ✅ | Item, seeding, loot injection, read panel, 5-line body — all present; seeded with `Math.random()` (**F9**) |
 | X | NG+ memory hooks | ✅ greetings + overlay | **NOT SHIPPED:** "the tree resets and unlocks one win faster each run." Perks are *carried over* instead; the spec contradicts itself on this in adjacent sentences |
 
-Anchors at HEAD: `const SWEELINCK_NAMING_LINES = {@27237` · `const NPC_EPILOGUES = {@27274` · `const FROBERGER_EPILOGUE = {@27307` · `const NPC_NG_PLUS_GREETINGS = {@27314` · `const PIT_PERK_UNLOCKS = {@27333` · `const COVENANT_STANDING_LABELS = [@27356` · `const ROUGH_WHISKEY_REACTIONS = {@27364` · `function _covenantStanding()@28032` · `function _buildSweelinckNamingSequence()@28037` · `function _buildEpilogueScroll()@28120` · `function _checkRoughWhiskeyReaction(npcKey)@28159` · `function _checkPitPerkUnlock()@28169` · `function _applyPitPerks(combatState)@28181` · `function _curseScore()@28191` · `function storyCheckVictory(node)@28207`.
+Anchors at HEAD: `const SWEELINCK_NAMING_LINES = {@27238` · `const NPC_EPILOGUES = {@27275` · `const FROBERGER_EPILOGUE = {@27308` · `const NPC_NG_PLUS_GREETINGS = {@27315` · `const PIT_PERK_UNLOCKS = {@27334` · `const COVENANT_STANDING_LABELS = [@27357` · `const ROUGH_WHISKEY_REACTIONS = {@27365` · `function _covenantStanding()@28033` · `function _buildSweelinckNamingSequence()@28038` · `function _buildEpilogueScroll()@28121` · `function _checkRoughWhiskeyReaction(npcKey)@28160` · `function _checkPitPerkUnlock()@28170` · `function _applyPitPerks(combatState)@28182` · `function _curseScore()@28192` · `function storyCheckVictory(node)@28208`.
 
 ---
 
@@ -81,7 +81,7 @@ The bonus for returning to all twenty Epic Battleground contacts is **−5**. A 
 { maxScore: -6, label: "Covenant Keeper", desc: "The people you helped are the reason this works." },
 ```
 
-`_covenantStanding()` returns the first bracket satisfying `score <= maxScore`. Nothing satisfies `≤ −6`. The same threshold gates the "Covenant Keeper (True)" ending: `const _isTrue = missionDone && curse <= -6@28229`.
+`_covenantStanding()` returns the first bracket satisfying `score <= maxScore`. Nothing satisfies `≤ −6`. The same threshold gates the "Covenant Keeper (True)" ending: `const _isTrue = missionDone && curse <= -6@28230`.
 
 **Measured in Chromium over all 231 partitions, through the engine's own `_curseScore()` and `_covenantStanding()`:**
 
@@ -109,19 +109,19 @@ The report's argument for Covenant Standing is explicit and it is the best sente
 
 | | Site | Effect |
 |---|---|---|
-| set `true` | `if (_pb41 && _pb41.nodeCode === 'HKG' && !S_story.roughWhiskeyUsed@24688` | entering the pit fight at HKG (historical `CY`), once per run |
-| set `false` | `S_story.roughWhiskeyActive = false;@25282` | **battle victory** |
+| set `true` | `if (_pb41 && _pb41.nodeCode === 'HKG' && !S_story.roughWhiskeyUsed@24689` | entering the pit fight at HKG (historical `CY`), once per run |
+| set `false` | `S_story.roughWhiskeyActive = false;@25283` | **battle victory** |
 | set `false` | `storyConfirmSleep` | resting |
 
 The spec's opening — *"consuming Rough Whiskey before visiting any named NPC triggers a unique response"* — has no code. There is no use-item path; the bottle is consumed by walking into one specific fight. Win that fight and the window closes in the same function call that opened it. `_storyFleeClean` / `_storyFleeMutual` do **not** clear the flag, so the only way to hear any of the eighteen authored lines is to **flee or lose the drunk pit fight and then go talk to someone.**
 
-The vendor even promises otherwise, in the game's own voice: `storyMsg('🥃 Bought Rough Whiskey. ★ Social — each NPC reacts differently if you visit them@24383`.
+The vendor even promises otherwise, in the game's own voice: `storyMsg('🥃 Bought Rough Whiskey. ★ Social — each NPC reacts differently if you visit them@24384`.
 
-What *did* ship is exact: disadvantage on every attack roll (`if (S_story._drunkFight) adv = 'dis';@25044`), `const drunkBonus = S_story._drunkFight ? 3 : 0;@25071`, and Weckmann delighted — *"You absolute idiot. I'm counting it."* — with a favor bump to Friendly on the win. → **§DX-02ep** 🟡
+What *did* ship is exact: disadvantage on every attack roll (`if (S_story._drunkFight) adv = 'dis';@25045`), `const drunkBonus = S_story._drunkFight ? 3 : 0;@25072`, and Weckmann delighted — *"You absolute idiot. I'm counting it."* — with a favor bump to Friendly on the win. → **§DX-02ep** 🟡
 
 ### F4 — the spec's own state field was created, written, and never read
 
-§IV gates the EB epilogue block on `ebReturnsCompleted >= 10`. The implementer created that field (`journalEntriesRead: [], ebReturnsCompleted: {},@23086`), writes it on every return (`S_story.ebReturnsCompleted[ebCode] = true;@30365`) — and then gated **every** consumer on the sibling `ebReturnDone`, which has nine live readers. `ebReturnsCompleted` has **zero**. A perfect parallel ledger, maintained for 90 days, that nothing has ever consulted.
+§IV gates the EB epilogue block on `ebReturnsCompleted >= 10`. The implementer created that field (`journalEntriesRead: [], ebReturnsCompleted: {},@23087`), writes it on every return (`S_story.ebReturnsCompleted[ebCode] = true;@30366`) — and then gated **every** consumer on the sibling `ebReturnDone`, which has nine live readers. `ebReturnsCompleted` has **zero**. A perfect parallel ledger, maintained for 90 days, that nothing has ever consulted.
 
 *(The block itself also ships as one summary line — `${ebReturns} of 20 EB contracts fulfilled. The people who sent you those contracts know your name.` — not "one line each" as §IV specifies.)* → **§DX-02eo** 🟢
 
@@ -141,7 +141,7 @@ else               lines.push(FROBERGER_EPILOGUE.efficient);
 
 §II: *"The ceremony is 8 seconds. Not cinematic — precise… the sigil holds for 2 seconds, then slowly pulses — once — and fades."*
 
-Measured: `const sigilDelay = missionDone && curse <= 0@28325` is `4000 + names × 1200 + 2000` ms in the naming branch (**13,200 ms** at six names) and a flat **6,500 ms** otherwise, then an 800 ms fade, then 8,800 ms of final-map render before the victory modal — **16.1 s / 22.8 s** from boss defeat to modal. The stylesheet defines `@keyframes sigil-fade-in@2031`, `@keyframes sigil-draw@2037` and `name-fade`; enumerated at runtime, **there is no pulse rule**. And the stroke has been amber (`#FEA712`) since `32c10c5`, never white.
+Measured: `const sigilDelay = missionDone && curse <= 0@28326` is `4000 + names × 1200 + 2000` ms in the naming branch (**13,200 ms** at six names) and a flat **6,500 ms** otherwise, then an 800 ms fade, then 8,800 ms of final-map render before the victory modal — **16.1 s / 22.8 s** from boss defeat to modal. The stylesheet defines `@keyframes sigil-fade-in@2031`, `@keyframes sigil-draw@2037` and `name-fade`; enumerated at runtime, **there is no pulse rule**. And the stroke has been amber (`#FEA712`) since `32c10c5`, never white.
 
 In the non-naming branches this reads as **~7 seconds of black screen with nothing on it but a sigil** — the ceremony's whole text surface is the naming block, and the naming block only renders at `curse <= 0`.
 
@@ -176,7 +176,7 @@ What *does* ship: sequential unlock at one win per perk, the unlock message in W
 
 ### F9 — the note is seeded off the unseeded stream
 
-`S_story.frobergerNoteNode = _ebPool[Math.floor(Math.random() * _ebPool.length)];@23980` (and again in the NG+ path). Invariant #6 requires that randomness affecting game state draw the seeded stream (`_seededNext()`). Which of twenty nodes holds a key item is game state. The value is persisted at new-game time, so a *save* still determines the future — the violation is narrow, but it is a violation of a fence the repo enforces elsewhere. → **§DX-02er** 🟢
+`S_story.frobergerNoteNode = _ebPool[Math.floor(Math.random() * _ebPool.length)];@23981` (and again in the NG+ path). Invariant #6 requires that randomness affecting game state draw the seeded stream (`_seededNext()`). Which of twenty nodes holds a key item is game state. The value is persisted at new-game time, so a *save* still determines the future — the violation is narrow, but it is a violation of a fence the repo enforces elsewhere. → **§DX-02er** 🟢
 
 ### F10 — §I names the wrong node, and it was wrong on the build it was written against
 
@@ -224,7 +224,7 @@ The same threshold gates §III: `missionDone && curse <= 0` is satisfiable **onl
 - **`story.md`** — *"The epilogue scroll builds a named list of all returned EB NPCs"* is false; it appends one summary count line. Corrected.
 - **`story.md` / `world.md`** — the two bare `HTML line NNNN` anchors of **F11** converted to `` `symbol@line` `` form so gate #15 can see them.
 - **`world.md` §Pit Training Perks** — the "Combat effect" column documented the *write*; it now states that the flag has no reader, with a pointer to §DX-02eq.
-- **NOT applied, filed instead:** `const COVENANT_STANDING_LABELS = [@27356` carries `→ doc: docs/mechanics/mechanics-economy.md §Covenant Standing`, and that file contains **zero** occurrences of the string; the live home is `story.md §Covenant Standing Tiers`. Fixing it edits `play.html`, whose working tree carries the user's uncommitted CSS recolor. → **§DX-02er**
+- **NOT applied, filed instead:** `const COVENANT_STANDING_LABELS = [@27357` carries `→ doc: docs/mechanics/mechanics-economy.md §Covenant Standing`, and that file contains **zero** occurrences of the string; the live home is `story.md §Covenant Standing Tiers`. Fixing it edits `play.html`, whose working tree carries the user's uncommitted CSS recolor. → **§DX-02er**
 
 ---
 

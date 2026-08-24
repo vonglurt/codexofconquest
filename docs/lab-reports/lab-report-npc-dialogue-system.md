@@ -58,10 +58,10 @@ Three principles, all of which survive as live code:
 - **It makes favorability a content key rather than a stat.** Four pools per NPC × 213 NPCs = **1,614
   authored lines** at HEAD, and roughly a quarter of them are only ever visible to a player who did
   optional work. The relationship ledger is the largest gated content surface in the game.
-- **It gives repeat visits a reason.** `return { quote: pool[count % pool.length], meta: d.meta, fav };@23639`
+- **It gives repeat visits a reason.** `return { quote: pool[count % pool.length], meta: d.meta, fav };@23640`
   cycles rather than randomises, so the fifth visit is *new*, not a reroll. This is the single most
   durable line in the document — specified in §II, shipped, unchanged in 82 days.
-- **It converts kindness into an ending.** `function _missionComplete() {@23648` counts twelve acts that
+- **It converts kindness into an ending.** `function _missionComplete() {@23649` counts twelve acts that
   produce no loot, and the ending branches on it. The game's best outcome is reserved for the player who
   did the things with no output — *"the part you did because you were there, and someone needed
   something, and you were the kind of person who noticed."*
@@ -102,29 +102,29 @@ Three principles, all of which survive as live code:
 `BIRKA_NPC_PROFILES` entry) need `meta.name`, and **all 10 have it** — §NPC-01-SF2's synthesised-profile
 fallback is exactly covered. *Checked and deliberately not filed.*
 
-### B. The selector — `function _getNPCDialogue(npcKey) {@23560`
+### B. The selector — `function _getNPCDialogue(npcKey) {@23561`
 
-Pool order at HEAD is `if (fav >= 2) pool = d.dearFriend;@23569`, then `questActive`, then `friendly`
+Pool order at HEAD is `if (fav >= 2) pool = d.dearFriend;@23570`, then `questActive`, then `friendly`
 (fav ≥ 1), then `impartial` — a **three-number** ledger (0/1/2), not the report's four (0/1/2/3). The
 selector has since grown eight one-time injection paths in front of the pool (onboarding, act-three
 weight, Froberger traces, cross-refs, void-pressure lines, and three per-NPC beats), all of which
 `return` early. The cycling tail is unchanged.
 
-### C. The mission ledger — `function _missionComplete() {@23648`
+### C. The mission ledger — `function _missionComplete() {@23649`
 
-Twelve named bits, `return Object.values(bits).filter(Boolean).length >= 8;@23663`. **Byte-identical to
+Twelve named bits, `return Object.values(bits).filter(Boolean).length >= 8;@23664`. **Byte-identical to
 the archive except two node codes** (`'CO'`→`'TLS'`, `'CI'`→`'LHR'`) — 82 days, zero drift.
 
 ### D. The endings — four variants, thresholds 0 and 15, exactly as specified
 
-`if (missionDone && curse <= 0) {@28243` → Covenant Keeper · `else if (curse <= 0)` → the Capable Warden ·
-`} else if (curse >= 15) {@28257` → the Loop Continues · `else` → the Imperfect Covenant. Plus a stricter
-fifth standing added later, `const _isTrue = missionDone && curse <= -6@28229`.
+`if (missionDone && curse <= 0) {@28244` → Covenant Keeper · `else if (curse <= 0)` → the Capable Warden ·
+`} else if (curse >= 15) {@28258` → the Loop Continues · `else` → the Imperfect Covenant. Plus a stricter
+fifth standing added later, `const _isTrue = missionDone && curse <= -6@28230`.
 
 ### E. The Disposition line — `docs`' quietest success
 
 **201 quests carry a `disposition:` field**, voiced and attributed, e.g.
-`disposition: '"The commissioners don\'t read field reports about the Slums.@21223` — Yael's grievance,
+`disposition: '"The commissioners don\'t read field reports about the Slums.@21224` — Yael's grievance,
 in her voice, on her quest. The report proposed it for six NPCs; it shipped as a schema field for the
 whole quest database.
 
@@ -136,22 +136,22 @@ whole quest database.
 |---|---|---|---|
 | 1 | `NPC_DIALOGUES` keyed by npcKey, `meta` + 4 pools | exactly that, 213 entries | ✅ EXACT |
 | 2 | `meta: {name, occupation, worldTruth, enemy, missionBit}` | 3 of 5 universal; `name`/`occupation` only where no profile exists | ✅ by design |
-| 3 | Cycling by `visitCount % pool.length`, not random | `pool[count % pool.length]@23639` | ✅ **EXACT, 82 days** |
+| 3 | Cycling by `visitCount % pool.length`, not random | `pool[count % pool.length]@23640` | ✅ **EXACT, 82 days** |
 | 4 | 4 favor states numbered 0/1/2/3 | **three** numbers; Friendly = 1, Dear Friend = 2 | ⚠️ compressed (§V-B) |
-| 5 | World Truth footer at "favorability 2 (Friendly)" | `if (fav >= 2 && dlg.meta && dlg.meta.worldTruth) {@23762` | ⚠️ literal shipped, **tier moved** (§V-B) |
+| 5 | World Truth footer at "favorability 2 (Friendly)" | `if (fav >= 2 && dlg.meta && dlg.meta.worldTruth) {@23763` | ⚠️ literal shipped, **tier moved** (§V-B) |
 | 6 | `enemy` surfaces only in the quest log | **also an NPC-card footer at fav ≥ 1** (§NPC-01-C) | ✅ + expansion |
 | 7 | `renderNPCDialogueCard()`, `.npc-dialogue-card`, `.npc-state-badge`, `.npc-world-truth` | **0 occurrences, all four** — ships as `_renderNpcCard` with inline styles | ❌ NOT SHIPPED |
 | 8 | 120 authored dialogue lines across 6 NPCs × 4 states | **0 of 120** present at HEAD **or** in the archive | ❌ **NOT SHIPPED** (§V-A) |
 | 9 | 6 World Truths, quoted | **0 verbatim**; 1 (Auros) a recognisable paraphrase, Yael's truncated, 4 replaced outright | ❌ NOT SHIPPED |
 | 10 | Yael Stormhook · Brynn Fenn · Tomas Quill · Crane | **0 commits ever**, all four | ❌ NOT SHIPPED (§V-C) |
-| 11 | "Deacon", the BA fence with a code on the wall | the **code** shipped, owned by Pachelbel — `const DEACON_CODE_TEXT =@27546` | ⚠️ name demoted to an artifact (§V-C) |
+| 11 | "Deacon", the BA fence with a code on the wall | the **code** shipped, owned by Pachelbel — `const DEACON_CODE_TEXT =@27547` | ⚠️ name demoted to an artifact (§V-C) |
 | 12 | Nodes CI · IN · TV · BA · CY · SQ | `LHR` · `TLL` · `MHQ` · `LLA` · `HKG` · `NUE` | ⚠️ 0 of 6 resolve, all 6 correctly remapped |
-| 13 | Crov and Auros share a node | `HKG:['crov','auros']@35139` | ✅ EXACT — the one geography claim that holds |
+| 13 | Crov and Auros share a node | `HKG:['crov','auros']@35121` | ✅ EXACT — the one geography claim that holds |
 | 14 | `_missionComplete()` = `bits.every(Boolean)` over 12 bits | `filter(Boolean).length >= 8` over a **different** 12 | ❌ NOT SHIPPED (author's own note said so) |
-| 15 | Bit `weckmannPitTrainingDone` | **0 occurrences**; ships as `crovPitTrainingWins@23654` | ❌ renamed to the profile key |
+| 15 | Bit `weckmannPitTrainingDone` | **0 occurrences**; ships as `crovPitTrainingWins@23655` | ❌ renamed to the profile key |
 | 16 | Bit `couperiSongReceived` | **shipped, typo and all** — 9 occurrences (§V-C) | ✅ EXACT |
-| 17 | Bit `ebReturnsCompleted >= 20` | `allEbReturns@23656` reads `ebReturnDone`, threshold **5** | ⚠️ and it minted a dead field (§V-D) |
-| 18 | Bit `journalEntriesRead >= 17` (a number) | `journalHalf@23657` — an **array**, `length >= 9` of 41 | ⚠️ type + threshold changed |
+| 17 | Bit `ebReturnsCompleted >= 20` | `allEbReturns@23657` reads `ebReturnDone`, threshold **5** | ⚠️ and it minted a dead field (§V-D) |
+| 18 | Bit `journalEntriesRead >= 17` (a number) | `journalHalf@23658` — an **array**, `length >= 9` of 41 | ⚠️ type + threshold changed |
 | 19 | Bits `frobergerLastEntryRead` · `ebNegotiatedPayments > 0` · `roughWhiskeyUsed` | **dropped**; replaced by `sealedVoid` · `atLeastThreeFriends` · `noHighCurse` | ⚠️ 3 of 12 replaced |
 | 20 | Four endings on `_missionComplete()` × `_curseScore()` at 0 / 15 | exactly that nest, both thresholds | ✅ EXACT — and **3 of 4 unreachable** (§V-E) |
 | 21 | Quest-log **Disposition** line, voiced, enemy-derived | **201 quests** carry `disposition:` | ✅ **+ shipped 33× wider than proposed** |
@@ -188,7 +188,7 @@ values and derives Quest-Active from `_hasActiveQuestFor` instead: `0 Impartial 
 
 What the note missed is the consequence. §V of the original specifies the World Truth footer as
 *"when favorability reaches 2 (Friendly)."* HEAD ships
-`if (fav >= 2 && dlg.meta && dlg.meta.worldTruth) {@23762` — **the literal is byte-faithful to the spec
+`if (fav >= 2 && dlg.meta && dlg.meta.worldTruth) {@23763` — **the literal is byte-faithful to the spec
 and one whole tier stricter than the spec meant**, because the number 2 changed meaning underneath it.
 The World Truth — the payload of principle 1 — is now a Dear Friend reveal, not a Friendly one.
 
@@ -213,7 +213,7 @@ history.** §DOC-02d identified its neighbour as the traceable origin of §AUDIT
 uses two names for one character mints two keys.* **This document is that failure at six characters and
 industrial scale**, and it is worse in a specific way: the ambiguity did not resolve *consistently*.
 
-- `crov` — key wins, flag renamed to `crovPitTrainingWins@23654`.
+- `crov` — key wins, flag renamed to `crovPitTrainingWins@23655`.
 - `auros` — key wins, flag keeps the surname: `bruhnsDepthsReported`.
 - `quill` — key wins, flag keeps the surname **and the surname is misspelled**.
 - `pachelbel` — the **flag's** name won and became the key; the §III heading name lost.
@@ -223,12 +223,12 @@ Four characters, four different resolutions of one ambiguity, all in the table a
 that has to spell it.***
 
 **Two consequences worth keeping.** (1) **`couperiSongReceived` is a typo that became a save format.**
-Nine occurrences at HEAD, including `S_story.couperiSongReceived = true;@35299` and a `_S_DEFAULTS()`
+Nine occurrences at HEAD, including `S_story.couperiSongReceived = true;@35281` and a `_S_DEFAULTS()`
 field — and because `_S_DEFAULTS()` fields persist to `localStorage`, renaming it would break every
 existing save. *The document wrote "couperi" once and the repository will spell it that way forever.*
 (2) **"Deacon" survived as a thing rather than a person.** The fence's *"My code's on the wall. Read
-it"* shipped as `const DEACON_CODE_TEXT =@27546` — *"Deacon's Code (4 rules; readable at BA; Pachelbel
-Dear Friend)"* — with `function _nodeHookBirkaDeaconCode(node, { npcRowDiv }) {@32126` rendering it at
+it"* shipped as `const DEACON_CODE_TEXT =@27547` — *"Deacon's Code (4 rules; readable at BA; Pachelbel
+Dear Friend)"* — with `function _nodeHookBirkaDeaconCode(node, { npcRowDiv }) {@32108` rendering it at
 `LLA`. The character's name is now the name of his rulebook, owned by the character who replaced him.
 A third, unrelated `Deacon Nikolaos` exists at ATH. ***When a document gives one character two names,
 the engine does not always drop one — sometimes it keeps both and demotes one to furniture.***
@@ -236,7 +236,7 @@ the engine does not always drop one — sometimes it keeps both and demotes one 
 ### D. The report's own mission bit minted the repository's cleanest dead field
 
 §IV lists `S_story.ebReturnsCompleted >= 20` as a mission bit. HEAD writes that field on every EB
-return — and `allEbReturns@23656` reads **`ebReturnDone`** instead. `ebReturnsCompleted` has **12 fewer
+return — and `allEbReturns@23657` reads **`ebReturnDone`** instead. `ebReturnsCompleted` has **12 fewer
 readers than its twin, which is to say zero**: it is §DX-02n(b), *"the quietest form of Hazard #2 — it
 saves, reloads, and is never consulted, so even the round-trip acceptance test passes it green."*
 
@@ -246,10 +246,10 @@ existed. ***A dead field usually has a document behind it, and the document usua
 requirement.***
 
 Two smaller shapes in the same twelve lines: `allEbReturns` opens with
-`allEbReturns: Object.keys(NPC_DIALOGUES).length > 0@23656` — a conjunct over an immutable non-empty
-literal, so it is **always true and tests nothing**; and `journalHalf: (S_story.journalEntriesRead || []).length >= 9,@23657`
+`allEbReturns: Object.keys(NPC_DIALOGUES).length > 0@23657` — a conjunct over an immutable non-empty
+literal, so it is **always true and tests nothing**; and `journalHalf: (S_story.journalEntriesRead || []).length >= 9,@23658`
 is named *half* while asking for 9 of `FROBERGER_JOURNAL`'s 41 entries — **22 %**. Also
-`returnedToCI: !!(S_story.visited && S_story.visited['LHR'] && S_story.level >= 5),@23661`: a dead node
+`returnedToCI: !!(S_story.visited && S_story.visited['LHR'] && S_story.level >= 5),@23662`: a dead node
 code preserved in an **identifier**, where no gate can see it (`check:legacycodes` scans `.md`,
 `check:noderegs` scans references, and this is a property name).
 
@@ -259,13 +259,13 @@ The report's thesis is §IV: *"The TRUE win — transcending the curse — requi
 bit… Because they were the part of the mission that had no output."* The four-way nest that delivers it
 shipped **exactly as specified**. It cannot fire as specified, and here is the arithmetic.
 
-`function _curseScore() {@28191` scores each of the twenty `const _EB_CODES = [@28030` as *returned*,
+`function _curseScore() {@28192` scores each of the twenty `const _EB_CODES = [@28031` as *returned*,
 *started-not-returned* (×3) or *never started* (×1). `returned` reads `S_story.ebReturnDone[code]`,
-written **only** by `function _storyEbReturnBeat(ebCode) {@30358`, called **only** from
-`c.addEventListener('click', () => _storyEbReturnBeat(ebCode));@35878`, which renders only when
-`const returnId   = 'quest_' + ebCode.toLowerCase() + '_return';@35865` is active — i.e.
+written **only** by `function _storyEbReturnBeat(ebCode) {@30359`, called **only** from
+`c.addEventListener('click', () => _storyEbReturnBeat(ebCode));@35860`, which renders only when
+`const returnId   = 'quest_' + ebCode.toLowerCase() + '_return';@35847` is active — i.e.
 `quest_prn_return`. `QUEST_DB` holds `quest_ef_return` … `quest_eg_return`, the **retired EA–ET codes**.
-The same mismatch sits in `const primaryId = 'quest_' + code.toLowerCase() + '_primary';@28196`.
+The same mismatch sits in `const primaryId = 'quest_' + code.toLowerCase() + '_primary';@28197`.
 **That is §EPIC-01.** No id resolves, the RETURN chip never renders, `ebReturnDone` is never written.
 
 With `returned = false` for all twenty, `_curseScore()` has a **hard floor of 20** (all-never-started)
@@ -278,8 +278,8 @@ and a ceiling of 60 (all-accepted-none-returned). Therefore:
 | The Imperfect Covenant | `0 < curse < 15` | ⛔ never |
 | **The Loop Continues (CURSED)** | `curse >= 15` | ✅ **always** |
 
-`const _isTrue = missionDone && curse <= -6@28229` — the "Covenant Keeper (True)" standing — likewise
-never renders, and the three score-banded `const SWEELINCK_DIALOGUE_VARIANTS = [@27229` below 15 are
+`const _isTrue = missionDone && curse <= -6@28230` — the "Covenant Keeper (True)" standing — likewise
+never renders, and the three score-banded `const SWEELINCK_DIALOGUE_VARIANTS = [@27230` below 15 are
 dead (the fifth, `birka:true`, is checked first via `_lubeckFriends() >= 3` and is fine).
 
 **So the only ending any player can reach is the accusation** — *"you couldn't slow down long enough to
@@ -288,7 +288,7 @@ befriends all six Birka NPCs, reads the journal, trains at the pit, walks the be
 for Quill's song is told, word for word, that they were the efficient one who skipped the people.
 ***The mechanic still works. It is pointed the wrong way.***
 
-`_missionComplete()` takes collateral damage from the same cause: `noHighCurse: _curseScore() < 10,@23660`
+`_missionComplete()` takes collateral damage from the same cause: `noHighCurse: _curseScore() < 10,@23661`
 and `allEbReturns` are **both permanently false**, so the ledger needs **8 of 10** attainable bits, not
 8 of 12. And `sealedVoid` is a tautology at both call sites — the victory screen only renders once
 `defeatedBattles['TLS']` is set — so the real bar is **7 of 9 genuine choices**. The design's stated
@@ -624,14 +624,14 @@ That is not a coincidence and it is the report's real lesson about itself.
 | Row | Severity | Summary |
 |---|---|---|
 | **§ENDING-01** extended | 🔴 | Third independent reproduction, first from the dialogue side, and the sharpest statement of impact: with `_curseScore()` floored at 20 the **only** reachable ending is the accusation, delivered to the most attentive possible player. `_missionComplete()` also drops from 8-of-12 to **7 of 9 real choices**. Released by §EPIC-01. |
-| **§EPIC-01** annotated | 🔴 | The id mismatch is at two computing sites, not one: `const primaryId = 'quest_' + code.toLowerCase() + '_primary';@28196` and `const returnId   = 'quest_' + ebCode.toLowerCase() + '_return';@35865`. Fixing only the primaries leaves `ebReturnDone` unwritable and the curse floor intact. |
-| **§DX-02n** +2, and one **origin** | 🟢 | `ebReturnsCompleted`'s origin traced to §IV of this report. New: the always-true conjunct in `allEbReturns@23656`, and `journalHalf@23657` — a bit named *half* that asks for 9 of 41. |
-| **§AUDIT-03s** family +1 | 🟢 | `returnedToCI@23661` — a retired node code preserved in an **identifier**, invisible to every gate by construction. |
+| **§EPIC-01** annotated | 🔴 | The id mismatch is at two computing sites, not one: `const primaryId = 'quest_' + code.toLowerCase() + '_primary';@28197` and `const returnId   = 'quest_' + ebCode.toLowerCase() + '_return';@35847`. Fixing only the primaries leaves `ebReturnDone` unwritable and the curse floor intact. |
+| **§DX-02n** +2, and one **origin** | 🟢 | `ebReturnsCompleted`'s origin traced to §IV of this report. New: the always-true conjunct in `allEbReturns@23657`, and `journalHalf@23658` — a bit named *half* that asks for 9 of 41. |
+| **§AUDIT-03s** family +1 | 🟢 | `returnedToCI@23662` — a retired node code preserved in an **identifier**, invisible to every gate by construction. |
 | **§AUDIT-03n** post-mortem | 🟢 | This document is the root cause at six characters; `couperiSongReceived` is a **typo that reached the save format** and cannot be renamed without breaking saves. Recorded, not actionable. |
 
 **Checked and deliberately NOT filed** (existing-work-first): the 21-of-213 `meta.name` coverage is
 correct by design — all 10 profile-less NPCs carry it; `quest_drunk_fight` in
-`const npcQuests = { yael:['quest_slums_cleanup','quest_city_watch_patrol']@23642` is still dangling but
+`const npcQuests = { yael:['quest_slums_cleanup','quest_city_watch_patrol']@23643` is still dangling but
 is already §DX-02o.
 
 ---
@@ -648,9 +648,9 @@ The report cites no line numbers, so it cannot be dated by instrument 18. What c
   its two corrections are right** (the `questActive` derivation and the 8-of-12 threshold) — a rare
   clean result for a status block (cf. §DOC-02j, §DOC-02x, where status blocks were the wrong half).
 
-Live anchors: `const NPC_DIALOGUES = {@10396` · `function _getNPCDialogue(npcKey) {@23560` ·
-`function _missionComplete() {@23648` · `function _curseScore() {@28191` ·
-`const SWEELINCK_DIALOGUE_VARIANTS = [@27229` · `const DEACON_CODE_TEXT =@27546` ·
+Live anchors: `const NPC_DIALOGUES = {@10396` · `function _getNPCDialogue(npcKey) {@23561` ·
+`function _missionComplete() {@23649` · `function _curseScore() {@28192` ·
+`const SWEELINCK_DIALOGUE_VARIANTS = [@27230` · `const DEACON_CODE_TEXT =@27547` ·
 `function _lubeckFriends() { return Object.values(S_story.npcFavorability || {}).filter(v => v >= 1).length; }@23461`.
 
 Cross-references: `lab-report-birka-beginner-arc.md` (§DOC-02d — the six Birka NPCs' quests and the same

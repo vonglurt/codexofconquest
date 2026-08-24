@@ -154,7 +154,7 @@ const MIGRATION_MANIFEST = [
   //    (logged residue, lab report §6). Each grant is silent:true; gold/favor/XP/flag/ability
   //    writes + the verbatim narrative msg stay in the ladder branch.
   //
-  //    NOTE on the manifest grant fields: long readText blobs and long description prose are
+  //    NOTE on the manifest grant fields: long readText blobs and long desc prose are
   //    OMITTED here on purpose — they were moved byte-for-byte by the mechanical transform, and
   //    fieldsEqual only checks fields present in `want`. The short STRUCTURED rich fields (bonus,
   //    uses, passive, weapon stats, readable/readableKey) ARE asserted — they're the parity-
@@ -183,7 +183,7 @@ const MIGRATION_MANIFEST = [
 ];
 
 // Field allow-list a migrated grant may carry (lab report §3.1). `silent` is authoring-only.
-const GRANT_FIELDS = ['name', 'icon', 'type', 'sell', 'desc', 'description', 'readText',
+const GRANT_FIELDS = ['name', 'icon', 'type', 'sell', 'desc', 'readText',
   'readableKey', 'readable', 'passive', 'bonus', 'uses', 'minLevel',
   'atkBonus', 'dmgDie', 'dmgCount', 'dmgFlat'];
 

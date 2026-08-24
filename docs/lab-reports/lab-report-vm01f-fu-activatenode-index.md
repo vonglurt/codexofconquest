@@ -39,7 +39,7 @@ it. Indexing is how you keep *"add a quest"* a free action.
 
 **And there is a second payoff nobody planned for, which arrived a month later.** §VM-01-G3 needed to run the
 activation pass **before** `storyRender`'s render body, so per-node UI keyed on `active` status could see
-same-arrival activations. It extracted the loop into `function _uqfActivateAtNode(node)@30137` and called it
+same-arrival activations. It extracted the loop into `function _uqfActivateAtNode(node)@30138` and called it
 **twice per arrival** — once early, once from `storyCheckQuests` — relying on idempotence. That refactor is
 comfortable only because the pass is cheap. **A cheap operation can be called from two places; an O(n) one cannot.**
 The index did not make the game faster in a way a player can perceive; it made the *engine* editable in a way its
@@ -48,7 +48,7 @@ authors could act on, and someone did, without ever having to think about it.
 **Where the design came from.** Nowhere clever — the idiom already existed in the file, twice, and the second
 instance had left a note for whoever came next:
 
-> *"Lazy + cached like `_questNodes()`; QUEST_DB is static at runtime."* — `function _gateFlagSet()@26133`
+> *"Lazy + cached like `_questNodes()`; QUEST_DB is static at runtime."* — `function _gateFlagSet()@26134`
 
 Both precedents build once and never rebuild, banking on that second clause. **That clause is what §VM-01-F
 tripped over**, and closing the gap it hides is the whole content of this increment.
@@ -282,9 +282,9 @@ was never committed, so no diff can be measured. §VM-01-F's own commit message 
 callers of `storyCheckQuests` 5 → **4** · index population 2,803 → **2,804**, buckets unchanged at **348**.
 
 **The one structural change.** §VM-01-G3 **extracted the activation loop** out of `storyCheckQuests` into
-`function _uqfActivateAtNode(node)@30137`, carrying this increment's comment with it verbatim, and now calls it
-**twice per arrival** — from `function storyRender(node, prefix)@34567` before the render body, and again from
-`function storyCheckQuests(node)@30166`. The pass is idempotent, so this is correct; but it means **the size guard
+`function _uqfActivateAtNode(node)@30138`, carrying this increment's comment with it verbatim, and now calls it
+**twice per arrival** — from `function storyRender(node, prefix)@34549` before the render body, and again from
+`function storyCheckQuests(node)@30167`. The pass is idempotent, so this is correct; but it means **the size guard
 now runs twice per arrival**, ~0.22 ms of Θ(n) work to look up a median of 3 quests. Filed as **§DX-02ea**.
 
 ---
@@ -307,10 +307,10 @@ this helper.
 
 ## 11. Anchors (HEAD, 2026-08-22)
 
-`const QUEST_DB = {@10615` · `function _gateFlagSet()@26133` · `function _uqfActivateAtNode(node)@30137` ·
-`function storyCheckQuests(node)@30166` · `function storyRender(node, prefix)@34567` ·
-`function _questNodes()@36995` · `let _questsByNodeIndex = null@37014` · `function _questsByNode(nodeCode)@37015` ·
-`function _boardBounties(node, limit)@37183` · `src/js/wbapi-core.js:_questsByNode: {}@707` ·
+`const QUEST_DB = {@10615` · `function _gateFlagSet()@26134` · `function _uqfActivateAtNode(node)@30138` ·
+`function storyCheckQuests(node)@30167` · `function storyRender(node, prefix)@34549` ·
+`function _questNodes()@36977` · `let _questsByNodeIndex = null@36996` · `function _questsByNode(nodeCode)@36997` ·
+`function _boardBounties(node, limit)@37165` · `src/js/wbapi-core.js:_questsByNode: {}@707` ·
 `src/scripts/check-quest-parity.js:quest parity: QUEST:CORE identical@25` ·
 `edit.html:function applyPatch(NODE_MAP, QUEST_DB@2513`.
 

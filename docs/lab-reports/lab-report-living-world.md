@@ -57,14 +57,14 @@ The eleven subsystems: **(II)** the off-screen character · **(III)** world prog
 | III | World progression | ⚠️ half | 6 events live; **6 of 6 can fire** — `weckmann_class` asks `_npcFavor('crov') >= 3`, and crov's ceiling of **2** (§DOC-02cz F1) was lifted to 3 by §DX-02fb ✅ 2026-08-23. **NOT SHIPPED: the rendering** — notes go to the breadcrumb array (**F2**); flag polarity collides with Layer 69 (**F8**); fires on sleep, not visit (**F9**) |
 | IV | Map warmth | ✅ | All five tiers exact (`#222`/`#555`/`#5a4a3a`/`#6a5a3a`/`#8a6a3a`/`#3a7a5a`). Spec's dead `warmth = fav * 20` line correctly dropped (**F10**). EB green is ending-map-only in practice |
 | V | Corridor farewells | ✅ 16/18 | Route lookup the spec punted on was **finished** by the implementer (**F10**). Threshold is `fav >= 1`, not the spec's `>= 2` (**F7**). Auros's 2 lines unreachable (**F4**) |
-| VI | Third Act weight | ✅ byte-identical | 6/6 lines; `body.act-three .npc-card-chip { filter: saturate(0.85); }` shipped exactly as written, chip class applied at `card.className@23722` |
+| VI | Third Act weight | ✅ byte-identical | 6/6 lines; `body.act-three .npc-card-chip { filter: saturate(0.85); }` shipped exactly as written, chip class applied at `card.className@23723` |
 | VII | Brynn's maintenance | ✅ byte-identical | 3 tasks, narration + `brynn_after` exact, ledger panel, zero-balance line. Ledger arithmetic never balanced (**F6**); surplus reachable by 1 copper (**F6**); gate one tier low (**F7**) |
 | VIII | Quiet receipts | ✅ 19/24 reachable | 5 Birka keys have no lookup path; `INV` has no receipt (**F5**) |
 | IX | Pachelbel's code | ✅ byte-identical | 4 rules exact, ungated and public **exactly as the spec asked** — the `→ doc:` comment claiming a Dear Friend gate is the thing that's wrong (**F11**) |
 | X | The Void's First Sign | ❌ | Not shipped, in any form (**F3b**) |
 | XI | Final map | ✅ + ⚠️ | 129 cells, timings matched to the millisecond. **Overlay is not full-screen** (**F3**); §XI's "no text on the map" superseded by Layer 66b's caption |
 
-Anchors at HEAD: `const PETRA_STALL_STATES = [@27398` · `const WORLD_PROGRESSION_EVENTS = [@27404` · `const NODE_NPC_KEYS = {@27413` · `const NPC_FAREWELLS = {@27427` · `const NPC_ACT_THREE_LINES = {@27469` · `const BRYNN_MAINTENANCE_TASKS = [@27498` · `const QUIET_RETURN_RECEIPTS = {@27519` · `const DEACON_CODE_TEXT =@27546` · `function _getGigaultState()@27558` · `function _getNodeMapColor(nodeSlug)@27562` · `function _getFarewell(fromCode, toCode)@27575` · `function _checkWorldProgressionEvents()@27584` · `function _applyActThreeWeight()@27598` · `function _renderFinalMap()@27605` · `function _storyEbReturnBeat(ebCode)@30358` · `function _nodeHookBirkaGigaultStall(node,@32117` · `function _nodeHookBirkaDeaconCode(node,@32126` · `function _nodeHookBirkaBrynnMaintenance(node,@32154`.
+Anchors at HEAD: `const PETRA_STALL_STATES = [@27399` · `const WORLD_PROGRESSION_EVENTS = [@27405` · `const NODE_NPC_KEYS = {@27414` · `const NPC_FAREWELLS = {@27428` · `const NPC_ACT_THREE_LINES = {@27470` · `const BRYNN_MAINTENANCE_TASKS = [@27499` · `const QUIET_RETURN_RECEIPTS = {@27520` · `const DEACON_CODE_TEXT =@27547` · `function _getGigaultState()@27559` · `function _getNodeMapColor(nodeSlug)@27563` · `function _getFarewell(fromCode, toCode)@27576` · `function _checkWorldProgressionEvents()@27585` · `function _applyActThreeWeight()@27599` · `function _renderFinalMap()@27606` · `function _storyEbReturnBeat(ebCode)@30359` · `function _nodeHookBirkaGigaultStall(node,@32099` · `function _nodeHookBirkaDeaconCode(node,@32108` · `function _nodeHookBirkaBrynnMaintenance(node,@32136`.
 
 ---
 
@@ -84,7 +84,7 @@ Two smaller drifts ride along. The constant is named for **Petra**, a character 
 
 ### F2 — six world-progression notes are written into the movement breadcrumb array ⚠️
 
-`S_story.log` has exactly eight consumers in the file. Six treat it as an array of node-code **strings** — the trail: `S_story.log.push(S_story.currentCode)@28359`, capped at twenty by the next line, and read back as `new Set((S_story.log || []).slice(-20))` in three separate minimap renders.
+`S_story.log` has exactly eight consumers in the file. Six treat it as an array of node-code **strings** — the trail: `S_story.log.push(S_story.currentCode)@28360`, capped at twenty by the next line, and read back as `new Set((S_story.log || []).slice(-20))` in three separate minimap renders.
 
 The other two are Layer 44 and its descendant, and they `unshift` an **object**:
 
@@ -140,7 +140,7 @@ Measured exhaustively: `_getFarewell` swept over all ordered pairs of `NODE_MAP`
 
 ### F5 — five receipts with no lookup, and one return met with silence
 
-`QUIET_RETURN_RECEIPTS` holds **24** keys. Its only consumer is `const receipt = QUIET_RETURN_RECEIPTS[ebCode];` inside `function _storyEbReturnBeat(ebCode)@30358`, where `ebCode` is always an Epic Battleground node code. Nineteen keys are EB codes. The other five — `yael_ghetto`, `quill_debt`, `deacon_redd`, `crov_pit`, `auros_depths` — are the Birka arc returns the spec listed alongside them, and no call site can ever produce those strings as an argument. *"[Pachelbel holds the receipt for a long time. Then puts it in his coat.]"* has never been held by anyone. (`deacon_redd` also preserves the retired `deacon` prefix in a line that names Pachelbel — harmless, since it is unreachable.)
+`QUIET_RETURN_RECEIPTS` holds **24** keys. Its only consumer is `const receipt = QUIET_RETURN_RECEIPTS[ebCode];` inside `function _storyEbReturnBeat(ebCode)@30359`, where `ebCode` is always an Epic Battleground node code. Nineteen keys are EB codes. The other five — `yael_ghetto`, `quill_debt`, `deacon_redd`, `crov_pit`, `auros_depths` — are the Birka arc returns the spec listed alongside them, and no call site can ever produce those strings as an argument. *"[Pachelbel holds the receipt for a long time. Then puts it in his coat.]"* has never been held by anyone. (`deacon_redd` also preserves the retired `deacon` prefix in a line that names Pachelbel — harmless, since it is unreachable.)
 
 Separately, the file defines **20** EB return quests. Exactly one has no receipt: **`INV`** (`quest_eh_return` — *Return: Shepherd Rona*). This is not remap damage — the ship build authored 19 legacy keys too, so Rona has been returning to silence since the initial commit while her nineteen colleagues each get a sentence.
 
@@ -154,7 +154,7 @@ Kitchen staff -45 · Supplies      -112 · Repairs -24
 BALANCE: -8 copper
 ```
 
-`235 + 84 − 45 − 112 − 24 = +138`. Fixing the third step moves Repairs to −20 and the printed sum to **+142**. The `BALANCE` line is not computed from the lines above it at all — it renders `S_story.brynLedgerBalance`, a separate field initialised to `-8@23096`. The spec had the same gap; the implementation reproduced it faithfully, which is arguably the correct call for a design lock and is certainly the funnier one. Brynn's inn is, on its own printed evidence, comfortably profitable and being told otherwise.
+`235 + 84 − 45 − 112 − 24 = +138`. Fixing the third step moves Repairs to −20 and the printed sum to **+142**. The `BALANCE` line is not computed from the lines above it at all — it renders `S_story.brynLedgerBalance`, a separate field initialised to `-8@23097`. The spec had the same gap; the implementation reproduced it faithfully, which is arguably the correct call for a design lock and is certainly the funnier one. Brynn's inn is, on its own printed evidence, comfortably profitable and being told otherwise.
 
 The second miss is smaller and more precise. §VII promises: *"The deficit can be brought to zero but not into surplus — Brynn keeps prices fair."* The three tasks add `+4`, `+2`, `+3` to a `−8` start. Measured through the tasks' own `action()` closures: `−4 → −2 → **+1**`. The engine even has a dedicated branch for the state the design forbids —
 
@@ -190,7 +190,7 @@ A player who reaches Act IV having **never started** Quill's quest triggers Laye
 
 The event table says *"Act V reached + Quill quest never started."* The code block four paragraphs later says `const actThreshold = 4; // Act IV`. Shipped: `actNumber >= 4`. The implementer followed the code, which is the right instinct, but the lock contradicted itself in the same section — the exact failure mode a design lock exists to prevent. (The other five rows match their table entries exactly, including `weckmann_class`'s `actNumber >= 6 && _npcFavor('crov') >= 3`.)
 
-Relatedly, §III opens *"these are state transitions that trigger at game milestones **regardless of player action**"*, and the constant's `→ doc:` comment says *"run per node visit."* Both are wrong: `_checkWorldProgressionEvents()` has exactly one call site, inside `function storyConfirmSleep()@36244`. A player who never sleeps never advances the world. Given F2, they would not have noticed.
+Relatedly, §III opens *"these are state transitions that trigger at game milestones **regardless of player action**"*, and the constant's `→ doc:` comment says *"run per node visit."* Both are wrong: `_checkWorldProgressionEvents()` has exactly one call site, inside `function storyConfirmSleep()@36226`. A player who never sleeps never advances the world. Given F2, they would not have noticed.
 
 ### F10 — credit where it is due: the implementer finished the spec's homework
 

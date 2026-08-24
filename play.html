@@ -11085,7 +11085,7 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
   },
   quest_wm_02: { id:'quest_wm_02', type:'side', schema:'UQF-1.0', gate:{ questsDone:['quest_wm_01'] }, bits:[], completion:{ flags:['wmDoc1Read','wmDoc2Read','wmDoc3Read'] }, title:'Isolde: Lower Archive',
     onComplete:[ { kind:'flag_write', set:['wmArchiveComplete'] }, { kind:'favor', npc:"isolde_voss", set:1 }, { kind:'narrative', msg:'📗 Froberger\'s Field Notes (Tome) obtained. Isolde is Friendly.' } ], // §ARCH-01 W7c
-    itemChain:[{action:'grant',name:"Froberger's Field Notes", icon:'📗', type:'tome', sell:0, bonus:{ deathSave:1 }, description:'Margin: "The pressure is survivable if you know it\'s coming."',silent:true}], // §EDITOR-01-D-FU(b) b2b
+    itemChain:[{action:'grant',name:'Froberger\'s Field Notes',icon:'📗',type:'tome',sell:0,bonus:{deathSave:1},silent:true,desc:'Margin: "The pressure is survivable if you know it\'s coming."'}], // §EDITOR-01-D-FU(b) b2b
     desc:"Three documents in the lower archive. The revocation letter, the field report, the personnel file. Read all three.",
     hint:'Visit the Scholar\'s Quarter and examine the archive documents.',
     activateNode:'NUE', onActivate:null,
@@ -11095,7 +11095,7 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
   },
   quest_wm_03: { id:'quest_wm_03', type:'side', schema:'UQF-1.0', gate:{ flags:['wmArchiveComplete'] }, bits:[], completion:{ flags:['wmBenediktCircleComplete'] }, title:'Benedikt: The Reading Circle',
     onComplete:[ { kind:'flag_write', set:['wmBenediktCircleComplete','wmDoc3Unredacted'] }, { kind:'favor', npc:"benedikt_rasp", set:1 }, { kind:'narrative', msg:'📘 Scholar Kings\' History (Tome) obtained. Benedikt is Dear Friend.' } ], // §ARCH-01 W7c
-    itemChain:[{action:'grant',name:"Scholar Kings' History", icon:'📘', type:'tome', sell:0, bonus:{ initiative:2 }, description:'"First knowledge, then decision, then action. Never the other order."',silent:true}], // §EDITOR-01-D-FU(b) b2b
+    itemChain:[{action:'grant',name:'Scholar Kings\' History',icon:'📘',type:'tome',sell:0,bonus:{initiative:2},silent:true,desc:'"First knowledge, then decision, then action. Never the other order."'}], // §EDITOR-01-D-FU(b) b2b
     desc:"Benedikt Rasp runs a reading circle from a bookbinder\'s stall. Three sessions — three different days.",
     hint:'Attend 3 reading circle sessions at the Scholar\'s Quarter (one per day).',
     activateNode:'NUE', onActivate:null,
@@ -11105,7 +11105,7 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
   },
   quest_wm_04: { id:'quest_wm_04', type:'side', schema:'UQF-1.0', gate:{ flags:['wmBenediktCircleComplete'] }, bits:[], completion:{ flags:['wmFirstResearcherKnown'] }, title:'Benedikt: The First Researcher',
     onComplete:[ { kind:'flag_write', set:['wmFirstResearcherKnown'] }, { kind:'reward', gold:300 }, { kind:'narrative', msg:'📙 Benedikt\'s Annotated Copy (Tome) obtained. +300gp. The First Researcher is known.' } ], // §ARCH-01 W7c
-    itemChain:[{action:'grant',name:"Benedikt's Annotated Copy", icon:'📙', type:'tome', sell:0, bonus:{ atkWhileQuestActive:1 }, description:'"He was right about this one too." — B. Rasp',silent:true}], // §EDITOR-01-D-FU(b) b2b
+    itemChain:[{action:'grant',name:'Benedikt\'s Annotated Copy',icon:'📙',type:'tome',sell:0,bonus:{atkWhileQuestActive:1},silent:true,desc:'"He was right about this one too." — B. Rasp'}], // §EDITOR-01-D-FU(b) b2b
     desc:"Benedikt knows who the First Researcher was. He waited three sessions to be sure you were the kind of person to be told.",
     hint:'Return to the lower archive and read the unredacted personnel file.',
     activateNode:'NUE', onActivate:null,
@@ -11135,7 +11135,7 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
   },
   quest_va_02: { id:'quest_va_02', type:'side', schema:'UQF-1.0', gate:{}, bits:[], completion:{ flags:['vaLogFound'] }, title:"The Architecture: Constructor's Log",
     onComplete:[ { kind:'flag_write', set:['vaLogFound'] }, { kind:'narrative', msg:"📜 The Constructor's Log and Antecedent Seal obtained." } ], // §ARCH-01 W7c
-    itemChain:[{action:'grant',name:"The Constructor's Log", icon:'📜', type:'readable', sell:0, readable: true, readableKey:'constructors_log', description:'Seven entries. Her handwriting. Entry 3 matches Froberger\'s margin note word for word.',silent:true},{action:'grant',name:'Antecedent Seal', icon:'🏛️', type:'relic', sell:0, description:'"Antecedent Containment Protocol. Seal 7. Activated."',silent:true}], // §EDITOR-01-D-FU(b) b2b
+    itemChain:[{action:'grant',name:'The Constructor\'s Log',icon:'📜',type:'readable',sell:0,readable:true,readableKey:'constructors_log',silent:true,readText:'Seven entries. Her handwriting. Entry 3 matches Froberger\'s margin note word for word.'},{action:'grant',name:'Antecedent Seal',icon:'🏛️',type:'relic',sell:0,silent:true,desc:'"Antecedent Containment Protocol. Seal 7. Activated."'}], // §EDITOR-01-D-FU(b) b2b
     desc:"A fourth document has appeared in the lower archive. It was not there when Isolde catalogued the collection — or it was there and not visible, which is a distinction the archive does not officially recognize. Seven entries. Her handwriting. The last entry reads: 'If someone is reading this, the sealing mechanism has activated. The cage is closed. I am sorry.' She wrote that line and then walked out of the archive knowing she would not be back to see if anyone found it.",
     hint:'Return to the Scholar\'s Quarter lower archive.',
     activateNode:null, 
@@ -11156,7 +11156,7 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     onComplete:[ // §ARCH-01 W7c — conditional annotation append stays _legacy_fn
       { kind:'flag_write', set:['vaArchitectureKnown'] },
       { kind:'reward', gold:500 },
-      { kind:'_legacy_fn', fn:S => { const annotated = (S.inventory || []).find(i => i.name === "Benedikt's Annotated Copy"); if (annotated) annotated.description += '\n"One annotation, added later: \'She was right. The fourth link held.\'"'; } },
+      { kind:'_legacy_fn', fn:S => { const annotated = (S.inventory || []).find(i => i.name === "Benedikt's Annotated Copy"); if (annotated) annotated.desc += '\n"One annotation, added later: \'She was right. The fourth link held.\'"'; } },
       { kind:'narrative', msg:'📙 +500gp. The Architecture is known. The chain holds.' },
     ],
     desc:"Benedikt Rasp has been assembling something for three weeks, since the last time you were in his reading circle. He has the Constructor's Log, Froberger's margin notes, your name, and one other piece he waited to confirm before speaking. He waited because he wanted to be certain you were the kind of person the message should go to. He has decided you are. Return to the Scholar's Quarter. He says it is about a chain. He means it is about what holds.",
@@ -11172,7 +11172,7 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
       { kind:'flag_write', set:['tlLedgerRead'] },
       { kind:'favor', npc:"rennau", set:1 },
       { kind:'_legacy_fn', fn:S => { S.inventory.push({ name:'The Harrow Manifest', icon:'📄', type:'readable', sell:0,
-        description:'Cargo: 40 crates, Scholar Kings correspondence, sealed. Consignee: Weimar, Archivist I. Voss. Departure: Day 17. Expected arrival: Day 20. Status: Weather Loss.'
+        readText:'Cargo: 40 crates, Scholar Kings correspondence, sealed. Consignee: Weimar, Archivist I. Voss. Departure: Day 17. Expected arrival: Day 20. Status: Weather Loss.'
           + (S.wmFirstResearcherKnown ? '\n\nIsolde Voss\'s name on a ship manifest from eleven months ago. Before the revocation. Whatever she was sending arrived nowhere.' : '') }); } },
       { kind:'narrative', msg:'📄 The Harrow Manifest obtained. Rennau is Friendly.' },
       { kind:'narrative', msg:'🪧 Rennau reads the manifest twice, then slides a second ledger across: the harbor has been shut three weeks under Emergency Protocol 7 — no lost ship gets chased through a closed port. Adjutant Vonn holds the seal at Tilbury. A new bounty surfaces on the Warrant\'s Board.' }, /* §BOARD-01-FU6 referral edge */
@@ -11206,7 +11206,7 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
       { kind:'favor', npc:"rennau", set:2 },
       { kind:'reward', gold:300 },
       { kind:'_legacy_fn', fn:S => { S.inventory.push({ name:"Ori's Account", icon:'📜', type:'readable', sell:0,
-        description:'She describes what boarded them. Not pirates. Not storm. A shape in the water, very large, that moved like it was looking for something. Then it found the ship.'
+        readText:'She describes what boarded them. Not pirates. Not storm. A shape in the water, very large, that moved like it was looking for something. Then it found the ship.'
           + ((S.inventory || []).find(i => i.name === "Froberger's Field Notes") ? '\n\nFroberger wrote: "The pressure is survivable if you know it\'s coming." Ori survived because she knew the shape was there and went over the side before it hit.' : '') }); } },
       { kind:'narrative', msg:'📜 +300gp. Ori\'s Account obtained. Rennau is Dear Friend.' },
     ],
@@ -13802,7 +13802,7 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     passText:"He built that rack himself, the second season. The rubble has been cleared. The Corrupted Cats are gone.",
     failText:"Five Corrupted Cats are still holding the rubble at Fishmonger Row. Clear them to find what they carry.",
     npc:"connie_tuna",
-    onComplete:[{kind:'reward',gold:500,items:[{name:'Old Tuna Account Book',icon:'📒',type:'key_item',sell:0,description:'A worn ledger. Every vendor on Fishmonger\'s Row — who owed what, who paid forward. Vincenzo\'s page is the last completed entry. The pages after it are blank.'}]},{kind:'favor',npc:'aldo_sardino',add:1},{kind:'unlock',quests:['quest_la_riva_03']},{kind:'narrative',msg:'💰 +500gp. The rubble is quieter now.\n\nAldo Sardino steps out from between two collapsed stalls. He has been here the whole time.\n\n"I found the net in the rubble of my stall. Three days after. I folded it." He does not look at Connie. "I\'ve been carrying it since."\n\nHe reaches inside his coat. He puts the folded net down on the nearest intact piece of counter. Then he reaches under his arm and draws out a ledger — battered, squared, the handwriting on the cover formal.\n\n"Every vendor on the row. Who owed what. Who paid. Vincenzo\'s page is the last one." He holds it out to you. "Take it to Kenickie. He\'s the one who knew Vincenzo\'s operation. He should hold it."\n\n📒 Old Tuna Account Book obtained.\n📋 Quest: The Account Book — accepted.'}],
+    onComplete:[{kind:'reward',gold:500,items:[{name:'Old Tuna Account Book',icon:'📒',type:'key_item',sell:0,desc:'A worn ledger. Every vendor on Fishmonger\'s Row — who owed what, who paid forward. Vincenzo\'s page is the last completed entry. The pages after it are blank.'}]},{kind:'favor',npc:'aldo_sardino',add:1},{kind:'unlock',quests:['quest_la_riva_03']},{kind:'narrative',msg:'💰 +500gp. The rubble is quieter now.\n\nAldo Sardino steps out from between two collapsed stalls. He has been here the whole time.\n\n"I found the net in the rubble of my stall. Three days after. I folded it." He does not look at Connie. "I\'ve been carrying it since."\n\nHe reaches inside his coat. He puts the folded net down on the nearest intact piece of counter. Then he reaches under his arm and draws out a ledger — battered, squared, the handwriting on the cover formal.\n\n"Every vendor on the row. Who owed what. Who paid. Vincenzo\'s page is the last one." He holds it out to you. "Take it to Kenickie. He\'s the one who knew Vincenzo\'s operation. He should hold it."\n\n📒 Old Tuna Account Book obtained.\n📋 Quest: The Account Book — accepted.'}],
   },
   quest_la_riva_03: { id:'quest_la_riva_03', type:'side', schema:'UQF-1.0', gate:{}, bits:[], completion:{ flags:['laRivaComplete'] }, title:"Aldo: The Account Book",
     desc:"Aldo Sardino has kept the account book since the row came down. Vincenzo's page is the last completed entry. He wants it to go to someone who knew Vincenzo.",
@@ -25357,7 +25357,7 @@ function _storyBattleVictory() {
     if (S_story.frCatKillCount >= 5 && (S_story.quests || {})['quest_la_riva_02'] === 'active'
         && !(S_story.inventory || []).some(i => i.name === "Vincenzo's Net")) {
       const _net = { name:"Vincenzo's Net", icon:'🎣', type:'key_item', sell:0,
-        description:"A fishing net with a bronze fish-stamp tag on the corner. It was left hanging to dry the morning the Cat-King came. Found in the rubble, folded." };
+        desc:"A fishing net with a bronze fish-stamp tag on the corner. It was left hanging to dry the morning the Cat-King came. Found in the rubble, folded." };
       S_story.inventory = S_story.inventory || [];
       S_story.inventory.push(_net);
       dropsThisBattle.push({ icon:'🎣', name:"Vincenzo's Net", type:'key_item' });
@@ -25385,7 +25385,7 @@ function _storyBattleVictory() {
     S_story.vshamanDefeated = true;
     S_story.wardensLegacyKnown = true;
     const _wt = { name:"The Warden's Token", icon:'🔑', type:'relic', sell:0,
-      description:'Original Warden\'s seal, First Researcher\'s appointment. Recopied seventeen times. The seventeenth copy has a small error in the verb tense that changed everything.' };
+      desc:'Original Warden\'s seal, First Researcher\'s appointment. Recopied seventeen times. The seventeenth copy has a small error in the verb tense that changed everything.' };
     S_story.inventory = S_story.inventory || [];
     S_story.inventory.push(_wt);
     dropsThisBattle.push({ icon:'🔑', name:"The Warden's Token", type:'relic' });
@@ -26180,7 +26180,7 @@ function _applyItemChain(q) {
         // declarative grants can carry the full item shape the reward ladder used (readText,
         // tome bonus, passive, readable, weapon stats, …). Anything off-list is intentionally
         // dropped. Kept in lockstep with the worldbuilder widget + scripts/check-itemchain.js.
-        for (const f of ['desc', 'description', 'readText', 'readableKey', 'readable', 'passive',
+        for (const f of ['desc', 'readText', 'readableKey', 'readable', 'passive',
                          'bonus', 'uses', 'minLevel', 'atkBonus', 'dmgDie', 'dmgCount', 'dmgFlat', 'heal']) {
           if (s[f] !== undefined) item[f] = s[f];
         }
@@ -27867,9 +27867,9 @@ function _storyWmArchiveModal(wrap) {
         if (!S_story.inventory) S_story.inventory = [];
         if (!S_story.inventory.find(i => i.name === "The Constructor's Log")) {
           S_story.inventory.push({ name:"The Constructor's Log", icon:'📜', type:'readable', sell:0,
-            description:'Seven entries. Her handwriting. Entry 3 matches Froberger\'s margin note word for word.' });
+            readText:'Seven entries. Her handwriting. Entry 3 matches Froberger\'s margin note word for word.' });
           S_story.inventory.push({ name:'Antecedent Seal', icon:'🏛️', type:'relic', sell:0,
-            description:'"Antecedent Containment Protocol. Seal 7. Activated."' });
+            desc:'"Antecedent Containment Protocol. Seal 7. Activated."' });
         }
         if (!S_story.quests) S_story.quests = {};
         if (!S_story.quests['quest_va_03']) S_story.quests['quest_va_03'] = 'active';
@@ -30865,6 +30865,7 @@ function storyRenderInventory() {
       + (item.mintKey ? ' <span class="inv-tag" title="Minted on the ledger — tradeable in multiplayer">🔗</span>' : '')
       + '</span>'
       + '<span class="inv-src">' + (node ? node.name : (item.code || '')) + '</span>';
+    div.title = item.desc || '';
     if (extraBtns) extraBtns(div, item);
     list.appendChild(div);
   }
@@ -31714,7 +31715,7 @@ function _nodeHookVoidShamanWarden(node) {
         S_story.wardensLegacyKnown = true;
         S_story.inventory = S_story.inventory || [];
         S_story.inventory.push({ name:"The Warden's Token", icon:'🔑', type:'relic', sell:0,
-          description:'Original Warden\'s seal, First Researcher\'s appointment. Recopied seventeen times. The seventeenth copy has a small error in the verb tense that changed everything.' });
+          desc:'Original Warden\'s seal, First Researcher\'s appointment. Recopied seventeen times. The seventeenth copy has a small error in the verb tense that changed everything.' });
         S_story.gold += 600;
         storyMsg('💰 +600gp (quest: The Warden). 🔑 The Warden\'s Token added to inventory.');
         if (!S_story.quests['quest_vs_warden']) S_story.quests['quest_vs_warden'] = 'active';
@@ -34342,7 +34343,7 @@ const NODE_VERBS = [
       // `set:1`, not `add:1` — _setNpcFavor takes an ABSOLUTE level and only ever raises it.
       { kind:'favor', npc:'yva', set:1 },
       { kind:'reward', items:[{ name:'Hollow Hands Seal', icon:'🖤', type:'quest_item', sell:0,
-        description:'A goblin sub-clan mark. Void-tainted. The mark of a faction answering to a shaman Mordus doesn\'t know.' }] },
+        desc:'A goblin sub-clan mark. Void-tainted. The mark of a faction answering to a shaman Mordus doesn\'t know.' }] },
       { kind:'unlock', quests:['quest_vs_03'] } ] },
   // ── §DESIGN-03: quest_brynn_firewood — the woodpile at Birka ──
   { id:'tll-brynn-firewood', group:'tll-brynn-firewood', nodes:['TLL'],
@@ -34799,7 +34800,7 @@ function storyRender(node, prefix) {
           if (!manifestFound) {
             S_story.inventory = S_story.inventory || [];
             S_story.inventory.push({ name:'The Harrow Manifest', icon:'📄', type:'readable', sell:0,
-              description:'Cargo: 40 crates, Scholar Kings correspondence, sealed. Consignee: Weimar, Archivist I. Voss. Departure: Day 17. Expected arrival: Day 20. Status: Weather Loss.'
+              readText:'Cargo: 40 crates, Scholar Kings correspondence, sealed. Consignee: Weimar, Archivist I. Voss. Departure: Day 17. Expected arrival: Day 20. Status: Weather Loss.'
                 + (S_story.wmFirstResearcherKnown ? '\n\nIsolde Voss\'s name on a ship manifest from eleven months ago. Before the revocation. Whatever she was sending arrived nowhere.' : '') });
             storyMsg('📄 Found: The Harrow Manifest.');
           }

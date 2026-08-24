@@ -84,23 +84,23 @@ scored **UNVERIFIABLE**, not wrong, and the report is dated by the birth of the 
 ## III. As-Built Inventory (HEAD, 2026-08-12)
 
 **Condition economy — exact.**
-`const CONDITION_GOLD = {@24618` · `const CONDITION_ITEMS = [@22409` · `function storyPreBattle(node) {@36399`
+`const CONDITION_GOLD = {@24619` · `const CONDITION_ITEMS = [@22410` · `function storyPreBattle(node) {@36381`
 
 **Flashbang — exact.**
-`const COMBAT_ITEMS = [@24465` · `function storyBuyFlashbang() {@24366` ·
-`function _renderSboSpells() {@24909` · `function _storyUseFlashbang(invIdx) {@24934` ·
-`function _playerHasBonusOptions() {@24977` · `{ weight:6, _type:"flashbang" },@24522`
+`const COMBAT_ITEMS = [@24466` · `function storyBuyFlashbang() {@24367` ·
+`function _renderSboSpells() {@24910` · `function _storyUseFlashbang(invIdx) {@24935` ·
+`function _playerHasBonusOptions() {@24978` · `{ weight:6, _type:"flashbang" },@24523`
 
 **Progression — shipped under a different architecture.**
-`const XP_LEVELS = [@24418` (20 entries) · `const FIGHTER_FEATURES = {@25504` (19 entries, Lv2–20) ·
-`const _ASI_LEVELS = new Set([4, 6, 8, 12, 14, 16, 19]);@25526` ·
-`function _showLevelUpModal(lvl) {@25615` · `function _checkLevelUp() {@25671` ·
-`function _extraAttackCount() {@24995` · `const critMin = _lv >= 20 ? 17@25027`
+`const XP_LEVELS = [@24419` (20 entries) · `const FIGHTER_FEATURES = {@25505` (19 entries, Lv2–20) ·
+`const _ASI_LEVELS = new Set([4, 6, 8, 12, 14, 16, 19]);@25527` ·
+`function _showLevelUpModal(lvl) {@25616` · `function _checkLevelUp() {@25672` ·
+`function _extraAttackCount() {@24996` · `const critMin = _lv >= 20 ? 17@25028`
 
 **Integration points named by the report.**
-`function _storyBattleVictory() {@25280` · `_levelUpQueue = [];   // reset before each battle resolution@25296` ·
-`const lvlAtk@25030` · `function _calcPlayerAc() {@24610` ·
-`const nextThresh = XP_LEVELS[curLv];@25469` · `const lvEl = document.getElementById('s-level');@36136`
+`function _storyBattleVictory() {@25281` · `_levelUpQueue = [];   // reset before each battle resolution@25297` ·
+`const lvlAtk@25031` · `function _calcPlayerAc() {@24611` ·
+`const nextThresh = XP_LEVELS[curLv];@25470` · `const lvEl = document.getElementById('s-level');@36118`
 
 ---
 
@@ -112,7 +112,7 @@ Two-way: **REPORT-ROT** = the report aged. **ENGINE-ROT** = HEAD lost something 
 | # | Report claim (§) | HEAD | Verdict |
 |---|---|---|---|
 | 1 | `CONDITION_GOLD` ×100, all 12 values (§IV.C) | All 12 exact, byte-identical at archive **and** HEAD | ✅ **EXACT — 79 days unchanged** |
-| 2 | Condition item source = *"Pre-existing inventory"* (§V.A) | Not inventory-gated: `// All condition items available for gold purchase (not inventory gated)@36403` | **NOT SHIPPED — superseded, and it strengthens §IV** |
+| 2 | Condition item source = *"Pre-existing inventory"* (§V.A) | Not inventory-gated: `// All condition items available for gold purchase (not inventory gated)@36385` | **NOT SHIPPED — superseded, and it strengthens §IV** |
 | 3 | Cheapest condition = Feint Scroll 1,000 gp (§IV.C) | Live hint string names exactly that | ✅ EXACT |
 | 4 | `COMBAT_ITEMS` Flashbang `cost:150, sell:75` (§III.B) | Byte-identical | ✅ EXACT |
 | 5 | Flashbang = vendor purchase, scroll = loot drop (§III.B contrast) | Flashbang is **also** a 6 % `_D100_TABLE` loot row | **REPORT-ROT — EXPANDED** |
@@ -149,8 +149,8 @@ decision points"*).
 
 HEAD ships a dedicated `story-levelup-modal` in which the player **clicks to roll a d10 for HP**,
 sometimes **clicks a bonus d10**, and at seven levels **allocates two ability-score points by hand**
-(`const _ASI_LEVELS = new Set([4, 6, 8, 12, 14, 16, 19]);@25526`). `function _showLevelUpModal(lvl) {@25615`
-gates each section behind the previous one; `function _checkLevelUp() {@25671` now only *queues*.
+(`const _ASI_LEVELS = new Set([4, 6, 8, 12, 14, 16, 19]);@25527`). `function _showLevelUpModal(lvl) {@25616`
+gates each section behind the previous one; `function _checkLevelUp() {@25672` now only *queues*.
 
 This is not rot. `FIGHTER_FEATURES`, `_ASI_LEVELS` and the modal are **already present in the earliest
 surviving build three days later**, while the specified `XP_LEVELS` literal and `_LEVEL_REWARDS` have
@@ -158,8 +158,8 @@ surviving build three days later**, while the specified `XP_LEVELS` literal and 
 
 **Why the reversal was right, and worth recording as design history.** The report optimised for *zero
 overhead*; the shipped system optimised for *the level-up being an event*. Levels also stopped being
-scalar: `function _extraAttackCount() {@24995` turns the main action into 2/3/4 rolls at L5/11/20 and
-`const critMin = _lv >= 20 ? 17@25027` widens the crit window at L3/15/20 — changes to the *structure*
+scalar: `function _extraAttackCount() {@24996` turns the main action into 2/3/4 rolls at L5/11/20 and
+`const critMin = _lv >= 20 ? 17@25028` widens the crit window at L3/15/20 — changes to the *structure*
 of a round, which no flat `+1 ATK` table can express. The report's own rule (*deepen existing
 decisions*) is better served by the design that broke its constraint than by the one it specified.
 ***13th instrument: a design doc's prohibition is a claim like any other — verify it against what
@@ -167,9 +167,9 @@ shipped, because the reversal is usually the interesting part.***
 
 ### Finding 2 → §DX-02y — `S_story.acBonus` is a read-only field with no writer, and the home doc says otherwise
 
-Two declarations — `acBonus: 0,@23040` inside `_S_DEFAULTS()`, and again in the `S_story` seed
-literal at `level: 1, atkBonus: 0, acBonus: 0,@23074` — exactly **one reader**
-— the `(S_story.acBonus || 0)@24614` term inside `function _calcPlayerAc() {@24610` — and **zero
+Two declarations — `acBonus: 0,@23041` inside `_S_DEFAULTS()`, and again in the `S_story` seed
+literal at `level: 1, atkBonus: 0, acBonus: 0,@23075` — exactly **one reader**
+— the `(S_story.acBonus || 0)@24615` term inside `function _calcPlayerAc() {@24611` — and **zero
 writers in 38,712 lines**. The same holds at `32c10c5`: the field was **born dead**, not retired. The
 specified +1 AC at L5, +1 at L8 and +2 at L10 therefore never accrue; a level-20 character's AC comes
 entirely from shield and lake-magic terms.
@@ -189,16 +189,16 @@ The report defined `S_story.atkBonus` as a *level* bonus and specified the integ
 meaning underneath one of them changed.
 
 At HEAD the field carries the **STR modifier**: seeded at character creation by
-`S_story.atkBonus = Math.max(0, Math.floor((scores.str - 10) / 2));@23958` and grown only by an ASI
-STR bump (`if (strDelta > 0) S_story.atkBonus@38540`). The specified integration point survives as
-`const lvlAtk@25030`. Two individually-correct changes compose into three disagreeing surfaces:
+`S_story.atkBonus = Math.max(0, Math.floor((scores.str - 10) / 2));@23959` and grown only by an ASI
+STR bump (`if (strDelta > 0) S_story.atkBonus@38522`). The specified integration point survives as
+`const lvlAtk@25031`. Two individually-correct changes compose into three disagreeing surfaces:
 
 - **The battle engine** reads its ability modifier from the dice-roller's own control, which is
   `<option value="dex" selected>@3719`. The story→simulator sync at
-  `document.getElementById('char-level').value = _slv;@24675` writes the level, AC, max HP and all six
+  `document.getElementById('char-level').value = _slv;@24676` writes the level, AC, max HP and all six
   ability scores — but **never repoints that select**. So a story attack rolls
   **d20 + DEX mod + prof + STR mod + weapon/tome/lake/ally**: both abilities, every swing.
-- **The character sheet** uses `const atkTotal = strMod + profBonus + (S_story.atkBonus || 0);@37617`
+- **The character sheet** uses `const atkTotal = strMod + profBonus + (S_story.atkBonus || 0);@37599`
   — and since `atkBonus` *is* the STR mod, **STR is counted twice**.
 - **The sheet's own printed breakdown** renders the bonus term as `atkBonus − strMod`, i.e. `+0`, so
   the displayed components sum to `strMod + prof` while the displayed total is `2 × strMod + prof`.
@@ -211,22 +211,22 @@ visible only by asking what the field *means* at each reader.
 
 ### Finding 4 — The condition repricing is the report's durable result, and it ships stronger than specified
 
-`const CONDITION_GOLD = {@24618` is **byte-identical at `32c10c5` and at HEAD** — all 12 entries,
+`const CONDITION_GOLD = {@24619` is **byte-identical at `32c10c5` and at HEAD** — all 12 entries,
 unchanged across 79 days while the file grew from 14,377 to 38,712 lines. It is the most durable
 thing this report produced.
 
 It also carries more weight than the report knew. §V.A files condition items under *source:
 pre-existing inventory*; HEAD does not gate on possession at all
-(`// All condition items available for gold purchase (not inventory gated)@36403`), so **gold is the
+(`// All condition items available for gold purchase (not inventory gated)@36385`), so **gold is the
 only brake on the strongest pre-battle effect in the game** and the ×100 multiplier is doing the
 entire balancing job §IV.B argued for. The mechanism reaches every entry point: both the pre-battle
-overlay (`function storyPreBattle(node) {@36399`) and the in-page battle accordion price from the same
+overlay (`function storyPreBattle(node) {@36381`) and the in-page battle accordion price from the same
 table.
 
 Two residues:
 
 - **Stale comment, one line above the code that contradicts it:**
-  `// filtered CONDITION_ITEMS matching current inventory@36395`.
+  `// filtered CONDITION_ITEMS matching current inventory@36377`.
 - **A latent price bypass → §DX-02z.** All five cost lookups read `CONDITION_GOLD[…] || 20`. Today
   all 12 `CONDITION_ITEMS` have a price row, so the fallback is unreachable — but a 13th condition
   added without one is **silently priced at 20 gp**, the retired pre-Layer-18 scale, re-creating the
@@ -264,8 +264,8 @@ summarise.***
 
 ### Finding 6 — `_playerHasBonusOptions()` is a constant-true function
 
-`function _playerHasBonusOptions() {@24977` tests the shield, offhand, scrolls, flashbangs and
-potions in turn — and then closes with `return true;  // wimper always available@24984`. Only the
+`function _playerHasBonusOptions() {@24978` tests the shield, offhand, scrolls, flashbangs and
+potions in turn — and then closes with `return true;  // wimper always available@24985`. Only the
 opening `usedBonusAction` guard can return false, so **every inventory test in the body is inert**.
 The manifest row *"`_playerHasBonusOptions()` flashbang check ✅"* is honest about the line and
 misleading about the behaviour.
@@ -283,13 +283,13 @@ The Flashbang is the cleanest implementation in the report — **11 of 11 manife
 byte-exact:
 
 - `{ name:'Flashbang', icon:'💥', type:'flashbang', cost:150, sell:75 }` — every field.
-- `function _storyUseFlashbang(invIdx) {@24934` — the guard order is exactly as specified: *must have
+- `function _storyUseFlashbang(invIdx) {@24935` — the guard order is exactly as specified: *must have
   attacked* → *free hand required* → splice → `spellAdvantageReady = true` → `usedBonusAction = true`
   → enemy turn. §III.C's one-round-delay framing (*throw in round 1, ADV lands in round 2*) is a
   direct consequence and is live.
 - Vendor row, `#btn-buy-flashbang` listener, orange-bordered no-DC button in `_renderSboSpells`, the
   💊 Consumables filter, and `'flashbang'` in `knownTypes` — all present.
-- **Expanded beyond spec:** `{ weight:6, _type:"flashbang" },@24522` makes it a 6 % loot drop, so the
+- **Expanded beyond spec:** `{ weight:6, _type:"flashbang" },@24523` makes it a 6 % loot drop, so the
   report's Flashbang-vs-Scroll contrast row (*vendor purchase* vs *loot drop value*) no longer
   distinguishes them. The **guarantee premium** argument survives; the **exclusivity** claim does not.
 
@@ -324,7 +324,7 @@ the queue-then-show victory sequencing all verify exact.
 | **§DX-02y** | `S_story.acBonus` — 2 declarations, 1 reader, **0 writers**, born dead; `mechanics-combat.md:313` claims it is written. Widens `check:deadconsts` to census readers and writers **separately**. | 🟢 No — but *how* to wire it (or delete it) is a small call |
 | **§AUDIT-03ae** | Attack-roll three-way disagreement: engine adds DEX **and** STR; the character sheet double-counts STR; the sheet's own breakdown does not sum to its own total. Player-visible. | 🟢 No |
 | **§DX-02z** | `CONDITION_GOLD[…] \|\| 20` in 5 sites with no gate pairing `CONDITION_ITEMS` ↔ `CONDITION_GOLD`; a 13th condition ships silently at the retired pre-Layer-18 price. | 🟢 No |
-| **Doc fixes** | `mechanics-combat.md:313` (`acBonus` claim) · `:254` bare archive-era anchor *"HTML line 8608"* for a const now at 24418 · `// filtered CONDITION_ITEMS matching current inventory@36395` contradicted 8 lines below. | 🟢 No |
+| **Doc fixes** | `mechanics-combat.md:313` (`acBonus` claim) · `:254` bare archive-era anchor *"HTML line 8608"* for a const now at 24418 · `// filtered CONDITION_ITEMS matching current inventory@36377` contradicted 8 lines below. | 🟢 No |
 
 ---
 

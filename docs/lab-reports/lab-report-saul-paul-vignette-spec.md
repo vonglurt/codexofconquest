@@ -200,7 +200,7 @@ mapping, the sentence each node was built around, and what HEAD did with it.
 | Spec | HEAD | The line the node was built on | Delta |
 |---|---|---|---|
 | **HR — Herath** *(the law-city)* | `JRS` Jerusalem | *"Fourteen warrants issued in the last quarter. Fourteen correctly processed."* | Desk and warrants kept (`has a desk in the lower court@8444`); ledger, corridor and second person gone. **Fourteen became three** (`loot:'Three Jerusalem Warrants'`) — and `quest_road_damascus` tests for that item by name, so a number in the fiction is now a number in a gate. |
-| **KS — Kesra** *(the blind days)* | `DAM` Damascus | *"The bread on the table arrived on the first day. You know it is still there because you can smell it."* | Bread ❌. Stairs relocated to Philippi. Three blind days shipped as a **literal counter**, `blindDaysKS@22512`, one per sleep — §AUDIT-03aj's first exhibit. The man on the landing became `I was told to come@22513`. |
+| **KS — Kesra** *(the blind days)* | `DAM` Damascus | *"The bread on the table arrived on the first day. You know it is still there because you can smell it."* | Bread ❌. Stairs relocated to Philippi. Three blind days shipped as a **literal counter**, `blindDaysKS@22513`, one per sleep — §AUDIT-03aj's first exhibit. The man on the landing became `I was told to come@22514`. |
 | **DR — The Dust Roads** | `RUH` Arabia | *"It has no opinion about what you believed four months ago… It is a clean surface."* | Argument kept, prose rewritten — *"The road to Damascus changed what he was. The desert changed what he does with it."* Three months → *"a season"*; `RUH` also gained a `Desert Wanderer ×2` battle nobody asked for. |
 | **TS — Tarsis** *(home)* | `ADA` Tarsus | *"You look for your father's mark in the lintel as a reflex… It will be there next time."* | The arc's most-developed object: **`lintel` = 0 occurrences, 0 commits ever. NEVER SHIPPED.** `ADA` does the same work in four words — `He does not knock@8464`. |
 | **AO — Anthos** *(the commissioning)* | `HTY` Antioch | *"Someone outside the community named them first… The name travels."* | Naming beat kept and moved onto the protagonist: *"He is called Paul here for the first time in this record."* Grain merchant, fire, breaking of bread ❌. |
@@ -239,7 +239,7 @@ alternative was last argued for.*
 
 | Key | Line as specified | At HEAD |
 |---|---|---|
-| `anath` | *"I was told to come. I am here. That is the extent of what I can tell you about why I am here."* | **partial** — `I was told to come@22513` survives inside a rebuilt sentence; the reluctance did not |
+| `anath` | *"I was told to come. I am here. That is the extent of what I can tell you about why I am here."* | **partial** — `I was told to come@22514` survives inside a rebuilt sentence; the reluctance did not |
 | `barnach` | *"He will stay with me. I am not asking for a discussion about this."* | rewritten — *"I have been looking for you for a year. It's time."* |
 | `silar` | *"You realize that singing in a prison cell is unusual behavior."* | ❌ NOT SHIPPED — and `silarJoined` is write-only (§DOC-02ai, §DX-02n) |
 | `timael` | *"I will go where you go…"* | rewritten — *"He got up. Everyone else left. I decided to stay."* |
@@ -289,8 +289,8 @@ the Fishing Guide, they will know how to read a stat line and will notice it.
 This is not a puzzle. There is no quest to remove it. The answer has already been given.
 
 > **Δ — 4 of 5 details exact, and the section corrects a sibling report.**
-> ✅ `Thorn (Permanent)@37676` renders under `S_story.saulConverted`, on the character sheet, with the
-> specified label byte-exact · ✅ **no mechanical penalty** · ✅ no tooltip · ✅ `Fishing Guide@13816`
+> ✅ `Thorn (Permanent)@37658` renders under `S_story.saulConverted`, on the character sheet, with the
+> specified label byte-exact · ✅ **no mechanical penalty** · ✅ no tooltip · ✅ `Fishing Guide@13817`
 > exists (Q-BAIT-00), so the cross-reference still holds 77 days on · ❌ **HEAD supplies the
 > explanation the spec forbade** — a 2 Cor 12:9 subtitle under the label, in a modern rendering
 > (*"my power is made perfect in weakness"*) against the spec's KJV *"my strength"*.
@@ -309,8 +309,8 @@ This is not a puzzle. There is no quest to remove it. The answer has already bee
 
 Census across all **2,824** UQF quests: **2,454** are `type:'skill_check'`, and **all 2,454 carry no
 `completion` block**. That is by design — `S_story.quests[questId] = 'done'@6990` is the skill-check
-terminal state, written on the pass path, while `q.completion && QuestRuntime.canComplete@30187` inside
-`function storyCheckQuests@30166` is the *only* route to `'complete'`.
+terminal state, written on the pass path, while `q.completion && QuestRuntime.canComplete@30188` inside
+`function storyCheckQuests@30167` is the *only* route to `'complete'`.
 
 The residue: **exactly 8 skill-check quests in the file carry an `onComplete[]` chain that can
 therefore never run**, and the migration author flagged all eight in place (*"⚠ dead in legacy too"*).
@@ -333,7 +333,7 @@ grants `xp:150`. → **§DX-02av**, 🟢, no design call.
 | **§DX-02av** *(new)* | 🟢 no design call | 8 skill-check quests file-wide carry an unreachable `onComplete[]`; 5 in this arc; one misstates its own XP. Move the narrative into `onPass` or delete it. |
 | **§FUTURE-01-FU** *(extended)* | 🟡 design call | Two naming fossils added: `quest_prison_phillam@11449` and `phillippiJailerConverted@11449` — the latter a **blend** of fictional *Phillam* and historical *Philippi*, not a straggler of either. Plus a second player-facing straggler: *"the waypoint"* for Troas, at `@8503` and `@11502`. |
 | **§AUDIT-03x** | 🟡 design call *(cheapest instance needs none)* | `ATH`←`SEA` strands `quest_areopagus@11461` — this spec's own nominated model scene. |
-| **§AUDIT-03aj** | 🟡 design call | `blindDaysKS@22512` / `hrHellenistDays@23175` — this document is where the three days and the fifteen days were first written as scene beats. |
+| **§AUDIT-03aj** | 🟡 design call | `blindDaysKS@22513` / `hrHellenistDays@23176` — this document is where the three days and the fifteen days were first written as scene beats. |
 | **§DOC-02ai** *(corrected)* | — | The Thorn is not an §AUDIT-03v/w-cluster member; see §V. |
 
 ---

@@ -59,13 +59,13 @@ Three concrete contributions, each verified live in §VI:
    that a speedrunner never sees. **The reward for kindness is deferred by an entire playthrough**, which
    is the only pacing this game has that a wiki cannot spoil.
 2. **It gives NG+ an authored ending, not a rerun.** Entry 42 is a hard precondition for the Void
-   Architecture arc: `S_story.vaArchitectureKnown = true;@31689` cannot fire without it, and that flag
+   Architecture arc: `S_story.vaArchitectureKnown = true;@31691` cannot fire without it, and that flag
    drives the **fifth ending** — Sweelinck's last question becomes *"What was inside the cage?"* and the
-   victory screen gains a closing addendum (`// Layer 52: §XVII — fifth ending: vaArchitectureKnown overrides all other questions@28268`).
+   victory screen gains a closing addendum (`// Layer 52: §XVII — fifth ending: vaArchitectureKnown overrides all other questions@28269`).
    A second run therefore has an ending the first run cannot reach.
 3. **It is a permanent artifact in a game about impermanence.** `entry42Text` survives every subsequent
    reset. By NG+3 the journal the player found in run 1 ends with something they wrote, rendered under
-   `Entry 42 ✦ — <span style="color:#f0c070">by you</span>@30682`. The doom clock erases the world every
+   `Entry 42 ✦ — <span style="color:#f0c070">by you</span>@30683`. The doom clock erases the world every
    49 days; this is the one line of the world it cannot erase.
 
 ### D. The three-layer stack (as designed)
@@ -99,9 +99,9 @@ layers wearing three labels.
 
 ### A. State flags — 7 of 7, verbatim, on three contiguous lines
 
-`ngPlusRun: 0,@23090` · `entry42Written: false, entry42Text: '', entry42Read: false,@23124` ·
-`ngMemoryDelivered: {}, nextFrobergerComplete: false, frobergerLetterFound: false,@23125` ·
-`priorQuestMinusOne: false,@23126`
+`ngPlusRun: 0,@23091` · `entry42Written: false, entry42Text: '', entry42Read: false,@23125` ·
+`ngMemoryDelivered: {}, nextFrobergerComplete: false, frobergerLetterFound: false,@23126` ·
+`priorQuestMinusOne: false,@23127`
 
 | Flag | Type | Specified purpose | Verdict |
 |---|---|---|---|
@@ -113,18 +113,18 @@ layers wearing three labels.
 | `nextFrobergerComplete` | boolean | *"set when `quest_ng_01` completes"* | ❌ **DEAD** — 1 occurrence in 38,712 lines, 0 assignments ever (§V-C) |
 | `frobergerLetterFound` | boolean | CO letter taken | ✅ live |
 
-### B. NG+ preservation — `function storyNewGamePlus() {@24001`
+### B. NG+ preservation — `function storyNewGamePlus() {@24002`
 
 Preserved across the reset, exactly as specified: `ngPlusRun + 1` · `entry42Written` · `entry42Text` ·
-`priorQuestMinusOne`, captured as `const savedPriorQuestMinus1  = !!(S_story.questMinusOne);@24027` and
-restored at `S_story.priorQuestMinusOne = savedPriorQuestMinus1;@24035`. **One preserved field the report
+`priorQuestMinusOne`, captured as `const savedPriorQuestMinus1  = !!(S_story.questMinusOne);@24028` and
+restored at `S_story.priorQuestMinusOne = savedPriorQuestMinus1;@24036`. **One preserved field the report
 omits:** `pitPerks`. Correctly **not** preserved: `ngMemoryDelivered`, `entry42Read`,
 `frobergerLetterFound`, `nextFrobergerComplete` — all reset by `Object.assign(S_story, _S_DEFAULTS())`,
 so the memory lines and the chain are re-earned each run.
 
 ### C. NPC memory lines
 
-`const NPC_NG_PLUS_GREETINGS = {@27314` and `const NPC_NG_MEMORY_LINES = {@27324` — **six keys each, and
+`const NPC_NG_PLUS_GREETINGS = {@27315` and `const NPC_NG_MEMORY_LINES = {@27325` — **six keys each, and
 at HEAD the same six**: `yael` (LHR) · `brynn` (TLL) · `quill` (MHQ) · `pachelbel` (LLA) · `crov`, `auros`
 (HKG). Delivery sits inside `_renderNpcCard`:
 
@@ -141,17 +141,17 @@ if ((S_story.ngPlusRun || 0) > 0 && S_story[ngGreetedKey] && fav >= 2   // ← �
 }
 ```
 
-`S_story[ngGreetedKey] = true;@23731` · `setTimeout(() => storyMsg(NPC_NG_MEMORY_LINES[key]), 800);@23738`.
+`S_story[ngGreetedKey] = true;@23732` · `setTimeout(() => storyMsg(NPC_NG_MEMORY_LINES[key]), 800);@23739`.
 **Eleven lines apart, one synchronous pass.** See §V-A.
 
 ### D. Entry 42 — a panel, not a modal
 
-`if (node.code === 'LHR' && (S_story.ngPlusRun || 0) >= 1 && S_story.priorQuestMinusOne@34636`, then
-`const _e42Dear = ['yael','brynn','quill','pachelbel','crov','auros']@34638` filtered on `_npcFavor(k) >= 2`
-and `if (_e42Dear >= 3) {@34640`. It builds a `.sweelinck-variant` div and inserts it with
+`if (node.code === 'LHR' && (S_story.ngPlusRun || 0) >= 1 && S_story.priorQuestMinusOne@34618`, then
+`const _e42Dear = ['yael','brynn','quill','pachelbel','crov','auros']@34620` filtered on `_npcFavor(k) >= 2`
+and `if (_e42Dear >= 3) {@34622`. It builds a `.sweelinck-variant` div and inserts it with
 `insertAdjacentElement('afterend')` after the story text box — an **inline panel**, never an overlay
 (§V-D). Two buttons: *"✍️ Write it."* and *"— Leave it blank."* The blank branch is not a null branch;
-it is an answer: `📖 You left Entry 42 blank. Some things need not be written to be true.@34660`
+it is an answer: `📖 You left Entry 42 blank. Some things need not be written to be true.@34642`
 
 ### E. The quest chain — `quest_ng_01: { id:'quest_ng_01'@11039` · `quest_ng_02: { id:'quest_ng_02'@11048` · `quest_ng_03: { id:'quest_ng_03'@11057`
 
@@ -169,7 +169,7 @@ on the Warrant's Board.
 `quest_ng_02` additionally gates on `flags:['priorQuestMinusOne']` — *you can only write what comes next if
 you understood what came before.*
 
-### F. The letter — `if (node.code === 'TLS' && (S_story.ngPlusRun || 0) >= 1 && !S_story.frobergerLetterFound) {@34940`
+### F. The letter — `if (node.code === 'TLS' && (S_story.ngPlusRun || 0) >= 1 && !S_story.frobergerLetterFound) {@34922`
 
 A one-button panel at the Cosmic Realm spire, present only in NG+. *"If you are reading this, you completed
 the run once already. That means you know how it ends. I am sorry about the ending. You deserved a better
@@ -210,7 +210,7 @@ one."* — Froberger, sealed, to a reader he never met. Taking it sets the flag 
 
 ### A. The second visit has never happened — and it failed two different ways
 
-`S_story[ngGreetedKey] = true;@23731` is written by the greeting branch and read by the memory branch
+`S_story[ngGreetedKey] = true;@23732` is written by the greeting branch and read by the memory branch
 **eleven lines later, in the same synchronous call**. There is no `return` between them. Two consequences,
 and both were live at birth:
 
@@ -239,13 +239,13 @@ section that transcribes. → **§DX-02aj**, a two-line fix: hoist the read abov
 
 ### B. A fourth trigger condition nobody wrote down — and the fifth ending hangs off it
 
-`if (_e42Dear >= 3) {@34640` requires **three preserved Dear Friends** before the Entry 42 panel renders at
+`if (_e42Dear >= 3) {@34622` requires **three preserved Dear Friends** before the Entry 42 panel renders at
 all. This was in the birth commit. The report's §II-D enumerates exactly three conditions; the home doc says
 *"fires … if all three hold."*
 
 The blast radius is larger than the panel. `entry42Written` is the gate on
-`S_story.vaArchitectureKnown = true;@31689`, which is the gate on the **fifth ending**
-(`// Layer 52: §XVII — fifth ending: vaArchitectureKnown overrides all other questions@28268`), on the
+`S_story.vaArchitectureKnown = true;@31691`, which is the gate on the **fifth ending**
+(`// Layer 52: §XVII — fifth ending: vaArchitectureKnown overrides all other questions@28269`), on the
 victory-screen addendum, and on `quest_va_04`. So the game's fifth ending requires three NPC relationships
 carried across a run boundary, and **no document, quest hint, or on-screen line says so**. A player at two
 Dear Friends walks into Birka on NG+ and simply sees nothing. → **§AUDIT-03ah** (🟡, small design call).
@@ -266,7 +266,7 @@ member was write-only or read-only. This one is **neither read nor written** —
 is pure ceremony, and therefore invisible to a reader census *and* a writer census, both of which are
 looking for an imbalance. The only detector that sees it is *"occurrence count = 1."*
 
-**`entry42Read`** has one writer — `S_story.entry42Read = true;@30676`, set as a side effect of *rendering*
+**`entry42Read`** has one writer — `S_story.entry42Read = true;@30677`, set as a side effect of *rendering*
 the journal sidebar — and **zero readers**. The report says it *"gates `quest_ng_02`"*; `quest_ng_02`'s
 completion is `flags:['entry42Written']`. A mutation performed by a render path, consumed by nobody: the
 inert cousin of §DX-02ae's Act-VIII farewell getter.
@@ -283,7 +283,7 @@ claim like any other, and a post-mortem can be wrong about the very thing it is 
 ### E. The fifth ending: line numbers copied exact, containing function recalled and wrong
 
 §II-F cites *"lines 12837, 12857"* for an `entry42Written` epilogue variant in `_buildEpilogueScroll()`.
-Both line numbers are **exact** at the report's tree — and `function _buildEpilogueScroll() {@28120`
+Both line numbers are **exact** at the report's tree — and `function _buildEpilogueScroll() {@28121`
 contains no `entry42` term at HEAD and contained none then; the function ended 150 lines above the cited
 sites. The real host is the victory-screen renderer, and the line directly above the first citation reads
 `// Layer 52: §XVII — fifth ending…` — which is where the report's phrase *"a fifth ending condition
@@ -308,7 +308,7 @@ gate — `check:legacycodes` scans `.md`, `check:noderegs` scans references, and
 
 ### G. One more, found on the way: NG+ draws from `Math.random()`
 
-`S_story.frobergerNoteNode = _ebPool[Math.floor(Math.random() * _ebPool.length)];@23980` (and the twin
+`S_story.frobergerNoteNode = _ebPool[Math.floor(Math.random() * _ebPool.length)];@23981` (and the twin
 inside `storyNewGamePlus`) picks the Epic-Battleground node hiding Froberger's last note from the **unseeded**
 stream, in violation of invariant #6 (*"randomness that affects game state must come from the seeded
 stream"*). Two sites, one line each. → **§DX-02m +1.**

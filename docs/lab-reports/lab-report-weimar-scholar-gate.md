@@ -122,14 +122,14 @@ mages, liches and library ghosts the report names. **Expansion:** it later joine
 
 ### B. `_tomeBonuses()` — function and all three call sites live
 
-`` `function _tomeBonuses()@23407` `` is byte-identical to the report's listing modulo the
+`` `function _tomeBonuses()@23408` `` is byte-identical to the report's listing modulo the
 whitespace of two `if` bodies. All three integration points survive:
 
 | System | Live anchor | Shipped expression |
 |---|---|---|
 | Initiative | `` `const _tomeInit = _tomeBonuses().initiative@7439` `` | `d20 + dexMod + tome initiative` |
 | Death saves | `` `_tomeBonuses().deathSave + _kingsSealBonus@7503` `` | exactly as specified, including the Corelli seal addend |
-| Attack | `` `_tomeBonuses().atk + _lakeMagicBonuses().atk@25030` `` | as specified, plus a §DROP-03 addend added later |
+| Attack | `` `_tomeBonuses().atk + _lakeMagicBonuses().atk@25031` `` | as specified, plus a §DROP-03 addend added later |
 
 The `atkWhileQuestActive` gate (contribute only while some quest is `'active'`) is intact.
 **But see Finding 2:** the only tome carrying that bonus is the one the player cannot obtain, so
@@ -137,23 +137,23 @@ The `atkWhileQuestActive` gate (contribute only while some quest is `'active'`) 
 
 ### C. State — 9 of 9 flags under their specified names
 
-`` `wmDoc1Read: false@23129` `` through `` `wmFirstResearcherKnown: false@23131` ``, plus
+`` `wmDoc1Read: false@23130` `` through `` `wmFirstResearcherKnown: false@23132` ``, plus
 `archiveLetterObtained` in the same section. Not one was renamed by §ARCH-01 or §VM-01.
 
 ### D. Archive interface
 
-`` `const WM_ARCHIVE_DOCS = [@27787` `` — three documents, keys and titles as specified, both
+`` `const WM_ARCHIVE_DOCS = [@27788` `` — three documents, keys and titles as specified, both
 signature lines verbatim: *"Signed: Archivist I. Voss"* and Froberger's margin note
 *"I talked to the shepherd. He was describing a Void pressure event. They wrote this before they
 knew. So did I."*
 
-`` `function _storyWmArchiveModal(wrap)@27809` `` — toggle-style, read/unread colour coding
+`` `function _storyWmArchiveModal(wrap)@27810` `` — toggle-style, read/unread colour coding
 (green + ✓ / amber + Read) exactly as described; §VM-01-G2 converted it from an HTML string to DOM
 nodes with **no behavioural change**. The 4th document (§XVII's Constructor's Log, gated on
 `vaAllMarksFound`) is present and correct — the report's best architectural call, verified.
 
-The launcher is now a registry entry: `` `id:'nue-lower-archive', nodes:['NUE']@34191` `` →
-`` `function _nodeHookNueLowerArchive(node)@32983` ``, still gated on `wmLowerArchiveUnlocked`.
+The launcher is now a registry entry: `` `id:'nue-lower-archive', nodes:['NUE']@34173` `` →
+`` `function _nodeHookNueLowerArchive(node)@32965` ``, still gated on `wmLowerArchiveUnlocked`.
 Button label shipped as `📚 Lower Archive`, not the report's `[Open Archive]` (cosmetic).
 
 ### E. Quest chain — 4 of 4 live as UQF-1.0, plus a fifth the report predates
@@ -166,14 +166,14 @@ Button label shipped as `📚 Lower Archive`, not the report's `[Open Archive]` 
 | `quest_wm_04` | `` `gate:{ flags:['wmBenediktCircleComplete'] }@11106` `` | `` `completion:{ flags:['wmFirstResearcherKnown'] }@11106` `` | **impossible** → Finding 2 |
 | `quest_wm_05` | — | `flags:['wmGurtFileRead']` | *added later (§L), outside this report* |
 
-All three tome grants are exact: `` `bonus:{ deathSave:1 }@11088` ``,
-`` `bonus:{ initiative:2 }@11098` ``, `` `bonus:{ atkWhileQuestActive:1 }@11108` ``, all
+All three tome grants are exact: `` `bonus:{deathSave:1}@11088` ``,
+`` `bonus:{initiative:2}@11098` ``, `` `bonus:{atkWhileQuestActive:1}@11108` ``, all
 `sell:0` (unsellable, as designed). `quest_wm_04`'s `+300gp` is present.
 
 ### F. The two access paths — verified end to end
 
 The alternative to grinding guards is Yael's letter, and it shipped precisely as §III.A describes:
-`` `yealFav >= 1@32289` `` → `` `S_story.archiveLetterObtained = true;@32297` ``, at the Blue
+`` `yealFav >= 1@32271` `` → `` `S_story.archiveLetterObtained = true;@32279` ``, at the Blue
 Shutters Archive, on the starting node. **A design decision that survived 80 days and a world
 migration without a single edit.**
 
@@ -200,12 +200,12 @@ engine defect, not report rot.
 |---|---|---|---|
 | 1 | `wmSessionsDays` "tracks **`gameDay`** values" | code reads `S_story.dayCounter`, a field that does not exist | **ENGINE DEFECT — the report is right** (§AUDIT-03at) |
 | 2 | `quest_wm_04` completes on `wmFirstResearcherKnown` | true — and that flag's only writer is `quest_wm_04`'s own `onComplete` | **ENGINE DEFECT — circular** (§AUDIT-03au) |
-| 3 | "Benedikt → **Dear Friend** on quest_wm_03" (stated 3×) | `` `npc:"benedikt_rasp", set:1@11097` ``; Dear Friend begins at 2 (`` `fav >= 2 ? p.dearFriend@23713` ``) | **NOT SHIPPED** (§AUDIT-03ar) |
+| 3 | "Benedikt → **Dear Friend** on quest_wm_03" (stated 3×) | `` `npc:"benedikt_rasp", set:1@11097` ``; Dear Friend begins at 2 (`` `fav >= 2 ? p.dearFriend@23714` ``) | **NOT SHIPPED** (§AUDIT-03ar) |
 | 4 | Isolde "Key line **at Dear Friend**" | she has no `dearFriend` pool at all; that line is her `friendly` tier, and `` `npc:"isolde_voss", set:1@11087` `` is her ceiling | **MISATTRIBUTED — internally consistent, so harmless** |
 | 5 | Isolde "Begins Neutral" | base tier is named `impartial` | cosmetic |
-| 6 | §IV: "no UI showing Sessions attended: 2/3" | `` `reading circle (' + sessions.length@34745` `` renders `(N/3)`, and `` `The circle meets again tomorrow.@34744` `` disables the button — **both in the ship commit** | **WRONG WHEN WRITTEN** |
-| 7 | §IV: Benedikt callback in §XXI is "a long gap" | `` `_npcFavor('benedikt_rasp') >= 2@34931` `` — not a gap, an **unreachable** branch (delta 3) | **understated** |
-| 8 | §IV: "no notification prompt" for the unredaction | correct; and the `` `Read (unredacted)' : '📄 Read'@27850` `` label is itself unreachable (Finding 2c) | **correct, and worse than stated** |
+| 6 | §IV: "no UI showing Sessions attended: 2/3" | `` `reading circle (' + sessions.length@34727` `` renders `(N/3)`, and `` `The circle meets again tomorrow.@34726` `` disables the button — **both in the ship commit** | **WRONG WHEN WRITTEN** |
+| 7 | §IV: Benedikt callback in §XXI is "a long gap" | `` `_npcFavor('benedikt_rasp') >= 2@34913` `` — not a gap, an **unreachable** branch (delta 3) | **understated** |
+| 8 | §IV: "no notification prompt" for the unredaction | correct; and the `` `Read (unredacted)' : '📄 Read'@27851` `` label is itself unreachable (Finding 2c) | **correct, and worse than stated** |
 | 9 | Node `SQ`; letter obtained at `CI` | 0 of 2 codes resolve as written; **2 of 2 resolve by `num`** — `SQ`(35)→`NUE`, `CI`(1)→`LHR` | renamed, not lost |
 | 10 | `[Open Archive]` button | ships as `📚 Lower Archive` | cosmetic |
 | 11 | `quest_wm_01`'s NPC | carries `npc:"archivus_sweelinck"` while its own disposition quotes Isolde | authoring metadata only (§AUDIT-03b) — inert |
@@ -229,13 +229,13 @@ const alreadyToday = sessions.includes(today);      // @34742
 **`S_story.dayCounter` occurs exactly once in 38,712 lines — that read — and has exactly one
 commit in the file's entire history: `194a810`, the commit that shipped this layer.** It was never
 declared in `_S_DEFAULTS()`, never written, and does not exist in the earliest surviving build. The
-game's real clock is `S_story.day` (`` `S_story.day + '/49'@36104` ``) and `S_story.gameDay`
+game's real clock is `S_story.day` (`` `S_story.day + '/49'@36086` ``) and `S_story.gameDay`
 (22 sites) — **and this report names `gameDay`, correctly, twice.**
 
 So `today` is `0` on every render, forever. The first click runs
-`` `S_story.wmSessionsDays.push(today);@34751` `` and thereafter `sessions.includes(0)` is
+`` `S_story.wmSessionsDays.push(today);@34733` `` and thereafter `sessions.includes(0)` is
 permanently true. The button locks at 1/3 reading *"📖 The circle meets again tomorrow."* — a
-promise made by a clock that does not tick. `` `if (n >= 3) S_story.wmBenediktCircleComplete = true;@34759` ``
+promise made by a clock that does not tick. `` `if (n >= 3) S_story.wmBenediktCircleComplete = true;@34741` ``
 never fires.
 
 **Blast radius:** `quest_wm_03` never completes (no Scholar Kings' History, no favor grant, no
@@ -274,17 +274,17 @@ Three consequences:
 - **(a)** Benedikt's Annotated Copy is never granted, so the `atkWhileQuestActive` mechanic — an
   entire designed bonus class — has never contributed to a single attack roll; and +300gp is never
   paid.
-- **(b)** `` `S_story.wmDoc3Unredacted && S_story.wmFirstResearcherKnown@27841` `` guards the
+- **(b)** `` `S_story.wmDoc3Unredacted && S_story.wmFirstResearcherKnown@27842` `` guards the
   substitution, so **`Marta Eilene Vass` — one occurrence in the file, at
-  `` `Marta Eilene Vass — First Tier@27842` `` — has never rendered.** The arc's declared climax is
-  a string in a dead branch. And `` `const _vaReady = (S_story.ngPlusRun || 0) >= 1@31623` ``
+  `` `Marta Eilene Vass — First Tier@27843` `` — has never rendered.** The arc's declared climax is
+  a string in a dead branch. And `` `const _vaReady = (S_story.ngPlusRun || 0) >= 1@31625` ``
   requires the same flag, so Layer 52 inherits the block.
-- **(c)** The `` `Read (unredacted)' : '📄 Read'@27850` `` label is computed only in the branch
+- **(c)** The `` `Read (unredacted)' : '📄 Read'@27851` `` label is computed only in the branch
   where the body is null — and `wmDoc3Unredacted` forces the body non-null. **The label is
   unreachable by construction**, at the ship tree and at HEAD.
 
 **A second wall behind the first.** New Game+ restores six fields
-(`` `const savedNgRun@24024` `` and its neighbours) and resets the rest from `_S_DEFAULTS()`.
+(`` `const savedNgRun@24025` `` and its neighbours) and resets the rest from `_S_DEFAULTS()`.
 `wmFirstResearcherKnown` is not among the six — while `_vaReady` demands `ngPlusRun >= 1` **and**
 that flag. So even a repaired `quest_wm_04` would have its result erased by the exact transition
 §XVII requires. *Two gates in series, each individually sufficient to close the door.*
@@ -302,7 +302,7 @@ The node's label is *Scholar's Quarter — **Weimar***, and the file says Weimar
 **Nuremberg** five times, and four of those attach to this node — including the Warrant's Board
 rumor that recruits the player into the arc:
 `` `Isolde in Nuremberg is short three of them@11084` ``, and an NPC whose occupation is
-`` `occupation:"secondary acquisitions, Nuremberg archive"@22953` ``. The player reads *Weimar* in
+`` `occupation:"secondary acquisitions, Nuremberg archive"@22954` ``. The player reads *Weimar* in
 the header and *Nuremberg* on the board that sent them there. `NUE` is Nuremberg's airport code;
 the content is Weimar's. Not a dead code — a live node with **two mutually exclusive place names in
 player-facing strings**, which no existing gate can see.

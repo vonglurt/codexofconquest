@@ -90,15 +90,15 @@ All 13 specified fields shipped under their specified names:
 `innmotherNamed`, `freeBookingUnlocked`, `innmotherKeyGiven`, `croneMarks`,
 `croneMarksBanked`, `glut_gift_held`, `innDeparted`, `whisperSaintSeen`,
 `glutGiftReturned`. Amendment A contributed four more —
-`waneStoneDCReduced@23202`, `electricEelOrganHeld`, `atlanteanProcessKnown`,
+`waneStoneDCReduced@23203`, `electricEelOrganHeld`, `atlanteanProcessKnown`,
 `iodineBuffActive` — plus one the amendment never named, `iodineBuffBonus`.
 
 ### C. Helpers
 
-`` `function _innKindness(n)@23529` `` and `` `function _addCroneMark()@23539` `` are
+`` `function _innKindness(n)@23530` `` and `` `function _addCroneMark()@23540` `` are
 **byte-identical to §III.F**, including the ≥5 unlock, the storyMsg string, the
 Innmother's Key push and the `innmotherKeyGiven` latch. Amendment A added
-`` `function _burnIodineSalt(questId)@23544` `` — the §A.5 "burn a dose" sketch,
+`` `function _burnIodineSalt(questId)@23545` `` — the §A.5 "burn a dose" sketch,
 shipped with a live call site in the Ceremonia modal.
 
 ### D. Quests — `QUEST_DB`
@@ -117,11 +117,11 @@ that can rot; the measurement that it did *not* rot is recorded here instead.
 
 | Surface | Shipped as | Anchor |
 |---------|-----------|--------|
-| HG1 first-visit gift | `NODE_PANELS` entry, `once:'glut_gift_held'` | `` `id:'story-hg1-gift'@31451` `` |
-| HCA mark conversion | `NODE_PANELS` entry, `once:'croneMarksBanked'` | `` `id:'story-hca-marks'@31460` `` |
-| WG0 gate trial | `NODE_HOOKS` block | `` `_wg0Div.id = 'story-wg0-trial'@33090` `` |
-| HCA Leviathan | `_nodeHookHcaLeviathan@33107` | — |
-| INN free sleep | inline cost override | `` `node.code === 'INN' && S_story.freeBookingUnlocked@36213` `` |
+| HG1 first-visit gift | `NODE_PANELS` entry, `once:'glut_gift_held'` | `` `id:'story-hg1-gift'@31453` `` |
+| HCA mark conversion | `NODE_PANELS` entry, `once:'croneMarksBanked'` | `` `id:'story-hca-marks'@31462` `` |
+| WG0 gate trial | `NODE_HOOKS` block | `` `_wg0Div.id = 'story-wg0-trial'@33072` `` |
+| HCA Leviathan | `_nodeHookHcaLeviathan@33089` | — |
+| INN free sleep | inline cost override | `` `node.code === 'INN' && S_story.freeBookingUnlocked@36195` `` |
 
 The conversion tiers are exact against §VII: **≥6** WIS +1; **≥10** WIS +1 + Crone
 Bead into `S_story.knowledge`; **≥15** WIS +1 + Crone Bead + Crone Staff
@@ -146,9 +146,9 @@ nine classified in `` `src/scripts/check-noderegs.js:WG0_TRIAL:@113` `` and fenc
 | 2 | II | Probe-based exits: `_buildNodeExits()` scans d=1..4 and writes N/S/E/W | `_buildNodeExits` = **0 occurrences**; §WALK/§NAV-01 replaced the probe mesh with the geo grid | RETIRED |
 | 3 | II | The neighbour codes EC · SC · OC · AT · EA · J3 · J6, and the Crones' home HS | **All 8 resolve in neither registry at HEAD**; all 8 existed at `00fe35c` with the exact coordinates cited | STALE (correct when written) |
 | 4 | III.D | Flat quest shape: `checkAbility`/`checkLabel`/`checkDC`/`checkPassFlag`/`checkFailFlag`/`xpAward`/`completeItems`/`onPass` closure | All seven survive **only inside §ARCH-01 migration comments**; re-expressed as `bits:[{kind:'skill_check', stat, skill, dc, onPass, onFail}]` | RETIRED (shape), thesis intact |
-| 5 | III.D, IV | Progression gate `activateCond: () => (quests['prev']\|\|'') !== ''` — "attempted, pass or fail both qualify" | Shipped as `gate:{ questsAttempted:[…] }`; the compiler is **`(QS[id] \|\| '') !== ''`**, `` `g.questsAttempted@22060` `` — the same predicate, verbatim | SHIPPED (renamed) |
+| 5 | III.D, IV | Progression gate `activateCond: () => (quests['prev']\|\|'') !== ''` — "attempted, pass or fail both qualify" | Shipped as `gate:{ questsAttempted:[…] }`; the compiler is **`(QS[id] \|\| '') !== ''`**, `` `g.questsAttempted@22061` `` — the same predicate, verbatim | SHIPPED (renamed) |
 | 6 | III.E | INN `quoteFn`, five states, name reveal fires once inside the fn | **Byte-identical**, including `"Mère Boudine. Since you'll keep coming back anyway."` | SHIPPED |
-| 7 | III.G | HG1 gift block "fires once (guarded by `!S_story.visited['HG1']`)" | The guard **never worked**: `storyCollectLoot` flips `visited[code]` earlier in the same render, so the block was dead from `00fe35c` until §VM-01-G-FU-a repointed it to `!glut_gift_held && !glutGiftReturned`. The engine records this in its own comment above `` `id:'story-hg1-gift'@31451` `` | **WRONG WHEN WRITTEN** — transcription exact, behaviour claim false |
+| 7 | III.G | HG1 gift block "fires once (guarded by `!S_story.visited['HG1']`)" | The guard **never worked**: `storyCollectLoot` flips `visited[code]` earlier in the same render, so the block was dead from `00fe35c` until §VM-01-G-FU-a repointed it to `!glut_gift_held && !glutGiftReturned`. The engine records this in its own comment above `` `id:'story-hg1-gift'@31453` `` | **WRONG WHEN WRITTEN** — transcription exact, behaviour claim false |
 | 8 | III.H | `storyCorridorTravel` hook sets `innDeparted` when `fromCode === 'INN'` | `storyCorridorTravel` = **0 occurrences** (deleted by §CELL-11A); `innDeparted` survives as a completion flag on `quest_inn_05` | RETIRED (host), flag intact |
 | 9 | VI | `quest_whisper_06` / `quest_wane_06` set the Crown-complete flag when "all 6 resolved" | Both compute `…filter(complete).length >= 5` — a **five**-quest threshold | SHIPPED, threshold differs |
 | 10 | VI | `quest_glut_06` sets `glutCrownComplete` | Set **unconditionally** by `onComplete`, not by a count — asymmetric with 9 | SHIPPED, mechanism differs |
@@ -157,12 +157,12 @@ nine classified in `` `src/scripts/check-noderegs.js:WG0_TRIAL:@113` `` and fenc
 | 13 | A.6 | `quest_whisper_boss` · `quest_glut_boss` · `quest_wane_boss` · `quest_inn_boss` | Shipped as `quest_whisper_witch` · `quest_glut_octopus` · `quest_wane_demon` · `quest_inn_eel`; the four spec ids have **0 commits ever** | SHIPPED (renamed) |
 | 14 | A.6 | Kill flags `seaWitchKilled`, `giantOctopusKilled`, `seaDemonKilled`, `giantEelKilled`; passage flags `glutEastPassageOpen`, `waneLowerPassageOpen`; `wg0TrialComplete`, `kelpieTracked`, `mudcrabReturned`, `seaSpawnCleared`, `swampKelpCount`, `leviathanBossFired`, `leviathanDefeated` | **All 13 have 0 occurrences and 0 commits ever.** Completion is expressed instead as `completion:{ battles:['<SYNTHETIC_CODE>'] }` against `defeatedBattles` | **NOT SHIPPED as named** — the mechanism shipped, the field list is narration |
 | 15 | A.6 | `quest_wane_boss` opens a new **HN2 loot node** holding the Atlantean Kelp Scroll | `HN2` = **0 occurrences, 0 commits ever.** The scroll ships as a `reward.knowledge` string on `quest_wane_demon` — no node | NOT SHIPPED (node); reward SHIPPED |
-| 16 | A.4 | Sea Spawn kill drops `quest_wane_02`'s DC from 13 to 10 | `waneStoneDCReduced` is **written once and read nowhere** (`set:['waneStoneDCReduced']@11994` → `waneStoneDCReduced: false@23202`, no third site). `quest_wane_02` is `retryable:false`, so there is no retry to discount either way | **NOT SHIPPED** → §DX-02n |
-| 17 | A.5 | Iodine Salt +3 / Charged +5 to a skill check, spent before the roll | Live: `` `const iodineBonus = st.iodineBuffActive@22249` `` adds it inside `_rollSkill` and clears it | SHIPPED |
+| 16 | A.4 | Sea Spawn kill drops `quest_wane_02`'s DC from 13 to 10 | `waneStoneDCReduced` is **written once and read nowhere** (`set:['waneStoneDCReduced']@11994` → `waneStoneDCReduced: false@23203`, no third site). `quest_wane_02` is `retryable:false`, so there is no retry to discount either way | **NOT SHIPPED** → §DX-02n |
+| 17 | A.5 | Iodine Salt +3 / Charged +5 to a skill check, spent before the roll | Live: `` `const iodineBonus = st.iodineBuffActive@22250` `` adds it inside `_rollSkill` and clears it | SHIPPED |
 | 18 | A.5 | Marsh Seaweed 🪸 — a second gathered reagent | The item drops (`` `name:'Marsh Seaweed'@7061` ``, 5 monsters) and its `desc` says *"Burns to trace iodine salt at the inn hearth."* **It occurs exactly once in the file. No quest, craft or handler consumes it** | **SHIPPED HALF** → §DX-02n / §AUDIT-03v cluster |
 | 19 | A.5 | Swamp Kelp drops from `sea_serpent`, `giant_eel`, `sea_witch` | Shipped for those three **plus** `sea_demon`, `kraken_spawn`, `sea_hag` — and `sea_hag` is in the `hag_swamp` roster, so kelp is obtainable from an ordinary swamp encounter | SHIPPED (expanded) |
 | 20 | A.7 | Leviathan iodine burn → "+2 ATK and +3 flat damage for the duration of the fight" | The button consumes the item and sets `iodineBuffActive` (`@33131`); **the only reader is `_rollSkill`.** No combat code reads it. Its own label says *"(+5 ATK this fight)"* | **NOT SHIPPED** → §AUDIT-03v cluster; see §V.2 |
-| 21 | A.7 | Leviathan defeat is the precondition for the conversion | Exact: `` `id:'story-hca-marks'@31460` `` requires `defeatedBattles['HCA_BOSS']` | SHIPPED |
+| 21 | A.7 | Leviathan defeat is the precondition for the conversion | Exact: `` `id:'story-hca-marks'@31462` `` requires `defeatedBattles['HCA_BOSS']` | SHIPPED |
 | 22 | A.2 | HJ2 battle "Grave Hag × 2 + Crone Witch" | Label only — `battle.key` is `grave_hag`. The Crone Witch exists as **`crones_witch`** (ac:17 hp:143 hard) and is in the `hag_swamp` roster, but is not in this fight | SHIPPED as specified (the report calls `count` display-only) |
 | 23 | III.C | INN sleep 8gp, waived by `node.code === 'INN' && freeBookingUnlocked` | Exact, at two sites (preview `@36213` and charge `@36250`) | SHIPPED |
 
@@ -189,8 +189,8 @@ At HEAD the nine cells are two:
 `` `const CELL_GRID = (() => {@9852` `` builds each cell as an **array** in `NODE_MAP`
 declaration order, and `` `CELL_GRID[key]?.[0]@9861` `` — the primary — is what the
 browser reads. `S_story.currentCode` is assigned at exactly two sites in the file
-(`` `S_story.currentCode = destCode@28373` ``, where `destCode = res.destCodes[0]`,
-and `` `S_story.currentCode = S_story.checkpointNode@26009` ``), both yielding the
+(`` `S_story.currentCode = destCode@28374` ``, where `destCode = res.destCodes[0]`,
+and `` `S_story.currentCode = S_story.checkpointNode@26010` ``), both yielding the
 primary. WG0 is first in `NODE_MAP` at `@8556`, so it takes cell `25,206`; INN
 precedes KTM, so it takes `22,191`.
 
@@ -198,7 +198,7 @@ precedes KTM, so it takes `22,191`.
 
 Consequences, measured:
 
-- `_uqfActivateAtNode@30137` keys on `node.code`. **HW1 carries 8 quests, HG1 8 and
+- `_uqfActivateAtNode@30138` keys on `node.code`. **HW1 carries 8 quests, HG1 8 and
   HN1 8 — 24 of the arc's 34 cannot activate.** The 10 that can are all at INN.
   A 35th `activateNode` sits on HCA and belongs to §LXX (see below).
 - The 18-quest Crone Mark supply is entirely at HW1/HG1/HN1, so `croneMarks` cannot
@@ -258,7 +258,7 @@ prose; all three are resolved here.
 | **§AUDIT-03x** (extended) | The first complete arc measured end-to-end as a non-primary-cell casualty: 7 of 9 nodes unarrivable, 24 of 34 quests unable to activate, the arc close and the §LXX entry both stranded — with archive proof that the nine cells were distinct and deliberately spaced when shipped. |
 | **§DX-02n** (two new members) | `waneStoneDCReduced` — 1 writer, 0 readers, and the quest it exists to discount is `retryable:false`. `Marsh Seaweed` — one occurrence in the whole file (its own push), 0 consumers, carrying a `desc` that promises a burn no code performs. |
 | **§AUDIT-03v / §AUDIT-03w / §AUDIT-03y(b)** (fourth and fifth instances) | Two more player-facing strings naming a benefit with no bit behind them — and these **widen the proposed detector past gold**: the Leviathan burn button says *"+5 ATK this fight"* with no combat reader, and **charges** for it; Marsh Seaweed's `desc` names a craft that does not exist. |
-| **§DX-02r** (NEW) | The activation-gate grammar can express *attempted* and *done* but not *failed*, though `'failed'` is a real written status — so three quests authored as failure consolation activate for everyone. Wants a `questsFailed` leaf beside `` `g.questsAttempted.every@22060` ``. |
+| **§DX-02r** (NEW) | The activation-gate grammar can express *attempted* and *done* but not *failed*, though `'failed'` is a real written status — so three quests authored as failure consolation activate for everyone. Wants a `questsFailed` leaf beside `` `g.questsAttempted.every@22061` ``. |
 
 ---
 

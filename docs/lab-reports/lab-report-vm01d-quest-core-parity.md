@@ -51,11 +51,11 @@ Five instruments, in order:
 
 | Artefact | Status |
 |---|---|
-| `QUEST:CORE:START ◆◆◆@21965` … `QUEST:CORE:END ◆◆◆@22334` | live, 370 lines |
-| `function createQuestRuntime(host) {@22180` | live, the factory |
-| `function _questRunToCompletion(gen) {@22036` | live, the pure twin of `function _uqfRunToCompletion(gen) {@6840` |
-| `const SCHEMA_VERSION@21966` · `const BIT_CONTRACTS = {@21970` · `function validateQuest(q) {@22004` · `function adaptLegacyQuest(id, q) {@22026` | the four pure members, moved unchanged |
-| `const QuestRuntime = createQuestRuntime({@22341` · `getState: () => S_story,@22342` · `rng:       () => _seededNext(),@22346` | host wiring, outside the sentinels |
+| `QUEST:CORE:START ◆◆◆@21966` … `QUEST:CORE:END ◆◆◆@22335` | live, 370 lines |
+| `function createQuestRuntime(host) {@22181` | live, the factory |
+| `function _questRunToCompletion(gen) {@22037` | live, the pure twin of `function _uqfRunToCompletion(gen) {@6840` |
+| `const SCHEMA_VERSION@21967` · `const BIT_CONTRACTS = {@21971` · `function validateQuest(q) {@22005` · `function adaptLegacyQuest(id, q) {@22027` | the four pure members, moved unchanged |
+| `const QuestRuntime = createQuestRuntime({@22342` · `getState: () => S_story,@22343` · `rng:       () => _seededNext(),@22347` | host wiring, outside the sentinels |
 | `src/js/quest.js:module.exports = { createQuestRuntime@403` | the export line, byte-exact as specified |
 | `src/scripts/check-quest-parity.js:const a = core@22` | the fence — **25,030 bytes identical**, green |
 | `src/tests/integration/uqf-quest-core.test.js:const Q = require@13` | **7 tests, 7/7 green** (2.6 s) |
@@ -90,7 +90,7 @@ Five instruments, in order:
 
 ### D5 — the guard that was promised and never written
 
-§4 states the kernel keeps *"a `Math.random()` fallback … only for a server that injects no rng."* There is no such fallback, at ship or at HEAD. The kernel contains **zero** occurrences of `Math.random()` — which is *better* than advertised for reproducibility — but `const d20  = Math.ceil(E.rng() * 20)@22248` calls the injected effect **bare**, and it is the **only** unguarded effect call among **13**. Every sibling is defended: `E.getQuest ? …`, `if (E.checkLevelUp)`, `if (E.mint)`, `if (E.preBattle)`, `mission_bit(bit, ctx)@22303` even carries an explicit env fallback.
+§4 states the kernel keeps *"a `Math.random()` fallback … only for a server that injects no rng."* There is no such fallback, at ship or at HEAD. The kernel contains **zero** occurrences of `Math.random()` — which is *better* than advertised for reproducibility — but `const d20  = Math.ceil(E.rng() * 20)@22249` calls the injected effect **bare**, and it is the **only** unguarded effect call among **13**. Every sibling is defended: `E.getQuest ? …`, `if (E.checkLevelUp)`, `if (E.mint)`, `if (E.preBattle)`, `mission_bit(bit, ctx)@22304` even carries an explicit env fallback.
 
 This is not hypothetical. `src/scripts/check-gate-parity.js:const rt = Q.createQuestRuntime@32` — a **shipped, green, in-`check:walk` consumer** — builds a runtime with `effects: { getQuest }` and no `rng`. It survives only because gate evaluation never reaches `_rollSkill`. It is one `skill_check` walk away from a `TypeError`. Filed **§DX-02dw**.
 
@@ -132,7 +132,7 @@ The engine runs headless in Node. That is the thing that was structurally imposs
 
 1. **Injection over a shared singleton** — `getState()` resolves at call time, so §VM-01-C's per-call `execBits(chain, {state: scratch})` seam survives. **Held.** `uqf-quest-core.test.js` and `uqf-softlock.test.js` both drive scratch states through it; §VM-01-E's own record credits the seam for letting it take the light option instead of porting 124 `_legacy_fn` closures.
 2. **Guards live in the host thunks, not the kernel** — **held 12 times out of 13.** The thirteenth is D5, and it is the one that matters.
-3. **`resolveSkillCheck` uses a kernel-internal pure `_questRunToCompletion`, not the host driver** — **held.** `function _questRunToCompletion(gen) {@22036` is live inside the sentinels; the four outer call sites still use the host driver, exactly as scoped.
+3. **`resolveSkillCheck` uses a kernel-internal pure `_questRunToCompletion`, not the host driver** — **held.** `function _questRunToCompletion(gen) {@22037` is live inside the sentinels; the four outer call sites still use the host driver, exactly as scoped.
 
 ---
 
@@ -148,7 +148,7 @@ The engine runs headless in Node. That is the thing that was structurally imposs
 
 ## VIII. Defects filed
 
-- **§DX-02dw** 🟢 — `const d20  = Math.ceil(E.rng() * 20)@22248` is the only unguarded effect call in a guards-in-the-host kernel, and `src/scripts/check-gate-parity.js:const rt = Q.createQuestRuntime@32` already injects no `rng`. Guard it, or document `rng` as the one required effect. §4 of this report promised a fallback that was never written.
+- **§DX-02dw** 🟢 — `const d20  = Math.ceil(E.rng() * 20)@22249` is the only unguarded effect call in a guards-in-the-host kernel, and `src/scripts/check-gate-parity.js:const rt = Q.createQuestRuntime@32` already injects no `rng`. Guard it, or document `rng` as the one required effect. §4 of this report promised a fallback that was never written.
 - **§DX-02dx** 🟢 — `src/scripts/check-questgraph.js:const Q = require@63` imports the kernel and never uses it. Either call it or drop the import and the header claim.
 - **§DX-02dv** (already open) — resolved above: the ship record dropped the 17, the report did not.
 

@@ -98,11 +98,11 @@ Instruments from the §DOC-02 program applied here:
 
 **Live under the specified name (18 of 20 identifiers, 90 %)**
 
-`const ROMANCE_QUOTES = [@22379` (21 entries) · `const NPC_ROMANCE_PREAMBLES = {@27479` ·
-`const NPC_ROMANCE_VIGNETTES = {@27489` · `const NPC_NG_MEMORY_LINES = {@27324` ·
-`function _mkSection(id, icon, label) {@35320` · `_mkCard` · `_rollCeremonia` ·
-`battleDis: 0,@23020` · `hoursElapsed: 0, hoursSinceSlept: 0,@23091` · `skillCheckAttempts: {},@23149` ·
-`romanceQuotesDelivered: [], npcRomanceVignetteDelivered: {},@23098` · `ngMemoryDelivered` ·
+`const ROMANCE_QUOTES = [@22380` (21 entries) · `const NPC_ROMANCE_PREAMBLES = {@27480` ·
+`const NPC_ROMANCE_VIGNETTES = {@27490` · `const NPC_NG_MEMORY_LINES = {@27325` ·
+`function _mkSection(id, icon, label) {@35302` · `_mkCard` · `_rollCeremonia` ·
+`battleDis: 0,@23021` · `hoursElapsed: 0, hoursSinceSlept: 0,@23092` · `skillCheckAttempts: {},@23150` ·
+`romanceQuotesDelivered: [], npcRomanceVignetteDelivered: {},@23099` · `ngMemoryDelivered` ·
 `priorQuestMinusOne` · `ngPlusRun` · `nexusQ01` · `nexusQ02` · `VOID_TIDE_EVENTS` · `storyConfirmSleep`.
 
 **Dead (2)**
@@ -140,7 +140,7 @@ content migrated to `plan-archive.md`, which `quest.md` correctly points at.
 | 2 | SP4: "20 stale PLANNED markers" | exact — `9684ff6`'s own message | ✅ EXACT |
 | 3 | SP4: "5 mismatched `// → doc:` targets" | exact — `ded062e`'s own message | ✅ EXACT |
 | 4 | `ROMANCE_QUOTES`, 21 entries, "15 % per sleep, Act III+" | `Math.random() < 0.15`, `actNumber >= 3`, and the engine comment **byte-identical** | ✅ EXACT |
-| 5 | §DESIGN-02 P3 fixed `battleDis` never applying | live at `// P3 exhaustion: battleDis charges@25045`, still naming P3 | ✅ SHIPPED |
+| 5 | §DESIGN-02 P3 fixed `battleDis` never applying | live at `// P3 exhaustion: battleDis charges@25046`, still naming P3 | ✅ SHIPPED |
 | 6 | 5 section types: LOCATION / ENCOUNTER / STALK / SOCIAL / VENDOR | **1 of 5 names survives** (`Encounter`); 9 sections at HEAD; STALK deleted by §TIMELESS-01; SOCIAL + VENDOR re-expressed as `NODE_HOOKS`/`NODE_VERBS` (§VM-01-G) | ⚠️ EXPANDED + RENAMED |
 | 7 | `storyRenderSections()` | survives **only inside an HTML comment**, `<!-- storyRenderSections() writes .story-section divs here -->@4278`; 1 commit ever | ❌ DEAD POINTER |
 | 8 | Instance 6 §DESIGN-03 — "Integration: **PLANNED**" | 9 skill-check quests specified → **2,634 `skill_check` bits** live | ❌ **STALE — SHIPPED** |
@@ -244,9 +244,9 @@ map cannot see it. Two codes in one short report suggests the residue is larger 
 
 Instance 4's romance layer delivers through `storyConfirmSleep`, and both of its branches draw the
 **unseeded** stream while writing `_S_DEFAULTS()` fields:
-`romanceQuotesDelivered: [], npcRomanceVignetteDelivered: {},@23098`, written at
+`romanceQuotesDelivered: [], npcRomanceVignetteDelivered: {},@23099`, written at
 `Math.random() < 0.15` and at
-`S_story.npcRomanceVignetteDelivered = { ..._vDelivered, [_vKey]: true };@36350`. Same shape as §DOC-02m's
+`S_story.npcRomanceVignetteDelivered = { ..._vDelivered, [_vKey]: true };@36332`. Same shape as §DOC-02m's
 fishing cluster and §DOC-02n's death saves: **the UQF quest path is seeded and every hand-authored
 surface that rolls its own dice is not.** Cosmetic in effect — a flavour line either appears or does not
 — but it is persisted state, so a seeded replay diverges.
@@ -316,13 +316,13 @@ register the program has measured** — §DOC-02i's subject went 3 of 5, with tw
 
 | Anchor | Content |
 |---|---|
-| `const ROMANCE_QUOTES = [@22379` · `// ROMANCE_QUOTES: 15% per sleep, Act III+, no repeat@36331` | Instance 4, verbatim |
-| `const NPC_ROMANCE_PREAMBLES = {@27479` · `const NPC_ROMANCE_VIGNETTES = {@27489` | the romance consts |
-| `romanceQuotesDelivered: [], npcRomanceVignetteDelivered: {},@23098` · `S_story.npcRomanceVignetteDelivered = { ..._vDelivered, [_vKey]: true };@36350` | §DX-02m (§V-E) |
-| `const NPC_NG_MEMORY_LINES = {@27324` | Instance 10 |
-| `function _mkSection(id, icon, label) {@35320` · `<!-- storyRenderSections() writes .story-section divs here -->@4278` | Instance 3 — helper live, host a dead pointer |
-| `battleDis: 0,@23020` · `// P3 exhaustion: battleDis charges@25045` | Instance 3's bug fix, still live |
-| `hoursElapsed: 0, hoursSinceSlept: 0,@23091` · `skillCheckAttempts: {},@23149` | the two fields §3.1 names |
+| `const ROMANCE_QUOTES = [@22380` · `// ROMANCE_QUOTES: 15% per sleep, Act III+, no repeat@36313` | Instance 4, verbatim |
+| `const NPC_ROMANCE_PREAMBLES = {@27480` · `const NPC_ROMANCE_VIGNETTES = {@27490` | the romance consts |
+| `romanceQuotesDelivered: [], npcRomanceVignetteDelivered: {},@23099` · `S_story.npcRomanceVignetteDelivered = { ..._vDelivered, [_vKey]: true };@36332` | §DX-02m (§V-E) |
+| `const NPC_NG_MEMORY_LINES = {@27325` | Instance 10 |
+| `function _mkSection(id, icon, label) {@35302` · `<!-- storyRenderSections() writes .story-section divs here -->@4278` | Instance 3 — helper live, host a dead pointer |
+| `battleDis: 0,@23021` · `// P3 exhaustion: battleDis charges@25046` | Instance 3's bug fix, still live |
+| `hoursElapsed: 0, hoursSinceSlept: 0,@23092` · `skillCheckAttempts: {},@23150` | the two fields §3.1 names |
 | `cat_king:         { key:'cat_king',@5404` | Instance 5 — the Cat-King, without the `the_` |
 | `LIM:{ num:81, code:'LIM', name:'mimic_meadow'@8815` | `MM` resolved (§V-D) |
 | `8abc606` · `9684ff6` · `ded062e` · `213d14b` · `7952752` · `5e48dd7` | own commit · SP4 · SP4 validation · §DESIGN-02 · §TIMELESS-01 · the `plan.md` split |

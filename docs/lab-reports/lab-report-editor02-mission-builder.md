@@ -142,7 +142,7 @@ Compile rules as locked: `id = <arcId>_<n>` (1-based) · `arc = arcLabel` · pro
 
 It shipped at `edit.html:9196` in `e2dcd76`, and the spec asserted it: `expect(q.activateCond).toMatch(/^\(s\)\s*=>\s*s\./)`. **The test was written to enforce the defect.**
 
-**The engine calls the condition with no argument.** At the reference build, `play.html:25845` reads `if (q.activateCond && !q.activateCond()) return;` — and at HEAD the same line is `if (q.activateCond && !q.activateCond()) return;@30154`, with a second, later call site that at least catches: `ok = q.activateCond(); } catch (e) { ok = false; }@37155`. So `s` is `undefined` and `s.<flag>` is a `TypeError` — thrown, at the reference build, inside the quest sweep with no `try`.
+**The engine calls the condition with no argument.** At the reference build, `play.html:25845` reads `if (q.activateCond && !q.activateCond()) return;` — and at HEAD the same line is `if (q.activateCond && !q.activateCond()) return;@30155`, with a second, later call site that at least catches: `ok = q.activateCond(); } catch (e) { ok = false; }@37137`. So `s` is `undefined` and `s.<flag>` is a `TypeError` — thrown, at the reference build, inside the quest sweep with no `try`.
 
 **Three mechanisms in the same toolchain already held the right answer.**
 

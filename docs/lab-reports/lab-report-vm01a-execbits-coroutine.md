@@ -142,8 +142,8 @@ exact. The two that are wrong are the two nothing depends on.
 
 | Locked in this report | Shipped at `c22f4f0` | Status at HEAD |
 |---|---|---|
-| `execBits` becomes `function*`, `yield* r` when a handler is itself a generator | yes | ✅ `*execBits(bits, ctx) {@22223` |
-| `choice` becomes `*choice`, applying **only** the picked option's bits, **after** the pick | yes | ✅ `*choice(bit, ctx) {@22319` |
+| `execBits` becomes `function*`, `yield* r` when a handler is itself a generator | yes | ✅ `*execBits(bits, ctx) {@22224` |
+| `choice` becomes `*choice`, applying **only** the picked option's bits, **after** the pick | yes | ✅ `*choice(bit, ctx) {@22320` |
 | `ask` envelope `{ ask:'choice', prompt, options:string[] }`, never persisted | yes | ✅ still the only `ask` kind in the file |
 | Module-level slot holding `{ gen, ask }` | yes, as `_uqfPending` | ✅ `let _uqfPending = null;@6824` |
 | `pump(gen, answer)` | shipped **renamed** `_uqfPump` | ✅ `function _uqfPump(gen, answer) {@6827` |
@@ -152,14 +152,14 @@ exact. The two that are wrong are the two nothing depends on.
 | Five production call sites wrapped | yes | ✅ all five, each tagged `// §VM-01-A` |
 | **Zero** `choice` bits authored into `QUEST_DB` | yes | scope fence held; **2** authored since (§VIII) |
 | No new opcode, gate term, `S_story` field, or save-migration | yes | ✅ `_uqfPending` still absent from every save path |
-| `BIT_CONTRACTS` untouched | yes | ✅ `const BIT_CONTRACTS = {@21970` |
+| `BIT_CONTRACTS` untouched | yes | ✅ `const BIT_CONTRACTS = {@21971` |
 
 **Two shapes have moved since, both by later increments and both cited to this report:**
 
 - **`QuestRuntime` is no longer an object literal.** The report anchors *"`QuestRuntime` object 21713."*
-  §VM-01-D refactored it into a factory — `const QuestRuntime = createQuestRuntime({@22341` — so the
+  §VM-01-D refactored it into a factory — `const QuestRuntime = createQuestRuntime({@22342` — so the
   runtime could be `require`d by a headless server. **RETIRED, not wrong.**
-- **A second, pure `runToCompletion` exists inside the kernel.** `function _questRunToCompletion(gen) {@22036`
+- **A second, pure `runToCompletion` exists inside the kernel.** `function _questRunToCompletion(gen) {@22037`
   is the parity twin `resolveSkillCheck` uses so a `require('./quest')` server needs no host driver.
   Its own comment cites *"lab-report-vm01a §6.2"* — the lock held; a *pure* twin was added beside it,
   not in place of it.
@@ -198,7 +198,7 @@ later, §VM-01-G4a put a real choice panel on a real node screen and discovered 
 choice can sit on screen across a render. The engine records the correction in its own source, and
 the record is worth quoting because of what it leans on:
 
-> `// §VM-01-G4a: the sweep below takes any pending choice panel@34619` — *"Inc A's single module slot
+> `// §VM-01-G4a: the sweep below takes any pending choice panel@34601` — *"Inc A's single module slot
 > assumed 'a choice resolves within one interaction turn'; a NODE choice can sit on screen across a
 > render. **Safe by construction — `choice` applies only the picked option's bits, AFTER the pick, so
 > an abandoned suspension has written nothing.**"*
@@ -246,7 +246,7 @@ quest-runtime-uqf 303 · warrants-board 25 · courier-map 1 · enemy-ai 4 · kg-
 ```
 
 **Browser-proved — the authored consumer, driven live in Chromium at HEAD:** seeded at DUS, the verb
-`dus-kern-sable-first@34296` renders **3 option buttons** and parks the generator in `_uqfPending`.
+`dus-kern-sable-first@34278` renders **3 option buttons** and parks the generator in `_uqfPending`.
 Before the pick: `creativeLiteracyToken` false, inventory unchanged. Clicking *"That book is a
 warning. Not a manual."* sets `nexusQ02Complete`, leaves the unpicked branch's `nexusQ01Active`
 **false**, grants the **Creative Literacy Token**, releases the slot, and removes the panel. The
@@ -260,7 +260,7 @@ mechanism this report locked is executing player-facing content, correctly, 30 d
 |---|---|
 | **Choice UI content** — a live on-screen `choice` render | ✅ **shipped**, §VM-01-G4a/G4b — but **NOT** under the name this report predicted. `renderChoiceBlock` appears exactly once in the file, in a comment recording that it **never existed as code**. The capability shipped as `function _uqfRenderAsk(gen, ask, mount, step) {@6885` + `function _uqfRunVerb(verb, mount) {@6914`. |
 | **Quest-acceptance rewrite** | ⚠️ **not shipped.** The seam exists; nothing has used it for acceptance. |
-| **Un-smuggling `skill_check`** | ⚠️ **not shipped, 30 days open.** `resolveSkillCheck(bit, ctx) {@22256` still branches inside the leaf, now wrapped in the pure twin and explicitly scope-fenced: a `choice` in `onPass`/`onFail` throws by design. |
+| **Un-smuggling `skill_check`** | ⚠️ **not shipped, 30 days open.** `resolveSkillCheck(bit, ctx) {@22257` still branches inside the leaf, now wrapped in the pure twin and explicitly scope-fenced: a `choice` in `onPass`/`onFail` throws by design. |
 | **`'abandoned'` status / transactional rollback** | ⚠️ **not shipped.** `'abandoned'` has **0** occurrences in the file. |
 | **Forward pointers** — *A · B · C independent; D needs C; E needs C; F answers `canComplete`'s `or`; G needs A + F* | ✅ **the whole dependency graph held.** A/B/C `c22f4f0` · D `9f10bfe` · E `354b20a` · F `c6be7f8` · F-FU `549d6b4` · G through G4d + G-FU a–f2. |
 
@@ -306,12 +306,12 @@ counts above would have caught.
 
 - **§DX-02ds** 🟢 — the driver's own safety comment cites *"no autosave (storyAutoSave, 23237) ever
   captures a suspension."* `storyAutoSave` was at **23313** at the commit that wrote the comment, and
-  is at `function storyAutoSave() {@23805` today. **Wrong when written, by exactly 76 — the
+  is at `function storyAutoSave() {@23806` today. **Wrong when written, by exactly 76 — the
   increment's own net line delta** (+106/−30). The author read the anchor off this report's §7 table,
   where it is *correct* for the **parent** build, and pasted it into a comment living in the **child**
   build. Today it resolves into `_S_DEFAULTS`, at `sbPapersRead: false` — a real-but-wrong line, the
   worst kind. Comment-only, no behaviour.
-- **§DX-02dt** 🟢 — the game's only two authored `choice` bits (`dus-kern-sable-first@34296` and its
+- **§DX-02dt** 🟢 — the game's only two authored `choice` bits (`dus-kern-sable-first@34278` and its
   follow-up) have **no test that names them**. `uqf-verb-driver.test.js` proves the driver thoroughly,
   but entirely against in-test fixtures; the one piece of shipped content that exercises the keystone
   end-to-end is covered only incidentally. One test.

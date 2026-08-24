@@ -132,7 +132,7 @@ selectors, no invariants: the discipline is entirely in the programmer's head, a
 namespace is an *implicit global coupling surface* between quests (§X.B.2, §XII).
 
 > **Correction (ledger 15).** The original said *"a single ~107-field object."*
-> `const _S_DEFAULTS = () => ({@23062` returns **485 fields (368 boolean) at the author's build and
+> `const _S_DEFAULTS = () => ({@23063` returns **485 fields (368 boolean) at the author's build and
 > 493 (370) at HEAD** — off by 4.5×, confirmed twice, once in Node and once in the live browser.
 > Already tracked as §AUDIT-03bf, which caught `index.md` advertising "All 193" for the same
 > function: **the undercount is an artifact of counting keys with a line-anchored regex, and this
@@ -176,15 +176,15 @@ namespace is an *implicit global coupling surface* between quests (§X.B.2, §XI
 `cellMove(dir)` delegates the bounds/wrap/sea decision to the shared kernel `Mover.move()`
 (`mover.js`, which also drives the MUD harness), applies the single-player side effects, and —
 crucially — **only re-renders when the destination cell carries a named node**. Empty cells route
-to `function _enterEmptyCell(@28420`, which paints the *same* slots via
-`function _renderNodeShell(@28408` so the shell is uniform. Movement is "timeless"
+to `function _enterEmptyCell(@28421`, which paints the *same* slots via
+`function _renderNodeShell(@28409` so the shell is uniform. Movement is "timeless"
 (§TIMELESS-01): only battle, sleep, fishing and rest advance the day clock.
 
 ### C. The renderer is an in-place DOM mutator
 
 `storyRender` never returns markup. It reads DOM nodes by fixed `id`, overwrites
 `.textContent`/`.innerHTML`, then *removes and rebuilds* the dynamic sibling range between
-`#story-text-box` and `#story-info-row` (`// Clear all stale dynamic siblings@34625`) — manual
+`#story-text-box` and `#story-info-row` (`// Clear all stale dynamic siblings@34607`) — manual
 double-buffering, static shell as frame, dynamic cards as swap. `textContent` carries author prose
 (XSS-safe, §DATA-01 residual); `innerHTML` only engine-authored markup.
 
@@ -196,7 +196,7 @@ double-buffering, static shell as frame, dynamic cards as swap. `textContent` ca
 ### D. The tail synthesis block is the real contract
 
 Everything narratively *live* happens in eighteen lines, beginning at
-`const questMsgs = storyCheckQuests(node);@36041`. This is where the page stops being "prose in a
+`const questMsgs = storyCheckQuests(node);@36023`. This is where the page stops being "prose in a
 slot" and becomes "a state machine's current frame": the quest scan runs, its messages merge into
 the log stream, the quest panel and exits repaint, the world autosaves. **Every subsystem in this
 report converges here, on every step.** Verified unchanged in composition at 42 days.
@@ -219,7 +219,7 @@ declarative and the runtime is the only code path.
 
 ### B. The per-arrival scanner
 
-`function storyCheckQuests(node) {@30166` runs two passes inside the tail synthesis:
+`function storyCheckQuests(node) {@30167` runs two passes inside the tail synthesis:
 
 1. **Activation** — for each not-yet-started quest with `activateNode === node.code`, activate iff
    the declarative gate passes. Emits `📋 {title}`.
@@ -238,7 +238,7 @@ headless-testable at all.
 
 ### C. Declarative gates
 
-`canActivate(questId) {@22193` and `canComplete(questId) {@22205` evaluate objects of typed terms
+`canActivate(questId) {@22194` and `canComplete(questId) {@22206` evaluate objects of typed terms
 against state, replacing arbitrary predicates with a fixed vocabulary: `flags` (AND), `flagsAny`
 (OR), `notFlags` (NONE), `flagEquals`, `nodes`/`sleptAt`, `questsAttempted`/`questsDone`/
 `questsComplete`, `favorMin`, `battles`/`notBattles`, `shardsMin`, `restedAtMin`, `flagsPath`,
@@ -249,8 +249,8 @@ legible constraint. All terms verified live; `itemsMinAny` was later superseded 
 
 ### D. The bit interpreter
 
-`*execBits(bits, ctx) {@22223` iterates an ordered bit chain, dispatches each `bit.kind` to a bound
-handler (`HANDLERS: {@22264`) and warns-and-skips unknowns. The instruction set as the report found
+`*execBits(bits, ctx) {@22224` iterates an ordered bit chain, dispatches each `bit.kind` to a bound
+handler (`HANDLERS: {@22265`) and warns-and-skips unknowns. The instruction set as the report found
 it — **all twelve verified byte-exact at the author's build**:
 
 | kind | effect | 2026-08-18 |
@@ -264,9 +264,9 @@ it — **all twelve verified byte-exact at the author's build**:
 | `favor` | set/increment NPC favorability (cap default 3) | live · 16 |
 | `unlock` | activate listed quest ids | live · 18 (**0 at the author's build** — §BOARD-01-FU6) |
 | `mission_bit` | → `_grantMissionBit(flag, label)` (§VI) | live · 2,449 |
-| `choice` | Phase-2 stub | **RETIRED as a stub** — implemented `*choice(bit, ctx) {@22319` |
+| `choice` | Phase-2 stub | **RETIRED as a stub** — implemented `*choice(bit, ctx) {@22320` |
 | `_legacy_fn` | escape-hatch closure | live · 124 |
-| — | — | **NEW: `cost(bit, ctx) {@22288`** (13th kind, `b905733`, 2026-08-04) |
+| — | — | **NEW: `cost(bit, ctx) {@22289`** (13th kind, `b905733`, 2026-08-04) |
 
 Two of those rows are the report aging *well*. It called `execBits` "a tiny virtual machine" as a
 metaphor; §VM-01 turned it into a literal one — the handlers are generators, `choice` yields
@@ -281,7 +281,7 @@ The worldbuilder mirrors the registry so the editor can only author real, execut
 `edit.html:const UQF_BIT_FIELDS = {@1442`, both still exact at HEAD.
 
 > **Correction (ledger 18).** The original called it *"a byte-for-byte mirror of
-> `const BIT_CONTRACTS = {@21970`."* Measured: **11 of 12 kinds shared, `required`/`optional`
+> `const BIT_CONTRACTS = {@21971`."* Measured: **11 of 12 kinds shared, `required`/`optional`
 > identical on all 11 with zero mismatches**, `_legacy_fn` deliberately editor-excluded,
 > declaration order different, and the editor carries prose where the engine carries a `validate`
 > predicate. The *contract* is exact; the *bytes* are not. Compare contracts before comparing code.
@@ -292,7 +292,7 @@ The worldbuilder mirrors the registry so the editor can only author real, execut
 
 ### A. Dual ontology on grant
 
-`function _grantMissionBit(@26109` makes a mission bit two things at once, deliberately:
+`function _grantMissionBit(@26110` makes a mission bit two things at once, deliberately:
 
 1. **The event** — `S_story[flag] = true`. This is what quest gates read: the fact that something
    happened.
@@ -309,9 +309,9 @@ The worldbuilder mirrors the registry so the editor can only author real, execut
 
 ### B. Asymmetric spend
 
-`function _takeMissionBit(@26153` is not the inverse of granting. The token always leaves inventory;
+`function _takeMissionBit(@26154` is not the inverse of granting. The token always leaves inventory;
 the flag is cleared **only if no quest gate depends on it**, determined by
-`function _gateFlagSet() {@26133`, a lazily-cached scan of every `QUEST_DB` gate's
+`function _gateFlagSet() {@26134`, a lazily-cached scan of every `QUEST_DB` gate's
 `flags`/`flagsAny`/`notFlags`. The rationale (§MBIT-02-E) is that a witnessed event which unlocks a
 downstream mission can never be *un*-witnessed, or spending a token could silently re-close an arc.
 
@@ -332,22 +332,22 @@ reader and no writer.
 
 ### A. Publication
 
-`function storyRenderQuests() {@30707` renders, for each active quest carrying a `waypointNode`,
+`function storyRenderQuests() {@30708` renders, for each active quest carrying a `waypointNode`,
 either a **Battle** button if the destination is a combat node or a **Navigate →** button wired to
 `storySetWaypoint(code)`, annotated with a live distance/bearing tag —
-`const distTag = _wpDistTag(q.waypointNode);@30751`, whose own comment gives the format as
+`const distTag = _wpDistTag(q.waypointNode);@30752`, whose own comment gives the format as
 *"(12 steps, NE)"*. The quest *publishes* a target; the player *subscribes* by clicking. **161
 quests carry a `waypointNode` at HEAD** (150 at the author's build).
 
 ### B. Target state
 
-`S_story.waypoint` — a single node code, or `null`. `function storySetWaypoint(@38146` sets it,
+`S_story.waypoint` — a single node code, or `null`. `function storySetWaypoint(@38128` sets it,
 surfaces the story sheet and calls `_travelStart()`.
 
 ### C. The auto-travel loop
 
-`function _travelStart() {@38025` → `function _travelTick() {@38034` is a **non-blocking
-setTimeout chain** — `_travelTimer = setTimeout(_travelTick, 120);@38061` — never a blocking loop,
+`function _travelStart() {@38007` → `function _travelTick() {@38016` is a **non-blocking
+setTimeout chain** — `_travelTimer = setTimeout(_travelTick, 120);@38043` — never a blocking loop,
 which is the only correct pattern on a single-threaded UI. Each tick:
 
 1. **Arrival test** — standing on the waypoint's *cell* (co-located locale nodes share a cell, so
@@ -366,7 +366,7 @@ that moved you while you were not there.
 ### D. Arrival → completion closure
 
 Where a quest's completion gate uses the `atNode` term
-(`if (g.atNode && st.currentCode !== g.atNode) return false;@22124` — "completes only while
+(`if (g.atNode && st.currentCode !== g.atNode) return false;@22125` — "completes only while
 standing here"), *arriving is completing*: the final `cellMove` re-enters `storyCheckQuests`,
 `canComplete` sees `currentCode === atNode`, the quest flips, its `onComplete` bits fire, and any
 `mission_bit`/`flag_write` among them may open the next quest's gate **on the same frame**. The
@@ -475,7 +475,7 @@ prose is a reliable witness to code it could see and an unreliable one to arithm
 | 2 | the flag namespace is an unbounded implicit coupling surface | **LIVE, AND IT HAS A BILL** — see §XII |
 | 3 | full re-scan of the quest DB per cell step | **RETIRED** — §VM-01-F-FU, `549d6b4`; the activation pass is now O(quests-at-node) |
 | 4 | idempotency is load-bearing but ambient | **PARTLY FENCED** — `once:` is now a declared field, and a re-render test pins it |
-| 5 | presentation/logic interleave: `DAM` sets `saulConverted` during paint | **RETIRED** — the write is now `once:'saulConverted'@31332`, a declared property of the panel |
+| 5 | presentation/logic interleave: `DAM` sets `saulConverted` during paint | **RETIRED** — the write is now `once:'saulConverted'@31334`, a declared property of the panel |
 
 ### C. Quality attributes
 
@@ -496,10 +496,10 @@ None of the five required a framework or a build step, and that was the point.
 
 | # | Recommendation | Outcome | Shipped as |
 |---|---|---|---|
-| 1 | Extract a `nodeCards` data schema — `{when, html\|text, onShow}` evaluated by one loop | ✅ **SHIPPED** (+21 d) | §VM-01-G1/G2 — `const NODE_PANELS = [@31318` (**29 entries**: `when`/`once`/`css`/`html`/`text`) + `const NODE_HOOKS = [@34190` (**61 entries**) behind `function _runNodeHook(@34253` |
-| 2 | Index quest activation by node, mirroring the editor's `_questsByNode` | ✅ **SHIPPED** (+15 d) | §VM-01-F-FU `549d6b4` — `function _questsByNode(@37015`, consumed by `function _uqfActivateAtNode(node) {@30137` |
+| 1 | Extract a `nodeCards` data schema — `{when, html\|text, onShow}` evaluated by one loop | ✅ **SHIPPED** (+21 d) | §VM-01-G1/G2 — `const NODE_PANELS = [@31320` (**29 entries**: `when`/`once`/`css`/`html`/`text`) + `const NODE_HOOKS = [@34172` (**61 entries**) behind `function _runNodeHook(@34235` |
+| 2 | Index quest activation by node, mirroring the editor's `_questsByNode` | ✅ **SHIPPED** (+15 d) | §VM-01-F-FU `549d6b4` — `function _questsByNode(@36997`, consumed by `function _uqfActivateAtNode(node) {@30138` |
 | 3 | A flag registry `FLAG_OWNERS` + collision assertion | ❌ **NOT SHIPPED** — 0 commits, any path, ever | see §XII |
-| 4 | Move state mutation out of `storyRender` into a declarative hook | ✅ **SHIPPED IN SUBSTANCE** (+21 d) | the `once:` field; the report's named example (`DAM`) is now `once:'saulConverted'@31332` |
+| 4 | Move state mutation out of `storyRender` into a declarative hook | ✅ **SHIPPED IN SUBSTANCE** (+21 d) | the `once:` field; the report's named example (`DAM`) is now `once:'saulConverted'@31334` |
 | 5 | A renderer idempotency test | ✅ **SHIPPED** (+21 d) | `src/tests/integration/uqf-node-panels.test.js:gone on re-render@28`, guarded at ship by a 24-combo golden-DOM diff |
 
 **None of the four shipped under the name the report proposed.** `nodeCards`, `FLAG_OWNERS`,
@@ -539,8 +539,8 @@ and the project's own CI gate):
 Two failure shapes, both one token wide:
 
 1. **Intra-chain (`waw`, 32 quests).** Every act gates on `wawNNNa<K>`; every act *writes*
-   `wawNNNAct<K>Passed`. `waw001_act2: {@14900` waits for `waw001a1`, which nothing sets. Its
-   structural twin `cph001_act2: {@15540` gates on `cph001Act1Passed` — the flag act 1 actually
+   `wawNNNAct<K>Passed`. `waw001_act2: {@14901` waits for `waw001a1`, which nothing sets. Its
+   structural twin `cph001_act2: {@15541` gates on `cph001Act1Passed` — the flag act 1 actually
    writes — and chains correctly, which is the proof the convention is right and only the `waw`
    family departed from it.
 2. **Inter-chain (`nwi`/`mla`/`crl`, 21 heads).** Each chain's internal rungs are correct; the
@@ -580,7 +580,7 @@ correct, specific, deferred finding with no row against it ages into a live defe
    the same scanner (`once:` unknown → `saulConverted` wrongly listed).
 3. **A correction to the prover's own report, caused by that false negative.** It states
    *"`waw001a1` only survives play because an NPC `missionBit` coincidentally grants it — the chain
-   stalls at act 3."* It does not and it stalls at **act 2**: `waw001_act2: {@14900` is the first
+   stalls at act 3."* It does not and it stalls at **act 2**: `waw001_act2: {@14901` is the first
    dead rung in all eight `waw` chains, which is why the family's true count is 32 and not 25. The
    author trusted the analyser's own over-approximation about the analyser's own blind spot.
    *A corrective instrument needs its own witness.*
@@ -619,27 +619,27 @@ and it is not architectural. **Make the prover fail.**
 
 | Concern | Anchor |
 |---|---|
-| Navigation kernel | `function cellMove(dir) {@28345` |
-| Empty-cell shell | `function _renderNodeShell(@28408` · `function _enterEmptyCell(@28420` |
-| The page generator | `function storyRender(node, prefix) {@34567` |
-| Dynamic-sibling clear | `// Clear all stale dynamic siblings@34625` |
-| Tail synthesis (the clock edge) | `const questMsgs = storyCheckQuests(node);@36041` |
-| Per-arrival quest scan | `function storyCheckQuests(node) {@30166` |
-| Activation pass (indexed) | `function _uqfActivateAtNode(node) {@30137` · `function _questsByNode(@37015` |
-| Activation / completion gates | `canActivate(questId) {@22193` · `canComplete(questId) {@22205` |
-| The `atNode` term | `if (g.atNode && st.currentCode !== g.atNode) return false;@22124` |
-| Bit interpreter | `*execBits(bits, ctx) {@22223` · `HANDLERS: {@22264` |
-| Bit contract registry | `const BIT_CONTRACTS = {@21970` |
-| Opcodes added after the report | `cost(bit, ctx) {@22288` · `*choice(bit, ctx) {@22319` |
-| Mission-bit grant | `function _grantMissionBit(@26109` |
-| Mission-bit spend (guarded) | `function _takeMissionBit(@26153` · `function _gateFlagSet() {@26133` |
-| Quest panel (waypoint publish) | `function storyRenderQuests() {@30707` · `const distTag = _wpDistTag(q.waypointNode);@30751` |
-| Waypoint set | `function storySetWaypoint(@38146` |
-| Auto-travel loop | `function _travelStart() {@38025` · `function _travelTick() {@38034` · `_travelTimer = setTimeout(_travelTick, 120);@38061` |
-| Presentation registries (Rec 1) | `const NODE_PANELS = [@31318` · `const NODE_HOOKS = [@34190` · `function _runNodeHook(@34253` |
-| Declared render-time write (Rec 4) | `once:'saulConverted'@31332` |
-| Data sections | `const NODE_MAP = {@8425` · `const QUEST_DB = {@10615` · `const WORLD_DB = {@6279` · `const _S_DEFAULTS = () => ({@23062` |
-| Broken chain / working twin | `waw001_act2: {@14900` · `cph001_act2: {@15540` |
+| Navigation kernel | `function cellMove(dir) {@28346` |
+| Empty-cell shell | `function _renderNodeShell(@28409` · `function _enterEmptyCell(@28421` |
+| The page generator | `function storyRender(node, prefix) {@34549` |
+| Dynamic-sibling clear | `// Clear all stale dynamic siblings@34607` |
+| Tail synthesis (the clock edge) | `const questMsgs = storyCheckQuests(node);@36023` |
+| Per-arrival quest scan | `function storyCheckQuests(node) {@30167` |
+| Activation pass (indexed) | `function _uqfActivateAtNode(node) {@30138` · `function _questsByNode(@36997` |
+| Activation / completion gates | `canActivate(questId) {@22194` · `canComplete(questId) {@22206` |
+| The `atNode` term | `if (g.atNode && st.currentCode !== g.atNode) return false;@22125` |
+| Bit interpreter | `*execBits(bits, ctx) {@22224` · `HANDLERS: {@22265` |
+| Bit contract registry | `const BIT_CONTRACTS = {@21971` |
+| Opcodes added after the report | `cost(bit, ctx) {@22289` · `*choice(bit, ctx) {@22320` |
+| Mission-bit grant | `function _grantMissionBit(@26110` |
+| Mission-bit spend (guarded) | `function _takeMissionBit(@26154` · `function _gateFlagSet() {@26134` |
+| Quest panel (waypoint publish) | `function storyRenderQuests() {@30708` · `const distTag = _wpDistTag(q.waypointNode);@30752` |
+| Waypoint set | `function storySetWaypoint(@38128` |
+| Auto-travel loop | `function _travelStart() {@38007` · `function _travelTick() {@38016` · `_travelTimer = setTimeout(_travelTick, 120);@38043` |
+| Presentation registries (Rec 1) | `const NODE_PANELS = [@31320` · `const NODE_HOOKS = [@34172` · `function _runNodeHook(@34235` |
+| Declared render-time write (Rec 4) | `once:'saulConverted'@31334` |
+| Data sections | `const NODE_MAP = {@8425` · `const QUEST_DB = {@10615` · `const WORLD_DB = {@6279` · `const _S_DEFAULTS = () => ({@23063` |
+| Broken chain / working twin | `waw001_act2: {@14901` · `cph001_act2: {@15541` |
 | Inert NPC grant field | `rinaldo_sau: {@10461` |
 | Editor bit-contract mirror | `edit.html:const OPERAND_CONTRACTS = {@1413` · `edit.html:const UQF_BIT_FIELDS = {@1442` · `edit.html:_questsByNode: {},@1508` |
 | Soft-lock prover's over-credit | `src/scripts/check-questgraph.js:// NPC/data mission-bit grant@309` |

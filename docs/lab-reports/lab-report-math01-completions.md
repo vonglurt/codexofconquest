@@ -83,10 +83,10 @@ increment is four coordinates and one field per quest, which is why it took 23 m
 
 ## III. As-built findings at design time (2026-07-07) — all verified
 
-**1. The collection mechanism already existed.** `` `function storyCollectLoot(node) {@30092` `` splits
+**1. The collection mechanism already existed.** `` `function storyCollectLoot(node) {@30093` `` splits
 `node.loot` on ` · ` and pushes each entry into `S_story.inventory` under its exact name. It is a
 strict once-ever grant, guarded by
-`` `if (S_story.visited[node.code] || !node.loot)@30094` ``. All five documents were already on the
+`` `if (S_story.visited[node.code] || !node.loot)@30095` ``. All five documents were already on the
 nodes:
 
 | Node | `loot` | Verified |
@@ -97,18 +97,18 @@ nodes:
 | CNTR — Cantor's Attic | `Moonshine Memo · ∞-Fragment` | ✅ |
 
 **2. Evaluation order supports same-visit completion.** `storyRender` calls
-`` `const lootMsg  = storyCollectLoot(node);@34574` `` before
-`` `const questMsgs = storyCheckQuests(node);@36041` ``, and inside `storyCheckQuests` activation is
-the *first* statement — `` `msgs.push(..._uqfActivateAtNode(node));@30168` `` — ahead of the
+`` `const lootMsg  = storyCollectLoot(node);@34556` `` before
+`` `const questMsgs = storyCheckQuests(node);@36023` ``, and inside `storyCheckQuests` activation is
+the *first* statement — `` `msgs.push(..._uqfActivateAtNode(node));@30169` `` — ahead of the
 completion loop. Arrive, receive the loot, complete on the same render. **Verified at HEAD**, and it
 survived the §VM-01-F-FU refactor that replaced the per-render activation scan with an index.
 
 **3. Three of the four nodes were unreachable.** At the design-lock build, `EHZ`, `MONS` and `ZERO`
 all sat at `(38,215)` — a copy of Jerusalem's cell — alongside `JRS`, `PKR`, `JAR`, `OLN` and `JER`,
 eight codes on one cell. `CELL_GRID` treats `list[0]` as the arrival code, and the client has exactly
-one walking entry point: `` `const destCode = res.destCodes[0] || null;@28355` `` feeding
-`` `S_story.currentCode = destCode;@28373` ``. The only other writer in the whole file is the death
-respawn, `` `S_story.currentCode = S_story.checkpointNode || 'LHR';@26009` ``. **A non-primary code on
+one walking entry point: `` `const destCode = res.destCodes[0] || null;@28356` `` feeding
+`` `S_story.currentCode = destCode;@28374` ``. The only other writer in the whole file is the death
+respawn, `` `S_story.currentCode = S_story.checkpointNode || 'LHR';@26010` ``. **A non-primary code on
 a shared cell is therefore unreachable, permanently** — so `quest_math_02` (activates at EHZ) and
 `quest_math_05` (activates at MONS) could never fire, and three nodes' loot could never be granted.
 `CNTR` alone at `(37,215)` was reachable. *Corrected:* the report calls this a "copy-paste of
@@ -145,8 +145,8 @@ dimensions, and Cantor's shade still stands at the window. **4 of 4 live at HEAD
 |---|---|---|
 | **D1** | Relocate to the Undercity pocket: EHZ `(29,247)`, ZERO `(28,247)`, MONS `(29,248)`, CNTR `(28,248)`, one code per cell | ✅ **Exact.** `` `EHZ:{r:29,c:247},@9740` `` · `` `ZERO:{r:28,c:247},@9722` `` · `` `MONS:{r:29,c:248},@9741` `` · `` `CNTR:{r:28,c:248},@9723` ``. Each is still the sole occupant of its cell; none is sea or road |
 | **D2** | Free-Movement upheld — the *"carry 3 documents to enter"* gate **rejected**; no mover, terrain or `IMPASSABLE` change | ✅ **Proved by the diff.** The ship commit's HTML change is exactly three hunks: one `NODE_COORDS` line, three more `NODE_COORDS` lines, and the `QUEST_DB` block. Zero hunks in `SEA_RUNS`, `ROAD_RUNS`, `IMPASSABLE_CELLS` or the mover |
-| **D3** | Five UQF completions `{itemsAll:[document], atNode:collect node}`; gold 300/350/350/500/600 via `onComplete` reward bits; `xpAward` 350/400/400/500/600 engine-paid; **no `itemChain`** | ✅ **Byte-exact**, e.g. `` `completion:{itemsAll:['Zero Treatise'],atNode:'ZERO'},@21899` `` and `` `completion:{itemsAll:['Moonshine Memo'],atNode:'CNTR'},@21935` ``. ⚠ The stated *reason* for "no `itemChain`" is wrong — see §IX |
-| **D4** | `gate:{}` everywhere; independent side quests, no sequencing | ⚠ **Letter holds, spirit superseded.** All five gates are still `{}` — and §BOARD-01-FU6 (`f7350b0`, +14 d) added four `` `unlock(bit, ctx) { (bit.quests@22312` `` edges making 01→02→03→04→05 a forward chain, plus `rumor` fields putting all five on the Warrant's Board. A mechanism D4 could not have weighed, because it did not exist |
+| **D3** | Five UQF completions `{itemsAll:[document], atNode:collect node}`; gold 300/350/350/500/600 via `onComplete` reward bits; `xpAward` 350/400/400/500/600 engine-paid; **no `itemChain`** | ✅ **Byte-exact**, e.g. `` `completion:{itemsAll:['Zero Treatise'],atNode:'ZERO'},@21900` `` and `` `completion:{itemsAll:['Moonshine Memo'],atNode:'CNTR'},@21936` ``. ⚠ The stated *reason* for "no `itemChain`" is wrong — see §IX |
+| **D4** | `gate:{}` everywhere; independent side quests, no sequencing | ⚠ **Letter holds, spirit superseded.** All five gates are still `{}` — and §BOARD-01-FU6 (`f7350b0`, +14 d) added four `` `unlock(bit, ctx) { (bit.quests@22313` `` edges making 01→02→03→04→05 a forward chain, plus `rumor` fields putting all five on the Warrant's Board. A mechanism D4 could not have weighed, because it did not exist |
 | **D5** | `atNode` = the collect node, uniformly; accepted edge — both ZERO documents drop on one visit, so a late-activated `quest_math_04` completes on a re-visit | ✅ **Still the only edge**, and it is pinned by a test that deliberately exercises it |
 | **D6** | Five `onComplete` narrative lines, recited before writing | ✅ **5 of 5 byte-identical** at HEAD, including *"the north wall, grudgingly: 'You perceived three of them correctly. That deserves something.'"* and *"the difference between 196,883 and 196,884 is 1. The gold, however, is real."* |
 | **D7** | No new state fields; a `mathArcComplete` capstone flag is out of scope | ✅ `mathArcComplete` = **0 occurrences**, 42 days on |
@@ -222,7 +222,7 @@ designed. (`` `410 road cells, 89 junctions.@9881` `` — the generator stamps i
 data it writes, which is why that figure can be trusted.)
 
 **The documents cannot be lost.** `storyCollectLoot` mints them without a `sell` field, and both sell
-paths filter on `` `S_story.inventory.filter(i => i.sell > 0 && !_isLastWeapon(i))@24275` ``. A player
+paths filter on `` `S_story.inventory.filter(i => i.sell > 0 && !_isLastWeapon(i))@24276` ``. A player
 cannot accidentally vendor a quest document into a soft-lock — a real hazard for a once-ever grant,
 closed by accident rather than by design, but closed.
 
@@ -247,7 +247,7 @@ false at the design-lock build. EHZ already carried `` `npc:"Johannes von Weishe
 him four paragraphs of node text: *"He looks like a man who has been calculating the exact probability
 of your arrival and found it satisfying."* CNTR carries `npc:"Cantor's Shade"`. Both render an NPC
 chip; **neither can be talked to**, because the Talk button is gated on
-`` `!(node.npc && NPC_DIALOGUE[node.code])@35924` `` and neither code is a key in that table. Measured
+`` `!(node.npc && NPC_DIALOGUE[node.code])@35906` `` and neither code is a key in that table. Measured
 through the project's parser: **71 of 416 nodes carry an `npc` chip; 6 have no dialogue entry, and two
 of the six are this arc's.** The design decision (no delivery step) may still be the right one — but
 it was made on a wrong fact, and the visible result is a named scholar in a room full of documents
@@ -263,7 +263,7 @@ real JS engine. The 15 mis-counted entries are single lines of 1,436–2,655 cha
 near the *end*. **The newer measurement was not the better one.** Row corrected in place, not re-filed.
 
 **(c) Two engine comments still describe the world this increment ended** (→ appended to §DX-02as).
-`` `q.schema === 'UQF-1.0' && q.completion && QuestRuntime.canComplete(id)@30187` `` sits directly
+`` `q.schema === 'UQF-1.0' && q.completion && QuestRuntime.canComplete(id)@30188` `` sits directly
 beneath a comment stating that *"the remaining non-UQF entries (quest_math_01–05 §MATH-01 gap …) never
 had a completion mechanism and stay activate-only"* — three lines above the code that completes them.
 The `adaptLegacyQuest` copy of the same sentence is already tracked as §DX-02as (e); this is its

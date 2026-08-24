@@ -107,7 +107,7 @@ Direct references at HEAD: **9 × `activateNode:'BK'`, 2 × `waypointNode:'BK'`,
 
 Consequences, in order of severity:
 
-1. **`encoded_letter` is unobtainable.** Stop 3 is its only grant path. This kills design decision §3.4 — the retroactive decode — which §4.1 named as the feature that tested best. The footnote code at `it._decoded@31175` is live and correct and can never fire from a purchased letter.
+1. **`encoded_letter` is unobtainable.** Stop 3 is its only grant path. This kills design decision §3.4 — the retroactive decode — which §4.1 named as the feature that tested best. The footnote code at `it._decoded@31177` is live and correct and can never fire from a purchased letter.
 2. **The arc still completes.** The gate is `count < index`, so stops 4 and 5 fire with `count` at 2 and 3; three purchases remain available (`scholar_ink`, `false_warrant`, `kings_seal`), so `fav_corelli` still reaches 3 and the revelation is attainable. The failure is silent — a missing stop, not a broken chain.
 3. Repointing stop 3 to `VBY` fixes 1 and 2 together. This is the cheap fix and it does **not** wait on §AUDIT-03x's design call.
 
@@ -141,15 +141,15 @@ Two design decisions verify exactly and remain sound: favorability derives from 
 
 ## 9. Architecture as Shipped
 
-**State** (`fav_corelli: 0@23143`) — `fav_corelli` (0–3, always derived), `corelli_purchase_count`, `corelli_encounter_count`, `corelliRevelationDelivered`.
+**State** (`fav_corelli: 0@23144`) — `fav_corelli` (0–3, always derived), `corelli_purchase_count`, `corelli_encounter_count`, `corelliRevelationDelivered`.
 
-**Selection** (`function _checkCorelliAppearance@23447`) — first entry where `nodeCode` matches, `actNumber >= actMin`, and `corelli_encounter_count < index`. Because every encounter raises the floor, an appearance can be *skipped* but never taken out of order.
+**Selection** (`function _checkCorelliAppearance@23448`) — first entry where `nodeCode` matches, `actNumber >= actMin`, and `corelli_encounter_count < index`. Because every encounter raises the floor, an appearance can be *skipped* but never taken out of order.
 
-**Voice** (`function _corelliOpener@23452`) — `openerTrusted` at fav ≥ 2, `openerFriendly` at fav ≥ 1, else `opener`.
+**Voice** (`function _corelliOpener@23453`) — `openerTrusted` at fav ≥ 2, `openerFriendly` at fav ≥ 1, else `opener`.
 
-**Data** (`const CORELLI_ITEMS@26586`, `const CORELLI_APPEARANCES@26608`).
+**Data** (`const CORELLI_ITEMS@26587`, `const CORELLI_APPEARANCES@26609`).
 
-**Surface** (`function _nodeHookCorelliMerchant@31736`) — renders a `🛒 Traveling Merchant` button after `#story-text-box`. On click: increment encounter count, emit the opener, then either the stop-5 revelation branch (deliver `last_cipher`, set `corelliRevelationDelivered`, mark any owned letter `_decoded`, **return**) or a buy/pass button pair that debits gold and recomputes favorability.
+**Surface** (`function _nodeHookCorelliMerchant@31738`) — renders a `🛒 Traveling Merchant` button after `#story-text-box`. On click: increment encounter count, emit the opener, then either the stop-5 revelation branch (deliver `last_cipher`, set `corelliRevelationDelivered`, mark any owned letter `_decoded`, **return**) or a buy/pass button pair that debits gold and recomputes favorability.
 
 **Appearances at HEAD:**
 

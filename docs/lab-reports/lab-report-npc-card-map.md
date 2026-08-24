@@ -202,9 +202,9 @@ before A (B without A crashes on the first lean node)."* It was obeyed; A landed
 
 | § | Locked shape | Outcome | Evidence |
 |---|---|---|---|
-| 3.1 | `_deriveNpcRenderMap()` — pure, memoized inversion of profiles on `.node` | ✅ **shipped under the exact specified name**, module-level cache, guard comment cites the same 121 / 0-dead measurement | `function _deriveNpcRenderMap@23672`; `33aa15f` |
-| 3.2 | `NPC_RENDER_OVERRIDES = { node: (base, S) => [...] }` — derivation default, explicit override wins | ❌ **NOT SHIPPED.** The symbol appears in **zero** builds; `git log -S NPC_RENDER_OVERRIDES --all` returns only this report and its BACKLOG archive. **Superseded**, not dropped — see below | `_curatedGoverned = new Set@35166` |
-| 3.3 | Greeting **synthesis** — `\|\| { greeting: <line from the tier pool> }` | ⚠️ **shipped as omission, not synthesis.** `greetingHtml` renders `''` when `staticProfile` is absent | `const greetingHtml@23718`; `76ad683` |
+| 3.1 | `_deriveNpcRenderMap()` — pure, memoized inversion of profiles on `.node` | ✅ **shipped under the exact specified name**, module-level cache, guard comment cites the same 121 / 0-dead measurement | `function _deriveNpcRenderMap@23673`; `33aa15f` |
+| 3.2 | `NPC_RENDER_OVERRIDES = { node: (base, S) => [...] }` — derivation default, explicit override wins | ❌ **NOT SHIPPED.** The symbol appears in **zero** builds; `git log -S NPC_RENDER_OVERRIDES --all` returns only this report and its BACKLOG archive. **Superseded**, not dropped — see below | `_curatedGoverned = new Set@35148` |
+| 3.3 | Greeting **synthesis** — `\|\| { greeting: <line from the tier pool> }` | ⚠️ **shipped as omission, not synthesis.** `greetingHtml` renders `''` when `staticProfile` is absent | `const greetingHtml@23719`; `76ad683` |
 | 5-A | Lean-profile render fallback, additive, ~3 lines | ✅ shipped **48 minutes** after the lock | `76ad683` |
 | 5-B | Derive + override, 14 legacy nodes byte-identical | ✅ shipped, curated-wins strategy | `33aa15f` |
 | 5-C | `meta.enemy` at Friendly, mirroring the `worldTruth` footer | ✅ shipped under its own tag | `696539e` |
@@ -312,7 +312,7 @@ was **112**, and the union at HEAD is 125.
 
 - **SF3 — `NODE_NPC_KEYS` stale comment.** ✅ **Correct and fixed.** The parent comment claimed the
   table was *"used by `_getNPCDialogue()` routing"*; its only readers were and are
-  `function _getNodeMapColor@27562` and `function _getFarewell@27575`. `ed06625` rewrote the comment
+  `function _getNodeMapColor@27563` and `function _getFarewell@27576`. `ed06625` rewrote the comment
   to *"read by `_getNodeMapColor()` + `_getFarewell()`"* — exactly the correction requested.
 
 **Later side-findings the report did not anticipate**, each filed and shipped inside five days:

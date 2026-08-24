@@ -93,7 +93,7 @@ holding at its cleanest — and §IV.6 explains why the memory was so plausible.
 
 The §XLII table row reads *"`_trackStat()` dual increment | 21,909–21,912 | Live."* **The line range
 is exactly right** — it is the body of `_statTally` — and the symbol has **0 commits in the file's
-entire history**. `git log -S "_trackStat"` returns nothing; `_statTally(key, n)@23915` has sixteen
+entire history**. `git log -S "_trackStat"` returns nothing; `_statTally(key, n)@23916` has sixteen
 live call sites.
 
 The cost is not the table row. It is the durable rule three paragraphs later:
@@ -117,7 +117,7 @@ reference at line 19,767."* Line 19,767 is a **comment**:
 quest_d0208_a1: { id:'quest_d0208_a1', type:'skill_check', title:'Act I — The Coin', …
 ```
 
-`quest_mimic_colony`: **0 commits ever**. The real arc is `quest_d0208_a1: { id:'quest_d0208_a1'@21829` through `a5` — five acts,
+`quest_mimic_colony`: **0 commits ever**. The real arc is `quest_d0208_a1: { id:'quest_d0208_a1'@21830` through `a5` — five acts,
 beginning on the line immediately below the one cited as confirmation. `quest.md:391` has carried
 the correct mapping the whole time: `` `quest_d0208_a1–a5` *(design: quest_mimic_colony)* ``.
 **The maintained home doc was right and the synthesis was not** — worth recording, because the usual
@@ -147,7 +147,7 @@ Not near the citation — *in* it. `defeatedBattles['TLS']` appears ten times in
 |---|---|---|
 | *"The Scholar's Workshop node (report called it `SW`) may use a different code — node code unconfirmed from this grep set."* | **`SZG`** — `SZG:{ num:80, code:'SZG', name:'workshop'@8811` | **Four lines above `LIM@8815`**, which the very next table row cites correctly |
 | *"Node SW for the Workshop may use a different code — check live HTML before referencing."* (repeated in the Summary) | same | same |
-| *"Bug noted in report not confirmed fixed… No confirming grep found for a fix."* | **The bug is real and still live at HEAD** — the panel is `nodes:['TLS']` with `when:st => (st.level || 1) >= 20 && !st.questMinusOne@31382` and carries no battle term. But the key is `defeatedBattles['TLS']`, not `['CO']` | ten lines away, in the same block |
+| *"Bug noted in report not confirmed fixed… No confirming grep found for a fix."* | **The bug is real and still live at HEAD** — the panel is `nodes:['TLS']` with `when:st => (st.level || 1) >= 20 && !st.questMinusOne@31384` and carries no battle term. But the key is `defeatedBattles['TLS']`, not `['CO']` | ten lines away, in the same block |
 
 The third is the interesting one: the negative is **right about the defect and wrong about the
 key**, which is the precise failure a single grep would have caught. The hedge — *"no confirming
@@ -168,7 +168,7 @@ const _isTrue = missionDone && curse <= -6
 
 Three of four terms are satisfiable — `pitTrainingWins` has a live writer, and 20 EB codes make
 `>= 5` negotiations reachable. The fourth is arithmetic:
-`_curseScore()@28191` returns `(startedNotReturned × 3) + (neverStarted × 1) − (allComplete ? 5 : 0)`
+`_curseScore()@28192` returns `(startedNotReturned × 3) + (neverStarted × 1) − (allComplete ? 5 : 0)`
 over 20 codes, so its **best possible value is −5** and its realistic floor is **20** (the
 `ebReturnDone` term has no reachable writer — §EPIC-01). `curse <= -6` is unsatisfiable at every
 value the function can return. **§ENDING-01 (b) already owns and dates this**; it is corroborated
@@ -204,11 +204,11 @@ Full correction set:
 
 | Document says | Live | Evidence |
 |---|---|---|
-| Entry 42 modal at **CI** | **LHR** | `node.code === 'LHR'@34636`; the bit is even named `returnedToCI` and reads `visited['LHR']@23661` |
-| Fifth ending / Quest -1 / Codex Core at **CO** | **TLS** | `nodes:['TLS']@31381`; `activateNode:'TLS'` at cited 19,707 |
+| Entry 42 modal at **CI** | **LHR** | `node.code === 'LHR'@34618`; the bit is even named `returnedToCI` and reads `visited['LHR']@23662` |
+| Fifth ending / Quest -1 / Codex Core at **CO** | **TLS** | `nodes:['TLS']@31383`; `activateNode:'TLS'` at cited 19,707 |
 | Yva at **GC** | **TRD** | `yva: { meta: { name:"Yva"@10414` |
 | Lady Aurel at **LA**, Lady Calice at **LC** *(both hedged "or equivalent")* | **LC1**, **LC2** | `LC1:{ num:112@8531`, `LC2:{ num:114@8535` — the declaration lines **one above** the cited text lines |
-| Benedikt's four-author synthesis at **SQ** (Report 2) | **NUE** | `node.code === 'NUE'@31685` — **and Report 1 of this same document corrects SQ→NUE correctly** |
+| Benedikt's four-author synthesis at **SQ** (Report 2) | **NUE** | `node.code === 'NUE'@31687` — **and Report 1 of this same document corrects SQ→NUE correctly** |
 | Scholar's Workshop **SW** *(hedged)* | **SZG** | `SZG:{ num:80@8811` |
 
 Report 2 repeating `SQ` two pages after Report 1 fixes it is instrument 53's failure mode inside a
@@ -233,7 +233,7 @@ single file: the pointer was re-checked, the sentence was inherited.
 ### 8. Entry 42 has a fourth gate the document does not mention.
 
 Reported conditions: `ngPlusRun >= 1`, `priorQuestMinusOne`, `!entry42Written`. The live guard adds
-`const _e42Dear = ['yael','brynn','quill','pachelbel','crov','auros']@34638` filtered to
+`const _e42Dear = ['yael','brynn','quill','pachelbel','crov','auros']@34620` filtered to
 `_npcFavor(k) >= 2`, then `if (_e42Dear >= 3)`. A player who reaches NG+ having been warm to two
 people never sees the page and is never told why. **§AUDIT-03ah already owns this** (filed
 2026-08-12) — corroborated, not re-filed. The key list also confirms the sixth Birka key is
@@ -245,7 +245,7 @@ people never sees the page and is never told why. **§AUDIT-03ah already owns th
 
 | # | Source report | Verdict | Delta |
 |---|---|---|---|
-| 1 | Weimar Scholar Gate (§XVI) | **Live** | SQ→**NUE** correctly caught. `_tomeBonuses()@23407`, `wmSessionsDays`, `wmDoc3Unredacted` all exact. `WM_ARCHIVE_DOCS@27787`'s own doc comment still says *"⚠️ PLANNED"* for a shipped surface. |
+| 1 | Weimar Scholar Gate (§XVI) | **Live** | SQ→**NUE** correctly caught. `_tomeBonuses()@23408`, `wmSessionsDays`, `wmDoc3Unredacted` all exact. `WM_ARCHIVE_DOCS@27788`'s own doc comment still says *"⚠️ PLANNED"* for a shipped surface. |
 | 2 | Void Archaeology (§XVII) | **Live, unreachable without console** | All 9 `va*` flags at 21,225 exact. Fires at **NUE**, not SQ; fifth ending at **TLS**, not CO. See §VII. |
 | 3 | NG+ Remembrance (§XV) | **Live** | The `_STAT_ZERO()` initialisation delta the document flags is **real and correctly stated** — `_S_DEFAULTS()` inlines the zero objects at 21,237–21,238; the factory is a reset tool. Good catch. Entry 42 is at **LHR**, and has a 4th gate (§IV.8). |
 | 4 | Quest -1 (§XIV) | **Live at TLS** | Node wrong. Flagged bug **confirmed still live at HEAD**. Its player-facing text carries four stale literals — **§AUDIT-03u already extended**. |
@@ -282,7 +282,7 @@ These are the load-bearing rules. Corrections are marked; everything unmarked ve
 - **Crown nodes have no battles; junction nodes do.** HW1/HG1/HN1 are battle-free; HJ1/HJ2/HJ3 carry
   the bosses. Still true.
 - **`innmotherKindness` never decrements.** Failure does not reduce it — accumulated kindness is
-  permanent within a run. Gate at `>= 5@11720`, naming at `>= 7@22584`.
+  permanent within a run. Gate at `>= 5@11720`, naming at `>= 7@22585`.
 - **The betrayal mechanic is an accumulator, not a branch.** `betrayalThought`/`Word`/`Deed`
   accumulate across failed checks and the arc-close witnesses them without judging.
 - **`vsShamanKnown` sets at debt settlement, not at shaman defeat.** The player learns the shaman

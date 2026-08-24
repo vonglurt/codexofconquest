@@ -248,7 +248,7 @@ The First Researcher did not merely study the Void — she built the Antecedent 
 
 New items — **corrected 2026-08-17 (§DOC-02bz), all three claims were wrong:** the relic ships as `name:'Antecedent Seal'` (`void_architect_seal` occurs only as the rumour key `void_architect_seal_inv`) and the readable as `name:"The Constructor's Log"`, `readableKey:'constructors_log'` (`constructor_log` singular: **0 occurrences**); and neither is NG+-persistent — `storyNewGamePlus` re-assigns from `_S_DEFAULTS()`, whose `inventory: []` wipes both. Persistence is not needed: the arc runs *inside* the NG+ run that grants them. No new monsters. No new nodes.
 
-The **Constructor's Log** (7 entries, First Researcher's own words) surfaces as Document 4 in the `NUE` (historical `WM`) lower archive after all five sites are visited. Benedikt Rasp delivers the final confirmation of the four-author chain — **and he is not one of the four.** The engine's line names First Researcher → Froberger → **the player** → **Entry 42**; Benedikt is the narrator who assembled it (`S_story.vaArchitectureKnown = true;@31689`).
+The **Constructor's Log** (7 entries, First Researcher's own words) surfaces as Document 4 in the `NUE` (historical `WM`) lower archive after all five sites are visited. Benedikt Rasp delivers the final confirmation of the four-author chain — **and he is not one of the four.** The engine's line names First Researcher → Froberger → **the player** → **Entry 42**; Benedikt is the narrator who assembled it (`S_story.vaArchitectureKnown = true;@31691`).
 
 See plan-archive.md §XVII for the full Constructor's Log text, investigation site descriptions, state flags, and `TLS` (historical `CO`) outro addendum.
 
@@ -539,7 +539,7 @@ These six NPCs are fully implemented with `npcFavorability` states, `NPC_DIALOGU
 
 **Weckmann Training Log** — available at `HKG` (historical `CY`) after Dear Friend. Shows pit fight history. `_buildWeckmannLog()` builds it dynamically. Contains personal combat philosophy.
 
-**Pit Training Perks** (`const PIT_PERK_UNLOCKS = {@27333`) — unlocked sequentially by `function _checkPitPerkUnlock()@28169` as `pitTrainingWins` accumulates. One perk per win threshold. Five total, in order:
+**Pit Training Perks** (`const PIT_PERK_UNLOCKS = {@27334`) — unlocked sequentially by `function _checkPitPerkUnlock()@28170` as `pitTrainingWins` accumulates. One perk per win threshold. Five total, in order:
 
 | # | Key | Title | Weckmann's line | Combat effect (`_applyPitPerks`) |
 |---|---|---|---|---|
@@ -552,7 +552,7 @@ These six NPCs are fully implemented with `npcFavorability` states, `NPC_DIALOGU
 Perks persist through NG+. Character sheet shows "Weckmann's Student" badge when all 5 are held.
 
 > **⚠️ MEASURED (§DOC-02cx, 2026-08-22) — the "Combat effect" column above is the WRITE, and there is no
-> reader.** `function _applyPitPerks(combatState)@28181` sets the five booleans on the live combat state
+> reader.** `function _applyPitPerks(combatState)@28182` sets the five booleans on the live combat state
 > at `_showBattleOverlay`, and each of the five names occurs **exactly twice in the whole file** — once in
 > `perkList`, once in that assignment. Nothing in the duel engine consults any of them, so all five
 > specified effects (+1 when flanking · pre-combat HP tier · free shove on a crit · 1d4 between rounds ·

@@ -96,10 +96,10 @@ The original report specified three tiers. HEAD has four; the droppable tier is 
 
 | Tier | Store | Death behaviour | Anchor |
 |---|---|---|---|
-| 1 | `S_story.tattoos[]` | Survives unconditionally — never touched by the death routine | `const _survivingTattoos@23924` |
-| 2 | `careerStats` / `runStats` | `careerStats` snapshot-restored; `runStats` reset *on one path only* (§V-A) | `const _STAT_ZERO = () => ({ kills:0@23914` |
-| 3a | `inventory` where `type ∈ {shard, key}` | **Survives** — filtered out before the strip | `const critTypes = new Set(['shard', 'key']);@25965` |
-| 3b | all other `inventory` + all gold | Moved to the corpse quest; replaced by a fresh starter dagger | `S_story.inventory = [...critItems, Object.assign({}, STARTER_DAGGER)];@25992` |
+| 1 | `S_story.tattoos[]` | Survives unconditionally — never touched by the death routine | `const _survivingTattoos@23925` |
+| 2 | `careerStats` / `runStats` | `careerStats` snapshot-restored; `runStats` reset *on one path only* (§V-A) | `const _STAT_ZERO = () => ({ kills:0@23915` |
+| 3a | `inventory` where `type ∈ {shard, key}` | **Survives** — filtered out before the strip | `const critTypes = new Set(['shard', 'key']);@25966` |
+| 3b | all other `inventory` + all gold | Moved to the corpse quest; replaced by a fresh starter dagger | `S_story.inventory = [...critItems, Object.assign({}, STARTER_DAGGER)];@25993` |
 
 Equipped weapons also survive, because they live in `equippedWeapon` / `equippedMainWeapon` rather
 than in the inventory array. The player is told this truthfully in the death message
@@ -143,7 +143,7 @@ recorded as fact. **NOT SHIPPED — kept.**
 
 ### III-D. Respawn Preservation
 
-`function storyRespawnFromCheckpoint()@23922` is **byte-identical** to the original specification
+`function storyRespawnFromCheckpoint()@23923` is **byte-identical** to the original specification
 across 79 days, save for one comment. It snapshots both survivors, loads the older checkpoint, keeps
 whichever tattoo set is longer, carries `careerStats` forward unconditionally, and zeroes `runStats`
 and `hour`.
@@ -155,7 +155,7 @@ and `hour`.
 ### IV-A. Hard Mode — `str:10, dex:8, con:8, int:8, wis:8, cha:8`
 
 52 points against the standard array's 72. Verified byte-exact at four sites, including
-`const _S_DEFAULTS = () => ({@23062`. Hard Mode's purpose is ledger legibility: with a flat floor,
+`const _S_DEFAULTS = () => ({@23063`. Hard Mode's purpose is ledger legibility: with a flat floor,
 **every point above 8 in the final sheet is traceable to a tattoo**, so the ledger reads as pure
 player choice rather than as character-creation noise.
 
@@ -186,26 +186,26 @@ function _ccSpent() { return Object.values(_cc_scores).reduce((s,v) => s + _ccCo
 
 ### V-A. Schema and Hooks
 
-`_STAT_ZERO()` ships with all 10 specified fields, byte-exact, and `function _statTally(key, n)@23915`
+`_STAT_ZERO()` ships with all 10 specified fields, byte-exact, and `function _statTally(key, n)@23916`
 null-guards both ledgers for backward compatibility with pre-Chronicle saves.
 
 **Table II — Hook Site Verification: 14 of 14 live**
 
 | Stat | Site | Anchor |
 |---|---|---|
-| `battlesAttempted` | all battle types | `_statTally('battlesAttempted', 1);@24642` |
+| `battlesAttempted` | all battle types | `_statTally('battlesAttempted', 1);@24643` |
 | `attacksAttempted` ×2 | main + offhand, per swing | `@25057` · `@25108` |
 | `attacksHit` ×2 | main + offhand hit branch | `@25081` · `@25128` |
 | `dmgDealt` ×2 | main + offhand hit branch | `@25080` · `@25127` |
 | `dmgReceived` ×2 | enemy turn + EB negotiation fail | `@25243` · `@30312` |
 | `kills` | battle victory | `@25295` |
-| `deaths` | death fall | `_statTally('deaths', 1);@25995` |
-| `exitsTaken` | grid move | `_statTally('exitsTaken', 1);@28365` |
+| `deaths` | death fall | `_statTally('deaths', 1);@25996` |
+| `exitsTaken` | grid move | `_statTally('exitsTaken', 1);@28366` |
 | `sleeps` + `daysAdventuring` | sleep confirm | `@36297` · `@36298` |
 
 **One host name is stale, and the hook is not.** The original named `storyMove()` as the
 `exitsTaken` site. `storyMove` was deleted as `storyMove_LEGACY` by `85cc43e` (§CELL-11A), but the
-hook was **re-homed** into the §WALK/§NAV-01 grid mover at `function cellMove(dir)@28345`. Behaviour
+hook was **re-homed** into the §WALK/§NAV-01 grid mover at `function cellMove(dir)@28346`. Behaviour
 correct, name RETIRED.
 
 `deaths` is tallied **after** the inventory strip (`@25992` strips, `@25995` tallies), not before as
@@ -215,7 +215,7 @@ conflated the two writes.
 ### V-B. The Time-of-Day Clock
 
 `S_story.hour` (0–23), +1 per battle at `@24649`, +6 per sleep at
-`S_story.hour = ((S_story.hour || 0) + 6) % 24;@36299`. Verified. The clock is decoupled from the
+`S_story.hour = ((S_story.hour || 0) + 6) % 24;@36281`. Verified. The clock is decoupled from the
 49-day void timer and affects no balance system — it exists solely so a death tattoo can say
 *14:00* instead of only *Day 12*.
 
@@ -223,11 +223,11 @@ conflated the two writes.
 
 | Surface | Reads | Anchor |
 |---|---|---|
-| Game-over modal, "This Run" | `runStats`, 9 rows + hit rate | `function _populateGameoverChronicle()@23852` |
-| Character sheet, Progression | level-keyed tattoos | `const tattooByLvl = {};@37627` |
-| Character sheet, Deaths | death tattoos | `const deathTattoos = (S_story.tattoos || []).filter@37703` |
-| Character sheet, Chronicle | both ledgers, two columns | `const isFirstRun = (cs.deaths || 0) === 0;@37728` |
-| **Inventory sheet, Character Tattoos** | **all tattoos, newest first** | `makeSection('⚔ Character Tattoos');@31244` |
+| Game-over modal, "This Run" | `runStats`, 9 rows + hit rate | `function _populateGameoverChronicle()@23853` |
+| Character sheet, Progression | level-keyed tattoos | `const tattooByLvl = {};@37609` |
+| Character sheet, Deaths | death tattoos | `const deathTattoos = (S_story.tattoos || []).filter@37685` |
+| Character sheet, Chronicle | both ledgers, two columns | `const isFirstRun = (cs.deaths || 0) === 0;@37710` |
+| **Inventory sheet, Character Tattoos** | **all tattoos, newest first** | `makeSection('⚔ Character Tattoos');@31246` |
 
 The inventory sheet section is an **undocumented expansion** — the original claimed two render
 locations. It is the only surface that shows the whole ledger in one list.
@@ -267,15 +267,15 @@ that suppresses the panel on an instant death with nothing to report.
 
 ### VII-A. FINDING 1 — The death that writes the tattoo is the death that never resets the run
 
-`S_story.runStats    = _STAT_ZERO();@23933` and `S_story.hour        = 0;@23934` occur at
+`S_story.runStats    = _STAT_ZERO();@23934` and `S_story.hour        = 0;@23935` occur at
 **exactly one site each**,
 both inside `storyRespawnFromCheckpoint()`. That function has two callers:
 
-1. `btn-gameover-respawn@38327` — the game-over modal button.
-2. `_onPitChampionLoss()@27928` — losing the optional Birka pit championship.
+1. `btn-gameover-respawn@38309` — the game-over modal button.
+2. `_onPitChampionLoss()@27929` — losing the optional Birka pit championship.
 
 Combat death does not reach either. The death-save mini-game resolves to `_storyDeathSaveCrawl()`
-(3 successes → survive at 1 HP) or `function _storyDeathSaveFall()@25950` (3 failures). The fall
+(3 successes → survive at 1 HP) or `function _storyDeathSaveFall()@25951` (3 failures). The fall
 path writes the death tattoo, tallies `deaths`, strips the player, and **respawns inline** —
 `S_story.currentCode = S_story.checkpointNode || 'LHR'` followed by `storyEnter()`. It never opens
 the game-over modal and never calls the respawn function.
@@ -316,13 +316,13 @@ and tattoos are never in that array.
 For tattoos this costs nothing — they are safe by container. But **two ordinary inventory items also
 carry `drop:false`**, and the death routine filters on `type`, not on `drop`:
 
-- `name:"Innmother's Key"@23535` — granted when Innmother kindness reaches 5. Carries no `type`, so
+- `name:"Innmother's Key"@23536` — granted when Innmother kindness reaches 5. Carries no `type`, so
   `critTypes.has(undefined)` is false and the key goes to the corpse. It is also **read 0 times**:
   the free-room effect runs entirely on `S_story.freeBookingUnlocked`, set the line above. The item
-  is a prop, and so is `S_story.innmotherKeyGiven = true;@23536`, a third marker for the same fact
+  is a prop, and so is `S_story.innmotherKeyGiven = true;@23537`, a third marker for the same fact
   with no reader either. → **§DX-02n +2**.
-- `name:"Glut's Gift", icon:'🍯'@31456` — a **real gated item**, tested by
-  `some(i => i.name === "Glut's Gift")@34462` and consumed by `quest_glut_06`. Also untyped, so a
+- `name:"Glut's Gift", icon:'🍯'@31458` — a **real gated item**, tested by
+  `some(i => i.name === "Glut's Gift")@34444` and consumed by `quest_glut_06`. Also untyped, so a
   death while carrying the jar sends it to the corpse. Recoverable by reclaiming the body, so this
   is a stumble rather than a soft-lock — but it is exactly the failure `drop:false` was written to
   prevent, on the one item that needs it.
@@ -364,13 +364,13 @@ independent of the bonus rolls, so even that number should have survived — it 
 
 ### VII-F. FINDING 6 — The ledger shape is declared three times
 
-`const _STAT_ZERO = () => ({ kills:0@23914` is the specified factory, but
-`careerStats: { kills:0@23146` and `runStats:` on the line below hand-write the same ten fields
+`const _STAT_ZERO = () => ({ kills:0@23915` is the specified factory, but
+`careerStats: { kills:0@23147` and `runStats:` on the line below hand-write the same ten fields
 inside `_S_DEFAULTS()` rather than calling it. Three copies now exist and all three currently agree
 — which is the only reason this is a hazard rather than a bug.
 
 There is no ordering obstacle: `_S_DEFAULTS` is itself an arrow const and is first *called* at
-`S_story = _S_DEFAULTS();@23403`, long after the factory is defined. This is the §STATE-INIT drift
+`S_story = _S_DEFAULTS();@23404`, long after the factory is defined. This is the §STATE-INIT drift
 class one object deeper, and the file's own comment at `@22999` warns against exactly it. Filed
 **§DX-02ay**.
 
@@ -382,8 +382,8 @@ class one object deeper, and the file's own comment at `@22999` warns against ex
 |---|---|---|
 | 1 | Feat tattoos (`subtype:'feat'`) | **NOT SHIPPED.** Superseded — the level-up tattoo already carries `feature: feat.name` for all 20 levels, which delivers the intent without a subtype. |
 | 2 | Story tattoos for narrative events | **NOT SHIPPED.** No writer outside the three in §III-B. |
-| 3 | Negative tattoos (scars) | **PARTIALLY, ELSEWHERE.** `Thorn (Permanent)@37676` (§FUTURE-01) is a permanent character-sheet caption — the shape, arriving outside this system. |
-| 4 | Cross-run ancestral record in NG+ | **NOT SHIPPED.** `storyNewGamePlus()@24001` calls `_S_DEFAULTS()`, discarding the ledger. The "you fell here before" warning does not exist. |
+| 3 | Negative tattoos (scars) | **PARTIALLY, ELSEWHERE.** `Thorn (Permanent)@37658` (§FUTURE-01) is a permanent character-sheet caption — the shape, arriving outside this system. |
+| 4 | Cross-run ancestral record in NG+ | **NOT SHIPPED.** `storyNewGamePlus()@24002` calls `_S_DEFAULTS()`, discarding the ledger. The "you fell here before" warning does not exist. |
 | 5 | Chronicle analytics (K/D, dmg per battle) | **PARTIALLY.** Hit rate ships on the game-over modal; no derived metric reaches the character sheet, which shows raw counters only. |
 
 **0 of 5 shipped as specified, 1 delivered by a better mechanism, 1 arrived from another arc.** The

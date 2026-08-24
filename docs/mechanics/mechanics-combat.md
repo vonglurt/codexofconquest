@@ -251,7 +251,7 @@ XP accumulates across the run. On each victory, `_checkLevelUp()` fires — if X
 
 **XP Thresholds (Levels 1–20):**
 
-> **Source:** `const XP_LEVELS = [@24418`. Cumulative XP to reach each level. *(§DOC-02t: the former bare pointer "HTML line 8608" was an archive-era line number — the const has been at 24418 since the file grew past 14,377 lines. Bare numeric anchors are invisible to `check:anchors`; write `` `symbol@line` `` per §DX-01e.)*
+> **Source:** `const XP_LEVELS = [@24419`. Cumulative XP to reach each level. *(§DOC-02t: the former bare pointer "HTML line 8608" was an archive-era line number — the const has been at 24418 since the file grew past 14,377 lines. Bare numeric anchors are invisible to `check:anchors`; write `` `symbol@line` `` per §DX-01e.)*
 
 | Lv | XP | Lv | XP | Lv | XP | Lv | XP |
 |---|---|---|---|---|---|---|---|
@@ -313,8 +313,8 @@ STR modifier increases flow through to `S_story.atkBonus`. CON modifier increase
 Shield gifts are added to inventory and auto-equipped if better than the currently held shield. `hpMax` increases and current HP also increases by the same roll. The status bar shows `⭐ Level N · X/Y XP`.
 
 > **⚠️ Corrected 2026-08-12 (§DOC-02t).** This paragraph previously read *"`atkBonus` and `acBonus` in `S_story` are updated immediately."* Neither is true of the level-up path:
-> - **`S_story.atkBonus` is the STR modifier, not a level bonus.** It is seeded at character creation by `S_story.atkBonus = Math.max(0, Math.floor((scores.str - 10) / 2));@23958` and changes only when an ASI raises STR (`if (strDelta > 0) S_story.atkBonus@38540`). Levelling by itself never touches it.
-> - **`S_story.acBonus` has no writer at all** — declared at `acBonus: 0,@23040` and `level: 1, atkBonus: 0, acBonus: 0,@23074`, read once by `function _calcPlayerAc() {@24610`, and written nowhere in the file (also true at the earliest surviving build). It is permanently 0. → **§DX-02y**.
+> - **`S_story.atkBonus` is the STR modifier, not a level bonus.** It is seeded at character creation by `S_story.atkBonus = Math.max(0, Math.floor((scores.str - 10) / 2));@23959` and changes only when an ASI raises STR (`if (strDelta > 0) S_story.atkBonus@38522`). Levelling by itself never touches it.
+> - **`S_story.acBonus` has no writer at all** — declared at `acBonus: 0,@23041` and `level: 1, atkBonus: 0, acBonus: 0,@23075`, read once by `function _calcPlayerAc() {@24611`, and written nowhere in the file (also true at the earliest surviving build). It is permanently 0. → **§DX-02y**.
 
 ---
 
@@ -502,7 +502,7 @@ total = d20 + proficiencyBonus + S_story.atkBonus (level)
 
 **14 base types (die size ascending):** Pointy Stick d4 Lv1, Sickle d4 Lv1, Axe d6 Lv1, Bow d6 Lv2, Scimitar d6 Lv2, Flail d8 Lv3, Long Sword d8 Lv3, Morningstar d8 Lv4, Rapier d8 Lv4, Crossbow d10 Lv5, Glaive d10 Lv5, Halberd d10 Lv6, Maul 2d6 Lv7, Lance d12 Lv8.
 
-**Magic-tier level gate:** `_magicTierAllowed(magic)` (`function _magicTierAllowed@24509`) = player `level ≥ magic × 5` — so **+1 → Lv5, +2 → Lv10, +3 → Lv15, +4 → Lv20** (no `baseLv` term in the gate). Each item also carries a per-entry `minLevel = min(20, max(magic × 5, baseLv + magic × 4))` used for display/sort.
+**Magic-tier level gate:** `_magicTierAllowed(magic)` (`function _magicTierAllowed@24510`) = player `level ≥ magic × 5` — so **+1 → Lv5, +2 → Lv10, +3 → Lv15, +4 → Lv20** (no `baseLv` term in the gate). Each item also carries a per-entry `minLevel = min(20, max(magic × 5, baseLv + magic × 4))` used for display/sort.
 
 **Acquisition (§FC06 nerf — fishing-exclusive positive magic):** Only the **base tier (magicBonus 0)** drops from combat, via `_rollMonsterWeaponDrop()` (see §Equipment Drops — one guaranteed weapon per battle, d6 quality −4..0). The +1..+4 tiers **no longer drop from any monster kill** — the old `_rollMainWeaponDrop()` 15%/battle path is retired and the d100 table is consumables-only. Positive-magic gear reaches the player only from **Yugurt Lake fishing** (`LAKE_MAGIC_DB` passive trinkets) and **hand-authored quest/Epic-Boss rewards** (e.g. Sea Element +2, Rod of Self-Discovery +1). The +N `WEAPON_ITEMS` pool remains defined for save reconstruction and possible future authored grants, but nothing rolls it.
 

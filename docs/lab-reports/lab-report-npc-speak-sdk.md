@@ -45,7 +45,7 @@ The log is the decisive instrument in this pass. This report is unusual in the c
 GET /api/npc/{id}/speak?prompt={text}&state={neutral|friendly|dearFriend}&model={model-id}
 ```
 
-Live at `src/js/wbapi-server.js:action === 'speak'@10598`, reading `WBAPI.birkaNpcs` (i.e. `const BIRKA_NPC_PROFILES = {@22712`, 206 entries).
+Live at `src/js/wbapi-server.js:action === 'speak'@10598`, reading `WBAPI.birkaNpcs` (i.e. `const BIRKA_NPC_PROFILES = {@22713`, 206 entries).
 
 | Parameter | Required | Default | Notes |
 |---|---|---|---|
@@ -145,7 +145,7 @@ Appendix A's forecast — "calls 2–N would show cache reads equal to the syste
 
 The conclusion asks for "a BIRKA_NPC profile for the Fisherman (who is currently a string and cannot be asked anything)."
 
-He is not a string, and he can be asked things. `the_fisherman: { key:"the_fisherman"@22950` is a complete `BIRKA_NPC_PROFILES` entry — `name`, `occupation:"fisherman"`, `node:"SSJ"`, and all three endpoint-required states with greeting and dialogue. `GET /api/npc/the_fisherman/speak` resolves today.
+He is not a string, and he can be asked things. `the_fisherman: { key:"the_fisherman"@22951` is a complete `BIRKA_NPC_PROFILES` entry — `name`, `occupation:"fisherman"`, `node:"SSJ"`, and all three endpoint-required states with greeting and dialogue. `GET /api/npc/the_fisherman/speak` resolves today.
 
 It shipped at **19:29:51 on 2026-06-05** — the same evening — in commit `240ae1a`, whose subject is *"map: layout solver applied, 81 nodes reachable from BK"*. Nothing in that subject line mentions an NPC. This is instrument 21 again: **a content addition hidden inside a commit that describes something else.** The recommendation was right, was actioned immediately, and left no trace an author could find by reading the log.
 
@@ -195,7 +195,7 @@ Claude Sonnet 4.6 is $3/$15 per MTok; Claude Haiku 4.5 is $1/$5. That is exactly
 | 12 | "5× cost" for Sonnet | **NOT SHIPPED — measured 3.00×** | $3/$15 vs $1/$5 per MTok |
 | 13 | Rec 1: worldTruth + enemy in prompt | **NOT SHIPPED** | fields exist in the *other* registry (Finding 3) |
 | 14 | Rec 2: `?questId=&questStatus=` | **NOT SHIPPED** | 0 occurrences repo-wide |
-| 15 | Rec 3: `the_fisherman` profile | **SHIPPED same day** | `the_fisherman: { key:"the_fisherman"@22950`, `240ae1a` 19:29 |
+| 15 | Rec 3: `the_fisherman` profile | **SHIPPED same day** | `the_fisherman: { key:"the_fisherman"@22951`, `240ae1a` 19:29 |
 | 16 | Rec 4: pre-render cache, `STANDARD_PROMPTS` | **NOT SHIPPED** | 0 occurrences repo-wide |
 | 17 | Rec 5: improve Emmer's friendly seeds | **NOT SHIPPED** | friendly seeds unchanged; still the weakest state |
 | 18 | Rec 6: Yugurt watershed source-book pass | **NOT SHIPPED** | — |

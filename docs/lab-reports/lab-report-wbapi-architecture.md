@@ -295,7 +295,7 @@ collection. Delete the getter or wire the field.
 
 **7.4 — §DX-02fl 🟢 `ITEM_DB` is an anchored, parsed, exported section with zero entries.**
 `const ITEM_DB = { // General item definitions — weapons, amulets, consumables, readables. };`
-— `` `const ITEM_DB = { // General item definitions@26549` ``. Not a parse failure — the section is genuinely empty. Decide: seed
+— `` `const ITEM_DB = { // General item definitions@26550` ``. Not a parse failure — the section is genuinely empty. Decide: seed
 it, or retire the anchor. As it stands it is 0-entry infrastructure that reads as a live surface,
 and §7.1 means an emptied `ITEM_DB` and a *corrupted* `ITEM_DB` look identical.
 

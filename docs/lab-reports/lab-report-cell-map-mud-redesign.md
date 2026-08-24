@@ -45,7 +45,7 @@ say where everything is; adjacency is a question you ask them, not a fact you wr
 **What the player actually gets, and why it matters for playability:**
 
 - **The world became walkable instead of navigable.** Previously the map was ~416 destinations joined by
-  invisible rails. Now the space *between* the cities is real: `_enterEmptyCell@28420` gives every blank cell
+  invisible rails. Now the space *between* the cities is real: `_enterEmptyCell@28421` gives every blank cell
   prose, a terrain, a signpost toward the next settlement, and an encounter roll. The map went from a menu of
   places to a place.
 - **Movement became legible.** One key, one cell, no dialog. A player can form a plan ("go west four, then
@@ -53,7 +53,7 @@ say where everything is; adjacency is a question you ask them, not a fact you wr
 - **Roads became a real decision.** `const TERRAIN_ENCOUNTER_RATE@9892` sets `road:0` while `forest:0.25` and
   `hag_swamp:0.35`. The road is *safe and slow*; the wilderness is *fast and expensive*. That trade-off was
   impossible when travel was a teleport.
-- **Discovery became a mechanic.** Fog-of-war is tracked per **cell**, not per node (`visitedCells@23093`), so
+- **Discovery became a mechanic.** Fog-of-war is tracked per **cell**, not per node (`visitedCells@23094`), so
   the map fills in as a record of where you have physically been — not a checklist of nodes you have unlocked.
 - **The world became shareable.** §CELL-07's session layer put other live players on the same grid, in the same
   cell, with chat and arrival events. A MUD is only possible once "where you are" is a coordinate.
@@ -79,14 +79,14 @@ guard defused `cluster-bridge`; a live 400 proved it. All probes ran against a b
 
 | § | Claim | Anchor | Verdict |
 |---|---|---|---|
-| CELL-01 | All `N:`/`E:`/`S:`/`W:` stripped from `NODE_MAP` | — | ✅ **0** in `NODE_MAP`. The 4 surviving hits are direction-*name* lookups (`_MAP_OPP@36635`, `ARROWS@37516`) — not edges. |
+| CELL-01 | All `N:`/`E:`/`S:`/`W:` stripped from `NODE_MAP` | — | ✅ **0** in `NODE_MAP`. The 4 surviving hits are direction-*name* lookups (`_MAP_OPP@36617`, `ARROWS@37498`) — not edges. |
 | CELL-02 | `CELL_GRID` built once from `NODE_COORDS` | `const CELL_GRID@9852` | ✅ live, single source of adjacency truth |
-| CELL-03 | `cellMove(dir)` replaces `storyMove(dir)` | `function cellMove@28345` | ✅ live; `storyMove` **0 occurrences** |
-| CELL-04 | Empty-cell traversal + terrain inference + encounter roll | `_enterEmptyCell@28420`, `_inferTerrain@28383`, `const TERRAIN_ENCOUNTER_RATE@9892` | ✅ shipped — precedence since revised, see Δ4 |
+| CELL-03 | `cellMove(dir)` replaces `storyMove(dir)` | `function cellMove@28346` | ✅ live; `storyMove` **0 occurrences** |
+| CELL-04 | Empty-cell traversal + terrain inference + encounter roll | `_enterEmptyCell@28421`, `_inferTerrain@28384`, `const TERRAIN_ENCOUNTER_RATE@9892` | ✅ shipped — precedence since revised, see Δ4 |
 | CELL-05 | Junctions bulk-deleted; `J13`/`WRO` promoted | `POST /api/graph/nuke-junctions` | ✅ done — **and it is the origin of a live hazard**, see Finding 3 |
 | CELL-05b | Zombie J-stubs purged; `junction` field removed | — | ✅ `junction:true` **0**, `junction:false` **0**, `name:'junction'` **0** |
-| CELL-09 | Quest triggers + waypoints on the cell grid | `_enterEmptyCell@28420` (§CELL-09 encounter block) | ✅ live |
-| CELL-10 | Per-cell fog-of-war + live minimap cursor | `visitedCells@23093` (3 render sites) | ✅ live |
+| CELL-09 | Quest triggers + waypoints on the cell grid | `_enterEmptyCell@28421` (§CELL-09 encounter block) | ✅ live |
+| CELL-10 | Per-cell fog-of-war + live minimap cursor | `visitedCells@23094` (3 render sites) | ✅ live |
 | CELL-11A | 13 corridor symbols deleted | — | ✅ **all 13 return 0**, incl. `buildCorridorMap`, `_buildNodeExits`, `storyCorridorTravel`, `CORRIDOR_CELLS`, `story-corridor-overlay` |
 
 **A clean sweep on the client.** For a 2-month-old report describing a 5.4 MB single-file engine, 13 deletions
@@ -186,7 +186,7 @@ with two reference sets: quest `activateNode`/`waypointNode`, and `WBAPI.birkaNp
 ```
 
 The safety check passes because The Cartographer is not in either set. She lives in
-`const JUNCTION_VIGNETTES@26554` — a map keyed **by node code**, with **no `node:` field on any entry** — and
+`const JUNCTION_VIGNETTES@26555` — a map keyed **by node code**, with **no `node:` field on any entry** — and
 `nuke-junctions` reads `BIRKA_NPC_PROFILES` instead. The guard is not reading the wrong field; it is reading a
 different map. This pins the mechanism behind §DX-02bk.
 
@@ -213,7 +213,7 @@ after the thing it stopped being is the whole bug.
 | Row | Sev | Defect |
 |---|---|---|
 | **§DX-02bl** (sharpened) | 🟠 | Three connectivity endpoints, three answers (416 · 2 · 1). Mechanism now pinned: only `graph/reachability` is correct; `cluster-bridge`/`junction-audit` read `N/S/E/W` (deleted §CELL-01); `grid/reachability` reads the right graph but reports a meaningless metric. |
-| **§DX-02bk** (mechanism pinned) | 🟠 | `nuke-junctions` deletes `J13`/The Cartographer. Confirmed by live dry-run (`safe=1 dead-end=1`). Cause: safety net reads `BIRKA_NPC_PROFILES`; the vignette lives in `JUNCTION_VIGNETTES@26554`, which has no `node:` field and is never consulted. |
+| **§DX-02bk** (mechanism pinned) | 🟠 | `nuke-junctions` deletes `J13`/The Cartographer. Confirmed by live dry-run (`safe=1 dead-end=1`). Cause: safety net reads `BIRKA_NPC_PROFILES`; the vignette lives in `JUNCTION_VIGNETTES@26555`, which has no `node:` field and is never consulted. |
 | **§DX-02bm** *(new)* | 🟢 | `const TERRAIN_ENCOUNTER_RATE@9892` key `junction:0` is unreachable — `_inferTerrain` cannot return `'junction'` (`name:'junction'` = 0). Delete the key; the removal is already documented at `@6402`. |
 | **§DX-02bn** *(new)* | 🟡 | The 68-line auto-junction rule (`@11054`) is dead code behind the §CELL-08 PUT guard (`@11043`) — and it mints `J\d+` codes, the exact hazard class of §DX-02bk. Delete with the retirement sweep. |
 | **§AUDIT-03az** (unchanged) | 🟡 | Re-code `J13` to a non-`J` key — the permanent close for §DX-02bk. This report is its origin: §CELL-05 promoted the node and kept the name. |

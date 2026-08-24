@@ -86,10 +86,10 @@ catch a *re-added*; spec line numbers replayed against `git show 017d7d8:play.ht
 | **D** | `1d6263a` | Quest comment · map-click wording · doc sync |
 | **FU** | `790d4f3` | *(unplanned)* Hunt/Stalk residue swept from 7 deeper spec docs |
 
-`function cellMove(dir)@28345` holds zero clock writers and says so at line 28366. Exactly **four**
+`function cellMove(dir)@28346` holds zero clock writers and says so at line 28366. Exactly **four**
 `hoursElapsed` writers survive, all on the D1 keep-list: the short-rest button (7149),
-`function _storyRollInit()@24624` at battle start (24650), `function storyShortRest(nodeCode)@25817`
-(25841), and `function storyConfirmSleep()@36244` at +8 (36300). The `⏱ Hours` HUD
+`function _storyRollInit()@24625` at battle start (24650), `function storyShortRest(nodeCode)@25818`
+(25841), and `function storyConfirmSleep()@36226` at +8 (36300). The `⏱ Hours` HUD
 (`id="s-hours"@4190`) and the 24-hour fatigue rule (25046) are live.
 
 The **Stalk** half is gone and stayed gone: `storyQuestHunt`, `storyQuickWait`, `btn-hunt-toggle`,
@@ -138,7 +138,7 @@ genuinely different mechanic:
 
 Same name, same state field, same two function names, different behaviour. The new design is
 **better** and consistent with D1 — a grinding aid that costs no clock — and it lives entirely in
-`function _enterEmptyCell(r, c)@28420` and `function _weightedMonsterPick(terrain)@38237`, whose only
+`function _enterEmptyCell(r, c)@28421` and `function _weightedMonsterPick(terrain)@38219`, whose only
 caller is that function; named-node battles never consult it.
 
 The defect is not the feature. It is that **nothing updated its predecessor's paperwork**, and the
@@ -146,7 +146,7 @@ paperwork was thorough. Most vividly, line 38113 still reads:
 
 > `// §TIMELESS-01: _updateHuntBtn / storyToggleHunt removed with the Hunt feature.`
 
-`function _updateHuntBtn()@38074` and `function storyToggleHunt()@38085` are defined 39 and 28 lines
+`function _updateHuntBtn()@38056` and `function storyToggleHunt()@38067` are defined 39 and 28 lines
 **above** that sentence. *The tombstone outlived the corpse, and the corpse got up.*
 
 The general hazard, in its sharpest form: **a retired feature's vocabulary is not free to re-use.**

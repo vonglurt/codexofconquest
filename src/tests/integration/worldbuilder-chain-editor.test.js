@@ -106,7 +106,7 @@ test.describe('itemChain chain editor — buildChainEditor (§EDITOR-01-D-FU a)'
     const out = await page.evaluate(() => {
       const initial = [{
         action: 'grant', name: 'Field Tome', icon: '📗', type: 'tome', sell: 0,
-        description: 'margin note', bonus: { deathSave: 1 }, readText: 'a\nb',
+        desc: 'margin note', bonus: { deathSave: 1 }, readText: 'a\nb',
         passive: true, uses: 3, atkBonus: 1, dmgDie: 4,
       }];
       const ed = window.buildChainEditor(null, { initial });
@@ -117,7 +117,7 @@ test.describe('itemChain chain editor — buildChainEditor (§EDITOR-01-D-FU a)'
     expect(out.advValue).toBeTruthy();
     expect(out.steps).toEqual([{
       action: 'grant', name: 'Field Tome', icon: '📗', type: 'tome', sell: 0,
-      description: 'margin note', bonus: { deathSave: 1 }, readText: 'a\nb',
+      desc: 'margin note', bonus: { deathSave: 1 }, readText: 'a\nb',
       passive: true, uses: 3, atkBonus: 1, dmgDie: 4,
     }]);
   });

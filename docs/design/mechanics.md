@@ -506,11 +506,11 @@ total = d20 + proficiencyBonus + S_story.atkBonus (level)
 
 ### Main Hand Weapons (WEAPON_ITEMS)
 
-70 entries: 14 base weapon types × 5 magic tiers (base, +1, +2, +3, +4) — `[0,1,2,3,4].flatMap(...)` over `_BASE_WEAPONS` (`const _BASE_WEAPONS@24471`).
+70 entries: 14 base weapon types × 5 magic tiers (base, +1, +2, +3, +4) — `[0,1,2,3,4].flatMap(...)` over `_BASE_WEAPONS` (`const _BASE_WEAPONS@24472`).
 
 **14 base types (die size ascending):** Pointy Stick d4 Lv1, Sickle d4 Lv1, Axe d6 Lv1, Bow d6 Lv2, Scimitar d6 Lv2, Flail d8 Lv3, Long Sword d8 Lv3, Morningstar d8 Lv4, Rapier d8 Lv4, Crossbow d10 Lv5, Glaive d10 Lv5, Halberd d10 Lv6, Maul 2d6 Lv7, Lance d12 Lv8.
 
-**Magic-tier level gate:** `_magicTierAllowed(magic)` (`function _magicTierAllowed@24509`) = player `level ≥ magic × 5` — so **+1 → Lv5, +2 → Lv10, +3 → Lv15, +4 → Lv20** (note: no `baseLv` term in the gate). Each item also carries a per-entry `minLevel = min(20, max(magic × 5, baseLv + magic × 4))` used for display/sort.
+**Magic-tier level gate:** `_magicTierAllowed(magic)` (`function _magicTierAllowed@24510`) = player `level ≥ magic × 5` — so **+1 → Lv5, +2 → Lv10, +3 → Lv15, +4 → Lv20** (note: no `baseLv` term in the gate). Each item also carries a per-entry `minLevel = min(20, max(magic × 5, baseLv + magic × 4))` used for display/sort.
 
 **Acquisition (§FC06 nerf — fishing-exclusive positive magic):** only the **base tier (magicBonus 0)** drops from combat, via the one-guaranteed `_rollMonsterWeaponDrop()` (d6 quality −4..0; see §Equipment Drops). The +1..+4 tiers **no longer drop from any kill** — the old `_rollMainWeaponDrop()` 15%/battle path is **deleted** and the d100 table is consumables-only. Positive-magic weapons reach the player only via **Yugurt Lake fishing** (`LAKE_MAGIC_DB`) and **hand-authored quest / Epic-Boss rewards**. The +N `WEAPON_ITEMS` pool stays defined for save reconstruction + future authored grants, but nothing random rolls it.
 
@@ -824,7 +824,7 @@ Potions do not stack effects — each is one item, one use. Buy multiples to car
 
 ### Final Boss — Commander Auros ✅
 
-**High Commander Seraphine Bruhns / Auros** — accessible at **`TLS`** (Cosmic Realm; historical `CO`) when the node's **`finalBattle` thresholds** are met: `TLS` authors `finalBattle:{minLevel:20, minShards:7}` in `NODE_MAP` (§VM-01-G-FU-f2 — the §VM-01-G3 `onActivate` precedent: per-node data driving an engine seam), read by the single helper `` `function _finalBattleReady@27998` ``. That helper is the ONE copy of what used to be three hand-copied `=== 'TLS' && level ≥ 20 && shards ≥ 7` predicates (the encounter card + both quest-list Fight buttons); a node without the field is never final. The stat block is loaded from `BOSS_COMMANDER_AUROS`.
+**High Commander Seraphine Bruhns / Auros** — accessible at **`TLS`** (Cosmic Realm; historical `CO`) when the node's **`finalBattle` thresholds** are met: `TLS` authors `finalBattle:{minLevel:20, minShards:7}` in `NODE_MAP` (§VM-01-G-FU-f2 — the §VM-01-G3 `onActivate` precedent: per-node data driving an engine seam), read by the single helper `` `function _finalBattleReady@27999` ``. That helper is the ONE copy of what used to be three hand-copied `=== 'TLS' && level ≥ 20 && shards ≥ 7` predicates (the encounter card + both quest-list Fight buttons); a node without the field is never final. The stat block is loaded from `BOSS_COMMANDER_AUROS`.
 
 | Stat | Value |
 |---|---|

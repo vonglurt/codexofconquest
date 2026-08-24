@@ -1523,7 +1523,7 @@ The ending is driven by `_curseScore()` — a measure of how many EB quest giver
 
 ### Curse Score Formula
 
-> **Source:** `function _curseScore()@28191`.
+> **Source:** `function _curseScore()@28192`.
 
 ```
 _curseScore():
@@ -1543,7 +1543,7 @@ _curseScore():
 
 ### Covenant Standing Tiers
 
-> **Source:** `const COVENANT_STANDING_LABELS = [@27356`. (Home doc: this section. The HTML comment on that
+> **Source:** `const COVENANT_STANDING_LABELS = [@27357`. (Home doc: this section. The HTML comment on that
 > line points at `docs/mechanics/mechanics-economy.md §Covenant Standing`, which does not exist — §DX-02er.)
 
 | Curse Score | Tier | Description | Reachable? |
@@ -1563,11 +1563,11 @@ The sheet row unlocks at `(S_story.shards || 0) >= 1` — Act II, when the Trade
 | Condition | Variant | Description |
 |---|---|---|
 | `!_missionComplete() && curseScore >= 15` | **Cursed Seal Echo** | Groundhog Day text — Sweelinck has seen this 17 times. Mission failed but Void sealed. |
-| `_missionComplete() && curseScore <= -6` | **Covenant Keeper (True)** | ❌ **Unreachable** — `const _isTrue = missionDone && curse <= -6@28229` has no satisfying state (§DX-02en). Kept for the record. |
+| `_missionComplete() && curseScore <= -6` | **Covenant Keeper (True)** | ❌ **Unreachable** — `const _isTrue = missionDone && curse <= -6@28230` has no satisfying state (§DX-02en). Kept for the record. |
 | `_missionComplete() && curseScore <= 0` | **Covenant Keeper (naming ceremony)** | Reachable **only at −5**, i.e. all 20 returned. Sweelinck names every person the player helped, one line at a time on the sigil overlay. |
 | Otherwise | **Standard** | Score-based tier; epilogue reflects breadth of engagement. |
 
-**Note:** `function _covenantStanding()@28032` maps curse score to label using `COVENANT_STANDING_LABELS`. `function _buildEpilogueScroll()@28120` builds the **per-NPC** epilogue lines (six keys, fav-gated) plus **one summary count line** for the Epic Battlegrounds when ≥ 10 are returned — *not* a named list of the returned EB NPCs (corrected §DOC-02cx). It substitutes the Cursed Seal Echo text wholesale when `!missionComplete && score ≥ 15`, which is also why `FROBERGER_EPILOGUE.cursed` has no selector (§DX-02eo). **No ending branch names the player's Covenant Standing** — the character-sheet label is never spoken back (§DX-02en).
+**Note:** `function _covenantStanding()@28033` maps curse score to label using `COVENANT_STANDING_LABELS`. `function _buildEpilogueScroll()@28121` builds the **per-NPC** epilogue lines (six keys, fav-gated) plus **one summary count line** for the Epic Battlegrounds when ≥ 10 are returned — *not* a named list of the returned EB NPCs (corrected §DOC-02cx). It substitutes the Cursed Seal Echo text wholesale when `!missionComplete && score ≥ 15`, which is also why `FROBERGER_EPILOGUE.cursed` has no selector (§DX-02eo). **No ending branch names the player's Covenant Standing** — the character-sheet label is never spoken back (§DX-02en).
 
 ### Covenant Ceremony
 

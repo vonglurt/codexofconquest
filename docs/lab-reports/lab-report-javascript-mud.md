@@ -109,27 +109,27 @@ server. **Verified:** all three twins and all three parity scripts existed at th
 ## IV. The four traces (all confirmed)
 
 **A. Boot — two disjoint wiring phases, in inverted order.** The `<script>` sits at the end of `<body>`, so
-every `#id` exists before it runs. `storyEnter();@38272` is a **top-level statement**: the MUD renders
+every `#id` exists before it runs. `storyEnter();@38254` is a **top-level statement**: the MUD renders
 *during parse*. `DOMContentLoaded` — which wires the combat sheet and nothing else — fires afterward. The
 world is on screen before the combat panel has a single listener. This is safe only because `storyEnter`
 hides `#main-body`, and it is why the repo's test helpers must never click into story mode: the game is
 already there. **Proven in the browser at both builds** — at `DOMContentLoaded`, `#story-panel` already
 carries `.visible` and `#main-body` is already `display:none`.
 
-**B. The continue fork.** `storyCheckContinue@23827`, guarded by the one-shot `let _continueChecked@23824`,
+**B. The continue fork.** `storyCheckContinue@23828`, guarded by the one-shot `let _continueChecked@23825`,
 returns `true` — *suppressing the render* — if it put a modal on screen. A returning player's world is not
 rendered at boot; it renders on Continue. A fresh player's renders immediately.
 
-**C. The `_S_DEFAULTS` merge — a scar worth reading.** `storyLoadSave@23813` runs
+**C. The `_S_DEFAULTS` merge — a scar worth reading.** `storyLoadSave@23814` runs
 `Object.assign(S_story, _S_DEFAULTS(), JSON.parse(raw))`. Defaults go **in the middle**: they backfill
 fields the save predates, then the save's real values win. The comment records why — *saves written before a
 field existed must not leave it undefined; `cellMove` crashed on such saves.* The `S_story` literal is
 explicitly demoted to a seed because it and the defaults had drifted, and the drift was the bug.
 
-**D. Movement — the cleanest path in the file.** `cellMove@28345` is a thin caller: the kernel decides
-(`Mover.move` → `{ok, destKind, terrain, encounter}`), the caller mutates. `_travelStepping@28347` is the
+**D. Movement — the cleanest path in the file.** `cellMove@28346` is a thin caller: the kernel decides
+(`Mover.move` → `{ok, destKind, terrain, encounter}`), the caller mutates. `_travelStepping@28348` is the
 discriminator that lets one function mean two things — *a user's `N` means "stop", the loop's `N` means
-"step"*. Auto-travel (`_travelTick@38034`, a 120 ms `setTimeout` chain) wraps its own step in `try/finally`
+"step"*. Auto-travel (`_travelTick@38043`, a 120 ms `setTimeout` chain) wraps its own step in `try/finally`
 so a throw cannot leave the flag set, and **verifies progress positionally** rather than trusting that its
 own `cellMove` succeeded. Movement does not advance the clock (§TIMELESS-01): **walking is free.**
 
@@ -169,17 +169,17 @@ the abstract's ratio is not. *The inventory earns trust; the summary does not �
 > *"There is no free-text input anywhere in the story UI — nothing player-typed reaches the DOM at all,
 > via `main` or otherwise."*
 
-The author checked exactly one function (`storyCreateCustomQuest@38130`, correctly: it constrains a
+The author checked exactly one function (`storyCreateCustomQuest@38112`, correctly: it constrains a
 `<select>` to a `WORLD_DB` key) and generalised from it. **A negative claim about a resource is a census of
 its writers.** The census finds two, and both live *inside `storyRender`*, in the very special-case region
 §VII of the original describes — and the report **names both features by name in its own §VII diagram**:
 
-- `entry42-textarea@34647` — *"Write Entry 42, or leave this blank."*
-- `sg-secret-input@34778` — *"Type your secret here..."*
+- `entry42-textarea@34636` — *"Write Entry 42, or leave this blank."*
+- `sg-secret-input@34767` — *"Type your secret here..."*
 
-The Entry 42 text is not merely read; it round-trips. `entry42-write-btn@34649` stores it to
-`S_story.entry42Text`, `storyAutoSave()` persists it to `localStorage`, and `storyJournalToggle@30654`
-renders it back through **`e42JovDiv.innerHTML`@30682**, where `entry42Text.replace@30680` converts `\n` to
+The Entry 42 text is not merely read; it round-trips. `entry42-write-btn@34635` stores it to
+`S_story.entry42Text`, `storyAutoSave()` persists it to `localStorage`, and `storyJournalToggle@30655`
+renders it back through **`e42JovDiv.innerHTML`@30682**, where `entry42Text.replace@30681` converts `\n` to
 `<br>` — the tell that the sink is markup, not text.
 
 **Executed in the browser, at the parent build and at HEAD, identically:** with `entry42Text` set to
@@ -195,7 +195,7 @@ whose entire point is the byline *"by you"*. Filed as **§DX-02do**.
 
 ### D. Softened, not withdrawn
 
-`_rollSkill@22242` is labelled *"Pure roll"* while consuming the one-shot iodine buff. The original called
+`_rollSkill@22243` is labelled *"Pure roll"* while consuming the one-shot iodine buff. The original called
 the file's purity vocabulary "wrong" here. It overstates: the same comment discloses the side effect in its
 own next sentence — *"the one-shot iodine buff (consumed here, exactly like the legacy resolver)"*. The word
 `Pure` is loose; the comment is not misleading. **The side effect is still there at HEAD**, so the
@@ -217,8 +217,8 @@ questions were answered by named work tracks, every one of them adopting its dia
 
 **The scan.** Finding 9 diagnosed a linear pass over all 2,850 quests on every render and recommended *"an
 `activateNode → [quests]` index — the same shape `CELL_GRID` already builds for nodes."* On 2026-07-22,
-`549d6b4` shipped exactly that. At HEAD, `function storyCheckQuests(node)@30166` opens with
-`_uqfActivateAtNode@30137`, whose comment names the track: *"§VM-01-F-FU — `_questsByNode@30135` replaces
+`549d6b4` shipped exactly that. At HEAD, `function storyCheckQuests(node)@30167` opens with
+`_uqfActivateAtNode@30138`, whose comment names the track: *"§VM-01-F-FU — `_questsByNode@30136` replaces
 the old O(2,850) scan."* The report's §IX had recommended *leaving* it ("leave it, note it"). **Its
 diagnosis was adopted and its recommendation overruled** — the right outcome, and worth recording as such.
 
@@ -242,12 +242,12 @@ blocks would become node data on the `isFishingLake` pattern. Measured:
 | `node.code === '` file-wide | 130 | **95** |
 
 Stated honestly: of the 52 comparisons that left the region, **35 left the file entirely and ~17 relocated**
-into the `const NODE_PANELS@31318` / `const NODE_HOOKS@34190` / `NODE_VERBS@6875` registries. That is migration, not
+into the `const NODE_PANELS@31320` / `const NODE_HOOKS@34172` / `NODE_VERBS@6875` registries. That is migration, not
 deletion — which is precisely what the report predicted.
 
 **And a fourth kernel.** The report's central complaint was that only the MUD core is pure. On 2026-07-22 —
 six days later — `9f10bfe` added `src/js/quest.js`: *"§VM-01-D: QUEST:CORE — the fourth kernel, host-injected."*
-`createQuestRuntime(host)@22180` now takes an injected host, `_rollSkill@22242` reads state through a
+`createQuestRuntime(host)@22181` now takes an injected host, `_rollSkill@22243` reads state through a
 `getState` fence rather than touching `S_story`, its d20 draws a seeded stream so a roll is reproducible
 from a save, and `check:questparity` joined `check:walk`. **The report's L1/L3 coupling thesis is now one
 layer less true, in the direction it wanted.**
@@ -256,9 +256,9 @@ layer less true, in the direction it wanted.**
 
 ## VII. `storyRender` — the file's tension, in one function
 
-Still two programs stacked, still split at one line — `Section-based UI rendering@35319`. Above it, per-node
-imperative special cases. Below it, a clean two-primitive builder: `_mkSection@35320` returns `{sec, body}`,
-`_mkCard@35333` builds a card from a plain options object, and sections append in fixed order (FISH ·
+Still two programs stacked, still split at one line — `Section-based UI rendering@35301`. Above it, per-node
+imperative special cases. Below it, a clean two-primitive builder: `_mkSection@35302` returns `{sec, body}`,
+`_mkCard@35315` builds a card from a plain options object, and sections append in fixed order (FISH ·
 ENCOUNTER · QUESTS · LOOT · REST · TOURNAMENT · WORLD). A whole feature is about eight lines, because
 `node.isFishingLake` is **data** — add the flag, the node gets a fishing card.
 
@@ -269,7 +269,7 @@ mutation and *before* the map redraw, so the save always reflects the quests the
 **DOM contracts encoded in sibling position.** *"Everything physically between `#story-text-box` and
 `#story-info-row` is transient"* is expressed in neither a class nor a container — only in sibling order,
 enforced by two hand-written sweeps that still exist at HEAD (in `storyRender` and in
-`_renderNodeShell@28408`). It has already caused one crash on record (§MATH-01's write to a `#story-content`
+`_renderNodeShell@28409`). It has already caused one crash on record (§MATH-01's write to a `#story-content`
 that did not exist). This report's own §V-C strengthens the finding: the Entry 42 prompt is inserted with
 `insertAdjacentElement('afterend')` on `#story-text-box`, i.e. **live features deliberately write into that
 gap**, and rely on being swept. The original proposed a wrapper `<div id="story-dynamic">` to make the
@@ -280,13 +280,13 @@ but in this document. Filed now as **§DX-02dp**.
 
 ## VIII. Quest acceptance — the finding that is still true, and still open
 
-**There is no accept step.** No button, no confirmation, no dialogue. Arrival runs `function storyCheckQuests(node)@30166`,
+**There is no accept step.** No button, no confirmation, no dialogue. Arrival runs `function storyCheckQuests(node)@30167`,
 the declarative gate passes, `S_story.quests[id] = 'active'`, and the player learns about it from a
 `📋 <title>` fragment in a `·`-joined message strip. *The player is told, never asked. Consent is implicit
 in arrival.*
 
 Resolution runs through `_rollCeremonia@7024` → `_resolveQuestUQF@6962`, with the math in one place. Either
-way **effort XP is paid once** — `EFFORT_XP_PCT@24426` at `0.25`, guarded so retryables cannot farm it:
+way **effort XP is paid once** — `EFFORT_XP_PCT@24427` at `0.25`, guarded so retryables cannot farm it:
 *"The attempt was not wasted."* Four statuses exist and two of them mean success: `'done'` (skill-check
 pass) and `'complete'` (declarative gate), unified only at the gate.
 
@@ -308,9 +308,9 @@ repo has not answered.
    **Now four, not three** — `QUEST:CORE` joined them six days after this was written.
 2. ✅ **`cellMove` is the model the rest of the file does not follow.** Thin caller, kernel decides.
 3. ✅ **Two disjoint wiring phases, in inverted order.** Proven in the running game at both builds.
-4. ✅ **Two disjoint state atoms**, bridged only at `_startStoryBattle@38259`. *Two games in a trench coat,
+4. ✅ **Two disjoint state atoms**, bridged only at `_startStoryBattle@38241`. *Two games in a trench coat,
    and the trench coat is that bridge.*
-5. ✅ **`_S_DEFAULTS@23062` is authoritative; the `S_story` literal is a demoted seed.**
+5. ✅ **`_S_DEFAULTS@23063` is authoritative; the `S_story` literal is a demoted seed.**
 6. ✅ **The 43:1 data-to-engine ratio is the central achievement** — though the *file-wide* 76/24 split
    quoted in the abstract is contradicted by the report's own table (§V-B).
 7. ✅→**ANSWERED.** The gate language had no boolean nesting. §VM-01-F gave it `{all}/{any}/{not}` and
@@ -332,16 +332,16 @@ repo has not answered.
 
 | To understand | Read |
 |---|---|
-| Boot order | `storyEnter();@38272` → `storyEnter@24386` → `storyCheckContinue@23827` |
-| MUD movement | `MOVER:CORE@9914` → `_moverWorld@9970` → `cellMove@28345` |
-| Room description | `ROOMS:CORE@9985` → `describeCell@10150` → `_enterEmptyCell@28420` |
-| Auto-travel | `_travelTick@38034` → the halt guard at `_travelStepping@28347` |
-| Quest engine | `BIT_CONTRACTS@21970` → `createQuestRuntime(host)@22180` → `QuestRuntime@22341` |
-| Quest activation | `_questsByNode@30135` → `_uqfActivateAtNode@30137` → `function storyCheckQuests(node)@30166` |
+| Boot order | `storyEnter();@38254` → `storyEnter@24387` → `storyCheckContinue@23828` |
+| MUD movement | `MOVER:CORE@9914` → `_moverWorld@9970` → `cellMove@28346` |
+| Room description | `ROOMS:CORE@9985` → `describeCell@10150` → `_enterEmptyCell@28421` |
+| Auto-travel | `_travelTick@38043` → the halt guard at `_travelStepping@28348` |
+| Quest engine | `BIT_CONTRACTS@21971` → `createQuestRuntime(host)@22181` → `QuestRuntime@22340` |
+| Quest activation | `_questsByNode@30136` → `_uqfActivateAtNode@30138` → `function storyCheckQuests(node)@30167` |
 | Quest resolution | `_rollCeremonia@7024` → `_resolveQuestUQF@6962` · retry `_ceremoRetryBlocked@6806` |
-| UI generation | `Section-based UI rendering@35319` → `_mkSection@35320` / `_mkCard@35333` |
-| State shape | `_S_DEFAULTS@23062` (authoritative) |
-| The free-text path | `entry42-textarea@34647` → `entry42Text.replace@30680` → `e42JovDiv.innerHTML@30682` |
+| UI generation | `Section-based UI rendering@35301` → `_mkSection@35302` / `_mkCard@35315` |
+| State shape | `_S_DEFAULTS@23063` (authoritative) |
+| The free-text path | `entry42-textarea@34636` → `entry42Text.replace@30681` → `e42JovDiv.innerHTML@30683` |
 
 **Parity commands:** `npm run check:walk` (now **16** gates, not the six of 2026-07) ·
 `npm run check:duelparity` · `npm run test:mud`.

@@ -63,7 +63,7 @@ The eight subsystems: **(II)** Froberger's traces · **(III)** NPC cross-referen
 | VIII | Cross-item connections | ✅ 3/3 | All three live. Two gated one tier below the lock's own words (**F8**). The Fighter's Token is removed from inventory but never *"sits on Weckmann's counter"* |
 | IX | The composite truth | ⚠️ | Arithmetically incomplete: the portrait is missing Crov's panel, and Brynn's depends on quest order |
 
-Anchors at HEAD: `function _checkFrobergerTrace(npcKey)@27648` · `function _getYaelLocation()@27660` · `function _buildWeckmannLog()@27667` · `const FROBERGER_TRACES = {@27685` · `const NPC_CROSS_REFS = {@27694` · `const NIVERS_DIALOGUE = "Evening.";@27726` · `const YAEL_PATROL_NODES = [@27728` · `const WECKMANN_TRAINING_LOG =@27736` · `function _npcFavor(key)@23460` · `function _setNpcFavor(key, level)@23462` · `function _checkDearFriendUpgrade(key)@23489` · `function _nodeHookBirkaNiversPasses(node,@32227` · `function _nodeHookBirkaYaelPatrolLine(node,@32518` · `function _nodeHookBirkaRoom6(node,@32778`.
+Anchors at HEAD: `function _checkFrobergerTrace(npcKey)@27649` · `function _getYaelLocation()@27661` · `function _buildWeckmannLog()@27668` · `const FROBERGER_TRACES = {@27686` · `const NPC_CROSS_REFS = {@27695` · `const NIVERS_DIALOGUE = "Evening.";@27727` · `const YAEL_PATROL_NODES = [@27729` · `const WECKMANN_TRAINING_LOG =@27737` · `function _npcFavor(key)@23461` · `function _setNpcFavor(key, level)@23463` · `function _checkDearFriendUpgrade(key)@23490` · `function _nodeHookBirkaNiversPasses(node,@32209` · `function _nodeHookBirkaYaelPatrolLine(node,@32500` · `function _nodeHookBirkaRoom6(node,@32760`.
 
 ---
 
@@ -71,7 +71,7 @@ Anchors at HEAD: `function _checkFrobergerTrace(npcKey)@27648` · `function _get
 
 ### F1 — the favor ceiling is 2, and the content was written for 3 ⚠️ *the headline*
 
-Every write to `npcFavorability` in the file resolves to four sites: `_setNpcFavor`'s own assignment, two hardcoded auto-upgrade lines, and one unrelated NPC. The two auto-upgrade sites — inside `function _setNpcFavor(key, level)@23462` and `function _checkDearFriendUpgrade(key)@23489` — are identical and both write the literal **2**:
+Every write to `npcFavorability` in the file resolves to four sites: `_setNpcFavor`'s own assignment, two hardcoded auto-upgrade lines, and one unrelated NPC. The two auto-upgrade sites — inside `function _setNpcFavor(key, level)@23463` and `function _checkDearFriendUpgrade(key)@23490` — are identical and both write the literal **2**:
 
 ```js
 const check = dearFriendBits[key];
@@ -82,16 +82,16 @@ if (check && check()) { S_story.npcFavorability[key] = 2; /* "says your name whe
 
 | NPC | Declarative writes | Direct writes | **Ceiling** | Content asking for 3 |
 |---|---|---|---|---|
-| `yael` | `set:1`, `add:1` (cap 3) | `_setNpcFavor('yael', 3)@21429` (Ceremonia, CHA DC 15) | **3** | patrol entry 4 ✅ |
+| `yael` | `set:1`, `add:1` (cap 3) | `_setNpcFavor('yael', 3)@21430` (Ceremonia, CHA DC 15) | **3** | patrol entry 4 ✅ |
 | `brynn` | `set:1`, `add:1` (cap 3) | — | **3**, order-dependent | Froberger trace ⚠️ · Room 6 ⚠️ |
 | `quill` | `set:1` | — | **2** | — |
 | `pachelbel` | `set:1` | — | **2** | — |
-| `crov` | `set:1` + `add:2` (§DX-02fb) | `_setNpcFavor('crov',1)@25400` | **3** | Froberger trace ✅ · Layer 44 `weckmann_class` ✅ |
+| `crov` | `set:1` + `add:2` (§DX-02fb) | `_setNpcFavor('crov',1)@25401` | **3** | Froberger trace ✅ · Layer 44 `weckmann_class` ✅ |
 | `auros` | `set:2` | — | **2** | — |
 
 Measured in Chromium: with `pitTrainingWins = 5` (crov's own Dear-Friend condition) and his single `set:1` bit applied, `_npcFavor('crov')` is **2**, and a second `_setNpcFavor('crov', 2)` is a no-op. With visit counts amply satisfied, `_checkFrobergerTrace('crov')` returned **`null`**. Force the ledger to 3 and it returns the authored line — *"You still grieve it, don't you. That's why you run it clean."* — which is, by some distance, the best of the six.
 
-> **✅ SHIPPED 2026-08-23 (§DX-02fb), and the remedy this report proposed was the wrong one.** The fix landed as a second bit on **`quest_pit_training`**, not on `quest_pit_debut`, and as **`add:2`**, not `add:1`. Both corrections were forced by measurement. The two pit quests share one counter and complete in the *opposite* order to the one assumed here: `quest_pit_debut` completes at `pitTrainingWins >= 1`, `quest_pit_training` at `>= 3`, so the debut is **first**. An `add:1` there is applied while the ledger is still 0, lands crov on 1, and then makes `quest_pit_training`'s `set:1` a monotonic no-op — measured final favor **1**, *below* the 2 that doing nothing produces, with the Dear-Friend message lost as well. And `add:1` on the training quest is not enough either, because a player who has won the drunk fight (`_setNpcFavor('crov',1)@25400`) or taken three Talk actions arrives at 1, where `set:1` no-ops and `add:1` reaches only 2. `add:2` clamped to the default cap of 3 lands on exactly 3 from every reachable prior level — 0, 1, 2 and 3 — which is what `src/tests/integration/dx02fb-crov-favor-ceiling.test.js` asserts by driving `storyCheckQuests` rather than planting a ledger value.
+> **✅ SHIPPED 2026-08-23 (§DX-02fb), and the remedy this report proposed was the wrong one.** The fix landed as a second bit on **`quest_pit_training`**, not on `quest_pit_debut`, and as **`add:2`**, not `add:1`. Both corrections were forced by measurement. The two pit quests share one counter and complete in the *opposite* order to the one assumed here: `quest_pit_debut` completes at `pitTrainingWins >= 1`, `quest_pit_training` at `>= 3`, so the debut is **first**. An `add:1` there is applied while the ledger is still 0, lands crov on 1, and then makes `quest_pit_training`'s `set:1` a monotonic no-op — measured final favor **1**, *below* the 2 that doing nothing produces, with the Dear-Friend message lost as well. And `add:1` on the training quest is not enough either, because a player who has won the drunk fight (`_setNpcFavor('crov',1)@25401`) or taken three Talk actions arrives at 1, where `set:1` no-ops and `add:1` reaches only 2. `add:2` clamped to the default cap of 3 lands on exactly 3 from every reachable prior level — 0, 1, 2 and 3 — which is what `src/tests/integration/dx02fb-crov-favor-ceiling.test.js` asserts by driving `storyCheckQuests` rather than planting a ledger value.
 
 So **§II's central claim is arithmetically false**: *"The player who talks to every NPC enough times will reconstruct Froberger from the outside."* Five sixths of him. The missing panel is precisely the one §II's own Composite Picture lists as *"He could see grief from the outside (Weckmann)"* — the trace in which Froberger reads a man's twelve-year-old bereavement off the way he watches fighters. It has never been read by anyone.
 
@@ -121,7 +121,7 @@ No message tells them. Nothing looks broken. The button is simply not there.
 for (const p of YAEL_PATROL_NODES) { if (p.condition()) return p; }
 ```
 
-First match wins, and `const YAEL_PATROL_NODES = [@27728` declares its **loosest** condition first: `(S_story.gameDay || 0) % 2 === 1`, true half the time and dependent on nothing else. Measured with *every* other patrol condition simultaneously satisfied — slums cleanup complete, escort used, named report delivered, yael at favor 3, act 5 — `_getYaelLocation()` on an odd game day returns `MSY` / *"Eastern check. You're traveling late."* Only on even days does it fall through to `BMA` / *"Showing my face."*
+First match wins, and `const YAEL_PATROL_NODES = [@27729` declares its **loosest** condition first: `(S_story.gameDay || 0) % 2 === 1`, true half the time and dependent on nothing else. Measured with *every* other patrol condition simultaneously satisfied — slums cleanup complete, escort used, named report delivered, yael at favor 3, act 5 — `_getYaelLocation()` on an odd game day returns `MSY` / *"Eastern check. You're traveling late."* Only on even days does it fall through to `BMA` / *"Showing my face."*
 
 So the Ghetto line, the escort line, the *"Checking on Quill. Don't tell him."* line and Layer 74's second-report line are reachable **only on even game days**, and only one at a time, in declaration order. The four conditions were written as *independent facts about Yael's week*; the loop reads them as a priority list.
 
@@ -151,7 +151,7 @@ Note also that all 17 lines are gated at `fav: 1` or `fav: 2` — never 3 — wh
 
 ### F5 — the training log renders a stage direction as handwriting
 
-The lock writes `[twelve years of entries — fighters' names, brief notes, outcomes]` as an authoring instruction, in the same bracket convention it uses for `[gap of two years]`. The first is a note to whoever fills the log in; the second is prose. `const WECKMANN_TRAINING_LOG =@27736` shipped **both** verbatim, and `_buildWeckmannLog()` substitutes only `{PLAYER_ENTRIES}` and `{CHAMP_ENTRY}`. Measured: the rendered log contains the literal string `[years of entries — fighters' names, brief notes, outcomes]`.
+The lock writes `[twelve years of entries — fighters' names, brief notes, outcomes]` as an authoring instruction, in the same bracket convention it uses for `[gap of two years]`. The first is a note to whoever fills the log in; the second is prose. `const WECKMANN_TRAINING_LOG =@27737` shipped **both** verbatim, and `_buildWeckmannLog()` substitutes only `{PLAYER_ENTRIES}` and `{CHAMP_ENTRY}`. Measured: the rendered log contains the literal string `[years of entries — fighters' names, brief notes, outcomes]`.
 
 So a player who opens Weckmann's battered notebook — a genuinely lovely object, with Cabanilles who said he'd be back and wasn't, and Bruna pushed too far, and the two-year silence, and *"Back. Running legal fights only."* — reads, in the middle of it, an editorial placeholder describing what should have been written there. Everything else in §VI shipped exactly: Bruna's entries, the gap, the player's own five progressive notes keyed to `pitTrainingWins`, and Layer 64's championship addendum. **Cost to fix: replace one bracketed line with three or four invented fighters.**
 

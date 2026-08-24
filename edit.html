@@ -8604,7 +8604,7 @@ const CHAIN_KINDS = {
 // object in the per-row "advanced" field and merged on read. Kept in lockstep with
 // _applyItemChain's allow-list + check-itemchain. `desc` lives in the scalar inputs, so it's
 // excluded here to avoid two sources for one key.
-const GRANT_RICH = ['description','readText','readableKey','readable','passive','bonus','uses','minLevel','atkBonus','dmgDie','dmgCount','dmgFlat','heal'];
+const GRANT_RICH = ['readText','readableKey','readable','passive','bonus','uses','minLevel','atkBonus','dmgDie','dmgCount','dmgFlat','heal'];
 
 function buildChainEditor(host, opts) {
   opts = opts || {};

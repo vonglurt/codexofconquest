@@ -60,21 +60,21 @@ quests / 204 NPC profiles):
 
 | Claim | Status at HEAD | Anchor |
 |---|---|---|
-| `BIRKA_NPC_PROFILES`, 6 entries, fields `{key, name, occupation, node, neutral, friendly, dearFriend}` | **exact** — all six shipped, all fields present, `special` used exactly once (Yael) | `const BIRKA_NPC_PROFILES@22712` |
-| `S_story.npcFavorability` — `npcKey` → 0 / 1 / 2 | **exact**, declared in `_S_DEFAULTS()` | `npcFavorability: {}@23087` |
-| `_setNpcFavor(npcKey, level)` + its two log lines | **exact**, both strings verbatim: *"looks at you differently now"* / *"says your name when you walk in"* | `function _setNpcFavor@23462` |
+| `BIRKA_NPC_PROFILES`, 6 entries, fields `{key, name, occupation, node, neutral, friendly, dearFriend}` | **exact** — all six shipped, all fields present, `special` used exactly once (Yael) | `const BIRKA_NPC_PROFILES@22713` |
+| `S_story.npcFavorability` — `npcKey` → 0 / 1 / 2 | **exact**, declared in `_S_DEFAULTS()` | `npcFavorability: {}@23088` |
+| `_setNpcFavor(npcKey, level)` + its two log lines | **exact**, both strings verbatim: *"looks at you differently now"* / *"says your name when you walk in"* | `function _setNpcFavor@23463` |
 | `_npcFavor(npcKey)` selects the card variant | **exact** — 42 call sites | — |
-| `_renderNpcCard(npcKey)` | **exact** (signature grew a `container` argument) | `function _renderNpcCard@23683` |
-| `S_story.roughWhiskeyUsed` — one-time drunk-fight latch | **exact** | `roughWhiskeyUsed: false@23054` |
-| `S_story.yaelEscortUsed` | **exact**, and load-bearing in four more places than specified | `yaelEscortUsed: false@23055` |
-| Rough Whiskey — 5gp at the bar, `consumable_misc`, sell 2gp | **exact, all three** | `Rough Whiskey',icon:'🥃',type:'consumable_misc',sell:2@24380` |
-| Six of seven quests: slums cleanup · ledger · lute · shipment · pit training · void below | **all live as UQF-1.0** | `quest_slums_cleanup@21217` … `quest_void_below@21317` |
-| Gold rewards 80 / 40 / 60 | **exact, all three** | `gold:80@21218`, `gold:40@21263`, `gold:60@21279` |
+| `_renderNpcCard(npcKey)` | **exact** (signature grew a `container` argument) | `function _renderNpcCard@23684` |
+| `S_story.roughWhiskeyUsed` — one-time drunk-fight latch | **exact** | `roughWhiskeyUsed: false@23055` |
+| `S_story.yaelEscortUsed` | **exact**, and load-bearing in four more places than specified | `yaelEscortUsed: false@23056` |
+| Rough Whiskey — 5gp at the bar, `consumable_misc`, sell 2gp | **exact, all three** | `Rough Whiskey',icon:'🥃',type:'consumable_misc',sell:2@24381` |
+| Six of seven quests: slums cleanup · ledger · lute · shipment · pit training · void below | **all live as UQF-1.0** | `quest_slums_cleanup@21218` … `quest_void_below@21318` |
+| Gold rewards 80 / 40 / 60 | **exact, all three** | `gold:80@21219`, `gold:40@21264`, `gold:60@21280` |
 | Items: Worn Ledger Book · Sealed Scholar Box · Pit Legend Token · EMP Grenade · Scholar's Note · Cipher Scrap · Conclave Pass | **all seven live** | `itemChain`@21242/21270/21288/21298/21324 |
-| Pachelbel hands the lute over on request, no fight — with his line verbatim | **exact**, including *"it didn't look like something that should be left under a chair in here"* | `key === 'pachelbel' && S_story.quests@23769` |
-| Sweelinck's four curse-score variants **plus** a fifth Birka variant at ≥3 friends | **exact structure** — 5 entries, the 5th flagged `birka:true` | `const SWEELINCK_DIALOGUE_VARIANTS@27229` |
-| Player starts with 150gp | **exact** | `gold: 150@23005` |
-| Auros → Dear Friend on Void Below; the arc's only fav-2 grant | **exact** (`{kind:'favor', npc:'auros', set:2}`) | `quest_void_below@21317` |
+| Pachelbel hands the lute over on request, no fight — with his line verbatim | **exact**, including *"it didn't look like something that should be left under a chair in here"* | `key === 'pachelbel' && S_story.quests@23770` |
+| Sweelinck's four curse-score variants **plus** a fifth Birka variant at ≥3 friends | **exact structure** — 5 entries, the 5th flagged `birka:true` | `const SWEELINCK_DIALOGUE_VARIANTS@27230` |
+| Player starts with 150gp | **exact** | `gold: 150@23006` |
+| Auros → Dear Friend on Void Below; the arc's only fav-2 grant | **exact** (`{kind:'favor', npc:'auros', set:2}`) | `quest_void_below@21318` |
 
 **Live: 29 of 32.**
 
@@ -88,21 +88,21 @@ Sixteen deltas. Each is **NOT SHIPPED** (never existed), **RETIRED** (shipped, l
 | # | Report claim | Outcome | Measured at HEAD |
 |---|---|---|---|
 | 1 | **`BIRKA_QUESTS`** — a named const holding the 7 quests | **NOT SHIPPED** | `grep -c` = 0; `git log -S` = **0 commits ever**. The quests were authored directly into `QUEST_DB`, which is the correct home (§ARCH-01). Harmless. |
-| 2 | **`quest_drunk_fight`** — the 7th quest, "auto-trigger, no activation" | **NOT SHIPPED — and left dangling** | No `QUEST_DB` entry; `git log -S` = 1 commit, the reference itself. It is listed in `_hasActiveQuestFor`'s `npcQuests` under `crov:['quest_pit_training','quest_drunk_fight']@23644`, so the lookup is permanently `undefined` and the entry is inert. **The drunk fight shipped as an engine event, not a quest.** See §V-3. |
-| 3 | **Drunk Pit Fight mechanics** — disadvantage on all attacks · +3 damage on a hit · one-time · item consumed | **SHIPPED, exactly** | `if (S_story._drunkFight) adv = 'dis'@25044`; `const drunkBonus = S_story._drunkFight ? 3 : 0@25071`; latch + inventory filter at `roughWhiskeyUsed = true@24690`. |
+| 2 | **`quest_drunk_fight`** — the 7th quest, "auto-trigger, no activation" | **NOT SHIPPED — and left dangling** | No `QUEST_DB` entry; `git log -S` = 1 commit, the reference itself. It is listed in `_hasActiveQuestFor`'s `npcQuests` under `crov:['quest_pit_training','quest_drunk_fight']@23645`, so the lookup is permanently `undefined` and the entry is inert. **The drunk fight shipped as an engine event, not a quest.** See §V-3. |
+| 3 | **Drunk Pit Fight mechanics** — disadvantage on all attacks · +3 damage on a hit · one-time · item consumed | **SHIPPED, exactly** | `if (S_story._drunkFight) adv = 'dis'@25045`; `const drunkBonus = S_story._drunkFight ? 3 : 0@25072`; latch + inventory filter at `roughWhiskeyUsed = true@24691`. |
 | 4 | **Drunk fight — the natural-20 flavor line** (*"…something underneath the training that knows exactly what it's doing"*) | **NOT SHIPPED** | 0 hits, **0 commits ever**. No crit branch exists in the drunk path. |
 | 5 | **Drunk fight — Weckmann's two reactions**; loss reaction *"Next time sober. Or come back drunk…"* | **CHANGED / NOT SHIPPED** | The **win** line shipped compressed — *"You absolute idiot. I'm counting it."@25401* (the *"most technically incorrect win"* beat cut). The **loss** line has **0 commits ever**: `_drunkFight` is consumed only in `_storyBattleVictory`, so **losing the drunk fight produces no Weckmann reaction at all**. |
-| 6 | **First drunk win grants the Pit Legend Token early**, regardless of Quest 5 | **NOT SHIPPED** | The victory branch does exactly one thing beyond the message: `if (_npcFavor('crov') < 1) _setNpcFavor('crov',1)@25400`. **No token.** The favor half of the claim shipped; the item half did not. |
+| 6 | **First drunk win grants the Pit Legend Token early**, regardless of Quest 5 | **NOT SHIPPED** | The victory branch does exactly one thing beyond the message: `if (_npcFavor('crov') < 1) _setNpcFavor('crov',1)@25401`. **No token.** The favor half of the claim shipped; the item half did not. |
 | 7 | **Pit Legend Token — "+5gp trade value at BA"** | **CHANGED** | `sell:30`, flat, everywhere. No node-specific trade bonus exists in the engine for any item. |
 | 8 | **Quest 5 requires 1+ Birka quest complete; Quest 6 requires Auros AND Weckmann both Friendly** | **NOT SHIPPED — both** | Both carry `gate:{}`. The gate shape exists and is used by a *sibling* quest in the same block (`quest_brynn_firewood` gates on `favorMin:{brynn:1}`), so this is an authoring omission, not a missing capability. **The arc's intended ordering is unenforced: Void Below is available on arrival.** |
 | 9 | **Slums Cleanup grants a "Guard Favor token (story item)"** | **NOT SHIPPED** | No inventory item. The phrase survives only inside the narrative string *"💰 +80gp from Yael. Guard Favor granted."* — 1 occurrence, 1 commit. The favor itself is granted (`favor npc:'yael' set:1`); the *token* was never minted. |
-| 10 | **Brynn's Ledger reward: "free lodging for 3 nights"** | **NOT SHIPPED** | `onComplete` emits *"🛏 Brynn offers 3 free nights"* and stops. No counter, no flag, no state. `storySleep` charges `node.sleepCost` unless `node.code === 'INN' && S_story.freeBookingUnlocked@36213` — an unrelated flag on a different node. **TLL charges `sleepCost:5` before and after the quest.** See §V-2. |
+| 10 | **Brynn's Ledger reward: "free lodging for 3 nights"** | **NOT SHIPPED** | `onComplete` emits *"🛏 Brynn offers 3 free nights"* and stops. No counter, no flag, no state. `storySleep` charges `node.sleepCost` unless `node.code === 'INN' && S_story.freeBookingUnlocked@36195` — an unrelated flag on a different node. **TLL charges `sleepCost:5` before and after the quest.** See §V-2. |
 | 11 | **Rough Whiskey can be consumed from inventory (−5% max HP, flavor)** | **NOT SHIPPED** | No consume path exists. The item's *only* consumer is the `pendingBattle.nodeCode === 'HKG'` auto-trigger, which removes it. |
-| 12 | **Rough Whiskey NPC reactions** — two authored (Quill refuses; Weckmann *"After the fight."*) | **CHANGED — expanded 2 → 18** | `const ROUGH_WHISKEY_REACTIONS@27364` covers **all six** NPCs × three tiers, read through `_checkRoughWhiskeyReaction@28159` and gated by a *second*, separate flag `roughWhiskeyActive` cleared on sleep and on battle victory. **Neither authored line survives verbatim** — Quill's became *"the lute strings are sensitive and I can smell everything from up here."* |
-| 13 | **Three favorability states** — neutral / friendly / dear friend; **"one quest is enough"** | **CHANGED — four tiers, and two ways up** | The dialogue registry is keyed `impartial · questActive · friendly · dearFriend`; **`questActive`** is a fourth tier the report does not specify, selected by `_hasActiveQuestFor@23641`. §NPC-01-D then added a second route to Friendly with no quest at all: `TALK_TO_FRIENDLY = 3@23513` deliberate talks on distinct game-days. Fav 2 remains quest/personal-act earned, so the report's *"one quest is enough"* is now *"one quest **or** three conversations."* |
-| 14 | **`S_story.lubeckFriends`** — a derived count state field | **CHANGED** | Shipped as a **function**, `function _lubeckFriends()@23461`, not a field. **The name is a fossil**: the city is Birka, and `Lübeck` survives only as an unrelated live node, `LBC` — the Hansa Gate, Act 2. A reader who greps `lubeck` lands in the wrong city. |
-| 15 | **Escort mechanic** — a *"special node-description overlay on the corridors from CI"*, firing on the **next move** to an adjacent node, with the blue-shutters / Varga's-pigeons narration verbatim | **CHANGED — three ways** | (a) There are **no corridors** — §WALK/§NAV-01 deleted that layer entirely (§DOC-02c delta 3), so it renders as a **modal fired on click**, `function _yaelEscortAction@23796`; (b) the narration is a **different, shorter text** — Skalder's corner, Nivers at the fountain, the unread riot report — none of the specified paragraphs shipped; (c) `yaelEscortUsed` and the *"🛡 Walk the beat"* re-view both shipped exactly, and the flag grew **four more readers** the report never anticipated: Yael's dear-friend second act, a `_missionComplete` bit, a journal beat, and an Act-5 records line. |
-| 16 | **Void Below combat: "Void Horror or equivalent, drawn from the WORLD_DB void pool"** | **CHANGED** | *"Void Horror"* has **0 occurrences**. The fight is a **synthetic battle code**: `code:'CY_VOID'@35917` — two `void_walker`, classified in `check-noderegs.js`'s `SYNTHETIC_BATTLE_CODES` as *"Layer 41 — Void Below descend at HKG"*. |
+| 12 | **Rough Whiskey NPC reactions** — two authored (Quill refuses; Weckmann *"After the fight."*) | **CHANGED — expanded 2 → 18** | `const ROUGH_WHISKEY_REACTIONS@27365` covers **all six** NPCs × three tiers, read through `_checkRoughWhiskeyReaction@28160` and gated by a *second*, separate flag `roughWhiskeyActive` cleared on sleep and on battle victory. **Neither authored line survives verbatim** — Quill's became *"the lute strings are sensitive and I can smell everything from up here."* |
+| 13 | **Three favorability states** — neutral / friendly / dear friend; **"one quest is enough"** | **CHANGED — four tiers, and two ways up** | The dialogue registry is keyed `impartial · questActive · friendly · dearFriend`; **`questActive`** is a fourth tier the report does not specify, selected by `_hasActiveQuestFor@23642`. §NPC-01-D then added a second route to Friendly with no quest at all: `TALK_TO_FRIENDLY = 3@23514` deliberate talks on distinct game-days. Fav 2 remains quest/personal-act earned, so the report's *"one quest is enough"* is now *"one quest **or** three conversations."* |
+| 14 | **`S_story.lubeckFriends`** — a derived count state field | **CHANGED** | Shipped as a **function**, `function _lubeckFriends()@23462`, not a field. **The name is a fossil**: the city is Birka, and `Lübeck` survives only as an unrelated live node, `LBC` — the Hansa Gate, Act 2. A reader who greps `lubeck` lands in the wrong city. |
+| 15 | **Escort mechanic** — a *"special node-description overlay on the corridors from CI"*, firing on the **next move** to an adjacent node, with the blue-shutters / Varga's-pigeons narration verbatim | **CHANGED — three ways** | (a) There are **no corridors** — §WALK/§NAV-01 deleted that layer entirely (§DOC-02c delta 3), so it renders as a **modal fired on click**, `function _yaelEscortAction@23797`; (b) the narration is a **different, shorter text** — Skalder's corner, Nivers at the fountain, the unread riot report — none of the specified paragraphs shipped; (c) `yaelEscortUsed` and the *"🛡 Walk the beat"* re-view both shipped exactly, and the flag grew **four more readers** the report never anticipated: Yael's dear-friend second act, a `_missionComplete` bit, a journal beat, and an Act-5 records line. |
+| 16 | **Void Below combat: "Void Horror or equivalent, drawn from the WORLD_DB void pool"** | **CHANGED** | *"Void Horror"* has **0 occurrences**. The fight is a **synthetic battle code**: `code:'CY_VOID'@35899` — two `void_walker`, classified in `check-noderegs.js`'s `SYNTHETIC_BATTLE_CODES` as *"Layer 41 — Void Below descend at HKG"*. |
 | 17 | **Auros's rune-tablet reading** — *"the second district boundary… We are currently at the third district boundary."* — the arc's Step 4 "New Information" | **NOT SHIPPED** | Both phrases: 0 hits, **0 commits ever**. The Sealed Scholar Box is delivered to Pachelbel and the chain ends there. **The report's Step 4 has no scene.** |
 
 ### III-A. Node-code resolution — 0 of 8, and 5 born dead
@@ -123,7 +123,7 @@ every sentence containing it stays wrong. The remaining seven are cleanly dead.
 
 **The five NPC codes were born dead.** The engine records this in its own source, at the `birkaNpcs`
 literal that carries the fix: *"No NODE_MAP entry ever existed for CI/IN/TV/BA/CY, so these cards
-previously rendered nowhere"* (`const birkaNpcs@35139`, §PLAY-01-G). These codes came from the
+previously rendered nowhere"* (`const birkaNpcs@35121`, §PLAY-01-G). These codes came from the
 `maps.md` legend, not from the world — the §AUDIT-03p **born-dead** class, and the reason
 `docs/maps/node-index.md` (`npm run nodes`) is now the only place a node code may be read.
 
@@ -174,13 +174,13 @@ before the doc becomes the schema.*
    has her say *"'Free,' she says. 'The room's free too, if you need it.'"* (`TLL:{ num:2@8431`),
    and `quest_brynn_ledger.onComplete` narrates *"🛏 Brynn offers 3 free nights"* (`@21234`).
    `storySleep` charges `node.sleepCost` — **5gp** at TLL — with a single exemption hardcoded to a
-   *different* node (`node.code === 'INN' && S_story.freeBookingUnlocked@36213`). So the game states
+   *different* node (`node.code === 'INN' && S_story.freeBookingUnlocked@36195`). So the game states
    a price of zero in prose, restates it as a quest reward, and bills the player at both. **Small
    design call:** grant the three nights (a `brynnFreeNights` counter decremented in `storySleep`,
    the shape `freeBookingUnlocked` already models) **or** rewrite both strings. Do not do neither.
 
 3. **§DX-02o — one quest-id string literal in the engine resolves to nothing, and no gate can see
-   it.** `quest_drunk_fight@23644` has no `QUEST_DB` entry; `S_story.quests['quest_drunk_fight']` is
+   it.** `quest_drunk_fight@23645` has no `QUEST_DB` entry; `S_story.quests['quest_drunk_fight']` is
    permanently `undefined`, so `_hasActiveQuestFor('crov')` silently drops half its roster — the
    `questActive` dialogue tier can only ever fire for `quest_pit_training`. Census over the whole
    file: **302 distinct `quest_*` literals, 301 resolve, 1 does not** (the two other misses,
