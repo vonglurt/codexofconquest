@@ -38,7 +38,7 @@
 // §VM-01-E-FU (the write-set completion pass): the write-set tree-walk in (1) only
 // sees flags a QUEST bit sets, so the cross-ref + reachability over-reported every
 // gate flag that NON-quest code provides (a combat kill sets hornedSharkSlain, an
-// arrival sets dunfallAccessed, an NPC missionBit grant, a readable-doc registry).
+// arrival sets dunfallAccessed, a _grantMissionBit call, a readable-doc registry).
 // scanFlagWrites() now scans the WHOLE file for flag-write forms and folds the
 // result into both pools (see its comment). The 114 "written-by-nothing" collapsed
 // to 48 — all genuine: the bulk-imported waw/crl/nwi/mla arcs whose act/chapter
@@ -288,8 +288,7 @@ function gateSat(node, pool) {
 // ── HOST-CODE flag-write scan (§VM-01-E-FU). The write-set tree-walk above only
 //    sees flags a QUEST bit sets; a gate flag is equally satisfiable if NON-quest
 //    code sets it — a combat kill (`S_story.hornedSharkSlain = true`), a node
-//    arrival (`S_story.dunfallAccessed`), a fishing catch, a Town-Crier event, an
-//    NPC `missionBit:` grant (→ `_grantMissionBit` → `S_story[flag]=true`), a
+//    arrival (`S_story.dunfallAccessed`), a fishing catch, a Town-Crier event, a
 //    `NODE_PANELS` stanza's `once:` flag (→ `if (p.once) st[p.once] = true`), a
 //    readable-doc registry written by computed key (`S_story[doc.key]=`). Without
 //    this the cross-ref over-reported 114 "written-by-nothing" gate reads, ~58% of
@@ -307,7 +306,6 @@ function scanFlagWrites(html) {
     /S_story\.([A-Za-z_][A-Za-z0-9_]*)\s*=(?![=>])/g,                        // S_story.flag = …
     /S_story\.([A-Za-z_][A-Za-z0-9_]*)\[[^\]]*\]\s*=(?![=>])/g,              // S_story.container[x] = …
     /S_story\[\s*['"]([A-Za-z_][A-Za-z0-9_]*)['"]\s*\]\s*=(?![=>])/g,        // S_story['flag'] = …
-    /missionBit:\s*['"]([A-Za-z_][A-Za-z0-9_]*)['"]/g,                       // NPC/data mission-bit grant
     /_grantMissionBit\(\s*['"]([A-Za-z_][A-Za-z0-9_]*)['"]/g,                // direct grant call
     /\bonce:\s*['"]([A-Za-z_][A-Za-z0-9_]*)['"]/g,                            // NODE_PANELS once-flag, set by `if (p.once) st[p.once] = true`
     /\b(?:flag|key|flagBought):\s*['"]([A-Za-z_][A-Za-z0-9_]*)['"]/g,        // record fields consumed by S_story[rec.flag|key|flagBought]=
@@ -339,7 +337,6 @@ function selfDeadlocks(db, html, extrSection) {
     /S_story\.([A-Za-z_][A-Za-z0-9_]*)\s*=(?![=>])/g,
     /S_story\[\s*['"]([A-Za-z_][A-Za-z0-9_]*)['"]\s*\]\s*=(?![=>])/g,
     /_grantMissionBit\(\s*['"]([A-Za-z_][A-Za-z0-9_]*)['"]/g,
-    /missionBit:\s*['"]([A-Za-z_][A-Za-z0-9_]*)['"]/g,
   ]) { let m; while ((m = re.exec(outside))) hostOnly.add(m[1]); }
   { const arr = /\b(?:set|clear):\s*\[([^\]]*)\]/g; let m;
     while ((m = arr.exec(outside))) { let x; const sr = /['"]([A-Za-z_][A-Za-z0-9_]*)['"]/g;
@@ -385,6 +382,14 @@ function selfDeadlocks(db, html, extrSection) {
 const KNOWN_SELF_DEADLOCK = {
   quest_wm_04: '\u00A7AUDIT-03au',
   quest_tl_01: '\u00A7AUDIT-03bh-FU',
+};
+
+// Each surviving written-by-nothing gate flag, named with the backlog row that owns
+// its repair. A flag belongs here only while a real authoring decision is pending;
+// anything not listed fails the gate (§AUDIT-03bj).
+const KNOWN_UNWRITTEN_FLAG = {
+  innDeparted: '§AUDIT-03bk',
+  voidFluxCleared: '§DX-02u',
 };
 
 // ── the analyser: pure over (db, startFlags, legacyClosures, hostWrites). ──────
@@ -473,11 +478,11 @@ function selftest() {
   // scanFlagWrites recognises every write form it is responsible for
   const scanned = scanFlagWrites([
     'S_story.direct = true;', 'S_story.container[node.code] = 1;', "S_story['bracket'] = 2;",
-    "npc: { missionBit: 'mbFlag' }", "_grantMissionBit('grantFlag')",
+    "_grantMissionBit('grantFlag')",
     "{ kind:'flag_write', set:['setFlag','setFlag2'], clear:['clrFlag'] }",
     "WM_DOCS = [{ key: 'keyFlag' }]", "{ flag: 'evtFlag' }", "{ flagBought: 'shopFlag' }",
   ].join('\n'));
-  ['direct', 'container', 'bracket', 'mbFlag', 'grantFlag', 'setFlag', 'setFlag2', 'clrFlag', 'keyFlag', 'evtFlag', 'shopFlag']
+  ['direct', 'container', 'bracket', 'grantFlag', 'setFlag', 'setFlag2', 'clrFlag', 'keyFlag', 'evtFlag', 'shopFlag']
     .forEach(f => ok(scanned.has(f), 'scanFlagWrites captures ' + f));
   console.log(`\ncheck:questgraph selftest — ${pass} passed, ${fail} failed`);
   if (fail) { process.exit(1); }
@@ -549,7 +554,11 @@ function main() {
     for (const f of r.writtenByNothing) { const k = (f.match(/^([a-z]+)/) || [null, f])[1]; (fam[k] = fam[k] || []).push(f); }
     console.log('\n  written-by-nothing — genuine candidates by family:');
     Object.keys(fam).sort().forEach(k => console.log('     ·', (k + ' ×' + fam[k].length).padEnd(10), fam[k].join(', ')));
+    r.writtenByNothing.forEach(f => console.log('     ' + (KNOWN_UNWRITTEN_FLAG[f]
+      ? '✓ ' + f.padEnd(28) + '— known, owned by ' + KNOWN_UNWRITTEN_FLAG[f]
+      : '✗ ' + f.padEnd(28) + '— UNACCOUNTED: every quest gated on this flag can never activate')));
   }
+  const wbnUnexpected = r.writtenByNothing.filter(f => !KNOWN_UNWRITTEN_FLAG[f]);
 
   console.log('\n  self-deadlock (completion.flags ∩ own onComplete flag_write):');
   console.log('     fatal (no other writer):', dl.fatal.length, dlUnexpected.length ? '' : '✓ (each one accounted for)');
@@ -557,6 +566,10 @@ function main() {
     KNOWN_SELF_DEADLOCK[x.quest] ? '— known, owned by ' + KNOWN_SELF_DEADLOCK[x.quest] : '— UNACCOUNTED: this quest can never complete'));
   console.log('     inert (flag has an independent writer):', dl.inert.length, '— each classified, not tolerated by threshold:');
   dl.inert.forEach(x => console.log('       ·', (x.quest + ' / ' + x.flag).padEnd(46), 'written by', x.by));
+  if (wbnUnexpected.length) {
+    console.error('\ncheck:questgraph FAILED — ' + wbnUnexpected.length + ' gate flag(s) are read by a quest and written by nothing — quest bit, host code or panel: every quest behind them can never activate (§AUDIT-03bj). ' + wbnUnexpected.join(', '));
+    process.exit(1);
+  }
   if (dlUnexpected.length) {
     console.error('\ncheck:questgraph FAILED — ' + dlUnexpected.length + ' quest(s) wait on a flag only their own onComplete sets, with no other writer: they can never complete (§AUDIT-03bh).');
     process.exit(1);

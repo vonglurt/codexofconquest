@@ -570,7 +570,7 @@ correct, specific, deferred finding with no row against it ages into a live defe
 1. **The blast radius.** The gate and the report both count *heads* — 47–50. The transitive closure
    is **138 quests and ~29,000 words**, 2.8× larger, and nobody had computed it.
 2. **The prover under-counts by seven.** Its host-writer scan credits
-   `src/scripts/check-questgraph.js:// NPC/data mission-bit grant@309` — a regex lifting `missionBit:`
+   `src/scripts/check-questgraph.js:function scanFlagWrites(html) {@302` — a regex lifting `missionBit:`
    out of the NPC dialogue data — as a real writer, *"(→ `_grantMissionBit` → `S_story[flag]=true`)"*.
    That call does not exist: **`meta.missionBit` has 209 declarations across 203 distinct flags
    (first at `rinaldo_sau: {@10461`, born 2026-06-04) and zero readers in the engine.** Disabling
@@ -642,7 +642,7 @@ and it is not architectural. **Make the prover fail.**
 | Broken chain / working twin | `waw001_act2: {@14901` · `cph001_act2: {@15541` |
 | Inert NPC grant field | `rinaldo_sau: {@10461` |
 | Editor bit-contract mirror | `edit.html:const OPERAND_CONTRACTS = {@1413` · `edit.html:const UQF_BIT_FIELDS = {@1442` · `edit.html:_questsByNode: {},@1508` |
-| Soft-lock prover's over-credit | `src/scripts/check-questgraph.js:// NPC/data mission-bit grant@309` |
+| Soft-lock prover's over-credit (the `missionBit:` pattern, dropped by §AUDIT-03bj) | `src/scripts/check-questgraph.js:function scanFlagWrites(html) {@311` |
 | Idempotency acceptance (Rec 5) | `src/tests/integration/uqf-node-panels.test.js:gone on re-render@28` |
 
 ## Appendix B — Defects filed by this verification
