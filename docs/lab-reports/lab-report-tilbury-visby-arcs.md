@@ -16,6 +16,11 @@
 > *Everything in this arc was built. Almost none of it can be reached. The two facts are
 > independent, and only one of them is visible to a grep.*
 
+> **Blocker 1 (§V-A) is closed — §AUDIT-03bh-FU, 2026-08-24.** `quest_tl_01.completion` is
+> `flags:['tlManifestFound']`, written by the harbor board; `tlLedgerRead` keeps its sole
+> writer in the quest's own `onComplete`, so §V-A's table row and every count below it read
+> as the 2026-08-12 measurement, not as HEAD. Blockers 2–4 stand.
+
 ---
 
 ## Abstract
@@ -202,7 +207,7 @@ different predicates, and nothing in the 2026-05-25 toolchain could tell them ap
 `onComplete`, which by definition runs *after* the completion test passes.
 
 **The flag is its own precondition.** The harbor board — the surface the report names as the thing
-that sets it — grants the Harrow Manifest and never touches the flag (`if (!S_story.tlLedgerRead) {@34792`
+that sets it — grants the Harrow Manifest and never touches the flag (`if (!S_story.tlManifestFound) {@34796`
 through the `hbBtn.remove()` that ends the handler).
 
 **This is not migration rot.** At the arc's own commit `194a810` the shape was identical:

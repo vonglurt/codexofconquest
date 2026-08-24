@@ -381,7 +381,6 @@ function selfDeadlocks(db, html, extrSection) {
 // term expresses; anything not listed fails the gate.
 const KNOWN_SELF_DEADLOCK = {
   quest_wm_04: '\u00A7AUDIT-03au',
-  quest_tl_01: '\u00A7AUDIT-03bh-FU',
 };
 
 // Each surviving written-by-nothing gate flag, named with the backlog row that owns

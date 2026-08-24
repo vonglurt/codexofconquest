@@ -11167,7 +11167,7 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     npc:"benedikt_rasp",
   },
   // ── Layer 54: Tilbury Harbor Arc quests ──
-  quest_tl_01: { id:'quest_tl_01', type:'side', schema:'UQF-1.0', gate:{}, bits:[], completion:{flags:['tlLedgerRead']}, title:'Rennau: The Ledger',
+  quest_tl_01: { id:'quest_tl_01', type:'side', schema:'UQF-1.0', gate:{}, bits:[], completion:{flags:['tlManifestFound']}, title:'Rennau: The Ledger',
     onComplete:[ // §ARCH-01 W7c — manifest item built at runtime (description branches on wmFirstResearcherKnown) → _legacy_fn
       { kind:'flag_write', set:['tlLedgerRead'] },
       { kind:'favor', npc:"rennau", set:1 },
@@ -11179,7 +11179,7 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
       { kind:'unlock', quests:['quest_tl_02'] },
     ],
     desc:"Harbor Master Rennau keeps the ledger of ships that haven\'t come back. The Harrow is the most recent. Find its manifest.",
-    hint:'Search the Storefront docks for the Harrow manifest (loot or monster drop).',
+    hint:"Search the Harbor Board on the Storefront docks for the Harrow consignment, then bring it to Rennau.",
     activateNode:'STN', onActivate:null, // §VM-01-G3 — was "LCY", a wrong-target dead-code remap (710bb75 SF→LCY; SF meant the Storefront = STN, where Rennau, the Harbor Board, and the whole arc live)
     waypointNode:'STN', reward:0,
     disposition:'"The Conclave calls the ones that haven\'t come back \'weather losses.\' I stopped calling them that six weeks ago." — Harbor Master Rennau',
@@ -34793,23 +34793,16 @@ function storyRender(node, prefix) {
     //  — tl_01 unconditional; tl_02 tlLedgerRead; tl_03 questsDone tl_02 (the old act≥4 leg was
     //  structurally dead: actNumber = node.act, constant per node). The FU6 unlock referral
     //  chain (tl_01 → tl_02 → tl_03) remains the live in-sequence path.)
-    // Harbor board button — shows manifest loot; awards quest completion
-    if (!S_story.tlLedgerRead) {
+    if (!S_story.tlManifestFound) {
       const hbBtn = document.createElement('button');
       hbBtn.className = 'inv-use-btn';
       hbBtn.textContent = '📋 Harbor Board';
       hbBtn.style.cssText = 'margin-top:6px;';
       hbBtn.addEventListener('click', () => {
         storyMsg('Harbor Board — Empty berths: HARROW (Day 17), SILVER MARCH (Day 24), CORMORANT (Day 31), BRINE OATH (Day 44), VELVET DAWN (Day 52), KESSLER (Day 61), THE ROOK (Day 73), PALE MERIDIAN (Day 88), ANCHOR & WHEEL (Day 95), SUNDRESS (Day 107).\n\nThe Harbor Master adds a note: "Any information about the HARROW — cargo, crew, last position — should be reported immediately. Harbor Master Rennau."');
+        S_story.tlManifestFound = true;
         setTimeout(() => {
-          const manifestFound = (S_story.inventory || []).some(i => i.name === 'The Harrow Manifest');
-          if (!manifestFound) {
-            S_story.inventory = S_story.inventory || [];
-            S_story.inventory.push({ name:'The Harrow Manifest', icon:'📄', type:'readable', sell:0,
-              readText:'Cargo: 40 crates, Scholar Kings correspondence, sealed. Consignee: Weimar, Archivist I. Voss. Departure: Day 17. Expected arrival: Day 20. Status: Weather Loss.'
-                + (S_story.wmFirstResearcherKnown ? '\n\nIsolde Voss\'s name on a ship manifest from eleven months ago. Before the revocation. Whatever she was sending arrived nowhere.' : '') });
-            storyMsg('📄 Found: The Harrow Manifest.');
-          }
+          storyMsg('🔍 Behind the berth list, tacked through with the same nail: a consignment slip for the HARROW. Rennau keeps the ledger. Bring her this.');
         }, 400);
         hbBtn.remove();
         storyAutoSave();
