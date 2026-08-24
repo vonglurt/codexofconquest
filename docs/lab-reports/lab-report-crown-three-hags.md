@@ -88,7 +88,8 @@ exact against the §II table as originally filed.
 All 13 specified fields shipped under their specified names:
 `whisperCrownComplete`, `glutCrownComplete`, `waneCrownComplete`, `innmotherKindness`,
 `innmotherNamed`, `freeBookingUnlocked`, `innmotherKeyGiven`, `croneMarks`,
-`croneMarksBanked`, `glut_gift_held`, `innDeparted`, `whisperSaintSeen`,
+`croneMarksBanked`, `glut_gift_held`, `innDeparted` (retired by §AUDIT-03bk),
+`whisperSaintSeen`,
 `glutGiftReturned`. Amendment A contributed four more —
 `waneStoneDCReduced@23203`, `electricEelOrganHeld`, `atlanteanProcessKnown`,
 `iodineBuffActive` — plus one the amendment never named, `iodineBuffBonus`.
@@ -149,7 +150,7 @@ nine classified in `` `src/scripts/check-noderegs.js:WG0_TRIAL:@113` `` and fenc
 | 5 | III.D, IV | Progression gate `activateCond: () => (quests['prev']\|\|'') !== ''` — "attempted, pass or fail both qualify" | Shipped as `gate:{ questsAttempted:[…] }`; the compiler is **`(QS[id] \|\| '') !== ''`**, `` `g.questsAttempted@22061` `` — the same predicate, verbatim | SHIPPED (renamed) |
 | 6 | III.E | INN `quoteFn`, five states, name reveal fires once inside the fn | **Byte-identical**, including `"Mère Boudine. Since you'll keep coming back anyway."` | SHIPPED |
 | 7 | III.G | HG1 gift block "fires once (guarded by `!S_story.visited['HG1']`)" | The guard **never worked**: `storyCollectLoot` flips `visited[code]` earlier in the same render, so the block was dead from `00fe35c` until §VM-01-G-FU-a repointed it to `!glut_gift_held && !glutGiftReturned`. The engine records this in its own comment above `` `id:'story-hg1-gift'@31454` `` | **WRONG WHEN WRITTEN** — transcription exact, behaviour claim false |
-| 8 | III.H | `storyCorridorTravel` hook sets `innDeparted` when `fromCode === 'INN'` | `storyCorridorTravel` = **0 occurrences** (deleted by §CELL-11A); `innDeparted` survives as a completion flag on `quest_inn_05` | RETIRED (host), flag intact |
+| 8 | III.H | `storyCorridorTravel` hook sets `innDeparted` when `fromCode === 'INN'` | `storyCorridorTravel` = **0 occurrences** (deleted by §CELL-11A), which left `innDeparted` on `quest_inn_05` with no writer for 90 days. §AUDIT-03bk restored the beat as a general host record — `S_story.departedNodes[S_story.currentCode] = true@28365` in `storyMove`, read by `flagsPath:['departedNodes.INN']` — and retired the flag | **SHIPPED §AUDIT-03bk**, writer generalised |
 | 9 | VI | `quest_whisper_06` / `quest_wane_06` set the Crown-complete flag when "all 6 resolved" | Both compute `…filter(complete).length >= 5` — a **five**-quest threshold | SHIPPED, threshold differs |
 | 10 | VI | `quest_glut_06` sets `glutCrownComplete` | Set **unconditionally** by `onComplete`, not by a count — asymmetric with 9 | SHIPPED, mechanism differs |
 | 11 | V | `ARC_CROWNS` / `runArcFrame(arcDef)` abstraction | **0 occurrences, 0 commits ever.** The report states it is not implemented | NOT SHIPPED (correctly self-reported) |

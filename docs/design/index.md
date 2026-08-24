@@ -89,7 +89,7 @@ node server. To only play, open `play.html` — nothing else is required.
 
 | Metric | Value | Status |
 |--------|-------|--------|
-| HTML line count | 38,698 | ✅ 2026-08-24 (`wc -l play.html`) — ±0 from §AUDIT-03bj (53 gate/bit edits, all in place through `./bin/api`); ±0 from §AUDIT-03bh (four `completion` objects rewritten in place); ±0 from §DX-02gl (one act-table entry out, one comment line in); +12 from §DX-02gk: the ending scorer reads `DEAR_FRIEND_BITS` instead of respelling its six acts (`MISSION_ACT_BITS` + `_missionBits` cost more lines than the six predicates saved). Prior: −9 §DX-02gb, +1 §DX-02aj, +1 §DX-02gd, −19 §DX-02cm |
+| HTML line count | 38,700 | ✅ 2026-08-24 (`wc -l play.html`) — +2 from §AUDIT-03bk (`departedNodes` in `_S_DEFAULTS` + the `storyMove` departure record, one `innDeparted` decl out); ±0 from §AUDIT-03bj (53 gate/bit edits, all in place through `./bin/api`); ±0 from §AUDIT-03bh (four `completion` objects rewritten in place); ±0 from §DX-02gl (one act-table entry out, one comment line in); +12 from §DX-02gk: the ending scorer reads `DEAR_FRIEND_BITS` instead of respelling its six acts (`MISSION_ACT_BITS` + `_missionBits` cost more lines than the six predicates saved). Prior: −9 §DX-02gb, +1 §DX-02aj, +1 §DX-02gd, −19 §DX-02cm |
 | Lab reports on disk | 116 | ✅ 2026-08-24 (`ls docs/lab-reports/*.md \| wc -l`) |
 | Lab reports in index | 81 | ⚠️ 35 on disk are unlisted → §DX-01j |
 | Node text rewrites (noir register) | 121 / 121 | ✅ +33 nodes: Med arc (91–110) + Littoral Courts (111–120) Layer 104 |
@@ -649,6 +649,7 @@ All 54 source books are marked `[x]` in `books.md` — all have been processed t
 | `S_story.tattoos` | array | Tattoo items pushed on each level-up |
 | `S_story.shortRestedAtNodes` | object | nodeCode → true; first short rest per location |
 | `S_story.sleptAtNodes` | object | nodeCode → true; first sleep per location |
+| `S_story.departedNodes` | object | nodeCode → true; set in `storyMove` on the node being left (§AUDIT-03bk; `quest_inn_05` completes on `flagsPath:['departedNodes.INN']`) |
 | `S_story.journalEntriesRead` | array | entryNums of FROBERGER_JOURNAL entries found |
 | `S_story.ebReturnsCompleted` | object | ebCode → true; set on EB return quest completion |
 | `S_story.ebNegotiatedPayments` | object | ebCode → gold accepted |

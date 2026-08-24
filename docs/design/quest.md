@@ -749,7 +749,7 @@ The Overseer. It has been in the water since Port Aurel, in telepathic contact w
 | `quest_inn_02` | "The Unrequested Thing" | INN | [SKILL CHECK] | WIS Insight | 12 | `_innKindness(1)` | 150 | [✅ LIVE §CROWN-01] |
 | `quest_inn_03` | "The Correction" | INN | [SKILL CHECK] | CHA Persuasion | 13 | `_innKindness(1)` | 175 | [✅ LIVE §CROWN-01] |
 | `quest_inn_04` | "The Tired Hour" | INN | [SKILL CHECK] | WIS Insight | 12 | `_innKindness(1)` | 150 | [✅ LIVE §CROWN-01] |
-| `quest_inn_05` | "The Return" | INN | [COMPLETION] | — | — | `_innKindness(1)` (on innDeparted return) | — | [✅ LIVE §CROWN-01] |
+| `quest_inn_05` | "The Return" | INN | [COMPLETION] | — | — | `_innKindness(1)` (on return to INN after departing it — `flagsPath:['departedNodes.INN']`) | — | [✅ LIVE §CROWN-01] |
 | `quest_inn_06` | "The Free Booking" | INN | [THRESHOLD] | Kindness ≥5 | — | `freeBookingUnlocked`, Innmother's Key | — | [✅ LIVE §CROWN-01] |
 
 **Kindness Meter thresholds:** ≥3 first register shift · ≥5 free booking + Innmother's Key · ≥7 `innmotherNamed = true` ("Mère Boudine.")
