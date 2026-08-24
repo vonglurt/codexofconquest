@@ -446,13 +446,27 @@ Wave 8c named it the sole inline exception and deferred the fix to §GR; §GR cl
 it. At HEAD the quest carries `completion:{countMin, itemsAll}` and **no `onComplete`, no
 `xpAward`**, while all six of its effects — +500 gp, the Old Tuna Account Book, Aldo's favour, the
 activation of `quest_la_riva_03`, and two narration beats — live in an **AMS-only** hook
-(`S_story.quests['quest_la_riva_02'] = 'complete';@31904`) guarded on `status === 'active'`. Ordering
+(`function _nodeHookLaRivaRow(node) {@31887`) guarded on `status === 'active'`. Ordering
 saves it today: the hook runs before the engine's pass in the same render. But the completion gate
 carries **no `atNode` term**, so any `storyCheckQuests` that fires while the two conditions hold and
 the player is not rendering AMS flips the quest to `'complete'` and the hook's `'active'` test can
 never be true again — silently stranding the arc. Fix: either fold the effects into an `onComplete`
 chain (the §GR intent) or add `atNode:'AMS'` to the completion gate as a one-line fence. The
 exception *is* test-pinned, so this is a design debt rather than a silent rot.
+
+> **✅ SHIPPED 2026-08-24 (§DX-02cm) — both halves, and the strand was reproducible.** The six effects
+> are `quest_la_riva_02.onComplete`'s four bits (`reward` · `favor` · `unlock` · `narrative`) and the
+> completion gate carries `atNode:'AMS'`; the hook's completion branch is deleted, so **0 inline
+> `S_story.quests['…'] = 'complete'` assignments remain in `play.html`** and Wave 8c's "sole completer"
+> headline is now literally true with no exception. The *"design debt rather than a silent rot"*
+> reading above is **corrected in one direction only**: measured against `HEAD` = `699155c`, a single
+> `storyCheckQuests(NODE_MAP.CDG)` with both preconditions held flipped the quest to `'complete'`
+> paying **0 gp, no account book, `aldo_sardino` 0, `quest_la_riva_03` never activated**, and a
+> subsequent AMS render recovered none of it. Player-reachability of that state is still not
+> demonstrated — `storyEnter@24387` re-renders `S_story.currentCode` (= `AMS`) on every return from the
+> corridor battle, so the hook did win the ordinary race. What the fix removes is the dependence on
+> the race. Acceptance: `dx02cm-la-riva-completion-fence.test.js` 4/4, with a negative control (drop
+> `atNode`, the fence case goes red and pays at `CDG`).
 
 **Not filed — already open.** The `item_check` bit kind is **§DX-02as item (d)**, and that row
 already credits this document: the contract at `item_check:  { required:['name'],@21989` carries the

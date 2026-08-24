@@ -147,12 +147,12 @@ the only copy.)*
 |---|---|---|
 | Node FR — Fishmonger's Row | `AMS:{ num:79, code:'AMS'@8801` — `name:'ruins'`, `label:"Fishmonger's Row"`, `act:1`, node text byte-identical to birth | ✅ renamed, all fields preserved |
 | Quest 1 — "What Remains" | `quest_la_riva_01: { id:'quest_la_riva_01'@13785`, `completion:{ flags:['connieMet'] }`, `waypointNode:'AMS'` | ✅ live (title now NPC-prefixed) |
-| Quest 2 — "The Weight of a Net" | `quest_la_riva_02: { id:'quest_la_riva_02'@13795`, `countMin:[{ path:'frCatKillCount', min:5 }]@13795` + `itemsAll:["Vincenzo's Net"]`, `reward:500` | ✅ live, condition and reward exact |
+| Quest 2 — "The Weight of a Net" | `quest_la_riva_02: { id:'quest_la_riva_02'@13795`, `countMin:[{path:'frCatKillCount',min:5}]@13795` + `itemsAll:["Vincenzo's Net"]`, `reward:500` | ✅ live, condition and reward exact — **§DX-02cm 2026-08-24 added `atNode:'AMS'` and moved the arc's six AMS effects into an `onComplete` chain; `reward:500` is still the dead display field (`q.reward` is intentionally NOT read@37032), the paying bit is `kind:'reward',gold:500`** |
 | Quest 3 — "The Account Book" | `quest_la_riva_03: { id:'quest_la_riva_03'@13806`, `completion:{ flags:['laRivaComplete'] }`, `reward:0` | ✅ live |
 | Activation | `S_story.catKingDefeated = true;@25373` → 2500 ms `setTimeout` → `S_story.quests['quest_la_riva_01'] = 'active';@25377` | ✅ delay exact as specified |
 | Repeatable encounter | `corridor:true@31928`, `count:1`, `key:'corrupted_cat'` | ✅ exact |
 | Item 1 | `name:"Vincenzo's Net", icon:'🎣', type:'key_item', sell:0@25358` — `description` **byte-identical** to the report's quotation | ✅ exact |
-| Item 2 | `name:'Old Tuna Account Book', icon:'📒', type:'key_item', sell:0@31911` | ✅ exact |
+| Item 2 | `name:'Old Tuna Account Book',icon:'📒',type:'key_item',sell:0@13805` | ✅ exact — **§DX-02cm 2026-08-24 moved it out of the AMS render hook into the quest's own `onComplete` `reward` bit; the object is byte-identical, including the `description:` key the inventory renderer does not read (it reads `item.desc@31191` → §DX-02gd)** |
 | State fields | `connieMet: false, fishmongerRowRestored: false, laRivaComplete: false, frCatKillCount: 0,@23122` — all four, **on one line, in the specified order** | ✅ exact |
 | NPCs | `connie_tuna` + `aldo_sardino`, both with `node:"AMS"` in profile and dialogue | ✅ live |
 | Delivery + Kenickie favor | `id:'cdg-la-riva-delivery'@34405` — a `NODE_VERBS` verb; `{ kind:'favor', npc:'kenickie', set:3 }@34414` | ✅ live, migrated to the VM (§VM-01-G4) |
@@ -229,11 +229,16 @@ curse-score floor of 20), so the missing line sits behind a screen no player can
 report **filed this correctly as deferred**, with a suggested text. It is a clean NOT SHIPPED, not an
 oversight discovered late. → **§GR-FU**.
 
-Second, smaller defect: Aldo's promotion is a **raw increment**,
-`S_story.npcFavorability['aldo_sardino'] = (S_story.npcFavorability['aldo_sardino'] || 0) + 1;@31907`,
+Second, smaller defect: Aldo's promotion was a **raw increment** into `S_story.npcFavorability`,
 bypassing `function _setNpcFavor(key, level) {@23462` — the absolute, only-ever-raises setter that
 the CDG verb's own comment cites as canonical and that emits the tier-change line. **Within one arc,
-one NPC is promoted through the host and the other by a direct write into the ledger.** → **§DX-02x**.
+one NPC was promoted through the host and the other by a direct write into the ledger.** → **§DX-02x**.
+
+> **⚠ Corrected 2026-08-24 (§DX-02cm).** The site is now `{kind:'favor',npc:'aldo_sardino',add:1}@13805`
+> — the second of the four bits in `quest_la_riva_02.onComplete` — so both promotions in the arc go
+> through `_setNpcFavor`. §DX-02x's remaining scope is the corpus-wide sweep and the writers-only gate,
+> not this site. The tier line it now emits reads **`aldo_sardino`**, not *Aldo Sardino*: `_setNpcFavor`
+> resolves display names from `BIRKA_NPC_PROFILES` alone, which holds 9 keys and not this one → **§DX-02gc**.
 
 ---
 

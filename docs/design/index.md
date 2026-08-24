@@ -3,8 +3,8 @@
 # Codex of Conquest — The Shattered Codex: Document Index
 
 **Project:** `play.html` — a single-file, quest-driven MUD-style fighter RPG
-**Live counts:** 416 nodes · 398 monsters · 111 terrains · 2,853 quests · 204 NPC profiles · 8 acts · 38,712 lines · 5.51 MB
-**Last updated:** 2026-08-23 — restructured for public release (§RELEASE-01)
+**Live counts:** 416 nodes · 398 monsters · 111 terrains · 2,853 quests · 204 NPC profiles · 8 acts · 38,693 lines · 5.51 MB
+**Last updated:** 2026-08-24 — §DX-02cm closed the last inline quest completer
 
 > **📁 Repository restructured 2026-08-23 for the first public release.** The
 > game was renamed *Roll2Hit* → **Codex of Conquest**; `roll2hit-v3.html` →
@@ -79,7 +79,7 @@ node server. To only play, open `play.html` — nothing else is required.
 
 | Metric | Value | Status |
 |--------|-------|--------|
-| HTML line count | 38,712 | ✅ 2026-08-24 (`wc -l play.html`) — unchanged by §DX-02fb: the API edited `quest_pit_training.onComplete` in place |
+| HTML line count | 38,693 | ✅ 2026-08-24 (`wc -l play.html`) — −19 from §DX-02cm: the 20-line inline completion branch cut out of `_nodeHookLaRivaRow`, the API's `onComplete` insert added one |
 | Lab reports on disk | 116 | ✅ 2026-08-24 (`ls docs/lab-reports/*.md \| wc -l`) |
 | Lab reports in index | 81 | ⚠️ 35 on disk are unlisted → §DX-01j |
 | Node text rewrites (noir register) | 121 / 121 | ✅ +33 nodes: Med arc (91–110) + Littoral Courts (111–120) Layer 104 |
@@ -210,6 +210,7 @@ Run with `npm test`. Tests serve the project at `localhost:7654` (no WBAPI serve
 | `src/tests/integration/multiplayer-presence.test.js` | **§MESH-01a** two-browser presence smoke — spawns a throwaway wbapi-server; connect via 🌐, "Also here:", exactly-once SSE chat, player_left on departure, strict opt-in | 2 tests |
 | `src/tests/integration/worldbuilder-mesh.test.js` | **§MESH-01 UI** 🌐 Mesh tab — fixture-driven render (identity/trackers/peers/remotes/packet log) + offline fallback | 2 tests |
 | `src/tests/integration/mesh-connections-ui.test.js` | **§MESH-02f** map-tab connection center, hermetic (`:1367` route-blocked before goto) — sub-tab switching, `mpParseServerList` txt/JSON/garbage, `_mpBlacklisted` matrix + row-filter + `mpJoin` refusal, D4 `_mdHostApproved` + auto-load gating, via `window.__mesh02` | 8 tests |
+| `src/tests/integration/dx02cm-la-riva-completion-fence.test.js` | **§DX-02cm** the completion fence — drives the real `storyCheckQuests` at `CDG`/`TLS`/`SSJ`/`LHR` (stays active, pays nothing) and at `AMS` (all six effects once); verified non-vacuous by removing `atNode` and seeing it red | 4 tests |
 | `src/tests/integration/dx02fb-crov-favor-ceiling.test.js` | **§DX-02fb** the `crov` favor ceiling — drives `storyCheckQuests` (not a planted ledger value) to prove `quest_pit_training`'s `add:2` reaches 3 from every prior level, and that `_checkFrobergerTrace('crov')` + `weckmann_class` both fire | 5 tests |
 | `src/tests/integration/quest-runtime-uqf.test.js` | **§ARCH-01** UQF runtime (canActivate/canComplete/execBits, wave-by-wave parity, census pins) + **§MATH-01** completions (shapes, HKG-pocket node cells, same-visit collect completion, atNode hold) | 303 tests |
 
@@ -327,7 +328,7 @@ All 54 source books are marked `[x]` in `books.md` — all have been processed t
 | `docs/lab-reports/lab-report-wbapi-evolution.md` | WBAPI | Evolution from grep to WBAPI — world data access history, design decisions, tradeoffs |
 | `docs/lab-reports/lab-report-quest-api-architecture.md` | §ARCH-01 | Quest API & Universal Mission Format — UQF v1.0 schema, Mission Bit Registry, QuestRuntime design |
 | `docs/lab-reports/lab-report-quest-data-code-separation.md` | §DATA-01 (✅ RESOLVED 2026-07-06 — superseded by §ARCH-01 UQF) | Data–code boundary enforcement: QUEST_EFFECTS declarative DSL, QUEST_HOOKS named engine, applyQuestEffects dispatch; storyShowNpc quoteFn fix; DFL node rename; innerHTML→textContent; passText function removal. Never re-shipped after a snapshot rollback; **closed as superseded** — UQF delivered the separation goal (declarative `onPass`/`onFail` descriptors, QuestRuntime); the innerHTML→textContent journal residual shipped 2026-07-06. Historical design record, not a restore spec. |
-| `docs/lab-reports/lab-report-uqf-migration-playbook.md` | §ARCH-01 Ph3 | UQF bulk-migration playbook — wave-by-wave history, golden-capture parity protocol, §SKILLFIX-01/-02 gotchas, `src/scripts/uqf-bulk-migrate.js` usage |
+| `docs/lab-reports/lab-report-uqf-migration-playbook.md` | §ARCH-01 Ph3 | UQF bulk-migration playbook — wave-by-wave history, golden-capture parity protocol, §SKILLFIX-01/-02 gotchas, `src/scripts/uqf-bulk-migrate.js` usage. **Its §DX-02cm paragraph shipped 2026-08-24 `d117b2f`** — `quest_la_riva_02` pays through `onComplete` and completes only at `atNode:'AMS'`; the *"design debt rather than a silent rot"* reading is annotated as half wrong (the strand reproduces in one call) |
 | `docs/lab-reports/lab-report-wbapi01-ph3-array-patch.md` | §WBAPI-01 Ph3 | Structured-field PATCH — source-level array/object literal patching (`editStructuredField`/`patchLiteralField`/`serializeJsLiteral`) |
 | `docs/lab-reports/lab-report-editor01d-itemchain.md` | §EDITOR-01-D | Declarative `itemChain` quest field — grant/take/grantBit/takeBit grammar, `_applyItemChain` runtime, pipe codec. **✅ VERIFIED §DOC-02bp 2026-08-17: SHIPPED IN FULL** (5/5 increments, runtime 6 min after the lock); 10/10 line citations byte-exact; the stated **58**-branch ladder held **61** → §DX-02ce |
 | `docs/lab-reports/lab-report-editor01d-fu-chain-ui.md` | §EDITOR-01-D-FU(a) | Visual itemChain editor widget (`buildChainEditor`) — Quest Creator + CRUD form wiring |
