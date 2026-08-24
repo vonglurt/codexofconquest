@@ -15,12 +15,59 @@
 
 ## 1. The prompt — paste this to resume
 
+The directive in full. Everything below §1 is the same instruction expanded; this
+block is the whole of it, and a cold session needs nothing else to start.
+
 ```
-Read docs/design/index.md and docs/backlog/BACKLOG.md and resume the backlog loop
-per resume.md. Start the API. Pick the next open row by the selection rule, prove
-it is not already shipped, implement it in play.html through ./bin/api, verify,
-mark the row complete in place, move it to plan-archive.md, and hand off.
-Then wait. I will say "next" or "continue".
+Read resume.md, docs/design/index.md and docs/backlog/BACKLOG.md, then resume the
+backlog loop.
+
+ONE ROW PER "CONTINUE". Take exactly one open row, take it as far as it goes, and
+stop. Never start a second row without being asked.
+
+Pick it by the selection rule: an unfinished increment first (git status dirty, or
+the newest §RESUME entry names a row still open), then a gating row, then phase
+order 1→6 and top-to-bottom within the file, preferring 🟢 over 🟡 over 🟠/🔴.
+
+Prove the ground before you touch it — git status, git log, one live session only,
+and grep to DISPROVE the row. Rows go stale; a row that turns out already shipped
+is closed as ALREADY SHIPPED, and that closure is real work.
+
+Measure the number the row claims, re-derived at HEAD, before you change anything.
+
+Decide on behalf of the backlog wherever the evidence is in the repo. 🟢 implement
+it. 🟡 make the call yourself and record the evidence in the row. 🟠/🔴/ASK: present
+the options with a recommendation and stop. Ask only when the answer would be a
+guess dressed as a decision.
+
+Write world data through ./bin/api only — never by hand-editing play.html's data
+sections, never by curl. If the API cannot express it, add the endpoint to
+src/js/wbapi-server.js first. Restart the server before any write session. Stop it
+before Playwright. play.html directly only for engine JS/CSS, server stopped first.
+
+Verify by round trip: re-read through the API after a reload, then the gates. Never
+"GET agrees with me". Tests run in the foreground, never piped.
+
+Measure the same number again and show it moved.
+
+Anything found on the path that is not this row becomes a NEW ROW in the phase file
+whose subsystem it belongs to. It does not get done inline and it does not get
+dropped. That rule is why this backlog is trustworthy.
+
+Read docs/design/index.md before the row and update it with the row — the badge, the
+Lab Report Index, the constants. Write every reference as a noun with the verb
+intended on it, one line, with the command that measured any number beside it.
+
+Close the row properly: edit the paragraph in place with what shipped and the
+evidence, mark it [x] ✅ SHIPPED <date> <sha>, CUT IT OUT of the phase file and paste
+it into plan-archive.md, add the §RESUME entry and the BACKLOG.md pointer row.
+
+Then commit, push, and speak the summary with src/bin/say.sh — never raw macOS say.
+
+Then HAND OFF: a numbered next-steps list in the reply, and STOP. Ask me before
+taking the next row. I will say "next" or "continue".
+
+No background processes. No subagents. Everything synchronous, in this conversation.
 ```
 
 Shorter form, once a session is warm:
@@ -29,9 +76,9 @@ Shorter form, once a session is warm:
 next
 ```
 
-That single word means: **close the increment you are on if it is not closed,
-then take the next row by the selection rule and run the full procedure on it.**
-It is not permission to start three rows.
+That single word means: **close the increment you are on if it is not closed, then
+take the next row by the selection rule and run the full procedure on it.** It is
+not permission to start three rows, and it is not permission to skip the hand-off.
 
 ---
 
