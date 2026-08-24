@@ -24010,6 +24010,7 @@ function storyNewGamePlus() {
     setTimeout(() => { ngOverlay.style.display = 'none'; ngOverlay.classList.remove('ng-plus-anim'); }, 2100);
   }
   const savedFavorability      = Object.assign({}, S_story.npcFavorability || {});
+  const savedDearFriendGranted = Object.assign({}, S_story.dearFriendGranted || {});
   const savedPitPerks          = (S_story.pitPerks || []).slice();
   const savedNgRun             = (S_story.ngPlusRun || 0) + 1;
   const savedEntry42Written    = !!(S_story.entry42Written);
@@ -24018,6 +24019,7 @@ function storyNewGamePlus() {
   try { localStorage.removeItem('coc_autosave'); localStorage.removeItem('coc_checkpoint'); } catch(e) {}
   Object.assign(S_story, _S_DEFAULTS());
   S_story.npcFavorability   = savedFavorability;
+  S_story.dearFriendGranted = savedDearFriendGranted;
   S_story.pitPerks          = savedPitPerks;
   S_story.ngPlusRun         = savedNgRun;
   S_story.entry42Written    = savedEntry42Written;

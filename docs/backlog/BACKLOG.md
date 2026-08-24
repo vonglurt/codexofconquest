@@ -34,7 +34,7 @@ Split by **subsystem**, not by track prefix (121 of the 175 sections were `§DX-
 
 | Phase | Backlog | Open rows | History | Scope |
 |---|---|---:|---:|---|
-| **1** | [Playable Truth](BACKLOG-1-playable-truth.md) | 10 | 5 | Shipped content the player can never reach or complete: unreachable act-gated beats, inert counters, gate flags with no writer, quest deadlocks, endings out of range. |
+| **1** | [Playable Truth](BACKLOG-1-playable-truth.md) | 12 | 5 | Shipped content the player can never reach or complete: unreachable act-gated beats, inert counters, gate flags with no writer, quest deadlocks, endings out of range. |
 | **2** | [Engine & Systems](BACKLOG-2-engine-systems.md) | 49 | 51 | Rules and mechanics: combat math, XP and economy, progression and New Game+, save/state defaults, the render pipeline, the quest VM and its migration fronts. |
 | **3** | [Content & Narrative](BACKLOG-3-content-narrative.md) | 20 | 41 | Authored strings and the people who say them: NPC dialogue and relationships, favor scales, arc beats, epilogue and ending prose, lines with no lookup path. |
 | **4** | [World & Navigation](BACKLOG-4-world-navigation.md) | 8 | 20 | The map and moving on it: node registration and labels, terrain tables and encounter rates, GEO anchors and projection bounds, road nets, movement results. |

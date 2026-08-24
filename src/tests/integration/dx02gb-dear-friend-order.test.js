@@ -114,6 +114,30 @@ test.describe('§DX-02gb — both orderings reach Dear Friend, for all six NPCs'
     expect(out.inlineCopies).toBe(0);
   });
 
+  test('New Game+ carries the granted record with the favor ledger it latches', async ({ page }) => {
+    await seedAndLoad(page, BIRKA_SEED);
+    await dismissContinue(page);
+
+    const out = await page.evaluate(() => {
+      for (let d = 0; d < 3; d++) { S_story.day = 100 + d; _talkToNpc('yael'); }
+      _yaelEscortAction();
+      const before = { fav: _npcFavor('yael'), granted: !!(S_story.dearFriendGranted || {}).yael };
+
+      // NG+ keeps the favor ledger and clears every act flag, so a record that does
+      // not survive it pays the step twice. Empty `corpsesQuests` skips the confirm().
+      S_story.corpsesQuests = [];
+      storyNewGamePlus();
+
+      _yaelEscortAction();
+      return { before, ngPlusRun: S_story.ngPlusRun,
+               after: { fav: _npcFavor('yael'), escort: !!S_story.yaelEscortUsed } };
+    });
+
+    expect(out.before).toEqual({ fav: 2, granted: true });
+    expect(out.ngPlusRun).toBe(1);
+    expect(out.after).toEqual({ fav: 2, escort: true });
+  });
+
   test('the step is granted once, so a repeated act cannot inflate favor', async ({ page }) => {
     await seedAndLoad(page, BIRKA_SEED);
     await dismissContinue(page);
