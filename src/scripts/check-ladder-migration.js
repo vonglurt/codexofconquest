@@ -157,7 +157,7 @@ const MIGRATION_MANIFEST = [
   //    NOTE on the manifest grant fields: long readText blobs and long desc prose are
   //    OMITTED here on purpose — they were moved byte-for-byte by the mechanical transform, and
   //    fieldsEqual only checks fields present in `want`. The short STRUCTURED rich fields (bonus,
-  //    uses, passive, weapon stats, readable) ARE asserted — they're the parity-
+  //    uses, passive, weapon stats) ARE asserted — they're the parity-
   //    sensitive ones b1 exists to carry. grant-exists / silent / no-double-push / name-
   //    preservation are asserted for every entry regardless.
   { quest: 'quest_void_below', grants: [
@@ -178,13 +178,13 @@ const MIGRATION_MANIFEST = [
   { quest: 'quest_muffat_03', grants: [{ name: 'Station 7 Transmission Log', icon: '📡', type: 'readable', sell: 0 }] },
   { quest: 'quest_muffat_02', grants: [{ name: 'Shipping Manifest (Intercepted)', icon: '📦', type: 'readable', sell: 0 }] },
   { quest: 'quest_va_02', grants: [
-    { name: "The Constructor's Log", icon: '📜', type: 'readable', sell: 0, readable: true },
+    { name: "The Constructor's Log", icon: '📜', type: 'readable', sell: 0 },
     { name: 'Antecedent Seal', icon: '🏛️', type: 'relic', sell: 0 } ] },
 ];
 
 // Field allow-list a migrated grant may carry (lab report §3.1). `silent` is authoring-only.
 const GRANT_FIELDS = ['name', 'icon', 'type', 'sell', 'desc', 'readText',
-  'readable', 'passive', 'bonus', 'uses', 'minLevel',
+  'passive', 'bonus', 'uses', 'minLevel',
   'atkBonus', 'dmgDie', 'dmgCount', 'dmgFlat'];
 
 function fieldsEqual(got, want) {

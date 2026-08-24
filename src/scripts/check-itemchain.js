@@ -70,14 +70,14 @@ ok(JSON.stringify(S.inventory[0]) === JSON.stringify({ name: 'Glow', icon: '🟡
 S.inventory = [];
 apply({ itemChain: [{ action: 'grant', name: 'Tome', icon: '📗', type: 'tome', sell: 0,
   desc: 'margin note', description: 'dead key', bonus: { deathSave: 1 }, readText: 'long text',
-  readable: true, readableKey: 'dead key', passive: true, uses: 3, minLevel: 2,
+  readable: 'dead key', readableKey: 'dead key', passive: true, uses: 3, minLevel: 2,
   atkBonus: 1, dmgDie: 4, dmgCount: 1, dmgFlat: 0, heal: 8 }] });
 {
   const it = S.inventory[0];
   ok(it.desc === 'margin note' && JSON.stringify(it.bonus) === '{"deathSave":1}', 'grant passes desc + bonus through');
   ok(!('description' in it), 'grant drops `description` — the item vocabulary spells it `desc`');
-  ok(!('readableKey' in it), 'grant drops `readableKey` — readables are opened by `readText`');
-  ok(it.readText === 'long text' && it.readable === true, 'grant passes readText/readable');
+  ok(!('readableKey' in it) && !('readable' in it), 'grant drops `readableKey`/`readable` — readables are selected by `type` and opened by `readText`');
+  ok(it.readText === 'long text', 'grant passes readText');
   ok(it.passive === true && it.uses === 3 && it.minLevel === 2, 'grant passes passive/uses/minLevel');
   ok(it.atkBonus === 1 && it.dmgDie === 4 && it.dmgCount === 1 && it.dmgFlat === 0, 'grant passes weapon stats');
   ok(it.heal === 8, 'grant passes heal (§KG Inc 3 — heal-consumable rewards)');

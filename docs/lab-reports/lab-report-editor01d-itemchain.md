@@ -117,7 +117,7 @@ inlining pushes, filters, gold, favor and `msgs.push`.
 |---|---|
 | Runtime applier | `` `function _applyItemChain(q) {@26171` `` |
 | Idempotent grant (`once`) | `` `if (s.once !== false && inv.some(i => i.name === s.name)) break@26178` `` |
-| Rich-field allow-list (FU-b1) | `` `for (const f of ['desc', 'readText', 'readable'@26184` `` |
+| Rich-field allow-list (FU-b1) | `` `for (const f of ['desc', 'readText', 'passive'@26184` `` |
 | Silent-grant suppression (FU-b) | `` `if (!s.silent) msgs.push(item.icon@26191` `` |
 | `take all` — spliced in place | `` `if (s.all) { for (let i = inv.length - 1@26197` `` |
 | `takeBit` dispatch | `` `case 'takeBit':  _takeMissionBit(s.flag); break@26201` `` |

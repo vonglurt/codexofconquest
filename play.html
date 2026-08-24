@@ -11135,7 +11135,7 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
   },
   quest_va_02: { id:'quest_va_02', type:'side', schema:'UQF-1.0', gate:{}, bits:[], completion:{ flags:['vaLogFound'] }, title:"The Architecture: Constructor's Log",
     onComplete:[ { kind:'flag_write', set:['vaLogFound'] }, { kind:'narrative', msg:"📜 The Constructor's Log and Antecedent Seal obtained." } ], // §ARCH-01 W7c
-    itemChain:[{action:'grant',name:'The Constructor\'s Log',icon:'📜',type:'readable',sell:0,readable:true,silent:true,readText:'Seven entries. Her handwriting. Entry 3 matches Froberger\'s margin note word for word.'},{action:'grant',name:'Antecedent Seal',icon:'🏛️',type:'relic',sell:0,silent:true,desc:'"Antecedent Containment Protocol. Seal 7. Activated."'}], // §EDITOR-01-D-FU(b) b2b
+    itemChain:[{action:'grant',name:'The Constructor\'s Log',icon:'📜',type:'readable',sell:0,silent:true,readText:'Seven entries. Her handwriting. Entry 3 matches Froberger\'s margin note word for word.'},{action:'grant',name:'Antecedent Seal',icon:'🏛️',type:'relic',sell:0,silent:true,desc:'"Antecedent Containment Protocol. Seal 7. Activated."'}], // §EDITOR-01-D-FU(b) b2b
     desc:"A fourth document has appeared in the lower archive. It was not there when Isolde catalogued the collection — or it was there and not visible, which is a distinction the archive does not officially recognize. Seven entries. Her handwriting. The last entry reads: 'If someone is reading this, the sealing mechanism has activated. The cage is closed. I am sorry.' She wrote that line and then walked out of the archive knowing she would not be back to see if anyone found it.",
     hint:'Return to the Scholar\'s Quarter lower archive.',
     activateNode:null, 
@@ -26182,7 +26182,7 @@ function _applyItemChain(q) {
         // declarative grants can carry the full item shape the reward ladder used (readText,
         // tome bonus, passive, readable, weapon stats, …). Anything off-list is intentionally
         // dropped. Kept in lockstep with the worldbuilder widget + scripts/check-itemchain.js.
-        for (const f of ['desc', 'readText', 'readable', 'passive',
+        for (const f of ['desc', 'readText', 'passive',
                          'bonus', 'uses', 'minLevel', 'atkBonus', 'dmgDie', 'dmgCount', 'dmgFlat', 'heal']) {
           if (s[f] !== undefined) item[f] = s[f];
         }
