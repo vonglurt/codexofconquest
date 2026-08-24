@@ -44,12 +44,11 @@
 
 ## §BACKLOG — Open Items (Phase 6)
 
-### §DX-02gm — a full `npm test` rewrites the line hints in 113 tracked docs, because one test runs `--fix` on the whole repo (NEW 2026-08-24 during §DX-02gk, 🟢 no design call)
+### §DX-02gn — a Playwright screenshot overwrites a TRACKED png every run (NEW 2026-08-24 during §DX-02gm, 🟢 no design call)
 
-- [ ] **§DX-02gm — the anchor gate's own acceptance test has a repo-wide side effect.** **Measured at `d9c4cad`:** `src/tests/integration/dx01e-anchor-convention.test.js:115` writes a probe doc at the repo root and asserts `expect(run(['--fix']).code).toBe(0)`. `run` invokes `node scripts/resolve-anchors.js` **with no path argument**, so `--fix` sweeps every doc it knows — and the probe's one repaired hint comes with **113 tracked files rewritten in place**, `CONTRIBUTING.md` and every `docs/**` file that carries a stale hint. The `finally` block removes the probe; it cannot remove the collateral. **Cost, observed:** a `git stash` taken mid-increment swept the churn in, the next suite run re-dirtied the same files, and `git stash pop` aborted on 115 conflicts — the increment's real work had to be extracted from the stash by hand (`git checkout stash@{0} -- play.html`).
-> **Why the tree looked clean anyway:** stale hints are a *warning*, never a gate failure, so nothing goes red — the diff is 113 files of `@1234` → `@1229` that a session either notices in `git status` or commits by accident. Any increment that shifts a line in `play.html` and then runs the suite produces one.
-> **Fix:** give the probe its own directory and point the script at it — `run(['--fix', doc])` if `resolve-anchors.js` accepts a path, and if it does not, that argument **is** the fix. **Verify:** `git status --short | wc -l` is unchanged across a full `npm test`, which is also the assertion worth keeping.
-> **Provenance:** §DX-02gk, found when the increment's own play.html change went missing into a stash.
+- [ ] **§DX-02gn — `living-world-l44.spec.js` writes its screenshot over a file git is watching.** **Measured at `c506357`:** with §DX-02gm's doc sweep removed, a full `npm test` leaves the tree byte-identical **except** ` M src/test-results/l44-final-map.png` — `src/tests/integration/living-world-l44.spec.js:210` calls `page.screenshot({ path: 'test-results/l44-final-map.png' })`, and that path is **tracked** (last written by `763c70f`). Every suite run re-encodes it, so every run produces a one-file diff that means nothing and that a session either restores by hand or commits by accident. It is the same shape as §DX-02gm one order of magnitude smaller, and it is what stands between the suite and a clean-tree invariant.
+> **Fix:** the screenshot is a debug artifact, not a fixture — nothing reads it back. Either write it to the untracked run dir the rest of the suite uses (`build/test-results/`, which the Playwright config already points at) or `git rm --cached` it and add the path to `.gitignore`. **Verify:** the §DX-02gm snapshot test's assertion, widened — `git status --porcelain` byte-identical across a full `npm test`, with no exception.
+> **Provenance:** §DX-02gm, found in the measurement that proved the doc sweep was gone.
 
 ### §DX-02gj — a Playwright seed lands the player somewhere, and that renders NPC cards before the test does (NEW 2026-08-24 during §DX-02aj, 🟢 no design call)
 
