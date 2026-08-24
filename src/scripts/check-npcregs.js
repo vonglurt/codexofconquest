@@ -72,6 +72,7 @@ const NPC_KEYED = [
   'NPC_ROMANCE_VIGNETTES',   // npc → romance-layer vignette
   'FROBERGER_TRACES',        // npc → "Froberger passed through" memory
   'NPC_CROSS_REFS',          // npc → cross-reference lines about other NPCs
+  'DEAR_FRIEND_BITS',        // npc → the second personal act that grants the Dear-Friend step
 ];
 // Nested npc-keyed groups, addressed by path.
 const NPC_KEYED_PATHS = [

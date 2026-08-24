@@ -21316,12 +21316,7 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
     npc:"auros",
   },
   quest_void_below: { id:'quest_void_below', type:'side', schema:'UQF-1.0', gate:{}, bits:[], completion:{ battles:['CY_VOID'] }, title:'Auros: Void Below',
-    onComplete:[ // §ARCH-01 W7c
-      { kind:'favor', npc:'auros', set:2 },
-      { kind:'narrative', msg:"📋 Scholar's Note + EMP Grenade from Auros. Dear Friend!" },
-      { kind:'flag_write', set:['bruhnsDepthsReported'] },
-      { kind:'_legacy_fn', fn:() => _checkDearFriendUpgrade('auros') },
-    ],
+    onComplete:[{kind:'favor',npc:'auros',set:2},{kind:'narrative',msg:'📋 Scholar\'s Note + EMP Grenade from Auros. Dear Friend!'},{kind:'flag_write',set:['bruhnsDepthsReported']}],
     itemChain:[{action:'grant',name:"Scholar's Note",icon:'📋',type:'key',sell:0,silent:true},{action:'grant',name:'EMP Grenade',icon:'💥',type:'flashbang',sell:50,uses:1,silent:true}], // §EDITOR-01-D-FU(b) b2b
     desc:"Commander Bruhns found the Void corruption node three weeks ago and has been writing maintenance requests to the Council since. The Council approved it in principle. The Void does not wait for implementation. She will not send anyone into the undercity depths alone — not because the regulations require two, but because she has already lost people in there and she knows what alone means in that context. She is asking you. She is not accustomed to asking.",
     hint:'Clear the Void corruption node in the undercity depths.',
@@ -23057,6 +23052,7 @@ let S_story = {
   pitTrainingWins: 0,
   slStalksWon: 0,
   npcVisitCounts: {}, couperiSongReceived: false, bruhnsDepthsReported: false, frobergerLastEntryRead: false,
+  dearFriendGranted: {},
 };
 
 /* ── Layer 6: Save / Load ── */
@@ -23086,6 +23082,7 @@ const _S_DEFAULTS = () => ({
   ebNegotiatedPayments: {}, ebReturnDone: {},
   journalEntriesRead: [], ebReturnsCompleted: {},
   npcFavorability: {}, roughWhiskeyUsed: false, roughWhiskeyActive: false, yaelEscortUsed: false, pitTrainingWins: 0, slStalksWon: 0, muffatBerthReached: false, muffatManifestRead: false, station7LogRead: false, suppressorLogRead: false, antecedentMet: false, solmFound: false, cycle4NoteRead: false, bogDefeated: false, // §LI–§LVIII + CO-001
+  dearFriendGranted: {},
   npcTalk: {},   // §NPC-01-D — key → { count, lastDay }: deliberate-talk progress toward Friendly (fav 1). Never raises above 1; Dear Friend stays quest/personal-act-earned.
   npcVisitCounts: {}, couperiSongReceived: false, bruhnsDepthsReported: false, frobergerLastEntryRead: false,
   pitPerks: [], frobergerNoteNode: null, froberger_last_note_found: false, froberger_last_note_read: false, ngPlusRun: 0,
@@ -23460,6 +23457,18 @@ function _corelliOpener(app) {
 /* ── Layer 41: NPC Favorability helpers ── */
 function _npcFavor(key) { return (S_story.npcFavorability || {})[key] || 0; }
 function _lubeckFriends() { return Object.values(S_story.npcFavorability || {}).filter(v => v >= 1).length; }
+// The second personal act each Birka NPC counts as the step from Friendly to Dear
+// Friend. Read by _setNpcFavor (on every raise) and by _checkDearFriendUpgrade
+// (called where each act is recorded), so neither ordering can foreclose the other.
+const DEAR_FRIEND_BITS = {
+  yael: () => S_story.yaelEscortUsed,
+  brynn: () => (S_story.journalEntriesRead||[]).includes(7),
+  quill: () => S_story.couperiSongReceived,
+  pachelbel: () => S_story.quests['quest_pachelbel_shipment'] === 'complete',
+  crov: () => (S_story.pitTrainingWins||0) >= 3,
+  auros: () => S_story.bruhnsDepthsReported,
+};
+const NPC_FAVOR_CAP = 3;
 function _setNpcFavor(key, level) {
   if (!S_story.npcFavorability) S_story.npcFavorability = {};
   const prev = _npcFavor(key);
@@ -23467,42 +23476,21 @@ function _setNpcFavor(key, level) {
   S_story.npcFavorability[key] = level;
   const p = BIRKA_NPC_PROFILES[key] || {};
   const n = p.name || key;
-  if (level === 1) {
-    storyMsg('🤝 ' + n + ' looks at you differently now.');
-    // Auto-upgrade to Dear Friend if second personal act is already satisfied
-    const dearFriendBits = {
-      yael: () => S_story.yaelEscortUsed,
-      brynn: () => (S_story.journalEntriesRead||[]).includes(7),
-      quill: () => S_story.couperiSongReceived,
-      pachelbel: () => S_story.quests['quest_pachelbel_shipment'] === 'complete',
-      crov: () => (S_story.pitTrainingWins||0) >= 3,
-      auros: () => S_story.bruhnsDepthsReported,
-    };
-    const check = dearFriendBits[key];
-    if (check && check()) {
-      S_story.npcFavorability[key] = 2;
-      storyMsg('💛 ' + n + ' says your name when you walk in.');
-      return;
-    }
-  }
+  if (level === 1) storyMsg('🤝 ' + n + ' looks at you differently now.');
   if (level === 2) storyMsg('💛 ' + n + ' says your name when you walk in.');
+  _checkDearFriendUpgrade(key);
 }
 function _checkDearFriendUpgrade(key) {
-  if (_npcFavor(key) !== 1) return;
-  const dearFriendBits = {
-    yael: () => S_story.yaelEscortUsed,
-    brynn: () => (S_story.journalEntriesRead||[]).includes(7),
-    quill: () => S_story.couperiSongReceived,
-    pachelbel: () => S_story.quests['quest_pachelbel_shipment'] === 'complete',
-    crov: () => (S_story.pitTrainingWins||0) >= 3,
-    auros: () => S_story.bruhnsDepthsReported,
-  };
-  const check = dearFriendBits[key];
-  if (check && check()) {
-    S_story.npcFavorability[key] = 2;
-    const p2 = BIRKA_NPC_PROFILES[key] || {};
-    storyMsg('💛 ' + (p2.name||key) + ' says your name when you walk in.');
-  }
+  const fav = _npcFavor(key);
+  if (fav < 1 || fav >= NPC_FAVOR_CAP) return;
+  const check = DEAR_FRIEND_BITS[key];
+  if (!check || !check()) return;
+  if (!S_story.dearFriendGranted) S_story.dearFriendGranted = {};
+  if (S_story.dearFriendGranted[key]) return;
+  S_story.dearFriendGranted[key] = true;
+  S_story.npcFavorability[key] = fav + 1;
+  const p2 = BIRKA_NPC_PROFILES[key] || {};
+  storyMsg('💛 ' + (p2.name||key) + ' says your name when you walk in.');
 }
 // §NPC-01-D — a Talk action on the NPC card raises favor toward Friendly (fav 1) ONLY, making the
 // ⚔ enemy footer (fav≥1) reachable by talking while Dear Friend (fav 2, the ✦ worldTruth footer)
@@ -23797,7 +23785,7 @@ function _renderNpcCard(key, container) {
 }
 function _yaelEscortAction() {
   const narration = "Yael walks beside you. She names each block as you pass: Skalder's corner, eleven years. The fountain — Nivers stands there until the second bell, every shift. The alley where the riot report she filed sits unread in a commissioner's drawer. \"The city talks if you know the language,\" she says. \"Most people never learn it. They just pass through.\"";
-  S_story.yaelEscortUsed = true;
+  if (!S_story.yaelEscortUsed) { S_story.yaelEscortUsed = true; _checkDearFriendUpgrade('yael'); }
   const ov = document.getElementById('story-npc-modal');
   document.getElementById('npc-card-name').textContent = '🛡 Yael — Walking the Beat';
   document.getElementById('npc-card-text').textContent = narration;
@@ -25322,6 +25310,7 @@ function _storyBattleVictory() {
   if (pb && pb.nodeCode === 'HKG' && (S_story.quests['quest_pit_training'] === 'active')) {
     S_story.pitTrainingWins = (S_story.pitTrainingWins || 0) + 1;
     _checkPitPerkUnlock();
+    _checkDearFriendUpgrade('crov');
   }
   // Layer 41: track BMA battle wins for quest_slums_cleanup (completes at >= 3).
   // §TIMELESS-01: `slStalksWon` counts plain BMA combat wins — it never depended on
@@ -30189,6 +30178,7 @@ function storyCheckQuests(node) {
     const done = q.schema === 'UQF-1.0' && q.completion && QuestRuntime.canComplete(id);
     if (done) {
       S_story.quests[id] = 'complete';
+      if (q.npc) _checkDearFriendUpgrade(q.npc);
       // §ARCH-01 W7 — completion-bit execution point: an ARRAY-valued onComplete is a
       // UQF bit chain (executed via the registry, narrative bits land in this msgs
       // stream); a FUNCTION-valued onComplete is the legacy closure, called as before.
@@ -30215,6 +30205,7 @@ function storyCheckJournal(node) {
   if (S_story.journalEntriesRead.includes(entry.entryNum)) return;
   S_story.journalEntriesRead.push(entry.entryNum);
   if (entry.entryNum === 41) S_story.frobergerLastEntryRead = true;
+  _checkDearFriendUpgrade('brynn');
   if (entry.readAloud) {
     document.getElementById('journal-entry-hd').textContent = '📔 Froberger\'s Journal — Entry ' + entry.entryNum;
     document.getElementById('journal-text').textContent = entry.text;

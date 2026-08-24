@@ -70,7 +70,7 @@ multiplying the way to earn either tier. The content existed; the verb did not.
 |---|---|---|
 | `kind:'favor'` bits in the whole quest corpus = 16 | **16** | ✅ exact |
 | distinct NPCs those bits reach = 13 | **13** | ✅ exact |
-| `dearFriendBits` auto-upgrade for ~6 NPCs | **exactly 6** (`const dearFriendBits = {@23473`) | ✅ exact |
+| `dearFriendBits` auto-upgrade for ~6 NPCs | **exactly 6** (`const DEAR_FRIEND_BITS = {@23463`) | ✅ exact |
 | `meta.enemy` declared by **202** NPCs | **202** of 213 dialogue entries | ✅ exact |
 | `meta.worldTruth` declared by **219** NPCs | **213** | ❌ **wrong when written** |
 | `onTalk` / `talkVerb` / `giftNpc` / `downtimeVerb` = 0 | **0** at both builds | ✅ exact |
@@ -149,8 +149,9 @@ that do nothing at all. Filed as §DX-02dq.
   profile); this one has stayed open. Fix is one short dialogue entry with a `meta`.
 - **Verified benign, recorded so it is not re-found:** `let S_story = {@23002` omits `npcTalk` while
   `const _S_DEFAULTS = () => ({@23063` declares it (both call sites guard), and
-  `const dearFriendBits = {@23473` is duplicated verbatim inside `function _checkDearFriendUpgrade@23490` —
-  two copies of one six-entry table, so any Dear Friend contract change must touch both.
+  the Dear-Friend act table was duplicated verbatim between `function _setNpcFavor@23463` and
+  `function _checkDearFriendUpgrade@23490` until §DX-02gb hoisted it to one
+  `const DEAR_FRIEND_BITS = {@23463`, which both now read.
 
 ---
 
