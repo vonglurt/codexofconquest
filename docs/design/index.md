@@ -79,7 +79,7 @@ node server. To only play, open `play.html` — nothing else is required.
 
 | Metric | Value | Status |
 |--------|-------|--------|
-| HTML line count | 38,686 | ✅ 2026-08-24 (`wc -l play.html`) — −9 from §DX-02gb: two verbatim `dearFriendBits` copies collapse to one `DEAR_FRIEND_BITS`. Prior: +1 §DX-02aj, +1 §DX-02gd, −19 §DX-02cm |
+| HTML line count | 38,698 | ✅ 2026-08-24 (`wc -l play.html`) — +12 from §DX-02gk: the ending scorer reads `DEAR_FRIEND_BITS` instead of respelling its six acts (`MISSION_ACT_BITS` + `_missionBits` cost more lines than the six predicates saved). Prior: −9 §DX-02gb, +1 §DX-02aj, +1 §DX-02gd, −19 §DX-02cm |
 | Lab reports on disk | 116 | ✅ 2026-08-24 (`ls docs/lab-reports/*.md \| wc -l`) |
 | Lab reports in index | 81 | ⚠️ 35 on disk are unlisted → §DX-01j |
 | Node text rewrites (noir register) | 121 / 121 | ✅ +33 nodes: Med arc (91–110) + Littoral Courts (111–120) Layer 104 |
@@ -211,6 +211,7 @@ Run with `npm test`. Tests serve the project at `localhost:7654` (no WBAPI serve
 | `src/tests/integration/worldbuilder-mesh.test.js` | **§MESH-01 UI** 🌐 Mesh tab — fixture-driven render (identity/trackers/peers/remotes/packet log) + offline fallback | 2 tests |
 | `src/tests/integration/mesh-connections-ui.test.js` | **§MESH-02f** map-tab connection center, hermetic (`:1367` route-blocked before goto) — sub-tab switching, `mpParseServerList` txt/JSON/garbage, `_mpBlacklisted` matrix + row-filter + `mpJoin` refusal, D4 `_mdHostApproved` + auto-load gating, via `window.__mesh02` | 8 tests |
 | `src/tests/integration/dx02cm-la-riva-completion-fence.test.js` | **§DX-02cm** the completion fence — drives the real `storyCheckQuests` at `CDG`/`TLS`/`SSJ`/`LHR` (stays active, pays nothing) and at `AMS` (all six effects once); verified non-vacuous by removing `atNode` and seeing it red | 4 tests |
+| `src/tests/integration/dx02gk-mission-bits.test.js` | **§DX-02gk** the ending scorer reads the act table — `MISSION_ACT_BITS` and `DEAR_FRIEND_BITS` name the same six NPCs, `_missionBits()` spells none of the six predicates, and at the 7-of-12 boundary one act flips both `DEAR_FRIEND_BITS[k]()` and `_missionComplete()` together | 8 tests |
 | `src/tests/integration/dx02fb-crov-favor-ceiling.test.js` | **§DX-02fb** the `crov` favor ceiling — drives `storyCheckQuests` (not a planted ledger value) to prove `quest_pit_training`'s `add:2` reaches 3 from every prior level, and that `_checkFrobergerTrace('crov')` + `weckmann_class` both fire | 5 tests |
 | `src/tests/integration/quest-runtime-uqf.test.js` | **§ARCH-01** UQF runtime (canActivate/canComplete/execBits, wave-by-wave parity, census pins) + **§MATH-01** completions (shapes, HKG-pocket node cells, same-visit collect completion, atNode hold) | 303 tests |
 
@@ -642,7 +643,7 @@ All 54 source books are marked `[x]` in `books.md` — all have been processed t
 | `S_story.ebReturnsCompleted` | object | ebCode → true; set on EB return quest completion |
 | `S_story.ebNegotiatedPayments` | object | ebCode → gold accepted |
 | `S_story.npcFavorability` | object | npcKey → 0/1/2/3. Raised only by `_setNpcFavor@23463`, which is monotonic |
-| `S_story.dearFriendGranted` | object | npcKey → true once `_checkDearFriendUpgrade@23483` has paid the Friendly→Dear-Friend `+1`. `DEAR_FRIEND_BITS@23463` names the second personal act per NPC; the check runs where each act is recorded, so either ordering earns it (§DX-02gb) |
+| `S_story.dearFriendGranted` | object | npcKey → true once `_checkDearFriendUpgrade@23483` has paid the Friendly→Dear-Friend `+1`. `DEAR_FRIEND_BITS@23463` names the second personal act per NPC; the check runs where each act is recorded, so either ordering earns it (§DX-02gb). `_missionBits@23649` reads the same table for 6 of the ending's 12 bits, relabelled through `MISSION_ACT_BITS@23639` (§DX-02gk) |
 | `S_story.npcTalk` | object | npcKey → `{count,lastDay}`: §NPC-01-D Talk progress to Friendly (once/day) |
 | `S_story.roughWhiskeyUsed` | boolean | true after drunk pit fight event fires |
 | `S_story.yaelEscortUsed` | boolean | true after one-time escort narration fires |
