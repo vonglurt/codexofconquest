@@ -7,6 +7,40 @@
 
 ---
 
+## Archived 2026-08-25 — §DX-02hm (one port pair per worker: the presence spec could not be run twice at once)
+
+### §DX-02hm — two module-constant ports made every extra Playwright worker a stowaway on the first worker's server ✅ SHIPPED 2026-08-25 `SHA`
+
+**The row, as filed:**
+
+### §DX-02hm — a multi-worker run of `multiplayer-presence.test.js` silently drops tests on two hardcoded ports (NEW 2026-08-25 during §DX-02hb, 🟢 no design call)
+
+- [x] **§DX-02hm — `npx playwright test multiplayer-presence --repeat-each=4` reported `17 passed` and EXIT=0 where 28 tests were expected.** `MP_PORT = 13891` / `TRK_PORT = 13892` are module constants, and `beforeAll` spawns both servers with `stdio: 'ignore'`. With more than one worker, the second worker's spawn hits `EADDRINUSE`, dies unheard, and its tests never report. **Measured at `378f95f`:** `--repeat-each=4` alone → **17 passed, EXIT=0**; the same command with `--workers=1` → **28 passed, EXIT=0**. A normal `npm test` gives one file to one worker, so the suite is not affected today — but the failure mode is a *green run that ran 11 fewer tests*, which is the same class of untrustworthy green §DX-02hb was filed about.
+> **Fix:** derive both ports from `test.info().parallelIndex` (or `process.env.TEST_WORKER_INDEX`), so each worker gets its own pair; alternatively bind port 0 and read the assigned port back. The `PEERS_CACHE_FILE` paths in `os.tmpdir()` are shared the same way and need the same suffix.
+> **Provenance:** §DX-02hb, on trying to run the mesh file under repetition to reproduce the flake.
+
+**The row's headline number no longer holds at HEAD, and grounding it came first.** The row measured `--repeat-each=4` at `378f95f` as **`17 passed, EXIT=0`** — 11 tests vanishing into a green run. **Re-measured at `3c0e9f7`: `14 failed / 14 passed`, EXIT≠0, 28 tests reported.** The change is §DX-02hb's, one commit earlier: `test.describe.configure({ retries: 0 })` on the `§MESH-01a` block. Under `retries: 1` the colliding workers' tests were retried into a different worker slot and the run reported a truncated green; with retries off they report as red. So the *silent* half of "silently drops tests" was already closed by the previous row — what remained, and what this row fixes, is that **the file simply cannot be run by more than one worker at all.**
+
+**The cause, unchanged from the row.** `MP_PORT = 13891` / `TRK_PORT = 13892` were module constants, and `beforeAll` spawns both servers with `stdio: 'ignore'`. Worker 0 binds; every other worker's spawn dies of `EADDRINUSE` **unheard**, its `beforeAll` poll then succeeds anyway — because worker 0's server is answering on that port — and its tests proceed against a stranger's server, whose `afterEach` session sweep is racing theirs. The `PEERS_CACHE_FILE` paths in `os.tmpdir()` were shared the same way.
+
+**What shipped:**
+
+1. **A port pair per worker** — `const WORKER = Number(process.env.TEST_PARALLEL_INDEX || 0)`, then `MP_PORT = 13891 + WORKER * 2` and `TRK_PORT = 13892 + WORKER * 2`. `TEST_PARALLEL_INDEX` is Playwright's 0-based worker slot, so concurrent workers never collide and sequential ones reuse the slot harmlessly. Both `PEERS_CACHE_FILE` paths take the same `-${WORKER}` suffix.
+2. **The spawn no longer dies unheard** — `exit` and `error` listeners on both children record what happened, and the `beforeAll` timeout error now names the worker and the cause (`server exited early (code=1, signal=null)`) instead of only naming a port. That is the half of the defect that made the first failure unreadable.
+
+**Verified — the row's own command, before and after:**
+
+| | result | exit | wall |
+|---|---|---:|---:|
+| at `3c0e9f7` | **14 failed / 14 passed** | ≠0 | 1.0m |
+| after | **28 passed** | **0** | **30.7s** |
+
+The wall time is the second half of the proof: the file went from serialised-and-broken to genuinely parallel.
+
+**Gates, foreground and unpiped:** `./bin/api audit` → `ok: true`, `errors: []` (48 warnings, 502 suggestions, all pre-existing); `npm run check:walk --prefix src` → **`✓ 17/17 gates green · wall 23.4s`**; `npm test --prefix src` (server stopped) → **`1033 passed`, EXIT=0**.
+
+---
+
 ## Archived 2026-08-25 — §DX-02hb (the flake that was never diagnosed, because the suite threw the evidence away)
 
 ### §DX-02hb — the two-client presence spec's one non-retrying assertion, and the retry that reported it as green ✅ SHIPPED 2026-08-25 `cb5e23a`

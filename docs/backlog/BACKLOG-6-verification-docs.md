@@ -45,11 +45,13 @@
 
 
 
-### §DX-02hm — a multi-worker run of `multiplayer-presence.test.js` silently drops tests on two hardcoded ports (NEW 2026-08-25 during §DX-02hb, 🟢 no design call)
+### §DX-02hp — `design/index.md`'s test table says `multiplayer-presence.test.js` has 2 tests and it has 7 (NEW 2026-08-25 during §DX-02hm, 🟢 no design call)
 
-- [ ] **§DX-02hm — `npx playwright test multiplayer-presence --repeat-each=4` reported `17 passed` and EXIT=0 where 28 tests were expected.** `MP_PORT = 13891` / `TRK_PORT = 13892` are module constants, and `beforeAll` spawns both servers with `stdio: 'ignore'`. With more than one worker, the second worker's spawn hits `EADDRINUSE`, dies unheard, and its tests never report. **Measured at `378f95f`:** `--repeat-each=4` alone → **17 passed, EXIT=0**; the same command with `--workers=1` → **28 passed, EXIT=0**. A normal `npm test` gives one file to one worker, so the suite is not affected today — but the failure mode is a *green run that ran 11 fewer tests*, which is the same class of untrustworthy green §DX-02hb was filed about.
-> **Fix:** derive both ports from `test.info().parallelIndex` (or `process.env.TEST_WORKER_INDEX`), so each worker gets its own pair; alternatively bind port 0 and read the assigned port back. The `PEERS_CACHE_FILE` paths in `os.tmpdir()` are shared the same way and need the same suffix.
-> **Provenance:** §DX-02hb, on trying to run the mesh file under repetition to reproduce the flake.
+- [ ] **§DX-02hp — the sixth measured instance of the §DX-02gs shape: a table states a count, the collection holds another.** **Measured at `3c0e9f7`:** `docs/design/index.md:223` describes `src/tests/integration/multiplayer-presence.test.js` as **`2 tests`**; the file declares **7** (`grep -c "^  test(" src/tests/integration/multiplayer-presence.test.js`), and §DX-02hm's `--repeat-each=4` run reports **28**. The description beside it names four behaviours (connect/"Also here:"/SSE chat/player_left) and omits the three `§MESH-01-FU` specs that shipped after it — magnet-join via tracker, pid-keyed leave, remote minimap movement, session auto-resume, dead-session fallback.
+> **Why it is worth a row:** this is the read-before-every-row doc, and the column it is wrong in is the one a reader uses to decide whether a subsystem is covered. Two is the number that was true when the row that wrote the line closed.
+> **Fix:** correct the count and widen the description to the seven specs actually in the file. **Check the whole column while there** — if this cell went stale by tests being added under it, its neighbours did too; the count is `grep -c "^  test("` per file and it is cheap to run across the table.
+> **Verify:** every `N tests` cell in that table equals its file's `test(` count.
+> **Provenance:** §DX-02hm, reading the file's own test count to size the `--repeat-each` expectation.
 
 ### §DX-02hn — `multiplayer-presence.test.js` line 1 is a stray `require` sitting above the SPDX header (NEW 2026-08-25 during §DX-02hb, 🟢 no design call, one line)
 
