@@ -73,7 +73,7 @@ codexofconquest/
 ├── build/                  GITIGNORED — generated + runtime output
 │   ├── test-results/       Playwright artifacts
 │   ├── playwright-report/
-│   ├── milepoints/         say-daemon queue, server logs, patch store
+│   ├── milepoints/         say-daemon queue, server logs, patch store, config (all generated)
 │   └── ledger/             per-deployment economy ledger
 │
 └── vendor/                 GITIGNORED — working material, never published
@@ -275,7 +275,7 @@ All finished §* items. Open/planned items live in `BACKLOG.md`.
 
 | Location | Contents |
 |----------|---------|
-| `milepoints/` | Curated milestone builds (e.g., `play-20260602-174751.html`) |
+| `build/milepoints/` | **Runtime scratch, not milestone builds** — the name predates the contents. Measured 2026-08-25: `patches/` (45 entries: `_base.html.gz` + the delta chain `monitor-snapshots.py` writes), `archive/` (20 `cleanup-*.tar.gz`), the say-daemon set (`say.lock`/`say.log`/`say.queue.d`/`say.seq`), `wbapi-server.log`, `api-cli.log`, `npc-speak.log`, `wbapi-config.json` (live `POST /api/mode` state), and dated `heatmap-*`/`reweave-maps-*` dumps. **All of it generated and gitignored:** the server creates the directory on start (§DX-02hi — before that guard, a fresh clone could not start it), so deleting `build/` is always safe and is how the cold-start path gets tested. |
 | `play-*.html` (root) | Dated snapshots, gitignored, consumed by `monitor-snapshots.py` → `milepoints/patches/`. **Produced on request only (§DX-02k, 2026-08-03):** a deliberate `cp` or `./api.sh save`. Until then the server stamped one **per successful write** and never swept it — 6 files / ~32 MB were sitting in the root when this was found. `WBAPI.save()` now refuses without a destination; `saveStamped()` is the backup, `saveGameFile()` (temp + atomic rename) is the per-write persist. **They are gitignored, so `./api.sh snapshots` is the only thing that reports them (§DX-02l, 2026-08-03)** — `--sweep` deletes those the `milepoints/patches` chain already holds, `--force` discards the rest |
 
 ### 1367-Sources
