@@ -9,7 +9,7 @@
 
 ## Archived 2026-08-25 — §FUTURE-01-FU2 (the arc's first mission card, and the quest that had already answered the question)
 
-### §FUTURE-01-FU2 — the arc's first mission card addressed the player as Saul ✅ SHIPPED 2026-08-25
+### §FUTURE-01-FU2 — the arc's first mission card addressed the player as Saul ✅ SHIPPED 2026-08-25 `7a47700`
 
 **The row, as filed:**
 
