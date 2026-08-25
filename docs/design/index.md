@@ -584,7 +584,7 @@ All 54 source books are marked `[x]` in `books.md` — all have been processed t
 | `CONDITION_ADV` | Adv/DIS modifier keyed by lowercase-underscore condition name |
 | `WORLD_DB` | 66 terrain entries (46 base + 20 epic); each has `monsters: []` with full stat blocks |
 | `MONSTER_POOL` | 398 monsters across 8 source pools; keyed by monster key string |
-| `MONSTER_DROPS` | Trophy drop per monster key. **Two shapes:** 386 keys are one object `{name, icon, sell}`; **13 are a weighted array** of `{name, icon, sell, weight}` (`void_shaman`, `rabid_dog`, and 11 farmyard/urban animals). `battKillEvent` reads both via `Array.isArray`. `PUT …/drop` writes at source level through `WBAPI.replaceEntrySource` and refuses a weighted table (§DX-02hc); the GET route's log line still assumes the object shape (§DX-02hd). |
+| `MONSTER_DROPS` | Trophy drop per monster key. **Two shapes:** 386 keys are one object `{name, icon, sell}`; **13 are a weighted array** of `{name, icon, sell, weight}` (`void_shaman`, `rabid_dog`, and 11 farmyard/urban animals). `battKillEvent` reads both via `Array.isArray`. `PUT …/drop` writes at source level through `WBAPI.replaceEntrySource` and refuses a weighted table (§DX-02hc); both read paths log through the shared `dropLogLine` formatter, which names the table and its entries (§DX-02hd). |
 | `EPIC_BOSS_POOL` | 20 deadly-tier bosses keyed by slug; AC/HP/ATK/dmg/epicDesc |
 | `EB_NPC_DIALOGUE` | 20 quest-giver NPC profiles; payment negotiation, return beat, specialItem |
 | `EB_STORY_ITEMS` | 11 special non-gold EB rewards: Forge Rune, Runic Hammer, Star Fragment, etc. |

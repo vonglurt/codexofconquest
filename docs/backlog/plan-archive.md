@@ -7,6 +7,56 @@
 
 ---
 
+## Archived 2026-08-25 — §DX-02hd (the last symptom of the two-shapes blindness, and there were two readers, not one)
+
+### §DX-02hd — the drop log line printed `undefined  ·  0gp` for a weighted table ✅ SHIPPED 2026-08-25
+
+**The row, as filed:**
+
+### §DX-02hd — the drop log line prints `undefined` for the 13 weighted tables (NEW 2026-08-25 during §DX-02hc, 🟢 no design call)
+
+- [ ] **§DX-02hd — `GET /api/monster/:key/drop` logs `undefined undefined · 0gp` for an array-form drop.** **Measured at `1233a1a`:** the route's `logRow` is `` `${drop.icon||''}  ${drop.name}  ·  ${drop.sell||0}gp` `` (`wbapi-server.js@10756`). `MONSTER_DROPS` carries **two** shapes — 386 single objects, and **13 weighted arrays** (`void_shaman`, `rabid_dog`, and 11 farmyard/urban animals) — and an array has no `.icon`/`.name`/`.sell`. **The JSON response is correct** (`drop` is the whole array); only the operator-facing log lies.
+> **Re-derive:** `./bin/api get monster void_shaman` shows the four entries; the server's own terminal line for the same request shows `undefined`.
+> **Fix:** branch on `Array.isArray` in the `logRow`, e.g. `` `weighted table ×${drop.length}  ·  ${drop.map(e=>e.name).join(', ')}` ``. One line. The same check §DX-02hc added to the PUT route.
+> **Why it is worth a row rather than an inline fix:** it is the **cosmetic end of the same blindness** that produced §DX-02ha's false measurement and §DX-02hc's silent corruption — a reader that knows one of two shapes. Three symptoms, one cause, and this is the last one found.
+> **Provenance:** §DX-02hc, reading all four `monster/:key/drop` routes to see which others assumed the object shape. GET was the only one left.
+
+**The ground confirmed the row and widened it by one call site.** Measured at `e8c3317`, with the server running and the log captured:
+
+```
+GET   monster/void_shaman/drop
+  ├─  drop:   undefined  ·  0gp          ← the row's site, wbapi-server.js@10756
+  └─  200  drop/void_shaman
+
+GET   monster/void_shaman
+  ├─  terrains+quests: 1 terrains · 0 quest refs ·  drop: undefined
+  └─  200  monster/void_shaman           ← a SECOND site, wbapi-server.js@10867
+```
+
+The row named one reader. There were **two**: the `/drop` route and the `get monster` entity summary, which appends `' ·  drop: '+drop.name`. Same one-shape template, same lie, and the second one is the line an operator actually reads most, because `get monster` is the first command run on any monster. Fixing only the named site would have left the more-travelled reader wrong.
+
+**Shipped:** one shared formatter, `dropLogLine(drop)` (`wbapi-server.js`, beside `serializeDropLiteral`), and **both** readers call it. The array branch prints `weighted table ×4  ·  Void Ichor Vial, Warden Sigil Shard, Nullstone Bead, Cracked Void Staff`; the object branch is byte-for-byte the old template, so the 386 single trophies log exactly as before. The comment above it states the two shapes and their counts, so the next reader added does not have to rediscover them.
+
+**Measured after, same three requests:**
+
+```
+GET   monster/void_shaman/drop   →  drop: weighted table ×4  ·  Void Ichor Vial, Warden Sigil Shard, Nullstone Bead, Cracked Void Staff
+GET   monster/taz_devil/drop     →  drop: 🌀  Furball Crown  ·  18gp          ← object shape unchanged
+GET   monster/void_shaman        →  … ·  drop: weighted table ×4  ·  Void Ichor Vial, …
+```
+
+**No world-data change.** `play.html` is untouched; this row is entirely in the operator-facing surface of the server.
+
+**Regression test — `src/tests/integration/dx02hd-drop-log-line.test.js`, 4 cases**, pure-node: the helper is lifted out of the server source text and evaluated, so no server starts and `play.html` is never read for writing. Pins: the array branch names the size and every entry and contains no `undefined`; the object branch is exact; a trophy missing `icon`/`sell` still degrades to `0gp` without `undefined`; and **both** call sites go through the helper, with the one-shape template surviving in **exactly one** place — inside `dropLogLine` — so a third reader cannot be added with an inline copy.
+
+**Non-vacuous by mutation:** with `src/js/wbapi-server.js` stashed, **4 of 4 fail**.
+
+**Verified:** `./bin/api audit` errors **0**; `npm run check:walk --prefix src` **18 gates, EXIT=0**; `npm test` **1033 passed, EXIT=0**, server stopped — 1029 before, plus these 4. An earlier run of the same suite went **1032 passed / 1 flaky** on `multiplayer-presence.test.js:174` — **the first reproduction of §DX-02hb**, which had gone three clean suites unseen; the row stays open with that pointer added.
+
+**Three symptoms, one cause, now all closed.** §DX-02ha was the false measurement (a grep that knew one shape reported a false absence), §DX-02hc the silent corruption (a write path that knew one shape), and §DX-02hd the log that knew one shape. The cause was never the drop data; it was that `MONSTER_DROPS` publishes two literal shapes and nothing in the tooling said so out loud. `dropLogLine`'s comment now does.
+
+---
+
 ## Archived 2026-08-25 — §DX-02hc (the third member of a family the repo had already closed twice)
 
 ### §DX-02hc — `PUT /api/monster/:key/drop` reported success without persisting ✅ SHIPPED 2026-08-25

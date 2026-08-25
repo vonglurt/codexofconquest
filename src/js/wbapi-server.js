@@ -1754,6 +1754,15 @@ function serializeTerrainLiteral(key, body) {
 // no dmgDie/dmgCount/dmgFlat, and `tier` through Number() → `tier:NaN`. The live shape
 // and its validation now live in WBAPI.monsters.serialize / .validate / .create.
 
+// §DX-02hd — MONSTER_DROPS carries two shapes: 386 single trophies and 13 weighted
+// tables (arrays). A log line that knows only the object shape prints
+// "undefined  ·  0gp" for the other 13. Both drop readers format through here.
+function dropLogLine(drop) {
+  if (Array.isArray(drop))
+    return `weighted table \u00d7${drop.length}  ·  ${drop.map(e => e.name).join(', ')}`;
+  return `${drop.icon||''}  ${drop.name}  ·  ${drop.sell||0}gp`;
+}
+
 function serializeDropLiteral(key, body) {
   return `  ${key}: { icon:${JSON.stringify(body.icon||'📦')}, name:${JSON.stringify(body.name)}, sell:${Number(body.sell||0)} },\n`;
 }
@@ -10753,7 +10762,7 @@ async function route(req, res) {
         logResponse(method, url.pathname, 404, `no drop for monster "${key}"`);
         return json(res, 404, { error:`No MONSTER_DROPS entry for "${key}". Create one with POST /api/monster/${key}/drop` });
       }
-      logRow('drop', `${drop.icon||''}  ${drop.name}  ·  ${drop.sell||0}gp`);
+      logRow('drop', dropLogLine(drop));
       logResponse(method, url.pathname, 200, `drop/${key}`);
       return json(res, 200, { ok:true, key, drop });
     }
@@ -10864,7 +10873,7 @@ async function route(req, res) {
           `GET /api/list/monster?tier=${ent.tier||''}`,
         ];
         logRow('entity', `${ent.name||key}  ·  AC ${ent.ac}  HP ${ent.hp}  ATK +${ent.atk}  tier: ${ent.tier||'?'}`);
-        logRow('terrains+quests', `${(r.connections?.terrains||[]).length} terrains  ·  ${questsWithMon.length} quest refs${drop?' ·  drop: '+drop.name:''}`);
+        logRow('terrains+quests', `${(r.connections?.terrains||[]).length} terrains  ·  ${questsWithMon.length} quest refs${drop?' ·  drop: '+dropLogLine(drop):''}`);
 
       } else if (type === 'npc') {
         // Full node details

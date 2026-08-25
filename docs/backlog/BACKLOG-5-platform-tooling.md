@@ -45,17 +45,6 @@
 ---
 ## §BACKLOG — Open Items (Phase 5)
 
-### §DX-02hd — the drop log line prints `undefined` for the 13 weighted tables (NEW 2026-08-25 during §DX-02hc, 🟢 no design call)
-
-- [ ] **§DX-02hd — `GET /api/monster/:key/drop` logs `undefined undefined · 0gp` for an array-form drop.** **Measured at `1233a1a`:** the route's `logRow` is `` `${drop.icon||''}  ${drop.name}  ·  ${drop.sell||0}gp` `` (`wbapi-server.js@10756`). `MONSTER_DROPS` carries **two** shapes — 386 single objects, and **13 weighted arrays** (`void_shaman`, `rabid_dog`, and 11 farmyard/urban animals) — and an array has no `.icon`/`.name`/`.sell`. **The JSON response is correct** (`drop` is the whole array); only the operator-facing log lies.
-> **Re-derive:** `./bin/api get monster void_shaman` shows the four entries; the server's own terminal line for the same request shows `undefined`.
-> **Fix:** branch on `Array.isArray` in the `logRow`, e.g. `` `weighted table ×${drop.length}  ·  ${drop.map(e=>e.name).join(', ')}` ``. One line. The same check §DX-02hc added to the PUT route.
-> **Why it is worth a row rather than an inline fix:** it is the **cosmetic end of the same blindness** that produced §DX-02ha's false measurement and §DX-02hc's silent corruption — a reader that knows one of two shapes. Three symptoms, one cause, and this is the last one found.
-> **Provenance:** §DX-02hc, reading all four `monster/:key/drop` routes to see which others assumed the object shape. GET was the only one left.
-
-
-
-
 ### §DX-02gy — `put monster` accepts field names it does not know, writes them onto the pool row, and reports `verified: ok` (NEW 2026-08-25 during §DX-02fy, 🟢 no design call)
 
 - [ ] **§DX-02gy — the write path has no field whitelist, so a typo becomes an inert field with a green receipt.** **Reproduced at `ebf6863`:** `./bin/api put monster desert_wanderer dropName="Sun-Bleached Waterskin" dropIcon="🧪" dropSell=16` returned `"ok": true` with `verified: [{field:"dropName",ok:true},{field:"dropIcon",ok:true}]` and appended all three to the **`MONSTER_POOL`** row. `grep -c dropName play.html` = **1** — the line the API had just written. **Nothing in the engine reads any of them.** The correct field is `drop` (declared `{ section:'MONSTER_DROPS' }` in the field schema at `wbapi-server.js:1310`), and `put monster … drop='{…}'` **also** wrote it onto the pool row rather than into `MONSTER_DROPS` — `put` ignores the schema's `section` and appends every key to the entity's own literal.
