@@ -7,6 +7,25 @@
 
 ---
 
+## Archived 2026-08-25 — §DX-02hn (the licence header that spent two days on line 2)
+
+### §DX-02hn — one displaced line, and the sweep its provenance note asked for ✅ SHIPPED 2026-08-25 `SHA_HN`
+
+**The row, as filed:**
+
+### §DX-02hn — `multiplayer-presence.test.js` line 1 is a stray `require` sitting above the SPDX header (NEW 2026-08-25 during §DX-02hb, 🟢 no design call, one line)
+
+- [x] **§DX-02hn — the same prepend that broke `mud-harness.mjs` also landed here, where CommonJS hid it.** Line 1 is `` `const path = require('path');` ``, above the `SPDX-License-Identifier` comment and the `'use strict'` pragma; `path` is used at `ROOT` on line 19. In `mud-harness.mjs` the identical prepend was a hard `SyntaxError` (§DX-02hi, fault 3) because that file is ESM with a shebang. Here it merely displaces the licence header from line 1 and duplicates nothing — no gate sees it. **Fix:** delete line 1 and add `const path = require('path');` to the require block beside `child_process`, restoring SPDX to line 1.
+> **Provenance:** §DX-02hb, reading the file to ground the flake. Same commit family as §DX-02hi's fault 3 — worth checking whether any third file took the same prepend.
+
+**Shipped exactly as written.** Line 1's `const path = require('path');` is deleted and `path` joins the require block beside `child_process`, restoring `SPDX-License-Identifier` to line 1 above `'use strict'`. **Verified:** `head -1` is the licence line; `multiplayer-presence --repeat-each=2` → **14 passed**.
+
+**The provenance note asked whether a third file took the same prepend, and that sweep was run rather than skipped.** All **136** tracked `*.js`/`*.mjs` files, testing for *line 1 is a `require`/`import` while `SPDX` sits below it*: **exactly one hit, this file.** So the class is closed at HEAD — `mud-harness.mjs` (§DX-02hi fault 3) and this were the only two.
+
+**What the sweep also established is that nothing would have caught either of them**, which is the part worth keeping: the identical prepend was a hard `SyntaxError` costing **72 red CI runs** in the ESM file and completely silent in the CommonJS one. Filed as **§DX-02hs** — a `check:spdx` gate, in the shape of `check:legacycodes`, so the cheap-and-silent version of this cannot hide again.
+
+---
+
 ## Archived 2026-08-25 — §DX-02hp (the Count column was remembered, not measured — five of eleven cells wrong)
 
 ### §DX-02hp — a test-coverage table where nearly half the counts were the number that was true when someone last looked ✅ SHIPPED 2026-08-25 `2d186cd`

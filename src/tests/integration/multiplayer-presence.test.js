@@ -1,4 +1,3 @@
-const path = require('path');
 // SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson
 'use strict';
 // §MESH-01a — two-browser presence smoke: the REAL client flow end-to-end.
@@ -8,6 +7,7 @@ const path = require('path');
 // departure. Multiplayer stays strictly opt-in — a page that never clicks 🌐
 // is asserted to keep MP off.
 const { test, expect } = require('@playwright/test');
+const path = require('path');
 const { spawn } = require('child_process');
 const { seedAndLoad, dismissContinue, workerPorts, watchChildren } = require('./helpers');
 

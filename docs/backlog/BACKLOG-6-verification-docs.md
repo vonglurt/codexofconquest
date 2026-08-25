@@ -45,6 +45,14 @@
 
 
 
+### §DX-02hs — no gate asserts that `SPDX-License-Identifier` is on line 1, and the class has now landed twice (NEW 2026-08-25 during §DX-02hn, 🟢 no design call)
+
+- [ ] **§DX-02hs — the licence header is a legal marker with no check behind it.** The same stray-`require`-above-the-header prepend hit **`mud-harness.mjs`** (§DX-02hi fault 3, where it was a hard `SyntaxError` and cost a CI job **72 red runs**) and **`multiplayer-presence.test.js`** (§DX-02hn, where CommonJS swallowed it and **no gate saw it for two days**). **Measured at `78508e4`:** a sweep of all **136** tracked `*.js`/`*.mjs` files found exactly **1** survivor, now fixed — so the repo is clean today and nothing enforces that it stays so.
+> **Why it is worth a row and not a shrug:** the two sightings had wildly different blast radii (a silent header displacement vs. a job red for 72 commits) from an identical cause, and the cheap sighting is the one that hides. `check:walk` gate #16 `check:legacycodes` is the precedent for a one-file-per-line textual sweep.
+> **Fix:** a `check:spdx` gate — for every tracked `*.js`/`*.mjs`/`*.sh`, assert `SPDX-License-Identifier` appears on line 1, or line 2 where line 1 is a shebang. Ship it with a `--selftest` that plants a displaced header and a missing one, as every other gate in the chain does.
+> **Verify:** the gate is red on a planted prepend and green at HEAD; `check:walk` reports 18/18.
+> **Provenance:** §DX-02hn, running the sweep its own provenance note asked for (*"worth checking whether any third file took the same prepend"*).
+
 ### §DX-02hr — 72% of every test's time is Chromium re-parsing the same 5.3 MB `play.html` (NEW 2026-08-25 during §DX-02hq, 🟡 ONE DESIGN CALL: is a reused page still an honest test)
 
 - [ ] **§DX-02hr — the suite's remaining cost is not parallelism, it is that each of ~1000 tests loads the whole game from cold.** **Measured at `b0c236d`** with a probe spec (`seedAndLoad` timed against a bare `page.evaluate`): **`seedAndLoad` = 326 ms, a subsequent `evaluate` = 7 ms**, against a typical `quest-runtime-uqf` test of ~450 ms. `play.html` is **5.3 MB** and Playwright's `{ page }` fixture is a fresh context per test, so the cache is cold every time: the suite performs **~649 `page.goto`/`seedAndLoad` calls** and pays a full parse for each. §DX-02hq took the free 24% (7.4m → 5.6m) by running tests inside a file concurrently; **the next 30–40% is here, and it is not free.**
@@ -52,11 +60,6 @@
 > **The design call:** a worker-scoped page that is loaded once and **re-seeded** per test instead of reloaded would skip the parse, but it trades away the property that makes these tests trustworthy — every test currently starts from a genuinely fresh engine, and a leaked global would be invisible. That is the same class of untrustworthy green as §DX-02hb and §DX-02hm. **Options:** (a) opt-in only, for the read-only assertion clusters in `quest-runtime-uqf.test.js` that never mutate `S_story`; (b) a reused page plus a hard reset assertion in `afterEach` that fails if any known global drifted; (c) leave it, and treat 5.6m as the price of a cold start per test.
 > **Recommendation: (a).** It is bounded to the file that is 303 of the 1033 tests, the read-only clusters are identifiable (they call `page.evaluate` against `validateQuest`/`adaptLegacyQuest`/`canActivate` without touching state), and it leaves every stateful test on the cold path it has today.
 > **Provenance:** §DX-02hq, sizing where the suite's wall time actually goes after the parallelism was fixed.
-
-### §DX-02hn — `multiplayer-presence.test.js` line 1 is a stray `require` sitting above the SPDX header (NEW 2026-08-25 during §DX-02hb, 🟢 no design call, one line)
-
-- [ ] **§DX-02hn — the same prepend that broke `mud-harness.mjs` also landed here, where CommonJS hid it.** Line 1 is `` `const path = require('path');` ``, above the `SPDX-License-Identifier` comment and the `'use strict'` pragma; `path` is used at `ROOT` on line 19. In `mud-harness.mjs` the identical prepend was a hard `SyntaxError` (§DX-02hi, fault 3) because that file is ESM with a shebang. Here it merely displaces the licence header from line 1 and duplicates nothing — no gate sees it. **Fix:** delete line 1 and add `const path = require('path');` to the require block beside `child_process`, restoring SPDX to line 1.
-> **Provenance:** §DX-02hb, reading the file to ground the flake. Same commit family as §DX-02hi's fault 3 — worth checking whether any third file took the same prepend.
 
 ### §DX-02hj — the `r2h → coc` rename reached the harness and not the wire (NEW 2026-08-25 during §DX-02hi, 🟡 ONE DESIGN CALL: rename the headers or keep them)
 
