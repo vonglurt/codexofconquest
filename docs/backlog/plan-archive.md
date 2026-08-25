@@ -7,6 +7,65 @@
 
 ---
 
+## Archived 2026-08-25 — §DX-02hc (the third member of a family the repo had already closed twice)
+
+### §DX-02hc — `PUT /api/monster/:key/drop` reported success without persisting ✅ SHIPPED 2026-08-25
+
+**The row, as filed:**
+
+### §DX-02hc — `MONSTER_DROPS` has two shapes and the write path knows only one (NEW 2026-08-25 during §DX-02ha, 🟢 no design call)
+
+- [ ] **§DX-02hc — `PUT /api/monster/:key/drop` corrupts a weighted-array drop and reports `ok:true`.** **Measured at `5a6b165`:** `MONSTER_DROPS` carries **two** entry shapes. **386** keys are a single object `{icon,name,sell}`; **13** are a weighted array of `{icon,name,sell,weight}` — `void_shaman@5853`, `rabid_dog@5860`, `aggressive_turkey@5865`, `horned_goat@5870`, `toilet_leech@5876`, `honeybucket_spider@5881`, `cockroach_swarm@5886`, `skittish_sheep@5891`, `swarming_wasps@5897`, `night_owl@5902`, `raging_bull@5908`, `spooked_horse@5914`, `catnabbing_eagle@5920`. **The engine reads both** — `battKillEvent@7051` does `Array.isArray(_rawDrop) ? _pickDrop(_rawDrop) : _rawDrop`. **The write path reads only the first:** `wbapi-server.js:10930` is `Object.assign(WBAPI.monsterDrops[key], body)`, and against an array that sets `.name` / `.sell` / `.icon` as **non-index properties** — invisible to `JSON.stringify`, invisible to `_pickDrop`, and never read by anything.
+> **Proven non-vacuously, not asserted.** `./bin/api drop void_shaman name="ZZZ-probe" sell=1 icon=❓ --update` returned **`ok:true`** and echoed the **four original entries unchanged**. `grep -c ZZZ-probe play.html` = **0**. The probe was PUT-only (in-memory), never `/api/save`d, and discarded by restarting the server.
+> **This is the §DX-02gy family:** the mandated write path reports success for a field nothing reads. It is worse here than in §DX-02gy, because the author's *intent* was to change an existing drop and the API told them it had.
+> **Fix:** branch on `Array.isArray` in the PUT route. Minimum viable is to **refuse** — `400 "drop for X is a weighted table (4 entries); use POST .../drop/:index or --replace-table"` — which is honest and cheap. Better is to teach the verb the array shape, since `./bin/api drop` cannot **create** one either (`wb.js:466` requires a scalar `name=`). Also `wbapi-server.js:1310` documents `drop` as `{icon,name,sell}` only and never mentions the array form, so the schema the API publishes about itself is wrong for 13 of 399 monsters.
+> **Provenance:** §DX-02ha, on grounding *"`void_shaman` has no drop"* — it has four, in the shape the row's measurement could not see.
+
+**The ground disproved the row — in the direction of worse.** The row said the route *corrupts weighted-array drops*, scoping the defect to **13 of 399** monsters. Grounding it found the corruption is the **second** defect on that route, and the first one is much larger.
+
+**Measured live at `1233a1a`, on an object-form drop — the shape the row considered safe:**
+
+```
+./bin/api drop taz_devil name="Furball Crown" sell=19 icon=🌀 --update
+  →  { "ok": true, "drop": { "name":"Furball Crown", "icon":"🌀", "sell":19 } }
+grep taz_devil play.html   →   sell:18
+./bin/api save             →   ✓ primary … ✓ backup (5.3 MB)
+grep taz_devil play.html   →   sell:18          ← unchanged
+git status --short play.html →  (clean, byte-identical)
+```
+
+**The route never persisted for ANY of the 399 drops.** Its whole body was `Object.assign(WBAPI.monsterDrops[key], body)` — an in-memory mutation — and `save()` writes the patched `_rawSrc`, which the route never touched. The response's own `note` said *"POST /api/save to persist"*, and **saving did not rescue it**: the escape hatch the API documented for itself does not exist.
+
+**This is the third member of a family this repo has already closed twice.** `wbapi-core.js:1556` states the lesson in full, about the DELETE family: *"a write path that reports success without persisting … the failure is silent because nothing ever throws."* §DX-01c was the create half, §DX-01d/i the delete half. **The update half was still open, and nothing had looked.**
+
+**Shipped, two parts.**
+
+**1. The missing primitive.** `WBAPI.replaceEntrySource(section, key, newText)` — `wbapi-core.js`, directly above `deleteNodeSource`. It reuses `deleteEntrySource`'s three proven parts unchanged: section-marker location, the **nested-section clamp** (`MONSTER_DROPS` sits *inside* `MONSTER_POOL`'s anchors, so an unclamped edit reaches into the wrong collection — §DX-01c's *"real-but-wrong object"*), and the **verify-or-revert guard** that diffs the section's top-level key set and refuses rather than write. `entrySpan` is already bracket-aware, so it spans a multi-line array entry as correctly as a one-line object.
+
+**2. The route.** `PUT /api/monster/:key/drop` now merges the body over the existing drop, serializes it with the same `serializeDropLiteral` **POST** already used, writes through `replaceEntrySource`, and terminates in **`saveAndRestart`** — which saves, reloads from disk, and makes the CLI's standing promise (*"you do NOT need to run save after a put/post/del"*, `wb.js:1293`) true for this route for the first time. Against one of the **13** array-form drops it now **refuses with 400**, naming the table size and returning the entries, because a flat `{name,icon,sell}` body cannot address a weighted table.
+
+**Round-tripped from disk, not from the server buffer:**
+
+```
+./bin/api drop taz_devil sell=19 --update
+  → "was": "taz_devil: { name:'Furball Crown', … sell:18 }",  "autoSaved": true
+grep taz_devil play.html  →  taz_devil: { icon:"🌀", name:"Furball Crown", sell:19 }
+./bin/api drop void_shaman name="ZZZ" sell=1 --update
+  → 400  "is a weighted table of 4 entries, not a single trophy"   (+ the 4 entries)
+```
+
+The `taz_devil` probe was a **measurement, not this row's change**, and was reverted with `git checkout play.html`; the row ships **no world-data change**, only the write path.
+
+**Regression test — `src/tests/integration/dx02hc-drop-update-persists.test.js`, 6 cases**, modelled on its sibling `dx01di-delete-persists.test.js` and pure-node against an in-memory copy, so `play.html` is never written. Pins: both shapes exist and the engine reads both; an object-form update **survives save + reload**; a replace touches exactly one entry and leaves the array tables alone; verify-or-revert refuses a key-renaming replacement with the source untouched; `Object.assign` onto a table is demonstrably invisible to every reader; and the route writes at source level and auto-saves.
+
+**Non-vacuous by mutation:** with the two `src/js` files stashed, **5 of the 6 fail**. Only *"the two shapes both exist"* survives, and it is meant to — it pins the shipped data, not the fix.
+
+**Verified:** `./bin/api audit` errors **0**; `npm run check:walk --prefix src` **18 gates, EXIT=0** (`check-battlepools` selftest 5/5); `npm test --prefix src` **1028 passed, EXIT=0**, server stopped — 1023 before, plus these 6, less one renumbered.
+
+**Found en route — §DX-02hd**, filed at the top of Phase 5: `GET /api/monster/:key/drop`'s log line is `${drop.icon} ${drop.name} · ${drop.sell}gp`, which prints `undefined undefined · 0gp` for the 13 array-form drops. The JSON response is correct; only the operator-facing log lies. Same two-shapes blindness, cosmetic end.
+
+---
+
 ## Archived 2026-08-25 — §DX-02ha (the drop that was there all along, in a shape the measurement could not see)
 
 ### §DX-02ha — a set-piece boss drops nothing ✅ CLOSED 2026-08-25 `PREMISE DISPROVED` — no code changed, and that was the increment

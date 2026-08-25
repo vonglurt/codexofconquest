@@ -10927,11 +10927,22 @@ async function route(req, res) {
         logResponse(method, url.pathname, 404, `no drop for "${key}" — create first with POST`);
         return json(res, 404, { error:`No drop for "${key}". Create with POST /api/monster/${key}/drop` });
       }
-      Object.assign(WBAPI.monsterDrops[key], body);
-      if (body.sell !== undefined) WBAPI.monsterDrops[key].sell = Number(body.sell);
-      logRow('updated', `drop › ${key}  →  ${WBAPI.monsterDrops[key].icon||''} ${WBAPI.monsterDrops[key].name}  ·  ${WBAPI.monsterDrops[key].sell}gp`);
+      const existing = WBAPI.monsterDrops[key];
+      if (Array.isArray(existing)) {
+        logResponse(method, url.pathname, 400, `drop for "${key}" is a weighted table`);
+        return json(res, 400, { ok:false,
+          error:`Drop for "${key}" is a weighted table of ${existing.length} entries, not a single trophy. A flat {name,icon,sell} update cannot address it.`,
+          entries: existing,
+          hint:`Edit the table in MONSTER_DROPS via PUT /api/monster/${key}/drop/<index> with {name,icon,sell,weight}.` });
+      }
+      const merged = { ...existing, ...body };
+      if (body.sell !== undefined) merged.sell = Number(body.sell);
+      const rep = WBAPI.replaceEntrySource('MONSTER_DROPS', key, serializeDropLiteral(key, merged));
+      if (!rep.ok) { logResponse(method, url.pathname, 500, rep.error); return json(res, 500, rep); }
+      WBAPI.monsterDrops[key] = merged;
+      logRow('updated', `drop › ${key}  →  ${merged.icon||''} ${merged.name}  ·  ${merged.sell}gp`);
       logResponse(method, url.pathname, 200, `drop/${key} updated`);
-      return json(res, 200, { ok:true, key, drop: WBAPI.monsterDrops[key], note:'PUT only updates in-memory. POST /api/save to persist.' });
+      return saveAndRestart(res, 200, { ok:true, key, drop: merged, was: rep.was });
     }
 
     // PUT /api/npc/:key/dialogue[/{field}[/{index}]]

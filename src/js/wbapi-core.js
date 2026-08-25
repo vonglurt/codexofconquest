@@ -1602,6 +1602,44 @@ const WBAPI = {
     return { ok:true, key, line: line.trim() };
   },
 
+  // Replace ONE entry in a WORLDBUILDER section AT SOURCE LEVEL, so the edit
+  // survives save() (which writes the patched _rawSrc, not a re-serialization).
+  // newText is the full replacement entry including its indent and trailing comma.
+  replaceEntrySource(section, key, newText) {
+    if (!this._rawSrc) return { ok:false, error:'no source loaded' };
+    const S = `// ◆◆◆ WORLDBUILDER:${section}:START ◆◆◆`;
+    const E = `// ◆◆◆ WORLDBUILDER:${section}:END ◆◆◆`;
+    const a = this._rawSrc.indexOf(S), b = this._rawSrc.indexOf(E);
+    if (a === -1 || b <= a) return { ok:false, error:`${section} section markers not found in source` };
+    const from = a + S.length;
+
+    let to = b;
+    const nestedRe = /\/\/ ◆◆◆ WORLDBUILDER:[A-Z0-9_]+:START ◆◆◆/g;
+    nestedRe.lastIndex = from;
+    const nested = nestedRe.exec(this._rawSrc);
+    if (nested && nested.index < b) to = nested.index;
+
+    const body = this._rawSrc.slice(from, to);
+    const span = entrySpan(body, key);
+    if (!span) return { ok:false, error:`entry "${key}" not found in ${section} source text` };
+
+    const was     = body.slice(span.start, span.end);
+    const patched = body.slice(0, span.start) + newText + body.slice(span.end);
+
+    const count = (keys) => keys.reduce((m, k) => (m[k] = (m[k] || 0) + 1, m), {});
+    const bC = count(sectionTopKeys(body)), aC = count(sectionTopKeys(patched));
+    const diff = [];
+    for (const k of new Set([...Object.keys(bC), ...Object.keys(aC)])) {
+      const d = (aC[k] || 0) - (bC[k] || 0);
+      if (d !== 0) diff.push(`${k}×${d > 0 ? '+' : ''}${d}`);
+    }
+    if (diff.length)
+      return { ok:false, error:`refused: replacing "${key}" in ${section} would change the key set (${diff.join(', ')}) — source NOT modified` };
+
+    this._rawSrc = this._rawSrc.slice(0, from) + patched + this._rawSrc.slice(to);
+    return { ok:true, key, was: was.trim(), now: newText.trim() };
+  },
+
   // Remove a node entry from NODE_MAP source. Returns true if removed.
   // §DX-01d — was a second, private brace-walker that nothing ever called (its own
   // scanner missed /* */ comments and it left the NODE_COORDS row orphaned). It now
