@@ -9,7 +9,7 @@
 
 ## Archived 2026-08-25 — §AUDIT-03al (a section written so a validator would go green, describing a constant retired two days later)
 
-### §AUDIT-03al — `story.md §Gate Locks` documented a deleted constant, a function that never existed, and a mechanic invariant #1 forbids ✅ SHIPPED 2026-08-25
+### §AUDIT-03al — `story.md §Gate Locks` documented a deleted constant, a function that never existed, and a mechanic invariant #1 forbids ✅ SHIPPED 2026-08-25 `c13178b`
 
 **The row, as filed:**
 
