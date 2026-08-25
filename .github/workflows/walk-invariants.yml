@@ -17,6 +17,7 @@
 name: WALK invariants
 
 on:
+  workflow_dispatch:
   push:
     paths:
       - 'src/js/mover.js'
