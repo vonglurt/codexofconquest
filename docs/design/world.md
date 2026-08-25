@@ -281,7 +281,9 @@ Quest chain Q-VS-01 through Q-VS-03: "What Mordus Owes"
 
 The shaman is Layer 56+ content. §XX names the threat; it does not resolve it. See plan-archive.md §XX for full dialogue, state flags, monster spec, and insertion spec.
 
-#### ⚠️ PLANNED — The Void Shaman: The Antecedent's Last Warden (plan-archive.md §XXI, Layer 56)
+#### ✅ Layer 56 — The Void Shaman: The Antecedent's Last Warden (plan-archive.md §XXI)
+
+*(Status corrected 2026-08-25 by §AUDIT-03ak: this block read ⚠️ PLANNED while `story.md:1708` recorded it ✅ — the same two-home-docs contradiction §DOC-02ar and §DOC-02bz repaired at Layers 51 and 52. Live at HEAD: the four state fields `vshamanFound@23141`, the statblock `void_shaman@5410` (AC 15 / HP 65, as specified below), its drop table `void_shaman@5853`, the quest block `// ── Layer 56: Void Shaman quest ──@13550` and the combat outcome `// ── Layer 56: Void Shaman combat outcome ──@25394`.)*
 
 Prerequisites: `vsShamanKnown` (§XX) + `vaLastWardVisited` (§XVII). The Warden has been living in the `GVA` (historical `MT`) tunnel for 6 months.
 
@@ -293,7 +295,9 @@ If persuaded: Benedikt Rasp (WM, Dear Friend after §XVI) reflects on the First 
 
 `void_shaman` monster is scripted only (`spawnsIn: []`). See plan-archive.md §XXI for full dialogue, both outcome texts, and insertion spec.
 
-#### ⚠️ PLANNED — Codex Shard Origin Stories (plan-archive.md §XXII, Layer 57)
+#### ✅ Layer 57 — Codex Shard Origin Stories (plan-archive.md §XXII)
+
+*(Status corrected 2026-08-25 by §AUDIT-03ak: this block read ⚠️ PLANNED while `story.md:1727` recorded it ✅. Live at HEAD as `SHARD_NOTES@27171` — **seven** notes, one per placer, matching the seven named below — auto-added at `// Layer 57: auto-add shard origin note@30122` and rendered at `// ── Layer 57: Readable Notes (shard origin stories) ──@31180`. The sidebar entry is `FROBERGER_JOURNAL@27196`. `SHARD_NOTES`' own header comment says *5 shard_note readable items* and the collection holds 7 → §DX-02hf.)*
 
 Seven readable items auto-added to inventory when each Codex Shard is collected. Each names the person who placed that shard and why. The 7 placers: Elder Couperin (Quill's ancestor), Scholar Marzena (Conclave-adjacent), Researcher Aldric (unaffiliated), Archivist Hendrika (Scholar Kings defector), the First Researcher (Shard 5, `GVA` (historical `MT`)), the original Warden (Shard 6, WM — recognized if `wardensLegacyKnown`), and Froberger himself (Shard 7, `TLS` (historical `CO`) — *"I couldn't carry it any further. Someone else will have to finish."*).
 
