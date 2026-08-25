@@ -4411,7 +4411,7 @@ test.describe('§ARCH-01 Wave 2p — clj_* family (bulk-migrated, 42 acts; mixed
 // that. NO §SKILLFIX-02 (0 skill-name checkStats). Transform type-gates out the
 // 3 combat members (nwi002/04/07_act4). Self-contained.
 test.describe('§ARCH-01 Wave 2q — nwi_* family (bulk-migrated, 42 acts; uniform flag-bearing)', () => {
-  test('every nwi_* skill_check is UQF-1.0, validates, onFail:[], NO residual activateCond; onPass = mission_bit', async ({ page }) => {
+  test('every nwi_* skill_check is UQF-1.0, validates, onFail:[], NO residual activateCond; onPass = mission_bit (+ chain-completion flag_write on the 8 chain tails)', async ({ page }) => {
     const errs = []; page.on('pageerror', e => errs.push(String(e)));
     await page.goto('/play.html');
     const r = await page.evaluate(() => {
@@ -4425,12 +4425,14 @@ test.describe('§ARCH-01 Wave 2q — nwi_* family (bulk-migrated, 42 acts; unifo
           gateShape: gate.flags ? 'flags' : (JSON.stringify(gate) === '{}' ? 'empty' : 'other'),
           hasStat:!!(b && b.stat), hasDc:typeof (b && b.dc) === 'number',
           onPassK:b ? b.onPass.map(x => x.kind) : null, onFailLen:b ? b.onFail.length : null,
+          passWrites:b ? b.onPass.filter(x => x.kind === 'flag_write').flatMap(x => x.set || []) : null,
           mbHasLabel:mb ? ('label' in mb) : null };
       });
     });
     expect(errs).toEqual([]);
     expect(r.length).toBe(42);
     const gateShapes = { flags:0, empty:0 };
+    let chainWriters = 0;
     for (const q of r) {
       expect(q.schema).toBe('UQF-1.0');
       expect(q.valid).toBe(true);
@@ -4439,10 +4441,13 @@ test.describe('§ARCH-01 Wave 2q — nwi_* family (bulk-migrated, 42 acts; unifo
       expect(q.hasStat).toBe(true);
       expect(q.hasDc).toBe(true);
       expect(q.onFailLen).toBe(0);
-      expect(q.onPassK).toEqual(['mission_bit']);
+      expect(q.onPassK).toEqual(q.passWrites.length ? ['mission_bit', 'flag_write'] : ['mission_bit']);
+      expect(q.passWrites.every(f => /^nwi\w*Complete$/.test(f))).toBe(true);
       expect(q.mbHasLabel).toBe(false);
       gateShapes[q.gateShape]++;
+      chainWriters += q.passWrites.length;
     }
+    expect(chainWriters).toBe(8);
     expect(gateShapes).toEqual({ flags:41, empty:1 });
   });
 
@@ -6856,7 +6861,7 @@ test.describe('§ARCH-01 Wave 2ao — erf_* family (bulk-migrated, 35 acts; unif
 // 0`, 0 skill-names, NOT §SKILLFIX-02. No type-gated siblings, no prefix bleed (all
 // 34 `mla` skill_checks migrated). Self-contained.
 test.describe('§ARCH-01 Wave 2ap — mla_* family (bulk-migrated, 34 acts; uniform flag-bearing)', () => {
-  test('every mla* skill_check is UQF-1.0, validates, onFail:[], NO residual activateCond; onPass = mission_bit', async ({ page }) => {
+  test('every mla* skill_check is UQF-1.0, validates, onFail:[], NO residual activateCond; onPass = mission_bit (+ chain-completion flag_write on the 6 chain tails)', async ({ page }) => {
     const errs = []; page.on('pageerror', e => errs.push(String(e)));
     await page.goto('/play.html');
     const r = await page.evaluate(() => {
@@ -6871,12 +6876,14 @@ test.describe('§ARCH-01 Wave 2ap — mla_* family (bulk-migrated, 34 acts; unif
           hasStat:!!(b && b.stat), abilOk: b ? ['STR','DEX','CON','INT','WIS','CHA'].includes(b.stat) : false,
           hasDc:typeof (b && b.dc) === 'number', noSkill: b ? !('skill' in b) : false,
           onPassK:b ? b.onPass.map(x => x.kind) : null, onFailLen:b ? b.onFail.length : null,
+          passWrites:b ? b.onPass.filter(x => x.kind === 'flag_write').flatMap(x => x.set || []) : null,
           mbHasLabel:mb ? ('label' in mb) : null };
       });
     });
     expect(errs).toEqual([]);
     expect(r.length).toBe(34);
     const gateShapes = { flags:0, empty:0 };
+    let chainWriters = 0;
     for (const q of r) {
       expect(q.schema).toBe('UQF-1.0');
       expect(q.valid).toBe(true);
@@ -6887,10 +6894,13 @@ test.describe('§ARCH-01 Wave 2ap — mla_* family (bulk-migrated, 34 acts; unif
       expect(q.noSkill).toBe(true);        // not §SKILLFIX-02 — no skill name retained
       expect(q.hasDc).toBe(true);
       expect(q.onFailLen).toBe(0);
-      expect(q.onPassK).toEqual(['mission_bit']);
+      expect(q.onPassK).toEqual(q.passWrites.length ? ['mission_bit', 'flag_write'] : ['mission_bit']);
+      expect(q.passWrites.every(f => /^mla\w*Complete$/.test(f))).toBe(true);
       expect(q.mbHasLabel).toBe(false);
       gateShapes[q.gateShape]++;
+      chainWriters += q.passWrites.length;
     }
+    expect(chainWriters).toBe(6);
     expect(gateShapes).toEqual({ flags:33, empty:1 });
   });
 

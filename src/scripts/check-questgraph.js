@@ -40,18 +40,18 @@
 // gate flag that NON-quest code provides (a combat kill sets hornedSharkSlain, an
 // arrival sets dunfallAccessed, a _grantMissionBit call, a readable-doc registry).
 // scanFlagWrites() now scans the WHOLE file for flag-write forms and folds the
-// result into both pools (see its comment). The 114 "written-by-nothing" collapsed
-// to 48 — all genuine: the bulk-imported waw/crl/nwi/mla arcs whose act/chapter
-// gates read a flag the prior step never writes (a systemic naming mismatch:
-// gates say `waw001a2`, acts write `waw001Act2Passed`), plus voidFluxCleared
-// (a documented-but-unimplemented mechanic). Unreachable 202 → ~53 the
-// same way. Fixing that quest CONTENT is a separate triage pass (BACKLOG §VM-01-E).
+// result into both pools (see its comment). The survivors it leaves are genuine:
+// a bulk-imported waw/crl/nwi/mla act whose gate reads a flag the prior step never
+// writes (a systemic naming mismatch: gates say `waw001a2`, acts write
+// `waw001Act2Passed`), each one a quest that can never activate.
 //
-// EXIT: hard-fails (1) ONLY on residual nondeterminism in quest data — the sound,
-// binary invariant the plague port established. The reachability + cross-ref
-// output is a REVIEW report (printed with counts): over 2,851 quests many reads
-// are satisfied by non-quest game code and many writes are read by render code,
-// so those are informational, not a gate. `--selftest` validates the analyser
+// EXIT: hard-fails (1) on residual nondeterminism in quest data (the sound, binary
+// invariant the plague port established), on any written-by-nothing gate flag not
+// on KNOWN_UNWRITTEN_FLAG (§AUDIT-03bj), and on any self-deadlocked quest not on
+// KNOWN_SELF_DEADLOCK (§AUDIT-03bh). The reachability report itself is REVIEW
+// output (printed with counts): over 2,851 quests many reads are satisfied by
+// non-quest game code and many writes are read by render code, so those are
+// informational, not a gate. `--selftest` validates the analyser
 // against a synthetic graph and is the CI-wired mode (check:walk).
 //
 // USAGE:  node src/scripts/check-questgraph.js            # real-corpus report
