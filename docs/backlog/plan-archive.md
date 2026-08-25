@@ -7,6 +7,15 @@
 
 ---
 
+## Archived 2026-08-24 — §DX-02gn (the screenshot that overwrote a tracked file)
+
+### §DX-02gn — a Playwright screenshot overwrites a TRACKED png every run ✅ SHIPPED 2026-08-24 `41ffaae`
+
+- [x] **§DX-02gn — `living-world-l44.spec.js` writes its screenshot over a file git is watching.** **Measured at `c506357` and reproduced at `88c41d0`:** the session opened with ` M src/test-results/l44-final-map.png` standing in `git status` from the previous run's suite, exactly as the row described. `src/tests/integration/living-world-l44.spec.js:210` called `page.screenshot({ path: 'test-results/l44-final-map.png' })` — a path resolved against `src/`, and therefore onto the binary tracked since `763c70f`. Every `npm test` re-encoded it, so every run produced a one-file diff that means nothing and that a session either restores by hand or commits by accident. **The row offered two directions and the ground chose between them:** `git rm --cached` is wrong here, because the committed png is *cited by path* as rendered proof in two places — `docs/lab-reports/lab-report-living-world.md:114` and the **still-open** §DX-02eu, whose entire claim is that the ending map is drawn 262 px down the page. Deleting the file would have deleted an open row's only visual evidence. So the *write* moved and the *file* stayed: `path: '../build/test-results/l44-final-map.png'`, the untracked run dir `playwright.config.js` already names as `outputDir` and `.gitignore` already covers under `build/`. **Verified:** full suite **1018 passed / 0 failed** (5.3m, foreground, redirected, WBAPI stopped), after which `git status --porcelain` named **only the source edit itself** — the tracked png survived a complete run byte-identical, where before it did not survive one. The screenshot is still taken and still written: `build/test-results/l44-final-map.png`, 63,420 bytes. `check:walk` **exit 0, all 16 gates**. **The row's stated verification could not be made durable, and that is a finding, not an omission:** it asks for the §DX-02gm snapshot test "widened" to wrap a full `npm test`, but no test inside a suite can snapshot the tree around the suite that contains it. The invariant is real and was measured by hand; the guard for it would have to live outside Playwright, in CI or in `check:walk`. **Found en route:** the phase table in `BACKLOG.md` had drifted again — phase 1 read **8** against a measured **7** — the third instance of the drift **§DX-02gs** exists to end, and the first one to appear *after* that row corrected all six cells. Both cells corrected here (1 → 7, 6 → 53 → 52), and phase 6 returns to **53** with **§DX-02gu** filed — the clean-tree invariant three rows have now restored by hand and nothing asserts.
+> **Provenance:** §DX-02gm, found in the measurement that proved the doc sweep was gone.
+
+---
+
 ## Archived 2026-08-24 — §DX-02gt (the red suite the gate chain could not see)
 
 ### §DX-02gt — two `quest-runtime-uqf` waves were red at HEAD and the gate chain could not see it ✅ SHIPPED 2026-08-24 `a72688a`
