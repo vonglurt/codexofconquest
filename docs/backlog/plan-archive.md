@@ -7,6 +7,43 @@
 
 ---
 
+## Archived 2026-08-25 — §DX-02fy (the battle whose monster was never written)
+
+### §DX-02fy — one node's battle names a monster that does not exist ✅ SHIPPED 2026-08-25 `62f4803`
+
+**Shipped: option (a), create the monster — and the node's own fiction, not the row's preference, is why.** The `arabia` roster is `gigascorpion · ifrit · djinn · catoblepas · wild_dog · genie` — **elementals and beasts, no people**. `RUH`'s text is a man alone for an unrecorded season in a desert *"not hostile so much as indifferent"*. A *Wanderer* is a person out there for their own unrecorded reason; option (b) would have replaced the only human presence in the encounter with a fire elemental and discarded the authored label *Desert Wanderer ×2*.
+
+**Statline** `ac:13 hp:72 atk:6 dmgDie:8 dmgCount:2 dmgFlat:3 tier:'medium'` — inside the band the row named (`ifrit` ac14/hp67/2d8+4, `sand_wraith` ac13/hp67/3d6+0), under the ceiling the terrain already sets (`gigascorpion` hard/hp127), and a clone of neither: tankier, lower AC, lower damage. Endurance, not burning.
+
+**It carries a drop (`🧪 Sun-Bleached Waterskin`, `sell:16`) because the convention was measured, not assumed:** of the **50** distinct `battle.key`s in the file, **47 carry a `MONSTER_DROPS` row**. The other two are `_bruhns` (by design) and **`void_shaman`** — filed as **§DX-02ha**, not fixed inline. `sell:16` sits between its own band-mates `sand_wraith` 15 and `ifrit` 17.
+
+**The API could not express the drop, so the endpoint was added first — the documented path, taken literally.** The server route `POST /api/monster/:key/drop` exists and works (`wbapi-server.js@11333`); `./bin/api` had **no verb that could reach it** — the CLI is a generic proxy that only builds `/api/<type>` and `/api/<type>/<id>`. Rather than fall back to `curl` or a hand-edit, a `drop` verb was added to `src/api/wb.js`. ⚠️ **Two API defects were reproduced on the way there and filed rather than fixed inline:** `put monster dropName=… dropIcon=… dropSell=…` returned **`ok:true` with `verified:[…ok…]`** and appended all three to the **`MONSTER_POOL`** row, where nothing reads them (**§DX-02gy**); and the drop routes are the only writes that do **not** autosave, while `./bin/api help` states *"You do NOT need to run save after a put/post/del"* (**§DX-02gz**, worked around inside the new verb). The junk fields were removed with `./bin/api del monster` and the monster re-created cleanly — never by hand.
+
+**The increment's real find: the gate could not see its own fix.** `check-battlepools.js` read pool rows with `key:'(\w+)'` — **single quotes only** — and `./bin/api post monster` writes **double** quotes. With the exemption retired, the gate reported `battle key 'desert_wanderer' … resolves in neither MONSTER_POOL nor EPIC_BOSS_POOL` **about a monster that was on disk, in `MONSTER_POOL`, written through the mandated write path**. Its `battleKeys` regex already accepted `["']`; the two pool reads did not. Both now accept either, with a **fifth selftest** asserting a double-quoted row resolves a battle key — **non-vacuous by mutation:** reverting the regex fails that check alone, the other four still pass.
+
+**The durable half the row asked for already existed:** *"A CI gate asserting every `node.battle.key` resolves in one of the two pools is the durable half of this row"* — shipped 2026-08-24 as `check:walk` gate #17 (§DX-02gv), which is what surfaced `desert_wanderer` from a cold start. This increment made that gate able to see API-written data.
+
+**Measured before** (`ebf6863`): `grep -c desert_wanderer play.html` = **1**; `./bin/api list monster --q desert` = **`[]`**; exemptions **4**. **Measured after** (`62f4803`): occurrences **3** (pool row, drop row, RUH battle); `./bin/api get monster desert_wanderer` round-trips the statline and the drop **from disk**; exemptions **3**. `./bin/api audit` errors **0**. **18 gates exit 0** (each run individually, unpiped, `check:behaviour` confirmed twice at >10 min). `npm test --prefix src` **1023 passed**, server stopped.
+
+⚠️ **One suite run returned 1 failed / 1022 passed** on `multiplayer-presence.test.js:174`, failing the attempt *and* its retry. Investigated rather than re-run away: stash → isolation on a clean tree (**7 passed**) → restore → isolation (**6 passed**, a differing count that is its own signal) → full re-run (**1023 passed, exit 0**). A flake, filed as **§DX-02hb**.
+
+**Found en route:** §DX-02gy, §DX-02gz, §DX-02ha, §DX-02hb.
+
+<details><summary>The row as it stood when it was taken</summary>
+
+### §DX-02fy — one node's battle names a monster that does not exist, so it fights whatever you fought last (NEW 2026-08-23 during §DX-02cy, 🟡 ONE DESIGN CALL: create the monster or re-point the battle)
+
+- [ ] **§DX-02fy — `RUH` is the only one of the 47 battle nodes whose `battle.key` resolves in neither monster pool.** 🟡 **the measurement is 🟢 and complete; only the remedy needs an author.** `_storyBattleStart` loads the opponent with `const mp = MONSTER_POOL[node.battle.key] || EPIC_BOSS_POOL[node.battle.key]; if (mp) loadWorldMonster(mp);` — **the load is guarded and the battle is not.** When the key misses, `loadWorldMonster` never runs and `S.enemy` keeps **every field of the previous battle's monster**: name, ac, maxHp, atk, dmgDie, dmgCount, dmgFlat. The fight that follows is the last fight again, wearing this node's label.
+> **Measured over the whole corpus** (`./bin/api export node_map` + `export monster_pool`, 416 nodes / 398 monsters): **47 nodes carry a `battle.key`; 46 resolve; one does not.** `RUH` → `desert_wanderer`, which occurs **exactly once in all 38,712 lines** — in RUH's own `battle` field. It is in neither `MONSTER_POOL` nor `EPIC_BOSS_POOL`, and `./bin/api list monster --q "desert"` returns **`[]`**.
+> **RUH is not a stub.** It is `act:4`, terrain `arabia` (*Arabia — The Desert Wilderness* 🏜), `sleep:true`, at cell `45,226`, and it carries the Saul→Paul arc's Arabia passage — *"He returns from Arabia changed in a way that is different from the road to Damascus. The road to Damascus changed what he was. The desert changed what he does with it."* Its `battle.label` is authored too: **Desert Wanderer ×2**. Someone wrote the encounter and never wrote the monster.
+> **The design call is which way to close it.** (a) **Create `desert_wanderer`** through the API — `./bin/api post monster key=desert_wanderer name="Desert Wanderer" …` — which keeps the authored label honest and is the only option that preserves *"Wanderer"* as a distinct thing from the terrain roster. Act 4 wants roughly the `ifrit` band (`ac 14 · hp 67 · atk 6 · 2d8+4`), and `gigascorpion` (`hard`, `hp 127`) is the ceiling the terrain already sets. (b) **Re-point `battle.key`** to a monster the `arabia` roster already holds (`gigascorpion` · `ifrit` · `djinn`), which costs one field and discards the authored label. **(a) is preferred** — the label is content and the roster is not short of a slot.
+> **The guard is the general defect and outlives this node.** `if (mp)` silently degrades a missing monster into *the previous monster*; nothing throws, nothing logs, and no gate looks at `battle.key` at all — `check:noderegs` classifies node **codes**, not monster keys. **A CI gate asserting every `node.battle.key` resolves in one of the two pools is the durable half of this row**, and it is the cheap half: the measurement above is nine lines of the same export the row was written from.
+> **Provenance:** found during §DX-02cy while proving `S.enemy.key` is the correct identity source for the kill counters. Before that row, RUH credited its kill to nobody because the counter was dead everywhere; after it, RUH credits the kill to **the previous battle's monster**. That mis-credit is the small half — the fight itself has been wrong since the node was authored.
+
+</details>
+
+---
+
 ## Archived 2026-08-24 — §DX-02gv (a monster no battle named, and the gate that walks both ways)
 
 ### §DX-02gv — a fully specified deadly-tier monster has a loot shard and no fight ✅ SHIPPED 2026-08-24

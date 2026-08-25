@@ -47,6 +47,21 @@
 
 
 
+### §DX-02gy — `put monster` accepts field names it does not know, writes them onto the pool row, and reports `verified: ok` (NEW 2026-08-25 during §DX-02fy, 🟢 no design call)
+
+- [ ] **§DX-02gy — the write path has no field whitelist, so a typo becomes an inert field with a green receipt.** **Reproduced at `ebf6863`:** `./bin/api put monster desert_wanderer dropName="Sun-Bleached Waterskin" dropIcon="🧪" dropSell=16` returned `"ok": true` with `verified: [{field:"dropName",ok:true},{field:"dropIcon",ok:true}]` and appended all three to the **`MONSTER_POOL`** row. `grep -c dropName play.html` = **1** — the line the API had just written. **Nothing in the engine reads any of them.** The correct field is `drop` (declared `{ section:'MONSTER_DROPS' }` in the field schema at `wbapi-server.js:1310`), and `put monster … drop='{…}'` **also** wrote it onto the pool row rather than into `MONSTER_DROPS` — `put` ignores the schema's `section` and appends every key to the entity's own literal.
+> **Two defects, one cause.** (a) unknown field names are not rejected; (b) known fields declared to live in another section are not routed there. `verified` checks only that the text is *present*, which is why both came back green.
+> **This is the §DX-02 shape in the tool that is supposed to prevent it** — a field written where nothing reads it, produced by the write path the repo mandates precisely to stop that happening.
+> **Fix:** reject any key absent from the type's field schema (400, listing the accepted names), and route a key whose schema names a different `section` to that section's writer — `POST /api/monster/:key/drop` already exists and works.
+> **Provenance:** §DX-02fy, creating `desert_wanderer`. The junk was removed with `./bin/api del monster` and the monster re-created cleanly; the *acceptance* was not fixed inline.
+
+### §DX-02gz — the drop routes are the only writes that do not persist, and the CLI help says persistence is automatic (NEW 2026-08-25 during §DX-02fy, 🟢 no design call)
+
+- [ ] **§DX-02gz — `POST /api/monster/:key/drop` returns `note:'POST /api/save to persist.'` while every other write autosaves.** **Measured at `ebf6863`:** `post monster` returns `"autoSaved": true, "savePath": …`; the drop route returns `201` with the persist note and **the file on disk is unchanged** until `./bin/api save` runs. Meanwhile `./bin/api help` states: ***"You do NOT need to run save after a put/post/del."*** Both statements ship; one of them is wrong at the drop route.
+> **Worked around, not fixed:** the `drop` verb added to `src/api/wb.js` in §DX-02fy issues `POST /api/save` after a successful write, so the CLI honours the documented contract. **The server-side inconsistency remains** and any other client hitting the route directly still loses the write.
+> **Fix:** make the POST/PUT/DELETE drop routes autosave like their siblings (the same `saveAndRestart` path), then drop the workaround from the CLI verb and the persist note from the response.
+> **Provenance:** §DX-02fy — the drop reported `201 ok` and `MONSTER_DROPS` was empty on the next read from disk. Caught only because the row's verification is a round trip *from the file*, not from the response.
+
 ### §DX-02gh — the file `resume.md` calls "the write path" documents a CLI that does not exist, 489 times (NEW 2026-08-24 during the §DX-02gd read-list audit, 🟢 no design call)
 
 - [ ] **§DX-02gh — `./api.sh` and `./wbapi-toggle.sh` were renamed and four API docs plus `CONTRIBUTING.md` were never told.** **Measured at `539749d`:** neither file exists — `ls api.sh wbapi-toggle.sh` → *No such file or directory*; the live entry points are `./bin/api`, `make wbapi` / `./run.sh server`, and `./run.sh stop`. Dead references, by file: `docs/api/api-user-guide.md` **191** · `docs/api/API-README.md` **160** · `docs/api/wbapi-help.md` **73** · `docs/api/api-faq.md` **32** · `CONTRIBUTING.md` **15** — plus `wbapi-toggle.sh` at 6 · 5 · 4 · 3. **489 in total, and not one of them runs.**

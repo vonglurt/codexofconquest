@@ -176,6 +176,15 @@ echo '{"label":"...","text":"..."}' | ./api.sh put node LHR
 ./api.sh put terrain dark_forest monsters=wolf,dire_wolf,worg   # §DX-02h — WHOLE roster, not a delta
 ```
 
+**A monster's trophy drop is its own verb, not a field on the monster.** `drop` lives in `MONSTER_DROPS`, a separate section keyed by the same monster key — `put monster … drop=…` writes it onto the `MONSTER_POOL` row where nothing reads it (§DX-02gy).
+
+```bash
+./api.sh drop desert_wanderer name="Sun-Bleached Waterskin" sell=16 icon="🧪"
+./api.sh drop desert_wanderer name="Waterskin" sell=18 --update   # replace an existing drop
+```
+
+The monster must exist first; a second `drop` without `--update` is refused with a 409. The verb persists on success — the drop routes are the only writes that do not autosave on their own (§DX-02gz). List the gap with `./api.sh list monster --has-drop false`.
+
 ### Export / Import
 
 ```bash
