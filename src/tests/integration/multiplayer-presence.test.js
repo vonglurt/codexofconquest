@@ -9,16 +9,10 @@ const path = require('path');
 // is asserted to keep MP off.
 const { test, expect } = require('@playwright/test');
 const { spawn } = require('child_process');
-const { seedAndLoad, dismissContinue } = require('./helpers');
+const { seedAndLoad, dismissContinue, workerPorts, watchChildren } = require('./helpers');
 
-// §DX-02hm — one port pair PER WORKER. These were bare constants, so a run with
-// more than one worker (`--repeat-each`, `--workers=N`) had every worker spawn its
-// server on the same port: the losers died of EADDRINUSE with `stdio: 'ignore'`,
-// unheard, and their tests talked to a stranger's server. TEST_PARALLEL_INDEX is
-// Playwright's 0-based worker slot; the cache files need the same suffix.
-const WORKER = Number(process.env.TEST_PARALLEL_INDEX || 0);
-const MP_PORT = 13891 + WORKER * 2;
-const TRK_PORT = 13892 + WORKER * 2;   // §MESH-01-FU 2: tracker for the join-by-magnet flow
+// §DX-02hm/§DX-02hq — one port pair PER WORKER, from the shared map in helpers.js.
+const { ports: [MP_PORT, TRK_PORT], tag: W } = workerPorts('presence', 2);   // TRK: §MESH-01-FU 2, join-by-magnet
 let server, tracker;
 
 const TMP = require('os').tmpdir();
@@ -26,23 +20,16 @@ const ROOT = path.resolve(__dirname, '..', '..', '..');
 test.beforeAll(async () => {
   tracker = spawn(process.execPath, [path.join(ROOT, 'src', 'js', 'wbapi-server.js'), '--tracker-mode'], {
     env: { ...process.env, PORT: String(TRK_PORT), MESH_SERVER_ID: 'b'.repeat(32),
-      PEERS_CACHE_FILE: `${TMP}/coc-presence-trk-cache-${WORKER}.json` },
+      PEERS_CACHE_FILE: `${TMP}/coc-presence-trk-cache${W}.json` },
     stdio: 'ignore',
   });
   server = spawn(process.execPath, [path.join(ROOT, 'src', 'js', 'wbapi-server.js')], {
     env: { ...process.env, PORT: String(MP_PORT), MESH_SERVER_ID: 'a'.repeat(32),
       TRACKER_URL: `http://localhost:${TRK_PORT}`, MESH_ANNOUNCE_MS: '200',
-      SERVER_NAME: 'Hub Alpha', PEERS_CACHE_FILE: `${TMP}/coc-presence-srv-cache-${WORKER}.json` },
+      SERVER_NAME: 'Hub Alpha', PEERS_CACHE_FILE: `${TMP}/coc-presence-srv-cache${W}.json` },
     stdio: 'ignore',
   });
-  // §DX-02hm — `stdio: 'ignore'` means a spawn that dies (EADDRINUSE, syntax error)
-  // dies unheard, and the poll below then times out naming a port instead of a cause.
-  // Record the exit so the thrown error says which process died and how.
-  const died = [];
-  for (const [name, p] of [['tracker', tracker], ['server', server]]) {
-    p.on('exit', (code, sig) => died.push(`${name} exited early (code=${code}, signal=${sig})`));
-    p.on('error', (e) => died.push(`${name} failed to spawn: ${e.message}`));
-  }
+  const died = watchChildren({ tracker, server });
   for (let i = 0; i < 100; i++) {
     try {
       const r = await fetch(`http://localhost:${MP_PORT}/api/ping`);
@@ -52,7 +39,7 @@ test.beforeAll(async () => {
     await new Promise((r) => setTimeout(r, 100));
   }
   throw new Error(`throwaway wbapi-server/tracker did not answer on :${MP_PORT}/:${TRK_PORT}`
-    + ` (worker ${WORKER})${died.length ? ' — ' + died.join('; ') : ''}`);
+    + ` (worker ${W.slice(1)})${died.length ? ' — ' + died.join('; ') : ''}`);
 });
 test.afterAll(() => {
   for (const p of [server, tracker]) if (p) { try { p.kill('SIGTERM'); } catch {} }

@@ -7,6 +7,42 @@
 
 ---
 
+## Archived 2026-08-25 — §DX-02hq (the suite was seven minutes because a 303-test file was one serial chain)
+
+### §DX-02hq — `fullyParallel`, and the four spawning specs that had to be made worker-safe before it could be turned on ✅ SHIPPED 2026-08-25 `SHA_HQ`
+
+**Raised directly by the author mid-session — *"can we design the test to give feedback synchronous, i want the tests to go quicker"* — and taken as a row rather than a tweak, because the answer turned out to be the same defect §DX-02hm had just closed, in three more files.**
+
+**Where the time actually was, measured before anything changed.** Playwright had been printing the answer at the bottom of every run and nobody had acted on it: `Slow test file: quest-runtime-uqf.test.js (5.7m)` out of a **7.4m** wall. Playwright parallelises **files**, not tests, so a file holding **303** of the suite's 1033 tests is a single serial chain and is the whole critical path. That file declares **99 `test.describe` blocks and zero `beforeAll`, `beforeEach` or serial hooks**, and every test takes its own `{ page }` fixture — there is nothing shared to protect.
+
+| the slow file alone | wall |
+|---|---:|
+| default (files parallel, tests serial) | **5.4m** |
+| `--fully-parallel` | **1.8m** |
+| `--fully-parallel --workers=8` | 1.7m |
+
+**Turning it on suite-wide broke three files at once, all with the same bug §DX-02hm had just fixed by hand.** `fullyParallel` moves tests of one file into different workers, so a file-level `beforeAll` runs **once per worker** — and `dx02l-save-snapshots-cli.test.js` (`13897`), `mesh-ledger-client.test.js` (`13893`, plus `13894`/`13895` for the cross-origin pair) and `mesh-duel-client.test.js` (`13896`) all spawned their throwaway server on a bare module constant. First attempt: **5 failed, 1 flaky**, every one of them `✗ WBAPI server not running at http://localhost:13897`.
+
+**So the port map moved out of the files and into one place.** `helpers.js` now exports `workerPorts(block, count)` over a `PORT_BLOCKS` table — `presence` 13900, `ledger` 14100, `duel` 14200, `snapshots` 14300, a hundred ports each — keyed on `TEST_PARALLEL_INDEX`. A new spawning spec can now see what is already taken instead of picking a free-looking number, and an unknown block or an over-wide worker index **throws by name**. `watchChildren()` moved there too: `stdio: 'ignore'` means a dying child takes its reason with it, so all four files now name the dead process and its exit code in the readiness-timeout error instead of naming only a port. §DX-02hm's hand-rolled versions of both were replaced by the shared ones.
+
+**Two knobs were measured and one was rejected.** `workers: '100%'` was tried and reverted: **333s at the default vs 329s at 100%** — inside the noise, because the cores are not equal (4 performance + 4 efficiency) and the run is already CPU-saturated — while the oversubscribed run flaked `worldbuilder-crud-arrays.test.js:173` on a click against an element Playwright had already confirmed visible, enabled and stable. Oversubscription bought nothing and cost UI-timing stability; the rejection and its numbers are recorded in `playwright.config.js` beside the setting, so it is not re-tried.
+
+**Checked before trusting it: the shared dev server is not raced.** Fifteen specs touch `:1367` or `edit.html`; the two that appear to write (`worldbuilder-walk`, `worldbuilder-mission-builder`) **stub the write in-page** — `WBAPI.quests.create = async (q) => …` — so no test mutates world data through the shared server, and `fullyParallel` introduces no cross-test state race.
+
+**Result:**
+
+| | before (`c99f4e2`) | after |
+|---|---:|---:|
+| full suite | **7.4m**, 1033 passed | **5.6m**, 1033 passed, **0 flaky** |
+| `quest-runtime-uqf.test.js` | 5.4m | **1.8m** |
+| the four spawning specs, `--repeat-each=4` | impossible — one worker only | **112 passed, 1.4m** |
+
+**Gates:** `npm run check:walk --prefix src` → **`✓ 17/17 gates green · wall 23.0s`**; `npm test --prefix src` → **`1033 passed`**, EXIT=0. **No world-data write** — test infrastructure and config only.
+
+**Found en route:** §DX-02hr — with parallelism fixed, the remaining cost is that each of ~1000 tests re-parses the same 5.3 MB `play.html` from a cold context (**`seedAndLoad` 326 ms of a ~450 ms test**), which is worth 30–40% more but trades away the fresh-engine guarantee, so it is a 🟡 with a design call.
+
+---
+
 ## Archived 2026-08-25 — §DX-02hm (one port pair per worker: the presence spec could not be run twice at once)
 
 ### §DX-02hm — two module-constant ports made every extra Playwright worker a stowaway on the first worker's server ✅ SHIPPED 2026-08-25 `467dc7f`

@@ -191,8 +191,62 @@ async function readStory(page, field) {
   return page.evaluate(() => S_story);
 }
 
+// ── Per-worker throwaway-server ports (§DX-02hq) ──────────────────────────────
+// Four spec files spawn their own wbapi-server. Every one of them used a bare
+// module constant for its port, which meant the file could only ever be run by
+// ONE worker: worker 0 binds, and every other worker's spawn dies of EADDRINUSE
+// with `stdio: 'ignore'` — unheard — after which its readiness poll succeeds
+// anyway, against worker 0's server, and its tests race a stranger's state.
+// §DX-02hm fixed that one file by hand; turning on `fullyParallel` made the same
+// bug appear in the other three at once, so the port map lives HERE, in one
+// place, where a new spawning spec can see what is already taken.
+//
+//   13900-14099  multiplayer-presence.test.js  (TWO ports per worker)
+//   14100-14199  mesh-ledger-client.test.js
+//   14200-14299  mesh-duel-client.test.js
+//   14300-14399  dx02l-save-snapshots-cli.test.js
+//
+// Each block holds 100 workers. `TEST_PARALLEL_INDEX` is Playwright's 0-based
+// worker slot: concurrent workers never collide, and sequential ones reuse a
+// slot harmlessly because the previous server is dead before the slot is reused.
+const PORT_BLOCKS = {
+  presence: 13900,
+  ledger: 14100,
+  duel: 14200,
+  snapshots: 14300,
+};
+
+// Returns `count` consecutive ports reserved for this worker inside `block`'s
+// hundred. Also returns `worker` and `tag`, so callers can suffix any other
+// shared resource - tmpdir cache files, on-disk fixtures - with the same index.
+function workerPorts(block, count = 1) {
+  const base = PORT_BLOCKS[block];
+  if (base === undefined) throw new Error(`workerPorts: unknown block "${block}" - add it to PORT_BLOCKS`);
+  const worker = Number(process.env.TEST_PARALLEL_INDEX || 0);
+  if (worker * count + count > 100) throw new Error(`workerPorts: block "${block}" holds 100 ports, worker ${worker} needs ${count}`);
+  const ports = [];
+  for (let i = 0; i < count; i++) ports.push(base + worker * count + i);
+  return { ports, worker, tag: `-${worker}` };
+}
+
+// `stdio: 'ignore'` means a spawn that dies takes its reason with it, and the
+// readiness poll then times out naming a port instead of a cause. Attach this to
+// every spawned child and pass the returned array into the timeout message.
+function watchChildren(children) {
+  const died = [];
+  for (const [name, child] of Object.entries(children)) {
+    if (!child) continue;
+    child.on('exit', (code, sig) => died.push(`${name} exited early (code=${code}, signal=${sig})`));
+    child.on('error', (e) => died.push(`${name} failed to spawn: ${e.message}`));
+  }
+  return died;
+}
+
+
 module.exports = {
   SEED_STATE,
+  workerPorts,
+  watchChildren,
   patchGameHtml,
   seedAndLoad,
   dismissContinue,

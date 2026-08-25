@@ -5,6 +5,26 @@ const { defineConfig, devices } = require('@playwright/test');
 module.exports = defineConfig({
   testDir: './tests/integration',
 
+  // §DX-02hq — tests inside a file run CONCURRENTLY, not one after another.
+  // Default Playwright parallelises files only, so a 303-test file is a single
+  // serial chain and becomes the whole suite's critical path: measured at
+  // `c99f4e2`, quest-runtime-uqf.test.js alone was 5.4m of a 7.4m wall. Every
+  // test here takes its own `{ page }` fixture, so there is nothing to share.
+  // The four specs that spawn a throwaway wbapi-server get a port per worker
+  // from `helpers.js`'s PORT_BLOCKS — without that, `beforeAll` running once
+  // per worker makes them fight over one port. A spec that genuinely needs
+  // ordering opts out with `test.describe.configure({ mode: 'default' })`.
+  fullyParallel: true,
+
+  // §DX-02hq — worker count is deliberately LEFT AT THE DEFAULT (half the cores).
+  // Raising it was measured and rejected: with `fullyParallel` on, the full suite
+  // was 333s at the default and 329s at `workers: '100%'` — inside the noise,
+  // because this machine's cores are not equal (4 performance + 4 efficiency) and
+  // the run is already CPU-saturated. What the extra workers DID buy was a flake:
+  // `worldbuilder-crud-arrays.test.js:173` timed out clicking a visible, stable,
+  // scrolled-into-view element. Oversubscription costs UI-timing stability and
+  // returns nothing, so the default stands.
+
   // Generated output belongs in build/, not beside the source.
   outputDir: '../build/test-results',
 

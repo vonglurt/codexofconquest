@@ -5,7 +5,7 @@ const { spawn } = require('child_process');
 const fs = require('fs');
 const os = require('os');
 const path = require('path');
-const { seedAndLoad, dismissContinue } = require('./helpers');
+const { seedAndLoad, dismissContinue, workerPorts, watchChildren } = require('./helpers');
 const ROOT = path.resolve(__dirname, '..', '..', '..');
 
 // ── §MESH-01i slice 2b — client ledger rung ──────────────────────────────────
@@ -191,7 +191,9 @@ test.describe('§MESH-01i slice 2b — client ledger rung', () => {
 // + durable ledgerPid), mint, ⇄ button, propose (want-side), SSE-driven
 // incoming modal, accept, and the co-signed event mirrored into BOTH
 // inventories. Mirrors the multiplayer-presence two-browser pattern.
-const MP_PORT = 13893;
+// §DX-02hq — three per-worker ports from the shared map in helpers.js: this file's
+// own throwaway server, plus the two cross-origin servers §MESH-01i needs.
+const [MP_PORT, XO_PORT_A, XO_PORT_B] = workerPorts('ledger', 3).ports;
 let server, ledgerDir;
 
 test.describe('§MESH-01i slice 2b — end-to-end trade (two real clients)', () => {
@@ -202,11 +204,13 @@ test.describe('§MESH-01i slice 2b — end-to-end trade (two real clients)', () 
         LEDGER_DIR: ledgerDir, PEERS_CACHE_FILE: path.join(ledgerDir, 'peers-cache.json') },
       stdio: 'ignore',
     });
+    const died = watchChildren({ server });
     for (let i = 0; i < 100; i++) {
       try { if ((await fetch(`http://localhost:${MP_PORT}/api/ping`)).ok) return; } catch {}
       await new Promise((r) => setTimeout(r, 100));
     }
-    throw new Error(`throwaway wbapi-server did not answer on :${MP_PORT}`);
+    throw new Error(`throwaway wbapi-server did not answer on :${MP_PORT}`
+      + (died.length ? ` — ${died.join('; ')}` : ''));
   });
   test.afterAll(() => { if (server) { try { server.kill('SIGTERM'); } catch {} } });
 
@@ -280,7 +284,6 @@ test.describe('§MESH-01i slice 2b — end-to-end trade (two real clients)', () 
 // propose relays proposer-origin → counterparty-origin, the accept relays
 // back, ONE event carries both origins' sigs, and BOTH ledgers resolve the
 // item to its new owner. Protocol internals are gated by mud-harness [I3].
-const XO_PORT_A = 13894, XO_PORT_B = 13895;
 let xoSrvs = [];
 
 test.describe('§MESH-01i last rung — cross-origin co-signed trade (two servers, two real clients)', () => {
@@ -298,13 +301,15 @@ test.describe('§MESH-01i last rung — cross-origin co-signed trade (two server
       spawnSrv(XO_PORT_A, 'a1'.repeat(16)),
       spawnSrv(XO_PORT_B, 'b2'.repeat(16), { MESH_PEERS: `localhost:${XO_PORT_A}` }),
     ];
+    const died = watchChildren({ originA: xoSrvs[0], originB: xoSrvs[1] });
     for (const port of [XO_PORT_A, XO_PORT_B]) {
       let ok = false;
       for (let i = 0; i < 100 && !ok; i++) {
         try { ok = (await fetch(`http://localhost:${port}/api/ping`)).ok; } catch {}
         if (!ok) await new Promise((r) => setTimeout(r, 100));
       }
-      if (!ok) throw new Error(`throwaway wbapi-server did not answer on :${port}`);
+      if (!ok) throw new Error(`throwaway wbapi-server did not answer on :${port}`
+        + (died.length ? ` — ${died.join('; ')}` : ''));
     }
   });
   test.afterAll(() => { for (const s of xoSrvs) { try { s.kill('SIGTERM'); } catch {} } });

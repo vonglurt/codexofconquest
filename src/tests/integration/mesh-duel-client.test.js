@@ -5,7 +5,7 @@ const { spawn } = require('child_process');
 const fs = require('fs');
 const os = require('os');
 const path = require('path');
-const { seedAndLoad, dismissContinue } = require('./helpers');
+const { seedAndLoad, dismissContinue, workerPorts, watchChildren } = require('./helpers');
 const ROOT = path.resolve(__dirname, '..', '..', '..');
 
 // ── §MESH-01j — client duel rung ─────────────────────────────────────────────
@@ -111,7 +111,8 @@ test.describe('§MESH-01j — client duel rung', () => {
 // modal, Accept (= commit), auto commit/reveal, DUEL:CORE playback with the
 // "Replay verified ✓" line on BOTH screens, one VICTORY + one DEFEAT, and the
 // no-stakes invariant (neither save changes).
-const DUEL_PORT = 13896;
+// §DX-02hq — a per-worker port from the shared map in helpers.js.
+const [DUEL_PORT] = workerPorts('duel').ports;
 let duelServer, duelDir;
 
 test.describe('§MESH-01j — end-to-end duel (two real clients)', () => {
@@ -122,11 +123,13 @@ test.describe('§MESH-01j — end-to-end duel (two real clients)', () => {
         LEDGER_DIR: duelDir, PEERS_CACHE_FILE: path.join(duelDir, 'peers-cache.json') },
       stdio: 'ignore',
     });
+    const died = watchChildren({ duelServer });
     for (let i = 0; i < 100; i++) {
       try { if ((await fetch(`http://localhost:${DUEL_PORT}/api/ping`)).ok) return; } catch {}
       await new Promise((r) => setTimeout(r, 100));
     }
-    throw new Error(`throwaway wbapi-server did not answer on :${DUEL_PORT}`);
+    throw new Error(`throwaway wbapi-server did not answer on :${DUEL_PORT}`
+      + (died.length ? ` — ${died.join('; ')}` : ''));
   });
   test.afterAll(() => { if (duelServer) { try { duelServer.kill('SIGTERM'); } catch {} } });
 

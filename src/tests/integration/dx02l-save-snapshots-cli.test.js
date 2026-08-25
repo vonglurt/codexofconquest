@@ -31,7 +31,12 @@ const path = require('path');
 
 const ROOT = path.resolve(__dirname, '..', '..', '..');
 const GAME = path.join(ROOT, 'play.html');
-const PORT = 13897;
+const { workerPorts, watchChildren } = require('./helpers');
+
+// §DX-02hq — a per-worker port from the shared map, so `fullyParallel` (which runs
+// this beforeAll once per worker) does not have every worker but the first die of
+// EADDRINUSE unheard and then talk to worker 0's server.
+const [PORT] = workerPorts('snapshots').ports;
 const BASE = `http://localhost:${PORT}`;
 const STAMPED = /^play-\d{8}-\d{6}\.html$/;
 
@@ -58,11 +63,13 @@ test.beforeAll(async () => {
       PEERS_CACHE_FILE: path.join(dir, 'peers.json') },
     stdio: 'ignore',
   });
+  const died = watchChildren({ server });
   for (let i = 0; i < 150; i++) {
     try { if ((await fetch(`${BASE}/api/ping`)).ok) return; } catch {}
     await new Promise(r => setTimeout(r, 100));
   }
-  throw new Error(`throwaway wbapi-server did not answer on :${PORT}`);
+  throw new Error(`throwaway wbapi-server did not answer on :${PORT}`
+    + (died.length ? ` — ${died.join('; ')}` : ''));
 });
 
 test.afterAll(() => {
