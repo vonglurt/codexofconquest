@@ -45,6 +45,13 @@
 
 
 
+### §DX-02he — `check-battlepools`'s green line says all 3 exemptions are owned by an open row, and one is owned by design (NEW 2026-08-25 during §DX-02hd, 🟢 no design call)
+
+- [ ] **§DX-02he — the gate's own summary miscounts what its exemptions are.** **Measured at `ba86c48`:** the pass line is `` `(${…UNREACHABLE_DEADLY.length + …UNRESOLVED_BATTLE_KEYS.length} exemptions, each owned by an open row)` `` (`check-battlepools.js:131`) and prints **3**. The tables hold `dragon_of_fyresdal` and `slyzard_matriarch` (both `'§DX-02gw'`, a genuinely open row) and **`_bruhns`, whose value is not a row at all** — it is `'by design — the _isFinalBoss leg loads BOSS_COMMANDER_AUROS, not the key'`, and the comment above the table says so explicitly. **There is no stale third exemption**; the count is right and the sentence about it is wrong.
+> **Why it is worth a row:** the line is read as a ledger — a reader chasing *"3 exemptions, each owned by an open row"* goes looking for a third row that does not exist, which is exactly the search that produced this finding. A permanent by-design exemption and a temporary row-owned one are different promises and the gate reports them as one.
+> **Fix:** count the two classes separately, e.g. `2 exemptions owned by open rows · 1 by design`. The values are already distinguishable — a row-owned exemption's value matches `/^§/`.
+> **Provenance:** §DX-02hd hand-off item 5, *"possibly a stale third"*. Grounded: not stale, mislabelled.
+
 ### §DX-02hb — `multiplayer-presence.test.js:174` fails under full-suite load and passes alone (NEW 2026-08-25 during §DX-02fy, 🟡 one design call)
 
 - [ ] **§DX-02hb — §MESH-01a *"remote players move on the watcher's minimap in real time"* is flaky, and it burns a full 5.6-minute suite run to discover that.** **Measured at `ebf6863` + the §DX-02fy tree:** one `npm test --prefix src` returned **1 failed / 1022 passed**, failing on the initial attempt *and* its retry (1.6s, 1.7s — an assertion, not a timeout). The same file **passed in isolation on a clean tree (7 passed)**, **passed in isolation with the changes (6 passed)**, and the **full suite re-run passed 1023 / exit 0**. Note the isolation runs disagree with each other on the test count, 7 vs 6, which is its own signal.
