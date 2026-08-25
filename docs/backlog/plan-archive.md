@@ -7,6 +7,33 @@
 
 ---
 
+## Archived 2026-08-25 — §DX-02ha (the drop that was there all along, in a shape the measurement could not see)
+
+### §DX-02ha — a set-piece boss drops nothing ✅ CLOSED 2026-08-25 `PREMISE DISPROVED` — no code changed, and that was the increment
+
+**The row, as filed:**
+
+### §DX-02ha — a set-piece boss drops nothing, and it is the only real one that does (NEW 2026-08-25 during §DX-02fy, 🟢 no design call)
+
+- [ ] **§DX-02ha — `void_shaman` is fought at `TRD` and has no `MONSTER_DROPS` row.** **Measured at `ebf6863`:** of the **50** distinct `battle.key`s in `play.html`, **47 carry a drop**. The three that do not are `_bruhns` (by design — the `_isFinalBoss` leg never reads the key), `desert_wanderer` (created with one in §DX-02fy) and **`void_shaman`**. `TRD`'s battle label is *"Goblin ×4 + Hobgoblin ×2 + Void Shaman"* — a named Void-arc boss at a Shard node — and defeating it yields no trophy.
+> **Re-derive:** collect `battle:{…key:…}` and the keys of the `MONSTER_DROPS` block, then diff. `./bin/api list monster --has-drop false` filters the same set server-side.
+> **Fix:** `./bin/api drop void_shaman name="…" sell=<gp> icon=<emoji>` — the verb added in §DX-02fy. The `sell` band for the node's tier is `djinn` 35 / `gigascorpion` 35. **The name is the only call** and the Void arc supplies it.
+> **Provenance:** §DX-02fy, measuring whether a node-battle monster conventionally carries a drop before giving one to `desert_wanderer`. 47 of 48 real ones do.
+
+**Both halves of the premise are false, measured at `5a6b165`.**
+
+**1. `void_shaman` has a drop — four of them.** `MONSTER_DROPS@5853` holds a **weighted table**: Void Ichor Vial `sell:28 weight:4`, Warden Sigil Shard `22/3`, Nullstone Bead `18/3`, Cracked Void Staff `10/2`, under the comment *"Void Shaman (The Warden) — rare arcane guardian, goblin sanctum"*. `battKillEvent@7051` reads it — `Array.isArray(_rawDrop) ? _pickDrop(_rawDrop) : _rawDrop` — so the trophy has been dropping the whole time. **The row's own re-derive command proves it:** `./bin/api list monster --has-drop false` returns **0 monsters**. Not three. Zero. Every one of the **399** monsters carries a drop.
+
+**2. `void_shaman` is not fought at `TRD`.** `TRD@8688` reads `battle:{label:'Goblin ×4 + Hobgoblin ×2 + Void Shaman', key:'goblin', count:4}` — the **label** names the Shaman, the **key** is `goblin`. The Warden is fought at the synthetic `MT_WARDEN` node, `play.html:31747`: `storyPreBattle({ ...node, code:'MT_WARDEN', battle:{ label:'The Warden', key:'void_shaman', count:1 } })`, and via `epic_goblin_cave@6364` (`P.void_shaman`).
+
+**Why the §DX-02fy measurement said otherwise.** It counted `MONSTER_DROPS` keys by the **single-object** shape, `key: { name:…, icon:…, sell:… }`. **13 of the 399** use the **array** shape instead and were invisible to it — the same class of blindness §DX-02fy itself had just fixed in `check-battlepools` (single-quote-only literal reads against a double-quote writer). A grep that knows one of two shapes reports a false absence, and a false absence reads exactly like a defect.
+
+**Verified at HEAD, nothing changed:** `./bin/api audit` errors **0**; `npm run check:walk --prefix src` **18 gates exit 0** (`check:battlepools` ✓, selftest 5/5); `npm test --prefix src` **1023 passed** with the server stopped.
+
+**Found en route — §DX-02hc**, and it is the real defect this row was standing on top of. `PUT /api/monster/:key/drop` is `Object.assign(WBAPI.monsterDrops[key], body)`; against one of the 13 array-form drops that writes `.name`/`.sell`/`.icon` as **non-index properties** and returns **`ok:true`** with the untouched table echoed back. Proven by probe: `./bin/api drop void_shaman name="ZZZ-probe" sell=1 icon=❓ --update` → `ok:true`, four entries unchanged, `grep -c ZZZ-probe play.html` = **0**. PUT-only, never saved, discarded by restarting the server. **The mandated write path silently loses an author's edit for 13 monsters, and tells them it succeeded.**
+
+---
+
 ## Archived 2026-08-25 — §DX-02fy (the battle whose monster was never written)
 
 ### §DX-02fy — one node's battle names a monster that does not exist ✅ SHIPPED 2026-08-25 `62f4803`
