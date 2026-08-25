@@ -9,7 +9,7 @@
 
 ## Archived 2026-08-25 — §DX-02hp (the Count column was remembered, not measured — five of eleven cells wrong)
 
-### §DX-02hp — a test-coverage table where nearly half the counts were the number that was true when someone last looked ✅ SHIPPED 2026-08-25 `SHA_HP`
+### §DX-02hp — a test-coverage table where nearly half the counts were the number that was true when someone last looked ✅ SHIPPED 2026-08-25 `2d186cd`
 
 **The row, as filed:**
 
