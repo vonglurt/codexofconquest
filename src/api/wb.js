@@ -463,6 +463,29 @@ const CMD = {
     ok(`${type}:${id} deleted`);
   },
 
+  async drop(pos, flags) {
+    await requireServer();
+    const [, key, ...rest] = pos;
+    if (!key) die('Usage: ./bin/api drop <monster-key> name="<item>" [sell=<gp>] [icon=<emoji>]  (or pipe JSON)');
+    const piped = await readStdin();
+    const body  = Object.assign(
+      typeof piped === 'object' && piped ? piped : {},
+      parseKV(rest),
+    );
+    if (!body.name) die('A drop needs name=. Optional: sell=<gp>, icon=<emoji>.');
+    const method = flags.update ? 'PUT' : 'POST';
+    const r = await request(method, `/api/monster/${encodeURIComponent(key)}/drop`, body);
+    if (r.status === 409) {
+      printError(r);
+      info('A drop already exists. Re-run with --update to replace it.');
+      process.exit(1);
+    }
+    if (r.status >= 400) { printError(r); process.exit(1); }
+    const sv = await request('POST', '/api/save', {});
+    if (sv.status >= 400) { printError(sv); process.exit(1); }
+    printResult(r.body, flags);
+  },
+
   async audit(pos, flags) {
     await requireServer();
     let auditPath;
@@ -1929,6 +1952,7 @@ ${C.bold}═══════════════════════�
   ${C.green}put${C.reset} <type> <id> [k=v]  Edit one or more fields
   ${C.green}post${C.reset} <type> [k=v]      Create a new entity
   ${C.green}del${C.reset} <type> <id>        Delete an entity
+  ${C.green}drop${C.reset} <monster> name=…    Trophy drop (MONSTER_DROPS; --update to replace)
   ${C.green}audit${C.reset} [--map]          Integrity scan
   ${C.green}export${C.reset} <collection>    Export data as JSON / JS / ES module
   ${C.green}import${C.reset} <file.json>     Bulk import nodes + quest cycles

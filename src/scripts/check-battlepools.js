@@ -27,19 +27,19 @@ const UNREACHABLE_DEADLY = {
 // BOSS_COMMANDER_AUROS and never consults the key. The rest are owned by an open row.
 const UNRESOLVED_BATTLE_KEYS = {
   _bruhns: 'by design — the _isFinalBoss leg loads BOSS_COMMANDER_AUROS, not the key',
-  desert_wanderer: '§DX-02fy',
 };
 
+// Pool rows are single-quoted by hand and double-quoted by `./bin/api post monster`; read both.
 function scan(src) {
   const findings = [];
 
   const poolKeys = new Set();
   const tiers = new Map();
-  for (const m of src.matchAll(/^ {2}(\w+):\s*\{\s*key:'(\w+)',[^}]*?tier:'(\w+)'/gm)) {
+  for (const m of src.matchAll(/^ {2}(\w+):\s*\{\s*key:["'](\w+)["'],[^}]*?tier:["'](\w+)["']/gm)) {
     poolKeys.add(m[2]);
     tiers.set(m[2], m[3]);
   }
-  for (const m of src.matchAll(/^ {2}(\w+):\s*\{\s*key:'(\w+)'/gm)) poolKeys.add(m[2]);
+  for (const m of src.matchAll(/^ {2}(\w+):\s*\{\s*key:["'](\w+)["']/gm)) poolKeys.add(m[2]);
 
   const battleKeys = new Map();
   for (const m of src.matchAll(/battle\s*:\s*\{[^}]*?["']?key["']?\s*:\s*["'](\w+)["']/g)) {
@@ -109,6 +109,13 @@ if (process.argv.includes('--selftest')) {
   ok(scan(orphan).some(f => f.startsWith('[deadly]')), 'a deadly monster no battle or pool names is caught');
   ok(scan(base).filter(f => f.includes('retire the exemption')).length === Object.keys(UNREACHABLE_DEADLY).length + Object.keys(UNRESOLVED_BATTLE_KEYS).length,
     'every exemption absent from the source is reported stale');
+  const apiWritten = [
+    "const MONSTER_POOL = {",
+    '  api_mob: { key:"api_mob", name:"API Mob", ac:13, hp:72, tier:"medium" },',
+    "};",
+  ].join('\n');
+  ok(scan(apiWritten + "\n  X:{ battle:{label:'L', key:'api_mob', count:1} },")
+    .filter(real).length === 0, 'a double-quoted (API-written) pool row resolves a battle key');
   if (fail) { console.log(`\n✗ check-battlepools selftest: ${fail} FAILED, ${pass} passed`); process.exit(1); }
   console.log(`✓ check-battlepools selftest: all ${pass} checks pass`);
   process.exit(0);
