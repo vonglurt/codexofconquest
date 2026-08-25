@@ -18,7 +18,6 @@ const GAME = path.join(__dirname, '..', '..', 'play.html');
 // Entries here are known-unreachable and owned by an open row; an entry that becomes
 // reachable is a stale exemption and fails, the same rule as SYNTHETIC_BATTLE_CODES.
 const UNREACHABLE_DEADLY = {
-  bruxa_corvo_bianco: '§DX-02gw',
   dragon_of_fyresdal: '§DX-02gw',
   slyzard_matriarch: '§DX-02gw',
 };

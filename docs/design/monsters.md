@@ -493,7 +493,7 @@ Measured 2026-08-03: **55 of 398 pool entries have exactly two references in the
 | Name | Key | AC | HP | ATK | Damage | Notes |
 |------|-----|----|----|-----|--------|-------|
 | Slyzard Matriarch | `slyzard_matriarch` | 16 | 187 | +10 | 3d10+6 | Draconid — elder slyzard queen |
-| The Bruxa of Corvo Bianco | `bruxa_corvo_bianco` | 18 | 187 | +11 | 3d8+7 | Named higher bruxa — ancient estate |
+| The Bruxa of Corvo Bianco | `bruxa_corvo_bianco` | 18 | 187 | +11 | 3d8+7 | Named higher bruxa — the title Elise Mourne holds at `CLJ`; `CLJ.battle` names it (the west wing, opt-in) |
 | The Dragon of Fyresdal | `dragon_of_fyresdal` | 18 | 243 | +12 | 3d10+8 | Named wyvern boss — island territory |
 
 ---

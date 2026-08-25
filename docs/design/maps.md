@@ -160,7 +160,7 @@ game, so it cannot go stale the way the historical legend below did.
 | PC | 27 | pirate_cave | V | R10,C16 | Pirate cave — treasure, hammock sleep |
 | MC | 28 | monster_cave | V | R11,C12 | Monster den — Zeugl, Abandoned Scholar Pack |
 | CA | 29 | catacombs | V | R10,C12 | Scholar Kings' underground road — Wights |
-| VC | 30 | vampire_castle | V | R11,C11 | Vampire ruins — Bruxa Mourne, Toll Token |
+| VC | 30 | vampire_castle | V | R11,C11 | Vampire ruins — Bruxa Mourne, Toll Token; the west-wing fight is `bruxa_corvo_bianco` (deadly, opt-in) |
 | DE | 31 | desert | VI | R10,C05 | Desert wastes — Mummy, crossroads |
 | DC | 32 | desert_caravan | VI | R10,C07 | Izador's caravan — Djinn, Shard #5 |
 | JU | 33 | jungle | VI | R10,C02 | Dense jungle — Mael, Neurotoxin, Scholar road |
