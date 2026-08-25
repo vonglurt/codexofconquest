@@ -7,6 +7,24 @@
 
 ---
 
+## Archived 2026-08-24 — §DX-02gv (a monster no battle named, and the gate that walks both ways)
+
+### §DX-02gv — a fully specified deadly-tier monster has a loot shard and no fight ✅ SHIPPED 2026-08-24
+
+- [x] **§DX-02gv — `void_warlord` is authored, priced, named on a battle label, and unreachable.** ✅ **SHIPPED 2026-08-24 `SHA`.** **Measured at `c0888aa`:** `grep -n void_warlord play.html` returns **2** lines — the `MONSTER_POOL` entry `@5789` (`ac:20, hp:210, atk:12, 4d8+8, tier:'deadly'`, the highest-statted single monster in the pool) and its drop, `{name:'Void Crown Shard', icon:'⚔', sell:95}` `@6266`. **No `battle.key` in the file resolves to it.** The nearest thing to a fight was `TLS`, whose battle read `battle:{label:'Void Walker ×7 → Void Warlord', key:'void_walker', count:1}`.
+
+**Shipped: option (b), and the ground moved the reason for it from *cheapest* to *correct*.** `TLS.battle` is **not** the climax — `_finalBattleReady@28008` diverts a level-20 / 7-shard player to `storyPreFinalBattle`, which builds its own `_preBattNode` with `key:'_bruhns'` and `_isFinalBoss:true`, and `storyCommitBattle`'s `_isFinalBoss` leg loads `BOSS_COMMANDER_AUROS` **without ever reading the key**. `TLS.battle.key` is the encounter for a player who arrives at the Convergence *not yet ready*, and that is exactly the Warlord's place: the wall before the Cradle, not a replacement for Bruhns. Option (a)'s scripted ×7 escalation is **an engine feature, not a field edit** — nothing in the battle path consumes `battle.count` for a node battle (its only read is the `combat` bit's passthrough `@22296`), and `storyCommitBattle` loads exactly one monster with no wave concept anywhere. It was not done inline and it was not dropped: it is **§WAVE-01**, filed in Phase 2.
+
+`./bin/api put node TLS` re-pointed the key; round-tripped from disk, not from the response: `grep -on "battle:[^,]*Void Warlord[^}]*}" play.html` → `8726:battle:{label:'Void Walker ×7 → Void Warlord',key:'void_warlord',count:1}`, and `grep -c void_warlord play.html` **2 → 3**. The label was left as authored — it was already the truthful half of the pair, and it is now the one the fight matches. The drop follows for free and by the same read: `battKillEvent@7047` resolves loot as `MONSTER_DROPS[S.enemy.key]`, so loading `void_warlord` is what makes the Void Crown Shard obtainable.
+
+**The durable half shipped with it: `src/scripts/check-battlepools.js`, `check:walk` gate #17.** It walks the two collections against each other in both directions — every `battle.key` resolves in a pool (§DX-02fy's shape, where the opponent load is guarded and the battle is not), *and* every `tier:'deadly'` monster is reachable by a battle key, a `P.<key>` pool membership, a `bossKey`, or any engine mention beyond its own two table rows (this row's shape). Exemptions are explicit and fail in the other direction when stale, the §AUDIT-03j/§AUDIT-03n pattern. Direction 1 found the two real cases immediately and **one of them was not the row's**: `_bruhns` (exempt by design, per the `_isFinalBoss` reading above) and `desert_wanderer` at `RUH` (§DX-02fy, exempt pending that row) — the gate reproduced §DX-02fy from a cold start, which is the check that it is not merely re-asserting what its author already knew. Selftest 4/4, non-vacuous: a synthetic source with a dangling key and one with an orphan deadly monster each go red.
+
+**Measured after:** unreachable deadly monsters **4 → 3**; `check:walk` **exit 0, 17 gates**, run unpiped and redirected. `play.html` 38,700 lines, unchanged.
+
+**Found en route, both filed:** **§DX-02gw** (Phase 1, top) — the Warlord was one of a **four**-monster `// deadly` block and the other three (`bruxa_corvo_bianco`, `dragon_of_fyresdal`, `slyzard_matriarch`) are referenced *exactly twice each*, pool row and drop row, and nowhere else; the gate's 3 remaining exemptions are precisely them. **§WAVE-01** (Phase 2) — the multi-wave battle the label has been describing to players all along. And one annotation, not a rewrite: `docs/design/index.md`'s ⚠️ that `check:walk` *"does not currently complete"* (§DX-02fz) was **disproved at HEAD today** — the full chain ran green, exit 0, in ~4 min; the line is annotated with that measurement and §DX-02fz stays open, because intermittent is what it now looks like. → [archived](plan-archive.md)
+
+---
+
 ## Archived 2026-08-24 — §AUDIT-03bi (the fifth ending behind a console command)
 
 ### §AUDIT-03bi — an entire NG+ layer and the game's fifth ending are downstream of a command the player has to type into a browser console ✅ SHIPPED 2026-08-24 `c0888aa`
