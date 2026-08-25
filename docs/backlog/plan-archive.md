@@ -7,6 +7,26 @@
 
 ---
 
+## Archived 2026-08-25 — §FUTURE-01-FU2 (the arc's first mission card, and the quest that had already answered the question)
+
+### §FUTURE-01-FU2 — the arc's first mission card addressed the player as Saul ✅ SHIPPED 2026-08-25
+
+**The row, as filed:**
+
+- [x] **§FUTURE-01-FU2 — the arc's first mission card addresses the player as Saul, one sentence away from calling him "he" (NEW 2026-08-12 during §DOC-02aj).** 🟢 **no design call, two lines.** The §FUTURE-01 arc's shipped frame is *player-as-travelling-companion*: node texts narrate Paul in third person and "you" is a separate character with their own hit points (*"Paul takes the hit before you close the distance"*). Measured across the 13 arc node texts: **113 third-person tokens against 22 second-person, 0 of 13 written in pure second person**; across the 18 arc quests, **99 prose fields, 21 mixing both persons** — nearly all of it legitimate, because a companion narrating Paul's action must use both. **The exception is `` `quest_road_damascus@11310` ``, the arc's first mission, which addresses the player *as Saul*:** *"The warrants are in your coat"* in the `desc`, and the completion narrative one line above it — *"The warrants are still in your coat. You will not use them again."* — while the sentence between them reads *"He leaves at first light."* The warrants are Saul's; nobody else can be carrying them. **This is the residue of the original vignette spec, which wrote the player AS Paul in second person throughout** (88 second-person tokens, the name "Paul" zero times) — so the one place that POV survived is the one place it contradicts the arc's own frame, and it is the first §FUTURE-01 text a player reads. **Fix:** repoint both to the companion (*"The warrants are in his coat" / "He will not use them again"*), or — if the opening beat is deliberately first-person-as-Saul — say so in the node text and make `desc` agree with itself. **Verify:** grep the arc block for `your coat`; 0 hits. **Related:** §FUTURE-01-FU (same reversion), and the transposition mechanism is what carried `Lythros` past the rename.
+
+**What grounding it found.** The row's two sites are real and still live, at `quest_road_damascus@11312` — the `onComplete` narrative (`The warrants are still in his coat@11313`) and the `desc` one line below it (`The warrants are in his coat@11314`). The row offered the repoint as one of two options and left the choice open. **It was not open.** The same quest's third prose field already reads *"He has the warrants in his coat."* — the companion phrasing, shipped, in the `failText` the player sees on the same card. `disposition` and `passText` are third-person throughout (*"He says: Lead me to the city"*, *"At noon a light struck the road. He fell."*), and the host node `JRS@8445` narrates Saul in third person as well. Three of the quest's five prose fields already agreed; two did not. **The design call the row reserved was answered by the quest's own text**, so the increment is the two strings and nothing else.
+
+**Shipped.** `desc` → *"The warrants are in his coat. He leaves at first light."*; the `onComplete` narrative → *"The warrants are still in his coat. He will not use them again."* Both written through `./bin/api put quest quest_road_damascus` — `desc` by `editField`, `onComplete` by `editStructuredField` from a JSON body, because a structured field cannot be addressed by `key=value`. **Round-tripped from disk**, not from the response: `git diff` is **2 lines, one file**, and `grep 'your coat'` inside the quest block is **2 → 0**. The `onComplete` line came back re-spaced by the serializer (`[ { kind:` → `[{kind:`) — that is **§DX-02ga**, the known reformat, and it moved no anchor.
+
+**The engine's item is not the fiction's coat.** `activateCond` requires *Three Jerusalem Warrants* in `S_story.inventory`, looted from `JRS`, so mechanically the player does carry them. That is party inventory, and the arc's frame is the companion travelling with Paul — the node text that grants the loot narrates Saul in third person on the same screen. The mechanic did not license the second person; it is what made the residue survive review.
+
+**Four doc anchors named the old literal** and `check:anchors` went red on the write, which is the gate working: `lab-report-saul-paul-vignette-spec.md:159/332`, `BACKLOG-6-verification-docs.md:531`, and the row itself. The two lab-report sites and the closed §DOC-02aj row are **records of a measurement**, so the quoted old text stays as prose and only the live anchor was repointed to `The warrants are in his coat@11314`, each stamped shipped.
+
+**Verified:** `./bin/api audit` errors **0**; `check:walk` **40 green lines, EXIT=0**; suite **1032 passed / 1 failed, EXIT=1** — `multiplayer-presence.test.js:174`, the **third sighting of §DX-02hb**, which passed **7 of 7, EXIT=0** re-run alone immediately after and is recorded in that row.
+
+---
+
 ## Archived 2026-08-25 — §DX-02hd (the last symptom of the two-shapes blindness, and there were two readers, not one)
 
 ### §DX-02hd — the drop log line printed `undefined  ·  0gp` for a weighted table ✅ SHIPPED 2026-08-25 `ab9e427`

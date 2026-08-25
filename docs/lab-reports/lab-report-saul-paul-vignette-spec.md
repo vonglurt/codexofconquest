@@ -156,7 +156,7 @@ no reason to look at a proper noun. §DOC-02ai found the fossil; this is its mec
 and **11 of 18 quests** do. Most of that mixing is legitimate — a companion narrating Paul's action
 must use both. The genuine defect is narrow and sits in the worst possible place: the arc's **first
 mission**, `quest_road_damascus@11310`, addresses the player *as Saul* in two adjacent lines —
-`The warrants are in your coat@11312`, and the completion line *"The warrants are still in your coat.
+*"The warrants are in your coat"*, and the completion line *"The warrants are still in your coat.
 You will not use them again."* — while the sentence between them says *"He leaves at first light."*
 Everywhere else in the arc, "you" is the companion. **The one place the spec's protagonist-Paul POV
 survived is the one place it contradicts the arc's own frame, and it is the first thing a player
@@ -329,7 +329,7 @@ grants `xp:150`. → **§DX-02av**, 🟢, no design call.
 
 | Row | Severity | Summary |
 |---|---|---|
-| **§FUTURE-01-FU2** *(new)* | 🟢 no design call | `quest_road_damascus@11310` addresses the player *as Saul* at `The warrants are in your coat@11312` and in its completion line, one sentence away from *"He leaves at first light."* Two lines; the arc's first mission card. |
+| **§FUTURE-01-FU2** *(new)* | 🟢 no design call | `quest_road_damascus@11310` addressed the player *as Saul* at what is now `The warrants are in his coat@11314` and in its completion line, one sentence away from *"He leaves at first light."* Two lines; the arc's first mission card. **✅ SHIPPED 2026-08-25 — both repointed to the companion.** |
 | **§DX-02av** *(new)* | 🟢 no design call | 8 skill-check quests file-wide carry an unreachable `onComplete[]`; 5 in this arc; one misstates its own XP. Move the narrative into `onPass` or delete it. |
 | **§FUTURE-01-FU** *(extended)* | 🟡 design call | Two naming fossils added: `quest_prison_phillam@11449` and `phillippiJailerConverted@11449` — the latter a **blend** of fictional *Phillam* and historical *Philippi*, not a straggler of either. Plus a second player-facing straggler: *"the waypoint"* for Troas, at `@8503` and `@11502`. |
 | **§AUDIT-03x** | 🟡 design call *(cheapest instance needs none)* | `ATH`←`SEA` strands `quest_areopagus@11461` — this spec's own nominated model scene. |

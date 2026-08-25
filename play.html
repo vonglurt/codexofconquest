@@ -11310,8 +11310,8 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
   },
   // ── §LIX: The Road to Damascus ──
   quest_road_damascus: { id:'quest_road_damascus', type:'side', schema:'UQF-1.0', gate:{ _legacyFn:true }, bits:[], completion:{ flags:['saulConverted'] }, title:'The Light at Noon',
-    onComplete:[ { kind:'narrative', msg:'⚡ The road to Damascus is behind you. The warrants are still in your coat. You will not use them again.' } ], // §ARCH-01 W7c
-    desc:"The road to Damascus is well-maintained for the first half day. After the stones give way to packed earth, the escort falls back and the dust is the same colour as the sky at noon. The warrants are in your coat. He leaves at first light.",
+    onComplete:[{kind:'narrative',msg:'⚡ The road to Damascus is behind you. The warrants are still in his coat. He will not use them again.'}], // §ARCH-01 W7c
+    desc:"The road to Damascus is well-maintained for the first half day. After the stones give way to packed earth, the escort falls back and the dust is the same colour as the sky at noon. The warrants are in his coat. He leaves at first light.",
     hint:'Take the road east from Jerusalem to Damascus.',
     activateNode:'JRS',
     activateCond:() => (S_story.inventory||[]).some(i => i.name === 'Three Jerusalem Warrants'),
