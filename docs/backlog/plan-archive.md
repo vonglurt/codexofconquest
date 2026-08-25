@@ -9,7 +9,7 @@
 
 ## Archived 2026-08-25 — §AUDIT-03ak (the residual set the row measured is not the residual set at HEAD)
 
-### §AUDIT-03ak — four `⚠️ PLANNED` headings describing live features ✅ SHIPPED 2026-08-25 — **two of the four, because the other two had already been repaired**
+### §AUDIT-03ak — four `⚠️ PLANNED` headings describing live features ✅ SHIPPED 2026-08-25 `37ace66` — **two of the four, because the other two had already been repaired**
 
 **The row, as filed:**
 
