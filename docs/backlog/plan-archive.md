@@ -9,7 +9,7 @@
 
 ## Archived 2026-08-25 — §DX-02hb (the flake that was never diagnosed, because the suite threw the evidence away)
 
-### §DX-02hb — the two-client presence spec's one non-retrying assertion, and the retry that reported it as green ✅ SHIPPED 2026-08-25 <SHA>
+### §DX-02hb — the two-client presence spec's one non-retrying assertion, and the retry that reported it as green ✅ SHIPPED 2026-08-25 `cb5e23a`
 
 **The row, as filed:**
 
