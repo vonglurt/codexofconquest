@@ -13,7 +13,7 @@ const path = require('path');
 const GAME = path.join(__dirname, '..', '..', 'play.html');
 
 // A deadly monster is REACHABLE when a node battle names it, an encounter pool lists it
-// (`P.<key>` inside TERRAIN_POOLS), a node's `bossKey` selects it, or engine code mentions
+// (`P.<key>` inside a `WORLD_DB` terrain row), a node's `bossKey` selects it, or engine code mentions
 // the key anywhere outside its own MONSTER_POOL row and MONSTER_DROPS row.
 // Entries here are known-unreachable and owned by an open row; an entry that becomes
 // reachable is a stale exemption and fails, the same rule as SYNTHETIC_BATTLE_CODES.
