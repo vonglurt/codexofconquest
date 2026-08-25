@@ -9,7 +9,7 @@
 
 ## Archived 2026-08-25 — §DX-02hn (the licence header that spent two days on line 2)
 
-### §DX-02hn — one displaced line, and the sweep its provenance note asked for ✅ SHIPPED 2026-08-25 `SHA_HN`
+### §DX-02hn — one displaced line, and the sweep its provenance note asked for ✅ SHIPPED 2026-08-25 `d0d17ab`
 
 **The row, as filed:**
 
