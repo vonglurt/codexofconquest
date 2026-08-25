@@ -7,6 +7,48 @@
 
 ---
 
+## Archived 2026-08-25 — §DX-02hb (the flake that was never diagnosed, because the suite threw the evidence away)
+
+### §DX-02hb — the two-client presence spec's one non-retrying assertion, and the retry that reported it as green ✅ SHIPPED 2026-08-25 <SHA>
+
+**The row, as filed:**
+
+### §DX-02hb — `multiplayer-presence.test.js:174` fails under full-suite load and passes alone (NEW 2026-08-25 during §DX-02fy, 🟡 one design call)
+
+- [x] **§DX-02hb — §MESH-01a *"remote players move on the watcher's minimap in real time"* is flaky, and it burns a full 5.6-minute suite run to discover that.** **Measured at `ebf6863` + the §DX-02fy tree:** one `npm test --prefix src` returned **1 failed / 1022 passed**, failing on the initial attempt *and* its retry (1.6s, 1.7s — an assertion, not a timeout). The same file **passed in isolation on a clean tree (7 passed)**, **passed in isolation with the changes (6 passed)**, and the **full suite re-run passed 1023 / exit 0**. Note the isolation runs disagree with each other on the test count, 7 vs 6, which is its own signal. **Third sighting, 2026-08-25 during §FUTURE-01-FU2** (second recorded at `ab9e427`): the full suite returned **1 failed / 1032 passed** on the same line, and the file re-run alone immediately after returned **7 passed, EXIT=0**. Three sightings now, all on `:174`, all on trees whose diff is two prose strings or a log formatter — **nothing the increments touch is anywhere near the mesh**, so the variable is suite load, not the change under test. **Fourth sighting, same session, the very next full run** — a tree whose entire diff is Markdown. **Two consecutive full-suite failures, each passing 7 of 7 alone straight after**, so the earlier reading of *rare flake* is wrong: at HEAD it is reproducing more often than not, and the first three clean suites are the outlier, not this. That makes it cheap to bisect for the first time — the failure is now the expected outcome of a full run. **Fifth sighting, third run of the same session:** `1 flaky` — it failed the first attempt and **passed its retry**, so the run reported `EXIT=0`. All three of this session's full runs hit `:174`; **two failed the retry and one did not**, which is the sharpest signal yet — the retry is a coin toss, and a green suite may simply be a run where the coin landed right.
+> **Why it matters more than one flake:** the two-real-client MESH tests are the reason a green suite cannot be trusted from a single run, and the §DX-02gt entry already recorded *"the suite was red at HEAD and the gate chain was green"*. A row that ends *"suite 1023 passed"* is only as good as whether this test felt like passing.
+> **The design call:** (a) make the assertion wait on the presence broadcast instead of a wall-clock window; (b) serialise the two-client MESH specs into their own non-parallel project so full-suite load cannot starve them; or (c) mark it `test.fixme` and file the real bug. **Recommendation: (b) then (a)** — the failure is load-dependent, so isolating it both fixes the signal and tells us whether (a) is still needed.
+> **Second sighting, 2026-08-25 during §DX-02hd (`e8c3317`+):** the same spec, the same line, `1032 passed / 1 flaky` — it failed the attempt and passed the retry. Three clean suites had gone by since §DX-02fy without it appearing. It is intermittent, not fixed, and the immediately following full run of the identical tree was **1033 passed, EXIT=0** — which is exactly the pattern that makes a single green run untrustworthy.
+> **Provenance:** §DX-02fy. The failure was investigated rather than re-run away: stash → isolation on clean tree → restore → isolation → full re-run, which is what distinguished a flake from a regression.
+
+**The row's premise does not hold at HEAD, and grounding it came first.** The row states that at HEAD the failure *"is reproducing more often than not"* and that *"the first three clean suites are the outlier."* **Measured at `378f95f`: two consecutive full runs, `1033 passed`, `EXIT=0`, `0 flaky`, no sighting on `:174` in either.** The mesh file alone under deliberate CPU oversubscription — 12 spin loops on 8 cores, `--repeat-each=6 --retries=0` — returned **42/42 green**. So CPU starvation is not the variable, and a plan built on *"it fails most runs, so it is finally cheap to bisect"* was not a plan worth implementing as written.
+
+**The `7 vs 6` signal in the row resolves to nothing.** The file declares exactly **7** tests (`grep -n "  test("`); the `6 passed` isolation run was taken against the §DX-02fy working tree, not a count of what the file contains.
+
+**The failure is real, and it is the one assertion in the test that cannot wait.** Of the four checks after `#btn-E`, three are auto-retrying (`expect.poll` on `MP.remotes[pid].c`, `expect.poll` on `MP.nearby`, `expect.poll` on the disconnect). The fourth — the `☺` glyph on the watcher's minimap — was a bare `expect(await page.evaluate(…)).toBe(true)`, which resolves once and fails instantly. `_mpRepaintMaps@29289` is **debounced ~100 ms** (`§MESH-01-REVIEW`), and it is the only writer of both `MP.nearby` (via `_mpRecomputeNearby@29277`) and the minimap DOM (via `_renderMiniMap@37286`) — the two run in the same synchronous callback. **Captured, for the first time in six sightings**, on a retry attempt running unmodified HEAD code under the disturbed timing of a worker restart: `multiplayer-presence.test.js:195`, `Expected: true / Received: false`, on exactly that line.
+
+**Why nobody had ever read that error.** `playwright.config.js` sets **no `trace` at all**, and `retries: 1` applies to the whole suite. A two-client presence spec that fails once and passes its retry therefore reports **`1 flaky`, `EXIT=0`, and leaves no artifact on disk** — the row's own fifth sighting. **Measured, with a first-attempt-only failure planted at the top of the `:174` test at HEAD: three runs, three times `1 flaky`, `EXIT=0`, `0` trace files.** Five sightings across three sessions produced five tally marks and zero diagnoses because the suite was configured to discard the evidence.
+
+**What shipped, and why not what the row recommended.** The row's call was *(b) serialise the two-client MESH specs into their own non-parallel project, then (a) make the assertion wait.* **(b) was rejected on grounding:** Playwright's `workers` is a global option, not a per-project one, so the only way one project runs alone is to make the rest `dependencies` of it — and a dependency failure **skips** its dependents, so a single mesh coin-flip would suppress the other **1026** tests. That is a worse signal than the one being repaired. Shipped instead:
+
+1. **(a), as recommended** — `multiplayer-presence.test.js:195` becomes `await expect.poll(() => …).toBe(true)`. The only non-retrying assertion in the file now waits for the debounce like its three neighbours.
+2. **The evidence, which is what the row was actually costing** — `test.use({ trace: 'retain-on-failure' })` at file top level (it is rejected inside a `describe`: *"forces a new worker"*), and `test.describe.configure({ retries: 0 })` on the `§MESH-01a` block. Scoped to this file, so the fishing smoke test keeps the by-design retry its config comment claims (*"the rare case where all 25+ casts miss"*), and the other 1026 tests pay no trace-recording overhead.
+
+**Verified — the same planted first-attempt-only failure, before and after:**
+
+| | outcome | exit | traces on disk |
+|---|---|---:|---:|
+| at `378f95f` | `1 flaky` (×3 runs) | **0** | **0** |
+| with this change | `1 failed` | **1** | **1** (`build/test-results/…-FU-4--chromium/trace.zip`) |
+
+**Also verified:** `multiplayer-presence.test.js` **28/28** green, `--repeat-each=4 --workers=1`; `npm run check:walk --prefix src` **17/17 gates, EXIT=0, 22.5 s**; `npm test --prefix src` **1033 passed, EXIT=0, 0 flaky**, server stopped. The acceptance test caught a real defect in the first attempt at the fix — `test.use({ trace })` inside the `describe` block is a hard parse error, and the planted failure is what surfaced it.
+
+**What this does *not* claim.** The flake itself is **not proven fixed** — it did not reproduce at HEAD in two full suites, so there is no before/after count of the flake to show, and `expect.poll` on `:195` is a repair of the mechanism that was captured failing, not of a mechanism observed failing repeatedly. What is proven is that the **next** occurrence arrives as `EXIT≠0` with a trace, instead of as a sixth tally mark.
+
+**Found en route:** §DX-02hm (a multi-worker run of this file silently drops tests on two hardcoded ports — `17 passed / EXIT=0` where 28 were expected), §DX-02hn (line 1 is a stray `require` above the SPDX header, the same prepend that broke `mud-harness.mjs` in §DX-02hi).
+
+---
+
 ## Archived 2026-08-25 — §DX-02hi (the check-in process: a chain that could hang, a gate that was 73 seconds, and a CI job red for 72 commits)
 
 ### §DX-02hi — the gate chain had no deadline, and the check-in process had three separate faults ✅ SHIPPED 2026-08-25

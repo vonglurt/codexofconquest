@@ -72,7 +72,12 @@ async function loadPlayer(browser, name) {
   return { ctx, page };
 }
 
+test.use({ trace: 'retain-on-failure' });
+
 test.describe('§MESH-01a — multiplayer presence (two real clients)', () => {
+  // A retry here reports `1 flaky` + EXIT=0, which is indistinguishable from green.
+  test.describe.configure({ retries: 0 });
+
   test('connect, co-presence, chat, departure — full flow', async ({ browser }) => {
     const a = await loadPlayer(browser, 'Aldona');
     const b = await loadPlayer(browser, 'Borys');
@@ -189,7 +194,7 @@ test.describe('§MESH-01a — multiplayer presence (two real clients)', () => {
     await expect.poll(() => w.page.evaluate((pid) => (MP.remotes[pid] || {}).c, moverPid))
       .toBe(wCol + 1);
     await expect.poll(() => w.page.evaluate((pid) => MP.nearby.some((p) => p.pid === pid), moverPid)).toBe(true);
-    expect(await w.page.evaluate(() =>
+    await expect.poll(() => w.page.evaluate(() =>
       [...document.querySelectorAll('#mini-map-grid .mmc')].some((cell) => cell.textContent === '☺')
     )).toBe(true);
 
