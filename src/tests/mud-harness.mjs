@@ -1,4 +1,3 @@
-const path = require('path');
 #!/usr/bin/env node
 // SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson
 // §WALK-5 Inc 3 — MUD multi-client harness.
@@ -27,7 +26,8 @@ import { fileURLToPath } from 'node:url';
 import { createRequire } from 'node:module';
 const requireCjs = createRequire(import.meta.url);   // §NAV-01f: rooms.js + wbapi-core are CJS
 
-const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
+// Repo root: this file is src/tests/, and every path built from ROOT names src/… itself.
+const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..', '..');
 const PORT = parseInt(process.env.MUD_HARNESS_PORT || '13679');
 const BASE = `http://127.0.0.1:${PORT}`;
 
@@ -261,7 +261,11 @@ async function main() {
   // trigger the sweep (any /session/* request prunes first) and assert that only
   // the idle one is dropped — and that its SSE stream was server-closed.
   console.log('\n[D] idle session past SESSION_TTL is pruned + its SSE closed');
-  const TTL_MS = 700;
+  // The TTL has to clear a whole round trip with room to spare: Warm stays alive only
+  // if the gap between two of its look()s is under it, and a look is a spawn-a-request,
+  // parse-a-response beat that costs whatever the machine is busy with. A margin tight
+  // enough to be fast is a margin that prunes Warm on a loaded runner.
+  const TTL_MS = 6000;
   const ttl = await startServer(PORT + 1, { SESSION_TTL_MS: String(TTL_MS) });
   const ghost = await jpost('/session/start', { name: 'Ghost', seed: 11 }, ttl.base);
   const warm  = await jpost('/session/start', { name: 'Warm',  seed: 22 }, ttl.base);
@@ -270,11 +274,19 @@ async function main() {
   check((await jget('/session/who', ttl.base)).count === 2, 'both sessions present before TTL elapses');
   check(sseG.closed === false, 'Ghost SSE is open before TTL elapses');
 
-  // Keep Warm warm across > TTL of wall-clock; never touch Ghost.
-  const warmTouches = 4, warmStep = Math.ceil((TTL_MS * 1.6) / warmTouches);
-  for (let i = 0; i < warmTouches; i++) {
-    await sleep(warmStep);
+  // Keep Warm warm across > TTL of wall-clock; never touch Ghost. Touch on ELAPSED
+  // time, not on a fixed count of sleeps: what has to stay under TTL is the interval
+  // between consecutive touches, so a slow round trip shortens the next sleep instead
+  // of eating the margin.
+  const warmUntil = Date.now() + TTL_MS * 1.6;
+  let lastTouch = Date.now();
+  while (Date.now() < warmUntil) {
+    await sleep(Math.max(0, Math.min(TTL_MS / 4, warmUntil - Date.now())));
     await jget(`/session/look?sessionId=${warm.sessionId}`, ttl.base); // refreshes Warm.lastSeen + prunes stale
+    if (Date.now() - lastTouch >= TTL_MS) {
+      throw new Error(`[D] harness too slow to keep Warm alive: ${Date.now() - lastTouch}ms between look()s exceeds SESSION_TTL_MS=${TTL_MS}`);
+    }
+    lastTouch = Date.now();
   }
   // one more pruning request after the dust settles, then assert
   const whoAfter = await jget('/session/who', ttl.base);
@@ -443,7 +455,7 @@ async function main() {
   // ── §MESH-01d3 — world download endpoint ──
   const dl = await fetch(mI.base + '/api/world/download');
   check(dl.status === 200 && (dl.headers.get('content-type') || '').includes('text/html')
-    && dl.headers.get('x-coc-worldhash') === manA.worldHash
+    && dl.headers.get('x-r2h-worldhash') === manA.worldHash
     && /^attachment; filename="world-/.test(dl.headers.get('content-disposition') || ''),
     'world download serves the game file with identity headers + attachment filename');
   const dlTxt = await dl.text();

@@ -45,13 +45,12 @@
 
 
 
-### §DX-02hi — a stale server on port 1367 turns a one-minute gate chain into an unbounded hang, and no gate has a timeout (NEW 2026-08-25 during §AUDIT-03al, 🟢 no design call)
+### §DX-02hj — the `r2h → coc` rename reached the harness and not the wire (NEW 2026-08-25 during §DX-02hi, 🟡 ONE DESIGN CALL: rename the headers or keep them)
 
-- [ ] **§DX-02hi — the verification chain has no upper bound on its own runtime, so the failure mode of a held port is *silence*, not an error.** **Observed twice at `37ace66`:** `npm run check:walk` ran past **10 minutes** and was killed, having printed through `check:behaviour` and stopped. The chain completes in **about a minute** and the tree's entire diff was Markdown. A WBAPI process was still holding **1367** from the write session; once `lsof -ti:1367` came back empty, the same command was green — **40 ✓ lines, EXIT=0**. The gates that stand up a server to compare client and server views (`check:terrain`, `check:roads`, the parity family) wait on that port with no deadline.
-> **Why it is worth a row and not a note:** every increment in this backlog ends in this chain, and a hang is the one outcome that is neither pass nor fail. It reads as *still working*, it costs whatever the caller's patience is, and — unlike a red gate — it leaves nothing behind to grep. The §0 loop pays for it in wall-clock on every row that follows a write session.
-> **Fix (three, cheapest first):** (1) a per-gate deadline, so a hung gate fails loudly with the gate's name — the chain is `npm run` serial, so a wrapper is one place; (2) `check:walk` refuses to start when 1367 is held by a process it did not start, naming the pid, since the ambiguity *is* the defect; (3) `run.sh stop` waits for the port to actually release rather than for the signal to be sent.
-> **Verify:** hold 1367 with a dummy listener, run the chain, and get a named failure inside the deadline instead of a hang.
-> **Related:** §DX-02ba (the exit-67 restart protocol the server repudiates) is the same port's other documented sharp edge.
+- [ ] **§DX-02hj — three response headers still carry the retired product name, and the test that would have said so asserted the new one.** **Measured at `779f5c0`:** `/api/world/download` emits `X-R2H-ServerId`, `X-R2H-WorldHash`, `X-R2H-EngineVer` (`wbapi-server.js@2937`), and `wbapi-server.js:1442`'s `Access-Control-Expose-Headers` names the same three. **The reader agrees** — `edit.html:10646-10647` reads `X-R2H-ServerId` / `X-R2H-WorldHash`. So the shipped contract is self-consistent and the **only** thing naming `x-coc-*` was `mud-harness.mjs`, whose assertion `a0801b7` updated while leaving the code alone. That assertion has been red ever since, in a job nothing was reading.
+> **Why it is a call and not a 🟢:** these headers are wire format. Renaming them is a coordinated change across the server, `edit.html`, and any peer server already running — mesh peers are other people's deployments, and the download endpoint is how a world crosses between them. The cheap alternative is to keep `X-R2H-*` as the wire name and note in `spec-engine.md` that the prefix predates the `coc` rename.
+> **Recommendation:** emit **both** for one release — new name authoritative, old name alongside — then drop `X-R2H-*`. That is the only version of the rename that does not break a peer mid-flight.
+> **Provenance:** the harness's third failing assertion in §DX-02hi. Pointed at the shipped header there so the job could go green; this row is the actual decision.
 
 ### §DX-02hh — `spec-engine.md §Gate Locks` says the gates are checked in `cellMove`, and `cellMove` has no gate branch (NEW 2026-08-25 during §AUDIT-03al, 🟡 the table is right and its two framing sentences are wrong)
 

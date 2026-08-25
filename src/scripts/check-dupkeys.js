@@ -62,7 +62,15 @@ function auditSection(src, name, fails) {
   // keys). The key seen at stack depth 1 doubles as the entry name for reports.
   let currentEntry = '(top)', entries = 0;
   const stack = [];
-  const lineOf = (idx) => text.slice(0, idx).split('\n').length;
+  // Newline offsets once, then binary search per lookup: this runs for every key in
+  // sections megabytes wide, so scanning from the start each time is quadratic.
+  const nl = [];
+  for (let i = text.indexOf('\n'); i !== -1; i = text.indexOf('\n', i + 1)) nl.push(i);
+  const lineOf = (idx) => {
+    let lo = 0, hi = nl.length;
+    while (lo < hi) { const mid = (lo + hi) >> 1; if (nl[mid] < idx) lo = mid + 1; else hi = mid; }
+    return lo + 1;
+  };
   for (const t of scanTokens(text)) {
     if (t.open) { stack.push(t.open === '{' ? new Map() : null); continue; }
     if (t.close) { stack.pop(); continue; }

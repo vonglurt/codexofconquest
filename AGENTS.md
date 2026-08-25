@@ -43,11 +43,11 @@ The server holds the file text from when it started. A write after a hand-edit s
 
 ```bash
 ./bin/api get <type> <id>              # round trip, AFTER a reload, from disk — never "GET agrees with me"
-npm run check:walk --prefix src        # 18 gates, && -chained: the last gate's ✓ proves all 18
+npm run check:walk --prefix src        # 17 gates in parallel, ~10s; the final ✓ N/N line is the verdict
 ./run.sh stop && npm test --prefix src # 1023 tests, server stopped
 ```
 
-**Never pipe a test run** — a pipe returns the last stage's exit code. Redirect to a file and read the counts. `check:walk` exists only in `src/package.json`; from the repo root it hangs silently.
+**Never pipe a test run** — a pipe returns the last stage's exit code. Redirect to a file and read the counts. `check:walk` exists only in `src/package.json`. Each gate carries a **120 s deadline**, so a stuck gate now fails by name instead of hanging (`--timeout` / `GATE_TIMEOUT_MS`, `--jobs` / `GATE_JOBS`; `check:walk:serial` runs the old one-at-a-time chain).
 
 ## Non-negotiables
 
