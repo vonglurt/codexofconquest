@@ -813,6 +813,9 @@ const PLACEHOLDER_NODES = new Set(['QUEST','TBD','TODO','UNKNOWN','NONE','XXX','
 const LOG_FILE       = path.join(ROOT, 'build', 'milepoints', 'wbapi-server.log');
 const ERROR_FILE     = path.join(ROOT, 'build', 'milepoints', 'wbapi-server.error');
 const SPEAK_LOG_FILE = path.join(ROOT, 'build', 'milepoints', 'npc-speak.log');
+// build/ is generated, so a fresh clone has no milepoints dir and the stream would
+// ENOENT before the server ever listens.
+try { fs.mkdirSync(path.dirname(LOG_FILE), { recursive: true }); } catch (_) {}
 const logStream = fs.createWriteStream(LOG_FILE, { flags: 'a' });
 
 function writeError(msg, detail) {
