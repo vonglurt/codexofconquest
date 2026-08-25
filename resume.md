@@ -15,6 +15,48 @@
 
 ---
 
+
+  Run the §0 loop. Read resume.md, AGENTS.md, docs/design/index.md and
+  docs/backlog/BACKLOG.md, then take the first 🟢 row by §3 — skip
+  ASK/🟠/🔴 and hand them back instead.
+
+  Per row: state the goal in one line, ground it in the file before
+  planning (if the ground disproves the plan, say so and replan — do not
+  implement the row as written), write world data through ./bin/api only
+  (missing verb → add it to src/js/wbapi-server.js or src/api/wb.js
+  first), round-trip the write from disk, then verify unpiped:
+  ./bin/api audit, npm run check:walk --prefix src, npm test --prefix src
+  with the server stopped.
+
+  Close the row out of its phase file into plan-archive.md, file anything
+  found on the path as a NEW row at the TOP of its phase file, sync
+  docs/design/index.md and the §RESUME chronology, commit, push,
+  src/bin/say.sh "<summary>".
+
+  One row, then stop and hand off with a numbered next-steps list and
+  where the budget stands. Foreground only — no background jobs, no
+  subagents. Comments CC-1..CC-6.
+
+  Why it's shaped that way
+
+  Three clauses do most of the work.
+
+  "take the first 🟢 row by §3 — skip ASK/🟠/🔴" — Phase 1's head is currently three rows that need you, not me. Without this line
+  the loop stalls at §VM-01-G2b-FU every session; with it, autonomous work continues and the author-decisions accumulate cleanly
+  into the hand-off.
+
+  "ground it in the file before planning… if the ground disproves the plan, say so and replan" — this is the single highest-value
+  instruction. It fired twice last session and both times the backlog row was wrong: the PDL for dragon_of_fyresdal contradicted
+  shipped story, and the "statted-priced-unfought = defect" premise collapsed against 50/384 unreachable monsters. A backlog row is
+  a hypothesis written before someone read the code.
+
+  "round-trip the write from disk" — the mandated write path returns ok:true for fields nothing reads (§DX-02gy). Until that row
+  closes, the API's own success report is not evidence.
+
+  Keep AGENTS.md in the read list — it's the short card that survives compaction, where resume.md is long enough that its §2.5 hard
+  rule can fall out of a summary.
+  
+
 ## 0. THE LOOP PROMPT — paste this to resume (supersedes §1 where they differ)
 
 > **This is the standing directive as of 2026-08-24, and it replaces the
@@ -42,9 +84,9 @@ THEN KEEP GOING. Close the row properly, commit, push, announce it, and take the
 one. Do not stop and ask at the row boundary. The loop continues.
 
 STOP ON THE BUDGET, NOT ON A ROW:
-  • Past ~100k tokens OR ~30 minutes in this session → finish the row you are on, then
+  • Past ~200k tokens OR ~60 minutes in this session → finish the row you are on, then
     stop and ask to continue. Stopping earlier at a clean boundary is fine.
-  • NEVER run past ~300k tokens or ~1 hour without asking. That is the hard ceiling,
+  • NEVER run past ~600k tokens or ~2 hours without asking. That is the hard ceiling,
     not a target.
   • When you stop, say roughly where the budget stands, so the next decision is informed.
 
@@ -186,8 +228,8 @@ named in the right-hand column for the entry in full.
 **A loop, paced by a budget — not one increment per "continue" (changed 2026-08-24,
 §0).** The user says `next` or `continue`; I take the first row by §3, propose the plan,
 state the goal, implement it, close it, commit, push, speak — **and then take the next
-row**. I stop and ask only when the budget in §0 is reached: past ~100k tokens or ~30
-minutes, and never past ~300k tokens or ~1 hour. **What has not changed is the unit of
+row**. I stop and ask only when the budget in §0 is reached: past ~200k tokens or ~60
+minutes, and never past ~600k tokens or ~2 hours. **What has not changed is the unit of
 work.** Each row is still closed whole before the next begins, and every increment must
 survive a context switch — if the session were killed the moment one row closed, the next
 session must be able to pick up from the committed tree, the edited row, and the §RESUME
@@ -414,11 +456,11 @@ Run all eleven steps, in order, every time.
                           phase file and paste it into plan-archive.md; add the
                           §RESUME entry and the BACKLOG.md pointer row
 11. COMMIT + PUSH        git commit; git push; src/bin/say.sh "<subject>" — written
-    + SPEAK + LOOP        for the ear. Then CHECK THE BUDGET (§0): under ~100k tokens
-                          and ~30 min → take the next row and run these eleven steps
+    + SPEAK + LOOP        for the ear. Then CHECK THE BUDGET (§0): under ~200k tokens
+                          and ~60 min → take the next row and run these eleven steps
                           again. Over it → HAND OFF with a numbered next-steps list,
                           say where the budget stands, and ask whether to repeat.
-                          Never run past ~300k tokens or ~1 hour without asking.
+                          Never run past ~600k tokens or ~2 hours without asking.
 ```
 
 New findings from step 3, 4, 7 or 8 that are not this row become **new rows**, written
