@@ -9,7 +9,7 @@
 
 ## Archived 2026-08-25 — §DX-02hd (the last symptom of the two-shapes blindness, and there were two readers, not one)
 
-### §DX-02hd — the drop log line printed `undefined  ·  0gp` for a weighted table ✅ SHIPPED 2026-08-25
+### §DX-02hd — the drop log line printed `undefined  ·  0gp` for a weighted table ✅ SHIPPED 2026-08-25 `ab9e427`
 
 **The row, as filed:**
 
