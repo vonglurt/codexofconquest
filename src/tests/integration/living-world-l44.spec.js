@@ -207,7 +207,7 @@ test.describe('Layer 44 — Living World', () => {
 
     await page.waitForTimeout(3600);
     await expect(page.locator('#final-map-caption')).toBeVisible();
-    await page.screenshot({ path: 'test-results/l44-final-map.png' });
+    await page.screenshot({ path: '../build/test-results/l44-final-map.png' });
   });
 
   // ── F9: the closing image is not full-screen, because the caption code says so ──
