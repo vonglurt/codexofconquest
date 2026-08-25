@@ -345,17 +345,6 @@ INNS: city · docks (Tilbury) · Visby (bar) · Weimar (scholars_qtr)
 - `│` Mountain pass or tunnel
 - Sea nodes connect via boat (Captain Draketide's ship or hired vessel)
 
-#### Gate Locks
-
-Four one-way travel blocks enforced by `GATE_LOCKS` (HTML line 10864). Each entry: `{from, to, item, msg}`. The `_canTravelTo()` check fires before any node transition; if the required item is not in inventory, the msg is shown and travel is blocked.
-
-| From | To | Required Item |
-|------|----|---------------|
-| `KRN` (historical `CR`) (Crypt) | `HKG` (historical `CY`) (Cyberpunk Streets) | Crypt Key |
-| `GIB` (historical `SC`) (Sea Cavern) | `TRF` (historical `FL`) (Freshwater Lake) | Sea Cave Key |
-| `GOT` (historical `AL`) (Alley) | `SFT` (historical `SE`) (Sewers) | Conclave Pass |
-| `CLJ` (historical `VC`) (Vampire Castle) | `AHB` (historical `DE`) (Desert) | Toll Token |
-
 ---
 
 ## THE JOURNEY

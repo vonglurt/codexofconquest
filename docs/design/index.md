@@ -494,7 +494,7 @@ All 54 source books are marked `[x]` in `books.md` — all have been processed t
 | **Pier Falk (BQ — trapped person)** | `plan-archive.md §SCAR-01-D` | `plan-archive.md §SCAR-01` |
 | **Froberger journal (41 entries)** | `froberger-journal-all-entries.txt` | `docs/lab-reports/lab-report-game-story-codex-of-conquest.md` · `story.md §PROLOGUE` |
 | **Froberger traces** | `world.md` | `docs/lab-reports/lab-report-web-of-connections.md` |
-| **Gate locks** *(removed — Free-Movement Policy; `GATE_LOCKS` = 0 in code, verified 2026-07-03)* | `maps.md §GATE LOCKS (removal notice)` | `CONTRIBUTING.md (Free-Movement / Mission-Gating Policy)` |
+| **Gate locks** *(removed — Free-Movement Policy; `GATE_LOCKS` = 0 in code, verified 2026-07-03; `story.md §Gate Locks` and this index's own live-constants row deleted 2026-08-25, §AUDIT-03al)* | `maps.md §GATE LOCKS (removal notice)` | `CONTRIBUTING.md (Free-Movement / Mission-Gating Policy)` |
 | **Hollow Hands sub-clan** | `docs/story/story-arc-coastal.md` | `docs/lab-reports/lab-report-tilbury-visby-arcs.md` · `docs/lab-reports/lab-report-void-shaman.md` |
 | **Hunt Mode / stalk** *(retired §TIMELESS-01)* | `docs/mechanics/mechanics-combat.md §Stalk / Hunt (retired)` | `docs/lab-reports/lab-report-timeless-movement-hunt-removal.md` · `docs/lab-reports/lab-report-battleground-circuit-path-quest.md` |
 | **Inn Dreams** | `story.md §XXIII stub` | `docs/lab-reports/lab-report-void-archaeology.md §H` |
@@ -578,7 +578,6 @@ All 54 source books are marked `[x]` in `books.md` — all have been processed t
 | `GEO_PROJ` | §2.1 equirectangular 1° grid dims `{ROWS:90, COLS:360}`; passed to the mover kernel as `world.proj` for N/S clamp + E↔W wrap |
 | `Mover` / `_moverWorld()` | §WALK-2 client handle to `mover.js` (`Mover.move(world,pos,dir)`); `_moverWorld()` builds the read-only world snapshot (`proj`/`impassable`/`cellCodes`/`terrainAt`/`encounterRate`) per move. See `mover.js` in Core Reference |
 | `QUEST_DB` | Quest definitions (UQF-1.0: `gate`/`bits`/`completion`/`onComplete`); ~2,848 quests — ALL UQF after §ARCH-01 close 2026-07-05 + the §MATH-01 migration 2026-07-07, except the 30 dead `blq` stubs |
-| `GATE_LOCKS` | 4 passage locks + shard gate; each entry: `{from, to, item, label}` |
 | `CONDITION_ITEMS` | 11 condition items: name, icon, effect, sell value |
 | `CONDITION_GOLD` | Pre-battle cost per condition (flat gold, not inventory) |
 | `CONDITION_ADV` | Adv/DIS modifier keyed by lowercase-underscore condition name |
