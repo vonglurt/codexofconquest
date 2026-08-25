@@ -9,7 +9,7 @@
 
 ## Archived 2026-08-25 — §DX-02hm (one port pair per worker: the presence spec could not be run twice at once)
 
-### §DX-02hm — two module-constant ports made every extra Playwright worker a stowaway on the first worker's server ✅ SHIPPED 2026-08-25 `SHA`
+### §DX-02hm — two module-constant ports made every extra Playwright worker a stowaway on the first worker's server ✅ SHIPPED 2026-08-25 `467dc7f`
 
 **The row, as filed:**
 
