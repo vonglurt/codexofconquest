@@ -25341,6 +25341,13 @@ function _storyBattleVictory() {
   if (pb && pb.nodeCode === 'CY_VOID') {
     storyMsg('🔴 The Void Corruption node is cleared. The undercity stabilises.');
   }
+  // Layer 49 §XIV: Quest −1 has two writers — the console line the disclosure panel
+  // prints, and the Convergence win at L20. _checkLevelUp above has already run, so a
+  // player who reaches 20 on this kill qualifies on the same battle.
+  if (pb && pb.nodeCode === 'TLS' && (S_story.level || 1) >= 20 && !S_story.questMinusOne) {
+    S_story.questMinusOne = true;
+    storyMsg('🔓 The Convergence is yours. Quest −1 is marked — the door does not need the console.');
+  }
   // Layer 44: Ally Cat Arc kill tracking
   if (S.enemy && S.enemy.key) {
     // §KG Inc 3: generic per-monster kill counter
