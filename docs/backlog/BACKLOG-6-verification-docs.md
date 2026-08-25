@@ -53,14 +53,6 @@
 > **Recommendation: (a).** It is bounded to the file that is 303 of the 1033 tests, the read-only clusters are identifiable (they call `page.evaluate` against `validateQuest`/`adaptLegacyQuest`/`canActivate` without touching state), and it leaves every stateful test on the cold path it has today.
 > **Provenance:** §DX-02hq, sizing where the suite's wall time actually goes after the parallelism was fixed.
 
-### §DX-02hp — `design/index.md`'s test table says `multiplayer-presence.test.js` has 2 tests and it has 7 (NEW 2026-08-25 during §DX-02hm, 🟢 no design call)
-
-- [ ] **§DX-02hp — the sixth measured instance of the §DX-02gs shape: a table states a count, the collection holds another.** **Measured at `3c0e9f7`:** `docs/design/index.md:223` describes `src/tests/integration/multiplayer-presence.test.js` as **`2 tests`**; the file declares **7** (`grep -c "^  test(" src/tests/integration/multiplayer-presence.test.js`), and §DX-02hm's `--repeat-each=4` run reports **28**. The description beside it names four behaviours (connect/"Also here:"/SSE chat/player_left) and omits the three `§MESH-01-FU` specs that shipped after it — magnet-join via tracker, pid-keyed leave, remote minimap movement, session auto-resume, dead-session fallback.
-> **Why it is worth a row:** this is the read-before-every-row doc, and the column it is wrong in is the one a reader uses to decide whether a subsystem is covered. Two is the number that was true when the row that wrote the line closed.
-> **Fix:** correct the count and widen the description to the seven specs actually in the file. **Check the whole column while there** — if this cell went stale by tests being added under it, its neighbours did too; the count is `grep -c "^  test("` per file and it is cheap to run across the table.
-> **Verify:** every `N tests` cell in that table equals its file's `test(` count.
-> **Provenance:** §DX-02hm, reading the file's own test count to size the `--repeat-each` expectation.
-
 ### §DX-02hn — `multiplayer-presence.test.js` line 1 is a stray `require` sitting above the SPDX header (NEW 2026-08-25 during §DX-02hb, 🟢 no design call, one line)
 
 - [ ] **§DX-02hn — the same prepend that broke `mud-harness.mjs` also landed here, where CommonJS hid it.** Line 1 is `` `const path = require('path');` ``, above the `SPDX-License-Identifier` comment and the `'use strict'` pragma; `path` is used at `ROOT` on line 19. In `mud-harness.mjs` the identical prepend was a hard `SyntaxError` (§DX-02hi, fault 3) because that file is ESM with a shebang. Here it merely displaces the licence header from line 1 and duplicates nothing — no gate sees it. **Fix:** delete line 1 and add `const path = require('path');` to the require block beside `child_process`, restoring SPDX to line 1.

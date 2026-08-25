@@ -7,6 +7,48 @@
 
 ---
 
+## Archived 2026-08-25 — §DX-02hp (the Count column was remembered, not measured — five of eleven cells wrong)
+
+### §DX-02hp — a test-coverage table where nearly half the counts were the number that was true when someone last looked ✅ SHIPPED 2026-08-25 `SHA_HP`
+
+**The row, as filed:**
+
+### §DX-02hp — `design/index.md`'s test table says `multiplayer-presence.test.js` has 2 tests and it has 7 (NEW 2026-08-25 during §DX-02hm, 🟢 no design call)
+
+- [x] **§DX-02hp — the sixth measured instance of the §DX-02gs shape: a table states a count, the collection holds another.** **Measured at `3c0e9f7`:** `docs/design/index.md:223` describes `src/tests/integration/multiplayer-presence.test.js` as **`2 tests`**; the file declares **7** (`grep -c "^  test(" src/tests/integration/multiplayer-presence.test.js`), and §DX-02hm's `--repeat-each=4` run reports **28**. The description beside it names four behaviours (connect/"Also here:"/SSE chat/player_left) and omits the three `§MESH-01-FU` specs that shipped after it — magnet-join via tracker, pid-keyed leave, remote minimap movement, session auto-resume, dead-session fallback.
+> **Why it is worth a row:** this is the read-before-every-row doc, and the column it is wrong in is the one a reader uses to decide whether a subsystem is covered. Two is the number that was true when the row that wrote the line closed.
+> **Fix:** correct the count and widen the description to the seven specs actually in the file. **Check the whole column while there** — if this cell went stale by tests being added under it, its neighbours did too; the count is `grep -c "^  test("` per file and it is cheap to run across the table.
+> **Verify:** every `N tests` cell in that table equals its file's `test(` count.
+> **Provenance:** §DX-02hm, reading the file's own test count to size the `--repeat-each` expectation.
+
+**The row named one cell. Following its own instruction — *"check the whole column while there"* — found five.** The count was taken from `npx playwright test <file> --list` rather than `grep`, because a `test()` inside a loop or a `describe` is not something `grep` can count reliably, and that is the authority the table should have been citing all along.
+
+| cell | stated | measured | |
+|---|---:|---:|---|
+| `navigation.test.js` | 37 | **35** | ✗ |
+| `fishing.test.js` | ~10 | **9** | ✗ |
+| `autosave.spec.js` | ~4 | 4 | ✓ (tilde dropped) |
+| `worldbuilder-walk.test.js` | **73** | **89** | ✗ — the only cell that was *under* |
+| `multiplayer-presence.test.js` | 2 | **7** | ✗ — the cell the row filed |
+| `worldbuilder-mesh.test.js` | 2 | **4** | ✗ |
+| `mesh-connections-ui.test.js` | 8 | 8 | ✓ |
+| `dx02cm-la-riva-completion-fence.test.js` | 4 | 4 | ✓ |
+| `dx02gk-mission-bits.test.js` | 8 | 8 | ✓ |
+| `dx02fb-crov-favor-ceiling.test.js` | 5 | 5 | ✓ |
+| `quest-runtime-uqf.test.js` | 303 | 303 | ✓ |
+
+**Every wrong cell fails the same way, and it is worth naming: the number was correct on the day the row that wrote it closed.** `worldbuilder-walk` at 73 is the sharpest — sixteen tests were added under a cell that kept asserting the old total, so the table under-reported the coverage that exists. This is the sixth measured instance of the §DX-02gs shape.
+
+**Two descriptions were widened, not just renumbered.** `multiplayer-presence` named four behaviours and omitted the five `§MESH-01-FU` specs that shipped after it (magnet-join via tracker, pid-keyed leave under duplicate names, remote minimap movement, session auto-resume, dead-session fallback) — the count was wrong *because* the description had stopped tracking the file. `worldbuilder-mesh` likewise gained the ⬇ BIG WARNING modal, the server-browser tracker rows and the empty-status placeholders.
+
+**The measuring command now sits above the table**, per the §RESUME convention that a number carries the command that produced it — along with the fact a reader most needs and the table never said: **this is a selected list of 12 files, not the suite.** `npx playwright test --list` reports **1046 declared across 91 files**, of which **1033 run**.
+
+**Two false claims in the same section's header paragraph were corrected while there, because both are contradicted by measurements taken three times today.** It said the walk gate is **`6/6`** (it is **17/17**), and it carried a standing **⚠️ *"`npm run check:walk` does not currently complete — it stalls at gate 4"*** with the instruction to run gates individually. §DX-02hi replaced that `&&` chain with `scripts/run-gates.js`, which gives every gate a 120 s deadline and runs six at a time, so a hang is now a *failure* rather than an open-ended wait; three consecutive full runs on 2026-08-25 returned `✓ 17/17 gates green` in **23.0–23.4s**. The warning is struck through with the evidence rather than deleted, and **§DX-02fz is left open** — closing it is that row's job, not this one's.
+
+**Verify — the check the row asked for, re-run against the corrected table:** a script matching every `` `src/tests/…` `` cell against `--list` reports **`11 countable cells, 0 disagree`** (it reported 5 disagreements before). `npm run check:walk --prefix src` → **`✓ 17/17 gates green`**. Docs only; no engine, test or world-data change.
+
+---
+
 ## Archived 2026-08-25 — §DX-02hq (the suite was seven minutes because a 303-test file was one serial chain)
 
 ### §DX-02hq — `fullyParallel`, and the four spawning specs that had to be made worker-safe before it could be turned on ✅ SHIPPED 2026-08-25 `b0c236d`
