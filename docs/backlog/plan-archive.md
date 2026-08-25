@@ -9,7 +9,7 @@
 
 ## Archived 2026-08-25 — §DX-02hq (the suite was seven minutes because a 303-test file was one serial chain)
 
-### §DX-02hq — `fullyParallel`, and the four spawning specs that had to be made worker-safe before it could be turned on ✅ SHIPPED 2026-08-25 `SHA_HQ`
+### §DX-02hq — `fullyParallel`, and the four spawning specs that had to be made worker-safe before it could be turned on ✅ SHIPPED 2026-08-25 `b0c236d`
 
 **Raised directly by the author mid-session — *"can we design the test to give feedback synchronous, i want the tests to go quicker"* — and taken as a row rather than a tweak, because the answer turned out to be the same defect §DX-02hm had just closed, in three more files.**
 
