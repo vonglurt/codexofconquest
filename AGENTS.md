@@ -21,7 +21,7 @@
 first row by §3  →  plan, then goal  →  implement  →  close  →  commit  →  push  →  say.sh  →  next row
 ```
 
-**Do not stop at row boundaries.** Stop on the budget: past ~200k tokens or ~60 min, finish the row and ask. Never past ~600k or 2 hours.
+**Do not stop at row boundaries.** The loop runs until the user stops it. Finish the row you are on, then take the next.
 
 **After every commit:** `git push`, then `src/bin/say.sh "<summary written for the ear>"` — never raw macOS `say`.
 

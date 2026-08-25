@@ -9,9 +9,10 @@
 >
 > **This file is a procedure, not a record.** It does not track which rows are
 > done — the six `docs/backlog/BACKLOG-*.md` files and `docs/backlog/plan-archive.md`
-> do that. Written 2026-08-23; **§0 replaced the one-row-per-`continue` handshake
-> with a budget-paced loop on 2026-08-24** — read §0 first, and treat §1 as the
-> record of what it replaced.
+> do that. Written 2026-08-23; **§0 replaced the one-row-per-`continue` handshake with a
+> continuous loop on 2026-08-24**, and the token/time budget that paced it was removed on
+> 2026-08-25 — the loop now runs until the user stops it. Read §0 first, and treat §1 as
+> the record of what it replaced.
 
 ---
 
@@ -33,9 +34,10 @@
   docs/design/index.md and the §RESUME chronology, commit, push,
   src/bin/say.sh "<summary>".
 
-  One row, then stop and hand off with a numbered next-steps list and
-  where the budget stands. Foreground only — no background jobs, no
-  subagents. Comments CC-1..CC-6.
+  Then take the next row. The loop runs until I stop it; when you do
+  stop, hand off with a numbered next-steps list saying what stopped
+  you. Foreground only — no background jobs, no subagents.
+  Comments CC-1..CC-6.
 
   Why it's shaped that way
 
@@ -61,10 +63,9 @@
 
 > **This is the standing directive as of 2026-08-24, and it replaces the
 > one-row-per-`continue` handshake §1 was written under.** Where §1, §2.2 or §4
-> step 11 still say *"take one row and stop"*, **this section wins** — they now
-> say *"stop on the budget in §0"*, and the paragraphs below are the whole rule.
-> The loop no longer pauses at every row boundary; it pauses when the budget says
-> to.
+> step 11 still say *"take one row and stop"*, **this section wins** — the paragraphs
+> below are the whole rule. The loop does not pause at row boundaries. It runs until the
+> user stops it, or until it meets something it cannot decide.
 
 ```
 Read resume.md, docs/design/index.md and docs/backlog/BACKLOG.md, then work the backlog
@@ -83,12 +84,11 @@ implement a plan you have already stopped believing.
 THEN KEEP GOING. Close the row properly, commit, push, announce it, and take the next
 one. Do not stop and ask at the row boundary. The loop continues.
 
-STOP ON THE BUDGET, NOT ON A ROW:
-  • Past ~200k tokens OR ~60 minutes in this session → finish the row you are on, then
-    stop and ask to continue. Stopping earlier at a clean boundary is fine.
-  • NEVER run past ~600k tokens or ~2 hours without asking. That is the hard ceiling,
-    not a target.
-  • When you stop, say roughly where the budget stands, so the next decision is informed.
+DO NOT STOP ON A ROW, OR ON A COUNT:
+  • The loop runs until the user stops it. Finish the row you are on, then take the next.
+  • Stop early only for something the loop cannot decide: an ASK row at the head of the
+    work, a gate that will not go green, or a question whose answer changes what ships.
+    Say which of those it is.
 
 NEW ROWS GO AT THE TOP. Anything found on the path that is not the current row becomes a
 NEW ROW, written at the START of that phase file's open-items section — newest first, so
@@ -106,8 +106,7 @@ plan-archive.md, add the §RESUME entry and the BACKLOG.md pointer row.
 AFTER EVERY COMMIT: git push, then announce what you committed with src/bin/say.sh —
 never raw macOS say. Write the announcement for the ear, not the eye.
 
-THEN ASK TO REPEAT. When the budget says stop, hand off with a numbered next-steps list
-and ask whether to run the loop again.
+WHEN YOU DO STOP, hand off with a numbered next-steps list and say what stopped you.
 
 No background processes. No subagents. Everything synchronous, in this conversation.
 ```
@@ -119,8 +118,8 @@ next
 ```
 
 That word means: **finish the increment you are on if it is open, then run the loop from
-§0 — first row by §3, plan, goal, implement, close, commit, push, speak, next row — until
-the budget in §0 says stop.**
+§0 — first row by §3, plan, goal, implement, close, commit, push, speak, next row — and
+keep going until I stop you.**
 
 ---
 
@@ -129,7 +128,7 @@ the budget in §0 says stop.**
 **Kept for the record; §0 is what a session runs.** This was the directive from
 2026-08-23 to 2026-08-24, and everything below §1 is still the same instruction
 expanded — except the handshake. Where this block says *one row per "continue", then
-stop*, §0 says *keep going until the budget says stop*, and §0 wins. Read this one to
+stop*, §0 says *keep going until the user stops you*, and §0 wins. Read this one to
 understand why the procedure has the shape it does; run §0.
 
 ```
@@ -225,11 +224,11 @@ named in the right-hand column for the entry in full.
 
 ### 2.2 The loop
 
-**A loop, paced by a budget — not one increment per "continue" (changed 2026-08-24,
-§0).** The user says `next` or `continue`; I take the first row by §3, propose the plan,
-state the goal, implement it, close it, commit, push, speak — **and then take the next
-row**. I stop and ask only when the budget in §0 is reached: past ~200k tokens or ~60
-minutes, and never past ~600k tokens or ~2 hours. **What has not changed is the unit of
+**A loop — not one increment per "continue" (changed 2026-08-24, §0; the token/time
+budget that paced it was removed 2026-08-25).** The user says `next` or `continue`; I take
+the first row by §3, propose the plan, state the goal, implement it, close it, commit,
+push, speak — **and then take the next row**. I stop when the user stops me, or when the
+loop meets something it cannot decide. **What has not changed is the unit of
 work.** Each row is still closed whole before the next begins, and every increment must
 survive a context switch — if the session were killed the moment one row closed, the next
 session must be able to pick up from the committed tree, the edited row, and the §RESUME
@@ -456,11 +455,10 @@ Run all eleven steps, in order, every time.
                           phase file and paste it into plan-archive.md; add the
                           §RESUME entry and the BACKLOG.md pointer row
 11. COMMIT + PUSH        git commit; git push; src/bin/say.sh "<subject>" — written
-    + SPEAK + LOOP        for the ear. Then CHECK THE BUDGET (§0): under ~200k tokens
-                          and ~60 min → take the next row and run these eleven steps
-                          again. Over it → HAND OFF with a numbered next-steps list,
-                          say where the budget stands, and ask whether to repeat.
-                          Never run past ~600k tokens or ~2 hours without asking.
+    + SPEAK + LOOP        for the ear. Then TAKE THE NEXT ROW and run these eleven
+                          steps again. The loop ends when the user ends it, or when
+                          it meets something it cannot decide — then HAND OFF with a
+                          numbered next-steps list saying what stopped it.
 ```
 
 New findings from step 3, 4, 7 or 8 that are not this row become **new rows**, written
