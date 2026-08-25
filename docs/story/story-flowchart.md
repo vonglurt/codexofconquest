@@ -206,7 +206,7 @@ SQ(35) — Benedikt synthesis (requires entry42Written) — links to §XVII
 CO(42) — Froberger's sealed letter (frobergerLetterFound)
 ALL    — NPC_NG_MEMORY_LINES fire on 2nd visit to each Dear Friend node
 
-State chain: questMinusOne (§XIV) → priorQuestMinusOne (NG+ reset) → entry42Written (§XV) → vaArchitectureKnown (§XVII)
+State chain: questMinusOne (§XIV — set by the Convergence win at TLS at L20, or by the console line the panel prints) → priorQuestMinusOne (NG+ reset) → entry42Written (§XV) → vaArchitectureKnown (§XVII)
 ```
 
 ### Birka NPC Arc

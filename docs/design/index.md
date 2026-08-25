@@ -769,7 +769,7 @@ All 54 source books are marked `[x]` in `books.md` — all have been processed t
 | `S_story.catKills` | object | **monster key** → kill count (`catKills.stray_alley_cat`); the four Cat Quarter `countMin` gates read it *(corrected 2026-08-11 — was documented as "nodeCode → kill count")* |
 | `S_story.catKingDefeated` | boolean | Cat King boss defeated |
 | `S_story.kenickieMarketUsed` | boolean | Kenickie's black market accessed |
-| `S_story.questMinusOne` | boolean | Quest -1 (Level 21 / World Creator) seen |
+| `S_story.questMinusOne` | boolean | Quest -1 (Level 21 / World Creator) marked. **Two writers:** the Convergence win at `TLS` at level ≥ 20 (`_storyBattleVictory`, §AUDIT-03bi) and the console line the Layer 49 disclosure panel prints. |
 | `S_story.entry42Written` | boolean | Player has written Entry 42 |
 | `S_story.entry42Text` | string | Player's text for Entry 42 |
 | `S_story.entry42Read` | boolean | Entry 42 read back after writing |
