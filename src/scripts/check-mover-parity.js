@@ -21,7 +21,7 @@ const a = core('src/js/mover.js');
 const b = core('play.html');
 if (a === b) {
   console.log(`✓ mover parity: MOVER:CORE identical in mover.js and play.html (${a.length} bytes)`);
-  process.exit(0);
+  return;
 }
 console.error('✗ mover parity FAILED: the inlined MOVER:CORE block differs from mover.js');
 const la = a.split('\n'), lb = b.split('\n');

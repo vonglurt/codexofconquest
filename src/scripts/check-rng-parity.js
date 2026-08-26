@@ -123,4 +123,3 @@ if (fails.length) {
   process.exit(1);
 }
 console.log('\n✓ client _seededNext is byte-identical to server seededNext (and DUEL __duelRng) — one stream, replayable from a save');
-process.exit(0);

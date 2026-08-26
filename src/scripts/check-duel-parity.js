@@ -23,7 +23,7 @@ const a = core('src/js/duel.js');
 const b = core('play.html');
 if (a === b) {
   console.log(`✓ duel parity: DUEL:CORE identical in duel.js and play.html (${a.length} bytes)`);
-  process.exit(0);
+  return;
 }
 console.error('✗ duel parity FAILED: the inlined DUEL:CORE block differs from duel.js');
 const la = a.split('\n'), lb = b.split('\n');

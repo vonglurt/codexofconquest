@@ -100,7 +100,7 @@ if (process.argv.includes('--selftest')) {
     'a table that has lost a phase row is caught, not silently counted short');
   if (fail) { console.log(`\n✗ check-backlogcounts selftest: ${fail} FAILED, ${pass} passed`); process.exit(1); }
   console.log(`✓ check-backlogcounts selftest: all ${pass} checks pass`);
-  process.exit(0);
+  return;
 }
 
 const read = f => { const p = path.join(DIR, f); return fs.existsSync(p) ? fs.readFileSync(p, 'utf8') : null; };

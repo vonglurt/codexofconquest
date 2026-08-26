@@ -180,4 +180,3 @@ if (fails.length) {
 }
 console.log('\n✓ no entry declares the same key twice — no silently-shadowed authored values');
 console.log('✓ parse parity: every source entry key survives the WBAPI parse (§AUDIT-03f)');
-process.exit(0);

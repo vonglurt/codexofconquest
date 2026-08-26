@@ -193,4 +193,3 @@ if (fails.length) {
   process.exit(1);
 }
 console.log('\n✓ server getMoverWorld() terrain+encounter inputs match the client byte-for-behaviour');
-process.exit(0);

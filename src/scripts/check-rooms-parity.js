@@ -21,7 +21,7 @@ const a = core('src/js/rooms.js');
 const b = core('play.html');
 if (a === b) {
   console.log(`✓ rooms parity: ROOMS:CORE identical in rooms.js and play.html (${a.length} bytes)`);
-  process.exit(0);
+  return;
 }
 console.error('✗ rooms parity FAILED: the inlined ROOMS:CORE block differs from rooms.js');
 const la = a.split('\n'), lb = b.split('\n');

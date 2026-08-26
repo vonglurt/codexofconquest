@@ -44,12 +44,12 @@ if (leftover) {
 }
 if (!moved.length) {
   console.log('no REMOVABLE blocks found — nothing to do');
-  process.exit(0);
+  return;
 }
 for (const m of moved) {
   console.log(`${dry ? '[dry] would move' : 'moving'}  ${m.id}  (${m.body.split('\n').length} lines)`);
 }
-if (dry) process.exit(0);
+if (dry) return;
 
 let arch = `\n---\n\n## Removable items archived from ${srcPath} (${today})\n\n`;
 arch += `> Moved by \`src/scripts/archive-removable.js\`; each block is verbatim. A pointer quote remains at the original location.\n\n`;

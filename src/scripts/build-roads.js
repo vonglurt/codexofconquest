@@ -222,7 +222,7 @@ const ROAD_CELLS = (() => {
 
 if (!APPLY) {
   console.log('\n(dry-run — pass --apply to patch play.html)');
-  process.exit(0);
+  return;
 }
 
 const START = '// ◆ §NAV-01b ROAD_RUNS:START';

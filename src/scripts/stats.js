@@ -54,7 +54,7 @@ const stats = {
 
 if (process.argv.includes('--json')) {
   console.log(JSON.stringify(stats, null, 2));
-  process.exit(0);
+  return;
 }
 
 const row = (label, val) => console.log('  ' + String(label).padEnd(24) + val);

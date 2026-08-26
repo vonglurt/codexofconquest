@@ -86,4 +86,3 @@ if (mismatches.length) {
   process.exit(1);
 }
 console.log('✓ behavioural parity: new kernel reproduces every content-affecting cellMove decision');
-process.exit(0);

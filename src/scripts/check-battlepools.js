@@ -188,7 +188,7 @@ if (process.argv.includes('--selftest')) {
     'row-owned exemptions are counted separately and named as such');
   if (fail) { console.log(`\n✗ check-battlepools selftest: ${fail} FAILED, ${pass} passed`); process.exit(1); }
   console.log(`✓ check-battlepools selftest: all ${pass} checks pass`);
-  process.exit(0);
+  return;
 }
 
 if (process.argv.includes('--census')) {
@@ -208,7 +208,7 @@ if (process.argv.includes('--census')) {
   }
   console.log(`\n  ${unreachable} of ${total} unreachable.`);
   console.log('  Only `deadly` is a gate failure — the rest are a bestiary (see the header comment).');
-  process.exit(0);
+  return;
 }
 
 const findings = scan(fs.readFileSync(GAME, 'utf8'));

@@ -67,7 +67,7 @@ if (process.argv.includes('--selftest')) {
 
   if (fail) { console.log(`\n✗ check-spdx selftest: ${fail} FAILED, ${pass} passed`); process.exit(1); }
   console.log(`✓ check-spdx selftest: all ${pass} checks pass`);
-  process.exit(0);
+  return;
 }
 
 const tracked = execFileSync('git', ['ls-files'], { cwd: ROOT, encoding: 'utf8' })

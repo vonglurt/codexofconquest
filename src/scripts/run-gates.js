@@ -2,6 +2,12 @@
 // SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson
 // The `check:walk` gate chain: every gate gets a deadline, and gates run concurrently.
 //
+// Gates are spawned as `sh -c '<the raw package.json script>'` with stdout on a PIPE —
+// never through `npm run`, and never onto a regular file or /dev/null. That is not
+// cosmetic: `process.exit()` on Node v26.6.0 can deadlock in `uv_thread_join` during
+// platform disposal, after the gate's ✓ has printed, and the odds shift sharply with
+// how stdout is connected (§DX-02fz). The gate scripts no longer call `process.exit(0)`,
+// and the per-gate deadline below is the backstop if one ever hangs again.
 // Every gate is a pure read over play.html — no gate opens a socket, spawns a server, or
 // writes. Two consequences this runner depends on: they are safe to run at the same time,
 // and any gate still running after the deadline is hung, not slow.

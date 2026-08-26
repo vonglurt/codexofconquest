@@ -283,7 +283,7 @@ if (query) {                                    // lookup mode — the grep -n r
   console.log(`${hits.length} line(s) in ${where} contain '${t.sym}':\n`);
   for (const n of hits.slice(0, 20)) console.log(`  \`${query.replace(/@\d+$/, '')}@${n}\`  ${t.lines[n - 1].trim().slice(0, 100)}`);
   if (hits.length > 20) console.log(`  … and ${hits.length - 20} more`);
-  process.exit(0);
+  return;
 }
 
 const docs = docFiles(scope).map(f => ({ file: f, text: fs.readFileSync(f, 'utf8') }));
@@ -295,7 +295,7 @@ if (argv.includes('--legacy')) {
   for (const r of rows) console.log(`  ${String(r.count).padStart(4)}  ${rel(r.file)}`);
   console.log('\n  Migrate one by naming what it points at:  `symbol@1234`  (then `npm run anchors:fix`).');
   console.log('  Closed ship records are HISTORY — annotate, do not rewrite (§DX-02c/§AUDIT-03m).');
-  process.exit(0);
+  return;
 }
 
 if (argv.includes('--fix')) {

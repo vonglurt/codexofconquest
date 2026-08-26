@@ -44,19 +44,19 @@ if (process.argv.includes('--selftest')) {
   ok(added([' M a.js', '?? b'], []).length === 0, 'a path that went away is not an addition');
   if (fail) { console.log(`\n✗ cleantree selftest: ${fail} FAILED, ${pass} passed`); process.exit(1); }
   console.log(`✓ cleantree selftest: all ${pass} checks pass`);
-  process.exit(0);
+  return;
 }
 
 if (process.argv.includes('--snapshot')) {
   fs.mkdirSync(path.dirname(SNAP), { recursive: true });
   fs.writeFileSync(SNAP, status().join('\n'));
-  process.exit(0);
+  return;
 }
 
-if (!fs.existsSync(SNAP)) process.exit(0);
+if (!fs.existsSync(SNAP)) return;
 const dirtied = added(fs.readFileSync(SNAP, 'utf8').split('\n').filter(Boolean), status());
 fs.rmSync(SNAP, { force: true });
-if (!dirtied.length) process.exit(0);
+if (!dirtied.length) return;
 
 console.warn(`\n⚠ §DX-02gu — the suite dirtied ${dirtied.length} path(s) that were clean before it ran:\n`);
 for (const l of dirtied.slice(0, 20)) console.warn('    ' + l);

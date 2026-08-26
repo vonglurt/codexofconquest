@@ -110,4 +110,3 @@ if (fails.length) {
   process.exit(1);
 }
 console.log('\n✓ road net connects every settlement, overlaps nothing, stays lean');
-process.exit(0);

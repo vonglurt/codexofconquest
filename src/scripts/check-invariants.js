@@ -166,4 +166,3 @@ if (fails.length) {
   process.exit(1);
 }
 console.log('\n✓ I1 + I2 + I3 hold — terrain field is total, stub-free, and fully reachable from ' + HUB);
-process.exit(0);
