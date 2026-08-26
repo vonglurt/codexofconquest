@@ -9,7 +9,7 @@
 
 ## Archived 2026-08-26 — §DX-02z (a missing price and a cheap price were the same value at the call site)
 
-### §DX-02z — nothing pairs `CONDITION_ITEMS` with `CONDITION_GOLD`, and the fallback is the retired price scale (NEW 2026-08-12 during §DOC-02t, 🟢 no design call) ✅ SHIPPED 2026-08-26 `PENDING_SHA`
+### §DX-02z — nothing pairs `CONDITION_ITEMS` with `CONDITION_GOLD`, and the fallback is the retired price scale (NEW 2026-08-12 during §DOC-02t, 🟢 no design call) ✅ SHIPPED 2026-08-26 `8a4a296`
 
 - [x] **§DX-02z — a 13th condition item ships silently at 20 gp, the pre-Layer-18 price.** All five cost lookups read `CONDITION_GOLD[…] || 20`. Today the two tables are a clean bijection — every one of the 12 `const CONDITION_ITEMS = [@22410` `match` names has a row in `const CONDITION_GOLD = {@24620` — so the fallback is unreachable and this is **latent, not live**. But the fallback value *is* the scale §DOC-02t's origin report multiplied away: adding a condition item without a price row re-creates the exact defect the ×100 repricing was written to fix (a 3-round ADV-plus-status effect costing less than a healing potion), and it does it **silently**, since a missing key and a 20 gp key are indistinguishable at the call site.
 > **Two independent reasons this is worth a gate rather than a comment.** (a) The two tables are **~2,200 lines apart** and neither names the other. (b) Conditions are **not inventory-gated** — `// All condition items available for gold purchase (not inventory gated)@36386` — so **gold is the only brake** on the strongest pre-battle effect in the game, and the price table is carrying the entire balance load alone.
