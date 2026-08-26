@@ -9,7 +9,7 @@
 
 ## Archived 2026-08-26 — §AUDIT-03ad (a string that is correct five times before it lies once)
 
-### §AUDIT-03ad — the §WISDOM-01 arc advertises a DC 14 that is not a roll (NEW 2026-08-12 during §DOC-02r, 🟢 no design call) ✅ SHIPPED 2026-08-26 `PENDING_SHA`
+### §AUDIT-03ad — the §WISDOM-01 arc advertises a DC 14 that is not a roll (NEW 2026-08-12 during §DOC-02r, 🟢 no design call) ✅ SHIPPED 2026-08-26 `bf34ce2`
 
 - [x] **§AUDIT-03ad — `W6 here (WIS 14 or combat)@33495` names a check the engine has never made.** `quest_wis_06` ships `type:'side'` with `bits:[]`; both W6 paths are `storyRender` buttons. `Accept the reflection (receive the shadow@33472` grants `wisPage6_shadow`, a Shadow Shard and **+350 XP unconditionally** — no `skill_check` bit, no `dc:`, no d20 anywhere in the block — and the fight branch (`label:'Shadow — The Mirror Construct'@33489`, `key:'shadow'` ac 12) sets the same flag. Roen's portfolio line enumerates all six fragments, and its **other five entries are exact against the shipped bits** (W1 WIS 13 · W2 WIS 12 · W3 INT 11 · W4 INT 12 · W5 WIS 12). Both facts are present at the arc's birth commit `e339aeb`: **born broken, 76 days live.**
 > **This is the §AUDIT-03v/w cluster's sharpest instance: the string is correct five times before it lies once, which is exactly what makes it credible.** The previous members of that cluster promise a mechanic that does not exist anywhere, so a grep finds nothing and the reader knows.
