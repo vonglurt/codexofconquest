@@ -9,7 +9,7 @@
 
 ## Archived 2026-08-25 — §DX-02hs (`check:spdx`, gate #18 — the licence header now has something behind it)
 
-### §DX-02hs — a gate for the class that landed twice, once loudly and once silently ✅ SHIPPED 2026-08-25 `SHA_HS`
+### §DX-02hs — a gate for the class that landed twice, once loudly and once silently ✅ SHIPPED 2026-08-25 `a75e703`
 
 **The row, as filed:**
 
