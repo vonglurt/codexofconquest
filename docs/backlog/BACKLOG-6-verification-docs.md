@@ -45,6 +45,13 @@
 
 
 
+### §DX-02hv — `edit.html@5881` is an anchor for a symbol in edit.html, and `check:anchors` only resolves against play.html (NEW 2026-08-25 during §DX-02he, 🟢 no design call)
+
+- [ ] **§DX-02hv — two docs carry a dead anchor, and it is red in the gate chain and in the suite.** **Measured at `4cc201a`:** `npm run check:walk --prefix src` is **17/18, red: check:anchors**, and `npm test --prefix src` is **1031 passed, 2 failed** — `dx01e-anchor-convention.test.js:67` and `:78`, the same finding from the other side. The anchor is `` `edit.html@5881` `` at `docs/backlog/BACKLOG.md:76` and `docs/backlog/plan-archive.md:39`, both written by §DX-02hu. It is not stale, it is **cross-file**: `check-anchors.js` resolves symbols against `play.html` only, and the symbol lives in `edit.html`.
+> **Ground already proved:** the file-prefixed form is the shipped convention and is used elsewhere in the same corpus — `` `src/js/wbapi-server.js:function seededNext@1147` `` (`CONTRIBUTING.md:96`). Check whether `check-anchors.js` honours a `<file>:<symbol>@<line>` prefix; if it does, the fix is the two doc lines. If it does not, the anchor convention has a hole that every non-`play.html` anchor falls through, and that is the row.
+> **Why it is worth a row:** the gate chain and the suite are both red at HEAD for this one anchor, so every subsequent row in the loop closes against a red baseline. It gates.
+> **Provenance:** §DX-02he verification. Confirmed pre-existing at HEAD by `git stash` + re-run, not introduced by that row.
+
 ### §DX-02hr — 72% of every test's time is Chromium re-parsing the same 5.3 MB `play.html` (NEW 2026-08-25 during §DX-02hq, 🟡 ONE DESIGN CALL: is a reused page still an honest test)
 
 - [ ] **§DX-02hr — the suite's remaining cost is not parallelism, it is that each of ~1000 tests loads the whole game from cold.** **Measured at `b0c236d`** with a probe spec (`seedAndLoad` timed against a bare `page.evaluate`): **`seedAndLoad` = 326 ms, a subsequent `evaluate` = 7 ms**, against a typical `quest-runtime-uqf` test of ~450 ms. `play.html` is **5.3 MB** and Playwright's `{ page }` fixture is a fresh context per test, so the cache is cold every time: the suite performs **~649 `page.goto`/`seedAndLoad` calls** and pays a full parse for each. §DX-02hq took the free 24% (7.4m → 5.6m) by running tests inside a file concurrently; **the next 30–40% is here, and it is not free.**
@@ -74,13 +81,6 @@
 > **Why it is not §AUDIT-03ak:** that row named four headings and this is a fifth; two of its four had already been repaired by §DOC-02ar and §DOC-02bz, so the residual set it measured on 2026-08-12 is not the residual set at HEAD. Filed rather than folded in, per the new-rows rule.
 > **Why it is 🟡 and not 🟢:** a single ✅/⚠️ verdict on the heading would be wrong either way — one half ships, one half was never built and is already documented as such. The call is whether the section splits into two headings or the heading states the split.
 > **Verify:** no `⚠️ PLANNED` heading in `world.md` names a layer with live engine anchors.
-
-### §DX-02he — `check-battlepools`'s green line says all 3 exemptions are owned by an open row, and one is owned by design (NEW 2026-08-25 during §DX-02hd, 🟢 no design call)
-
-- [ ] **§DX-02he — the gate's own summary miscounts what its exemptions are.** **Measured at `ba86c48`:** the pass line is `` `(${…UNREACHABLE_DEADLY.length + …UNRESOLVED_BATTLE_KEYS.length} exemptions, each owned by an open row)` `` (`check-battlepools.js:131`) and prints **3**. The tables hold `dragon_of_fyresdal` and `slyzard_matriarch` (both `'§DX-02gw'`, a genuinely open row) and **`_bruhns`, whose value is not a row at all** — it is `'by design — the _isFinalBoss leg loads BOSS_COMMANDER_AUROS, not the key'`, and the comment above the table says so explicitly. **There is no stale third exemption**; the count is right and the sentence about it is wrong.
-> **Why it is worth a row:** the line is read as a ledger — a reader chasing *"3 exemptions, each owned by an open row"* goes looking for a third row that does not exist, which is exactly the search that produced this finding. A permanent by-design exemption and a temporary row-owned one are different promises and the gate reports them as one.
-> **Fix:** count the two classes separately, e.g. `2 exemptions owned by open rows · 1 by design`. The values are already distinguishable — a row-owned exemption's value matches `/^§/`.
-> **Provenance:** §DX-02hd hand-off item 5, *"possibly a stale third"*. Grounded: not stale, mislabelled.
 
 ### §DX-02gx — `check:battlepools` direction 2 tests `tier:'deadly'`, and 48 monsters at other tiers meet the identical condition unremarked (NEW 2026-08-25 during §DX-02gw, 🟡 one design call)
 

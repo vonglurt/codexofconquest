@@ -7,6 +7,14 @@
 
 ---
 
+## Archived 2026-08-25 — §DX-02he (a green line that sent readers hunting for a row that does not exist)
+
+### §DX-02he — the count was right and the sentence about it was wrong ✅ SHIPPED 2026-08-25 `PENDING_SHA`
+
+- [x] **§DX-02he — the gate's own summary miscounted what its exemptions are.** **Measured at `4cc201a`:** `node src/scripts/check-battlepools.js` printed `` (3 exemptions, each owned by an open row) `` — the sum of `UNREACHABLE_DEADLY` and `UNRESOLVED_BATTLE_KEYS` with one sentence over both. **The row's premise held under grep:** `UNREACHABLE_DEADLY` holds `dragon_of_fyresdal` and `slyzard_matriarch`, both valued `'§DX-02gw'`; `UNRESOLVED_BATTLE_KEYS` holds `_bruhns`, valued `'by design — the _isFinalBoss leg loads BOSS_COMMANDER_AUROS, not the key'`. **There was no stale third exemption** — the number was correct and the clause after it was not. **Shipped `exemptionSummary()`**, which partitions the two tables' values on `/^§/` and renders the classes separately, omitting a class at zero, so the pass line now reads **`(2 exemptions owned by an open row · 1 by design)`**. The literal count is gone from the string, so the line cannot drift from the tables again. **Two selftest checks added** — a by-design exemption is not counted as owned by an open row, and row-owned ones are named as such — taking the selftest **5 → 7 checks**, both keyed off the live tables rather than a fixed number, so adding an exemption of either class is covered without editing the test. **Verified:** `check:walk` **17/18**, `check:battlepools` green with the new line; `npm test --prefix src` **1031 passed, 2 failed**.
+> **The two failures are not this row, and they are not new.** `dx01e-anchor-convention.test.js:67` and `:78` fail on `` `edit.html@5881` `` at `BACKLOG.md:76` and `plan-archive.md:39`, and `check:anchors` fails on the same two lines. Confirmed **pre-existing at `4cc201a`** by stashing this row's diff and re-running both — so §DX-02he shipped against an already-red baseline rather than creating one. **Filed as §DX-02hv at the top of Phase 6**, and it gates: it is the next row.
+> **Design index synced** — `docs/design/index.md` gate #17 row now states the two-class rule and reads **7 checks**, not 5.
+
 ## Archived 2026-08-25 — §DX-02hu (the editor specs were racing a world load nobody had asked for)
 
 ### §DX-02hu — the flake was not a slow click, it was whether a server happened to be listening ✅ SHIPPED 2026-08-25 `78821cb`

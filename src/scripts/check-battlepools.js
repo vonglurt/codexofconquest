@@ -89,6 +89,18 @@ function scan(src) {
   return findings;
 }
 
+// Two kinds of exemption, and they are different promises: a row-owned one names the
+// open row that will retire it (`§…`), a by-design one never retires.
+function exemptionSummary() {
+  const values = [...Object.values(UNREACHABLE_DEADLY), ...Object.values(UNRESOLVED_BATTLE_KEYS)];
+  const owned = values.filter(v => /^§/.test(v)).length;
+  const design = values.length - owned;
+  const parts = [];
+  if (owned) parts.push(`${owned} exemption${owned === 1 ? '' : 's'} owned by an open row`);
+  if (design) parts.push(`${design} by design`);
+  return parts.length ? ` (${parts.join(' · ')})` : '';
+}
+
 if (process.argv.includes('--selftest')) {
   let pass = 0, fail = 0;
   const ok = (c, m) => { if (c) pass++; else { fail++; console.log('  ✗ FAIL:', m); } };
@@ -116,6 +128,14 @@ if (process.argv.includes('--selftest')) {
   ].join('\n');
   ok(scan(apiWritten + "\n  X:{ battle:{label:'L', key:'api_mob', count:1} },")
     .filter(real).length === 0, 'a double-quoted (API-written) pool row resolves a battle key');
+  const summary = exemptionSummary();
+  const owned = [...Object.values(UNREACHABLE_DEADLY), ...Object.values(UNRESOLVED_BATTLE_KEYS)]
+    .filter(v => /^§/.test(v)).length;
+  const design = Object.keys(UNREACHABLE_DEADLY).length + Object.keys(UNRESOLVED_BATTLE_KEYS).length - owned;
+  ok(!design || /\d+ by design/.test(summary),
+    'a by-design exemption is not counted as owned by an open row');
+  ok(!owned || summary.includes(`${owned} exemption${owned === 1 ? '' : 's'} owned by an open row`),
+    'row-owned exemptions are counted separately and named as such');
   if (fail) { console.log(`\n✗ check-battlepools selftest: ${fail} FAILED, ${pass} passed`); process.exit(1); }
   console.log(`✓ check-battlepools selftest: all ${pass} checks pass`);
   process.exit(0);
@@ -128,4 +148,4 @@ if (findings.length) {
   process.exit(1);
 }
 console.log('✓ §DX-02gv battle pools: every battle key resolves, every deadly monster is reachable'
-  + ` (${Object.keys(UNREACHABLE_DEADLY).length + Object.keys(UNRESOLVED_BATTLE_KEYS).length} exemptions, each owned by an open row)`);
+  + exemptionSummary());
