@@ -7,6 +7,63 @@
 
 ---
 
+## Archived 2026-08-25 — §DX-02hu (the editor specs were racing a world load nobody had asked for)
+
+### §DX-02hu — the flake was not a slow click, it was whether a server happened to be listening ✅ SHIPPED 2026-08-25 `SHA_HU`
+
+**The row, as filed:**
+
+### §DX-02hu — the `worldbuilder-*` flakes are one bug: every spec clicks into `edit.html` before `#load-splash` has let go of the pointer (NEW 2026-08-25 during §DX-02ht, 🟢 no design call)
+
+- [x] **§DX-02hu — three "flaky" tally marks turned out to be one named defect the moment traces existed.** **Measured at `0827e87`+**, from the four `trace.zip`s §DX-02ht's change produced on its first full run. Three of the four are the same failure, in three different files, and Playwright's own call log names the cause outright:
+> ```
+> - locator resolved to <button id="mb-add" class="btn sm">+ Add Step</button>
+> - element is visible, enabled and stable
+> - scrolling into view if needed / done scrolling
+> - <div class="scol-inner">🌾 Epic Battleground — Midlands…</div>
+>   from <div class="" id="load-splash">…</div> subtree intercepts pointer events
+> ```
+> **It is not timing noise and it is not a slow machine.** `edit.html:303` defines `#load-splash` as `position:absolute; inset:0; z-index:200` — a full-viewport overlay that is up while the world loads and streams node names into `.scol-inner`. Every flaking spec does `await page.goto('/edit.html')` and then clicks immediately (`worldbuilder-crud-arrays.test.js:135`, `worldbuilder-quest-editor.test.js:66`, `worldbuilder-mission-builder.test.js:307`), with **no wait for the splash to go `.hidden`**. The target button is genuinely visible, enabled and stable the whole time — which is exactly why the failure reads as inexplicable in a bare `1 flaky` line. One trace also caught the earlier overlay in the same race: `<div id="welcome-screen"> intercepts pointer events`.
+> **Why it presents as a flake:** on an idle machine the splash clears inside the 8 s `actionTimeout`; under full-suite load it does not. The test never asserted the precondition, so the pass was always luck.
+> **Fix:** a shared helper — `openEditor(page)` in `helpers.js` — that does the `goto` and then awaits `expect(page.locator('#load-splash')).toBeHidden()` and the welcome overlay, and route the **8** `worldbuilder-*` specs' `goto('/edit.html')` calls through it. `grep -c "goto('/edit.html')"` per file sizes the change.
+> **Verify:** the three named tests survive `--repeat-each` under a deliberately loaded machine, where they currently flake; and the full suite reports **0 flaky** across two consecutive runs.
+> **Provenance:** §DX-02ht, reading the traces rather than counting them.
+
+**The row's diagnosis was right about the overlay and wrong about the mechanism, and the difference is the whole fix.** The row proposed *"wait for `#load-splash` to be hidden."* Grounding that produced a probe spec logging the loader's real timeline on an idle machine:
+
+```
+PROBE t~0    {"loaded":"no WBAPI","splashHidden":true,"welcomeHidden":false}
+PROBE t~6000 {"loaded":"no WBAPI","splashHidden":true,"welcomeHidden":false}
+```
+
+**The splash never rises, and `#welcome-screen` stays up for the full six seconds** — while the §DX-02hu traces show the opposite, `.scol-inner` streaming real node names over the button being clicked. Both are true, because `edit.html@5881` is `probeServer().then(up => { if (up) loadFromServer(); })`: the editor auto-loads the entire world **only if something answers `http://localhost:1367/api/ping`**. So the overlay a spec faces is decided by whether a server happens to be listening at that moment — ambient state, not test state. *(The probe also disproved the helper's first draft: `WBAPI` is module-scoped and never reaches `window`, so a wait on `WBAPI.loaded` could never have succeeded. It was caught by the family run taking >600s, one 30s timeout at a time.)*
+
+**And the dependency ran the other way from the guess.** Blocking the probe alone turned `worldbuilder-crud-arrays` **red, 4 failed** — because `#welcome-screen` starts *visible* and is dismissed only as a side effect of the world loading. That file had been relying on an auto-load it never mentions, for months, to clear an overlay it never waits for. Which is the finding: **these specs were passing for a reason none of them states.**
+
+**What shipped: `openEditor(page, opts)` in `helpers.js`, and all 52 `page.goto('/edit.html')` call sites across the 7 `worldbuilder-*` specs routed through it.** It blocks the `:1367` probe so the editor deterministically does not auto-load — the same hermetic idiom `mesh-connections-ui.test.js` already uses — hides `#welcome-screen` outright, and then **asserts** `#load-splash` is hidden rather than waiting for a race to resolve. `{ live: true }` opts a spec back into the real world load.
+
+**Verified under the condition that produced the flake, not just on an idle machine:**
+
+| | result |
+|---|---|
+| the family, `--retries=0` | **142 passed**, 19.9s |
+| the family, `--repeat-each=3 --retries=0`, under 8 spin loops on 8 cores | **426 passed, 0 failed** |
+| full suite | **1033 passed, 0 flaky, 0 traces** |
+
+**And it made the suite faster, because 52 editor page loads stopped fetching a world they never used:**
+
+| | wall |
+|---|---:|
+| session start (`c99f4e2`) | 7.4m |
+| after §DX-02hq | 5.6m |
+| **after §DX-02hu** | **4.3m** |
+
+**A measurement error of mine, recorded because it nearly shipped as a finding.** The first post-fix suite run read **8.4m** and looked like a regression. It was not: `kill $LOADPIDS` had failed to reap the spin loops from the load test — `jobs -p` in a non-interactive subshell — and the run was taken on a machine at **load average 38**. Killed, waited for load to fall below 4, re-measured: 4.3m. **A wall-time number is only as good as `uptime` at the moment it was taken**, and this session produced two ruined measurements (this, and §DX-02hf's flake attribution) before that was written down.
+
+**Gates:** `npm run check:walk --prefix src` → **`✓ 18/18 gates green · wall 10.6s`**. Tests and one helper only; no engine, config or world-data change.
+
+---
+
 ## Archived 2026-08-25 — §DX-02ht (evidence for a flake, without paying for it on every run — and it diagnosed three on its first outing)
 
 ### §DX-02ht — the row's own plan was measured and rejected twice before something worked ✅ SHIPPED 2026-08-25 `1995538`

@@ -45,22 +45,6 @@
 
 
 
-### §DX-02hu — the `worldbuilder-*` flakes are one bug: every spec clicks into `edit.html` before `#load-splash` has let go of the pointer (NEW 2026-08-25 during §DX-02ht, 🟢 no design call)
-
-- [ ] **§DX-02hu — three "flaky" tally marks turned out to be one named defect the moment traces existed.** **Measured at `0827e87`+**, from the four `trace.zip`s §DX-02ht's change produced on its first full run. Three of the four are the same failure, in three different files, and Playwright's own call log names the cause outright:
-> ```
-> - locator resolved to <button id="mb-add" class="btn sm">+ Add Step</button>
-> - element is visible, enabled and stable
-> - scrolling into view if needed / done scrolling
-> - <div class="scol-inner">🌾 Epic Battleground — Midlands…</div>
->   from <div class="" id="load-splash">…</div> subtree intercepts pointer events
-> ```
-> **It is not timing noise and it is not a slow machine.** `edit.html:303` defines `#load-splash` as `position:absolute; inset:0; z-index:200` — a full-viewport overlay that is up while the world loads and streams node names into `.scol-inner`. Every flaking spec does `await page.goto('/edit.html')` and then clicks immediately (`worldbuilder-crud-arrays.test.js:135`, `worldbuilder-quest-editor.test.js:66`, `worldbuilder-mission-builder.test.js:307`), with **no wait for the splash to go `.hidden`**. The target button is genuinely visible, enabled and stable the whole time — which is exactly why the failure reads as inexplicable in a bare `1 flaky` line. One trace also caught the earlier overlay in the same race: `<div id="welcome-screen"> intercepts pointer events`.
-> **Why it presents as a flake:** on an idle machine the splash clears inside the 8 s `actionTimeout`; under full-suite load it does not. The test never asserted the precondition, so the pass was always luck.
-> **Fix:** a shared helper — `openEditor(page)` in `helpers.js` — that does the `goto` and then awaits `expect(page.locator('#load-splash')).toBeHidden()` and the welcome overlay, and route the **8** `worldbuilder-*` specs' `goto('/edit.html')` calls through it. `grep -c "goto('/edit.html')"` per file sizes the change.
-> **Verify:** the three named tests survive `--repeat-each` under a deliberately loaded machine, where they currently flake; and the full suite reports **0 flaky** across two consecutive runs.
-> **Provenance:** §DX-02ht, reading the traces rather than counting them.
-
 ### §DX-02hr — 72% of every test's time is Chromium re-parsing the same 5.3 MB `play.html` (NEW 2026-08-25 during §DX-02hq, 🟡 ONE DESIGN CALL: is a reused page still an honest test)
 
 - [ ] **§DX-02hr — the suite's remaining cost is not parallelism, it is that each of ~1000 tests loads the whole game from cold.** **Measured at `b0c236d`** with a probe spec (`seedAndLoad` timed against a bare `page.evaluate`): **`seedAndLoad` = 326 ms, a subsequent `evaluate` = 7 ms**, against a typical `quest-runtime-uqf` test of ~450 ms. `play.html` is **5.3 MB** and Playwright's `{ page }` fixture is a fresh context per test, so the cache is cold every time: the suite performs **~649 `page.goto`/`seedAndLoad` calls** and pays a full parse for each. §DX-02hq took the free 24% (7.4m → 5.6m) by running tests inside a file concurrently; **the next 30–40% is here, and it is not free.**

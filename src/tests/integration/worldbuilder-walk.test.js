@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson
 'use strict';
 const { test, expect } = require('@playwright/test');
+const { openEditor } = require('./helpers');
 
 // ── §WALK — Playable World Editor Integration Tests ───────────────────────────
 //
@@ -45,7 +46,7 @@ async function loadWalkTab(page, opts = {}) {
   // failure). Callers needing custom endpoint handlers pass their own pre-armed
   // stub (opts.stub); every other describe gets a bare 404-firewall here.
   if (!opts.stub) await armApiStub(page);
-  await page.goto('/edit.html');
+  await openEditor(page);
 
   await page.evaluate(({ nm, nc, qd }) => {
     WBAPI.nodeMap     = nm;

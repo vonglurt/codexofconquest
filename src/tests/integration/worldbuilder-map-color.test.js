@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson
 'use strict';
 const { test, expect } = require('@playwright/test');
+const { openEditor } = require('./helpers');
 
 // ── §WALK-G — Map "color by" mode: Act vs Terrain ─────────────────────────────
 //
@@ -20,7 +21,7 @@ test.use({ trace: 'retain-on-failure' });
 
 test.describe('Map color-by mode (§WALK-G)', () => {
   test('terrainColor() is a stable, distinct, fallback-safe hash', async ({ page }) => {
-    await page.goto('/edit.html');
+    await openEditor(page);
     const r = await page.evaluate(() => ({
       stable:   window.terrainColor('coastal_market') === window.terrainColor('coastal_market'),
       distinct: window.terrainColor('forest') !== window.terrainColor('desert'),
@@ -34,7 +35,7 @@ test.describe('Map color-by mode (§WALK-G)', () => {
   });
 
   test('the canvas dot is painted from the active color mode', async ({ page }) => {
-    await page.goto('/edit.html');
+    await openEditor(page);
     const res = await page.evaluate(() => {
       // Minimal loaded world: one act-2 node with a known terrain at cell (3,3).
       WBAPI.loaded = true;
@@ -60,7 +61,7 @@ test.describe('Map color-by mode (§WALK-G)', () => {
   });
 
   test('the #map-act-filter dims out-of-act dots on the canvas', async ({ page }) => {
-    await page.goto('/edit.html');
+    await openEditor(page);
     const res = await page.evaluate(() => {
       // Two nodes, different acts, far apart so their discs never overlap.
       WBAPI.loaded = true;
@@ -92,7 +93,7 @@ test.describe('Map color-by mode (§WALK-G)', () => {
   });
 
   test('the compass rose is north-up (N above S, E right of W)', async ({ page }) => {
-    await page.goto('/edit.html');
+    await openEditor(page);
     const r = await page.evaluate(() => {
       const svg = document.getElementById('map-compass');
       const lbl = c => svg.querySelector(`.mc-lbl.mc-${c}`) || [...svg.querySelectorAll('.mc-lbl')].find(t => t.textContent.trim() === c.toUpperCase());
@@ -123,7 +124,7 @@ test.describe('Map color-by mode (§WALK-G)', () => {
 
 test.describe('In-context node creation (§WALK-G)', () => {
   test('place mode → click an empty cell drops a node at that (r,c)', async ({ page }) => {
-    await page.goto('/edit.html');
+    await openEditor(page);
     page.on('dialog', d => d.accept(d.type() === 'prompt' ? 'NEWN' : undefined));
     const res = await page.evaluate(async () => {
       WBAPI.loaded = true;
@@ -157,7 +158,7 @@ test.describe('In-context node creation (§WALK-G)', () => {
   });
 
   test('clicking an existing node in place mode selects it (no node created, exits)', async ({ page }) => {
-    await page.goto('/edit.html');
+    await openEditor(page);
     let prompted = false;
     page.on('dialog', d => { if (d.type() === 'prompt') prompted = true; d.accept(d.type() === 'prompt' ? 'XXX' : undefined); });
     const res = await page.evaluate(async () => {
@@ -179,7 +180,7 @@ test.describe('In-context node creation (§WALK-G)', () => {
   });
 
   test('__createNodeAt rejects duplicate + invalid codes', async ({ page }) => {
-    await page.goto('/edit.html');
+    await openEditor(page);
     page.on('dialog', d => d.accept());     // dismiss the alert()s
     const res = await page.evaluate(async () => {
       WBAPI.loaded = true;

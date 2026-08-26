@@ -243,8 +243,51 @@ function watchChildren(children) {
 }
 
 
+// ── Opening edit.html without racing its loader (§DX-02hu) ────────────────────
+// edit.html auto-loads the whole world on every page load:
+//
+//   probeServer().then(up => { if (up) loadFromServer(); });     // edit.html@5881
+//
+// `probeServer` fetches `http://localhost:1367/api/ping` (2s abort), and when it
+// answers, `loadFromServer` raises `#load-splash` — an `inset:0; z-index:200`
+// full-viewport overlay — for ~2.1s of scripted phases plus API time.
+//
+// So whether these specs face an overlay depends on WHETHER A SERVER HAPPENS TO BE
+// LISTENING, which is not something a test should be deciding by luck. Probed on an
+// idle machine: the splash never rose and `#welcome-screen` stayed up for a full 6s
+// — the state the 52 call sites were written against. But the §DX-02hu traces show
+// the opposite, `.scol-inner` streaming real node names ("KSU  The Lake Harbor") over
+// the button being clicked, and Playwright reporting the target as "visible, enabled
+// and stable" while `<div id="load-splash">` swallowed the pointer. Three specs flaked
+// that way on 2026-08-25.
+//
+// Blocking the probe makes the choice explicit instead of ambient — the same idiom
+// `mesh-connections-ui.test.js` already uses to be hermetic. Pass `{ live: true }`
+// for a spec that genuinely wants the world loaded, and then wait for it yourself.
+async function openEditor(page, opts = {}) {
+  if (!opts.live) {
+    await page.route('http://localhost:1367/api/ping', (route) => route.abort());
+  }
+  await page.goto('/edit.html');
+  // Both overlays, explicitly. `#welcome-screen` starts VISIBLE and is dismissed as a
+  // side effect of the world loading — so a spec that clicks through it was relying on
+  // the very auto-load this helper blocks, which is how `worldbuilder-crud-arrays`
+  // passed for months without ever saying it needed a server. Hide it outright: these
+  // specs drive the editor through `window.__crudTest` / `window.switchTab` and none
+  // of them needs the welcome card itself.
+  if (!opts.live) {
+    await page.evaluate(() => document.getElementById('welcome-screen')?.classList.add('hidden'));
+  }
+  // With the probe blocked the splash is never raised, so this asserts a precondition
+  // rather than waiting for a race to resolve.
+  await expect(page.locator('#load-splash')).toBeHidden();
+  if (opts.tab) await page.evaluate((t) => window.switchTab(t), opts.tab);
+}
+
+
 module.exports = {
   SEED_STATE,
+  openEditor,
   workerPorts,
   watchChildren,
   patchGameHtml,

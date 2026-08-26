@@ -1,6 +1,7 @@
 // SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson
 'use strict';
 const { test, expect } = require('@playwright/test');
+const { openEditor } = require('./helpers');
 
 // ── §EDITOR-01-D-FU(a) — visual itemChain step-list editor ────────────────────
 //
@@ -22,7 +23,7 @@ test.use({ trace: 'retain-on-failure' });
 
 test.describe('itemChain chain editor — buildChainEditor (§EDITOR-01-D-FU a)', () => {
   test('setSteps → getSteps round-trips all four kinds', async ({ page }) => {
-    await page.goto('/edit.html');
+    await openEditor(page);
     const out = await page.evaluate(() => {
       const initial = [
         { action: 'grant', name: 'Pip Bead', icon: '🪵', type: 'misc', sell: 1, desc: 'a token' },
@@ -45,7 +46,7 @@ test.describe('itemChain chain editor — buildChainEditor (§EDITOR-01-D-FU a)'
   });
 
   test('grant.once: default (checked) omits once; toggled off emits once:false', async ({ page }) => {
-    await page.goto('/edit.html');
+    await openEditor(page);
     const out = await page.evaluate(() => {
       const ed = window.buildChainEditor(null, { initial: [{ action: 'grant', name: 'A' }] });
       const before = ed.getSteps();                       // default checked → no `once`
@@ -59,7 +60,7 @@ test.describe('itemChain chain editor — buildChainEditor (§EDITOR-01-D-FU a)'
   });
 
   test('▲/▼ reorder swaps adjacent rows', async ({ page }) => {
-    await page.goto('/edit.html');
+    await openEditor(page);
     const out = await page.evaluate(() => {
       const ed = window.buildChainEditor(null, { initial: [
         { action: 'grantBit', flag: 'one' },
@@ -80,7 +81,7 @@ test.describe('itemChain chain editor — buildChainEditor (§EDITOR-01-D-FU a)'
   });
 
   test('rows with a blank required field are dropped from getSteps', async ({ page }) => {
-    await page.goto('/edit.html');
+    await openEditor(page);
     const out = await page.evaluate(() => {
       const ed = window.buildChainEditor(null, {});
       ed.addStep({ action: 'grant', name: '' });          // blank name → dropped
@@ -92,7 +93,7 @@ test.describe('itemChain chain editor — buildChainEditor (§EDITOR-01-D-FU a)'
   });
 
   test('codec parity: getSteps() ≡ parseItemChainText for the equivalent text', async ({ page }) => {
-    await page.goto('/edit.html');
+    await openEditor(page);
     const out = await page.evaluate(() => {
       const text = [
         'grant | Pip Bead | 🪵 | misc | 1 | a token',
@@ -110,7 +111,7 @@ test.describe('itemChain chain editor — buildChainEditor (§EDITOR-01-D-FU a)'
 
   // ── §EDITOR-01-D-FU(b1) — rich grant fields via the advanced-JSON row ──────────
   test('rich grant fields round-trip through setSteps → getSteps (advanced JSON)', async ({ page }) => {
-    await page.goto('/edit.html');
+    await openEditor(page);
     const out = await page.evaluate(() => {
       const initial = [{
         action: 'grant', name: 'Field Tome', icon: '📗', type: 'tome', sell: 0,
@@ -131,7 +132,7 @@ test.describe('itemChain chain editor — buildChainEditor (§EDITOR-01-D-FU a)'
   });
 
   test('grant.silent round-trips (unchecked omits; seeded true survives)', async ({ page }) => {
-    await page.goto('/edit.html');
+    await openEditor(page);
     const out = await page.evaluate(() => {
       const plain = window.buildChainEditor(null, { initial: [{ action: 'grant', name: 'A' }] });
       const silent = window.buildChainEditor(null, { initial: [{ action: 'grant', name: 'B', silent: true }] });
@@ -142,7 +143,7 @@ test.describe('itemChain chain editor — buildChainEditor (§EDITOR-01-D-FU a)'
   });
 
   test('invalid advanced JSON is ignored — scalar fields still read', async ({ page }) => {
-    await page.goto('/edit.html');
+    await openEditor(page);
     const out = await page.evaluate(() => {
       const ed = window.buildChainEditor(null, { initial: [{ action: 'grant', name: 'X' }] });
       const adv = ed.el.querySelector('.chain-row [data-cf="adv"]');
@@ -153,7 +154,7 @@ test.describe('itemChain chain editor — buildChainEditor (§EDITOR-01-D-FU a)'
   });
 
   test('off-allow-list keys in advanced JSON are dropped', async ({ page }) => {
-    await page.goto('/edit.html');
+    await openEditor(page);
     const out = await page.evaluate(() => {
       const ed = window.buildChainEditor(null, { initial: [{ action: 'grant', name: 'X' }] });
       const adv = ed.el.querySelector('.chain-row [data-cf="adv"]');
@@ -164,7 +165,7 @@ test.describe('itemChain chain editor — buildChainEditor (§EDITOR-01-D-FU a)'
   });
 
   test('factory returns independent instances (no shared singleton state)', async ({ page }) => {
-    await page.goto('/edit.html');
+    await openEditor(page);
     const out = await page.evaluate(() => {
       const a = window.buildChainEditor(null, { initial: [{ action: 'grantBit', flag: 'aaa' }] });
       const b = window.buildChainEditor(null, { initial: [{ action: 'grantBit', flag: 'bbb' }] });
