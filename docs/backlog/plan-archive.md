@@ -9,7 +9,7 @@
 
 ## Archived 2026-08-25 — §DX-02hw (the rule was a habit two commits deep in a diff; now it has a witness)
 
-### §DX-02hw — a doc could not quote a dead anchor, and the escape that worked was written down nowhere ✅ SHIPPED 2026-08-25 `PENDING_SHA`
+### §DX-02hw — a doc could not quote a dead anchor, and the escape that worked was written down nowhere ✅ SHIPPED 2026-08-25 `ec14c5d`
 
 - [x] **§DX-02hw — writing down the defect reproduced the defect.** **Measured at `e1ca994`:** the §DX-02hv archive entry and §RESUME row quote the anchor they retired and the remedy string that replaces it; in a code span those *are* anchors, so `check:anchors` audited **7 of them** and went red on the commit whose subject was making it green. `ANCHOR_RE` (`resolve-anchors.js:48`) cannot tell a ship record from a live pointer. The working commit escaped them by putting the `@N` **outside** the span — *`` `edit.html` ``@5881* — which `ANCHOR_RE` cannot match, but nothing stated the rule and nothing enforced it.
 > **The design call, and the half of my own recommendation the ground killed.** The row proposed (a) document the escape, (b) exempt archived ship records, (c) invent an inline escape token, recommending **(a) plus the narrow half of (b)**. **(b) is disproved by measurement:** `plan-archive.md` holds **128 live symbol anchors** in 794 KB and `BACKLOG.md` another **17** (`node -e` over `ANCHOR_RE`) — exempting the archive to buy an escape for a handful of quotations would blind the gate to 128 real pointers into a doc nobody re-reads. History being *annotated rather than rewritten* is an argument about the numbers, not about whether the symbols still resolve. **Shipped (a) alone, plus the witness (b) and (c) were both standing in for.**
