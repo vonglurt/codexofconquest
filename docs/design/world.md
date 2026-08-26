@@ -1198,11 +1198,13 @@ Read-only derived stat. Never stored in `S_story`. `_calcLuck()` = `⌈(STR×DEX
 
 ---
 
-## ⚠️ PLANNED — The Pressure Cascade: Void-Touched Monsters and NPC Reactions (plan-archive.md §XXIV, Layer 59)
+## ✅ The Pressure Cascade: Void-Touched Monsters and NPC Reactions — core shipped, runtime injection ⚠️ PLANNED (plan-archive.md §XXIV, Layer 59)
+
+*(Status corrected 2026-08-25 by §DX-02hg: this heading read ⚠️ PLANNED for the whole layer while most of it is live — the fifth such heading, after §DOC-02ar, §DOC-02bz and §AUDIT-03ak's four. **The heading states the split rather than the section being cut in two**, following the `Layer 47` precedent above (*"Core mechanic implemented … Tournament circuit is ⚠️ PLANNED follow-on"*), because the two halves already have their own subheadings and their own status notes. **Live at HEAD, four pieces:** the NPC lines `const NPC_VOID_PRESSURE_LINES@26946`, dispatched at `// Layer 59: void pressure line — Dear Friends at pressure ≥ 6@23621`; the two `voidTainted:true` monsters, statically rostered (§DX-02h); `_voidFlavorLine@26954`, the per-node void flavor line appended to the story box at `// Layer 59: void flavor line@34612`; and the tide-event mercy window at `// Increment void pressure at each tide event (Layer 59: mercy window)@36354`. **The last two were not documented in this section at all** and were found by re-deriving `Layer 59` against `play.html` rather than reading the section. **Never built:** the `voidPressure`-gated runtime monster injection — `_applyVoidPressureMonsters()` occurs **0 times** — which is §TIDE-01's territory and is marked as such below.)*
 
 `voidPressure` reaching thresholds (3, 6, 9) produces visible world changes. See `story.md §XXIV stub` for the full flavor text and threshold event table. This section covers the world-layer additions: void-touched monster variants and NPC pressure responses.
 
-### Void-Touched Monsters
+### Void-Touched Monsters — ⚠️ shipped, but NOT as designed
 
 > ⚠️ **DRIFT CORRECTED 2026-08-03 (§DX-02h) — this section described a design, in the present tense, that was never built.** Measured at HEAD: **`_applyVoidPressureMonsters()` occurs 0 times in the file** (the runtime-injection mechanism below does not exist), and of the five terrains the table named, **`dark_forest` and `mountain_pass` are not terrain keys at all** — `WORLD_DB` has no such entries, and "`MUC` (historical `GL`) wilderness" is not a key either. The net effect is that both monsters were in **no roster, on no `node.battle`, in no quest**: authored content nothing could reach, while this doc read as if it shipped. That is the "authoritative-looking but fictional" class §AUDIT-03l warns about, and it is precisely why the gap went unnoticed — the doc was the thing that looked like evidence. Both are now **statically rostered in `sewers`** (its one node is **SFT "Visby Sewers"**, act 5 — Visby is where `VOID_TIDE_EVENTS[21]` sights the first Void Walker), verified by `dx02h-terrain-roster-write.test.js`. **The voidPressure-gated injection remains unbuilt and is §TIDE-01's territory** (§TIDE-01-B/C are the open rows for the tide changing the world); do not cite it as shipped.
 
@@ -1217,7 +1219,7 @@ Two entries added to `MONSTER_POOL` at Layer 59. Both are `voidTainted:true`, an
 
 **Void Shard** is a sellable lore relic, not a Codex Shard. Flavor text: *"A fragment of something that shouldn't exist."*
 
-### NPC Pressure Reactions — Dear Friend Lines (voidPressure ≥ 6)
+### NPC Pressure Reactions — Dear Friend Lines (voidPressure ≥ 6) — ✅ LIVE
 
 Stored in `NPC_VOID_PRESSURE_LINES`. Fires when `fav[npc] ≥ 2` and `voidPressure ≥ 6`. Replaces one Dear Friend quote during that visit:
 
@@ -1231,6 +1233,13 @@ Stored in `NPC_VOID_PRESSURE_LINES`. Fires when `fav[npc] ≥ 2` and `voidPressu
 | Auros | *"Something is moving in the Convergence. Not the Commander. Something older."* |
 
 **No new nodes, quests, or named NPCs.** Extend `lab-report-living-world.md` with a §XXIV implementation note on completion.
+
+### Void Flavor Lines and the Mercy Window — ✅ LIVE (undocumented until §DX-02hg)
+
+Two further Layer 59 pieces ship and had no entry in this section:
+
+- **`_voidFlavorLine(nodeCode)`** (`_voidFlavorLine@26954`) returns a per-node void line, appended to the story text box on every render (`// Layer 59: void flavor line@34612`).
+- **The mercy window.** A tide event spends `S_story.void_mercy_count` instead of raising pressure (`// Increment void pressure at each tide event (Layer 59: mercy window)@36354`); the counter is armed at pressure 9 when the player holds ≥ 5 shards.
 
 ---
 
