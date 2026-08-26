@@ -25586,10 +25586,22 @@ function _syncStoryWeaponInto(w) {
     w.flatMod = mw.magicBonus || 0;
   }
   w.finesse = _storyWeaponIsFinesse();
+  w.prof    = true;
   const el = document.getElementById('weapon-finesse');
   if (el) el.checked = w.finesse;
   const sel = document.getElementById('atk-ability');
   if (sel) sel.value = _storyAtkAbility().label.toLowerCase();
+  const profEl = document.getElementById('weapon-prof');
+  if (profEl) profEl.checked = w.prof;
+  const nameEl = document.getElementById('weapon-name');
+  if (nameEl && mw) nameEl.value = mw.name || '';
+  const countEl = document.getElementById('weapon-count');
+  if (countEl) countEl.value = w.count;
+  const flatEl = document.getElementById('weapon-flatmod');
+  if (flatEl) flatEl.value = w.flatMod;
+  document.querySelectorAll('#weapon-die-sel .die-opt').forEach(b => {
+    b.classList.toggle('active', parseInt(b.dataset.die) === w.die);
+  });
 }
 
 // The one place a story character becomes roller state. Every roller control the

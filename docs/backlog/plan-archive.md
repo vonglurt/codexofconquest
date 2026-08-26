@@ -7,6 +7,25 @@
 
 ---
 
+## Archived 2026-08-26 — §SIMLEAK-01 (the weapon panel that overwrote the weapon)
+
+### §SIMLEAK-01 — three more roller controls the story sync does not write, and one of them clobbers the story weapon back (NEW 2026-08-26 during §ATKAB-01, 🟡 one design call)
+
+- [x] ✅ SHIPPED 2026-08-26 `PENDING` **§SIMLEAK-01 — `#atk-extra-mod` was not the only unwritten control; it was the one inside `getAtkAbilityMod`.** §ATKAB-01 closed that leak and its extraction, `_syncStoryCharInto@25599`, is now the single place a story character becomes roller state. **Three weapon-side controls are still outside it.** (1) **`#weapon-prof`** ships `id="weapon-prof" checked@3845` and is read only by `syncWeaponFromUI@8041`; `_syncStoryWeaponInto@25593` never writes `w.prof`, so whether a story swing adds the proficiency bonus (`S.weapon.prof ? getProfBonus() : 0`, in `_overlayPlayerAttack`, `offhandRoll` and `doPlayerAttack`) is decided by a checkbox in the simulator. (2) **`id="weapon-count"@3862` and `id="weapon-flatmod"@3866` leak in the OPPOSITE direction**, which is the dangerous half: `_syncStoryWeaponInto` writes `w.count` and `w.flatMod` onto the state object but **leaves the two inputs stale**, so the next `input` event on any weapon field re-runs `syncWeaponFromUI` and **overwrites the equipped weapon's real values with the simulator's**. The story weapon silently becomes whatever the roller shows.
+> **This is live, not theoretical.** `main-body` is displayed during a story battle — `_storyFleeClean` hides it on the way out — so the roller panel and its inputs are reachable while the overlay is up.
+> **The design call is which direction the sync runs for the weapon block.** (i) **Story owns it** — write the three controls' DOM from `_syncStoryWeaponInto` the way `getElementById('weapon-finesse')@25601` and `getElementById('atk-ability')@25603` already are, so the roller displays the equipped weapon and editing it is editing a mirror. (ii) **Disable the weapon panel while `S_story.active`**, which admits the two tools are one UI and stops pretending the simulator is independent. **Recommend (i)** — it matches what the finesse and ability controls already do, and (ii) removes a tool the player may legitimately want. 🟡 rather than 🟢 because (i) makes the simulator's weapon panel read-only in effect without saying so.
+> **Provenance:** §ATKAB-01, whose census of `getAtkAbilityMod`'s inputs found the extra-mod leak and then the same shape on the sibling controls.
+
+> **Option (i) taken, and the row's own evidence settles the 🟡.** The call was *which direction the sync runs for the weapon block*, and (i) — story owns it — is what `getElementById('weapon-finesse')@25601` and `getElementById('atk-ability')@25603` already do for the other two controls. Making the remainder behave the same way is not a new policy; it is finishing one. (ii), disabling the panel while `S_story.active`, was rejected because it removes a tool rather than making it honest.
+> **The ground added a fourth control the row did not name.** `#weapon-die-sel@3850` is a row of `.die-opt` buttons whose `.active` class is the display, and `setupDieSelector@8334` is the only writer. The sync set `w.die` and never moved the highlight, so the panel showed the *previous* weapon's die even when the state was right.
+> **Measured before, with a Maul (2d6+3) equipped and the panel left at 7d6−4 and Proficient unchecked:** `S.weapon.prof` came out **false** — the sync never wrote it, so an unchecked simulator box decided whether a story swing added the proficiency bonus — and **one `input` event on `#weapon-flatmod` turned the equipped Maul into 7d6−4**, because `syncWeaponFromUI@8040` is wired to `input` on every field in the panel and rewrote `count` and `flatMod` from the stale DOM. That is the reverse leak: not the panel reading story state, the panel *overwriting* it.
+> **`_syncStoryWeaponInto@25593` now writes all six.** `w.prof = true` (a story Fighter is proficient with the weapon they carry) plus the DOM for `#weapon-prof`, `#weapon-name`, `id="weapon-count"@3862`, `id="weapon-flatmod"@3866` and the die-selector highlight. The round trip is now a no-op by construction: whatever `syncWeaponFromUI` reads back is what the sync just wrote.
+> **Pinned by `simleak01-weapon-panel-mirrors-story.test.js` 4/4** — for a Maul and a Rapier, that the panel shows what the sync wrote, and that a synthetic `input` event cannot rewrite the equipped weapon. All four failed before the fix, with the exact 2→7 / 3→−4 clobber in the diff.
+> **`check:walk` 21/21 · `npm test` 1122 passed, exit 0** — 1118 + the 4 new pin cases. No new doc anchors died; nothing was extracted.
+
+
+---
+
 ## Archived 2026-08-26 — §ATKAB-01 (a roller-only control that reached every story swing)
 
 ### §ATKAB-01 — three of the five `getAtkAbilityMod` callers were never checked against the derivation that now drives the select (NEW 2026-08-26 during §NEXT-2026-08-26, 🟢 no design call)
