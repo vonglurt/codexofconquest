@@ -43,7 +43,7 @@ The server holds the file text from when it started. A write after a hand-edit s
 
 ```bash
 ./bin/api get <type> <id>              # round trip, AFTER a reload, from disk — never "GET agrees with me"
-npm run check:walk --prefix src        # 18 gates in parallel, ~23s; the final ✓ N/N line is the verdict
+npm run check:walk --prefix src        # 19 gates in parallel, ~10s; the final ✓ N/N line is the verdict
 ./run.sh stop && npm test --prefix src # 1023 tests, server stopped
 ```
 

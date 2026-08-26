@@ -29,7 +29,7 @@ const GATES = [
   'check:gateast', 'check:rng', 'check:questgraph', 'check:nodeindex',
   'check:noderegs', 'check:npcregs', 'check:anchors', 'check:legacycodes',
   'check:battlepools',
-  'check:spdx',
+  'check:spdx', 'check:backlogcounts',
 ];
 
 const argv = process.argv.slice(2);

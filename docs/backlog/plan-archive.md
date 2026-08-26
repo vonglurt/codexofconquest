@@ -7,6 +7,19 @@
 
 ---
 
+## Archived 2026-08-25 — §DX-02gs (six hand corrections, then a gate; and the gate caught the seventh drift on the commit that added it)
+
+### §DX-02gs — the count is derived now, and the range is the load-bearing half of the rule ✅ SHIPPED 2026-08-25 `PENDING_SHA`
+
+- [x] **§DX-02gs — `BACKLOG.md`'s routing table counted open rows by hand, inside the file it counts, and drifted in both directions.** The row records **five** prior instances; **this increment measured the sixth at HEAD** and it had drifted in both columns again: phase 5 cell **31** vs actual **30**, phase 6 cell **55** vs actual **54**, and the §RESUME header **191 entries** vs **199** actual rows. A row archived without decrementing and a row filed without incrementing are each silent, and they do not cancel, so a reader cannot mentally correct for a lag in one direction.
+> **Shipped `src/scripts/check-backlogcounts.js` as `check:walk` gate #19** — the fix the row specified, at the size it estimated. Open rows are `^### §` headings **BETWEEN** a phase file's `## §BACKLOG — Open Items` marker and its first `## Track records` / `## §RESUME` marker; the §RESUME header count is checked against its own table's rows. **The range is the load-bearing half and the selftest says so in four checks** — a §-heading before the range, after `## Track records`, and after `## §RESUME` must all not count — because this row's own first census counted whole files, reported *"four of six stale"*, and named a phase-2 cell that had been correct all along.
+> **Failures name the phase, both numbers, and the direction:** *"phase 5 — Open rows says 31, BACKLOG-5-platform-tooling.md has 30 (reads HIGH by 1)"*. It also catches a table that has **lost a phase row** rather than silently counting short, and a table row naming a file that does not exist.
+> **Asserts only, never rewrites.** A checker that repairs what it audits makes its own verdict depend on run order — that is §DX-02fx, open in this same phase, and inheriting it here would have been free and wrong.
+> **What is NOT derived, said out loud:** the *Closed (archived)* column stays hand-maintained. `plan-archive.md` is not split by phase, so there is nothing to count it against; claiming the gate covers the table would be the §AUDIT-03l shape.
+> **The three drifted numbers were corrected in the same increment**, and every doc claiming *18 gates* was swept — `AGENTS.md`'s verify block and `docs/design/index.md`'s `run-gates.js` row now read **19**. **Selftest 10 checks.**
+> **It proved itself immediately:** archiving this very row took phase 6 from 54 to 53, and the gate went red on the next run until the cell followed. That is the failure mode the row was filed about, caught by the thing the row asked for, on its own closing commit.
+> **Verified:** `check:walk` **19/19, wall 9.9s**; `npm test --prefix src` **1033 passed, 0 failed, 3.8m**, `posttest` silent.
+
 ## Archived 2026-08-25 — §DX-02gu (the invariant three rows restored by hand now warns at the moment it breaks)
 
 ### §DX-02gu — the guard could not live in the suite, so it lives in npm ✅ SHIPPED 2026-08-25 `56df66e`
