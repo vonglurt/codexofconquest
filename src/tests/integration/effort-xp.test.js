@@ -102,4 +102,69 @@ test.describe('§XP-01 — universal effort XP (misses + failed checks)', () => 
     expect(r.noRewardFail).toBe(0);      // nothing to scale off
     expect(r.guarded).toBe(true);
   });
+
+  // §DX-02de — the fail branch WROTE the notice and `storyRender`'s unconditional tail
+  // `storyMsg(parts.join(…))` destroyed it in the same synchronous tick, so it never
+  // painted a frame in 37 days. The pass branch had already been repaired for exactly
+  // this hazard (§BOARD-01-FU6's `_passMsgs` buffer, under a comment naming the failure
+  // mode verbatim) and the repair stopped nineteen lines short. The fail branch now
+  // uses the same buffered-prefix idiom.
+  test('§DX-02de — the effort notice survives the render that used to erase it', async ({ page }) => {
+    await page.goto('/play.html');
+    const r = await page.evaluate(() => {
+      storyNewGame({ str:8, dex:8, con:8, int:8, wis:8, cha:8 });
+      const sc = QUEST_DB['quest_muffat_01'].bits.find(b => b.kind === 'skill_check');
+      const savedDc = sc.dc; sc.dc = 999;
+      const xp0 = S_story.xp;
+      try { _resolveQuestUQF('quest_muffat_01'); } finally { sc.dc = savedDc; }
+      return { msg: document.getElementById('story-move-msg').textContent, gained: S_story.xp - xp0 };
+    });
+    // The XP always arrived; it is the telling that was deleted. §XP-01's whole job is
+    // to teach that failure is not a dead end, in this one sentence.
+    expect(r.gained).toBe(38);
+    expect(r.msg).toContain('The attempt was not wasted');
+    expect(r.msg).toContain('+38 XP');
+  });
+
+  // §DX-02df — story mode tallies exactly two attack surfaces and paid for one. The
+  // off-hand bonus-action swing calls `_statTally('attacksAttempted', 1)` and its miss
+  // branch returned without granting: the one swing the engine counts and refuses to
+  // pay for, left to the dual-wielding player alone.
+  test('§DX-02df — an off-hand miss earns effort XP, under the same shared cap', async ({ page }) => {
+    await page.goto('/play.html');
+    const r = await page.evaluate(() => {
+      storyNewGame({ str:10, dex:8, con:8, int:8, wis:8, cha:8 });
+      _storyRollInit();
+      Object.assign(S.enemy, { ac:100, atk:0, dmgDie:4, dmgCount:1, dmgFlat:0, maxHp:10 });
+      Object.assign(S.opp,   { tier:'easy', hp:10, maxHp:10, enraged:false, adv:'norm' });
+      Object.assign(S.player,{ hp:45, maxHp:45, dmgMod:0, adv:'norm' });
+      Object.assign(S.char,  { ac:16 });
+      S.offhand = { die:4, count:1 };
+      S_story.equippedShield = null;
+      const kill = 100 * 10;
+      const perMiss = Math.round(kill * EFFORT_MISS_PCT);
+      const cap     = Math.round(kill * EFFORT_XP_PCT);
+      const _rand = Math.random; Math.random = () => 0.5;
+
+      // one off-hand miss on its own — the case that paid nothing before
+      const xp0 = S_story.xp;
+      S_story.battleTurn = 'player'; S_story.usedMainAttack = true; S_story.usedBonusAction = false;
+      _overlayOffhandAttack();
+      const offhandOnly = S_story.xp - xp0;
+
+      // the cap is per ENCOUNTER and shared, not per surface: grind both past it
+      for (let i = 0; i < 30; i++) {
+        S_story.battleTurn = 'player'; S_story.usedMainAttack = false; S_story.usedBonusAction = false;
+        _overlayPlayerAttack();
+        S_story.battleTurn = 'player'; S_story.usedMainAttack = true; S_story.usedBonusAction = false;
+        _overlayOffhandAttack();
+      }
+      const total = S_story.xp - xp0;
+      Math.random = _rand;
+      return { perMiss, cap, offhandOnly, total, banked: S.effortXpEarned };
+    });
+    expect(r.offhandOnly).toBe(r.perMiss);
+    expect(r.total).toBe(r.cap);
+    expect(r.banked).toBe(r.cap);
+  });
 });

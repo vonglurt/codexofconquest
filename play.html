@@ -6983,7 +6983,7 @@ function _resolveQuestUQF(questId) {
   // own tail storyMsg (which overwrites #story-move-msg). Surfaced as the render prefix,
   // exactly like storyRender's other 2-arg callers (29547, 35146). Fail path is left
   // byte-identical: passing `undefined` prefix reproduces the prior 1-arg call exactly.
-  let _passMsgs = null;
+  let _passMsgs = null, _failMsgs = null;
   if (pass) {
     S_story.quests[questId] = 'done';
     _passMsgs = [];
@@ -7009,13 +7009,14 @@ function _resolveQuestUQF(questId) {
         S_story.xp += effXp;
         _levelUpQueue = [];
         _checkLevelUp();
-        storyMsg('The attempt was not wasted. +' + effXp + ' XP for the effort.');
+        _failMsgs = ['The attempt was not wasted. +' + effXp + ' XP for the effort.'];
         if (_levelUpQueue.length > 0) _showLevelUpModal(_levelUpQueue.shift());
       }
     }
   }
   storyUpdateStatus();
-  storyRender(NODE_MAP[S_story.currentCode], (_passMsgs && _passMsgs.length) ? _passMsgs.join('  ·  ') : undefined);
+  const _tail = (_passMsgs && _passMsgs.length) ? _passMsgs : _failMsgs;
+  storyRender(NODE_MAP[S_story.currentCode], (_tail && _tail.length) ? _tail.join('  ·  ') : undefined);
   return true;
 }
 
@@ -25135,7 +25136,9 @@ function _overlayOffhandAttack() {
   const isHit    = isCrit || (!isNat1 && atkTotal >= S.enemy.ac);
   let finalDmg = 0, logMsg;
   if (!isHit || isNat1) {
-    logMsg = isNat1 ? '✗ Offhand NAT 1 — Miss!' : '✗ Offhand miss. ' + atkTotal + ' vs AC ' + S.enemy.ac;
+    const _ex = _grantMissEffortXp();
+    logMsg = (isNat1 ? '✗ Offhand NAT 1 — Miss!' : '✗ Offhand miss. ' + atkTotal + ' vs AC ' + S.enemy.ac)
+      + (_ex ? ' (+' + _ex + ' XP effort)' : '');
   } else {
     const dmgCount = isCrit ? S.offhand.count * 2 : S.offhand.count;
     const dmgRolls = rollN(S.offhand.die, dmgCount);

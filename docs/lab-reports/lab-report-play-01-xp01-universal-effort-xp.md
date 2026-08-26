@@ -28,7 +28,7 @@ notification is **written and never displayed**, and the **off-hand attack** —
 counted attack surface — was left out of scope without the report saying so.
 
 > *"The attempt was not wasted. +38 XP for the effort."*
-> — `play.html`, a string no player has ever read (§7.1).
+> — `play.html`, a string no player had ever read (§7.1) — **✅ displayed since 2026-08-26, §DX-02de**.
 
 ---
 
@@ -190,7 +190,7 @@ repaired the test by forcing the outcome through the engine's own dial —
 
 ## VII. Findings
 
-### 7.1 The failed-check notice is written, and has never been displayed → **§DX-02de** 🟡
+### 7.1 The failed-check notice is written, and has never been displayed → **§DX-02de** ✅ shipped 2026-08-26
 
 The fail branch ends with
 
@@ -212,13 +212,19 @@ repaired for exactly this hazard by §BOARD-01-FU6: it buffers through `_passMsg
 text to `storyRender` as its `prefix` argument, under a comment that names the failure mode
 verbatim. The fail branch sits **nineteen lines below that comment** on the broken idiom.
 
+> **✅ CLOSED 2026-08-26 (§DX-02de).** The fail branch now buffers into `_failMsgs` and hands the
+> text to `storyRender` as its `prefix`, which is the idiom the pass branch nineteen lines above it
+> had been using since §BOARD-01-FU6. Pinned by `effort-xp.test.js` on the **property** the report
+> named — force a reward-bearing check to fail, assert `#story-move-msg` still carries the sentence
+> after the render settles — and the assertion goes red against the parent build.
+
 **Player impact.** The XP arrives, and the level-up modal still opens, so nothing is lost
 mechanically — but the *pedagogy* is lost entirely. The feature's whole job is to teach the player
 that failure is not a dead end, and the one sentence that teaches it is deleted before it can be
 read. **Fix:** buffer the string and pass it as `storyRender`'s prefix, exactly as the pass branch
 already does. **Risk:** low.
 
-### 7.2 The off-hand miss is counted and unrewarded → **§DX-02df** 🟢
+### 7.2 The off-hand miss is counted and unrewarded → **§DX-02df** ✅ shipped 2026-08-26
 
 Story mode has exactly **two** `_statTally('attacksAttempted', 1)` sites: the main attack
 (`function _overlayPlayerAttack@25022`, granted) and the off-hand bonus-action swing
@@ -236,6 +242,15 @@ third such surface, untallied as well as unrewarded.
 **Blast radius is small by construction** — main-attack misses usually reach the per-encounter cap
 regardless, so the off-hand grant would often be zero anyway. Fix it for consistency, not balance.
 **Risk:** low.
+
+> **✅ CLOSED 2026-08-26 (§DX-02df).** The off-hand miss branch calls `_grantMissEffortXp()` and
+> names the grant in its own log line, exactly as the main attack's two branches do. **Both counted
+> attack surfaces now pay, under one shared per-encounter cap** — pinned by `effort-xp.test.js`,
+> which asserts the lone off-hand miss earns `EFFORT_MISS_PCT` of the kill *and* that grinding both
+> surfaces together still lands on the same `EFFORT_XP_PCT` ceiling, so the cap is per encounter and
+> not per surface. **The third surface named above — the mutual-flee free swing — is deliberately
+> not swept in here**: it is neither tallied nor paid, so paying it is a different decision from
+> §DX-02df's, and tallying it would move a statistic the player reads. Filed as **§XP-FLEE**.
 
 ### 7.3 The failed-check grant reaches 3.5 % of skill checks → **§AUDIT-03bm** 🟡 (design call)
 
@@ -341,6 +356,8 @@ not a defect, and it is filed as §AUDIT-03bm.
   → **11 passed**, one run.
 - **Live probe:** throwaway Playwright spec driving the real functions; main-miss `+20`,
   off-hand-miss `+0`, banked `20`; reward-check fail `+38` with `#story-move-msg` empty;
+  *(both figures are the pre-fix measurement — since §DX-02de/df the off-hand miss pays and the
+  notice paints)*;
   mission-bit-check fail (`quest_spark_01`) `+0`. Spec run and deleted.
 - **Census:** `src/js/wbapi-core.js` `W.load('play.html')`, brace-walked entry bodies for the
   `_legacy_fn` scan — **0** of 77 `_legacy_fn` onPass bits carry an XP grant the reward-bit reader
