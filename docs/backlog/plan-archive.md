@@ -9,7 +9,7 @@
 
 ## Archived 2026-08-26 — §DX-02er (a hole in the seeded fence, and a dead doc pointer that turned out to be ten)
 
-### §DX-02er — `Math.random()` decides where a key item lives, and one `→ doc:` pointer names a section that does not exist (NEW 2026-08-22 during §DOC-02cx, 🟢 two lines + one comment, NO DESIGN CALL) ✅ SHIPPED 2026-08-26 `PENDING`
+### §DX-02er — `Math.random()` decides where a key item lives, and one `→ doc:` pointer names a section that does not exist (NEW 2026-08-22 during §DOC-02cx, 🟢 two lines + one comment, NO DESIGN CALL) ✅ SHIPPED 2026-08-26 `ef94628`
 
 - [x] **§DX-02er(a) — the seeded-RNG fence has a hole in the ending arc.** 🟢 `S_story.frobergerNoteNode = _ebPool@23988` picks which of the 20 Epic Battlegrounds carries Froberger's Last Note, and the identical line runs again on the New Game+ path. Invariant #6 requires game-state randomness to draw the seeded stream (`_seededNext()`). Which node holds a key item is game state. The roll happens once at new-game time and is persisted, so a *save* still determines the future — the violation is narrow, but it is the same fence `check:rng` enforces elsewhere and it is two characters to close.
 - [x] **§DX-02er(b) — a doc pointer with no target.** 🟢 `const COVENANT_STANDING_LABELS = [@27425` carries `// → doc: docs/mechanics/mechanics-economy.md §Covenant Standing`. That file contains **zero** occurrences of the string; the live home is `story.md §Covenant Standing Tiers`, which `check:anchors` now resolves. Repoint the comment. *(Deferred out of §DOC-02cx because it edits `play.html`, whose working tree carries the user's uncommitted CSS recolor.)*
