@@ -1524,11 +1524,14 @@ _curseScore():
   Net range: −5 (all 20 returned) to +60 (all 20 started but abandoned)
 ```
 
-> **⚠️ MEASURED (§DOC-02cx, 2026-08-22) — the reachable set is `{ −5 } ∪ [1, 60]`.** Enumerated over all
-> 231 partitions of the 20 EB codes, through the engine's own `_curseScore()` in Chromium: **0 is not
-> reachable** (a score of 0 needs zero abandoned *and* zero untouched, which is the all-20 case, which
-> takes the −5 bonus), and **nothing reaches ≤ −6**. Read the two tables below against that set — one
-> tier row and one ending row are unreachable by one point. → §DX-02en.
+> **⚠️ MEASURED (§DOC-02cx, 2026-08-22; corrected §DX-02en, 2026-08-25) — the reachable set is
+> `{ −5 } ∪ [1, 58] ∪ { 60 }`.** Enumerated over all 231 partitions of the 20 EB codes, through the
+> engine's own `_curseScore()` in Chromium: **0 is not reachable** (a score of 0 needs zero abandoned
+> *and* zero untouched, which is the all-20 case, which takes the −5 bonus), and **59 is not reachable
+> either** — it needs `3s + n = 59` with `s + n ≤ 20`, and `s = 19` leaves room for only `n = 2`.
+> §DOC-02cx wrote the upper band as `[1, 60]`. Both tables below are keyed to this set: **§DX-02en moved
+> the two thresholds that fell outside it**, and `src/tests/integration/dx02en-covenant-standing.test.js`
+> re-derives the whole set on every run.
 
 ### Covenant Standing Tiers
 
@@ -1537,10 +1540,10 @@ _curseScore():
 
 | Curse Score | Tier | Description | Reachable? |
 |---|---|---|---|
-| ≤ −6 | **Covenant Keeper** | "The people you helped are the reason this works." | ❌ **never** — min score is −5 |
-| ≤ 0 | **Warden** | "You carry the work with you. It shows." | only at −5 → **all 20 returned** |
-| ≤ 7 | **Keeper** | "The seal holds. The cost is visible." | ≥ 13 returned, none abandoned |
-| ≤ 14 | **Watcher** | "You know what needs doing. You're still learning to stay." | ≥ 6 returned, none abandoned |
+| ≤ −5 | **Covenant Keeper** | "The people you helped are the reason this works." | exactly at −5 → **all 20 returned**, 1 of 231 states (§DX-02en; was ≤ −6 and unreachable) |
+| ≤ 3 | **Warden** | "You carry the work with you. It shows." | 4 states — 19 of 20 returned, at most one abandoned (§DX-02en; was ≤ 0, which held only −5) |
+| ≤ 7 | **Keeper** | "The seal holds. The cost is visible." | 10 states — ≥ 13 returned, none abandoned |
+| ≤ 14 | **Watcher** | "You know what needs doing. You're still learning to stay." | 30 states — ≥ 6 returned, none abandoned |
 | > 14 | **Wanderer** | "The Void will open again. Not your fault. Not entirely." | **the default** — 186 of 231 states |
 
 The sheet row unlocks at `(S_story.shards || 0) >= 1` — Act II, when the Trade Seal (Shard #1) is taken at
@@ -1552,11 +1555,11 @@ The sheet row unlocks at `(S_story.shards || 0) >= 1` — Act II, when the Trade
 | Condition | Variant | Description |
 |---|---|---|
 | `!_missionComplete() && curseScore >= 15` | **Cursed Seal Echo** | Groundhog Day text — Sweelinck has seen this 17 times. Mission failed but Void sealed. |
-| `_missionComplete() && curseScore <= -6` | **Covenant Keeper (True)** | ❌ **Unreachable** — `const _isTrue = missionDone && curse <= -6@28231` has no satisfying state (§DX-02en). Kept for the record. |
+| `_missionComplete() && curseScore <= -5` | **Covenant Keeper (True)** | `const _isTrue = missionDone && curse <= -5@28241` — the perfect 20-of-20 run, plus 5 pit wins and 5 negotiated payments. The threshold was `<= -6` against a score floor of −5 and had no satisfying state from the first commit until §DX-02en moved it. |
 | `_missionComplete() && curseScore <= 0` | **Covenant Keeper (naming ceremony)** | Reachable **only at −5**, i.e. all 20 returned. Sweelinck names every person the player helped, one line at a time on the sigil overlay. |
 | Otherwise | **Standard** | Score-based tier; epilogue reflects breadth of engagement. |
 
-**Note:** `function _covenantStanding()@28034` maps curse score to label using `COVENANT_STANDING_LABELS`. `function _buildEpilogueScroll()@28122` builds the **per-NPC** epilogue lines (six keys, fav-gated) plus **one summary count line** for the Epic Battlegrounds when ≥ 10 are returned — *not* a named list of the returned EB NPCs (corrected §DOC-02cx). It substitutes the Cursed Seal Echo text wholesale when `!missionComplete && score ≥ 15`, which is also why `FROBERGER_EPILOGUE.cursed` has no selector (§DX-02eo). **No ending branch names the player's Covenant Standing** — the character-sheet label is never spoken back (§DX-02en).
+**Note:** `function _covenantStanding()@28034` maps curse score to label using `COVENANT_STANDING_LABELS`. `function _buildEpilogueScroll()@28122` builds the **per-NPC** epilogue lines (six keys, fav-gated) plus **one summary count line** for the Epic Battlegrounds when ≥ 10 are returned — *not* a named list of the returned EB NPCs (corrected §DOC-02cx). It substitutes the Cursed Seal Echo text wholesale when `!missionComplete && score ≥ 15`, which is also why `FROBERGER_EPILOGUE.cursed` has no selector (§DX-02eo). **All four ending branches close on the standing** — `const standingSpoken = @28255` appends *“At the door he says the word the ledger has for you”* plus `_covenantStanding().label` to each, so the sheet label the player carried all run is spoken back (§DX-02en).
 
 ### Covenant Ceremony
 

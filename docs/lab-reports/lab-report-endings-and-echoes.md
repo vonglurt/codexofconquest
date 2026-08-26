@@ -74,14 +74,16 @@ Anchors at HEAD: `const SWEELINCK_NAMING_LINES = {@27239` · `const NPC_EPILOGUE
 return (startedNotReturned * 3) + (neverStarted * 1) - (allComplete ? 5 : 0);
 ```
 
-The bonus for returning to all twenty Epic Battleground contacts is **−5**. A run with any contact unreturned scores ≥ +1. So the reachable set is `{ −5 } ∪ [1, 60]` — **0 is not reachable either.**
+The bonus for returning to all twenty Epic Battleground contacts is **−5**. A run with any contact unreturned scores ≥ +1. So the reachable set is `{ −5 } ∪ [1, 58] ∪ { 60 }` — **0 is not reachable either.**
+
+> **Corrected 2026-08-25 (§DX-02en), and it is this report's own arithmetic that was one value out.** The band was written here as `[1, 60]`. **59 is not reachable either**: it needs `3s + n = 59` with `s + n ≤ 20`, and `s = 19` leaves room for only `n = 2`. Nothing in F1's argument turns on it — the gap is at the *abandoned* end, not the covenant end — but the assertion that caught it, in `src/tests/integration/dx02en-covenant-standing.test.js`, is the reason the set is now re-derived on every run instead of being transcribed.
 
 ```js
 // const COVENANT_STANDING_LABELS = [@27356 — also byte-identical since 32c10c5
 { maxScore: -6, label: "Covenant Keeper", desc: "The people you helped are the reason this works." },
 ```
 
-`_covenantStanding()` returns the first bracket satisfying `score <= maxScore`. Nothing satisfies `≤ −6`. The same threshold gates the "Covenant Keeper (True)" ending: `const _isTrue = missionDone && curse <= -6@28231`.
+`_covenantStanding()` returns the first bracket satisfying `score <= maxScore`. Nothing satisfies `≤ −6`. The same threshold gates the "Covenant Keeper (True)" ending: `const _isTrue = missionDone && curse <= -6`@28231.
 
 **Measured in Chromium over all 231 partitions, through the engine's own `_curseScore()` and `_covenantStanding()`:**
 
@@ -94,6 +96,8 @@ The bonus for returning to all twenty Epic Battleground contacts is **−5**. A 
 | Wanderer | 186 | everything else — **including the default** |
 
 The player who does the hardest thing the game asks — twenty return journeys, no one left waiting — is handed *"You carry the work with you. It shows."* The line written for them, *"The people you helped are the reason this works,"* is in the file, unreachable, and has been since the first commit. **A design lock whose numbers were correct on the day and whose arithmetic was never run.** → **§DX-02en** 🟡
+
+> **✅ CLOSED 2026-08-25 by §DX-02en.** `Covenant Keeper` moved to `maxScore: -5` and `_isTrue` to `curse <= -5`, so the perfect 20-of-20 run is handed the line written for it. `Warden` moved from `maxScore: 0` to `maxScore: 3` rather than being left decorative: at `-5` its bracket was provably empty, and an unearnable rung is the defect this finding names, not a smaller version of it. The ladder now reads **1 · 4 · 10 · 30 · 186** across the 231 partitions, every rung earned by at least one run. **F2 closed in the same pass** — all four `endingEl` branches now append `_covenantStanding().label`. **Latent until §EPIC-01:** `ebReturnDone` still has no reachable writer, so in *play* the score floor remains 20 (§ENDING-01 (a)); this finding was always about the threshold, and the threshold is now inside the arithmetic's reach.
 
 ### F2 — §VII's payoff is in no ending branch
 

@@ -27366,8 +27366,8 @@ const PIT_PERK_UNLOCKS = { // → doc: world.md §Pit Training Perks (5 perks; u
 };
 
 const COVENANT_STANDING_LABELS = [ // → doc: docs/mechanics/mechanics-economy.md §Covenant Standing (score → label/desc; shown on character sheet)
-  { maxScore: -6,       label: "Covenant Keeper", desc: "The people you helped are the reason this works." },
-  { maxScore:  0,       label: "Warden",          desc: "You carry the work with you. It shows." },
+  { maxScore: -5,       label: "Covenant Keeper", desc: "The people you helped are the reason this works." },
+  { maxScore:  3,       label: "Warden",          desc: "You carry the work with you. It shows." },
   { maxScore:  7,       label: "Keeper",           desc: "The seal holds. The cost is visible." },
   { maxScore: 14,       label: "Watcher",          desc: "You know what needs doing. You're still learning to stay." },
   { maxScore: Infinity, label: "Wanderer",         desc: "The Void will open again. Not your fault. Not entirely." }
@@ -28238,7 +28238,7 @@ function storyCheckVictory(node) {
   const endingEl = document.getElementById('victory-ending');
   const missionDone = _missionComplete();
   // S42: Covenant Keeper (True) — perfect run
-  const _isTrue = missionDone && curse <= -6
+  const _isTrue = missionDone && curse <= -5
     && (S_story.pitTrainingWins || 0) >= 5
     && Object.keys(S_story.ebNegotiatedPayments || {}).length >= 5;
   const standingEl = document.getElementById('vic-standing');
@@ -28252,6 +28252,7 @@ function storyCheckVictory(node) {
       standingEl.style.color = '#FEA712';
     }
   }
+  const standingSpoken = '\n\nAt the door he says the word the ledger has for you. "' + _covenantStanding().label + '." He does not explain it.';
   if (missionDone && curse <= 0) {
     // Covenant Keeper Ending — Sweelinck names each person (L42-O / L43-K)
     const namingLines = _buildSweelinckNamingSequence();
@@ -28261,16 +28262,16 @@ function storyCheckVictory(node) {
       : '"Froberger had seven Shards and no names. You have seven Shards and names."\n\nHe says them:';
     const outro = '\n"That\'s the covenant. Not the sealing. That\'s what the sealing is for." He looks at the Cradle. "The world is worth saving when you\'ve been paying attention to who\'s in it. You were."';
     const nameBlock = namingLines.length > 0 ? '\n\n' + namingLines.join('\n') : '\n\n(No one. You moved through without stopping.)';
-    endingEl.textContent = 'Sweelinck reads Entry 41 aloud. Then he sets the journal down.\n\n' + intro + nameBlock + outro;
+    endingEl.textContent = 'Sweelinck reads Entry 41 aloud. Then he sets the journal down.\n\n' + intro + nameBlock + outro + standingSpoken;
     endingEl.style.display = '';
   } else if (curse <= 0) {
-    endingEl.textContent = 'Sweelinck reads Entry 41 aloud.\n\n"Froberger got this far. He had all seven. He chose not to seal it — he said the world didn\'t deserve it yet."\n\nHe looks at the Cradle. "He was wrong. The world doesn\'t have to deserve it. That\'s not how covenants work. A covenant is: I will do this because it needs to be done and I am able to do it. Not because they asked correctly. Not because they thanked you. Just: because."\n\nHe steps back. "He couldn\'t stay uncertain with them. You did. That\'s the difference."';
+    endingEl.textContent = 'Sweelinck reads Entry 41 aloud.\n\n"Froberger got this far. He had all seven. He chose not to seal it — he said the world didn\'t deserve it yet."\n\nHe looks at the Cradle. "He was wrong. The world doesn\'t have to deserve it. That\'s not how covenants work. A covenant is: I will do this because it needs to be done and I am able to do it. Not because they asked correctly. Not because they thanked you. Just: because."\n\nHe steps back. "He couldn\'t stay uncertain with them. You did. That\'s the difference."' + standingSpoken;
     endingEl.style.display = '';
   } else if (curse >= 15) {
-    endingEl.textContent = 'Sweelinck sets the journal on the table without opening it.\n\n"The Void is sealed. The curse is not in the Void."\n\nA long pause.\n\n"Froberger sealed it seventeen times. Different configurations of the same person. Each time he stood here, he was faster than before. More capable. Less present."\n\nHe looks at you. "You sealed it. That\'s real. That\'s not nothing."\n\nAnother pause.\n\n"I\'ve said this seventeen times. I believe it will land differently the eighteenth. That is either wisdom or stubbornness. I\'ve been unable to determine which for three hundred years."\n\nHe turns back to the relay terminal. "Come back when you\'re ready. The floor will be honest."';
+    endingEl.textContent = 'Sweelinck sets the journal on the table without opening it.\n\n"The Void is sealed. The curse is not in the Void."\n\nA long pause.\n\n"Froberger sealed it seventeen times. Different configurations of the same person. Each time he stood here, he was faster than before. More capable. Less present."\n\nHe looks at you. "You sealed it. That\'s real. That\'s not nothing."\n\nAnother pause.\n\n"I\'ve said this seventeen times. I believe it will land differently the eighteenth. That is either wisdom or stubbornness. I\'ve been unable to determine which for three hundred years."\n\nHe turns back to the relay terminal. "Come back when you\'re ready. The floor will be honest."' + standingSpoken;
     endingEl.style.display = '';
   } else {
-    endingEl.textContent = 'Sweelinck reads Entry 41 aloud.\n\n"Froberger had seven. He could have sealed it." He looks at the Cradle. "You sealed it. That\'s the covenant."\n\nA pause. "There are people who are still waiting. You know their names." He does not elaborate. "The world is saved. The rest is yours to decide."';
+    endingEl.textContent = 'Sweelinck reads Entry 41 aloud.\n\n"Froberger had seven. He could have sealed it." He looks at the Cradle. "You sealed it. That\'s the covenant."\n\nA pause. "There are people who are still waiting. You know their names." He does not elaborate. "The world is saved. The rest is yours to decide."' + standingSpoken;
     endingEl.style.display = '';
   }
   // S48: Sweelinck's Last Question — one per ending variant

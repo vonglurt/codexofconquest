@@ -119,7 +119,7 @@ the archive except two node codes** (`'CO'`→`'TLS'`, `'CI'`→`'LHR'`) — 82 
 
 `if (missionDone && curse <= 0) {@28245` → Covenant Keeper · `else if (curse <= 0)` → the Capable Warden ·
 `} else if (curse >= 15) {@28259` → the Loop Continues · `else` → the Imperfect Covenant. Plus a stricter
-fifth standing added later, `const _isTrue = missionDone && curse <= -6@28231`.
+fifth standing added later, `const _isTrue = missionDone && curse <= -6`@28231.
 
 ### E. The Disposition line — `docs`' quietest success
 
@@ -278,7 +278,7 @@ and a ceiling of 60 (all-accepted-none-returned). Therefore:
 | The Imperfect Covenant | `0 < curse < 15` | ⛔ never |
 | **The Loop Continues (CURSED)** | `curse >= 15` | ✅ **always** |
 
-`const _isTrue = missionDone && curse <= -6@28231` — the "Covenant Keeper (True)" standing — likewise
+`const _isTrue = missionDone && curse <= -6`@28231 — the "Covenant Keeper (True)" standing — likewise
 never renders, and the three score-banded `const SWEELINCK_DIALOGUE_VARIANTS = [@27231` below 15 are
 dead (the fifth, `birka:true`, is checked first via `_lubeckFriends() >= 3` and is fine).
 

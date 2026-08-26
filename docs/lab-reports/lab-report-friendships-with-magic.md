@@ -191,7 +191,7 @@ Consequences, all measured at HEAD:
 achievable and `curse = −5` was reachable. The endings worked when this report was written and broke
 75 days ago. Fixing §EPIC-01 restores all three.
 
-**F1b — a separate, born-broken off-by-one.** `const _isTrue = missionDone && curse <= -6@28231`
+**F1b — a separate, born-broken off-by-one.** `const _isTrue = missionDone && curse <= -6`@28231
 gates the *"Covenant Keeper (True)"* standing. The best attainable score in a fully working engine is
 `0 + 0 − 5 = −5` — the `(allComplete ? 5 : 0)@28206` bonus is the only negative term and it is worth
 exactly 5. **`curse <= -6` is unsatisfiable by construction**, and the same threshold is present at
@@ -316,7 +316,7 @@ nearest is two days later. Both are internally consistent and are recorded as un
 | Row | Premise | Design call? |
 |---|---|---|
 | **§ENDING-01** *(new)* | `_curseScore()` floor is 20 because `ebReturnDone` has no reachable writer → Covenant Keeper, Standard Covenant and Mixed are all unreachable; Groundhog Day Cursed is the only ending the game can produce; 2 of 12 mission bits permanently false. **Resolved by fixing §EPIC-01** — sequence behind it. | No |
-| **§ENDING-01 (b)** *(new)* | `missionDone && curse <= -6@28231` against a score floor of −5: the *"Covenant Keeper (True)"* standing is unsatisfiable and always has been. One-character fix, but which threshold is intended is the author's call. | Small |
+| **§ENDING-01 (b)** *(new)* | `missionDone && curse <= -6`@28231 against a score floor of −5: the *"Covenant Keeper (True)"* standing is unsatisfiable and always has been. One-character fix, but which threshold is intended is the author's call. | Small |
 | **§FISH-02** *(extended)* | Denominator corrected: **56 of 70** `WEAPON_ITEMS` unreachable, not 48 of 60. Adds **F2b**: negative `magicBonus` is applied to attack/damage but hidden on 3 of 4 render surfaces. Adds the live-comment contradiction (`Finders Keepers@25428` vs `FC06@24588`). | Existing |
 | **§AUDIT-03aa** *(extended)* | Second instance of the class, and stronger: `_updateHuntBtn / storyToggleHunt removed@38096` is refuted by declarations 39 and 28 lines above it. Adds the stale `// Waypoint BFS direction (§CELL-09)@37503`. Argues the wanted detector is *"a comment asserting removal of a symbol that resolves"* — mechanically checkable. | No |
 | **§EPIC-03** *(narrowed)* | The damage-on-fail half is **answered**: deliberate, specified by this report, implemented faithfully. What remains open is ceiling == floor on 16 of 20, which makes negotiation strictly dominated there. | Small |
