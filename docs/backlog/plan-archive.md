@@ -9,7 +9,7 @@
 
 ## Archived 2026-08-25 — §DX-02gs (six hand corrections, then a gate; and the gate caught the seventh drift on the commit that added it)
 
-### §DX-02gs — the count is derived now, and the range is the load-bearing half of the rule ✅ SHIPPED 2026-08-25 `PENDING_SHA`
+### §DX-02gs — the count is derived now, and the range is the load-bearing half of the rule ✅ SHIPPED 2026-08-25 `78fbc21`
 
 - [x] **§DX-02gs — `BACKLOG.md`'s routing table counted open rows by hand, inside the file it counts, and drifted in both directions.** The row records **five** prior instances; **this increment measured the sixth at HEAD** and it had drifted in both columns again: phase 5 cell **31** vs actual **30**, phase 6 cell **55** vs actual **54**, and the §RESUME header **191 entries** vs **199** actual rows. A row archived without decrementing and a row filed without incrementing are each silent, and they do not cancel, so a reader cannot mentally correct for a lag in one direction.
 > **Shipped `src/scripts/check-backlogcounts.js` as `check:walk` gate #19** — the fix the row specified, at the size it estimated. Open rows are `^### §` headings **BETWEEN** a phase file's `## §BACKLOG — Open Items` marker and its first `## Track records` / `## §RESUME` marker; the §RESUME header count is checked against its own table's rows. **The range is the load-bearing half and the selftest says so in four checks** — a §-heading before the range, after `## Track records`, and after `## §RESUME` must all not count — because this row's own first census counted whole files, reported *"four of six stale"*, and named a phase-2 cell that had been correct all along.
