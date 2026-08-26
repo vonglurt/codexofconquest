@@ -24680,13 +24680,7 @@ function _showBattleOverlay() {
   if (S.char.baseAc) S.char.ac = S.char.baseAc;
   S.char.baseAc  = S.char.ac;
   S.char.ac      = _calcPlayerAc();
-  // L24-C: sync main hand weapon if equipped
-  if (S_story.equippedMainWeapon) {
-    const mw = S_story.equippedMainWeapon;
-    S.weapon.die     = mw.die;
-    S.weapon.count   = mw.count || 1;
-    S.weapon.flatMod = mw.magicBonus || 0;
-  }
+  _syncStoryWeaponInto(S.weapon);
   // Sync story character stats into the battle simulator UI
   const _sc = S_story.abilityScores || { str:16, dex:12, con:14, int:10, wis:12, cha:8 };
   const _slv = S_story.level || 1;
@@ -24695,9 +24689,6 @@ function _showBattleOverlay() {
   document.getElementById('char-ac').value = _sac;
   document.getElementById('char-maxhp').value = S_story.hpMax;
   document.getElementById('char-prof-override').checked = false;
-  document.getElementById('atk-ability').value = _storyAtkAbility().label.toLowerCase();
-  document.getElementById('weapon-finesse').checked = _storyWeaponIsFinesse();
-  S.weapon.finesse = _storyWeaponIsFinesse();
   ['str','dex','con','int','wis','cha'].forEach(ab => {
     const el = document.getElementById('ab-' + ab);
     if (el) el.value = _sc[ab] || 10;
@@ -25602,6 +25593,22 @@ function _storyWeaponProps() {
 }
 
 function _storyWeaponIsFinesse() { return _storyWeaponProps().finesse; }
+
+// The one place a story weapon becomes roller state. Both story→simulator syncs call
+// it, so a field added to a weapon has a single call site to reach rather than two.
+function _syncStoryWeaponInto(w) {
+  const mw = S_story.equippedMainWeapon;
+  if (mw) {
+    w.die     = mw.die;
+    w.count   = mw.count || 1;
+    w.flatMod = mw.magicBonus || 0;
+  }
+  w.finesse = _storyWeaponIsFinesse();
+  const el = document.getElementById('weapon-finesse');
+  if (el) el.checked = w.finesse;
+  const sel = document.getElementById('atk-ability');
+  if (sel) sel.value = _storyAtkAbility().label.toLowerCase();
+}
 
 function _storyAtkAbility() {
   const sc = S_story.abilityScores || { str:16, dex:12, con:14, int:10, wis:12, cha:8 };
@@ -37651,9 +37658,7 @@ function storyCharToggle() {
       document.getElementById('char-ac').value     = _calcPlayerAc();
       document.getElementById('char-maxhp').value  = S_story.hpMax;
       document.getElementById('char-prof-override').checked = false;
-      document.getElementById('atk-ability').value = _storyAtkAbility().label.toLowerCase();
-      document.getElementById('weapon-finesse').checked = _storyWeaponIsFinesse();
-      S.weapon.finesse = _storyWeaponIsFinesse();
+      _syncStoryWeaponInto(S.weapon);
       ['str','dex','con','int','wis','cha'].forEach(ab => {
         const el = document.getElementById('ab-' + ab);
         if (el) el.value = _sc[ab] || 10;

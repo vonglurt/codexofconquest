@@ -226,4 +226,31 @@ test.describe('§AUDIT-03ae — the sheet prints the number the engine rolls', (
     // sheet label are the same answer, which is why they come from one function
     expect((await readSurfaces(page, scores, false, RAPIER)).select).toBe('str');
   });
+
+  // §WEAP-FIN-FU(b) — there are two story→simulator syncs. The battle sync copied the
+  // weapon's die/count/flatMod; the char-sheet-open sync copied the character and not
+  // the weapon, so opening the sheet left S.weapon.die at whatever the last battle or
+  // the initial-state literal set. Both now go through one _syncStoryWeaponInto.
+  test('§WEAP-FIN-FU — both story→simulator syncs carry the weapon, not just the character', async ({ page }) => {
+    await seedAndLoad(page);
+    const r = await page.evaluate(() => {
+      S_story.active = true;
+      S_story.abilityScores = { str:8, dex:16, con:10, int:10, wis:10, cha:10 };
+      S_story.level = 5;
+      // a stale roller: d4 offhand-sized die, no finesse, pointed at STR
+      S.weapon.die = 4; S.weapon.count = 1; S.weapon.flatMod = 0; S.weapon.finesse = false;
+      document.getElementById('atk-ability').value = 'str';
+      S_story.equippedMainWeapon = { tier:'+2_rapier', name:'+2 Rapier', icon:'🤺', type:'weapon', die:8, count:1, magicBonus:2, sell:0 };
+      // open the character sheet — the sync that used to carry only the character
+      document.getElementById('sheet-character').classList.remove('active');
+      storyCharToggle();
+      return { die: S.weapon.die, count: S.weapon.count, flatMod: S.weapon.flatMod,
+               finesse: S.weapon.finesse, select: document.getElementById('atk-ability').value };
+    });
+    expect(r.die).toBe(8);        // the rapier's die, not the stale d4
+    expect(r.flatMod).toBe(2);    // and its magic bonus
+    expect(r.count).toBe(1);
+    expect(r.finesse).toBe(true);
+    expect(r.select).toBe('dex'); // DEX 16 beats STR 8 on a finesse weapon
+  });
 });
