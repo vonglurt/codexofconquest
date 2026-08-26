@@ -7,6 +7,34 @@
 
 ---
 
+## Archived 2026-08-25 — §DX-02hf (a header said five, the collection held seven)
+
+### §DX-02hf — one word, and the shipped dialogue that had been saying "all seven" the whole time ✅ SHIPPED 2026-08-25 `SHA_HF`
+
+**The row, as filed:**
+
+### §DX-02hf — `SHARD_NOTES` says five and holds seven, and the doc that cites it inherited the wrong number (NEW 2026-08-25 during §AUDIT-03ak, 🟢 no design call)
+
+- [x] **§DX-02hf — an engine header comment states a count the collection contradicts three lines below it.** **Measured at `7a47700`:** `SHARD_NOTES@27171` carries `// → doc: story.md §Codex Shards (5 shard_note readable items; one per Codex Shard location)` and the object holds **seven** — `shard_note_1..7`, The Toccata Fragment through The Sarabande Key. `world.md`'s Layer 57 block names **seven** placers, and `story.md:1727` describes the same seven, so the doc side is right and the engine comment is the outlier.
+> **Why it is worth a row:** this is the fifth measured instance of the §DX-02gs shape — *a table or header states a count, the collection holds another* — and the comment is a `→ doc:` pointer, the exact construct `check:anchors` and the doc-sync passes trust when deciding what a collection is. A reader sizing the shard system from the comment is off by two before they open anything.
+> **Fix:** one word, `5` → `7`, in the header comment. Engine JS only — server stopped, `play.html` direct, no world-data write.
+> **Verify:** `grep -c "key:'shard_note" ` inside the collection is 7; the comment agrees.
+> **Provenance:** found while promoting the Layer 57 heading in §AUDIT-03ak; the promotion cites the mismatch and points here.
+
+**Grounded and confirmed exactly as filed, which is worth saying because most rows this session were not.** `SHARD_NOTES@27171` carried `// → doc: story.md §Codex Shards (5 shard_note readable items; one per Codex Shard location)` and the collection holds **seven** — `shard_note_1..7`, The Toccata Fragment through The Sarabande Key, each key appearing exactly once. The doc side agrees on seven: `story.md`'s Codex Shards table runs to row 7 (The Sarabande Key, `NUE`, Froberger himself), and **the shipped dialogue settles it** — Auros at `story.md:581` says *"find the Codex Shards. **All seven.**"*
+
+**Where the 5 most likely came from, since it is three lines below the comment:** the collection's own completion reward reads *"Seven people carried the pieces. **Five of them** knew what they were carrying."* A five in the neighbourhood of a seven, in a header written from memory.
+
+**Shipped:** `5` → `7`, one word, engine JS only — server stopped, `play.html` direct, no world-data write. `git diff --stat` is **1 file changed, 1 insertion, 1 deletion**.
+
+**Verify (the row's own check):** `grep -c "key:'shard_note"` inside the collection is **7**, and the comment now says 7. `npm run check:walk --prefix src` → **`✓ 18/18 gates green · wall 23.1s`**. Full suite → **1032 passed, 1 flaky, EXIT=0**.
+
+**That `1 flaky` is not swept under the rug — it is filed as §DX-02ht.** `worldbuilder-mesh.test.js:62` failed its first attempt and passed the retry, leaving **no trace on disk**, because §DX-02hb's `trace: 'retain-on-failure'` was scoped to `multiplayer-presence.test.js` alone. The file passed **4/4 alone, four times**, so it is load-dependent. **Stated plainly: §DX-02hq's `fullyParallel` probably made it more likely** — the same session's `workers: '100%'` experiment flaked `worldbuilder-crud-arrays.test.js:173` before that knob was reverted. Two files in that family have now flaked once each and neither left an artifact, which is the exact state §DX-02hb was filed about.
+
+**A tooling error on the path, recorded so the next reader does not repeat it:** the first three re-runs of the mesh file were issued from the **repo root** rather than `src/`, where there is no `playwright.config.js` and no `node_modules` — so `npx` silently resolved a *different* Playwright out of `~/.npm/_npx/`, and reported `Playwright Test did not expect test.describe() to be called here` / *"You have two different versions of @playwright/test"*. That message names neither the real cause nor the cwd. The measurements above were retaken from `src/`.
+
+---
+
 ## Archived 2026-08-25 — §DX-02hs (`check:spdx`, gate #18 — the licence header now has something behind it)
 
 ### §DX-02hs — a gate for the class that landed twice, once loudly and once silently ✅ SHIPPED 2026-08-25 `a75e703`

@@ -45,6 +45,15 @@
 
 
 
+### §DX-02ht — `worldbuilder-mesh.test.js:62` flaked under the full suite, and the suite kept no evidence (NEW 2026-08-25 during §DX-02hf, 🟢 no design call)
+
+- [ ] **§DX-02ht — §DX-02hb's fix was scoped to one file, and the second file to need it has now appeared.** **Measured at `a851705`:** a full `npm test --prefix src` returned **`1032 passed, 1 flaky`** — *"⬇ world sits behind the BIG WARNING modal (§MESH-01d3)"* failed its first attempt and passed the retry, so the run reported **EXIT=0**. The file **passed 4/4 alone, four times in a row** (`--retries=0`), so it is load-dependent, not broken. **Zero traces exist on disk**, because `playwright.config.js` still sets no `trace` outside the file-scoped `test.use({ trace: 'retain-on-failure' })` §DX-02hb added to `multiplayer-presence.test.js`.
+> **Why now, and stated plainly: §DX-02hq probably made this more likely.** Turning on `fullyParallel` raises concurrency, and UI-timing assertions are the first thing to feel it — the §DX-02hq run at `workers: '100%'` flaked `worldbuilder-crud-arrays.test.js:173` the same way before that knob was reverted. **Two different files in the same family have now flaked once each**, and neither left an artifact. That is precisely the state §DX-02hb was filed about: *five sightings across three sessions produced five tally marks and zero diagnoses.*
+> **Fix:** promote `trace: 'retain-on-failure'` from the one file to the config's `use` block, so **any** first-attempt failure anywhere in the suite leaves a `trace.zip`. Measure the cost before and after — that is the reason it was scoped narrowly the first time, and the reason should be re-derived rather than assumed (the §DX-02hb close estimated an overhead it never measured).
+> **Do NOT reach for `retries: 0` suite-wide** — the fishing smoke test's retry is by design (*"the rare case where all 25+ casts miss"*), which is why §DX-02hb scoped that half to the mesh block.
+> **Verify:** a planted first-attempt-only failure in a third file leaves exactly one `trace.zip`; the full suite's wall time is re-measured against the 5.6m baseline and the delta stated.
+> **Provenance:** §DX-02hf's closing full-suite run.
+
 ### §DX-02hr — 72% of every test's time is Chromium re-parsing the same 5.3 MB `play.html` (NEW 2026-08-25 during §DX-02hq, 🟡 ONE DESIGN CALL: is a reused page still an honest test)
 
 - [ ] **§DX-02hr — the suite's remaining cost is not parallelism, it is that each of ~1000 tests loads the whole game from cold.** **Measured at `b0c236d`** with a probe spec (`seedAndLoad` timed against a bare `page.evaluate`): **`seedAndLoad` = 326 ms, a subsequent `evaluate` = 7 ms**, against a typical `quest-runtime-uqf` test of ~450 ms. `play.html` is **5.3 MB** and Playwright's `{ page }` fixture is a fresh context per test, so the cache is cold every time: the suite performs **~649 `page.goto`/`seedAndLoad` calls** and pays a full parse for each. §DX-02hq took the free 24% (7.4m → 5.6m) by running tests inside a file concurrently; **the next 30–40% is here, and it is not free.**
@@ -67,14 +76,6 @@
 > **The same section's `### Time Cost` is the second half:** *"Every `cellMove` call advances `hoursElapsed` and `hoursSinceSlept` by 1"* — contradicted by `cellMove`'s own comment, *"§TIMELESS-01: movement is timeless"*.
 > **Two more sites, framing not yet judged:** `spec-engine.md:628` (`### Layer 7 — ✅ IMPLEMENTED`, *"`storyMove()` checks gate locks"*) and `spec-migration.md:538` both describe `GATE_LOCKS` — **0 occurrences** in `play.html` since `5123f5a` — in the present tense. They read as layer-history sections, so the call is whether history sections get tombstones or are exempt; that is the §DX-02fa tension in a second file.
 > **Verify:** no live spec section attributes a gate check to `cellMove` or `storyMove`.
-
-### §DX-02hf — `SHARD_NOTES` says five and holds seven, and the doc that cites it inherited the wrong number (NEW 2026-08-25 during §AUDIT-03ak, 🟢 no design call)
-
-- [ ] **§DX-02hf — an engine header comment states a count the collection contradicts three lines below it.** **Measured at `7a47700`:** `SHARD_NOTES@27171` carries `// → doc: story.md §Codex Shards (5 shard_note readable items; one per Codex Shard location)` and the object holds **seven** — `shard_note_1..7`, The Toccata Fragment through The Sarabande Key. `world.md`'s Layer 57 block names **seven** placers, and `story.md:1727` describes the same seven, so the doc side is right and the engine comment is the outlier.
-> **Why it is worth a row:** this is the fifth measured instance of the §DX-02gs shape — *a table or header states a count, the collection holds another* — and the comment is a `→ doc:` pointer, the exact construct `check:anchors` and the doc-sync passes trust when deciding what a collection is. A reader sizing the shard system from the comment is off by two before they open anything.
-> **Fix:** one word, `5` → `7`, in the header comment. Engine JS only — server stopped, `play.html` direct, no world-data write.
-> **Verify:** `grep -c "key:'shard_note" ` inside the collection is 7; the comment agrees.
-> **Provenance:** found while promoting the Layer 57 heading in §AUDIT-03ak; the promotion cites the mismatch and points here.
 
 ### §DX-02hg — `world.md`'s Layer 59 heading still reads ⚠️ PLANNED, and half the layer shipped (NEW 2026-08-25 during §AUDIT-03ak, 🟡 the two halves need different answers)
 
