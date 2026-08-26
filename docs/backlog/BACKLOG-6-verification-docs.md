@@ -43,6 +43,14 @@
 ---
 ## §BACKLOG — Open Items (Phase 6)
 
+### §CSS-CENSUS — every dead-symbol gate in the repo scans JS identifiers, and a CSS class selector is invisible to all of them (NEW 2026-08-26 during §DX-02dc, 🟢 no design call)
+
+- [ ] **§CSS-CENSUS — extend the dead-symbol census to class selectors declared in the `<style>` block and applied by nothing.** `check:deadconsts` and every sibling census walk JS identifiers, so a rule like `.info-chip.corpse-chip` — four of them, in both the dark and light theme blocks — sat unreferenced with **no gate able to say so**, and the two ID-vs-class near-twins ten lines apart in one stylesheet are exactly the shape a future reader mis-reads. §DX-02dc deleted that member by hand and pinned it with a per-selector Playwright assertion, which is an interim measure and does not generalise.
+> **Shape of the check:** collect every class selector declared inside `<style>`; collect every application — a literal `class="…"`, a `className =` / `className +=` assignment, a `classList.add/remove/toggle/contains` argument, and template-literal interpolation into a `class=` attribute; report the difference in both directions. **The applications side is the hard half and the whole value:** a scanner that under-collects applications produces false positives on live CSS, which is worse than no gate, so it needs a `--selftest` with a planted live-but-unusual application (a `classList.toggle` behind a ternary, a class assembled by string concatenation) as well as a planted dead one.
+> **Both directions, per the §DX-02z pattern:** a declared-and-unapplied selector is the §DX-02dc case; an **applied-and-undeclared** class is the sharper one — it is a style that silently does nothing, and no test would catch it either.
+> **Known exemptions to expect:** classes applied only from `edit.html` or another file, and classes that exist for a third-party or user-agent hook. Those want the named-exemption table `check:battlepools` uses, so an exemption that becomes live is a stale exemption and fails.
+> **Provenance:** §DX-02dc, whose own row argues for exactly this and correctly places it outside its own fix.
+
 
 
 ### §DX-02hz — the Doc Health Badge's line count is maintained by hand and had drifted 9 lines with nothing to say who moved them (NEW 2026-08-25 during §DX-02en, 🟢 no design call)

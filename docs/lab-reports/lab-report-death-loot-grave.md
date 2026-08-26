@@ -189,11 +189,20 @@ mutates persisted state. **Finding #5 is STALE, and the reason is stronger than 
 *"the save is last"* (it isn't) but *"everything after the save is read-only"* (it is). Unenforced:
 no gate pins it, so a future render layer writing `S_story` after line 36048 re-opens it silently.
 
-### Defect A — the dead affordance the ship notice claims to have revived (→ §DX-02dc 🟢)
+### Defect A — the dead affordance the ship notice claims to have revived (→ §DX-02dc ✅ shipped 2026-08-26)
+
+> **✅ CLOSED 2026-08-26 by §DX-02dc.** All four rules deleted; `#corpse-chip` and `_renderCorpseChip`
+> untouched. **One correction to the finding as filed:** the class was **not born dead**. It was applied
+> as `c.className = 'info-chip corpse-chip'` on the REMAINS chips at the initial commit and removed by
+> `dc2ecf5` (§DESIGN-02) — the commit §DX-02dc credits with *creating* the rules. Retired, not
+> stillborn, and `git log -S "info-chip corpse-chip" --all` returns **6** commits rather than the 0 the
+> row measured. The false ship notice is `a76bd18`, not `a52f9cd`. **The verdict is unchanged either
+> way** — nothing applied them at HEAD — which is the point: *the fix was right and the reasoning was
+> wrong, and only re-running the measurement separated them.*
 
 The report correctly identified `.info-chip.corpse-chip` as *"a dead affordance"*: four CSS rules —
-`` `.info-chip.corpse-chip { border-color: #a07840;@1317` `` and its `:hover`, plus
-`` `.info-chip.corpse-chip { border-left: 3px solid var(--border);@2906` `` and its `:hover` in the
+`` `.info-chip.corpse-chip { border-color: #a07840;` *(deleted, §DX-02dc)* `` and its `:hover`, plus
+`` `.info-chip.corpse-chip { border-left: 3px solid var(--border);` *(deleted, §DX-02dc)* `` and its `:hover` in the
 light-theme block — with no JS to apply them. The ship commit then announced that Inc B *"wires the
 long-dead `.corpse-chip` CSS."*
 
