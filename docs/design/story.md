@@ -1536,7 +1536,7 @@ _curseScore():
 ### Covenant Standing Tiers
 
 > **Source:** `const COVENANT_STANDING_LABELS = [@27358`. (Home doc: this section. The HTML comment on that
-> line points at `docs/mechanics/mechanics-economy.md §Covenant Standing`, which does not exist — §DX-02er.)
+> line points here — repointed by §DX-02er, which also measured the class: **11 of the 70 distinct `→ doc:` pointers in `play.html` name a section that does not exist**.)
 
 | Curse Score | Tier | Description | Reachable? |
 |---|---|---|---|

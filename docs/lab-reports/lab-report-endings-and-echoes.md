@@ -191,7 +191,7 @@ What *does* ship: sequential unlock at one win per perk, the unlock message in W
 
 ### F9 — the note is seeded off the unseeded stream
 
-`S_story.frobergerNoteNode = _ebPool[Math.floor(Math.random() * _ebPool.length)];@23982` (and again in the NG+ path). Invariant #6 requires that randomness affecting game state draw the seeded stream (`_seededNext()`). Which of twenty nodes holds a key item is game state. The value is persisted at new-game time, so a *save* still determines the future — the violation is narrow, but it is a violation of a fence the repo enforces elsewhere. → **§DX-02er** 🟢
+`S_story.frobergerNoteNode = _ebPool@23988` **✅ CLOSED by §DX-02er 2026-08-26** — both this line and the NG+ twin now draw `_seededNext()`, so the placement is reproducible from a seed; pinned in `rng-seed.test.js`. (and again in the NG+ path). Invariant #6 requires that randomness affecting game state draw the seeded stream (`_seededNext()`). Which of twenty nodes holds a key item is game state. The value is persisted at new-game time, so a *save* still determines the future — the violation is narrow, but it is a violation of a fence the repo enforces elsewhere. → **§DX-02er** 🟢
 
 ### F10 — §I names the wrong node, and it was wrong on the build it was written against
 

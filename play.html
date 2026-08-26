@@ -23985,7 +23985,7 @@ function storyNewGame(startScores) {
   S_story.inventory.push({ name:'Minor Healing Potion', icon:'🧪', type:'potion', sell:25, code:'start' });
   // L43-S: seed Froberger's Last Note in a random EB node
   const _ebPool = ['PRN','INV','SDR','PMO','FLR','KUN','ACE','IST','SOF','BEG','OTP','WAW','CAI','MCT','SJO','KTM','RKV','MAD','HAV','TBS'];
-  S_story.frobergerNoteNode = _ebPool[Math.floor(Math.random() * _ebPool.length)];
+  S_story.frobergerNoteNode = _ebPool[Math.floor(_seededNext() * _ebPool.length)];
   _continueChecked = true;
   document.getElementById('story-continue-modal').classList.remove('visible');
   document.getElementById('story-gameover-modal').classList.remove('visible');
@@ -24052,7 +24052,7 @@ function storyNewGamePlus() {
   S_story.inventory.push({ name:'Minor Healing Potion', icon:'🧪', type:'potion', sell:25, code:'start' });
   S_story.inventory.push({ name:'Minor Healing Potion', icon:'🧪', type:'potion', sell:25, code:'start' });
   const _ebPool = ['PRN','INV','SDR','PMO','FLR','KUN','ACE','IST','SOF','BEG','OTP','WAW','CAI','MCT','SJO','KTM','RKV','MAD','HAV','TBS'];
-  S_story.frobergerNoteNode = _ebPool[Math.floor(Math.random() * _ebPool.length)];
+  S_story.frobergerNoteNode = _ebPool[Math.floor(_seededNext() * _ebPool.length)];
   _continueChecked = true;
   document.getElementById('story-continue-modal').classList.remove('visible');
   document.getElementById('story-gameover-modal').classList.remove('visible');
@@ -27422,7 +27422,7 @@ const PIT_PERK_UNLOCKS = { // → doc: world.md §Pit Training Perks (5 perks; u
   }
 };
 
-const COVENANT_STANDING_LABELS = [ // → doc: docs/mechanics/mechanics-economy.md §Covenant Standing (score → label/desc; shown on character sheet)
+const COVENANT_STANDING_LABELS = [ // → doc: docs/design/story.md §Covenant Standing Tiers (score → label/desc; shown on character sheet)
   { maxScore: -5,       label: "Covenant Keeper", desc: "The people you helped are the reason this works." },
   { maxScore:  3,       label: "Warden",          desc: "You carry the work with you. It shows." },
   { maxScore:  7,       label: "Keeper",           desc: "The seal holds. The cost is visible." },

@@ -308,7 +308,7 @@ gate — `check:legacycodes` scans `.md`, `check:noderegs` scans references, and
 
 ### G. One more, found on the way: NG+ draws from `Math.random()`
 
-`S_story.frobergerNoteNode = _ebPool[Math.floor(Math.random() * _ebPool.length)];@23982` (and the twin
+`S_story.frobergerNoteNode = _ebPool@23988` **✅ CLOSED by §DX-02er 2026-08-26** — both this line and the NG+ twin now draw `_seededNext()`, so the placement is reproducible from a seed; pinned in `rng-seed.test.js`. (and the twin
 inside `storyNewGamePlus`) picks the Epic-Battleground node hiding Froberger's last note from the **unseeded**
 stream, in violation of invariant #6 (*"randomness that affects game state must come from the seeded
 stream"*). Two sites, one line each. → **§DX-02m +1.**

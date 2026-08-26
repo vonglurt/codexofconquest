@@ -124,4 +124,40 @@ test.describe('§VM-01-B — the seeded client RNG', () => {
     expect(r.inRange).toBe(true);
     expect(r.second).toEqual(r.first);   // same seed → same d20 sequence
   });
+
+  // §DX-02er(a) — the fence had a hole in the ending arc. Which of the 20 Epic
+  // Battlegrounds carries Froberger's Last Note is game state, and both new-game
+  // paths picked it with Math.random(). The roll is persisted, so a save still
+  // determined the future — but the placement was not reproducible FROM a seed,
+  // which is the property this file exists to guarantee.
+  test('§DX-02er — Froberger\'s Last Note is placed from the seeded stream, on both new-game paths', async ({ page }) => {
+    await page.goto('/play.html');
+    const r = await page.evaluate((NG) => {
+      // the source carries no Math.random() on either placement line
+      const lines = [...document.documentElement.outerHTML.matchAll(/frobergerNoteNode = _ebPool\[[^\]]*\]/g)].map(m => m[0]);
+      // seed → placement must be a pure function: same seed, same node; different seed, it moves
+      const place = (seed) => {
+        storyNewGame(NG);
+        S_story.rngState = seed;
+        const pool = ['PRN','INV','SDR','PMO','FLR','KUN','ACE','IST','SOF','BEG','OTP','WAW','CAI','MCT','SJO','KTM','RKV','MAD','HAV','TBS'];
+        return pool[Math.floor(_seededNext() * pool.length)];
+      };
+      const seen = new Set();
+      for (let sd = 1; sd <= 400; sd++) seen.add(place(sd * 2654435761 | 0));
+      return {
+        lines,
+        a: place(0x1234ABCD), b: place(0x1234ABCD), c: place(0x0BADF00D),
+        distinct: seen.size,
+        placed: (storyNewGame(NG), S_story.frobergerNoteNode),
+      };
+    }, NEWGAME);
+    expect(r.lines.length).toBe(2);                       // both new-game paths
+    for (const l of r.lines) expect(l).toContain('_seededNext()');
+    for (const l of r.lines) expect(l).not.toContain('Math.random');
+    expect(r.a).toBe(r.b);                                // same seed → same node
+    expect(r.c).not.toBe(r.a);                            // a different seed moves it
+    expect(r.distinct).toBeGreaterThan(15);               // and it still reaches the pool, not one node
+    expect(typeof r.placed).toBe('string');               // a real game still places it
+    expect(r.placed).toMatch(/^[A-Z]{3}$/);
+  });
 });
