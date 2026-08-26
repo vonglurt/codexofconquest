@@ -35,7 +35,9 @@
     "nodes": "node scripts/node-index.js",
     "anchors": "node scripts/resolve-anchors.js",
     "anchors:fix": "node scripts/resolve-anchors.js --fix",
+    "pretest": "node scripts/cleantree.js --snapshot",
     "test": "playwright test -c playwright.config.js",
+    "posttest": "node scripts/cleantree.js",
     "test:headed": "playwright test -c playwright.config.js --headed",
     "test:install": "playwright install chromium",
     "check:invariants": "node scripts/check-invariants.js",
@@ -64,7 +66,8 @@
     "check:worlddiff": "node scripts/world-diff.js --selftest",
     "test:mud": "node tests/mud-harness.mjs",
     "check:walk": "node scripts/run-gates.js --selftest",
-    "check:walk:serial": "npm run check:invariants && npm run check:dupkeys && npm run check:parity && npm run check:behaviour && npm run check:terrain && npm run check:roads && npm run check:roomsparity && npm run check:questparity && npm run check:gateast && npm run check:rng && npm run check:questgraph && npm run check:nodeindex && npm run check:noderegs && npm run check:npcregs && npm run check:anchors && npm run check:legacycodes && npm run check:battlepools && npm run check:spdx"
+    "check:walk:serial": "npm run check:invariants && npm run check:dupkeys && npm run check:parity && npm run check:behaviour && npm run check:terrain && npm run check:roads && npm run check:roomsparity && npm run check:questparity && npm run check:gateast && npm run check:rng && npm run check:questgraph && npm run check:nodeindex && npm run check:noderegs && npm run check:npcregs && npm run check:anchors && npm run check:legacycodes && npm run check:battlepools && npm run check:spdx",
+    "cleantree:selftest": "node scripts/cleantree.js --selftest"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.36.3"

@@ -7,6 +7,17 @@
 
 ---
 
+## Archived 2026-08-25 — §DX-02gu (the invariant three rows restored by hand now warns at the moment it breaks)
+
+### §DX-02gu — the guard could not live in the suite, so it lives in npm ✅ SHIPPED 2026-08-25 `PENDING_SHA`
+
+- [x] **§DX-02gu — the clean-tree invariant had no guard, and it could not get one from inside the suite.** §DX-02gm removed a 2,883-hint doc sweep, §DX-02gn moved a screenshot off a tracked path, and both closed on the same manual measurement — run the whole suite, then read `git status --porcelain`. True at HEAD, asserted nowhere, and **both rows were found by accident.** §DX-02gm asked for its snapshot test to be widened to cover a full run; that is not constructible, because a Playwright test cannot snapshot the tree around the run that contains it.
+> **The call is *where*, and one of the three options had a precondition that does not hold.** (a) a `check:cleantree` gate appended to `check:walk` doubles the chain to ~6 minutes, and `check:walk` is already the slowest thing a session runs. (b) a CI-only step is cheap for sessions — **but no workflow runs the Playwright suite.** `walk-invariants.yml` runs `check:walk` and `test:mud`; that is the same finding §DX-02ht landed on from the trace side, re-derived here at HEAD. So (b) is not "after", it is **blocked** until a workflow runs the suite, and the row is annotated to say so rather than leaving a recommendation that reads as scheduled. **Shipped (c).**
+> **Shipped:** `src/scripts/cleantree.js` wired as npm's `pretest` / `posttest` around the existing `test` script. `--snapshot` records `git status --porcelain` before the run; the bare invocation diffs it after, **warns**, and names every path the run dirtied that was clean going in. **It matches on path, not on status code**, so a file already dirty is the increment's own work and is not reported — proved by planting two changes, one to a file this increment had already touched and one to `README.md`, and getting exactly the `README.md` line back. Porcelain omits gitignored paths, so the snapshot's own home under `build/` cannot trip it.
+> **Two limits are stated in the file rather than hidden:** npm skips `posttest` when the suite **fails**, so a red run is unchecked; and the CI half is blocked as above. A warning that overstates its coverage is the §AUDIT-03l class this backlog keeps finding.
+> **Verified:** `npm test --prefix src` **1033 passed, 0 failed, 3.7m**, with both hooks firing and the posttest silent — the invariant holds and is now asserted instead of assumed. `npm run cleantree:selftest --prefix src` **5 checks**. `check:walk` **18/18, wall 10.6s** (unchanged — this is deliberately not a gate).
+> **Named `cleantree:selftest`, not `check:cleantree`** — the latter is option (a)'s name, which was measured and rejected, and a script wearing it would read as though (a) had shipped.
+
 ## Archived 2026-08-25 — §DX-02gx (the cutoff was a policy nobody had stated; now it is stated, and the number it omits is a command)
 
 ### §DX-02gx — direction 2 walks `deadly` on purpose, and the census is what it deliberately does not assert ✅ SHIPPED 2026-08-25 `4a5e488`
