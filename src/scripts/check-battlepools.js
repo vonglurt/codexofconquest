@@ -5,7 +5,15 @@
 // at `storyCommitBattle` is guarded and the battle is not, so a missed key silently
 // refights the previous monster. Direction 2 (a monster no battle names) is §DX-02gv:
 // a fully statted deadly-tier entry with a priced drop that nothing can reach.
-// Read-only: never writes the game file. Run: node scripts/check-battlepools.js [--selftest]
+//
+// Direction 2 walks `deadly` ONLY, and that is deliberate (§DX-02gx). `deadly` means
+// SET-PIECE: a 187+ HP statblock is authored for one fight, so nothing naming it is a
+// defect. The other tiers are a BESTIARY — `monsters.md` catalogues them by category as
+// a library, and a library is allowed to outrun the map, so an unplaced entry there is
+// the normal state, not a finding. The gate does not walk them and does not imply it
+// has. `--census` prints the reachability of every tier when you want the number.
+// Read-only: never writes the game file.
+// Run: node scripts/check-battlepools.js [--selftest] [--census]
 
 'use strict';
 const fs = require('fs');
@@ -30,9 +38,9 @@ const UNRESOLVED_BATTLE_KEYS = {
 };
 
 // Pool rows are single-quoted by hand and double-quoted by `./bin/api post monster`; read both.
-function scan(src) {
-  const findings = [];
-
+// One index, read by both the gate and `--census`, so the census can never drift from the
+// rule the gate enforces.
+function indexSource(src) {
   const poolKeys = new Set();
   const tiers = new Map();
   for (const m of src.matchAll(/^ {2}(\w+):\s*\{\s*key:["'](\w+)["'],[^}]*?tier:["'](\w+)["']/gm)) {
@@ -45,6 +53,22 @@ function scan(src) {
   for (const m of src.matchAll(/battle\s*:\s*\{[^}]*?["']?key["']?\s*:\s*["'](\w+)["']/g)) {
     if (!battleKeys.has(m[1])) battleKeys.set(m[1], src.slice(0, m.index).split('\n').length);
   }
+
+  const poolMembers = new Set([...src.matchAll(/P\.(\w+)/g)].map(m => m[1]));
+  const bossKeys = new Set([...src.matchAll(/bossKey\s*:\s*["'](\w+)["']/g)].map(m => m[1]));
+  return { poolKeys, tiers, battleKeys, poolMembers, bossKeys };
+}
+
+// Its own two table rows are the definition, not a reference — hence `> 3`.
+function isReachable(src, idx, key) {
+  const mentions = (src.match(new RegExp('\\b' + key + '\\b', 'g')) || []).length;
+  return idx.battleKeys.has(key) || idx.poolMembers.has(key) || idx.bossKeys.has(key) || mentions > 3;
+}
+
+function scan(src) {
+  const findings = [];
+  const idx = indexSource(src);
+  const { poolKeys, tiers, battleKeys } = idx;
 
   // ── Direction 1: every battle key resolves in a pool ──────────────────────
   for (const [key, line] of battleKeys) {
@@ -63,15 +87,11 @@ function scan(src) {
     }
   }
 
-  // ── Direction 2: every deadly monster is reachable ────────────────────────
-  const poolMembers = new Set([...src.matchAll(/P\.(\w+)/g)].map(m => m[1]));
-  const bossKeys = new Set([...src.matchAll(/bossKey\s*:\s*["'](\w+)["']/g)].map(m => m[1]));
-
+  // ── Direction 2: every deadly (= set-piece) monster is reachable ──────────
+  // Other tiers are a bestiary and are NOT walked — see the header, and `--census`.
   for (const [key, tier] of tiers) {
     if (tier !== 'deadly') continue;
-    // Its own two table rows are the definition, not a reference.
-    const mentions = (src.match(new RegExp('\\b' + key + '\\b', 'g')) || []).length;
-    const reachable = battleKeys.has(key) || poolMembers.has(key) || bossKeys.has(key) || mentions > 3;
+    const reachable = isReachable(src, idx, key);
     const owned = UNREACHABLE_DEADLY[key];
     if (!reachable && !owned) {
       findings.push(`[deadly] deadly-tier monster '${key}' is named by no battle, no encounter pool and no bossKey — it is statted, priced and unfightable`);
@@ -101,6 +121,20 @@ function exemptionSummary() {
   return parts.length ? ` (${parts.join(' · ')})` : '';
 }
 
+// The number direction 2 deliberately does not assert. Prints every tier so the bestiary's
+// unplaced entries are one command away instead of a figure in a doc that rots (§DX-02gx).
+function census(src) {
+  const idx = indexSource(src);
+  const rows = new Map();
+  for (const [key, tier] of idx.tiers) {
+    if (!rows.has(tier)) rows.set(tier, { total: 0, unreachable: [] });
+    const r = rows.get(tier);
+    r.total++;
+    if (!isReachable(src, idx, key)) r.unreachable.push(key);
+  }
+  return rows;
+}
+
 if (process.argv.includes('--selftest')) {
   let pass = 0, fail = 0;
   const ok = (c, m) => { if (c) pass++; else { fail++; console.log('  ✗ FAIL:', m); } };
@@ -128,6 +162,22 @@ if (process.argv.includes('--selftest')) {
   ].join('\n');
   ok(scan(apiWritten + "\n  X:{ battle:{label:'L', key:'api_mob', count:1} },")
     .filter(real).length === 0, 'a double-quoted (API-written) pool row resolves a battle key');
+  const censusBase = [
+    "const MONSTER_POOL = {",
+    "  t_mob:  { key:'t_mob',  name:'T', ac:10, hp:5,   tier:'trivial' },",
+    "  h_mob:  { key:'h_mob',  name:'H', ac:15, hp:97,  tier:'hard' },",
+    "  d_seen: { key:'d_seen', name:'D', ac:20, hp:210, tier:'deadly' },",
+    "};",
+    "const T = { pit: { monsters:[ P.d_seen ] } };",
+  ].join('\n');
+  const c = census(censusBase);
+  ok([...c.keys()].sort().join(',') === 'deadly,hard,trivial'
+    && c.get('deadly').unreachable.length === 0 && c.get('hard').unreachable.length === 1
+    && c.get('trivial').unreachable.length === 1 && c.get('hard').total === 1,
+    'the census covers EVERY tier, not just the one direction 2 walks');
+  ok(scan(censusBase).filter(real).some(f => f.startsWith('[deadly]')) === false,
+    'a census-visible unreachable at a non-deadly tier is NOT a gate failure');
+
   const summary = exemptionSummary();
   const owned = [...Object.values(UNREACHABLE_DEADLY), ...Object.values(UNRESOLVED_BATTLE_KEYS)]
     .filter(v => /^§/.test(v)).length;
@@ -138,6 +188,26 @@ if (process.argv.includes('--selftest')) {
     'row-owned exemptions are counted separately and named as such');
   if (fail) { console.log(`\n✗ check-battlepools selftest: ${fail} FAILED, ${pass} passed`); process.exit(1); }
   console.log(`✓ check-battlepools selftest: all ${pass} checks pass`);
+  process.exit(0);
+}
+
+if (process.argv.includes('--census')) {
+  const rows = census(fs.readFileSync(GAME, 'utf8'));
+  const order = ['trivial', 'easy', 'medium', 'hard', 'deadly'];
+  const tiers = [...rows.keys()].sort((a, b) => order.indexOf(a) - order.indexOf(b));
+  let total = 0, unreachable = 0;
+  console.log('MONSTER_POOL reachability by tier — a battle key, a `P.<key>` pool membership,');
+  console.log('a node bossKey, or any mention beyond its own pool + drop rows.\n');
+  console.log('  tier      unreachable / total');
+  for (const t of tiers) {
+    const r = rows.get(t);
+    total += r.total; unreachable += r.unreachable.length;
+    console.log(`  ${t.padEnd(9)} ${String(r.unreachable.length).padStart(5)} / ${String(r.total).padEnd(4)}`
+      + (r.unreachable.length ? '  ' + r.unreachable.slice(0, 6).join(', ')
+         + (r.unreachable.length > 6 ? `, … +${r.unreachable.length - 6}` : '') : ''));
+  }
+  console.log(`\n  ${unreachable} of ${total} unreachable.`);
+  console.log('  Only `deadly` is a gate failure — the rest are a bestiary (see the header comment).');
   process.exit(0);
 }
 

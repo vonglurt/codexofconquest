@@ -320,6 +320,8 @@ Measured 2026-08-03: **55 of 398 pool entries have exactly two references in the
 
 ## Dark Fantasy Bestiary II — ✅ Implemented
 
+> **A bestiary is a library, and a library may outrun the map (§DX-02gx).** An entry here with no `battle.key`, no `P.<key>` pool membership and no node `bossKey` is **not a defect** — `check:battlepools` direction 2 walks `tier:'deadly'` only, because `deadly` means *set-piece*. The count it deliberately does not assert: `node src/scripts/check-battlepools.js --census` — **51 of 419** unreachable across five tiers at 2026-08-25.
+
 > All entries in `MONSTER_POOL`. Many have counterparts in the tier tables above (Wolf, Griffon, Wyvern, Endrega, Arachas, Drowner, Ghoul, Alghoul, Striga, Bruxa, Troll, Cyclops, Cloud Giant, Gargoyle, Wraith, Nightwraith, Noonwraith, Werewolf, Berserker, Leshen, Harpy, Rotfiend, Barghest, Foglet, Ghost, Green Hag, Lamia, Ogre, Plague Maiden, Ekimara, Polar Bear, Revenant).
 
 ### Categories

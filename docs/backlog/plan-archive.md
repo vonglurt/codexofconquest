@@ -7,6 +7,17 @@
 
 ---
 
+## Archived 2026-08-25 — §DX-02gx (the cutoff was a policy nobody had stated; now it is stated, and the number it omits is a command)
+
+### §DX-02gx — direction 2 walks `deadly` on purpose, and the census is what it deliberately does not assert ✅ SHIPPED 2026-08-25 `PENDING_SHA`
+
+- [x] **§DX-02gx — `check:battlepools` direction 2 tested `tier:'deadly'` while 48 monsters at other tiers met the identical condition unremarked.** **Re-derived at `9257656`, and it moved:** the row measured **50 of 384** (easy 6/60, medium 16/148, hard 26/123, deadly 2/53) on 2026-08-25. At HEAD the same rule gives **51 of 419 across FIVE tiers** — trivial 1/32, easy 6/61, medium 16/149, hard 26/124, deadly 2/53. **`trivial` is a fifth tier the row did not know about**, 32 entries, one unreachable (`lemure`). The per-tier unreachable counts are otherwise identical, so the row's shape held and only its denominator and tier list were short.
+> **The call: (b), the row's own recommendation, and the repo settles it rather than taste.** `docs/design/monsters.md` heads the collection *"Dark Fantasy Bestiary II — ✅ Implemented … All entries in `MONSTER_POOL`"* and catalogues it **by category** — the shape of a library, not an inventory — while the tier tables above it are organised **by role**. A library is allowed to outrun the map, so an unplaced bestiary entry is the normal state. `deadly` is different in kind: a 187+ HP statblock is authored for one fight, so nothing naming it *is* a defect. **(a)** would manufacture 49 rows the world has not asked for; **(c)** would throw away the check that caught `void_warlord` and `bruxa_corvo_bianco`, both genuine.
+> **Shipped (b), plus the thing that makes (b) honest.** The header comment and direction 2's own comment now say `deadly` means **set-piece**, that the other tiers are a bestiary, and that the gate does not walk them and does not imply it has. And because a policy that hides a number is just a quieter version of the same problem, **`--census`** prints per-tier reachability on demand — the 49 non-deadly entries are now one command away instead of a figure in a doc that rots. `docs/design/index.md` and `monsters.md` cite the command, not the number.
+> **Refactored so the census cannot lie.** `indexSource(src)` and `isReachable(src, idx, key)` are extracted and read by **both** the gate and the census, so the census reports exactly the rule the gate enforces — the `deadly` column of `--census` is 2/53 and the gate's exemption table holds exactly those two. **Selftest 7 → 9 checks:** the census covers every tier, not just the walked one, and a census-visible unreachable at a non-deadly tier is **not** a gate failure.
+> **It unblocks §DX-02gw without deciding it.** The two rows shared one question — *is an unplaced named monster a defect* — answered **no** for anything below `deadly`. §DX-02gw's remaining two members are therefore a **retire-or-keep** call, not a **find-a-host** one, and that row is annotated in place with the answer and the command. It stays ASK; what changed is the question it is asking.
+> **Verified:** `check:walk` **18/18, wall 10.0s**; `npm test --prefix src` **1033 passed, 0 failed, 3.8m**; `check-battlepools` green with the census reporting `51 of 419`.
+
 ## Archived 2026-08-25 — §DX-02hx (NOT A DEFECT — the two numbers are on two different quests)
 
 ### §DX-02hx — the row's own premise, disproved by reading the quest the gate is attached to ✅ CLOSED 2026-08-25 `b5cf877` — premise disproved
