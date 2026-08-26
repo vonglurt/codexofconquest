@@ -61,27 +61,27 @@ quests):
 
 | Claim | Status at HEAD | Anchor |
 |---|---|---|
-| The Ceremonia Roll formula: `d20 + ⌊(score−10)/2⌋ + 2+⌊(level−1)/4⌋ ≥ DC` | **exact, all three terms** | `_rollSkill(stat)@22243` |
-| `_rollCeremonia(questId)` | **live as a name** — now a 4-line dispatcher; see delta 2 | `function _rollCeremonia@7024` |
-| `_appendStoryHcard(entry)` — a story-only hcard channel that never touches `#hcard-container` | **shipped**, four line-level details inverted (delta 5) | `function _appendStoryHcard@6796` |
+| The Ceremonia Roll formula: `d20 + ⌊(score−10)/2⌋ + 2+⌊(level−1)/4⌋ ≥ DC` | **exact, all three terms** | `_rollSkill(stat)@22240` |
+| `_rollCeremonia(questId)` | **live as a name** — now a 4-line dispatcher; see delta 2 | `function _rollCeremonia@7026` |
+| `_appendStoryHcard(entry)` — a story-only hcard channel that never touches `#hcard-container` | **shipped**, four line-level details inverted (delta 5) | `function _appendStoryHcard@6798` |
 | `#story-hcard-container` + `buildCard(entry)` reuse | **exact** — the container exists and `buildCard` is unchanged | `<div id="story-hcard-container">@4814` |
-| `_ceremoRetryBlocked(questId)` | **exact**, body identical modulo one inlined local | `function _ceremoRetryBlocked@6806` |
+| `_ceremoRetryBlocked(questId)` | **exact**, body identical modulo one inlined local | `function _ceremoRetryBlocked@6808` |
 | `S_story.skillCheckAttempts = { questId: { lastDay, failures } }` | **exact shape**, declared in `_S_DEFAULTS()`; `failures` is never read (delta 12) | `skillCheckAttempts: {}@23150` |
-| `retryable` + `retryGateDays` (default 1) | **exact**, both read by the live gate | `q.retryGateDays@6811` |
-| `activateCond` patch to the activation loop | **exact and still live**, at 2 call sites; 66 quests carry one | `if (q.activateCond && !q.activateCond()) return;@30156` |
-| Card label `'ROLL'` for skill-check quests | **exact** — and now the *default* of a five-way typed table | `verb:'Roll Ceremonia'@35566` |
-| `btn-talk` on the roll button | **exact** | `cls:'btn-talk'@35565` |
+| `retryable` + `retryGateDays` (default 1) | **exact**, both read by the live gate; the default is the only way to say *one day* and, since §DX-02ee, `0` is no longer written anywhere — it was inert (`0 \|\| 1`) and all 42 uses were deleted | `q.retryGateDays@6813` |
+| `activateCond` patch to the activation loop | **exact and still live**, at 2 call sites; 66 quests carry one | `if (q.activateCond && !q.activateCond()) return;@30169` |
+| Card label `'ROLL'` for skill-check quests | **exact** — and now the *default* of a five-way typed table | `verb:'Roll Ceremonia'@35574` |
+| `btn-talk` on the roll button | **exact** | `cls:'btn-talk'@35573` |
 | All 5 `_S_DEFAULTS()` fields: `skillCheckAttempts` · `ceremoniaYaelAct` · `ceremonia_yael_04_failed` · `ceremonia_yael_complete` · `cryptSurveyed` | **all five, under their specified names** | `skillCheckAttempts: {}@23150` … `cryptSurveyed: false@23155` |
-| All 9 quests: courier release · crypt survey · watch patrol · pit debut · yael 01–05 | **all live, all UQF-1.0** | `quest_courier_release@21334` … `quest_ceremonia_yael_05@21416` |
+| All 9 quests: courier release · crypt survey · watch patrol · pit debut · yael 01–05 | **all live, all UQF-1.0** | `quest_courier_release@21331` … `quest_ceremonia_yael_05@21413` |
 | **All 15 Yael prose strings** — 5 vignettes, 5 pass, 5 fail | **verbatim, every one** | `@21368`–`@21424` |
-| `vignetteTextAlt` + its selection rule (`ceremonia_yael_04_failed`) | **exact**, and the report's *"selected at render time, not a QUEST_DB field"* note is wrong twice over — it **is** a field, and it is selected at render time | `q.vignetteTextAlt && S_story.ceremonia_yael_04_failed@35554` |
+| `vignetteTextAlt` + its selection rule (`ceremonia_yael_04_failed`) | **exact**, and the report's *"selected at render time, not a QUEST_DB field"* note is wrong twice over — it **is** a field, and it is selected at render time | `q.vignetteTextAlt && S_story.ceremonia_yael_04_failed@35562` |
 | Yael arc DCs and stats: CHA 10 · WIS 12 · STR 12 · CHA 14 · CHA 15 | **exact, all five** | `@21371`, `@21384`, `@21397`, `@21410`, `@21425` |
 | Yael arc XP: 75 · 100 · 100 · 125 · 150 | **exact, all five** | same lines |
 | `retryable` per act: true · true · true · **false** · **false** | **exact, all five** | `@21367`–`@21420` |
-| Act V's `onPass`: `ceremoniaYaelAct=5` · `_setNpcFavor('yael',3)` · push **Yael's Watch Token** (🪙, `type:'token'`, `sell:0`) with its full `desc` | **exact, all four, including the description string verbatim** | `Yael's Watch Token@21431` |
+| Act V's `onPass`: `ceremoniaYaelAct=5` · `_setNpcFavor('yael',3)` · push **Yael's Watch Token** (🪙, `type:'token'`, `sell:0`) with its full `desc` | **exact, all four, including the description string verbatim** | `Yael's Watch Token@21428` |
 | Crypt Survey prose — all three strings incl. *"a cleaner hand than Froberger's"* | **verbatim** | `@21344`–`@21346` |
-| Patrol route as a three-node ordered visit tracked in `storyCheckQuests` | **shipped**, with the nodes remapped (delta 16) | `§DESIGN-03: Track patrol route@30173` |
-| `pitTrainingWins >= 1` completes Pit Debut; its reward message | **exact**, message verbatim: *"🥊 First Blood! +100gp +250 XP — The Pit knows your face now."* | `quest_pit_debut@21356` |
+| Patrol route as a three-node ordered visit tracked in `storyCheckQuests` | **shipped**, with the nodes remapped (delta 16) | `§DESIGN-03: Track patrol route@30186` |
+| `pitTrainingWins >= 1` completes Pit Debut; its reward message | **exact**, message verbatim: *"🥊 First Blood! +100gp +250 XP — The Pit knows your face now."* | `quest_pit_debut@21353` |
 
 **Live: 50 of 61.**
 
@@ -96,13 +96,13 @@ Seventeen deltas. Each is **NOT SHIPPED** (never existed), **RETIRED** (shipped,
 |---|---|---|---|
 | 1 | **The §1 flat data shape** — `checkAbility` · `checkLabel` · `checkDC` · `checkPassFlag` · `checkFailFlag` · `xpAward` · `goldAward` · top-level `onPass` · `completeItems` | **RETIRED — all nine, in one pass** | §ARCH-01 re-expressed the type as `bits:[{ kind:'skill_check', stat, skill, dc, onPass:[…], onFail:[…] }]`. `checkAbility`/`checkLabel`/`checkDC`/`checkPassFlag`/`checkFailFlag`/`completeItems`/`completeFn` survive **only inside migration comments**; `goldAward` is 0 hits (9 commits — retired, not born dead). The mapping is recorded in-file: *"`checkPassFlag`→`mission_bit{flag}` … `xpAward`→`reward{xp}`"*`@21437`. |
 | 2 | **`_rollCeremonia`'s body** — the 6-step guard/compute/hcard/apply/render procedure of §2 | **RETIRED (§ARCH-01 W7d)** | The function is now four lines: dispatch to `_resolveQuestUQF` when `schema==='UQF-1.0'`, else `console.warn` and no-op. Its own comment: *"the legacy roll body … is RETIRED"*`@7028`. The 30 dead `blq_05–blq_10` book-stubs are the only quests that still reach the warn. **The specified procedure survives — line for line — inside `_resolveQuestUQF`**`@6962`, under a different name. |
-| 3 | **`d20 = Math.ceil(Math.random() * 20)`** | **CHANGED — and the spec as written is now a banned shape** | `Math.ceil(E.rng() * 20)@22249` — the seeded mulberry32 stream. Invariant #6 (*seeded RNG for game state*) makes the report's line a defect today. It was correct when written; §VM-01-B moved it. |
-| 4 | **`total = d20 + mod + prof`** | **CHANGED — two addends added** | `total: d20 + mod + prof + iodineBonus + lmAll`. §CROWN-01 added **Iodine Salt** (+3, or +5 charged), burned by a dedicated button *inside* the roll card and consumed by the roll itself; §DROP-03's lake-magic passives added `allAbility` (`_lakeMagicBonuses@23421`). The three specified terms are untouched. |
+| 3 | **`d20 = Math.ceil(Math.random() * 20)`** | **CHANGED — and the spec as written is now a banned shape** | `Math.ceil(E.rng() * 20)@22246` — the seeded mulberry32 stream. Invariant #6 (*seeded RNG for game state*) makes the report's line a defect today. It was correct when written; §VM-01-B moved it. |
+| 4 | **`total = d20 + mod + prof`** | **CHANGED — two addends added** | `total: d20 + mod + prof + iodineBonus + lmAll`. §CROWN-01 added **Iodine Salt** (+3, or +5 charged), burned by a dedicated button *inside* the roll card and consumed by the roll itself; §DROP-03's lake-magic passives added `allAbility` (`_lakeMagicBonuses@23420`). The three specified terms are untouched. |
 | 5 | **`_appendStoryHcard`'s body** — `appendChild` · opacity `1 − (len−1−i)·0.07` · trim `firstChild` · `scrollTop = scrollHeight` | **CHANGED — all four inverted, for one reason** | Shipped as `prepend` · opacity `1 − i·0.07` · trim `lastChild` · `scrollLeft = 0`. The container is a **horizontal, newest-first** row (`flex-direction: row; overflow-x: auto`@2741), not a vertical log. Every line-level difference is the mirror of the spec because the axis changed. The *contract* — a story channel that never touches `#hcard-container`, capped at 30, faded by age — shipped exactly. |
-| 6 | **§5's three card states** | **CHANGED — replaced by an accordion (§CEREMO-ACC)** | The card button no longer rolls. Tapping it slides down a panel carrying the vignette, the roll breakdown, a **pass-odds readout** (`~N% to pass`), the Iodine button and a `← Not yet` cancel; the roll is confirmed inside. The specified string survives **verbatim on the confirm button**: `' DC ' + _dc@35631`. |
+| 6 | **§5's three card states** | **CHANGED — replaced by an accordion (§CEREMO-ACC)** | The card button no longer rolls. Tapping it slides down a panel carrying the vignette, the roll breakdown, a **pass-odds readout** (`~N% to pass`), the Iodine button and a `← Not yet` cancel; the roll is confirmed inside. The specified string survives **verbatim on the confirm button**: `' DC ' + _dc@35639`. |
 | 7 | **State 1: `sub` = vignetteText on the card body** | **CHANGED** | `vignetteText` renders inside the accordion (`.ceremonia-vignette`), not as the card's sub-line. The card's `hint` is the specified `<skill> (<+mod>) vs DC <n>` — **exact**. |
 | 8 | **State 2: a greyed `btn-rest` button reading `⏳ Retry tomorrow — …`, hint `Next attempt available: Day N`** | **CHANGED** | Blocked renders **no button at all** (`btn: blocked ? null : …`@35600) and the hint compresses to `'⏳ Retry available: Day ' + retryDay`@35597. A disabled button was never shipped; the affordance is simply absent. |
-| 9 | **§7 step 1 — XP goes through `S_story.xp` then `_checkLevelUp()`** | **SHIPPED** | The `reward` handler does exactly this: `if (E.checkLevelUp) E.checkLevelUp(); }@22272`, wired at `checkLevelUp: () =>@22349`. |
+| 9 | **§7 step 1 — XP goes through `S_story.xp` then `_checkLevelUp()`** | **SHIPPED** | The `reward` handler does exactly this: `if (E.checkLevelUp) E.checkLevelUp(); }@22269`, wired at `checkLevelUp: () =>@22346`. |
 | 10 | **§7 step 2 — *"If `_levelUpQueue.length > 0`: show level-up modal immediately"*** | **NOT SHIPPED — and it is a live defect** | The pass path never drains the queue. **See §IV.** |
 | 11 | **`_updateStorySidebar()`** — named in §7 as the live stat-panel updater | **NOT SHIPPED** | 0 hits, **0 commits ever**. The function is `storyUpdateStatus()`@36053. A name written from memory. |
 | 12 | **`skillCheckAttempts[id].failures`** — a per-quest failure counter | **CHANGED — write-only** | Incremented at `@6999` and **read by nothing**. `_ceremoRetryBlocked` consults only `lastDay`. Filed under §DX-02n. |

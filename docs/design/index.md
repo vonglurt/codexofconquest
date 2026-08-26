@@ -591,6 +591,7 @@ All 54 source books are marked `[x]` in `books.md` — all have been processed t
 | `GEO_PROJ` | §2.1 equirectangular 1° grid dims `{ROWS:90, COLS:360}`; passed to the mover kernel as `world.proj` for N/S clamp + E↔W wrap |
 | `Mover` / `_moverWorld()` | §WALK-2 client handle to `mover.js` (`Mover.move(world,pos,dir)`); `_moverWorld()` builds the read-only world snapshot (`proj`/`impassable`/`cellCodes`/`terrainAt`/`encounterRate`) per move. See `mover.js` in Core Reference |
 | `QUEST_DB` | Quest definitions (UQF-1.0: `gate`/`bits`/`completion`/`onComplete`); ~2,848 quests — ALL UQF after §ARCH-01 close 2026-07-05 + the §MATH-01 migration 2026-07-07, except the 30 dead `blq` stubs |
+| `q.retryGateDays` | Days a failed retryable skill check stays locked. Read at exactly one site — `S_story.day < att.lastDay + (q.retryGateDays || 1)@6813`, inside `function _ceremoRetryBlocked@6808` — so **the absent field and `1` are the same thing, and `0` was never expressible** (`0 || 1` is `1`). §DX-02ee deleted all 42 zeros through `./bin/api put quest <id> retryGateDays=null` and kept the coercion; **21 entries carry `1`** (`grep -c 'retryGateDays:1' play.html`, 2026-08-26) and none carries `0`. Pinned by `src/tests/integration/dx02ee-scalar-field-clear.test.js`. |
 | `CONDITION_ITEMS` | 11 condition items: name, icon, effect, sell value |
 | `CONDITION_GOLD` | Pre-battle cost per condition (flat gold, not inventory) |
 | `CONDITION_ADV` | Adv/DIS modifier keyed by lowercase-underscore condition name |
@@ -618,7 +619,7 @@ All 54 source books are marked `[x]` in `books.md` — all have been processed t
 | `VENDOR_NODES` | Set of node codes with vendor access (5 nodes: `LLA`/`LGW`/`STN`/`PDL`/`BK`) |
 | `XP_LEVELS` | 20-entry array; max 195,000 XP at L20 |
 | `LOOT_TABLE` | 20-entry d20 drop table (dead code — replaced by `_D100_TABLE`) |
-| `_applyItemChain` allow-list | **The item field vocabulary.** `for (const f of ['desc', 'readText'@26184` names every key a declarative grant may copy into `S_story.inventory`; anything off-list is dropped. `desc` is the row tooltip (`div.title = item.desc@30869`), `readText` the 📖 Read text (`let txt = it.readText@31176`), and the item's `type` decides which one a string belongs in. `description` was retired by §DX-02gd (2026-08-24) after 15 sites resolved to no reader. Kept in lockstep with `edit.html:const GRANT_RICH@8607`, `src/scripts/check-itemchain.js` and `check-ladder-migration.js`'s `GRANT_FIELDS` — nothing gates that lockstep (§DX-02cj) |
+| `_applyItemChain` allow-list | **The item field vocabulary.** `for (const f of ['desc', 'readText'@26194` names every key a declarative grant may copy into `S_story.inventory`; anything off-list is dropped. `desc` is the row tooltip (`div.title = item.desc@30884`), `readText` the 📖 Read text (`let txt = it.readText@31191`), and the item's `type` decides which one a string belongs in. `description` was retired by §DX-02gd (2026-08-24) after 15 sites resolved to no reader. Kept in lockstep with `edit.html:const GRANT_RICH@8607`, `src/scripts/check-itemchain.js` and `check-ladder-migration.js`'s `GRANT_FIELDS` — nothing gates that lockstep (§DX-02cj) |
 
 ---
 
@@ -669,7 +670,7 @@ All 54 source books are marked `[x]` in `books.md` — all have been processed t
 | `S_story.ebReturnsCompleted` | object | ebCode → true; set on EB return quest completion |
 | `S_story.ebNegotiatedPayments` | object | ebCode → gold accepted |
 | `S_story.npcFavorability` | object | npcKey → 0/1/2/3. Raised only by `_setNpcFavor@23463`, which is monotonic |
-| `S_story.dearFriendGranted` | object | npcKey → true once `_checkDearFriendUpgrade@23482` has paid the Friendly→Dear-Friend `+1`. `DEAR_FRIEND_BITS@23463` names the second personal act for the **five** NPCs whose act grants the step; the check runs where each act is recorded, so either ordering earns it (§DX-02gb). auros is absent — `quest_void_below` writes his favor as an absolute `set:2`, which **is** the step (§DX-02gl). `_missionBits@23647` reads that table for 5 of the ending's 12 bits, relabelled through `MISSION_ACT_BITS@23639`, and seeds the sixth from `S_story.bruhnsDepthsReported` (§DX-02gk) |
+| `S_story.dearFriendGranted` | object | npcKey → true once `_checkDearFriendUpgrade@23482` has paid the Friendly→Dear-Friend `+1`. `DEAR_FRIEND_BITS@23465` names the second personal act for the **five** NPCs whose act grants the step; the check runs where each act is recorded, so either ordering earns it (§DX-02gb). auros is absent — `quest_void_below` writes his favor as an absolute `set:2`, which **is** the step (§DX-02gl). `_missionBits@23649` reads that table for 5 of the ending's 12 bits, relabelled through `MISSION_ACT_BITS@23641`, and seeds the sixth from `S_story.bruhnsDepthsReported` (§DX-02gk) |
 | `S_story.npcTalk` | object | npcKey → `{count,lastDay}`: §NPC-01-D Talk progress to Friendly (once/day) |
 | `S_story.roughWhiskeyUsed` | boolean | true after drunk pit fight event fires |
 | `S_story.yaelEscortUsed` | boolean | true after one-time escort narration fires |
@@ -831,7 +832,7 @@ All 54 source books are marked `[x]` in `books.md` — all have been processed t
 | `S_story.runStats` | object | Per-run ledger (reset on respawn): same 10 fields as careerStats |
 | `S_story.tackleboxZoneUnlocks` | object | `{shore:true, reeds:false, deep:false}` — which fishing search zones are accessible; zone gating live (Layer 83) |
 | `S_story.baitFishingActive` | boolean | Suppresses node re-render during bait catch sequence |
-| `S_story.skillCheckAttempts` | object | `{ questId: { lastDay, failures } }` — retry gate for Ceremonia Roll quests; set on each failed retryable roll |
+| `S_story.skillCheckAttempts` | object | `{ questId: { lastDay, failures } }` — retry gate for Ceremonia Roll quests; set on each failed retryable roll; `lastDay` is compared against `q.retryGateDays || 1`, whose only two live values are *absent* and `1` (§DX-02ee) |
 | `S_story.ceremoniaYaelAct` | number | Current act in Yael Ceremonia Arc (0 = not started, 1–5 = act N complete) |
 | `S_story.ceremonia_yael_04_failed` | boolean | Act IV fail path — changes Yael's Act V vignetteText |
 | `S_story.ceremonia_yael_complete` | boolean | Full Yael Ceremonia Arc complete; triggers Watch Token item |

@@ -426,6 +426,14 @@ function insertStringField(sectionSrc, entryKey, field, newValue) {
 
 // Remove a string field from an existing entry's body.
 // Handles both leading-comma and trailing-comma forms.
+// §DX-02ee — `null clears a field` is what `./bin/api help` promises, and until this row
+// it held for QUOTED values only. A numeric or boolean field — `retryGateDays`, `checkDC`,
+// `xpAward`, `reward`, `retryable` — matched neither pattern, so PUT …=null returned
+// `field "x" not found on "y" or strip failed` on a field that was plainly there. The
+// second pass below removes an UNQUOTED scalar: a number, `true`, `false` or `null`.
+// Deliberately not extended to arrays/objects: those need brace matching, they are
+// `editStructuredField`'s territory, and a regex that half-removes one would corrupt the
+// entry silently — the failure mode this repo keeps paying for.
 function removeStringField(sectionSrc, entryKey, field) {
   const b = findEntryBounds(sectionSrc, entryKey);
   if (!b) return null;
@@ -435,6 +443,14 @@ function removeStringField(sectionSrc, entryKey, field) {
   let patchedBody = body
     .replace(new RegExp(`,\\s*${field}\\s*:\\s*(['"\`])[^\\1]*?\\1`), '')
     .replace(new RegExp(`${field}\\s*:\\s*(['"\`])[^\\1]*?\\1,?\\s*`), '');
+  if (patchedBody === body) {
+    // The leading (^|[{,\s]) guard keeps `checkDC` from matching inside `_checkDC`, and
+    // the trailing lookahead keeps the value from swallowing the next field.
+    const SCALAR = '(?:-?\\d+(?:\\.\\d+)?|true|false|null)';
+    patchedBody = body
+      .replace(new RegExp(`,\\s*${field}\\s*:\\s*${SCALAR}(?=\\s*[,}])`), '')
+      .replace(new RegExp(`(^|[{\\s])${field}\\s*:\\s*${SCALAR}\\s*,?\\s*`), '$1');
+  }
   if (patchedBody === body) return null;
   return sectionSrc.slice(0, openEnd) + patchedBody + sectionSrc.slice(bodyEnd);
 }

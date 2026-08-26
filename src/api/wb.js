@@ -2370,6 +2370,8 @@ ${C.bold}═══════════════════════�
 
   Values are auto-coerced: numbers for ac/hp/atk/act/sleepCost etc.,
   null clears a field, true/false for booleans.
+  null clears strings, numbers and booleans alike; an array- or object-valued
+  field is refused — brace matching is editStructuredField's job (§DX-02ee).
   Pipe JSON body for multi-field or long-text updates.
 
   Editable node fields:

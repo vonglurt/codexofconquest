@@ -1797,7 +1797,9 @@ test.describe('§ARCH-01 Wave 1k — Spark2 Dunfall Harmony Chain (quest_spark2_
 // onPass item-push → reward{items:[Archive Key]}. Only `questions` keeps an
 // onFail _legacy_fn (hp−10 psychic damage — no declarative damage bit). The
 // gates chain: handshake←wmLowerArchiveUnlocked, questions←handshakePassed,
-// final←questionsPassed. retryGateDays (0/0/1) kept top-level.
+// final←questionsPassed. Only the final leg carries a retryGateDays (1); the
+// other two are unqualified — §DX-02ee removed the `0`s, which the one consumer
+// read through `|| 1` and could never honour.
 
 test.describe('§ARCH-01 Wave 1l — Codex Inquisitor gauntlet (quest_inquisitor_*)', () => {
   const IDS = ['quest_inquisitor_handshake','quest_inquisitor_questions','quest_inquisitor_final'];
@@ -1810,14 +1812,15 @@ test.describe('§ARCH-01 Wave 1l — Codex Inquisitor gauntlet (quest_inquisitor
       const rw = (bit.onPass||[]).find(b=>b.kind==='reward');
       return { id, schema:q.schema, valid:validateQuest(q).valid, stat:bit.stat, skill:bit.skill, dc:bit.dc,
                mbFlag:mb&&mb.flag, mbLabel:mb&&(mb.label||null), xp:rw&&rw.xp,
-               gate:JSON.stringify(q.gate), retryGateDays:q.retryGateDays,
+               gate:JSON.stringify(q.gate), retryGateDays:q.retryGateDays ?? null,
+               hasRetryGate:('retryGateDays' in q),
                hasOnPassLegacyFn:(bit.onPass||[]).some(b=>b.kind==='_legacy_fn') };
     }), IDS);
     expect(r.every(x => x.schema==='UQF-1.0' && x.valid && !x.hasOnPassLegacyFn)).toBe(true);
     expect(r).toMatchObject([
-      { id:'quest_inquisitor_handshake', stat:'CHA', skill:'Persuasion', dc:10, mbFlag:'inquisitorHandshakePassed', mbLabel:null, xp:50,  gate:'{"flags":["wmLowerArchiveUnlocked"]}',     retryGateDays:0 },
-      { id:'quest_inquisitor_questions', stat:'WIS', skill:'Insight',    dc:12, mbFlag:'inquisitorQuestionsPassed', mbLabel:null, xp:75,  gate:'{"flags":["inquisitorHandshakePassed"]}', retryGateDays:0 },
-      { id:'quest_inquisitor_final',     stat:'CHA', skill:'Persuasion', dc:12, mbFlag:'inquisitorPassed',          mbLabel:null, xp:200, gate:'{"flags":["inquisitorQuestionsPassed"]}', retryGateDays:1 },
+      { id:'quest_inquisitor_handshake', stat:'CHA', skill:'Persuasion', dc:10, mbFlag:'inquisitorHandshakePassed', mbLabel:null, xp:50,  gate:'{"flags":["wmLowerArchiveUnlocked"]}',     retryGateDays:null, hasRetryGate:false },
+      { id:'quest_inquisitor_questions', stat:'WIS', skill:'Insight',    dc:12, mbFlag:'inquisitorQuestionsPassed', mbLabel:null, xp:75,  gate:'{"flags":["inquisitorHandshakePassed"]}', retryGateDays:null, hasRetryGate:false },
+      { id:'quest_inquisitor_final',     stat:'CHA', skill:'Persuasion', dc:12, mbFlag:'inquisitorPassed',          mbLabel:null, xp:200, gate:'{"flags":["inquisitorQuestionsPassed"]}', retryGateDays:1,    hasRetryGate:true  },
     ]);
   });
 
