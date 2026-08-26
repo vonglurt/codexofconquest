@@ -11,7 +11,7 @@
 
 ### §ASI-01 — the ability-score improvement is rolled, not chosen, and no design doc says so (NEW 2026-08-26 during §NEXT-2026-08-26, 🟡 one design call)
 
-- [x] ✅ SHIPPED 2026-08-26 `PENDING` **§ASI-01 — `_ASI_TABLE` *(deleted 2026-08-26, §ASI-01)* is rolled across the seven `_ASI_LEVELS@25549`.** Three of its six options raise DEX — Agility (+2), Speed (+1), Guard (+1) — so **DEX rises without player intent**. §WEAP-FIN leaned on that fact to overturn its own recommendation, and it is load-bearing for §WEAP-RANGED and §OFFHAND-01, but **no row has ever verified it against a design doc**: it was read out of the code, not out of an intent.
+- [x] ✅ SHIPPED 2026-08-26 `145938d` **§ASI-01 — `_ASI_TABLE` *(deleted 2026-08-26, §ASI-01)* is rolled across the seven `_ASI_LEVELS@25549`.** Three of its six options raise DEX — Agility (+2), Speed (+1), Guard (+1) — so **DEX rises without player intent**. §WEAP-FIN leaned on that fact to overturn its own recommendation, and it is load-bearing for §WEAP-RANGED and §OFFHAND-01, but **no row has ever verified it against a design doc**: it was read out of the code, not out of an intent.
 > **The call is whether rolled is the design.** Check `docs/design/index.md` §Design Constants and `docs/mechanics/` for any statement of the ASI contract; if there is none, the choice is (i) keep it rolled and **write the constant down**, or (ii) make it a player choice, which is a character-progression change and would then be 🟠. **Recommend (i) unless a doc contradicts it** — the roll is shipped behaviour that three rows already depend on, and the defect here is the undocumented premise, not the mechanic.
 > **Provenance:** item (iii) of the §NEXT-2026-08-26 hand-off.
 
