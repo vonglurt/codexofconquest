@@ -9,7 +9,7 @@
 
 ## Archived 2026-08-25 — §DX-02ht (evidence for a flake, without paying for it on every run — and it diagnosed three on its first outing)
 
-### §DX-02ht — the row's own plan was measured and rejected twice before something worked ✅ SHIPPED 2026-08-25 `SHA_HT`
+### §DX-02ht — the row's own plan was measured and rejected twice before something worked ✅ SHIPPED 2026-08-25 `1995538`
 
 **The row, as filed:**
 
