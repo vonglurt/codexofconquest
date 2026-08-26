@@ -9,7 +9,7 @@
 
 ## Archived 2026-08-25 — §DX-02hf (a header said five, the collection held seven)
 
-### §DX-02hf — one word, and the shipped dialogue that had been saying "all seven" the whole time ✅ SHIPPED 2026-08-25 `SHA_HF`
+### §DX-02hf — one word, and the shipped dialogue that had been saying "all seven" the whole time ✅ SHIPPED 2026-08-25 `e5ce2c8`
 
 **The row, as filed:**
 
