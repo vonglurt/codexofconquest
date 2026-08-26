@@ -285,8 +285,105 @@ async function openEditor(page, opts = {}) {
 }
 
 
+// ── Seed, then clear what you are about to measure (§DX-02gj) ─────────────────
+// THE RULE: `seedAndLoad` + `dismissContinue` is NOT a neutral starting state.
+// `dismissContinue` → `storyLoadContinue` → `storyLoadSave` → `storyRender`, which
+// renders the NPC row for `S_story.currentCode`. Any NPC pinned to the seeded node
+// therefore has ONE card render already behind them when the test's first line runs.
+//
+// The contamination is SELECTIVE, which is what makes it expensive: seeded at `TLL`,
+// a "visit 1" assertion for `brynn` is measuring her visit 2, while `yael` at `LHR`
+// reads correctly — so the same assertion passes for one NPC and fails for another in
+// the same loop, and it reads as a broken fix rather than a broken harness. It cost a
+// full debug cycle on a two-line change that was already correct (§DX-02aj), and it is
+// the second subsystem to hit it — §DX-02gb records the same cause on the favor tables,
+// where an earlier pass that did not reset reported a false 4-of-6 pass.
+//
+// So: seed per-entity tests at a node NO measured entity is pinned to (`BOO` is the
+// one §DX-02aj settled on), reset before you measure, and assert the precondition —
+// a contaminated seed should fail at the SETUP line naming the cause, not at the
+// assertion naming the wrong one.
+//
+// Every key one NPC card render writes, across `_renderNpcCard` and `_getNPCDialogue`.
+// Re-derive with: node -e over play.html for `S_story[...] =` inside both functions.
+const NPC_RENDER_KEYS = [
+  key => key + 'NgGreeted',
+  key => 'act8Farewell' + key[0].toUpperCase() + key.slice(1),
+  key => 'crossRefIdx_' + key,
+  key => 'voidPressureLine_' + key,
+  key => 'actThreeLine_' + key,
+];
+// Written under a per-NPC map rather than a flat key.
+const NPC_RENDER_MAPS = ['ngMemoryDelivered', 'npcVisitCounts'];
+// Written as one global, but only by one NPC's dialogue branch.
+const NPC_RENDER_GLOBALS = {
+  brynn: ['brynRoom6LineDelivered'],
+  crov: ['crovChampionLineDelivered'],
+  isolde: ['isoldeGurtAckDelivered'],
+  yael: ['yaelOnboardingSeen'],
+};
+
+function renderKeysFor(key) {
+  return NPC_RENDER_KEYS.map(f => f(key));
+}
+
+/**
+ * Clear every piece of state one NPC card render writes, for each key in `keys`.
+ * Returns the names that were set going in — the contamination this call removed —
+ * so a caller can report what the seed had already advanced.
+ */
+async function resetNpcRenderState(page, keys) {
+  return page.evaluate(([ks, maps, globals, kmap]) => {
+    const removed = [];
+    for (const key of ks) {
+      for (const name of kmap[key]) {
+        if (S_story[name] !== undefined) removed.push(name);
+        delete S_story[name];
+      }
+      for (const m of maps) {
+        if (S_story[m] && S_story[m][key] !== undefined) { removed.push(m + '[' + key + ']'); delete S_story[m][key]; }
+      }
+      for (const g of (globals[key] || [])) {
+        if (S_story[g] !== undefined) removed.push(g);
+        delete S_story[g];
+      }
+    }
+    return removed;
+  }, [keys, NPC_RENDER_MAPS, NPC_RENDER_GLOBALS,
+      Object.fromEntries(keys.map(k => [k, renderKeysFor(k)]))]);
+}
+
+/**
+ * Fail at the SETUP line, naming the cause, when the seed has already rendered a card
+ * for one of `keys`. Use it after `resetNpcRenderState` in a per-entity test, so a
+ * future seed change surfaces as "the seed contaminated brynn" rather than as an
+ * off-by-one in whatever the test was actually measuring.
+ */
+async function expectNpcRenderStateClean(page, keys) {
+  const dirty = await page.evaluate(([ks, maps, globals, kmap]) => {
+    const found = [];
+    for (const key of ks) {
+      for (const name of kmap[key]) if (S_story[name] !== undefined) found.push(name);
+      for (const m of maps) if (S_story[m] && S_story[m][key] !== undefined) found.push(m + '[' + key + ']');
+      for (const g of (globals[key] || [])) if (S_story[g] !== undefined) found.push(g);
+    }
+    return found;
+  }, [keys, NPC_RENDER_MAPS, NPC_RENDER_GLOBALS,
+      Object.fromEntries(keys.map(k => [k, renderKeysFor(k)]))]);
+  expect(dirty, `§DX-02gj — the seed already rendered a card for ${keys.join(', ')}: `
+    + `these were set before the test measured anything. Seed at a node no measured NPC `
+    + `is pinned to (BOO), or call resetNpcRenderState first`).toEqual([]);
+}
+
 module.exports = {
   SEED_STATE,
+  NPC_RENDER_KEYS,
+  NPC_RENDER_MAPS,
+  NPC_RENDER_GLOBALS,
+  renderKeysFor,
+  resetNpcRenderState,
+  expectNpcRenderStateClean,
+
   openEditor,
   workerPorts,
   watchChildren,

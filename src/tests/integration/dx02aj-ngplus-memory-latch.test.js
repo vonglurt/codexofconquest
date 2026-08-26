@@ -15,7 +15,8 @@
  * delivers the memory line, and it is delivered exactly once.
  */
 const { test, expect } = require('@playwright/test');
-const { seedAndLoad, dismissContinue } = require('./helpers');
+const { seedAndLoad, dismissContinue, resetNpcRenderState,
+        expectNpcRenderStateClean } = require('./helpers');
 
 // BOO is Yugurt Lake — no Birka NPC is pinned there, so the load renders none of
 // the six cards. The harness resets the latch per NPC anyway; this keeps the seed
@@ -36,12 +37,10 @@ const NG_SEED = {
 const RENDER = `(key, times, fav) => {
   S_story.npcFavorability = S_story.npcFavorability || {};
   if (fav !== null) S_story.npcFavorability[key] = fav;
-  // Reset this NPC's latch and delivery mark first. Loading a save at a node an
-  // NPC is pinned to renders their card once through storyRender, which would
-  // make "visit 1" here their visit 2 — the contamination §DX-02gb records as
-  // having produced a false 4-of-6 pass on the sibling favor tables.
-  delete S_story[key + 'NgGreeted'];
-  if (S_story.ngMemoryDelivered) delete S_story.ngMemoryDelivered[key];
+  // The reset is the harness's job, not this file's: resetNpcRenderState clears every
+  // key one card render writes, and expectNpcRenderStateClean fails at the caller's
+  // setup line if the seed rendered a card first (§DX-02gj). No backticks in here --
+  // this whole block is a template literal.
   const perVisit = [];
   const quotes = [];
   const realMsg = window.storyMsg;
@@ -83,6 +82,8 @@ test.describe('§DX-02aj — the NG+ memory line lands on the second visit', () 
     await dismissContinue(page);
     const keys = await page.evaluate(() => Object.keys(NPC_NG_MEMORY_LINES));
     for (const key of keys) {
+      await resetNpcRenderState(page, [key]);
+      await expectNpcRenderStateClean(page, [key]);
       const r = await page.evaluate(({ src, key }) =>
         eval(src)(key, 1, 2), { src: RENDER, key });
       expect(r.perVisit[0], `${key} visit 1`).toEqual([]);
@@ -95,6 +96,8 @@ test.describe('§DX-02aj — the NG+ memory line lands on the second visit', () 
     await dismissContinue(page);
     const keys = await page.evaluate(() => Object.keys(NPC_NG_MEMORY_LINES));
     for (const key of keys) {
+      await resetNpcRenderState(page, [key]);
+      await expectNpcRenderStateClean(page, [key]);
       const r = await page.evaluate(({ src, key }) =>
         eval(src)(key, 2, 2), { src: RENDER, key });
       const line = await page.evaluate(k => NPC_NG_MEMORY_LINES[k], key);
@@ -108,6 +111,8 @@ test.describe('§DX-02aj — the NG+ memory line lands on the second visit', () 
   test('a third visit says nothing more — the line is delivered once', async ({ page }) => {
     await seedAndLoad(page, NG_SEED);
     await dismissContinue(page);
+    await resetNpcRenderState(page, ['brynn']);
+    await expectNpcRenderStateClean(page, ['brynn']);
     const r = await page.evaluate(({ src }) => eval(src)('brynn', 3, 2), { src: RENDER });
     expect(r.perVisit.map(v => v.length)).toEqual([0, 1, 0]);
   });
@@ -115,6 +120,8 @@ test.describe('§DX-02aj — the NG+ memory line lands on the second visit', () 
   test('below Dear Friend the line never fires, however many visits', async ({ page }) => {
     await seedAndLoad(page, NG_SEED);
     await dismissContinue(page);
+    await resetNpcRenderState(page, ['brynn']);
+    await expectNpcRenderStateClean(page, ['brynn']);
     const r = await page.evaluate(({ src }) => eval(src)('brynn', 3, 1), { src: RENDER });
     expect(r.perVisit.flat()).toEqual([]);
     expect(r.delivered.brynn).toBeUndefined();
@@ -123,6 +130,8 @@ test.describe('§DX-02aj — the NG+ memory line lands on the second visit', () 
   test('outside NG+ neither the greeting nor the memory line fires', async ({ page }) => {
     await seedAndLoad(page, Object.assign({}, NG_SEED, { ngPlusRun: 0 }));
     await dismissContinue(page);
+    await resetNpcRenderState(page, ['brynn']);
+    await expectNpcRenderStateClean(page, ['brynn']);
     const r = await page.evaluate(({ src }) => eval(src)('brynn', 2, 2), { src: RENDER });
     expect(r.perVisit.flat()).toEqual([]);
     expect(r.latch).toBe(false);
