@@ -246,6 +246,14 @@ regardless, so the off-hand grant would often be zero anyway. Fix it for consist
 > **✅ CLOSED 2026-08-26 (§DX-02df).** The off-hand miss branch calls `_grantMissEffortXp()` and
 > names the grant in its own log line, exactly as the main attack's two branches do. **Both counted
 > attack surfaces now pay, under one shared per-encounter cap** — pinned by `effort-xp.test.js`,
+> **§XP-FLEE (2026-08-26) closed the third and last surface — annotation, not rewrite.** The mutual-flee
+> parting swing in `_storyFleeMutual` was neither tallied nor paid; it now pays under the same shared cap
+> and is still **not** tallied, because *all action earns XP* is a written directive while the meaning of
+> `attacksAttempted` is not, and the player reads that statistic. Adding the grant also falsified this
+> report's own claim that *victory/flee/death all call `_checkLevelUp`* — true only while the flee
+> resolution granted nothing — so the escape branch now runs the `_storyEnemyFlees` shape verbatim.
+> Suite 5/5 → 6/6.
+>
 > which asserts the lone off-hand miss earns `EFFORT_MISS_PCT` of the kill *and* that grinding both
 > surfaces together still lands on the same `EFFORT_XP_PCT` ceiling, so the cap is per encounter and
 > not per surface. **The third surface named above — the mutual-flee free swing — is deliberately

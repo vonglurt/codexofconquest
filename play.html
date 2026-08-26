@@ -25732,10 +25732,12 @@ function _storyFleeMutual() {
   // Player free attack on enemy
   const pRoll = Math.ceil(Math.random() * 20) + (getAtkAbilityMod ? getAtkAbilityMod() : 0);
   const pHit  = pRoll >= S.enemy.ac;
-  let pDmg = 0;
+  let pDmg = 0, pEffortXp = 0;
   if (pHit) {
     pDmg = Math.max(1, Math.ceil(Math.random() * (S.weapon.die || 6)) + (getDmgMod ? getDmgMod() : 0));
     S.opp.hp = Math.max(0, S.opp.hp - pDmg);
+  } else {
+    pEffortXp = _grantMissEffortXp();
   }
   // Enemy free attack on player
   const eRoll = Math.ceil(Math.random() * 20) + S.enemy.atk;
@@ -25749,7 +25751,7 @@ function _storyFleeMutual() {
   _updateBattleOverlay();
   storyUpdateStatus();
   const msg = '🏃 Fled at start of round — mutual exchange! You: '
-    + (pHit ? pDmg + ' dmg dealt' : 'miss') + ' · Enemy: '
+    + (pHit ? pDmg + ' dmg dealt' : 'miss' + (pEffortXp ? ' (+' + pEffortXp + ' XP effort)' : '')) + ' · Enemy: '
     + (eHit ? eDmg + ' dmg taken' : 'miss') + '.';
   _sboLog(msg);
   if (S.player.hp <= 0) {
@@ -25759,12 +25761,15 @@ function _storyFleeMutual() {
   }
   if (S.opp.hp <= 0) { setTimeout(_storyBattleVictory, 800); return; }
   setTimeout(() => {
+    _levelUpQueue = [];
+    _checkLevelUp();
     S_story.pendingBattle = null;
     document.getElementById('story-battle-overlay').classList.remove('visible');
     document.getElementById('sbo-refocus-bar').style.display = 'none';
     document.getElementById('main-body').style.display = 'none';
     storyEnter();
     storyMsg(msg + ' You escape.');
+    if (_levelUpQueue.length > 0) _showLevelUpModal(_levelUpQueue.shift());
   }, 1400);
 }
 

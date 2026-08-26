@@ -167,4 +167,53 @@ test.describe('§XP-01 — universal effort XP (misses + failed checks)', () => 
     expect(r.total).toBe(r.cap);
     expect(r.banked).toBe(r.cap);
   });
+
+  // §XP-FLEE — the parting swing inside `_storyFleeMutual` was neither counted nor paid:
+  // invisible to `attacksAttempted` as well as to the XP. The call taken was (b) of the
+  // row's three — pay it without tallying it — because the *all action earns XP*
+  // directive is explicit while the meaning of `attacksAttempted` (deliberate attacks)
+  // is not, and tallying would retroactively change the hit-rate every save prints.
+  test('§XP-FLEE — the mutual-flee swing pays effort XP on a miss and is still not tallied', async ({ page }) => {
+    await page.goto('/play.html');
+    const r = await page.evaluate(() => {
+      storyNewGame({ str:10, dex:8, con:8, int:8, wis:8, cha:8 });
+      _storyRollInit();
+      Object.assign(S.enemy, { ac:100, atk:0, dmgDie:4, dmgCount:1, dmgFlat:0, maxHp:10 });
+      Object.assign(S.opp,   { tier:'easy', hp:10, maxHp:10, enraged:false, adv:'norm' });
+      Object.assign(S.player,{ hp:45, maxHp:45, dmgMod:0, adv:'norm' });
+      Object.assign(S.char,  { ac:16 });
+      S.offhand = { die:4, count:1 };
+      S_story.equippedShield = null;
+      const kill = 100 * 10;
+      const perMiss = Math.round(kill * EFFORT_MISS_PCT);
+      const cap     = Math.round(kill * EFFORT_XP_PCT);
+      const _rand = Math.random; Math.random = () => 0.5;   // both rolls 10: player misses AC 100, enemy misses AC 16
+
+      const xp0 = S_story.xp;
+      const tally0 = S_story.runStats.attacksAttempted;
+      S_story.battleTurn = 'player'; S_story.usedMainAttack = false; S_story.usedBonusAction = false;
+      _storyFleeMutual();
+      const fleeOnly = S_story.xp - xp0;
+      const tallyDelta = S_story.runStats.attacksAttempted - tally0;
+      const logged = document.getElementById('sbo-log').textContent;
+
+      // the cap is per ENCOUNTER and shared across ALL THREE surfaces
+      for (let i = 0; i < 30; i++) {
+        S_story.battleTurn = 'player'; S_story.usedMainAttack = false; S_story.usedBonusAction = false;
+        _overlayPlayerAttack();
+        S_story.battleTurn = 'player'; S_story.usedMainAttack = true; S_story.usedBonusAction = false;
+        _overlayOffhandAttack();
+        S_story.battleTurn = 'player'; S_story.usedMainAttack = false; S_story.usedBonusAction = false;
+        _storyFleeMutual();
+      }
+      const total = S_story.xp - xp0;
+      Math.random = _rand;
+      return { perMiss, cap, fleeOnly, tallyDelta, total, banked: S.effortXpEarned, logged };
+    });
+    expect(r.fleeOnly).toBe(r.perMiss);      // the swing pays one miss
+    expect(r.tallyDelta).toBe(0);            // (b): it is still not a deliberate attack
+    expect(r.logged).toContain('XP effort'); // and the player is told
+    expect(r.total).toBe(r.cap);             // three surfaces, one cap
+    expect(r.banked).toBe(r.cap);
+  });
 });
