@@ -190,8 +190,8 @@ proves `QuestRuntime.canComplete` honours it. The reader was verified; the write
 | 8 | Bout Token (kg_05) · Prime Core (kg_09) tabled as **items** | shipped as `mission_bit` **labels** | ⚠ form differs — kg_01's papers were correctly marked mission_bit; these two were not |
 | 9 | skill_check `bits` with `onPass[…]` / `onFail[…]` | `onPass` populated, **`onFail:[]` on both** | ⚠ narrowed — a failed check is silent |
 | 10 | *"the entire mechanical footprint of Inc 3"* | ship also widened the itemChain grant allow-list with `'dmgFlat', 'heal']) {@26185`, in lockstep across `edit.html:const GRANT_RICH = ['readText','passive'@8607` and `check-itemchain.js`, and repaired a pre-existing `_gateFlagSet` crash in that harness | ⚠ **understated at ship** — 5 sites tabled, 6 engine sites + 2 support files needed |
-| 11 | §6 XP model → *"≈5,697, just past L6"* | **5,301** — 199 short of 5,500 | ❌ **wrong when written** (§VI) |
-| 12 | *"Gold ≈ 550 across the chain"* | **450** | ❌ wrong when written |
+| 11 | §6 XP model → *"≈5,697, just past L6"* | **5,301** — 199 short of 5,500 | ❌ **wrong when written** (§VI) — **resolved 2026-08-26, §AUDIT-03bl**: capstones +300, minimum path now **5,601** |
+| 12 | *"Gold ≈ 550 across the chain"* | **450** | ❌ wrong when written — the report's error, not the chain's; left at 450 (§AUDIT-03bl) |
 | 13 | *"winning a node card battle … increments the kill counter"* | nothing increments the kill counter | ❌ **NOT SHIPPED** (§IV) |
 | 14 | *"retires the need for the next arc to invent its own"* | 42 days on: **6 consumers, all §KG.** No second arc adopted it — but none minted a rival either (`frCatKillCount` predates it by six weeks) | ⚠ capability real, uptake zero |
 | 15 | Integration test (§8 step 9) | `kg-quest-chain.test.js`, 4 tests, real `QuestRuntime` | ✅ shipped |
@@ -225,6 +225,23 @@ effort XP for misses and failed checks (`const EFFORT_XP_PCT = 0.25;@24428`, 202
 added flat first-arrival exploration XP. A player walking the corridor today would clear Level 6 on
 those grants plus incidental encounters. **The pacing survives by accident, not by design** — and it
 is moot until §IV is fixed.
+
+> **CLOSED 2026-08-26 by §AUDIT-03bl, option (a): retune.** §IV's blocker (§DX-02cy) shipped, so the
+> chain can complete and the model is live rather than hypothetical. The two capstones were raised
+> **beyond** the lever this report wrote — **kg_09 400 → 500** and **kg_11 500 → 700**, +300 rather
+> than +150 — because landing on 5,500 exactly is not a design, it is a coincidence waiting to be
+> broken by the next restat. Quest XP **2,790 → 3,090**; minimum path **5,301 → 5,601**, clearing
+> Level 6 with **101** to spare. **The cull quotas are untouched**, which was this report's own
+> stated principle: pacing drives the level-up, not arithmetic. Chain gold stays **450** — the
+> ≈550 was an error in the report, not a shortfall in the chain, and nothing in the band depends on it.
+>
+> **The lever is not the durable part of this fix; the test is.** This chain has had its XP done
+> wrong by hand twice — once in this report and once in its own contingency — so
+> `audit03bl-kg-corridor-clears-l6.test.js` **re-derives the whole model from `QUEST_DB` and
+> `MONSTER_POOL` on every run** and asserts against `XP_LEVELS` itself. Retune a capstone, change a
+> quota or restat a droid and the band is re-checked, including the cumulative-counter subtlety
+> (`gladiator_bot` ×3, not ×4) that produced half the original error. **A number in a document is
+> not a model.**
 
 **Instrument.** Partition a paragraph's numbers by *how each was obtained*. Every figure a single
 lookup answers — six AC·HP products, the L6 threshold, eleven reward pairs, the type mix — is exact.
