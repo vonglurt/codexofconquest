@@ -613,7 +613,7 @@ All 54 source books are marked `[x]` in `books.md` — all have been processed t
 | `DAGGER_ITEMS` | 4 offhand daggers (drop-only): +1 Royal (Lv3) → +4 Voidsteel (Lv20) |
 | `WEAPON_ITEMS` | 70 main-hand weapons (14 base × 5 magic tiers 0–+4); `_magicTierAllowed()` gates drops |
 | `FIGHTER_FEATURES` | Fighter Champion features per level 2–20 |
-| `_ASI_TABLE` | 6-entry d6 table; each: `{name, icon, delta, desc}` |
+| `_ASI_TABLE` *(deleted 2026-08-26, §ASI-01)* | zero readers; the ASI is player-allocated, 2 points, cap 20 |
 | `_LEVEL_GOLD_GIFT` | Gold gifted on non-ASI levels: `{2:250, 3:350, 5:500, …, 20:2500}` |
 | `_LEVEL_SHIELD_GIFT` | Magic shield gifts on milestone levels: L3 → +1 Shield, L11 → +2 Shield |
 | ~~`XP_BY_TIER`~~ | ✅ **DELETED 2026-08-03 (§DX-02i).** Read by nothing (one occurrence: its own declaration), and it encoded a *different* XP model, not a stale form of the shipped one — it paid 1.9×–6.5× less at every tier. Battle XP is `(S.enemy.ac‖10) × (S.opp.maxHp‖10)` at **every** level; the old "L12+ uses `AC × maxHP`" note here was also wrong, since nothing ever consulted the table at any level. |

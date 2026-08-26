@@ -273,18 +273,11 @@ The player is a **Fighter Champion** with a **d10 Hit Die**. Every level-up roll
 
 **ASI Levels:** 4, 6, 8, 12, 14, 16, 19
 
-At ASI levels, the game rolls a **d6** on `_ASI_TABLE` and applies the result:
+At ASI levels **the player allocates two points**, one at a time, across the six abilities. The level-up modal shows six `.lu-asi-btn@5235` buttons (`STR +1` … `CHA +1`); `_lu_pending.asiRemaining` starts at **2** and the Continue button unlocks only when both are spent. **No ability may pass 20** — `_lu_refreshAsiBtns` disables a button at that ceiling.
 
-| d6 | Name | Effect |
-|---|---|---|
-| 1 | Might | STR +2 → atkBonus increases |
-| 2 | Endurance | CON +2 → retroactive HP per level |
-| 3 | Agility | DEX +2 |
-| 4 | Power | STR +1, CON +1 |
-| 5 | Speed | STR +1, DEX +1 |
-| 6 | Guard | DEX +1, CON +1 |
+> **There is no ASI roll, and there never was one in shipped code.** A six-entry `_ASI_TABLE` describing a d6 roll (Might / Endurance / Agility / Power / Speed / Guard) stood in `play.html` with **zero readers** until §ASI-01 deleted it on 2026-08-26; six docs, this one included, described that table as the live mechanic. The `→ doc:` pointer on `` const _ASI_LEVELS@25531 `` is the surviving half.
 
-STR modifier increases flow through to `S_story.atkBonus`. CON modifier increases add `conDelta × currentLevel` HP retroactively.
+CON modifier increases add `conDelta × currentLevel` HP retroactively, applied in the button handler itself so the modal's *Max HP now* line moves as the point is spent.
 
 **Non-ASI levels** receive a gold stipend (Royal Recognition) and a magic shield gift at milestones:
 

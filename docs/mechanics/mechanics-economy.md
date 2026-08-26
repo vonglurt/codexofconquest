@@ -260,8 +260,8 @@ On NG+ runs, the EB nodes show one-time atmospheric `EB_NG_PLUS_LINES` on first 
 | `CONDITION_GOLD` | const object | Gold cost per condition item (1,000–5,000gp) |
 | `VENDOR_NODES` | Set | Node codes with vendor access (BA, MQ, SF, IS, BK) |
 | `FIGHTER_FEATURES` | const object | Fighter Champion class features by level (2–20) |
-| `_ASI_TABLE` | const array[6] | d6 ASI roll outcomes (Might/Endurance/Agility/Power/Speed/Guard) |
-| `_ASI_LEVELS` | Set | Level numbers that grant ASI rolls: {4,6,8,12,14,16,19} |
+| `_ASI_TABLE` *(deleted 2026-08-26, §ASI-01)* | — | had zero readers; the ASI is player-allocated (§ASI-01) |
+| `_ASI_LEVELS` | Set | Levels that grant an ASI allocation: {4,6,8,12,14,16,19} |
 | `S_story.npcFavorability` | object | npcKey → 0/1/2/3 (Impartial/Friendly/Dear Friend/Dear Friend+) |
 | `S_story.ngPlusRun` | number | NG+ generation counter; 0 = first run |
 | `S_story.frobergerLastEntryRead` | boolean | true after player finds Journal Entry 41 |

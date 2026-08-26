@@ -25530,16 +25530,6 @@ const FIGHTER_FEATURES = { // → doc: docs/mechanics/mechanics-combat.md §Leve
 
 const _ASI_LEVELS = new Set([4, 6, 8, 12, 14, 16, 19]); // → doc: docs/mechanics/mechanics-combat.md §Level-Up System
 
-// d6 ASI roll table — fighter-appropriate stat improvements
-const _ASI_TABLE = [ // → doc: docs/mechanics/mechanics-combat.md §Level-Up System
-  { name:'Might',     icon:'⚔', delta:{ str:2 },         desc:'STR +2 — attack and carry weight improve.' },
-  { name:'Endurance', icon:'🛡', delta:{ con:2 },         desc:'CON +2 — more HP every level from here on.' },
-  { name:'Agility',   icon:'⚡', delta:{ dex:2 },         desc:'DEX +2 — quicker and harder to hit.' },
-  { name:'Power',     icon:'💪', delta:{ str:1, con:1 }, desc:'STR +1, CON +1 — the all-round warrior grows.' },
-  { name:'Speed',     icon:'🏹', delta:{ str:1, dex:1 }, desc:'STR +1, DEX +1 — fast and aggressive.' },
-  { name:'Guard',     icon:'🔰', delta:{ dex:1, con:1 }, desc:'DEX +1, CON +1 — resilient and hard to pin down.' },
-];
-
 // Gold gifts for non-ASI levels (Royal Recognition stipend)
 const _LEVEL_GOLD_GIFT = {
   2:250, 3:350, 5:500, 7:650, 9:800,

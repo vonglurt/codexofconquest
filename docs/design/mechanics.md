@@ -289,7 +289,7 @@ The player is a **Fighter Champion** with a **d10 Hit Die**. Every level-up roll
 
 **ASI Levels:** 4, 6, 8, 12, 14, 16, 19
 
-At ASI levels, the game rolls a **d6** on `_ASI_TABLE` and applies the result:
+At ASI levels **the player allocates two points** across the six abilities, one per click, capped at 20 — see `mechanics-combat.md` §Level-Up System. *(This section previously described a d6 roll on a table with zero readers; corrected 2026-08-26, §ASI-01.)*
 
 | d6 | Name | Effect |
 |---|---|---|
@@ -1026,8 +1026,8 @@ Two servers sync only if their `(proto, engineVer, worldHash)` match exactly. `w
 | `CONDITION_GOLD` | const object | Gold cost per condition item (1,000–5,000gp) |
 | `VENDOR_NODES` | Set | Node codes with vendor access (BA, MQ, SF, IS, BK) |
 | `FIGHTER_FEATURES` | const object | Fighter Champion class features by level (2–20) |
-| `_ASI_TABLE` | const array[6] | d6 ASI roll outcomes (Might/Endurance/Agility/Power/Speed/Guard) |
-| `_ASI_LEVELS` | Set | Level numbers that grant ASI rolls: {4,6,8,12,14,16,19} |
+| `_ASI_TABLE` *(deleted 2026-08-26, §ASI-01)* | — | had zero readers; the ASI is player-allocated (§ASI-01) |
+| `_ASI_LEVELS` | Set | Levels that grant an ASI allocation: {4,6,8,12,14,16,19} |
 | `S_story.npcFavorability` | object | npcKey → 0/1/2/3 (Impartial/Friendly/Dear Friend/Dear Friend+) |
 | `S_story.npcTalk` | object | npcKey → `{count, lastDay}`: §NPC-01-D talk progress toward Friendly (once/game-day; `count≥TALK_TO_FRIENDLY` → fav 1) |
 | `S_story.ngPlusRun` | number | NG+ generation counter; 0 = first run |

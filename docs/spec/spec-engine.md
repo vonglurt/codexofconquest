@@ -730,7 +730,7 @@ The game is designed to be built in vertical slices. Each layer adds one complet
 - **No respawn** from void/time defeat — only New Game; combat death retains checkpoint respawn
 
 ### Layer 21 — ✅ IMPLEMENTED
-- **Fighter level-up system**: `FIGHTER_FEATURES` (20 entries), `_ASI_TABLE`, `_LEVEL_GOLD_GIFT`, `_LEVEL_SHIELD_GIFT`
+- **Fighter level-up system**: `FIGHTER_FEATURES` (20 entries), `_ASI_TABLE` *(deleted 2026-08-26, §ASI-01)*, `_LEVEL_GOLD_GIFT`, `_LEVEL_SHIELD_GIFT`
 - **`_showLevelUpModal()`**: interactive HP roll (`🎲 Roll d10`), ASI 2-point player allocation, feature grant
 - **`S_story.abilityScores`**: `{str, dex, con, int, wis, cha}` — persistent; affects attack, AC, healing
 

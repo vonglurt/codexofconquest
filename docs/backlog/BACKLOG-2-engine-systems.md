@@ -45,13 +45,6 @@
 ---
 ## §BACKLOG — Open Items (Phase 2)
 
-### §ASI-01 — the ability-score improvement is rolled, not chosen, and no design doc says so (NEW 2026-08-26 during §NEXT-2026-08-26, 🟡 one design call)
-
-- [ ] **§ASI-01 — `_ASI_TABLE@25552` is rolled across the seven `_ASI_LEVELS@25549`.** Three of its six options raise DEX — Agility (+2), Speed (+1), Guard (+1) — so **DEX rises without player intent**. §WEAP-FIN leaned on that fact to overturn its own recommendation, and it is load-bearing for §WEAP-RANGED and §OFFHAND-01, but **no row has ever verified it against a design doc**: it was read out of the code, not out of an intent.
-> **The call is whether rolled is the design.** Check `docs/design/index.md` §Design Constants and `docs/mechanics/` for any statement of the ASI contract; if there is none, the choice is (i) keep it rolled and **write the constant down**, or (ii) make it a player choice, which is a character-progression change and would then be 🟠. **Recommend (i) unless a doc contradicts it** — the roll is shipped behaviour that three rows already depend on, and the defect here is the undocumented premise, not the mechanic.
-> **Provenance:** item (iii) of the §NEXT-2026-08-26 hand-off.
-
-
 ### §OFFHAND-01 — the off-hand bonus action is not the dagger you equipped, and it is not gated on equipping one (NEW 2026-08-26 during §WEAP-FIN-FU, 🟠 design call)
 
 - [ ] **§OFFHAND-01 — `S.offhand` has two writers and both are dice-roller UI handlers.** `S.offhand.count  = parseInt@8049` and `setupDieSelector('offhand-die-sel'@8367`. **Nothing in the story layer ever writes it.** So `_overlayOffhandAttack` — a live bonus action on the story battle overlay — rolls the initial-state literal `offhand: { die: 4, count: 1, shield: false }@5304` forever, and `const hasOffhand = S.offhand && S.offhand.count > 0@24809` is therefore **always true**: the 🗡 Offhand button is shown and enabled in every story battle, for every character, whether or not a dagger is equipped (the only disabler is `shielded`).
