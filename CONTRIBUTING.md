@@ -106,18 +106,17 @@ Before starting any task:
 - **Loop tasks** (no user input needed — clear next step): begin immediately, state what you are doing in one sentence.
 - **Ask tasks** (user decision required): present a yes/no or choice prompt. Then run:
   ```bash
-  say "If you say yes: <one sentence describing the intention and outcome of yes>"
+  src/bin/say.sh "If you say yes: <one sentence describing the intention and outcome of yes>"
   ```
+  Same rule as the commit announcement — the queue daemon, never raw macOS `say` (§DX-02gi).
 
-### Commit + Speak Rule
+### Commit + Speak Rule — owned by `resume.md` §2.6
 
-After every `git commit`, immediately run:
+**This file no longer states the rule (§DX-02gi).** It stated one that contradicted `resume.md` on the command, on what is spoken, and on whether raw macOS `say` is permitted — and `CONTRIBUTING.md` is on `resume.md` §6's read list as *"the policies, verbatim and binding"*, so both were binding and opposite.
 
-```bash
-say "<commit subject line>"
-```
+The rule lives in **`resume.md` §2.6**, restated on the short card in [`AGENTS.md`](AGENTS.md). In one line: **after every commit, `git push`, then `src/bin/say.sh "<summary written for the ear>"` — never raw macOS `say`.**
 
-Read the **subject line only** aloud via macOS `say`. This confirms the commit completed and anchors the session.
+Why `say.sh` and not `say`, mechanically rather than stylistically: it enqueues to `build/milepoints/say.queue.d` for the `sayd.sh` daemon and **returns immediately**, so announcements serialise instead of overlapping and a long increment never blocks on speech. Raw `say` has neither property, and the rule that named it was written before the script existed.
 
 ### Test-Run Rules (learned 2026-07-03, §NAV-01h session)
 

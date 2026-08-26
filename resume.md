@@ -386,8 +386,13 @@ Full reference: `docs/api/API-README.md`, `docs/api/wbapi-help.md`,
   for a second live session, and grep *to disprove the row*. Four rows have closed
   as ALREADY SHIPPED. A row that turns out done still gets closed properly — that
   closure is real work.
-- **Commit + speak.** After every commit, `src/bin/say.sh "<subject line>"` (the
-  repo queue daemon — never raw macOS `say`).
+- **Commit + speak.** After every commit, `src/bin/say.sh "<summary written for the
+  ear>"` (the repo queue daemon — never raw macOS `say`). **This file owns the rule
+  (§DX-02gi):** `CONTRIBUTING.md` points here instead of restating it, and `AGENTS.md`
+  carries the one-line card. **What is spoken is written for the ear, not the eye** — a
+  commit subject read aloud by a synthesiser is largely unintelligible, so `§DX-02gi` is
+  spoken *"dee ex zero two gee eye"* and the announcement is a sentence, not a slug.
+  That clause is settled here explicitly rather than left to practice.
 - **No background processes. No subagents.** Everything runs synchronously in the
   foreground, in this conversation.
 
