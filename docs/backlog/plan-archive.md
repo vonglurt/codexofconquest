@@ -9,7 +9,7 @@
 
 ## Archived 2026-08-25 — §DX-02hx (NOT A DEFECT — the two numbers are on two different quests)
 
-### §DX-02hx — the row's own premise, disproved by reading the quest the gate is attached to ✅ CLOSED 2026-08-25 `PENDING_SHA` — premise disproved
+### §DX-02hx — the row's own premise, disproved by reading the quest the gate is attached to ✅ CLOSED 2026-08-25 `b5cf877` — premise disproved
 
 - [x] **§DX-02hx — there is no off-by-one, and the row that filed it was mine.** **The claim, filed during §DX-02hh:** the TLS final battle needs 7 shards (`NODE_MAP.TLS.finalBattle:{minLevel:20,minShards:7}` via `_finalBattleReady`) while *"the TLS quest"* lists at `gate:{ shardsMin:6 }`, so **"the mission appears one shard before its Fight button works."** **Ground at `9410719`:** `shardsMin:6` occurs **exactly once** in `play.html`, at `play.html:21719`, and it is not on the final-battle quest. It is on **`quest_d0210_a1`, Act I of the five-act skill-check arc `quest_d0210_a1…a5` — §D02-10, *"The Seventh Shard"***. **The arc is about acquiring the seventh shard; gating it at six is the coherent number, not an off-by-one against seven.** It is `type:'skill_check'` and has no Fight button at all.
 > **The final quest is not gated on shards either.** `./bin/api get quest mq_7` — *"The Reckoning"* — returns `gate:{}`, always listed, with the requirement carried in its `hint` (*"Reach the Cosmic Realm with all 7 shards before the 7th new moon"*). So the 7 is enforced once, by `_finalBattleReady` reading node data, and nothing competes with it.
