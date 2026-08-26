@@ -290,8 +290,8 @@ test.describe('§VM-01-G-FU-c — §WISDOM-01 manuscript hub (VS) behaves as the
   test('VS accept: the WIS 14 roll, then +350 XP, the Shadow Shard, wisPage6_shadow, the knowledge entry', async ({ page }) => {
     // §AUDIT-03ad — accepting is a roll now, not a gift. Seeded to clear DC 14 outright
     // so this stays a parity test of the PASS payload rather than a test of the dice.
-    await at(page, 'VS', Object.assign({}, LEG, { wisHookReceived: true, visbyUnderground: true }, P5,
-      { level: 20, abilityScores: { str:10, dex:10, con:10, int:10, wis:20, cha:10 }, xp: 0 }));
+    await at(page, 'VS', Object.assign({}, LEG, { wisHookReceived: true, visbyUnderground: true }, P5, { xp: 0 }));
+    await page.evaluate(() => { QuestRuntime._rollSkill = () => ({ d20:20, mod:5, prof:6, total:31, iodineBonus:0, lmAll:0 }); });
     await clickIn(page, 'story-wis-vs', 'Accept the reflection');
     const r = await page.evaluate(() => ({
       card: document.getElementById('story-hcard-container').textContent,

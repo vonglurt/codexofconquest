@@ -134,7 +134,7 @@ in the location card, styled by `` `#corpse-chip {@1759` ``; rendered by
 `` `_renderCorpseChip();      // §DEATH-01 Inc B@36134` ``. Text escapes through
 `` `+ ' at ' + _mpEsc(where);@36149` ``; the `` `el.title = 'Your remains lie out in the world@36150` ``
 tooltip itemises each grave. Local-grid marker at
-`` `const _graveHere = (S_story.corpsesQuests || []).filter@36707` `` →
+`` `function _graveNote(code)@36677` *(the per-arm `_graveHere` filter it replaced — §DX-02dd)* `` →
 `` `cell.classList.add('mc-grave');@36710` `` inside `` `function _renderMapGrid()@36655` ``.
 
 **NG+ guard (Inc C).** `` `function storyNewGamePlus()@24003` `` opens with
@@ -270,9 +270,27 @@ none was quietly built.
   still not a loss — but *"noted for a future soft-cap"* has been noted for 37 days and filed
   nowhere, which is the shape instrument 112 exists to catch. Now filed as §DX-02dd (b).
 
+  > **✅ RESOLVED 2026-08-26 (§DX-02dd b) — and the answer is that unbounded is correct.** Every
+  > capping strategy either destroys player property or invents a merge semantic nothing else in the
+  > game uses, and the corpse record is the only thing standing between a death and the loot it
+  > holds. What was genuinely unbounded *in a way a player meets* is the chip's `title`, which
+  > concatenated every grave into one attribute; that is capped at `CORPSE_TITLE_MAX = 6` with an
+  > *"and N more"* tail. **The array keeps every record, and now says so on purpose rather than by
+  > omission** — which is the whole point of closing a deferral instead of re-noting it.
+
 **Added to the ledger by this pass:** the Local grave marker does not paint on the player's own cell
 or on an unvisited cell (§VI B), and `#corpse-chip` ships one palette rather than the two the spec
 named (§V).
+
+> **✅ The first of those closed 2026-08-26 (§DX-02dd a).** The marking step is hoisted out of the
+> `isVis || isTrail` arm and applied once per cell against the resolved code, so **all three arms
+> mark** — the player's own cell keeps its `◉` and gains the 🦴, and an unvisited grave marks too.
+> That last one is a deliberate call rather than a bug fix: the chip has always named the place in
+> words, so withholding it on the map was the contradiction, not the disclosure. The hover note is
+> now one helper, `_graveNote`, shared by all three arms instead of living in one of them. **The
+> assertion this report's own verification plan promised — *"Local-grid marker present on the grave
+> cell when in view"* — is written at last**, in `src/tests/integration/dx02dd-grave-marker.test.js`.
+> The palette finding is untouched and still open.
 
 ---
 

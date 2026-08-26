@@ -87,8 +87,9 @@ test.describe('§AUDIT-03ad — every DC the portfolio names is a DC the engine 
       S_story.personalLegendComplete = true;
       S_story.wisHookReceived = true;
       S_story.wisPage6_shadow = false;
-      S_story.abilityScores = { str:10, dex:10, con:10, int:10, wis:20, cha:10 };
-      S_story.level = 20;                       // WIS +5, prof +6 — a 14 cannot be missed
+      // The stream is seeded, not stubbed, so +11 against DC 14 still misses on a
+      // natural 1 or 2. Pin the die: this is a test of the PASS payload, not the dice.
+      QuestRuntime._rollSkill = () => ({ d20:20, mod:5, prof:6, total:31, iodineBonus:0, lmAll:0 });
       S_story.xp = 0; S_story.inventory = []; S_story.knowledge = [];
       S_story.quests = { quest_wis_06: 'active' };
       _resolveQuestUQF('quest_wis_06');
@@ -118,8 +119,7 @@ test.describe('§AUDIT-03ad — every DC the portfolio names is a DC the engine 
       S_story.personalLegendComplete = true;
       S_story.wisHookReceived = true;
       S_story.wisPage6_shadow = false;
-      S_story.abilityScores = { str:10, dex:10, con:10, int:10, wis:1, cha:10 };
-      S_story.level = 1;                        // WIS −5, prof +2 — a 14 cannot be made
+      QuestRuntime._rollSkill = () => ({ d20:1, mod:-5, prof:2, total:-2, iodineBonus:0, lmAll:0 });
       S_story.xp = 0; S_story.inventory = []; S_story.knowledge = [];
       S_story.quests = { quest_wis_06: 'active' };
       _resolveQuestUQF('quest_wis_06');

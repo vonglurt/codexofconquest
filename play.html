@@ -36155,6 +36155,8 @@ function storyUpdateStatus() {
 // chip that NAMES where your body is; clicking opens the Map tab (a read-only view aid — no
 // warp; §CELL-13 stands, checkpointNode respawn is the only warp). The chip TEXT carries the
 // location because the map is player-centered (region-centering stays deferred, §NAV-01-FU 4).
+
+const CORPSE_TITLE_MAX = 6;
 function _renderCorpseChip() {
   const el = document.getElementById('corpse-chip');
   if (!el) return;                                     // chip absent (e.g. worldbuilder) — no-op
@@ -36164,9 +36166,12 @@ function _renderCorpseChip() {
   const where  = places.length === 1 ? places[0] : places.length + ' places';
   el.innerHTML = '🦴 ' + bodies.length + ' ' + (bodies.length === 1 ? 'body' : 'bodies')
     + ' at ' + _mpEsc(where);
+  const named = bodies.slice(0, CORPSE_TITLE_MAX);
+  const rest  = bodies.length - named.length;
   el.title = 'Your remains lie out in the world — click to open the map. '
-    + bodies.map(q => q.nodeName + ' (' + (q.items || []).length + ' item(s), '
-        + (q.goldDropped || 0) + ' gp)').join(' · ');
+    + named.map(q => q.nodeName + ' (' + (q.items || []).length + ' item(s), '
+        + (q.goldDropped || 0) + ' gp)').join(' · ')
+    + (rest > 0 ? ' · and ' + rest + ' more' : '');
   el.style.display = '';
 }
 
@@ -36669,6 +36674,14 @@ function storyMapToggle() {
   }
 }
 
+function _graveNote(code) {
+  const here = (S_story.corpsesQuests || []).filter(q => q.nodeCode === code);
+  if (!here.length) return '';
+  const items = here.reduce((s, q) => s + (q.items || []).length, 0);
+  const gold  = here.reduce((s, q) => s + (q.goldDropped || 0), 0);
+  return '  \u00b7  \u{1F9B4} Your remains \u2014 ' + items + ' item(s), ' + gold + ' gp';
+}
+
 function _renderMapGrid() {
   const nc_ = NODE_COORDS[S_story.currentCode];
   const cr = S_story.playerR || (nc_ && nc_.r) || 0;
@@ -36702,8 +36715,9 @@ function _renderMapGrid() {
         cell.classList.add('mc-current');
         cell.innerHTML = '<div class="mc-icon">◉</div><div class="mc-code">' + S_story.currentCode + '</div>';
         _mapAddExits(cell, S_story.currentCode);
+        const _hereGrave = _graveNote(S_story.currentCode);
         cell.addEventListener('mouseenter', () => {
-          info.textContent = '📍 You are here — ' + (node ? node.label : S_story.currentCode);
+          info.textContent = '📍 You are here — ' + (node ? node.label : S_story.currentCode) + _hereGrave;
         });
       } else if (code) {
         const isVis = !!S_story.visited[code];
@@ -36721,15 +36735,7 @@ function _renderMapGrid() {
           const lbl = n ? n.label : code;
           // §DEATH-01 Inc B — mark the player's grave when it's in view (honest "getting
           // warm" cue near the body; the chip carries the location from anywhere else).
-          const _graveHere = (S_story.corpsesQuests || []).filter(q => q.nodeCode === code);
-          let _graveInfo = '';
-          if (_graveHere.length) {
-            cell.classList.add('mc-grave');
-            cell.insertAdjacentHTML('beforeend', '<div class="mc-grave-mark">🦴</div>');
-            const gi = _graveHere.reduce((s, q) => s + (q.items || []).length, 0);
-            const gg = _graveHere.reduce((s, q) => s + (q.goldDropped || 0), 0);
-            _graveInfo = '  ·  🦴 Your remains — ' + gi + ' item(s), ' + gg + ' gp';
-          }
+          const _graveInfo = _graveNote(code);
           cell.addEventListener('mouseenter', () => {
             info.textContent = lbl + (n ? '  ·  Act ' + n.act : '') + _graveInfo;
           });
@@ -36743,7 +36749,8 @@ function _renderMapGrid() {
           cell.style.borderColor = 'rgba(240,230,200,0.5)';
           cell.style.cursor = 'pointer';
           cell.innerHTML = '<div class="mc-icon" style="opacity:.75;color:#0e0a04">·</div>';
-          cell.addEventListener('mouseenter', () => { info.textContent = '??? — an unexplored settlement (click to travel)'; });
+          const _unseenGrave = _graveNote(code);
+          cell.addEventListener('mouseenter', () => { info.textContent = '??? — an unexplored settlement (click to travel)' + _unseenGrave; });
           cell.addEventListener('click', () => _navClickCell(r, c));   // §MP-MAPTABS
         }
       } else {
@@ -36775,6 +36782,11 @@ function _renderMapGrid() {
         }
       }
 
+      const _graveCode = isCurrent ? S_story.currentCode : code;
+      if (_graveCode && (S_story.corpsesQuests || []).some(q => q.nodeCode === _graveCode)) {
+        cell.classList.add('mc-grave');
+        cell.insertAdjacentHTML('beforeend', '<div class="mc-grave-mark">🦴</div>');
+      }
       grid.appendChild(cell);
     }
   }
