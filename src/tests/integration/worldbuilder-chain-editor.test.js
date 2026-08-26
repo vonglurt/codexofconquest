@@ -12,6 +12,14 @@ const { test, expect } = require('@playwright/test');
 //
 // Inc 2 exercises the factory head-lessly via page.evaluate — no form wiring yet.
 
+// §DX-02ht — the `worldbuilder-*` edit.html specs are UI-timing sensitive under
+// full-suite load: four of them flaked once each during 2026-08-25 (crud-arrays
+// :136/:173, mesh:62, quest-editor:80, mission-builder:336), every one a
+// `1 flaky` + EXIT=0 with nothing on disk. Suite-wide tracing was measured and
+// rejected (+27% wall, see playwright.config.js), so the family that actually
+// flakes carries the trace and the other ~80 files do not.
+test.use({ trace: 'retain-on-failure' });
+
 test.describe('itemChain chain editor — buildChainEditor (§EDITOR-01-D-FU a)', () => {
   test('setSteps → getSteps round-trips all four kinds', async ({ page }) => {
     await page.goto('/edit.html');

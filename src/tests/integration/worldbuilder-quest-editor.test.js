@@ -10,6 +10,14 @@ const { test, expect } = require('@playwright/test');
 // Export JS is fully client-side (no server), so we fill the form, click
 // ◇ Export JS, and assert the generated QUEST_DB entry.
 
+// §DX-02ht — the `worldbuilder-*` edit.html specs are UI-timing sensitive under
+// full-suite load: four of them flaked once each during 2026-08-25 (crud-arrays
+// :136/:173, mesh:62, quest-editor:80, mission-builder:336), every one a
+// `1 flaky` + EXIT=0 with nothing on disk. Suite-wide tracing was measured and
+// rejected (+27% wall, see playwright.config.js), so the family that actually
+// flakes carries the trace and the other ~80 files do not.
+test.use({ trace: 'retain-on-failure' });
+
 test.describe('Quest Creator — UQF emit (§EDITOR-03 W8b)', () => {
   test('Export JS: items + killGoals become the completion gate (no legacy roots)', async ({ page }) => {
     await page.goto('/edit.html');

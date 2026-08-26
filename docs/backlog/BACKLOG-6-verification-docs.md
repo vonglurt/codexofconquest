@@ -45,14 +45,21 @@
 
 
 
-### §DX-02ht — `worldbuilder-mesh.test.js:62` flaked under the full suite, and the suite kept no evidence (NEW 2026-08-25 during §DX-02hf, 🟢 no design call)
+### §DX-02hu — the `worldbuilder-*` flakes are one bug: every spec clicks into `edit.html` before `#load-splash` has let go of the pointer (NEW 2026-08-25 during §DX-02ht, 🟢 no design call)
 
-- [ ] **§DX-02ht — §DX-02hb's fix was scoped to one file, and the second file to need it has now appeared.** **Measured at `a851705`:** a full `npm test --prefix src` returned **`1032 passed, 1 flaky`** — *"⬇ world sits behind the BIG WARNING modal (§MESH-01d3)"* failed its first attempt and passed the retry, so the run reported **EXIT=0**. The file **passed 4/4 alone, four times in a row** (`--retries=0`), so it is load-dependent, not broken. **Zero traces exist on disk**, because `playwright.config.js` still sets no `trace` outside the file-scoped `test.use({ trace: 'retain-on-failure' })` §DX-02hb added to `multiplayer-presence.test.js`.
-> **Why now, and stated plainly: §DX-02hq probably made this more likely.** Turning on `fullyParallel` raises concurrency, and UI-timing assertions are the first thing to feel it — the §DX-02hq run at `workers: '100%'` flaked `worldbuilder-crud-arrays.test.js:173` the same way before that knob was reverted. **Two different files in the same family have now flaked once each**, and neither left an artifact. That is precisely the state §DX-02hb was filed about: *five sightings across three sessions produced five tally marks and zero diagnoses.*
-> **Fix:** promote `trace: 'retain-on-failure'` from the one file to the config's `use` block, so **any** first-attempt failure anywhere in the suite leaves a `trace.zip`. Measure the cost before and after — that is the reason it was scoped narrowly the first time, and the reason should be re-derived rather than assumed (the §DX-02hb close estimated an overhead it never measured).
-> **Do NOT reach for `retries: 0` suite-wide** — the fishing smoke test's retry is by design (*"the rare case where all 25+ casts miss"*), which is why §DX-02hb scoped that half to the mesh block.
-> **Verify:** a planted first-attempt-only failure in a third file leaves exactly one `trace.zip`; the full suite's wall time is re-measured against the 5.6m baseline and the delta stated.
-> **Provenance:** §DX-02hf's closing full-suite run.
+- [ ] **§DX-02hu — three "flaky" tally marks turned out to be one named defect the moment traces existed.** **Measured at `0827e87`+**, from the four `trace.zip`s §DX-02ht's change produced on its first full run. Three of the four are the same failure, in three different files, and Playwright's own call log names the cause outright:
+> ```
+> - locator resolved to <button id="mb-add" class="btn sm">+ Add Step</button>
+> - element is visible, enabled and stable
+> - scrolling into view if needed / done scrolling
+> - <div class="scol-inner">🌾 Epic Battleground — Midlands…</div>
+>   from <div class="" id="load-splash">…</div> subtree intercepts pointer events
+> ```
+> **It is not timing noise and it is not a slow machine.** `edit.html:303` defines `#load-splash` as `position:absolute; inset:0; z-index:200` — a full-viewport overlay that is up while the world loads and streams node names into `.scol-inner`. Every flaking spec does `await page.goto('/edit.html')` and then clicks immediately (`worldbuilder-crud-arrays.test.js:135`, `worldbuilder-quest-editor.test.js:66`, `worldbuilder-mission-builder.test.js:307`), with **no wait for the splash to go `.hidden`**. The target button is genuinely visible, enabled and stable the whole time — which is exactly why the failure reads as inexplicable in a bare `1 flaky` line. One trace also caught the earlier overlay in the same race: `<div id="welcome-screen"> intercepts pointer events`.
+> **Why it presents as a flake:** on an idle machine the splash clears inside the 8 s `actionTimeout`; under full-suite load it does not. The test never asserted the precondition, so the pass was always luck.
+> **Fix:** a shared helper — `openEditor(page)` in `helpers.js` — that does the `goto` and then awaits `expect(page.locator('#load-splash')).toBeHidden()` and the welcome overlay, and route the **8** `worldbuilder-*` specs' `goto('/edit.html')` calls through it. `grep -c "goto('/edit.html')"` per file sizes the change.
+> **Verify:** the three named tests survive `--repeat-each` under a deliberately loaded machine, where they currently flake; and the full suite reports **0 flaky** across two consecutive runs.
+> **Provenance:** §DX-02ht, reading the traces rather than counting them.
 
 ### §DX-02hr — 72% of every test's time is Chromium re-parsing the same 5.3 MB `play.html` (NEW 2026-08-25 during §DX-02hq, 🟡 ONE DESIGN CALL: is a reused page still an honest test)
 

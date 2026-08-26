@@ -6,14 +6,21 @@ module.exports = defineConfig({
   testDir: './tests/integration',
 
   // §DX-02hq — tests inside a file run CONCURRENTLY, not one after another.
-  // Default Playwright parallelises files only, so a 303-test file is a single
-  // serial chain and becomes the whole suite's critical path: measured at
-  // `c99f4e2`, quest-runtime-uqf.test.js alone was 5.4m of a 7.4m wall. Every
-  // test here takes its own `{ page }` fixture, so there is nothing to share.
-  // The four specs that spawn a throwaway wbapi-server get a port per worker
-  // from `helpers.js`'s PORT_BLOCKS — without that, `beforeAll` running once
-  // per worker makes them fight over one port. A spec that genuinely needs
-  // ordering opts out with `test.describe.configure({ mode: 'default' })`.
+  //
+  // Playwright parallelises FILES, not tests, so a 303-test file is a single serial
+  // chain and becomes the whole suite's critical path: at `c99f4e2`,
+  // quest-runtime-uqf.test.js alone was 5.4m of a 7.4m wall. Turning this on took
+  // the suite 7.4m -> 5.6m, and that file 5.4m -> 1.8m. It is safe because the
+  // specs take their own `{ page }` fixture per test; the four that spawn a
+  // throwaway wbapi-server get a port per worker from `helpers.js`'s PORT_BLOCKS,
+  // because `beforeAll` runs once PER WORKER under this setting.
+  //
+  // §DX-02ht tested the theory that this setting causes the `worldbuilder-*`
+  // UI-timing flakes, and DISPROVED it: with `fullyParallel: false` the same suite
+  // returned `1031 passed, 2 flaky` (crud-arrays:136, mission-builder:336) — worse,
+  // not better. Those specs are load-sensitive either way, so the setting stays and
+  // the family carries traces instead. A spec that genuinely needs ordering opts out
+  // with `test.describe.configure({ mode: 'default' })`.
   fullyParallel: true,
 
   // §DX-02hq — worker count is deliberately LEFT AT THE DEFAULT (half the cores).
@@ -52,6 +59,24 @@ module.exports = defineConfig({
   use: {
     baseURL: 'http://localhost:7654',
     headless: true,
+
+    // §DX-02ht — evidence for a flake, without paying for it on every run.
+    //
+    // The problem is real: with `retries: 1` and no trace, a test that fails once
+    // and passes its retry reports `1 flaky`, EXIT=0, and NOTHING on disk. That is
+    // how §DX-02hb accumulated five sightings across three sessions and zero
+    // diagnoses. But promoting `retain-on-failure` suite-wide was MEASURED and
+    // rejected: 5.6m -> 7.1m (+27%), which gives back most of what §DX-02hq won.
+    // Trimming the trace does not help — `{snapshots:false, sources:false}` also
+    // measured 7.1m, so the cost is the tracer running at all, not what it keeps.
+    // There is no CI to absorb that: no workflow runs this suite, so the only
+    // runner is a developer who runs it after every change.
+    //
+    // So: OFF by default, ON for the files that have actually flaked (each carries
+    // its own `test.use({ trace: 'retain-on-failure' })`), and one command away for
+    // anything else — `TRACE=1 npm test --prefix src` turns it on suite-wide, which
+    // is what to run the moment a NEW file reports `1 flaky`.
+    trace: process.env.TRACE ? 'retain-on-failure' : 'off',
     // Give DOM updates time to settle after synchronous JS runs
     actionTimeout: 8_000,
   },

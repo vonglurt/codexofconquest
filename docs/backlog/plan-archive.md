@@ -7,6 +7,48 @@
 
 ---
 
+## Archived 2026-08-25 — §DX-02ht (evidence for a flake, without paying for it on every run — and it diagnosed three on its first outing)
+
+### §DX-02ht — the row's own plan was measured and rejected twice before something worked ✅ SHIPPED 2026-08-25 `SHA_HT`
+
+**The row, as filed:**
+
+### §DX-02ht — `worldbuilder-mesh.test.js:62` flaked under the full suite, and the suite kept no evidence (NEW 2026-08-25 during §DX-02hf, 🟢 no design call)
+
+- [x] **§DX-02ht — §DX-02hb's fix was scoped to one file, and the second file to need it has now appeared.** **Measured at `a851705`:** a full `npm test --prefix src` returned **`1032 passed, 1 flaky`** — *"⬇ world sits behind the BIG WARNING modal (§MESH-01d3)"* failed its first attempt and passed the retry, so the run reported **EXIT=0**. The file **passed 4/4 alone, four times in a row** (`--retries=0`), so it is load-dependent, not broken. **Zero traces exist on disk**, because `playwright.config.js` still sets no `trace` outside the file-scoped `test.use({ trace: 'retain-on-failure' })` §DX-02hb added to `multiplayer-presence.test.js`.
+> **Why now, and stated plainly: §DX-02hq probably made this more likely.** Turning on `fullyParallel` raises concurrency, and UI-timing assertions are the first thing to feel it — the §DX-02hq run at `workers: '100%'` flaked `worldbuilder-crud-arrays.test.js:173` the same way before that knob was reverted. **Two different files in the same family have now flaked once each**, and neither left an artifact. That is precisely the state §DX-02hb was filed about: *five sightings across three sessions produced five tally marks and zero diagnoses.*
+> **Fix:** promote `trace: 'retain-on-failure'` from the one file to the config's `use` block, so **any** first-attempt failure anywhere in the suite leaves a `trace.zip`. Measure the cost before and after — that is the reason it was scoped narrowly the first time, and the reason should be re-derived rather than assumed (the §DX-02hb close estimated an overhead it never measured).
+> **Do NOT reach for `retries: 0` suite-wide** — the fishing smoke test's retry is by design (*"the rare case where all 25+ casts miss"*), which is why §DX-02hb scoped that half to the mesh block.
+> **Verify:** a planted first-attempt-only failure in a third file leaves exactly one `trace.zip`; the full suite's wall time is re-measured against the 5.6m baseline and the delta stated.
+> **Provenance:** §DX-02hf's closing full-suite run.
+
+**The row said "promote `retain-on-failure` to the config, and measure the cost rather than assume it." The measurement rejected the plan.**
+
+| trace setting | suite wall | |
+|---|---:|---|
+| none (baseline) | **5.6m** | evidence: none |
+| `retain-on-failure`, suite-wide | **7.1m** | **+27%** — gives back most of what §DX-02hq won |
+| `{mode:'retain-on-failure', snapshots:false, sources:false}` | **7.1m** | no better — the cost is the tracer running at all, not what it keeps |
+
+**And there is no CI to absorb that cost:** `.github/workflows/` holds `pages.yml` and `walk-invariants.yml`, neither of which runs the Playwright suite. The only runner is a developer running the full suite after every row — which this loop does — so +1.5m is a recurring charge, not a one-off.
+
+**A second hypothesis was tested and also disproved, which is worth recording because it was mine.** The filed row states plainly that §DX-02hq's `fullyParallel` *"probably made this more likely."* **Tested: with `fullyParallel: false`, the same suite returned `1031 passed, 2 flaky`** — worse, not better. So intra-file parallelism is not the cause, the `worldbuilder-*` specs are load-sensitive either way, and §DX-02hq's 7.4m→5.6m win was restored rather than sacrificed to a guess. That attribution in the §DX-02hf close is corrected by this row.
+
+**What shipped:**
+
+1. **`trace: process.env.TRACE ? 'retain-on-failure' : 'off'`** in the config's `use` block — off by default, and **one command away** when it is wanted: `TRACE=1 npm test --prefix src`, which is what to run the moment a *new* file reports `1 flaky`.
+2. **The family that actually flakes carries its own trace.** All seven `worldbuilder-*.test.js` files get `test.use({ trace: 'retain-on-failure' })`, joining `multiplayer-presence.test.js` from §DX-02hb — **8 of 88 files**, chosen because four of them had flaked once each within this one session.
+
+**Verified before it was trusted, with a planted first-attempt-only failure in `worldbuilder-mesh.test.js`:** `1 flaky`, and **1 `trace.zip` on disk**. Before the change, the identical real flake left **0**.
+
+**And then it did the thing it was built for, on its very first full run.** That run produced `1029 passed, 4 flaky` — and **4 traces**. Reading them instead of counting them collapsed three of the four into a single named defect: `#load-splash`, `edit.html:303`, an `inset:0; z-index:200` full-viewport overlay that is still up when the spec clicks, with Playwright's log saying so in as many words — *"element is visible, enabled and stable … `<div id="load-splash">` subtree intercepts pointer events."* Filed as **§DX-02hu**. The fourth is the two-client presence spec on a different assertion (`#mp-status` read `off`, expected `🟢 Ola`), recorded in that trace for whoever takes §DX-02hb's tail.
+
+**That is the whole argument for this row in one line: five sightings across three sessions produced five tally marks and zero diagnoses; four traces produced one root cause in an afternoon.**
+
+**Cost, stated honestly:** the confirming run was **6.2m** rather than 5.6m — but it also carried four flaky retries, which are themselves wall time, so the tracing overhead on 8 of 88 files is not separable from that and is not claimed as a clean number. `check:walk` **18/18**. No world-data change.
+
+---
+
 ## Archived 2026-08-25 — §DX-02hf (a header said five, the collection held seven)
 
 ### §DX-02hf — one word, and the shipped dialogue that had been saying "all seven" the whole time ✅ SHIPPED 2026-08-25 `e5ce2c8`
