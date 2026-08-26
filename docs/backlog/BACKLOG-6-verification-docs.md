@@ -45,14 +45,6 @@
 
 
 
-### §DX-02hs — no gate asserts that `SPDX-License-Identifier` is on line 1, and the class has now landed twice (NEW 2026-08-25 during §DX-02hn, 🟢 no design call)
-
-- [ ] **§DX-02hs — the licence header is a legal marker with no check behind it.** The same stray-`require`-above-the-header prepend hit **`mud-harness.mjs`** (§DX-02hi fault 3, where it was a hard `SyntaxError` and cost a CI job **72 red runs**) and **`multiplayer-presence.test.js`** (§DX-02hn, where CommonJS swallowed it and **no gate saw it for two days**). **Measured at `78508e4`:** a sweep of all **136** tracked `*.js`/`*.mjs` files found exactly **1** survivor, now fixed — so the repo is clean today and nothing enforces that it stays so.
-> **Why it is worth a row and not a shrug:** the two sightings had wildly different blast radii (a silent header displacement vs. a job red for 72 commits) from an identical cause, and the cheap sighting is the one that hides. `check:walk` gate #16 `check:legacycodes` is the precedent for a one-file-per-line textual sweep.
-> **Fix:** a `check:spdx` gate — for every tracked `*.js`/`*.mjs`/`*.sh`, assert `SPDX-License-Identifier` appears on line 1, or line 2 where line 1 is a shebang. Ship it with a `--selftest` that plants a displaced header and a missing one, as every other gate in the chain does.
-> **Verify:** the gate is red on a planted prepend and green at HEAD; `check:walk` reports 18/18.
-> **Provenance:** §DX-02hn, running the sweep its own provenance note asked for (*"worth checking whether any third file took the same prepend"*).
-
 ### §DX-02hr — 72% of every test's time is Chromium re-parsing the same 5.3 MB `play.html` (NEW 2026-08-25 during §DX-02hq, 🟡 ONE DESIGN CALL: is a reused page still an honest test)
 
 - [ ] **§DX-02hr — the suite's remaining cost is not parallelism, it is that each of ~1000 tests loads the whole game from cold.** **Measured at `b0c236d`** with a probe spec (`seedAndLoad` timed against a bare `page.evaluate`): **`seedAndLoad` = 326 ms, a subsequent `evaluate` = 7 ms**, against a typical `quest-runtime-uqf` test of ~450 ms. `play.html` is **5.3 MB** and Playwright's `{ page }` fixture is a fresh context per test, so the cache is cold every time: the suite performs **~649 `page.goto`/`seedAndLoad` calls** and pays a full parse for each. §DX-02hq took the free 24% (7.4m → 5.6m) by running tests inside a file concurrently; **the next 30–40% is here, and it is not free.**

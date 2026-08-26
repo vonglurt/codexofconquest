@@ -7,6 +7,40 @@
 
 ---
 
+## Archived 2026-08-25 — §DX-02hs (`check:spdx`, gate #18 — the licence header now has something behind it)
+
+### §DX-02hs — a gate for the class that landed twice, once loudly and once silently ✅ SHIPPED 2026-08-25 `SHA_HS`
+
+**The row, as filed:**
+
+### §DX-02hs — no gate asserts that `SPDX-License-Identifier` is on line 1, and the class has now landed twice (NEW 2026-08-25 during §DX-02hn, 🟢 no design call)
+
+- [x] **§DX-02hs — the licence header is a legal marker with no check behind it.** The same stray-`require`-above-the-header prepend hit **`mud-harness.mjs`** (§DX-02hi fault 3, where it was a hard `SyntaxError` and cost a CI job **72 red runs**) and **`multiplayer-presence.test.js`** (§DX-02hn, where CommonJS swallowed it and **no gate saw it for two days**). **Measured at `78508e4`:** a sweep of all **136** tracked `*.js`/`*.mjs` files found exactly **1** survivor, now fixed — so the repo is clean today and nothing enforces that it stays so.
+> **Why it is worth a row and not a shrug:** the two sightings had wildly different blast radii (a silent header displacement vs. a job red for 72 commits) from an identical cause, and the cheap sighting is the one that hides. `check:walk` gate #16 `check:legacycodes` is the precedent for a one-file-per-line textual sweep.
+> **Fix:** a `check:spdx` gate — for every tracked `*.js`/`*.mjs`/`*.sh`, assert `SPDX-License-Identifier` appears on line 1, or line 2 where line 1 is a shebang. Ship it with a `--selftest` that plants a displaced header and a missing one, as every other gate in the chain does.
+> **Verify:** the gate is red on a planted prepend and green at HEAD; `check:walk` reports 18/18.
+> **Provenance:** §DX-02hn, running the sweep its own provenance note asked for (*"worth checking whether any third file took the same prepend"*).
+
+**Shipped as specified, and the selftest replays both real sightings rather than inventing synthetic ones.** `src/scripts/check-spdx.js` asserts `SPDX-License-Identifier` is on line 1 of every tracked `*.js`/`*.mjs`/`*.cjs`/`*.sh`, or line 2 where line 1 is a shebang. `vendor/`, `node_modules/` and `build/` are skipped. `EXEMPT` is empty, and an exemption naming a file that is no longer tracked **fails** — the stale-exemption rule from gate #17, adopted so the escape hatch cannot rot open.
+
+**Its eight selftest checks**, in the shape of `check-battlepools --selftest`: header on line 1 is clean · header on line 2 under a shebang is clean · **§DX-02hn replayed** (a `require` prepended above the header is caught) · the finding quotes the displacing line · **§DX-02hi replayed** (an `import` above a shebang is caught) · a file with no header at all is caught · an empty file is not a finding · a blank first line still displaces the header.
+
+**Non-vacuous, proven by replanting the real defect rather than asserting the gate works.** With §DX-02hn's exact line restored to the top of `multiplayer-presence.test.js`:
+
+```
+✗ check:spdx — 1 file(s) do not carry the licence header first:
+    [displaced] src/tests/integration/multiplayer-presence.test.js:2 — SPDX-License-Identifier
+    should be on line 1, and line 1 is: "const path = require('path');"
+```
+
+EXIT=1, and EXIT=0 on restore. The finding names the file, the line and **the text that displaced it**, so the fix needs no investigation.
+
+**Wired in at the END of the chain on purpose.** `check:battlepools` is documented as *"gate #17"* in `design/index.md`, and inserting ahead of it would have silently renumbered a doc reference — the §DX-02gs shape this session has now closed twice. `check:spdx` is **#18**, in both `scripts/run-gates.js`'s `GATES` array and `check:walk:serial`.
+
+**Verify:** `npm run check:walk --prefix src` → **`✓ 18/18 gates green · wall 23.1s`**, with `✓ check:spdx — all 147 tracked source file(s) carry SPDX-License-Identifier first`. Docs synced: the new gate row in `design/index.md`, the runner row's *"the 17 gates"* → **18**, the §WALK header's `17/17` → `18/18`, and `AGENTS.md`'s gate line (which also still said *"~10s"*, now `~23s`). No world-data change.
+
+---
+
 ## Archived 2026-08-25 — §DX-02hn (the licence header that spent two days on line 2)
 
 ### §DX-02hn — one displaced line, and the sweep its provenance note asked for ✅ SHIPPED 2026-08-25 `d0d17ab`
