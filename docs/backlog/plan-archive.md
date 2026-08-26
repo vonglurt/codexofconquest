@@ -9,7 +9,7 @@
 
 ## Archived 2026-08-25 — §DX-02hu (the editor specs were racing a world load nobody had asked for)
 
-### §DX-02hu — the flake was not a slow click, it was whether a server happened to be listening ✅ SHIPPED 2026-08-25 `SHA_HU`
+### §DX-02hu — the flake was not a slow click, it was whether a server happened to be listening ✅ SHIPPED 2026-08-25 `78821cb`
 
 **The row, as filed:**
 
