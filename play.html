@@ -24484,13 +24484,13 @@ const _BASE_WEAPONS = [
   { key:'pointy_stick', name:'Pointy Stick', icon:'🪵', die:4,  count:1, baseLv:1 },
   { key:'sickle',       name:'Sickle',       icon:'🌿', die:4,  count:1, baseLv:1 },
   { key:'axe',          name:'Axe',          icon:'🪓', die:6,  count:1, baseLv:1 },
-  { key:'bow',          name:'Bow',          icon:'🏹', die:6,  count:1, baseLv:2 },
+  { key:'bow',          name:'Bow',          icon:'🏹', die:6,  count:1, baseLv:2, ranged:true },
   { key:'scimitar',     name:'Scimitar',     icon:'⚔', die:6,  count:1, baseLv:2, finesse:true },
   { key:'flail',        name:'Flail',        icon:'⚙', die:8,  count:1, baseLv:3 },
   { key:'long_sword',   name:'Long Sword',   icon:'🗡', die:8,  count:1, baseLv:3 },
   { key:'morningstar',  name:'Morningstar',  icon:'💫', die:8,  count:1, baseLv:4 },
   { key:'rapier',       name:'Rapier',       icon:'🤺', die:8,  count:1, baseLv:4, finesse:true },
-  { key:'crossbow',     name:'Crossbow',     icon:'🏹', die:10, count:1, baseLv:5 },
+  { key:'crossbow',     name:'Crossbow',     icon:'🏹', die:10, count:1, baseLv:5, ranged:true },
   { key:'glaive',       name:'Glaive',       icon:'⚔', die:10, count:1, baseLv:5 },
   { key:'halberd',      name:'Halberd',      icon:'⚔', die:10, count:1, baseLv:6 },
   { key:'maul',         name:'Maul',         icon:'🔨', die:6,  count:2, baseLv:7 },
@@ -24513,6 +24513,7 @@ const WEAPON_ITEMS = [0, 1, 2, 3, 4].flatMap(magic => // → doc: docs/mechanics
     count: w.count,
     magicBonus: magic,
     finesse: !!w.finesse,
+    ranged: !!w.ranged,
     sell: _WEAPON_SELL[magic](w.baseLv),
     minLevel: Math.min(20, Math.max(magic * 5, w.baseLv + magic * 4)),
   }))
@@ -24694,7 +24695,7 @@ function _showBattleOverlay() {
   document.getElementById('char-ac').value = _sac;
   document.getElementById('char-maxhp').value = S_story.hpMax;
   document.getElementById('char-prof-override').checked = false;
-  document.getElementById('atk-ability').value = 'str';
+  document.getElementById('atk-ability').value = _storyAtkAbility().label.toLowerCase();
   document.getElementById('weapon-finesse').checked = _storyWeaponIsFinesse();
   S.weapon.finesse = _storyWeaponIsFinesse();
   ['str','dex','con','int','wis','cha'].forEach(ab => {
@@ -25591,20 +25592,24 @@ function _statMod(score) { return Math.floor(((score || 10) - 10) / 2); }
 // sheet calls it. A finesse weapon may use DEX; every other weapon uses STR. The
 // sheet, the roller sync and `getAtkAbilityMod` must all reach the same answer —
 // three surfaces disagreeing about this is §AUDIT-03ae.
-// Saves written before the `finesse` field existed carry an equipped weapon without
-// it, so the tier is the authority and the stored flag is only the fallback.
-function _storyWeaponIsFinesse() {
+// Saves written before the `finesse`/`ranged` fields existed carry an equipped weapon
+// without them, so the tier is the authority and the stored flag is only the fallback.
+function _storyWeaponProps() {
   const mw = S_story.equippedMainWeapon;
-  if (!mw) return false;
-  const row = WEAPON_ITEMS.find(w => w.tier === mw.tier);
-  return row ? !!row.finesse : !!mw.finesse;
+  if (!mw) return { finesse: false, ranged: false };
+  const row = WEAPON_ITEMS.find(w => w.tier === mw.tier) || mw;
+  return { finesse: !!row.finesse, ranged: !!row.ranged };
 }
+
+function _storyWeaponIsFinesse() { return _storyWeaponProps().finesse; }
 
 function _storyAtkAbility() {
   const sc = S_story.abilityScores || { str:16, dex:12, con:14, int:10, wis:12, cha:8 };
   const strMod = _statMod(sc.str);
-  if (!_storyWeaponIsFinesse()) return { mod: strMod, label: 'STR' };
   const dexMod = _statMod(sc.dex);
+  const wp = _storyWeaponProps();
+  if (wp.ranged) return { mod: dexMod, label: 'DEX' };
+  if (!wp.finesse) return { mod: strMod, label: 'STR' };
   return dexMod > strMod ? { mod: dexMod, label: 'DEX' } : { mod: strMod, label: 'STR' };
 }
 
@@ -37646,7 +37651,7 @@ function storyCharToggle() {
       document.getElementById('char-ac').value     = _calcPlayerAc();
       document.getElementById('char-maxhp').value  = S_story.hpMax;
       document.getElementById('char-prof-override').checked = false;
-      document.getElementById('atk-ability').value = 'str';
+      document.getElementById('atk-ability').value = _storyAtkAbility().label.toLowerCase();
       document.getElementById('weapon-finesse').checked = _storyWeaponIsFinesse();
       S.weapon.finesse = _storyWeaponIsFinesse();
       ['str','dex','con','int','wis','cha'].forEach(ab => {

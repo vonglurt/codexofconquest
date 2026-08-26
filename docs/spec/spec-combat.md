@@ -130,7 +130,7 @@ Each roll event becomes a self-contained card appended to the right history pane
 
 | Tab | Ability Used | Proficiency | Target | Roll Button Label |
 |---|---|---|---|---|
-| Attack Roll | STR (melee) or DEX (ranged/finesse) | Proficient w/ weapon checkbox | Target AC | `⚔ ROLL ATTACK` |
+| Attack Roll | STR (melee) or DEX (ranged/finesse) — **implemented §WEAP-FIN / §WEAP-RANGED**: `ranged` → DEX outright, `finesse` → `max(STR, DEX)`, otherwise STR, all through `_storyAtkAbility` | Proficient w/ weapon checkbox | Target AC | `⚔ ROLL ATTACK` |
 | Skill Check | Governing ability (auto from skill) | Proficient in skill checkbox | DC | `🎲 ROLL CHECK` |
 | Saving Throw | Save type ability | Class save proficiency checkbox | Save DC | `🛡 ROLL SAVE` |
 

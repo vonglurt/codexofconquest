@@ -182,4 +182,48 @@ test.describe('§AUDIT-03ae — the sheet prints the number the engine rolls', (
     expect(r.parts).toBe(r.total);
     expect(r.rolled).toBe(r.total);
   });
+
+  // §WEAP-RANGED — a ranged attack keys off DEX outright, not max(STR, DEX). Marking a
+  // bow "finesse" would be closer and still wrong: it would let a STR 18 / DEX 8
+  // character fire at +4. `docs/spec/spec-combat.md` already specified
+  // "STR (melee) or DEX (ranged/finesse)"; nothing implemented the ranged half.
+  const BOW = { tier:'bow', name:'Bow', icon:'🏹', type:'weapon', die:6, count:1, magicBonus:0, sell:30, ranged:true };
+
+  test('§WEAP-RANGED — exactly two base weapons are ranged, and none of them is finesse', async ({ page }) => {
+    await seedAndLoad(page);
+    const r = await page.evaluate(() => ({
+      bases: _BASE_WEAPONS.filter(w => w.ranged).map(w => w.key),
+      overlap: WEAPON_ITEMS.filter(w => w.ranged && w.finesse).length,
+      rangedItems: WEAPON_ITEMS.filter(w => w.ranged).length,
+      everyItemDeclares: WEAPON_ITEMS.every(w => typeof w.ranged === 'boolean'),
+    }));
+    expect(r.bases).toEqual(['bow', 'crossbow']);
+    expect(r.rangedItems).toBe(10);       // 2 base types × 5 magic tiers
+    expect(r.overlap).toBe(0);            // ranged and finesse are different answers
+    expect(r.everyItemDeclares).toBe(true);
+  });
+
+  test('§WEAP-RANGED — a STRONG, clumsy archer fires at DEX and takes the penalty', async ({ page }) => {
+    await seedAndLoad(page);
+    const scores = { str:18, dex:8, con:10, int:10, wis:10, cha:10 };
+    const bow    = await readSurfaces(page, scores, false, BOW);
+    const maul   = await readSurfaces(page, scores, false, MAUL);
+    const rapier = await readSurfaces(page, scores, false, RAPIER);
+    expect(bow.label).toBe('DEX');
+    expect(maul.label).toBe('STR');
+    // the case that separates ranged from finesse: finesse would have said STR here
+    expect(rapier.label).toBe('STR');
+    expect(bow.rolled - maul.rolled).toBe(-5);   // DEX −1 vs STR +4
+    for (const r of [bow, maul, rapier]) expect(r.parts).toBe(r.total);
+  });
+
+  test('§WEAP-RANGED — the sync points the roller select at whichever ability actually keys the swing', async ({ page }) => {
+    await seedAndLoad(page);
+    const scores = { str:18, dex:8, con:10, int:10, wis:10, cha:10 };
+    expect((await readSurfaces(page, scores, false, BOW)).select).toBe('dex');
+    expect((await readSurfaces(page, scores, false, MAUL)).select).toBe('str');
+    // a finesse weapon whose STR is higher still points at STR — the select and the
+    // sheet label are the same answer, which is why they come from one function
+    expect((await readSurfaces(page, scores, false, RAPIER)).select).toBe('str');
+  });
 });
