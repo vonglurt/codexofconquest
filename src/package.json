@@ -63,11 +63,12 @@
     "check:arraypatch": "node scripts/check-array-patch.js",
     "check:itemchain": "node scripts/check-itemchain.js",
     "check:battlepools": "node scripts/check-battlepools.js --selftest && node scripts/check-battlepools.js",
+    "check:condprices": "node scripts/check-condition-prices.js --selftest && node scripts/check-condition-prices.js",
     "check:laddermigration": "node scripts/check-ladder-migration.js",
     "check:worlddiff": "node scripts/world-diff.js --selftest",
     "test:mud": "node tests/mud-harness.mjs",
     "check:walk": "node scripts/run-gates.js --selftest",
-    "check:walk:serial": "npm run check:invariants && npm run check:dupkeys && npm run check:parity && npm run check:behaviour && npm run check:terrain && npm run check:roads && npm run check:roomsparity && npm run check:questparity && npm run check:gateast && npm run check:rng && npm run check:questgraph && npm run check:nodeindex && npm run check:noderegs && npm run check:npcregs && npm run check:anchors && npm run check:legacycodes && npm run check:battlepools && npm run check:spdx && npm run check:backlogcounts",
+    "check:walk:serial": "npm run check:invariants && npm run check:dupkeys && npm run check:parity && npm run check:behaviour && npm run check:terrain && npm run check:roads && npm run check:roomsparity && npm run check:questparity && npm run check:gateast && npm run check:rng && npm run check:questgraph && npm run check:nodeindex && npm run check:noderegs && npm run check:npcregs && npm run check:anchors && npm run check:legacycodes && npm run check:battlepools && npm run check:spdx && npm run check:backlogcounts && npm run check:condprices",
     "cleantree:selftest": "node scripts/cleantree.js --selftest"
   },
   "dependencies": {

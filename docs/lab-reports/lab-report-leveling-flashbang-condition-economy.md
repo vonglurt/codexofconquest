@@ -235,7 +235,7 @@ table.
 Two residues:
 
 - **Stale comment, one line above the code that contradicts it:**
-  `// filtered CONDITION_ITEMS matching current inventory@36378`.
+  `// filtered CONDITION_ITEMS matching current inventory` *(swept, §DX-02z)*.
 - **A latent price bypass → §DX-02z.** All five cost lookups read `CONDITION_GOLD[…] || 20`. Today
   all 12 `CONDITION_ITEMS` have a price row, so the fallback is unreachable — but a 13th condition
   added without one is **silently priced at 20 gp**, the retired pre-Layer-18 scale, re-creating the
@@ -333,7 +333,7 @@ the queue-then-show victory sequencing all verify exact.
 | **§DX-02y** ✅ shipped 2026-08-26 | `S_story.acBonus` — 2 declarations, 1 reader, **0 writers**, born dead; `mechanics-combat.md:313` claims it is written. Widens `check:deadconsts` to census readers and writers **separately**. **Closed by deletion** — the reader/writer census widening stays open under §DX-02u. | 🟢 No — but *how* to wire it (or delete it) is a small call |
 | **§AUDIT-03ae** | Attack-roll three-way disagreement: engine adds DEX **and** STR; the character sheet double-counts STR; the sheet's own breakdown does not sum to its own total. Player-visible. | 🟢 No |
 | **§DX-02z** | `CONDITION_GOLD[…] \|\| 20` in 5 sites with no gate pairing `CONDITION_ITEMS` ↔ `CONDITION_GOLD`; a 13th condition ships silently at the retired pre-Layer-18 price. | 🟢 No |
-| **Doc fixes** | `mechanics-combat.md:313` (`acBonus` claim) · `:254` bare archive-era anchor *"HTML line 8608"* for a const now at 24418 · `// filtered CONDITION_ITEMS matching current inventory@36378` contradicted 8 lines below. | 🟢 No |
+| **Doc fixes** | `mechanics-combat.md:313` (`acBonus` claim) · `:254` bare archive-era anchor *"HTML line 8608"* for a const now at 24418 · `// filtered CONDITION_ITEMS matching current inventory` *(swept, §DX-02z)* contradicted 8 lines below. | 🟢 No |
 
 ---
 

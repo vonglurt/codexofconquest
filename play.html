@@ -24620,6 +24620,12 @@ const CONDITION_GOLD = { // → doc: docs/mechanics/mechanics-combat.md §Combat
   'Neurotoxin':4000, 'Thunderstone':3000, 'Basilisk Eye':5000, 'Feint Scroll':1000,
 };
 
+function _condCost(match) {
+  const gp = CONDITION_GOLD[match];
+  if (typeof gp !== 'number') throw new Error('CONDITION_GOLD has no price for "' + match + '" (§DX-02z)');
+  return gp;
+}
+
 function _storyRollInit() {
   const tierMod = { trivial:-2, easy:0, medium:1, hard:3, deadly:5 };
   const eTier   = S.opp.tier || 'easy';
@@ -35432,7 +35438,7 @@ function storyRender(node, prefix) {
           // Condition picker sub-row
           const condSubrow = document.createElement('div');
           condSubrow.className = 'battle-cond-subrow';
-          const anyAfford = avail.some(ci => S_story.gold >= (CONDITION_GOLD[ci.match]||20));
+          const anyAfford = avail.some(ci => S_story.gold >= _condCost(ci.match));
           if (!anyAfford) {
             const hint = document.createElement('div');
             hint.style.cssText = 'font-size:11px;color:var(--dim);padding:5px;border:1px dashed var(--border);border-radius:4px;text-align:center;';
@@ -35440,7 +35446,7 @@ function storyRender(node, prefix) {
             condSubrow.appendChild(hint);
           } else {
             avail.forEach((ci, i) => {
-              const cost = CONDITION_GOLD[ci.match]||20;
+              const cost = _condCost(ci.match);
               const canAfford = S_story.gold >= cost;
               const row = document.createElement('div');
               row.className = 'cond-item' + (!canAfford ? ' cant-afford' : '');
@@ -35454,7 +35460,7 @@ function storyRender(node, prefix) {
                 row.addEventListener('click', () => {
                   const sel = _condSelected.has(i);
                   if (!sel) {
-                    const tot = [..._condSelected].reduce((s,j)=>s+(CONDITION_GOLD[avail[j].match]||20),0)+cost;
+                    const tot = [..._condSelected].reduce((s,j)=>s+_condCost(avail[j].match),0)+cost;
                     if (S_story.gold < tot) return;
                     _condSelected.add(i);
                     row.querySelector('.cond-check').textContent = '☑';
@@ -36381,7 +36387,7 @@ function storyCheckMissedSleep() {
 /* ── Layer 4: Pre-Battle ── */
 let _preBattNode = null;
 let _selectedConds = new Set(); // indices into _availableConds
-let _availableConds = [];       // filtered CONDITION_ITEMS matching current inventory
+let _availableConds = [];       // every CONDITION_ITEMS entry — conditions are bought with gold, not inventory-gated
 
 let _preBattTab = 'plain';
 
@@ -36476,7 +36482,7 @@ function _renderPreBatt() {
   const list = document.getElementById('prebatt-cond-list');
   list.innerHTML = '';
   _availableConds.forEach((ci, i) => {
-    const cost     = CONDITION_GOLD[ci.match] || 20;
+    const cost     = _condCost(ci.match);
     const selected = _selectedConds.has(i);
     const canAfford = S_story.gold >= _selectedCondsTotalCost() + (selected ? 0 : cost);
     const div = document.createElement('div');
@@ -36499,7 +36505,7 @@ function _renderPreBatt() {
     list.appendChild(div);
   });
   // Show hint when nothing is affordable yet
-  const anyAffordable = _availableConds.some(ci => S_story.gold >= (CONDITION_GOLD[ci.match] || 20));
+  const anyAffordable = _availableConds.some(ci => S_story.gold >= _condCost(ci.match));
   if (!anyAffordable) {
     const hint = document.createElement('div');
     hint.style.cssText = 'font-size:11px;color:var(--dim);margin-top:8px;padding:6px;border:1px dashed var(--border);border-radius:4px;text-align:center';
@@ -36511,7 +36517,7 @@ function _renderPreBatt() {
 
 function _selectedCondsTotalCost() {
   let total = 0;
-  _selectedConds.forEach(i => { total += CONDITION_GOLD[_availableConds[i].match] || 20; });
+  _selectedConds.forEach(i => { total += _condCost(_availableConds[i].match); });
   return total;
 }
 
