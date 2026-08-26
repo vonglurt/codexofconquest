@@ -309,6 +309,17 @@ was **112**, and the union at HEAD is 125.
   `meta.node:'CDG'`, and CDG was not a mapped node at the time. The shipped fix synthesizes a lean
   profile from `dlg.meta` and its comment correctly says **nine**. `don_fluffissimo` still renders
   nowhere at HEAD → **§AUDIT-03bp**.
+  > **CLOSED 2026-08-26 by §AUDIT-03bp.** The Don is now `_cqNpcs`' third conditional entry, and the
+  > shipped content refined the fix the row proposed: `quest_cat_05` is *"Sandy wants Don Fluffissimo
+  > gone"*, its passText is *"Don Fluffissimo is down."* and its reward is the Don's Signet Ring — so
+  > he is not appended behind one gate but given a **window**, visible from `quest_cat_02` complete
+  > until `quest_cat_05` complete. Gating on arrival alone would have left a defeated boss on the
+  > corner forever. He was also added to `_curatedGoverned`, or the always-on derived map would
+  > un-gate what the window gates. **The general assertion SF2 needed is now in
+  > `npc-card-map.test.js`**: every `NPC_DIALOGUES` key with a `meta.node` that resolves in
+  > `NODE_MAP` must be reachable from the curated maximal set or the derived map. Measured at HEAD it
+  > found exactly one orphan — this one — and it closes all three faces of the registry-mismatch
+  > class, including §AUDIT-03bo's mirror, against silent reopening.
 
 - **SF3 — `NODE_NPC_KEYS` stale comment.** ✅ **Correct and fixed.** The parent comment claimed the
   table was *"used by `_getNPCDialogue()` routing"*; its only readers were and are

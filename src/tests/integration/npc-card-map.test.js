@@ -560,3 +560,79 @@ test.describe('§NPC-01-SF4 — dead codes CQ/SQ/GC remapped to CDG/NUE/TRD (car
     expect(r.trdCurated, 'TRD carries the remapped Yva entry').toBe(true);
   });
 });
+
+// §AUDIT-03bp — the third face of the registry-mismatch class, and the only one no
+// existing check could see. §NPC-01-SF2 closed "dialogue without profile, but mapped";
+// §AUDIT-03bo is open on "profile without dialogue". This one is "dialogue without
+// profile AND unmapped" — invisible to both, because each of the other checks starts
+// from a key some registry already lists.
+//
+// `don_fluffissimo` is the Cat Quarter's antagonist: a full NPC_DIALOGUES entry with
+// meta.node "CDG" and an authored worldTruth ("Power moves slowly, deliberately, and
+// with bodyguards"), no BIRKA_NPC_PROFILES entry — so the derived map, which inverts
+// the profiles, cannot reach him — and never in `_cqNpcs`, so the curated literal
+// could not either. He has rendered on no node since 2026-07-23.
+//
+// The row proposed appending him to _cqNpcs behind a quest gate. The shipped content
+// refines that into a WINDOW: quest_cat_05 is "Sandy wants Don Fluffissimo gone", its
+// passText is "Don Fluffissimo is down.", and its reward is the Don's Signet Ring.
+// Gating on arrival alone would leave a defeated boss standing on the corner forever.
+//
+// The census assertion is the general one the row asked for: every NPC_DIALOGUES key
+// carrying a meta.node that resolves in NODE_MAP must be reachable from the curated
+// literal's MAXIMAL key set or the derived map. That is the assertion that would have
+// caught this in 2026-07-23, and it closes all three faces at once.
+test.describe('§AUDIT-03bp — no dialogue with a real node is unreachable from both maps', () => {
+
+  test('census: every NPC_DIALOGUES key with a resolving meta.node is reachable', async ({ page }) => {
+    await page.goto('/play.html');
+    const orphans = await page.evaluate(() => {
+      const src = storyRender.toString();
+      const governed = new Set(
+        (src.match(/const _curatedGoverned = new Set\(\[(.*?)\]\)/s)[1].match(/'([^']+)'/g) || [])
+          .map(s => s.slice(1, -1)));
+      for (const arr of Object.values(_deriveNpcRenderMap())) (arr || []).forEach(k => governed.add(k));
+      return Object.entries(NPC_DIALOGUES)
+        .filter(([k, d]) => d.meta && d.meta.node && NODE_MAP[d.meta.node] && !governed.has(k))
+        .map(([k, d]) => k + '@' + d.meta.node);
+    });
+    expect(orphans).toEqual([]);
+  });
+
+  test('the Don is governed, so the always-on derived map cannot un-gate him', async ({ page }) => {
+    await page.goto('/play.html');
+    const governed = await page.evaluate(() =>
+      /const _curatedGoverned = new Set\(\[[^\]]*'don_fluffissimo'/.test(storyRender.toString()));
+    expect(governed).toBe(true);
+  });
+
+  test('CDG before the arc escalates: Jimmy alone, no Don', async ({ page }) => {
+    await seedAndLoad(page, { currentCode: 'CDG', checkpointNode: 'CDG', visited: { CDG: true } });
+    await dismissContinue(page);
+    const row = page.locator('#story-npc-cards-row');
+    await expect(row).toContainText('Carbonara');
+    await expect(row).not.toContainText('Don Fluffissimo');
+  });
+
+  test('CDG once Sandy points at him: the Don is on the corner', async ({ page }) => {
+    await seedAndLoad(page, {
+      currentCode: 'CDG', checkpointNode: 'CDG', visited: { CDG: true },
+      quests: { quest_cat_02: 'complete' },
+    });
+    await dismissContinue(page);
+    const row = page.locator('#story-npc-cards-row');
+    await expect(row).toContainText('Don Fluffissimo');
+    await expect(row).toContainText('Sandy');
+  });
+
+  test('CDG once he is down: the corner is his no longer', async ({ page }) => {
+    await seedAndLoad(page, {
+      currentCode: 'CDG', checkpointNode: 'CDG', visited: { CDG: true },
+      quests: { quest_cat_02: 'complete', quest_cat_05: 'complete' },
+    });
+    await dismissContinue(page);
+    const row = page.locator('#story-npc-cards-row');
+    await expect(row).not.toContainText('Don Fluffissimo');
+    await expect(row).toContainText('Kenickie');
+  });
+});

@@ -35222,6 +35222,11 @@ function storyRender(node, prefix) {
     if (npcRow) npcRow.remove();
     const _cqNpcs = ['jimmy'];
     if ((S_story.quests || {})['quest_cat_02'] === 'complete') _cqNpcs.push('sandy_cat');
+    // The Don stands on the corner only between being pointed at and being put down:
+    // quest_cat_05 is "Sandy wants Don Fluffissimo gone" and its passText is "Don
+    // Fluffissimo is down."
+    if ((S_story.quests || {})['quest_cat_02'] === 'complete'
+        && (S_story.quests || {})['quest_cat_05'] !== 'complete') _cqNpcs.push('don_fluffissimo');
     if ((S_story.quests || {})['quest_cat_05'] === 'complete') _cqNpcs.push('kenickie');
     const _sqNpcs = ['isolde_voss'];
     if (S_story.wmArchiveComplete) _sqNpcs.push('benedikt_rasp');
@@ -35258,7 +35263,7 @@ function storyRender(node, prefix) {
     // connieMet, pier before pierFalkWarm, emmer before emmerMet, vonn before tlLedgerRead, …) is NEVER
     // un-gated by the always-on derived map. Curated order first, then the un-shadowed additions (deduped).
     // Keep this set in sync with the birkaNpcs construction above; the SF6 tests assert no un-gating.
-    const _curatedGoverned = new Set(['yael','brynn','quill','pachelbel','crov','auros','jimmy','sandy_cat','kenickie','isolde_voss','benedikt_rasp','rennau','vonn','solvak','yva','connie_tuna','aldo_sardino','the_fisherman','emmer','gret','pier']);
+    const _curatedGoverned = new Set(['yael','brynn','quill','pachelbel','crov','auros','jimmy','sandy_cat','don_fluffissimo','kenickie','isolde_voss','benedikt_rasp','rennau','vonn','solvak','yva','connie_tuna','aldo_sardino','the_fisherman','emmer','gret','pier']);
     let keys;
     if (_npcNodeKey in birkaNpcs) {
       const _curatedList = birkaNpcs[_npcNodeKey] || [];
