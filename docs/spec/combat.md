@@ -90,7 +90,7 @@ atkTotal = d20 + abilityMod + profBonus + weaponAtk + mainWeaponAtk
 | `d20` | `rollD20(advState)` | ADV = roll 2 keep high; DIS = roll 2 keep low |
 | `abilityMod` | `getAtkAbilityMod()` | STR mod (or DEX if finesse) |
 | `profBonus` | `getProfBonus()` | `floor((level-1)/4)+2`, applied if `S.weapon.prof = true` |
-| `abilityMod` | `getAtkAbilityMod()` | The STR modifier — the story sync points `#atk-ability` at `str` and unchecks `#weapon-finesse`, both of which had kept the roller's own defaults (§AUDIT-03ae) |
+| `abilityMod` | `getAtkAbilityMod()` | STR, or `max(STR, DEX)` on a **finesse** weapon — the story sync points `#atk-ability` at `str` (§AUDIT-03ae) and sets `#weapon-finesse` from the equipped weapon's own `finesse` field (§WEAP-FIN), so neither control keeps the roller's default. Scimitar and Rapier are the only finesse base types |
 | `weaponAtk` | `S_story.equippedWeapon.atkBonus` | Offhand dagger magic bonus; 0 if no dagger |
 | `mainWeaponAtk` | `S_story.equippedMainWeapon.magicBonus` | Main hand weapon magic bonus; 0 if none |
 

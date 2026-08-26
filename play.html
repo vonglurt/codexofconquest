@@ -24485,11 +24485,11 @@ const _BASE_WEAPONS = [
   { key:'sickle',       name:'Sickle',       icon:'🌿', die:4,  count:1, baseLv:1 },
   { key:'axe',          name:'Axe',          icon:'🪓', die:6,  count:1, baseLv:1 },
   { key:'bow',          name:'Bow',          icon:'🏹', die:6,  count:1, baseLv:2 },
-  { key:'scimitar',     name:'Scimitar',     icon:'⚔', die:6,  count:1, baseLv:2 },
+  { key:'scimitar',     name:'Scimitar',     icon:'⚔', die:6,  count:1, baseLv:2, finesse:true },
   { key:'flail',        name:'Flail',        icon:'⚙', die:8,  count:1, baseLv:3 },
   { key:'long_sword',   name:'Long Sword',   icon:'🗡', die:8,  count:1, baseLv:3 },
   { key:'morningstar',  name:'Morningstar',  icon:'💫', die:8,  count:1, baseLv:4 },
-  { key:'rapier',       name:'Rapier',       icon:'🤺', die:8,  count:1, baseLv:4 },
+  { key:'rapier',       name:'Rapier',       icon:'🤺', die:8,  count:1, baseLv:4, finesse:true },
   { key:'crossbow',     name:'Crossbow',     icon:'🏹', die:10, count:1, baseLv:5 },
   { key:'glaive',       name:'Glaive',       icon:'⚔', die:10, count:1, baseLv:5 },
   { key:'halberd',      name:'Halberd',      icon:'⚔', die:10, count:1, baseLv:6 },
@@ -24512,6 +24512,7 @@ const WEAPON_ITEMS = [0, 1, 2, 3, 4].flatMap(magic => // → doc: docs/mechanics
     die: w.die,
     count: w.count,
     magicBonus: magic,
+    finesse: !!w.finesse,
     sell: _WEAPON_SELL[magic](w.baseLv),
     minLevel: Math.min(20, Math.max(magic * 5, w.baseLv + magic * 4)),
   }))
@@ -24694,8 +24695,8 @@ function _showBattleOverlay() {
   document.getElementById('char-maxhp').value = S_story.hpMax;
   document.getElementById('char-prof-override').checked = false;
   document.getElementById('atk-ability').value = 'str';
-  document.getElementById('weapon-finesse').checked = false;
-  S.weapon.finesse = false;
+  document.getElementById('weapon-finesse').checked = _storyWeaponIsFinesse();
+  S.weapon.finesse = _storyWeaponIsFinesse();
   ['str','dex','con','int','wis','cha'].forEach(ab => {
     const el = document.getElementById('ab-' + ab);
     if (el) el.value = _sc[ab] || 10;
@@ -25585,6 +25586,27 @@ let _levelUpQueue = [];
 
 // ── Stat helper ──
 function _statMod(score) { return Math.floor(((score || 10) - 10) / 2); }
+
+// The single source for which ability keys a story attack, and what the character
+// sheet calls it. A finesse weapon may use DEX; every other weapon uses STR. The
+// sheet, the roller sync and `getAtkAbilityMod` must all reach the same answer —
+// three surfaces disagreeing about this is §AUDIT-03ae.
+// Saves written before the `finesse` field existed carry an equipped weapon without
+// it, so the tier is the authority and the stored flag is only the fallback.
+function _storyWeaponIsFinesse() {
+  const mw = S_story.equippedMainWeapon;
+  if (!mw) return false;
+  const row = WEAPON_ITEMS.find(w => w.tier === mw.tier);
+  return row ? !!row.finesse : !!mw.finesse;
+}
+
+function _storyAtkAbility() {
+  const sc = S_story.abilityScores || { str:16, dex:12, con:14, int:10, wis:12, cha:8 };
+  const strMod = _statMod(sc.str);
+  if (!_storyWeaponIsFinesse()) return { mod: strMod, label: 'STR' };
+  const dexMod = _statMod(sc.dex);
+  return dexMod > strMod ? { mod: dexMod, label: 'DEX' } : { mod: strMod, label: 'STR' };
+}
 
 // ── Roll HP increase (Fighter d10 + CON mod) ──
 function _rollLevelHp() {
@@ -37625,8 +37647,8 @@ function storyCharToggle() {
       document.getElementById('char-maxhp').value  = S_story.hpMax;
       document.getElementById('char-prof-override').checked = false;
       document.getElementById('atk-ability').value = 'str';
-      document.getElementById('weapon-finesse').checked = false;
-      S.weapon.finesse = false;
+      document.getElementById('weapon-finesse').checked = _storyWeaponIsFinesse();
+      S.weapon.finesse = _storyWeaponIsFinesse();
       ['str','dex','con','int','wis','cha'].forEach(ab => {
         const el = document.getElementById('ab-' + ab);
         if (el) el.value = _sc[ab] || 10;
@@ -37643,7 +37665,8 @@ function storyRenderCharSheet() {
   const lv = S_story.level || 1;
   const profBonus = Math.floor((lv - 1) / 4) + 2;
   const ac = _calcPlayerAc();
-  const strMod = _statMod(sc.str);
+  const atkAb = _storyAtkAbility();
+  const strMod = atkAb.mod;
   const lvlAtk = _tomeBonuses().atk + _lakeMagicBonuses().atk;
   const atkTotal = strMod + profBonus + lvlAtk;
   const mw = S_story.equippedMainWeapon;
@@ -37691,7 +37714,7 @@ function storyRenderCharSheet() {
       <div class="cs-row"><span class="cs-row-lbl">HP</span><span class="cs-row-val">${S_story.hp} / ${S_story.hpMax}</span></div>
       <div class="cs-row"><span class="cs-row-lbl">AC</span><span class="cs-row-val">${ac}</span></div>
       <div class="cs-row"><span class="cs-row-lbl">Proficiency</span><span class="cs-row-val">${m(profBonus)}</span></div>
-      <div class="cs-row"><span class="cs-row-lbl">Attack Bonus</span><span class="cs-row-val">${m(atkTotal)} (STR${m(strMod)} + Prof${m(profBonus)}${lvlAtk ? ' + bonus'+m(lvlAtk) : ''})</span></div>
+      <div class="cs-row"><span class="cs-row-lbl">Attack Bonus</span><span class="cs-row-val">${m(atkTotal)} (${atkAb.label}${m(strMod)} + Prof${m(profBonus)}${lvlAtk ? ' + bonus'+m(lvlAtk) : ''})</span></div>
       <div class="cs-row"><span class="cs-row-lbl">Crit Range</span><span class="cs-row-val">${critMin}–20</span></div>
       <div class="cs-row"><span class="cs-row-lbl">XP</span><span class="cs-row-val">${(S_story.xp||0).toLocaleString()} / ${(XP_LEVELS[lv]||'—').toLocaleString()}</span></div>
       ${surgeCharges > 0 ? `<div class="cs-row"><span class="cs-row-lbl">⚡ Surge</span><span class="cs-row-val">${surgeCharges} charge${surgeCharges>1?'s':''}</span></div>` : ''}
