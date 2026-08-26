@@ -9,7 +9,7 @@
 
 ## Archived 2026-08-25 — §DX-02gi (a ratification, not a design decision — and a second raw-`say` the row had not found)
 
-### §DX-02gi — `CONTRIBUTING.md` cedes the speak rule, and the "verbatim subject line" clause is settled ✅ SHIPPED 2026-08-25 `PENDING_SHA`
+### §DX-02gi — `CONTRIBUTING.md` cedes the speak rule, and the "verbatim subject line" clause is settled ✅ SHIPPED 2026-08-25 `4ad8218`
 
 - [x] **§DX-02gi — two binding documents gave opposite instructions for the same action.** `CONTRIBUTING.md` § *Commit + Speak Rule*: *"After every `git commit`, immediately run `say "<commit subject line>"` … Read the **subject line only** aloud via macOS `say`."* `resume.md` §2.6 and §0: *"`src/bin/say.sh` … **never raw macOS `say`**."* They disagreed on the command, on what is spoken, and on whether the raw form is permitted — and `CONTRIBUTING.md` is on `resume.md` §6's read list as *"the policies, verbatim and binding"*, so a session reading in order got both.
 > **The call is (a), the row's recommendation, and the repo ratifies rather than decides it.** `src/bin/say.sh` is right for a mechanical reason: it enqueues to `build/milepoints/say.queue.d` for the `sayd.sh` daemon and **returns immediately**, so announcements serialise and a long increment never blocks on speech — read from the script, which also carries a sequence counter *"so filenames sort in strict call order within the same second."* Raw `say` has neither property, and the rule naming it is dated *learned 2026-07-03*, **before the script**. The split those two files were made under — `CONTRIBUTING.md` = policies, `resume.md` = the procedure — puts the owner in `resume.md`.
