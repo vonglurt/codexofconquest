@@ -30,7 +30,7 @@ const BASE = 'http://localhost:7655';
 const SEED = {
   active: true, currentCode: 'BOO', checkpointNode: 'BOO',
   hp: 46, hpMax: 58, gold: 214, xp: 5200, day: 17, level: 6, shards: 3,
-  voidPressure: 2, atkBonus: 3, acBonus: 0, shortRests: 2,
+  voidPressure: 2, atkBonus: 3, shortRests: 2,
   abilityScores: { str: 16, dex: 14, con: 15, int: 10, wis: 12, cha: 11 },
   inventory: [
     { name: 'Codex Shard', icon: '◈', type: 'quest', sell: 0, desc: 'One of seven. Warm to the touch.' },

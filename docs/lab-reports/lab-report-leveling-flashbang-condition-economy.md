@@ -167,9 +167,9 @@ shipped, because the reversal is usually the interesting part.***
 
 ### Finding 2 → §DX-02y — `S_story.acBonus` is a read-only field with no writer, and the home doc says otherwise
 
-Two declarations — `acBonus: 0,@23041` inside `_S_DEFAULTS()`, and again in the `S_story` seed
-literal at `level: 1, atkBonus: 0, acBonus: 0,@23075` — exactly **one reader**
-— the `(S_story.acBonus || 0)@24616` term inside `function _calcPlayerAc() {@24612` — and **zero
+Two declarations — `acBonus: 0,` *(deleted, §DX-02y)* inside `_S_DEFAULTS()`, and again in the `S_story` seed
+literal at `level: 1, atkBonus: 0, acBonus: 0,` *(deleted, §DX-02y)* — exactly **one reader**
+— the `(S_story.acBonus || 0)` *(deleted, §DX-02y)* term inside `function _calcPlayerAc() {@24612` — and **zero
 writers in 38,712 lines**. The same holds at `32c10c5`: the field was **born dead**, not retired. The
 specified +1 AC at L5, +1 at L8 and +2 at L10 therefore never accrue; a level-20 character's AC comes
 entirely from shield and lake-magic terms.
@@ -177,6 +177,15 @@ entirely from shield and lake-magic terms.
 `docs/mechanics/mechanics-combat.md:313` states the opposite outright — *"`atkBonus` and `acBonus` in
 `S_story` are updated immediately"* — the §DOC-02j `LOOT_TABLE` rot direction, and the more dangerous
 one: a reader greps the doc and concludes the field works.
+
+> **✅ CLOSED 2026-08-26 by §DX-02y, option (a).** The field and its `_calcPlayerAc` term are deleted.
+> Nothing in the shipped design grants AC by level, so there was nothing to wire it to — Layer 18's
+> +1/+1/+2 is a specification that was never built, and the honest form of that is an absent field,
+> not a present one reading 0. `_calcPlayerAc()` is now `baseAc + equippedShield.acBonus +
+> _lakeMagicBonuses().ac`, and **the number the player sees is unchanged**, because the deleted term
+> was provably `+ 0` for every state the game can reach. **The doc claim above had been corrected in
+> `mechanics-combat.md` and left standing in its sibling `docs/design/mechanics.md`** — a one-sided
+> correction, found only because this row went to delete the field. Both now say the same thing.
 
 This is the **inverse** of the §DX-02n write-only class: dead weight there, a **broken dependency**
 here. A `check:deadconsts` scoped to unread fields walks straight past it, which is the standing
@@ -321,7 +330,7 @@ the queue-then-show victory sequencing all verify exact.
 
 | Row | Defect | Design call? |
 |---|---|---|
-| **§DX-02y** | `S_story.acBonus` — 2 declarations, 1 reader, **0 writers**, born dead; `mechanics-combat.md:313` claims it is written. Widens `check:deadconsts` to census readers and writers **separately**. | 🟢 No — but *how* to wire it (or delete it) is a small call |
+| **§DX-02y** ✅ shipped 2026-08-26 | `S_story.acBonus` — 2 declarations, 1 reader, **0 writers**, born dead; `mechanics-combat.md:313` claims it is written. Widens `check:deadconsts` to census readers and writers **separately**. **Closed by deletion** — the reader/writer census widening stays open under §DX-02u. | 🟢 No — but *how* to wire it (or delete it) is a small call |
 | **§AUDIT-03ae** | Attack-roll three-way disagreement: engine adds DEX **and** STR; the character sheet double-counts STR; the sheet's own breakdown does not sum to its own total. Player-visible. | 🟢 No |
 | **§DX-02z** | `CONDITION_GOLD[…] \|\| 20` in 5 sites with no gate pairing `CONDITION_ITEMS` ↔ `CONDITION_GOLD`; a 13th condition ships silently at the retired pre-Layer-18 price. | 🟢 No |
 | **Doc fixes** | `mechanics-combat.md:313` (`acBonus` claim) · `:254` bare archive-era anchor *"HTML line 8608"* for a const now at 24418 · `// filtered CONDITION_ITEMS matching current inventory@36378` contradicted 8 lines below. | 🟢 No |

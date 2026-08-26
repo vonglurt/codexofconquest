@@ -28,7 +28,6 @@ const SEED_STATE = {
   shards: 0,
   voidPressure: 0,
   atkBonus: 3,
-  acBonus: 0,
   shortRests: 3,
   abilityScores: { str: 16, dex: 14, con: 14, int: 12, wis: 12, cha: 10 },
   inventory: [

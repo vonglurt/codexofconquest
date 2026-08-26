@@ -326,7 +326,9 @@ STR modifier increases flow through to `S_story.atkBonus`. CON modifier increase
 | 19 | ASI | — | — |
 | 20 | Extra Attack III — main fires 4 rolls; crits 17–20 | 2,500gp | — |
 
-Shield gifts are added to inventory and auto-equipped if better than the currently held shield. `atkBonus` and `acBonus` in `S_story` are updated immediately; `hpMax` increases and current HP also increases by the same roll. The status bar shows `⭐ Level N · X/Y XP`.
+Shield gifts are added to inventory and auto-equipped if better than the currently held shield. `hpMax` increases and current HP also increases by the same roll. The status bar shows `⭐ Level N · X/Y XP`.
+
+> **⚠️ Corrected 2026-08-26 (§DX-02y).** This paragraph previously read *"`atkBonus` and `acBonus` in `S_story` are updated immediately."* Neither was true of the level-up path. `S_story.atkBonus` is the STR modifier — seeded at character creation by `S_story.atkBonus = Math.max(0, Math.floor((scores.str - 10) / 2));@23958` and moved only when an ASI raises STR — and `S_story.acBonus` **had no writer at all** and has been deleted. The same sentence in `docs/mechanics/mechanics-combat.md` was corrected on 2026-08-12 by §DOC-02t and this copy was missed; **a claim corrected in one home doc and left standing in its sibling is the §DOC-02 rot direction that costs the most**, because the reader who greps finds the wrong one first.
 
 ---
 
@@ -983,7 +985,6 @@ Two servers sync only if their `(proto, engineVer, worldHash)` match exactly. `w
 | `S_story.xp / xpLastBattle` | number | Cumulative XP / last battle award |
 | `S_story.level` | number | Current player level (1–20) |
 | `S_story.atkBonus` | number | Cumulative ATK bonus (level ASIs + STR mod) |
-| `S_story.acBonus` | number | Cumulative AC bonus from level rewards |
 | `S_story.abilityScores` | object | STR/DEX/CON/INT/WIS/CHA scores; default {str:16,dex:12,con:14,int:10,wis:12,cha:8} |
 | `S_story.shortRests` | number | Remaining short rest charges today (0–3) |
 | `S_story.knowledge` | array | Necklace of Knowledge beads (one per unique rest location) |

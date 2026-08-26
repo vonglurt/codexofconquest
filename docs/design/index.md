@@ -636,7 +636,7 @@ All 54 source books are marked `[x]` in `books.md` — all have been processed t
 | `S_story.voidPressure` | number | Void Tide counter (0–10) |
 | `S_story.xp / xpLastBattle` | number | Cumulative XP / last battle award |
 | `S_story.level` | number | Current character level (1–20) |
-| `S_story.atkBonus / acBonus` | number | Story combat modifiers |
+| `S_story.atkBonus` | number | The STR modifier, seeded at character creation and moved only by an ASI that raises STR — **not** a per-level bonus. Its sibling `acBonus` was deleted by §DX-02y: two declarations, one reader, zero writers, born dead. `acBonus` is now a **shield-item** field only. |
 | `S_story.abilityScores` | object | `{str,dex,con,int,wis,cha}` — set by character creation (base `{10,10,10,8,8,8}` + point-buy); legacy-save fallback `{16,12,14,10,12,8}` |
 | `S_story.shieldTier` | string\|null | Magic shield tier granted |
 | `S_story.levelUpLog` | array | Records each level-up `{lvl, hp, asiResult, goldGift, shieldGift}` |

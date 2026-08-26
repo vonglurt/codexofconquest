@@ -706,7 +706,7 @@ The game is designed to be built in vertical slices. Each layer adds one complet
 ### Layer 18 — ✅ IMPLEMENTED
 - **Character levels 1–10**: `XP_LEVELS` thresholds; `_LEVEL_REWARDS` HP/ATK/AC gains
 - **`_checkLevelUp()`**: recursive; fires on every XP award in `_storyBattleVictory()`
-- **`S_story.level / atkBonus / acBonus`**: persistent across the run
+- **`S_story.level / atkBonus`**: persistent across the run (`acBonus` is deleted — §DX-02y found two declarations, one reader and no writer)
 - **CONDITION_GOLD ×100**: conditions now 1,000–5,000gp — decisive mid-game tactical tools
 - **Flashbang** (`COMBAT_ITEMS`): 150gp, guaranteed ADV on next attack, costs bonus action
 - **`usedRealAttack`** flag: gates offhand — requires a real attack (not wimper) this round

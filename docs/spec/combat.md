@@ -25,7 +25,7 @@ _storyRollInit()  →  initiative d20 each side; ties go to player
    ▼
 _showBattleOverlay()
    ├─ Syncs S.player.hp from S_story.hp
-   ├─ Saves S.char.baseAc snapshot; applies _calcPlayerAc() (shield + acBonus)
+   ├─ Saves S.char.baseAc snapshot; applies _calcPlayerAc() (shield + lake magic)
    ├─ Syncs equippedMainWeapon → S.weapon.die / count / flatMod
    └─ Syncs ability scores + level into simulator inputs; calls syncCharFromUI()
 ```
@@ -356,7 +356,7 @@ Defeating Commander Bruhns → `storyCheckVictory()` → Codex Reforged victory 
 | `_notorietyWeights(n)` | Map notoriety → {trivial,easy,medium,hard,deadly} weight object |
 | `_weightedMonsterPick(terrain)` | Pick random monster weighted by notoriety tier weights |
 | `_stalkedMonsterPick(terrain)` | Same + BOOST=6 for quest-target monsters |
-| `_calcPlayerAc()` | baseAc + equippedShield.acBonus + acBonus |
+| `_calcPlayerAc()` | baseAc + equippedShield.acBonus + `_lakeMagicBonuses().ac` — the `S_story.acBonus` term was deleted by §DX-02y, which found it had never had a writer |
 | `_rollD100Loot()` | Unified d100 loot table roll with 3-reroll gate fallback |
 | `_magicTierAllowed(n)` | `S_story.level >= n*5` — checks if player can hold +n magic items |
 | `storyStalk(nodeCode)` | Opens stalk modal with quest-target list; "Wait for Prey" → battle |
@@ -426,7 +426,7 @@ MILEPOINT A  Battle won → XP award written to S_story.xp by storyApplyOutcome(
 MILEPOINT B  ASI stat choice cascades into combat state
              STR +1 → atkBonus += strModDelta (added to all attack rolls in battle)
              CON +1 → retroactive HP: each level × new conModDelta added to hpMax
-             DEX +1 → acBonus adjustable (not auto-applied; player equips armor separately)
+             DEX +1 → no AC effect (never auto-applied, and the `S_story.acBonus` this line named had no writer at any point — deleted by §DX-02y)
 
 MILEPOINT C  _lu_applyGiftsAndFinish() commits tattoo + gold + shield gifts
              Tattoo object pushed: {type:'tattoo', lvl, name, icon, hpRoll, bonusHpRoll}
@@ -490,7 +490,7 @@ MILEPOINT D  3 failures → _storyDeathSaveFall()
 | `syncCharFromUI()` | 6743 | Syncs S.char from UI input fields | UI char-* elements | `S.char.*` |
 | `_magicTierAllowed(magic)` | 9441 | `S_story.level >= magic*5` — checks if player can hold +n magic items | `S_story.level` | returns bool |
 | `_rollD100Loot()` | 9472 | Unified d100 loot table roll with 3-reroll gate fallback | `_D100_TABLE`, `S_story.level` | `S_story.inventory`; returns result string |
-| `_calcPlayerAc()` | 9548 | Computes AC: baseAc + shield.acBonus + acBonus | `S.char.baseAc/ac`, `equippedShield`, `S_story.acBonus` | returns int |
+| `_calcPlayerAc()` | 9548 | Computes AC: baseAc + shield.acBonus + lake magic | `S.char.baseAc/ac`, `equippedShield`, `_lakeMagicBonuses()` | returns int |
 | `_storyRollInit()` | 9549 | Story initiative: player d20 vs enemy d20+tierMod | `S.opp.tier` | `S_story.battleTurn/battlePRoll/battleERoll/battleRound`, used* flags |
 | `_showBattleOverlay()` | 9568 | Story→Battle sync: HP, AC, weapon, ability scores, pit perks | `S_story.*`, `S_story.equippedMainWeapon` | `S.player/char/weapon.*`; DOM battle fields |
 | `_extraAttackCount()` | 9897 | Returns 1/2/3/4 based on level | `S_story.level` | returns int |

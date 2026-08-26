@@ -220,7 +220,6 @@ On NG+ runs, the EB nodes show one-time atmospheric `EB_NG_PLUS_LINES` on first 
 | `S_story.xp / xpLastBattle` | number | Cumulative XP / last battle award |
 | `S_story.level` | number | Current player level (1–20) |
 | `S_story.atkBonus` | number | Cumulative ATK bonus (level ASIs + STR mod) |
-| `S_story.acBonus` | number | Cumulative AC bonus from level rewards |
 | `S_story.abilityScores` | object | STR/DEX/CON/INT/WIS/CHA scores; set by character creation (base {str:10,dex:10,con:10,int:8,wis:8,cha:8} + point-buy); legacy saves fall back to {str:16,dex:12,con:14,int:10,wis:12,cha:8} |
 | `S_story.shortRests` | number | Remaining short rest charges today (0–3) |
 | `S_story.knowledge` | array | Necklace of Knowledge beads (one per unique rest location) |

@@ -314,7 +314,7 @@ Shield gifts are added to inventory and auto-equipped if better than the current
 
 > **⚠️ Corrected 2026-08-12 (§DOC-02t).** This paragraph previously read *"`atkBonus` and `acBonus` in `S_story` are updated immediately."* Neither is true of the level-up path:
 > - **`S_story.atkBonus` is the STR modifier, not a level bonus.** It is seeded at character creation by `S_story.atkBonus = Math.max(0, Math.floor((scores.str - 10) / 2));@23960` and changes only when an ASI raises STR (`if (strDelta > 0) S_story.atkBonus@38523`). Levelling by itself never touches it.
-> - **`S_story.acBonus` has no writer at all** — declared at `acBonus: 0,@23041` and `level: 1, atkBonus: 0, acBonus: 0,@23075`, read once by `function _calcPlayerAc() {@24612`, and written nowhere in the file (also true at the earliest surviving build). It is permanently 0. → **§DX-02y**.
+> - **`S_story.acBonus` no longer exists.** It had no writer at any point in the repository's history — two declarations, one reader in `function _calcPlayerAc() {@24612`, and zero assignments — so it was permanently 0 and contributed nothing to the AC the player was shown. **§DX-02y deleted the field and its `_calcPlayerAc` term 2026-08-26.** AC is `baseAc + equippedShield.acBonus + _lakeMagicBonuses().ac`; `acBonus` is now a **shield-item** field only. Levelled AC is not a shipped mechanic — if it is ever wanted, it is a new design, not a repair.
 
 ---
 

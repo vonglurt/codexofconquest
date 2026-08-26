@@ -23036,7 +23036,6 @@ let S_story = {
   xpLastBattle: 0,
   level: 1,
   atkBonus: 0,
-  acBonus: 0,
   shortRests: 3,
   knowledge: [],
   corpsesQuests: [],
@@ -23071,7 +23070,7 @@ const _S_DEFAULTS = () => ({
   battleTurn: 'player', battlePRoll: 0, battleERoll: 0, battleRound: 1,
   usedMainAttack: false, usedBonusAction: false, usedRealAttack: false, surpriseAdvantage: false,
   conditionRoundsLeft: 0, spellAdvantageReady: false, equippedShield: null,
-  xp: 0, xpLastBattle: 0, level: 1, atkBonus: 0, acBonus: 0,
+  xp: 0, xpLastBattle: 0, level: 1, atkBonus: 0,
   shortRests: 3, knowledge: [],
   corpsesQuests: [],
   storyDeathSaves: { successes: 0, failures: 0, active: false },
@@ -24615,7 +24614,6 @@ function _calcPlayerAc() {
   const base = S.char.baseAc || S.char.ac || 10;
   return base
     + (S_story.equippedShield ? (S_story.equippedShield.acBonus || 0) : 0)
-    + (S_story.acBonus || 0)
     + _lakeMagicBonuses().ac; // §DROP-03
 }
 
