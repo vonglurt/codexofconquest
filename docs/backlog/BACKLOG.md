@@ -35,7 +35,7 @@ Split by **subsystem**, not by track prefix (121 of the 175 sections were `§DX-
 | Phase | Backlog | Open rows | Closed (archived) | Scope |
 |---|---|---:|---:|---|
 | **1** | [Playable Truth](BACKLOG-1-playable-truth.md) | 4 | 14 | Shipped content the player can never reach or complete: unreachable act-gated beats, inert counters, gate flags with no writer, quest deadlocks, endings out of range. |
-| **2** | [Engine & Systems](BACKLOG-2-engine-systems.md) | 34 | 79 | Rules and mechanics: combat math, XP and economy, progression and New Game+, save/state defaults, the render pipeline, the quest VM and its migration fronts. |
+| **2** | [Engine & Systems](BACKLOG-2-engine-systems.md) | 35 | 79 | Rules and mechanics: combat math, XP and economy, progression and New Game+, save/state defaults, the render pipeline, the quest VM and its migration fronts. |
 | **3** | [Content & Narrative](BACKLOG-3-content-narrative.md) | 19 | 46 | Authored strings and the people who say them: NPC dialogue and relationships, favor scales, arc beats, epilogue and ending prose, lines with no lookup path. |
 | **4** | [World & Navigation](BACKLOG-4-world-navigation.md) | 8 | 18 | The map and moving on it: node registration and labels, terrain tables and encounter rates, GEO anchors and projection bounds, road nets, movement results. |
 | **5** | [Platform & Tooling](BACKLOG-5-platform-tooling.md) | 32 | 26 | Everything outside the game loop: the WBAPI server and its endpoints, the worldbuilder and editors, the HTML parse/export layer, multiplayer mesh, the NPC-speak service. |
