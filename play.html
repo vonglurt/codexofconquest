@@ -24675,19 +24675,7 @@ function _showBattleOverlay() {
   S.char.baseAc  = S.char.ac;
   S.char.ac      = _calcPlayerAc();
   _syncStoryWeaponInto(S.weapon);
-  // Sync story character stats into the battle simulator UI
-  const _sc = S_story.abilityScores || { str:16, dex:12, con:14, int:10, wis:12, cha:8 };
-  const _slv = S_story.level || 1;
-  const _sac = _calcPlayerAc();
-  document.getElementById('char-level').value = _slv;
-  document.getElementById('char-ac').value = _sac;
-  document.getElementById('char-maxhp').value = S_story.hpMax;
-  document.getElementById('char-prof-override').checked = false;
-  ['str','dex','con','int','wis','cha'].forEach(ab => {
-    const el = document.getElementById('ab-' + ab);
-    if (el) el.value = _sc[ab] || 10;
-  });
-  syncCharFromUI();
+  _syncStoryCharInto();
   refreshLeftPanel();
   _updateBattleOverlay();
   // ── Layer 41: Drunk Pit Fight (CY only) ──
@@ -25602,6 +25590,24 @@ function _syncStoryWeaponInto(w) {
   if (el) el.checked = w.finesse;
   const sel = document.getElementById('atk-ability');
   if (sel) sel.value = _storyAtkAbility().label.toLowerCase();
+}
+
+// The one place a story character becomes roller state. Every roller control the
+// story layer owns is written here, including the ones whose correct value is the
+// default: `getAtkAbilityMod` reads `#atk-extra-mod` on every story swing, and a
+// control left unwritten is a control the player can set behind the sheet's back.
+function _syncStoryCharInto() {
+  const sc = S_story.abilityScores || { str:16, dex:12, con:14, int:10, wis:12, cha:8 };
+  document.getElementById('char-level').value = S_story.level || 1;
+  document.getElementById('char-ac').value = _calcPlayerAc();
+  document.getElementById('char-maxhp').value = S_story.hpMax;
+  document.getElementById('char-prof-override').checked = false;
+  document.getElementById('atk-extra-mod').value = 0;
+  ['str','dex','con','int','wis','cha'].forEach(ab => {
+    const el = document.getElementById('ab-' + ab);
+    if (el) el.value = sc[ab] || 10;
+  });
+  syncCharFromUI();
 }
 
 function _storyAtkAbility() {
@@ -37648,17 +37654,8 @@ function storyCharToggle() {
     switchSheet('sheet-character');
     // L36-J: keep simulator inputs in sync when opened from story
     if (S_story.active) {
-      const _sc = S_story.abilityScores || { str:16, dex:12, con:14, int:10, wis:12, cha:8 };
-      document.getElementById('char-level').value  = S_story.level || 1;
-      document.getElementById('char-ac').value     = _calcPlayerAc();
-      document.getElementById('char-maxhp').value  = S_story.hpMax;
-      document.getElementById('char-prof-override').checked = false;
       _syncStoryWeaponInto(S.weapon);
-      ['str','dex','con','int','wis','cha'].forEach(ab => {
-        const el = document.getElementById('ab-' + ab);
-        if (el) el.value = _sc[ab] || 10;
-      });
-      syncCharFromUI();
+      _syncStoryCharInto();
     }
   }
 }

@@ -204,7 +204,7 @@ STR bump (`if (strDelta > 0) S_story.atkBonus` *(deleted, §AUDIT-03ae)*). The s
 
 - **The battle engine** reads its ability modifier from the dice-roller's own control, which is
   `<option value="dex" selected>@3719`. The story→simulator sync at
-  `document.getElementById('char-level').value = _slv;@24677` writes the level, AC, max HP and all six
+  `document.getElementById('char-level').value = _slv;` *(extracted 2026-08-26 into `_syncStoryCharInto@25599`, §ATKAB-01)* writes the level, AC, max HP and all six
   ability scores — but **never repoints that select**. So a story attack rolls
   **d20 + DEX mod + prof + STR mod + weapon/tome/lake/ally**: both abilities, every swing.
 - **The character sheet** uses `const atkTotal = strMod + profBonus + (S_story.atkBonus || 0);` *(rewritten, §AUDIT-03ae)*
