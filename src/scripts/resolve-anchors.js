@@ -100,6 +100,7 @@ function targetFor(sym, defaultLines, cache) {
   return { lines: cache.get(file), sym: rest, file };
 }
 
+const FILE_QUALIFIED_NAME = /^[\w./-]+\.(?:js|mjs|html|md)$/;
 const PLACEHOLDER = /^(?:symbol|sym|path\/to\/file\.js:symbol)$/;
 const isPlaceholder = sym => PLACEHOLDER.test(sym);
 
@@ -144,7 +145,7 @@ function audit(docs, lines) {
         const cached = Number(numStr);
         const t = targetFor(sym, lines, cache);
         const hits = resolve(t.lines, t.sym);
-        const at = { file, docLine: i + 1, sym, cached, hits };
+        const at = { file, docLine: i + 1, sym, cached, hits, target: t.file || rel(HTML) };
         if (!hits.length) dead.push(at);
         else if (hits.includes(cached)) fresh.push(at);
         else stale.push(at);
@@ -239,6 +240,17 @@ function selftest() {
   check('qualified', r.stale.length === 1 && r.stale[0].hits.length === 1 && r.dead.length === 1,
     'resolved against src/js/wbapi-server.js (not the stand-in target); a missing file is DEAD');
 
+  // 8. target reporting — a dead anchor names the file it was actually searched in, and a
+  // BARE repo path (no `:symbol`) is searched in the game file, which is how `edit.html@5881`
+  // survived being read as "renamed" when it was only unqualified (§DX-02hv).
+  r = audit([mk('target.md', 'a `goneSymbol@12` and a `edit.html@5881`')], target);
+  check('target', r.dead.length === 2 && r.dead.every(a => a.target === rel(HTML))
+    && FILE_QUALIFIED_NAME.test('edit.html') && fs.existsSync(path.join(ROOT, 'edit.html')),
+    'a bare repo path is NOT file-qualified — it falls through to the game file and is reported so');
+  r = audit([mk('target2.md', 'see `src/js/wbapi-server.js:function seededNext@99`')], target);
+  check('target', r.stale.length === 1 && r.stale[0].target === 'src/js/wbapi-server.js',
+    'a file-qualified anchor carries the file it resolved in, not the game file');
+
   fs.rmSync(tmp, { recursive: true, force: true });
   return ok;
 }
@@ -298,13 +310,26 @@ if (generic.length) {
   console.warn('');
 }
 if (dead.length) {
-  console.error(`✗ check:anchors — ${dead.length} doc anchor(s) name a symbol that is NOT in ${rel(HTML)}:\n`);
-  for (const a of dead) console.error(`    ${rel(a.file)}:${a.docLine}  \`${a.sym}@${a.cached}\``);
+  console.error(`✗ check:anchors — ${dead.length} doc anchor(s) name a symbol that is NOT in the file they point at:\n`);
+  for (const a of dead) console.error(`    ${rel(a.file)}:${a.docLine}  \`${a.sym}@${a.cached}\`  — not in ${a.target}`);
+  const unqualified = dead.filter(a => !a.target.includes('/') && FILE_QUALIFIED_NAME.test(a.sym)
+    && fs.existsSync(path.join(ROOT, a.sym)));
+  if (unqualified.length) {
+    console.error(`\n  ${unqualified.length} of those name a repo file that EXISTS and was searched anyway in ${rel(HTML)}:`);
+    for (const a of unqualified) console.error(`    \`${a.sym}@${a.cached}\` → write \`${a.sym}:<symbol>@${a.cached}\``);
+    console.error('  An anchor names a SYMBOL. A bare path has none, so it falls through to the game file.');
+  }
   console.error('\n  The pointer is dead, not merely drifted — the symbol was renamed or removed and the');
   console.error('  doc still names it. Find the current name (`node src/scripts/resolve-anchors.js <symbol>`),');
   console.error('  fix the doc, then `npm run anchors:fix` to refresh the number.');
   process.exit(1);
 }
-console.log(`✓ check:anchors — ${fresh.length + stale.length} symbol anchor(s) across `
-  + `${new Set([...fresh, ...stale].map(a => a.file)).size} doc(s) all resolve in ${rel(HTML)}`
+const live = [...fresh, ...stale];
+const qualified = live.filter(a => a.target !== rel(HTML));
+console.log(`✓ check:anchors — ${live.length} symbol anchor(s) across `
+  + `${new Set(live.map(a => a.file)).size} doc(s) all resolve`
+  + (qualified.length
+      ? ` (${live.length - qualified.length} in ${rel(HTML)}, ${qualified.length} file-qualified across `
+        + `${new Set(qualified.map(a => a.target)).size} other file(s))`
+      : ` in ${rel(HTML)}`)
   + (stale.length ? ` (${stale.length} hint(s) stale — run \`npm run anchors:fix\`)` : ''));

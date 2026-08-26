@@ -45,13 +45,6 @@
 
 
 
-### §DX-02hv — `edit.html@5881` is an anchor for a symbol in edit.html, and `check:anchors` only resolves against play.html (NEW 2026-08-25 during §DX-02he, 🟢 no design call)
-
-- [ ] **§DX-02hv — two docs carry a dead anchor, and it is red in the gate chain and in the suite.** **Measured at `4cc201a`:** `npm run check:walk --prefix src` is **17/18, red: check:anchors**, and `npm test --prefix src` is **1031 passed, 2 failed** — `dx01e-anchor-convention.test.js:67` and `:78`, the same finding from the other side. The anchor is `` `edit.html@5881` `` at `docs/backlog/BACKLOG.md:76` and `docs/backlog/plan-archive.md:39`, both written by §DX-02hu. It is not stale, it is **cross-file**: `check-anchors.js` resolves symbols against `play.html` only, and the symbol lives in `edit.html`.
-> **Ground already proved:** the file-prefixed form is the shipped convention and is used elsewhere in the same corpus — `` `src/js/wbapi-server.js:function seededNext@1147` `` (`CONTRIBUTING.md:96`). Check whether `check-anchors.js` honours a `<file>:<symbol>@<line>` prefix; if it does, the fix is the two doc lines. If it does not, the anchor convention has a hole that every non-`play.html` anchor falls through, and that is the row.
-> **Why it is worth a row:** the gate chain and the suite are both red at HEAD for this one anchor, so every subsequent row in the loop closes against a red baseline. It gates.
-> **Provenance:** §DX-02he verification. Confirmed pre-existing at HEAD by `git stash` + re-run, not introduced by that row.
-
 ### §DX-02hr — 72% of every test's time is Chromium re-parsing the same 5.3 MB `play.html` (NEW 2026-08-25 during §DX-02hq, 🟡 ONE DESIGN CALL: is a reused page still an honest test)
 
 - [ ] **§DX-02hr — the suite's remaining cost is not parallelism, it is that each of ~1000 tests loads the whole game from cold.** **Measured at `b0c236d`** with a probe spec (`seedAndLoad` timed against a bare `page.evaluate`): **`seedAndLoad` = 326 ms, a subsequent `evaluate` = 7 ms**, against a typical `quest-runtime-uqf` test of ~450 ms. `play.html` is **5.3 MB** and Playwright's `{ page }` fixture is a fresh context per test, so the cache is cold every time: the suite performs **~649 `page.goto`/`seedAndLoad` calls** and pays a full parse for each. §DX-02hq took the free 24% (7.4m → 5.6m) by running tests inside a file concurrently; **the next 30–40% is here, and it is not free.**
