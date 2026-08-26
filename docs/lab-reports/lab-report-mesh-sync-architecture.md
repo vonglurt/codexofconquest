@@ -308,8 +308,10 @@ a rung on this report's own roadmap.**
 - ⚠ **"MP state … never in the save file."** **CORRECTED.** The session id still lives only in
   `sessionStorage`, so the hazard the sentence guarded — *a save carrying a dead session id* — never
   occurred. But two mesh fields now persist: `S_story.playerKey` (`function _mpPlayerKey()@28982`,
-  the durable trade credential) and `S_story.pvpOff`. Neither is declared in `_S_DEFAULTS()`, with a
-  consequence the ledger design did not intend (§DX-02cn).
+  the durable trade credential) and `S_story.pvpOff`. Neither was declared in `_S_DEFAULTS()`, with a
+  consequence the ledger design did not intend — a New Game inherited the previous character's
+  ledger chain. ✅ **Both declared 2026-08-26 (§DX-02cn)**; a New Game clears the key and NG+
+  preserves it.
 
   *The lesson outlives the correction: **state an invariant at the width of the hazard it prevents,
   not wider.** "No session id in the save" would still be true today. "Never in the save file" was

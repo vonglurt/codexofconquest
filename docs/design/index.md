@@ -683,8 +683,8 @@ All 54 source books are marked `[x]` in `books.md` — all have been processed t
 | `S_story.currentCode` | string | Current node code |
 | `S_story.s8VargaWatches` | number | Varga observation count (S8 mechanic, 0–3) |
 | `S_story.archiveVisited` | boolean | Blue Shutters Archive entered |
-| `S_story.playerKey` | string | Private 32-hex durable trade identity (§MESH-01i 2b); generated once on first 🌐 connect, save-persisted; server derives ledger pid from its sha256 |
-| `S_story.pvpOff` | boolean | §MESH-01j global duel opt-out (🚫 decline all duels); presented at session/start — an off player is unchallengeable |
+| `S_story.playerKey` | string | Private 32-hex durable trade identity (§MESH-01i 2b); generated once on first 🌐 connect, save-persisted; server derives ledger pid from its sha256. **Declared `''` in `_S_DEFAULTS()` (§DX-02cn)** — before that it was absent from the defaults shape, and since `storyNewGame` resets by `Object.assign` on the live object, a fresh character **inherited the previous one's ledger chain**. A New Game clears it; **NG+ preserves it** through its explicit `saved*` locals, because NG+ is the same player continuing |
+| `S_story.pvpOff` | boolean | §MESH-01j global duel opt-out (🚫 decline all duels); presented at session/start — an off player is unchallengeable. Declared `false` in `_S_DEFAULTS()` (§DX-02cn), which is byte-for-byte the `!!undefined` every reader saw before |
 | `S_story.s29LineDelivered` | boolean | Auros/Froberger theory line delivered |
 | `S_story.s49BrynnDelivered` | boolean | Brynn Entry-41 reaction delivered |
 | `S_story.raisonToolsUsed` | boolean | Raison's Tools assessment used |

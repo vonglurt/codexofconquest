@@ -23098,6 +23098,7 @@ const _S_DEFAULTS = () => ({
   dearFriendGranted: {},
   npcTalk: {},   // §NPC-01-D — key → { count, lastDay }: deliberate-talk progress toward Friendly (fav 1). Never raises above 1; Dear Friend stays quest/personal-act-earned.
   npcVisitCounts: {}, couperiSongReceived: false, bruhnsDepthsReported: false, frobergerLastEntryRead: false,
+  playerKey: '', pvpOff: false,
   pitPerks: [], frobergerNoteNode: null, froberger_last_note_found: false, froberger_last_note_read: false, ngPlusRun: 0,
   hoursElapsed: 0, hoursSinceSlept: 0,
   playerR: 0, playerC: 0,   // §CELL-03: current grid position
@@ -24036,6 +24037,7 @@ function storyNewGamePlus() {
   const savedEntry42Written    = !!(S_story.entry42Written);
   const savedEntry42Text       = S_story.entry42Text || '';
   const savedPriorQuestMinus1  = !!(S_story.questMinusOne);
+  const savedPlayerKey         = S_story.playerKey || '';
   try { localStorage.removeItem('coc_autosave'); localStorage.removeItem('coc_checkpoint'); } catch(e) {}
   Object.assign(S_story, _S_DEFAULTS());
   S_story.npcFavorability   = savedFavorability;
@@ -24045,6 +24047,7 @@ function storyNewGamePlus() {
   S_story.entry42Written    = savedEntry42Written;
   S_story.entry42Text       = savedEntry42Text;
   S_story.priorQuestMinusOne = savedPriorQuestMinus1;
+  S_story.playerKey         = savedPlayerKey;
   S_story.active = true;
   S_story.equippedMainWeapon = Object.assign({}, STARTER_POINTY_STICK);
   S_story.equippedWeapon     = Object.assign({}, STARTER_FLINT_DAGGER);
