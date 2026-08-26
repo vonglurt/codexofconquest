@@ -11,7 +11,7 @@
 
 ### §ATKAB-01 — three of the five `getAtkAbilityMod` callers were never checked against the derivation that now drives the select (NEW 2026-08-26 during §NEXT-2026-08-26, 🟢 no design call)
 
-- [x] ✅ SHIPPED 2026-08-26 `PENDING` **§ATKAB-01 — `getAtkAbilityMod` has five call sites and §WEAP-FIN only proved two of them.** The two story surfaces (`_overlayPlayerAttack`, `_overlayOffhandAttack`) were made to agree with `_storyAtkAbility()` and with the character sheet. The other three — `@7217`, `@7374`, `@7665` — are **dice-roller paths**, and nothing has checked that the roller's own tabs still read correctly now that the `atk-ability` select is written by the story sync rather than left at its `<option value="dex" selected>` default.
+- [x] ✅ SHIPPED 2026-08-26 `53c5cf6` **§ATKAB-01 — `getAtkAbilityMod` has five call sites and §WEAP-FIN only proved two of them.** The two story surfaces (`_overlayPlayerAttack`, `_overlayOffhandAttack`) were made to agree with `_storyAtkAbility()` and with the character sheet. The other three — `@7217`, `@7374`, `@7665` — are **dice-roller paths**, and nothing has checked that the roller's own tabs still read correctly now that the `atk-ability` select is written by the story sync rather than left at its `<option value="dex" selected>` default.
 > **Measure first, and the row may close as ALREADY CORRECT.** Re-derive the call-site list at HEAD (`grep -n "getAtkAbilityMod" play.html`), then for each of the three name which control it reads and whether the story sync can reach it. The failure this is looking for is the §AUDIT-03ae shape: two surfaces that are each individually defensible and disagree.
 > **Provenance:** item (iv) of the §NEXT-2026-08-26 hand-off.
 
