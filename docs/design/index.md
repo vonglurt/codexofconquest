@@ -187,7 +187,7 @@ CodexOfConquest is a single-file HTML application. It runs as a combat dice trac
 
 | File | Scope |
 |------|-------|
-| `docs/spec/spec-engine.md` | Layers 0–20 narrative engine design — all marked IMPLEMENTED |
+| `docs/spec/spec-engine.md` | Layers 0–20 narrative engine design — all marked IMPLEMENTED. **§Gate Locks names mission gates, not movement** (§DX-02hh): `cellMove` has no gate branch, the ten conditions are UQF `gate:{…}` read only in `storyCheckQuests`, and each row now names what enforces it — two of them, `escapedDamascus` and `defeatedBattles['KIR']`, enforce nothing. §Layer 7 and `spec-migration.md` §X-C are **tombstoned** — `GATE_LOCKS` greps to 0 since `5123f5a` — annotated, not rewritten (§DX-02c / §AUDIT-03m). |
 | `docs/spec/spec-corridors.md` | Layer 9 corridor system — all L9-A through L9-H ✅ — **⚠️ SUPERSEDED by §CELL-03** |
 | `docs/spec/spec-world.md` | WORLD_DB + MONSTER_POOL architecture — live counts 111 terrains, 398 monsters (2026-07-09; the doc's in-body "66 terrains / 370 monsters" is a historical Layer-37 figure) |
 | `docs/spec/spec-combat.md` | Phase 0/2 combat arena spec — historical |

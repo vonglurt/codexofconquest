@@ -537,6 +537,8 @@ Key design constraint: `storyCheckContinue()` must run and return `true` before 
 
 `GATE_LOCKS` array of four `{from, to, item, msg}` objects: CR→CY (Crypt Key), SC→FL (Sea Cave Key), AL→SE (Conclave Pass), VC→DE (Toll Token). Checked in `storyMove()` before position update. Shard gate: destination CO requires `S_story.shards >= 7`. Victory modal at CO populated by `storyCheckVictory(node)` with Day/HP/Gold/Items/Quests stats.
 
+> **§DX-02hh — RETIRED, kept as history.** This is the Layer 7 migration record, and none of it is live: `GATE_LOCKS` has **0 occurrences** in `play.html` since `5123f5a`, `storyMove` is `storyMove_LEGACY` and is called by nothing, and CR/CY/SC/FL/AL/SE/VC/DE/CO are pre-§CELL-01 node codes. Item-locked edges were retired by the Free-Movement policy; the shard requirement survives as node data (`NODE_MAP.TLS.finalBattle:{minLevel:20,minShards:7}`), not as a movement check. Live description: `spec-engine.md` §Gate Locks.
+
 ### X-D. Layer 8 — Combat Drops + Vendor Economy
 
 **MONSTER_DROPS:** Every `MONSTER_POOL` key has a drop entry (name, icon, sell value by category: beasts → fangs/claws/pelts; humanoids → weapons; undead → bone/dust; constructs → cores/gears; etc.). Drop staged by `battKillEvent()` into `S._pendingDrop` on opponent HP = 0 (`_killFired` flag prevents double-fire). Victory banner (`#battle-victory-banner`) shows drop text in Battle Mode.

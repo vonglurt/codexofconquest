@@ -320,9 +320,8 @@ function cellMove(dir) {
     storyMsg('The sea is impassable on foot.'); return;
   }
 
-  // Gate-lock checks (see cellMove in HTML for all 9 gates)
+  // No gate branch — off-grid and sea are the only refusals (§Gate Locks).
   const destCode = CELL_GRID[`${nr},${nc}`];
-  // ... gate checks using destCode vs S_story.currentCode ...
 
   S_story.playerR = nr; S_story.playerC = nc;
   S_story.visitedCells[`${nr},${nc}`] = true;
@@ -353,24 +352,28 @@ Node OU → GA is a portal — instant, non-directional. Handled by `storyPortal
 
 ### Gate Locks
 
-Gate locks are checked inside `cellMove` using `destCode` (the node at the target cell). They are identical to the old `storyMove` checks:
+**Nothing here gates movement.** `cellMove` is a thin caller over `Mover.move`; it reads `res.destCodes[0]` only to choose the node to render and has **no gate branch of any kind**, and `storyMove_LEGACY` is not called by anything. Free movement is inviolable — a step is refused for exactly two reasons, off-grid or sea (`CONTRIBUTING.md`, Free-Movement / Mission-Gating Policy). The conditions below are **mission gates**: they decide whether a quest is *offered* when you arrive, and are read in one place, `storyCheckQuests`, through the UQF `gate:{…}` structure.
 
-| From | To (destCode) | Condition |
-|------|--------------|-----------|
-| any | TLS | shards < 7 |
-| DAM | any | saulConverted → blind days / escapedDamascus gates |
-| HTY | CI2 | commissionReceived |
-| JRS | ADA | barnachVouchedHR + hellenistsThreaten |
-| NUE | CAN | tideGateOpened |
-| HCA | DS0 | defeatedBattles['HCA_BOSS'] |
-| KIR | ZRH | defeatedBattles['KIR'] |
-| WRO | BNX | huntHook2Received |
-| ALF | VAW | lakeLairLocated |
-| DA2 | DA3 | tideGateOpened |
+The `From → To` columns are the *narrative* framing each condition was written for, not a lock on that edge. What actually enforces each one:
+
+| Narrative edge | Condition | Enforced by |
+|---|---|---|
+| any → TLS | 7 shards (+ level 20) | **data, not a gate** — `NODE_MAP.TLS.finalBattle:{minLevel:20,minShards:7}` read by `_finalBattleReady(code)`; the TLS quest itself lists one shard earlier, `gate:{ shardsMin:6, notBattles:['TLS'] }` |
+| DAM → any | `saulConverted` | `quest_anath`, `gate:{ flags:['saulConverted'] }` |
+| DAM → any | `escapedDamascus` | **nothing.** Written as a `mission_bit` on one `onPass` and declared in `S_story`; no `gate` reads it |
+| HTY → CI2 | `commissionReceived` | `quest_ezzir` and `quest_philippi`, `gate:{ flags:['commissionReceived'] }` |
+| JRS → ADA | `barnachVouchedHR`, `hellenistsThreaten` | **two separate quests, one flag each** — `quest_hellenists_jerusalem` and `quest_barnach_finds`; no quest requires both |
+| NUE → CAN, DA2 → DA3 | `tideGateOpened` | two quests: `gate:{ flags:['tideGateOpened','cycle4NoteRead'] }` and `gate:{ flags:['tideGateOpened'] }` |
+| HCA → DS0 | `defeatedBattles['HCA_BOSS']` | one quest, `gate:{ battles:['HCA_BOSS'] }`. The Leviathan itself is offered by the `_nodeHookHcaLeviathan` arrival panel, which renders a button — it does not block the step |
+| KIR → ZRH | `defeatedBattles['KIR']` | **no gate.** The flag is read once, to pick which sentence the Dunfall access panel shows |
+| WRO → BNX | `huntHook2Received` | one quest, `gate:{ flags:['huntHook2Received'] }` |
+| ALF → VAW | `lakeLairLocated` | one quest, `gate:{ flags:['lakeLairLocated'] }` |
+
+Two rows are inert: `escapedDamascus` and `defeatedBattles['KIR']` gate nothing at all. A `gate` flag with no reader is the §AUDIT-03bj shape.
 
 ### Time Cost
 
-- Every `cellMove` call advances `hoursElapsed` and `hoursSinceSlept` by 1.
+- **Movement is timeless (§TIMELESS-01).** `cellMove` advances neither `hoursElapsed` nor `hoursSinceSlept`; its own comment says so. The claim that every call advanced both by 1 described the pre-§TIMELESS-01 engine.
 - Missing sleep at end of day: `voidPressure += 1`, DIS on next 2 battles.
 
 ### Legacy: storyMove_LEGACY
@@ -630,6 +633,8 @@ The game is designed to be built in vertical slices. Each layer adds one complet
 - Shard gate: CO requires all 7 shards
 - `storyMove()` checks gate locks and displays blocked message with required item name
 - Victory modal at CO: shows day/HP/gold/items/quests stats on Codex reforging
+
+> **§DX-02hh — RETIRED, kept as history.** `GATE_LOCKS` has **0 occurrences** in `play.html` since `5123f5a`, `storyMove` is `storyMove_LEGACY` and uncalled, and CR/CY/SC/FL/AL/SE/VC/DE/CO are pre-§CELL-01 node codes. Item-locked edges were retired wholesale by the Free-Movement policy; what survives is mission gating — see **§Gate Locks** above. The bullets are left as written (history is annotated, not rewritten — §DX-02c / §AUDIT-03m).
 
 ### Layer 8 — ✅ IMPLEMENTED (scope expanded beyond original "Polish" plan)
 **Original plan:** Froberger's journal read-alouds, survival pressure callouts, NPC dialogue.  
@@ -921,7 +926,7 @@ The story navigation control is a 3×3 grid of buttons. Corner buttons are `.dpa
 
 | Function | Location | Purpose |
 |----------|----------|---------|
-| `cellMove(dir)` | story mode | **Primary movement handler** — moves one grid cell per call; gate checks; CELL_GRID lookup; calls storyRender or _enterEmptyCell |
+| `cellMove(dir)` | story mode | **Primary movement handler** — thin caller over `Mover.move`; moves one grid cell per call; **no gate checks**; CELL_GRID lookup; calls storyRender or _enterEmptyCell |
 | `_enterEmptyCell(r, c)` | story mode | Renders an unnamed cell — infers terrain, shows exits, rolls random encounter |
 | `_inferTerrain(r, c)` | story mode | Returns majority terrain name from CELL_GRID cardinal neighbors; fallback 'midlands' |
 | `storyMove_LEGACY(dir)` | story mode | Old node-graph navigator — retained until §CELL-05; **not called by any UI element** |
