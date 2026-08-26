@@ -7,6 +7,17 @@
 
 ---
 
+## Archived 2026-08-25 — §DX-02hw (the rule was a habit two commits deep in a diff; now it has a witness)
+
+### §DX-02hw — a doc could not quote a dead anchor, and the escape that worked was written down nowhere ✅ SHIPPED 2026-08-25 `PENDING_SHA`
+
+- [x] **§DX-02hw — writing down the defect reproduced the defect.** **Measured at `e1ca994`:** the §DX-02hv archive entry and §RESUME row quote the anchor they retired and the remedy string that replaces it; in a code span those *are* anchors, so `check:anchors` audited **7 of them** and went red on the commit whose subject was making it green. `ANCHOR_RE` (`resolve-anchors.js:48`) cannot tell a ship record from a live pointer. The working commit escaped them by putting the `@N` **outside** the span — *`` `edit.html` ``@5881* — which `ANCHOR_RE` cannot match, but nothing stated the rule and nothing enforced it.
+> **The design call, and the half of my own recommendation the ground killed.** The row proposed (a) document the escape, (b) exempt archived ship records, (c) invent an inline escape token, recommending **(a) plus the narrow half of (b)**. **(b) is disproved by measurement:** `plan-archive.md` holds **128 live symbol anchors** in 794 KB and `BACKLOG.md` another **17** (`node -e` over `ANCHOR_RE`) — exempting the archive to buy an escape for a handful of quotations would blind the gate to 128 real pointers into a doc nobody re-reads. History being *annotated rather than rewritten* is an argument about the numbers, not about whether the symbols still resolve. **Shipped (a) alone, plus the witness (b) and (c) were both standing in for.**
+> **Shipped:** the escape is now a stated rule in `CONTRIBUTING.md`'s Doc-Anchor Policy, beside the existing `` `symbol@1234` `` placeholder bullet, with the 7-anchor failure and the 128-anchor measurement as its reasons; `docs/design/index.md`'s gate #15 row carries it and the rejection of the exemption; and **selftest check #9, `selftest[quote]`**, asserts that a quoted anchor with the `@N` outside the span is not audited **while a live one in the same document still is** — so the convention has an enforcing witness rather than a habit. Selftest **9 → 10 checks**. Two dead-anchor bullets in `CONTRIBUTING.md` were corrected in the same pass to match what the gate now says (the target is *the file the anchor points at*, not *the HTML*), and the bare-path trap is named there.
+> **It caught itself on the way in.** The first draft of the new bullet wrote *ANCHOR_RE matches* `` *`` `…` ``@1234* `` **in a code span** — creating a live anchor whose symbol is `…`, which resolves in `play.html`, taking the corpus **4113 → 4114** with one more stale hint. The count was the only thing that noticed. Rewritten to the form the bullet is about, and back to **4113**.
+> **Verified:** `check:walk` **18/18, wall 10.0s**; `npm test --prefix src` **1033 passed, 0 failed, 3.8m**; `check:anchors` **4113 anchors / 121 docs, 3617 in `play.html` + 496 file-qualified across 31 files**.
+> **Provenance:** §DX-02hv, which hit it on its own closing commit and had to amend.
+
 ## Archived 2026-08-25 — §DX-02hv (the anchor was not renamed, it was never qualified — and the gate said "renamed")
 
 ### §DX-02hv — a bare path is not a symbol, and the failure message sent the reader to the wrong file ✅ SHIPPED 2026-08-25 `e1ca994`

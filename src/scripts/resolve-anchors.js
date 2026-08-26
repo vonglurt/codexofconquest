@@ -251,6 +251,14 @@ function selftest() {
   check('target', r.stale.length === 1 && r.stale[0].target === 'src/js/wbapi-server.js',
     'a file-qualified anchor carries the file it resolved in, not the game file');
 
+  // 9. quoting escape — a ship record must be able to NAME the anchor it retired without
+  // creating one. Keeping the `@N` outside the code span is invisible to ANCHOR_RE, which
+  // cannot tell history from a live pointer (§DX-02hw; §DX-02hv's own close went red on 7).
+  r = audit([mk('quote.md', 'we retired *`knownSymbol`@12* and *`goneSymbol`@12*, '
+    + 'replacing them with `knownSymbol@12`')], target);
+  check('quote', r.fresh.length === 1 && !r.dead.length && !r.stale.length,
+    'an anchor quoted with the @N outside the code span is not audited; the live one still is');
+
   fs.rmSync(tmp, { recursive: true, force: true });
   return ok;
 }
