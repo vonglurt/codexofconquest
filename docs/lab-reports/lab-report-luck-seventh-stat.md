@@ -110,7 +110,7 @@ transcription in the original §II-A is exact, `product <= 0` guard included.
 | Site | Anchor | Behaviour at HEAD |
 |---|---|---|
 | d100 loot roll | `Math.max(0, _luckMod())); // Layer 48: Luck bonus@24548` | `min(99, u + max(0, L))`; now on the seeded stream (§VM-01-B) |
-| Death saves | `let d20 = Math.ceil(Math.random() * 20) + _luckMod();@25898` | flat `+L`; **unseeded** — §DX-02m's named instance |
+| Death saves | `let d20 = Math.ceil(_combatRng() * 20) + _luckMod();@25977` | flat `+L`; **unseeded** — §DX-02m's named instance |
 | Tournament tie-break | `outcome = _luckMod() > 0 ? 'win'@34113` | undocumented; added after this report; hosted at `SSJ:{r:4,c:192},@9430` |
 | Character sheet | `✦ LUCK@37671` | `${_calcLuck()} [${m(_luckMod())}]` + the italic note, verbatim |
 
@@ -353,7 +353,7 @@ range was too narrow and guessed the wrong bound in the safe direction.
   cha:8 }` fallback literals. Unreachable since before this report, and the direct cause of a wrong
   claim in four documents. Sixth widening of the proposed `check:deadconsts`: a **dead alternative
   in a fallback chain that names a plausible data shape** is a documentation hazard, not inert.
-- **§DX-02m (existing, +confirmation)** — `let d20 = Math.ceil(Math.random() * 20) + _luckMod();@25898`
+- **§DX-02m (existing, +confirmation)** — `let d20 = Math.ceil(_combatRng() * 20) + _luckMod();@25977`
   and the Indomitable reroll three lines below remain the highest-stakes unseeded rolls in the file.
   Already filed by §DOC-02n; no new row.
 - **§FISH-01 (existing, +4 stranded consumers)** — this row now gates **four** of Luck's nine call
@@ -376,7 +376,7 @@ range was too narrow and guessed the wrong bound in the safe direction.
 | `let _cc_scores = { str:10, dex:10, con:10, int:8, wis:8, cha:8 };@38550` | untouched-panel default → Mod −1 |
 | `Math.max(0, _luckMod())); // Layer 48: Luck bonus@24548` | loot roll |
 | `const _D100_TABLE = [@24518` · `const gp = Math.floor(_seededNext() * 200) + 50;@24558` | what luck's 1 pp actually moves |
-| `let d20 = Math.ceil(Math.random() * 20) + _luckMod();@25898` | death saves |
+| `let d20 = Math.ceil(_combatRng() * 20) + _luckMod();@25977` | death saves |
 | `outcome = _luckMod() > 0 ? 'win'@34113` · `SSJ:{r:4,c:192},@9430` | tournament tie-break (undocumented) |
 | `Luck reduces Survival DC@30493` · `bare hook uses LuckMod@30528` · `typeTotal  = tDie + bait.type + _luckMod()@30558` | stranded fishing trio |
 | `const lm = _luckMod();@23424` | §DROP-03 `luckScale`, also stranded |

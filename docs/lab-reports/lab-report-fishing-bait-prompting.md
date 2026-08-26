@@ -120,7 +120,7 @@ Two-way. **STALE** = the report aged. **NOT SHIPPED** = specified, absent at HEA
 | 17 | `Luck Mod = floor((Luck − 10) / 2)` | `_luckMod()@23445` — byte-exact | **SHIPPED, exact** |
 | 18 | Luck never stored, computed on demand | Correct — no `S_story` field | **SHIPPED, exact** |
 | 19 | Luck at 7 roll points | 4 shipped, 3 not (see §V-C); **2 unspecified additions** | **PARTIAL / EXTENDED** |
-| 20 | Luck on fishing death saves only | `Math.ceil(Math.random() * 20) + _luckMod()@25898` applies to **all** death saves | **EXTENDED** |
+| 20 | Luck on fishing death saves only | `Math.ceil(_combatRng() * 20) + _luckMod()@25977` applies to **all** death saves | **EXTENDED** |
 | 21 | Tournament tiebreaker: higher Luck Mod, **coin flip on equal** | Higher Luck Mod shipped; equal Luck Mod leaves `'tie'` — no coin flip | **PARTIAL** |
 | 22 | Q-FISH-00 … Q-FISH-05 (6 quests) | Only `quest_fish_01` exists | **1 of 6** |
 | 23 | Q-TOUR-01 … Q-TOUR-06 (6 quests) | `quest_tour_01`–`06` all live | **6 of 6 SHIPPED** |
@@ -181,7 +181,7 @@ promises, and both are this report's own specifications surviving as player-faci
 `_calcLuck()@23439` reproduces the specified formula byte-for-byte, including the `product <= 0`
 guard, over the exact default statline. Of the seven specified roll points: **shipped** — zone DC
 (`- _luckMod()@30493`), type roll (`tDie + bait.type + _luckMod()@30558`), death save
-(`Math.ceil(Math.random() * 20) + _luckMod()@25898`), tournament tiebreak (minus the coin flip);
+(`Math.ceil(_combatRng() * 20) + _luckMod()@25977`), tournament tiebreak (minus the coin flip);
 **not shipped** — bait catch roll (no bait combat), predator hit roll, weapon drop quality.
 **Unspecified additions:** a Luck term in the d100 loot roll, and `luckScale` in `LAKE_MAGIC_DB`.
 
@@ -276,7 +276,7 @@ points at this report for its contents, and so this table is the specification o
   `fishingQuestFlags.q01`; plus `_magicTierAllowed` as a **live function reachable only from dead
   branches**, which a reader/writer census scores as live.
 - **§DX-02m, named instance outside the fishing block** — unseeded `Math.random()` on story death
-  saves at `Math.ceil(Math.random() * 20) + _luckMod()@25898`.
+  saves at `Math.ceil(_combatRng() * 20) + _luckMod()@25977`.
 - **§DX-02v extended** — `monsters.md:317` (370 vs 398 monsters), `monsters.md:645` (retired `YL`).
 
 **Blocked on §FISH-01.** Every defect above except §FISH-02's d100 half and the death-save roll sits

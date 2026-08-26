@@ -357,7 +357,7 @@ and `_rollMonsterWeaponDrop()` both draw the seeded stream (§VM-01-B), so a sav
 The trophy channel does not: **13 of the 398 `MONSTER_DROPS` entries are arrays** — multi-drop
 tables picked by `function _pickDrop(table) {@7041`, which rolls `Math.random()` and writes the
 result to persisted inventory through `const _rawDrop = MONSTER_DROPS[S.enemy.key];@7049`. The
-death save is the same shape: `let d20 = Math.ceil(Math.random() * 20) + _luckMod();@25898` decides
+death save is the same shape: `let d20 = Math.ceil(_combatRng() * 20) + _luckMod();@25977` decides
 whether the character lives, off the unseeded stream, while the loot roll eleven hundred lines away
 was converted. Both are instances of **§DX-02m** (open, 🟠), whose stated first job is to measure
 how many of the file's **51** `Math.random()` sites reach persisted state; these are four of them,

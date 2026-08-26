@@ -6413,7 +6413,7 @@ const WORLD_DB = { // → doc: docs/spec/spec-world.md §III-C. WORLD_DB Top-Lev
    HELPERS
 ══════════════════════════════════════════════════════════ */
 function roll(sides) {
-  return Math.floor(Math.random() * sides) + 1;
+  return Math.floor(_combatRng() * sides) + 1;
 }
 
 function rollN(sides, count) {
@@ -6428,7 +6428,8 @@ function rollN(sides, count) {
 // traces, server-verifiable rolls. Closes the SP/MP divergence the server documents
 // against itself ("a known SP/MP divergence", wbapi-server.js:1155). Feeds the four
 // game-state roll pipelines only (encounter · _rollSkill · loot/drop ·
-// _weightedMonsterPick); combat/fishing/cosmetic rolls stay on Math.random() (§6.3).
+// _weightedMonsterPick); fishing and cosmetic rolls stay on Math.random() (§6.3),
+// and the fight draws it only under `_combatRng`'s replay flag.
 function _seededNext() {
   // Lazy one-time seed — a BOOTSTRAP, not a game-state roll: Date-derived, never
   // Math.random(); thereafter the stream is deterministic and persisted. Covers
@@ -6440,6 +6441,15 @@ function _seededNext() {
   t = Math.imul(t ^ (t >>> 15), t | 1);
   t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
   return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+}
+
+// §VM-01-B-FU — the fight's die. Combat entropy is a shipped feature and stays on
+// Math.random(); `S_story.replaySeeded` moves the whole fight onto the persisted
+// seeded stream instead, so a run that ends in a battle can be handed to someone
+// else as a save file and replayed roll for roll. It must be on for the run you
+// want to reproduce — a save made under it OFF carries no combat stream to replay.
+function _combatRng() {
+  return S_story.replaySeeded ? _seededNext() : Math.random();
 }
 
 function rollNExploding(sides, count) {
@@ -23069,6 +23079,7 @@ let S_story = {
 const _S_DEFAULTS = () => ({
   active: false, currentCode: 'LHR',
   rngState: 0,   // §VM-01-B: seeded-PRNG stream cell (0 = unseeded; _seededNext lazily bootstraps). Persisted → a save fully determines future encounter/skill/loot rolls.
+  replaySeeded: false,   // §VM-01-B-FU: debug replay mode — when true the fight draws rngState too, so a battle is reproducible from a save.
   hp: 9, hpMax: 9, gold: 150, day: 1, shards: 0, voidPressure: 0,
   log: [], inventory: [], visited: {}, quests: {}, journalRead: {},
   defeatedBattles: {}, pendingBattle: null,
@@ -24637,8 +24648,8 @@ function _condCost(match) {
 function _storyRollInit() {
   const tierMod = { trivial:-2, easy:0, medium:1, hard:3, deadly:5 };
   const eTier   = S.opp.tier || 'easy';
-  const pRoll   = Math.ceil(Math.random() * 20);
-  const eRoll   = Math.ceil(Math.random() * 20) + (tierMod[eTier] ?? 0);
+  const pRoll   = Math.ceil(_combatRng() * 20);
+  const eRoll   = Math.ceil(_combatRng() * 20) + (tierMod[eTier] ?? 0);
   S_story.battleTurn  = (pRoll >= eRoll) ? 'player' : 'enemy';
   S_story.battlePRoll = pRoll;
   S_story.battleERoll = eRoll;
@@ -24955,7 +24966,7 @@ function _storyUseSpellScroll(invIdx) {
   }
   S_story.inventory.splice(invIdx, 1);
   const dc   = Math.max(5, (S.char.baseAc || S.char.ac || 10) - 2);
-  const roll = Math.ceil(Math.random() * 20);
+  const roll = Math.ceil(_combatRng() * 20);
   const pass = roll >= dc;
   if (pass) {
     S_story.spellAdvantageReady = true;
@@ -25101,7 +25112,7 @@ function _overlayOffhandAttack() {
   if (!S.offhand || !S.offhand.count) return;
   _disableSboActions(true);
   _statTally('attacksAttempted', 1);
-  const d20Val   = Math.ceil(Math.random() * 20);
+  const d20Val   = Math.ceil(_combatRng() * 20);
   const atkMod   = getAtkAbilityMod();
   const profB    = S.weapon.prof ? getProfBonus() : 0;
   const allyB    = S.partyHitBonus || 0;   // §MESH-01f: co-presence to-hit buff also applies to the off-hand strike
@@ -25213,12 +25224,12 @@ function _storyEnemyTurn() {
         _sboLog('⚫ The Void presses in — the wound only makes it worse. (+' + e.atk + ' atk, +' + e.dmg + ' dmg' + (e.die ? ', +' + e.die + 'd' + S.enemy.dmgDie : '') + ')');
         setTimeout(() => storyMsg('⚫ Cornered, the Void-touched thing does not falter — it presses in harder.'), 150);
       }
-    } else if (Math.random() < _fleeChance(S.opp.tier)) {
+    } else if (_combatRng() < _fleeChance(S.opp.tier)) {
       _storyEnemyFlees();
       return;
     }
   }
-  const d20Val  = Math.ceil(Math.random() * 20);
+  const d20Val  = Math.ceil(_combatRng() * 20);
   const atkTotal = d20Val + S.enemy.atk;
   const isCrit  = d20Val === 20;
   const isNat1  = d20Val === 1;
@@ -25328,7 +25339,7 @@ function _storyBattleVictory() {
   // Layer 41: Worn Ledger Book drop at SL when quest active
   if (pb && pb.nodeCode === 'BMA' && S_story.quests['quest_brynn_ledger'] === 'active'
       && !(S_story.inventory||[]).some(i => i.name === 'Worn Ledger Book')
-      && Math.random() < 0.6) {
+      && _combatRng() < 0.6) {
     S_story.inventory.push({name:'Worn Ledger Book',icon:'📔',type:'quest_item',sell:0,questId:'quest_brynn_ledger'});
     storyMsg('📔 Found: Worn Ledger Book — Brynn will want this back.');
   }
@@ -25766,21 +25777,21 @@ function _storyFleeMutual() {
   if (S_story.usedBonusAction) return;
   _disableSboActions(true);
   // Player free attack on enemy
-  const pRoll = Math.ceil(Math.random() * 20) + (getAtkAbilityMod ? getAtkAbilityMod() : 0);
+  const pRoll = Math.ceil(_combatRng() * 20) + (getAtkAbilityMod ? getAtkAbilityMod() : 0);
   const pHit  = pRoll >= S.enemy.ac;
   let pDmg = 0, pEffortXp = 0;
   if (pHit) {
-    pDmg = Math.max(1, Math.ceil(Math.random() * (S.weapon.die || 6)) + (getDmgMod ? getDmgMod() : 0));
+    pDmg = Math.max(1, Math.ceil(_combatRng() * (S.weapon.die || 6)) + (getDmgMod ? getDmgMod() : 0));
     S.opp.hp = Math.max(0, S.opp.hp - pDmg);
   } else {
     pEffortXp = _grantMissEffortXp();
   }
   // Enemy free attack on player
-  const eRoll = Math.ceil(Math.random() * 20) + S.enemy.atk;
+  const eRoll = Math.ceil(_combatRng() * 20) + S.enemy.atk;
   const eHit  = eRoll >= S.char.ac;
   let eDmg = 0;
   if (eHit) {
-    eDmg = Math.max(1, Math.ceil(Math.random() * (S.enemy.dmgDie || 6)) + (S.enemy.dmgFlat || 0));
+    eDmg = Math.max(1, Math.ceil(_combatRng() * (S.enemy.dmgDie || 6)) + (S.enemy.dmgFlat || 0));
     S.player.hp  = Math.max(0, S.player.hp - eDmg);
     S_story.hp   = S.player.hp;
   }
@@ -25964,11 +25975,11 @@ function _storyRollDeathSave() {
   if (!ds.active) return;
   document.getElementById('btn-sbo-ds-roll').disabled = true;
 
-  let d20 = Math.ceil(Math.random() * 20) + _luckMod(); // Layer 48: Luck applies to death saves
+  let d20 = Math.ceil(_combatRng() * 20) + _luckMod(); // Layer 48: Luck applies to death saves
   let indomUsed = false;
   // Indomitable I (Lv9): if roll fails (<10) and charges remain, reroll once
   if (d20 < 10 && (S_story.indomitableCharges || 0) > 0) {
-    const reroll = Math.ceil(Math.random() * 20);
+    const reroll = Math.ceil(_combatRng() * 20);
     _sboLog('🛡 Indomitable! Death save rerolled: ' + d20 + ' → ' + reroll + ' (' + Math.max(0, S_story.indomitableCharges - 1) + ' charges left)');
     S_story.indomitableCharges = Math.max(0, S_story.indomitableCharges - 1);
     d20 = reroll;
