@@ -36,6 +36,7 @@ const GATES = [
   'check:noderegs', 'check:npcregs', 'check:anchors', 'check:legacycodes',
   'check:battlepools',
   'check:spdx', 'check:backlogcounts', 'check:condprices',
+  'check:docpointers',
 ];
 
 const argv = process.argv.slice(2);

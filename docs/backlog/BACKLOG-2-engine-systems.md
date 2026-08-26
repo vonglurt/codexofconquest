@@ -45,6 +45,14 @@
 ---
 ## §BACKLOG — Open Items (Phase 2)
 
+### §LOOT-DEAD-01 — `LOOT_TABLE` is a live 77-row loot table with zero readers, and the doc records it as removed (NEW 2026-08-26 during §DOCPTR-01, 🟢 no design call)
+
+- [ ] **§LOOT-DEAD-01 — the drop table nothing rolls, and the two places that say otherwise.** **Measured at `99a913f`: `const LOOT_TABLE = [` at `play.html:24453` occurs exactly ONCE in the repo — its own declaration.** It is not a stub: it is ~77 populated entries built out of `Array(n).fill({…})` runs. The live roller is `_rollD100Loot()`, which reads `_D100_TABLE@24530`.
+> **Two records launder it, in opposite directions, and that is what makes it worth a row rather than a deletion.** `docs/mechanics/mechanics-economy.md:251` states `LOOT_TABLE` *(removed)* — *"Old d20 drop table — replaced by `_D100_TABLE` (§DROP-01 2026-06-05); definition now a comment stub."* **Both halves are false**: it was not removed and it is not a comment stub. Meanwhile the const's own `→ doc:` comment glosses it as *"(d100 result → item; used by `_rollD100Loot()`)"* — it is not d100-shaped and `_rollD100Loot()` has never read it. **A doc saying a thing is gone is worse than a doc that never mentioned it**, because it closes the question for the next reader.
+> **Why it survived every existing gate:** `check:deadconsts` and its siblings walk *references*, and a const referenced nowhere but its own declaration is exactly the shape §CSS-CENSUS records as invisible in one direction. Nothing walks *data* tables for readers.
+> **The work:** confirm the zero-reader count at HEAD, delete the table, correct the economy doc's row to say what actually happened (superseded by `_D100_TABLE`, definition retained until this row), and correct the `→ doc:` gloss. **Check the sell values before deleting** — if `_D100_TABLE` prices the same items differently, the dead table is the older balance pass and the discrepancy is its own finding.
+> **Provenance:** §DOCPTR-01, which repointed this const's dead `→ doc:` comment and found the table behind it had no readers. The pointer now names a live section (`§FL5 — Loot Pipeline`); **the false gloss beside it is deliberately left in place as this row's evidence.**
+
 ### §NEXT-2026-08-26 — the state this session stopped in, and what the next one should pick up (NEW 2026-08-26, session hand-off, 🟢 read first then delete)
 
 - [ ] **§NEXT-2026-08-26 — hand-off note. Delete this row once its contents have been taken up.** Six rows shipped 2026-08-26 in one continuous loop: **§DX-02ib** (Phase 5), **§XP-FLEE**, **§WEAP-FIN**, **§WEAP-RANGED**, **§WEAP-FIN-FU**, **§DX-02er** (all Phase 2). Tree clean, gates **20/20**, suite **1109 passed, exit 0**. No unfinished increment.

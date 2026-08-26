@@ -6274,7 +6274,7 @@ const VENDOR_NODES = new Set(['LLA','LGW','STN','PDL','BK']); // → doc: docs/m
 ══════════════════════════════════════════════════════════ */
 const P = MONSTER_POOL;
 // ◆◆◆ WORLDBUILDER:WORLD_DB:START ◆◆◆
-const WORLD_DB = { // → doc: world.md §WORLD_DB
+const WORLD_DB = { // → doc: docs/spec/spec-world.md §III-C. WORLD_DB Top-Level Structure
   // ── Urban / Town ─────────────────────────────────────────
   city:             { label:'City Streets',        icon:'🏙',  monsters:[ P.commoner, P.kobold, P.bandit, P.spy, P.shadow, P.thug, P.imp, P.kenku, P.wererat, P.ghoul, P.intellect_dev, P.doppelganger, P.wight, P.gargoyle, P.assassin, P.gladiator, P.veteran, P.night_hag, P.knight, P.stone_golem, P.vampire, P.lich, P.striga, P.botchling, P.plague_maiden, P.rabid_dog, P.cockroach_swarm, P.swarming_wasps ] },
   city_slums:       { label:'City Slums',          icon:'🏚',  monsters:[ P.rabid_dog, P.aggressive_turkey, P.horned_goat, P.toilet_leech, P.honeybucket_spider, P.cockroach_swarm, P.skittish_sheep, P.swarming_wasps, P.night_owl, P.raging_bull, P.spooked_horse, P.catnabbing_eagle, P.commoner, P.giant_rat ] },
@@ -10611,7 +10611,7 @@ const NPC_DIALOGUES = { // → doc: docs/story/story-arc-npc-dialogues.md
 
 /* ── Layer 3: Quest Data ── */
 // ◆◆◆ WORLDBUILDER:QUEST_DB:START ◆◆◆
-const QUEST_DB = { // → doc: world.md §QUEST_DB
+const QUEST_DB = { // → doc: quest.md §Quest Format
   mq_1: { id:'mq_1', type:'main', schema:'UQF-1.0', gate:{}, bits:[], completion:{ items:['Trade Seal (Shard #1)'] }, title:'Follow the Bloodstained Map',
     desc:'A dying courier pressed a map into your hands. He said one word — "Sweelinck" — as if that word would explain everything that came before it. You do not know what came before it. The map is bloodstained on the upper right corner. The blood is not yours. Follow the trail.',
     hint:'Seek Magistra Muffat at the Tilbury docks.',
@@ -22716,7 +22716,7 @@ const NPC_DIALOGUE = { // → doc: story.md §FL7
 
 /* ── Layer 41: Birka NPC Profiles ── */
 // ◆◆◆ WORLDBUILDER:BIRKA_NPC:START ◆◆◆
-const BIRKA_NPC_PROFILES = { // → doc: world.md §Birka Six NPCs
+const BIRKA_NPC_PROFILES = { // → doc: world.md §PART FOUR-B — THE BIRKA SIX
   yael: {
     key:'yael', name:'Guard Captain Yael Scheidemann', occupation:'city guard captain', node:'LHR',
     neutral:  { greeting:'Captain Scheidemann straightens as you approach.',
@@ -24450,7 +24450,7 @@ const STARTER_DAGGER = { name:'Rusted Dagger', icon:'🗡', type:'item', sell:0,
 const STARTER_POINTY_STICK = { tier:'pointy_stick', name:'Pointy Stick', icon:'🪵', type:'mainweapon', die:4, count:1, magicBonus:0, sell:10, minLevel:1 };
 const STARTER_FLINT_DAGGER  = { tier:'flint_dagger',  name:'Flint Dagger',  icon:'🗡', type:'weapon',     atkBonus:-3, sell:5, minLevel:1 };
 
-const LOOT_TABLE = [ // → doc: docs/mechanics/mechanics-economy.md §D100 Loot Table (d100 result → item; used by _rollD100Loot())
+const LOOT_TABLE = [ // → doc: docs/mechanics/mechanics-economy.md §FL5 — Loot Pipeline (d100 result → item; used by _rollD100Loot())
   ...Array(8).fill({ name:'Minor Healing Potion',   icon:'🧪', type:'potion', sell:25  }),
   ...Array(2).fill({ name:'Spell Scroll',           icon:'📜', type:'spell',  sell:50  }),
   ...Array(5).fill({ name:'Healing Potion',         icon:'🫧', type:'potion', sell:75  }),
@@ -26349,7 +26349,7 @@ const EPIC_BOSS_POOL = { // → doc: docs/story/story-arc-epic-battlegrounds.md
 /* ── Layer 39: Epic Battleground NPC Dialogue ──
    keyed by EB node code; npcNode = where NPC stands (differs from parent for ET→BQ, EG→BK) */
 /* ── Layer 39-O: Epic Battleground Special Item Registry ── */
-const EB_STORY_ITEMS = { // → doc: story.md §EB Wounds (EB encounter reward items: forge_rune, scholar_token, etc.)
+const EB_STORY_ITEMS = { // → doc: world.md §EB_STORY_ITEMS (EB encounter reward items: forge_rune, scholar_token, etc.)
   forge_rune:       { name:'Forge Rune',         icon:'🔱', type:'eb_reward', desc:'One use: advantage on any enchanted-object or Shard assembly roll.', sell:200 },
   runic_hammer:     { name:"Runewright's Hammer", icon:'🔨', type:'eb_reward', desc:"Dora Flint's teaching hammer. Forged for someone who would use it right.", sell:180 },
   star_fragment:    { name:'Star Fragment',       icon:'⭐', type:'eb_reward', desc:'A seraph made this for eventually. Glows faintly, always warm.', sell:0 },
@@ -26664,7 +26664,8 @@ const CORELLI_ITEMS = { // → doc: world.md §Corelli the Wandering Merchant (5
   last_cipher:   { name:'The Last Cipher', icon:'🔐', type:'readable', sell:0, price:0,
     readText:'A Scholar King administrative cipher key — the kind used to decode sealed distribution correspondence. At the bottom, in a different hand: "Antecedent Containment Protocol, cycle 3. All materials reclassified. Distribution route: suppressed. Reason on file: CLASSIFICATION LEVEL 7." Beneath that, scratched with a nail rather than written with a pen: "She built it to save us. They hid it to save themselves."' },
 };
-// → doc: world.md §Corelli the Wandering Merchant. The old 26×16 codes were DK/RD/BK/SQ/IN
+// → doc: world.md §Corelli the Wandering Merchant
+// The old 26×16 codes were DK/RD/BK/SQ/IN
 // (corrected 2026-08-11 §DOC-02g from the archive, `git show 194a810`/`c1d5a94^`; this comment
 // previously said TL/RD/IS/WM/IN, wrong on 3 of 5 — a migration comment written from memory
 // rather than from the diff). Live they are LCY/WRO/BK/NUE/TLL. ⚠️ Stop 3's `BK` is WRONG:
@@ -26774,7 +26775,7 @@ const FISHING_RODS = [
 ];
 
 // ── §XLV: Yugurt Tournament — Six Fishermen ──
-const NPC_TOUR_OPPONENTS = [ // → doc: plan-archive.md §XLV (YC tournament; competence bonus drives NPC cast roll)
+const NPC_TOUR_OPPONENTS = [ // → doc: docs/archive/plan-archive-verbatim-2026-06-12.md §XLV — Yugurt Tournament + Six Fishermen (YC tournament; competence bonus drives NPC cast roll)
   { key:'pip',    name:'Pip',             title:'The Kid',            competence:'Novice',   bonus:-1, stake:50,   order:1, xp:100,
     quote:'"I have been practicing. Every day. Well. Most days. Some days I forgot my string."' },
   { key:'renard', name:'Renard Castwell', title:'Accounting Dept.',   competence:'Terrible', bonus:-3, stake:75,   order:2, xp:150,
@@ -26790,7 +26791,7 @@ const NPC_TOUR_OPPONENTS = [ // → doc: plan-archive.md §XLV (YC tournament; c
 ];
 const TOUR_TITLES = { pip:'Lake Apprentice', renard:'Local Angler', bog:'Credible Fisher', vera:'Named Competitor', dirk:'Lake Champion', master:'Master of Yugurt' };
 
-function _tourRoll(bonus) { // → doc: plan-archive.md §XLV-B (d20 + bonus → catch total → size tier → fish rank)
+function _tourRoll(bonus) { // → doc: docs/archive/plan-archive-verbatim-2026-06-12.md §XLV-B. Tournament Mechanic (d20 + bonus → catch total → size tier → fish rank)
   const die  = Math.ceil(Math.random() * 20);
   const tot  = die + bonus;
   const size = tot <= 5 ? null : tot <= 10 ? 'small' : tot <= 16 ? 'medium' : tot <= 19 ? 'large' : tot <= 21 ? 'very_large' : 'legendary';
@@ -27470,7 +27471,7 @@ const PETRA_STALL_STATES = [ // → doc: world.md §Act III Optional Detour (Pet
   '<div class="npc-ambient">Gigault\'s bread stall — sold out. The sign reads: <em>Tomorrow</em>. The stall is clean.</div>'
 ];
 
-const WORLD_PROGRESSION_EVENTS = [ // → doc: world.md §World Progression (condition-gated journal notes; run per node visit)
+const WORLD_PROGRESSION_EVENTS = [ // → doc: world.md §FL4 — Rest & Void Tide (condition-gated journal notes; run per node visit)
   { id:'auros_report',   condition: () => S_story.actNumber >= 3 && S_story.bruhnsDepthsReported,        journalNote: "Structural assessment submitted — Auros's name on the cover page.", action: ()=>{} },
   { id:'raison_family',  condition: () => S_story.actNumber >= 4 && S_story.pachelbelPaidBack,           journalNote: "A courier delivered something to BA. Pachelbel signed for it.", action: ()=>{} },
   { id:'brynn_letter',   condition: () => S_story.actNumber >= 3 && S_story.brynnsJournalRead,           journalNote: "A letter arrived for Brynn at the inn. The seal is from the Heartwood district.", action: ()=>{} },
@@ -27479,7 +27480,7 @@ const WORLD_PROGRESSION_EVENTS = [ // → doc: world.md §World Progression (con
   { id:'quill_debt',     condition: () => S_story.actNumber >= 4 && !S_story.quillQuestComplete,        journalNote: null, action: () => { S_story.couperiDebtDegraded = true; } }
 ];
 
-const NODE_NPC_KEYS = { // → doc: world.md §NPC Locations (node code → primary NPC key; read by _getNodeMapColor() + _getFarewell())
+const NODE_NPC_KEYS = { // → doc: world.md §PART FOUR — ALL NAMED NPCs (node code → primary NPC key; read by _getNodeMapColor() + _getFarewell())
   // §AUDIT-03j: BOTH columns must resolve — the node code in NODE_MAP and the npc key
   // in the favor ledger — or the entry is inert. It was written in the retired 26×16
   // codes: 21 of 26 rows named a node that does not exist (IN/TV/BA/CY/SQ + 16 E*),
@@ -27493,7 +27494,7 @@ const NODE_NPC_KEYS = { // → doc: world.md §NPC Locations (node code → prim
   LHR:'yael', TLL:'brynn', MHQ:'quill', LLA:'pachelbel', HKG:'crov'
 };
 
-const NPC_FAREWELLS = { // → doc: story.md §Act VIII NPC Farewell Beats (separate from ACT8_FAREWELL_BEATS modal; ambient farewell text)
+const NPC_FAREWELLS = { // → doc: world.md §The Homecoming: Act VIII NPC Farewell Beats (separate from ACT8_FAREWELL_BEATS modal; ambient farewell text)
   // §AUDIT-03j: owner keys and `<from>_to_<to>` route keys were all written in the
   // retired 26×16 codes — all 12 routes and 3 of the 6 owners named something that does
   // not exist, so only each NPC's `default` line could ever fire, and only for yael.
@@ -28000,7 +28001,7 @@ function _onPitChampionLoss() {
 }
 
 // S36: EB node NG+ first-lines (one per node, shown once on first NG+ revisit)
-const EB_NG_PLUS_LINES = { // → doc: docs/story/story-arc-ngplus.md §EB NG+ Lines (per-node one-time NG+ recognition text at EB wounds)
+const EB_NG_PLUS_LINES = { // → doc: story.md §EB_NG_PLUS_LINES (per-node one-time NG+ recognition text at EB wounds)
   PRN: "The black bark again. It's the same.",
   INV: "The figures still walk below. They don't notice you're back.",
   SDR: "The altar stones unchanged. The water hasn't moved in centuries. You have.",
@@ -28024,7 +28025,7 @@ const EB_NG_PLUS_LINES = { // → doc: docs/story/story-arc-ngplus.md §EB NG+ L
 };
 
 // S45: Quill's unfinished songs — cycle by gameDay, never named
-const QUILL_UNFINISHED_SONGS = [ // → doc: story.md §TV — Quill Couperin (ambient fragments heard pre-arc; 3 rotating entries)
+const QUILL_UNFINISHED_SONGS = [ // → doc: story.md §QUILL_UNFINISHED_SONGS (ambient fragments heard pre-arc; 3 rotating entries)
   "A strange mode — augmented something. He keeps stopping and restarting.",
   "Something slow in a minor key. He mouths words but doesn't sing them.",
   "A quick pattern in a high register. He looks frustrated. Then plays it again.",
@@ -28128,7 +28129,7 @@ const BRYNN_HEARTWOOD_SCENE = { // → doc: world.md §The Heartwood Letter (Lay
 };
 
 // ── Layer 72: §XXXVII Commander Bruhns CO Scene ──
-const BRUHNS_CO_SCENE = { // → doc: story.md §Commander Bruhns CO Scene (Layer 68a; CO node; dearFriendWithTheory cross-ref s29LineDelivered)
+const BRUHNS_CO_SCENE = { // → doc: story.md §The Final Confrontation: Commander Bruhns's CO Scene (Layer 68a; CO node; dearFriendWithTheory cross-ref s29LineDelivered)
   friendly: '"You got this far. Froberger made it this far too, more than once."\n\nA pause. The cordon behind her is steady.\n\n"He didn\'t finish. I need you to finish. So does the city."',
   dearFriend: '"You know what I\'ve been doing here."\n\nIt isn\'t a question. She looks at the Codex Cradle, then at you.\n\n"The Circle classified every report I submitted for eleven years. I\'ve been buying time the only way the Circle\'s rules allow — holding command. As long as I hold this platform, no Circle delegate can lock that Cradle without going through me. And they won\'t move against a standing Commander without cause."\n\nShe meets your eyes.\n\n"You beating me is cause. Documented, witnessed, legitimate. After that, I don\'t hold command and I don\'t hold the Codex. You do. And the Circle can\'t classify that — you\'d be the one who opened it."\n\nA beat.\n\n"I\'m going to do everything I can to stop you. That\'s not negotiable. The Circle is watching and I need this to look like I meant it."\n\nShe doesn\'t wait for a response.',
   dearFriendWithTheory: '"You understood the tactical model. That meant you understood what getting this wrong would cost. Anyone who understood that and still came here — I can trust them to open it."',
