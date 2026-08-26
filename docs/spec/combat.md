@@ -82,7 +82,7 @@ _showBattleOverlay()
 ## Attack Formula (Story Mode)
 
 ```
-atkTotal = d20 + abilityMod + profBonus + atkBonus + weaponAtk + mainWeaponAtk
+atkTotal = d20 + abilityMod + profBonus + weaponAtk + mainWeaponAtk
 ```
 
 | Component | Source | Notes |
@@ -90,7 +90,7 @@ atkTotal = d20 + abilityMod + profBonus + atkBonus + weaponAtk + mainWeaponAtk
 | `d20` | `rollD20(advState)` | ADV = roll 2 keep high; DIS = roll 2 keep low |
 | `abilityMod` | `getAtkAbilityMod()` | STR mod (or DEX if finesse) |
 | `profBonus` | `getProfBonus()` | `floor((level-1)/4)+2`, applied if `S.weapon.prof = true` |
-| `atkBonus` | `S_story.atkBonus` | Accumulated from ASI STR increases at level-up |
+| `abilityMod` | `getAtkAbilityMod()` | The STR modifier — the story sync points `#atk-ability` at `str` and unchecks `#weapon-finesse`, both of which had kept the roller's own defaults (§AUDIT-03ae) |
 | `weaponAtk` | `S_story.equippedWeapon.atkBonus` | Offhand dagger magic bonus; 0 if no dagger |
 | `mainWeaponAtk` | `S_story.equippedMainWeapon.magicBonus` | Main hand weapon magic bonus; 0 if none |
 
@@ -239,14 +239,14 @@ All features grant a **tattoo item** (`type:'tattoo'`) pushed to `S_story.tattoo
 
 | Option | Delta | STR cascade | CON cascade |
 |---|---|---|---|
-| Might | STR +2 | `atkBonus` increases | — |
+| Might | STR +2 | the attack roll's STR modifier increases | — |
 | Endurance | CON +2 | — | retroactive HP: `conDelta × level` |
 | Agility | DEX +2 | — | — |
 | Power | STR +1, CON +1 | if mod changes | if mod changes |
 | Speed | STR +1, DEX +1 | if mod changes | — |
 | Guard | DEX +1, CON +1 | — | if mod changes |
 
-STR mod increase → `S_story.atkBonus += strModDelta`  
+STR mod increase → reaches the roll through `S_story.abilityScores` (the `atkBonus` cascade was deleted by §AUDIT-03ae)  
 CON mod increase → `S_story.hpMax += conDelta × currentLevel` (retroactive)
 
 ---
@@ -424,7 +424,7 @@ MILEPOINT A  Battle won → XP award written to S_story.xp by storyApplyOutcome(
              Levels queued in _levelUpQueue[]; _showLevelUpModal() fires for each
 
 MILEPOINT B  ASI stat choice cascades into combat state
-             STR +1 → atkBonus += strModDelta (added to all attack rolls in battle)
+             STR +1 → the STR modifier rises, and with it every attack roll (§AUDIT-03ae: no cache in between)
              CON +1 → retroactive HP: each level × new conModDelta added to hpMax
              DEX +1 → no AC effect (never auto-applied, and the `S_story.acBonus` this line named had no writer at any point — deleted by §DX-02y)
 

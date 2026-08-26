@@ -293,14 +293,14 @@ At ASI levels, the game rolls a **d6** on `_ASI_TABLE` and applies the result:
 
 | d6 | Name | Effect |
 |---|---|---|
-| 1 | Might | STR +2 → atkBonus increases |
+| 1 | Might | STR +2 → the attack roll's STR modifier increases |
 | 2 | Endurance | CON +2 → retroactive HP per level |
 | 3 | Agility | DEX +2 |
 | 4 | Power | STR +1, CON +1 |
 | 5 | Speed | STR +1, DEX +1 |
 | 6 | Guard | DEX +1, CON +1 |
 
-STR modifier increases flow through to `S_story.atkBonus`. CON modifier increases add `conDelta × currentLevel` HP retroactively.
+STR modifier increases reach the attack roll through `S_story.abilityScores` alone — the `S_story.atkBonus` cache they used to cascade into was deleted by §AUDIT-03ae, which found three readers interpreting it three different ways. CON modifier increases add `conDelta × currentLevel` HP retroactively.
 
 **Non-ASI levels** receive a gold stipend (Royal Recognition) and a magic shield gift at milestones:
 
@@ -328,7 +328,7 @@ STR modifier increases flow through to `S_story.atkBonus`. CON modifier increase
 
 Shield gifts are added to inventory and auto-equipped if better than the currently held shield. `hpMax` increases and current HP also increases by the same roll. The status bar shows `⭐ Level N · X/Y XP`.
 
-> **⚠️ Corrected 2026-08-26 (§DX-02y).** This paragraph previously read *"`atkBonus` and `acBonus` in `S_story` are updated immediately."* Neither was true of the level-up path. `S_story.atkBonus` is the STR modifier — seeded at character creation by `S_story.atkBonus = Math.max(0, Math.floor((scores.str - 10) / 2));@23958` and moved only when an ASI raises STR — and `S_story.acBonus` **had no writer at all** and has been deleted. The same sentence in `docs/mechanics/mechanics-combat.md` was corrected on 2026-08-12 by §DOC-02t and this copy was missed; **a claim corrected in one home doc and left standing in its sibling is the §DOC-02 rot direction that costs the most**, because the reader who greps finds the wrong one first.
+> **⚠️ Corrected 2026-08-26 (§DX-02y).** This paragraph previously read *"`atkBonus` and `acBonus` in `S_story` are updated immediately."* Neither was true of the level-up path. **Neither field exists any more.** `S_story.acBonus` had no writer at all (§DX-02y). `S_story.atkBonus` was a *cache of the STR modifier* that three readers each interpreted differently, and the STR modifier is now derived from `S_story.abilityScores` wherever it is needed (§AUDIT-03ae). The same sentence in `docs/mechanics/mechanics-combat.md` was corrected on 2026-08-12 by §DOC-02t and this copy was missed; **a claim corrected in one home doc and left standing in its sibling is the §DOC-02 rot direction that costs the most**, because the reader who greps finds the wrong one first.
 
 ---
 
@@ -499,7 +499,8 @@ Equipment persists across all battles. Vendor auto-sell removes inferior or dupl
 **Attack roll formula (combined):**
 
 ```
-total = d20 + proficiencyBonus + S_story.atkBonus (level)
+total = d20 + STR modifier (from S_story.abilityScores)
+             + proficiencyBonus
              + equippedWeapon.atkBonus (dagger offhand)
              + equippedMainWeapon.magicBonus (main weapon)
 ```
@@ -984,7 +985,6 @@ Two servers sync only if their `(proto, engineVer, worldHash)` match exactly. `w
 | `S_story.voidPressure` | number | Void Tide counter (0–10); defeat at 10 |
 | `S_story.xp / xpLastBattle` | number | Cumulative XP / last battle award |
 | `S_story.level` | number | Current player level (1–20) |
-| `S_story.atkBonus` | number | Cumulative ATK bonus (level ASIs + STR mod) |
 | `S_story.abilityScores` | object | STR/DEX/CON/INT/WIS/CHA scores; default {str:16,dex:12,con:14,int:10,wis:12,cha:8} |
 | `S_story.shortRests` | number | Remaining short rest charges today (0–3) |
 | `S_story.knowledge` | array | Necklace of Knowledge beads (one per unique rest location) |
@@ -1138,7 +1138,8 @@ MILEPOINT C  Player rolls HP (d10 + CON mod; min 1)
 
 MILEPOINT D  ASI branch (levels 4/6/8/12/14/16/19/20)
              Player clicks stat buttons; _lu_refreshAsiBtns() disables capped (≥20) stats
-             Each click: stat +1, asiRemaining−1; STR delta cascades to atkBonus; CON delta cascades to retroactive HP
+             Each click: stat +1, asiRemaining−1; CON delta cascades to retroactive HP
+             (the STR→atkBonus cascade is gone — §AUDIT-03ae; STR reaches the roll through the score)
              2 points to spend; can split across two stats
 
 MILEPOINT E  _lu_applyGiftsAndFinish(lvl, hp)

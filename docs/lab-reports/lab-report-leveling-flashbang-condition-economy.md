@@ -198,8 +198,8 @@ The report defined `S_story.atkBonus` as a *level* bonus and specified the integ
 meaning underneath one of them changed.
 
 At HEAD the field carries the **STR modifier**: seeded at character creation by
-`S_story.atkBonus = Math.max(0, Math.floor((scores.str - 10) / 2));@23960` and grown only by an ASI
-STR bump (`if (strDelta > 0) S_story.atkBonus@38523`). The specified integration point survives as
+`S_story.atkBonus = Math.max(0, Math.floor((scores.str - 10) / 2));` *(deleted, §AUDIT-03ae)* and grown only by an ASI
+STR bump (`if (strDelta > 0) S_story.atkBonus` *(deleted, §AUDIT-03ae)*). The specified integration point survives as
 `const lvlAtk@25032`. Two individually-correct changes compose into three disagreeing surfaces:
 
 - **The battle engine** reads its ability modifier from the dice-roller's own control, which is
@@ -207,7 +207,7 @@ STR bump (`if (strDelta > 0) S_story.atkBonus@38523`). The specified integration
   `document.getElementById('char-level').value = _slv;@24677` writes the level, AC, max HP and all six
   ability scores — but **never repoints that select**. So a story attack rolls
   **d20 + DEX mod + prof + STR mod + weapon/tome/lake/ally**: both abilities, every swing.
-- **The character sheet** uses `const atkTotal = strMod + profBonus + (S_story.atkBonus || 0);@37600`
+- **The character sheet** uses `const atkTotal = strMod + profBonus + (S_story.atkBonus || 0);` *(rewritten, §AUDIT-03ae)*
   — and since `atkBonus` *is* the STR mod, **STR is counted twice**.
 - **The sheet's own printed breakdown** renders the bonus term as `atkBonus − strMod`, i.e. `+0`, so
   the displayed components sum to `strMod + prof` while the displayed total is `2 × strMod + prof`.

@@ -46,10 +46,15 @@ test.describe('§CHAR-01-A — point-buy character creation (already shipped; co
     await page.locator('#btn-charcreate-begin').click();
     const r = await page.evaluate(() => ({
       scores: S_story.abilityScores, active: S_story.active,
-      atk: S_story.atkBonus, hpMax: S_story.hpMax, hp: S_story.hp,
+      hasAtkCache: 'atkBonus' in S_story,
+      atk: _statMod(S_story.abilityScores.str), hpMax: S_story.hpMax, hp: S_story.hp,
     }));
     expect(r.scores).toEqual({ str:14, dex:13, con:14, int:10, wis:12, cha:8 });
     expect(r.active).toBe(true);
+    // §AUDIT-03ae — the ATK bonus is DERIVED from STR at every reader, not cached on
+    // `S_story`. The cache existed, drifted from `_statMod` by a silent `Math.max(0, …)`,
+    // and let three surfaces disagree about one number.
+    expect(r.hasAtkCache, 'S_story.atkBonus is gone — the STR modifier is derived').toBe(false);
     expect(r.atk, 'ATK bonus = floor((STR-10)/2) = +2').toBe(2);
     expect(r.hpMax, 'L1 fighter HP = 10 + CON mod (+2)').toBe(12);
     expect(r.hp).toBe(r.hpMax);

@@ -23035,7 +23035,6 @@ let S_story = {
   xp: 0,
   xpLastBattle: 0,
   level: 1,
-  atkBonus: 0,
   shortRests: 3,
   knowledge: [],
   corpsesQuests: [],
@@ -23070,7 +23069,7 @@ const _S_DEFAULTS = () => ({
   battleTurn: 'player', battlePRoll: 0, battleERoll: 0, battleRound: 1,
   usedMainAttack: false, usedBonusAction: false, usedRealAttack: false, surpriseAdvantage: false,
   conditionRoundsLeft: 0, spellAdvantageReady: false, equippedShield: null,
-  xp: 0, xpLastBattle: 0, level: 1, atkBonus: 0,
+  xp: 0, xpLastBattle: 0, level: 1,
   shortRests: 3, knowledge: [],
   corpsesQuests: [],
   storyDeathSaves: { successes: 0, failures: 0, active: false },
@@ -23955,8 +23954,6 @@ function storyNewGame(startScores) {
   Object.assign(S_story, _S_DEFAULTS());
   // Apply chosen starting scores
   S_story.abilityScores = Object.assign({}, scores);
-  // Derive initial ATK bonus from STR
-  S_story.atkBonus = Math.max(0, Math.floor((scores.str - 10) / 2));
   // Fighter level 1 HP = 10 + CON mod
   const _conMod1 = Math.floor((scores.con - 10) / 2);
   S_story.hpMax = Math.max(1, 10 + _conMod1);
@@ -24678,6 +24675,9 @@ function _showBattleOverlay() {
   document.getElementById('char-ac').value = _sac;
   document.getElementById('char-maxhp').value = S_story.hpMax;
   document.getElementById('char-prof-override').checked = false;
+  document.getElementById('atk-ability').value = 'str';
+  document.getElementById('weapon-finesse').checked = false;
+  S.weapon.finesse = false;
   ['str','dex','con','int','wis','cha'].forEach(ab => {
     const el = document.getElementById('ab-' + ab);
     if (el) el.value = _sc[ab] || 10;
@@ -25029,7 +25029,7 @@ function _overlayPlayerAttack() {
   const critMin = _lv >= 20 ? 17 : _lv >= 15 ? 18 : _lv >= 3 ? 19 : 20;
   const atkMod       = getAtkAbilityMod();
   const profB        = S.weapon.prof ? getProfBonus() : 0;
-  const lvlAtk       = (S_story.atkBonus || 0) + _tomeBonuses().atk + _lakeMagicBonuses().atk; // §DROP-03
+  const lvlAtk       = _tomeBonuses().atk + _lakeMagicBonuses().atk; // §DROP-03
   const weaponAtk    = S_story.equippedWeapon     ? (S_story.equippedWeapon.atkBonus     || 0) : 0;
   const mainWeaponAtk= S_story.equippedMainWeapon ? (S_story.equippedMainWeapon.magicBonus|| 0) : 0;
   const allyAtk      = S.partyHitBonus || 0;   // §MESH-01f: +1/co-present ally, cap +2 (0 in single-player)
@@ -29926,7 +29926,7 @@ function _duelStatBlock() {
     level: lvl,
     hp: Math.min(30 + lvl * 20, Math.max(1, S_story.hpMax || 30)),
     ac: Math.min(30, Math.max(8, _calcPlayerAc())),
-    atkBonus: Math.min(8 + lvl, Math.max(0, mod('str') + prof + (S_story.atkBonus || 0))),
+    atkBonus: Math.min(8 + lvl, Math.max(0, mod('str') + prof)),
     dmgDie: [3, 4, 6, 8, 10, 12].includes(wDie) ? wDie : 8,
     dmgFlat: Math.min(20, Math.max(0, mod('str'))),
     abilityScores: { str: c20(scores.str), dex: c20(scores.dex), con: c20(scores.con), int: c20(scores.int), wis: c20(scores.wis), cha: c20(scores.cha) },
@@ -36063,7 +36063,7 @@ function storyUpdateStatus() {
     if (mw) {
       const mb = mw.magicBonus || 0;
       mwName.textContent = (mw.icon || '⚔') + ' ' + mw.name + (mb > 0 ? ' +' + mb : '');
-      const atkTotal = (S_story.atkBonus || 0) + mb;
+      const atkTotal = _statMod((S_story.abilityScores || {}).str || 10) + mb;
       mwStat.textContent = (mw.count||1) + 'd' + mw.die + (atkTotal >= 0 ? ' +' : ' ') + atkTotal;
     } else { mwName.textContent = '— no weapon —'; mwStat.textContent = ''; }
   }
@@ -37586,6 +37586,9 @@ function storyCharToggle() {
       document.getElementById('char-ac').value     = _calcPlayerAc();
       document.getElementById('char-maxhp').value  = S_story.hpMax;
       document.getElementById('char-prof-override').checked = false;
+      document.getElementById('atk-ability').value = 'str';
+      document.getElementById('weapon-finesse').checked = false;
+      S.weapon.finesse = false;
       ['str','dex','con','int','wis','cha'].forEach(ab => {
         const el = document.getElementById('ab-' + ab);
         if (el) el.value = _sc[ab] || 10;
@@ -37603,7 +37606,8 @@ function storyRenderCharSheet() {
   const profBonus = Math.floor((lv - 1) / 4) + 2;
   const ac = _calcPlayerAc();
   const strMod = _statMod(sc.str);
-  const atkTotal = strMod + profBonus + (S_story.atkBonus || 0);
+  const lvlAtk = _tomeBonuses().atk + _lakeMagicBonuses().atk;
+  const atkTotal = strMod + profBonus + lvlAtk;
   const mw = S_story.equippedMainWeapon;
   const shield = S_story.equippedShield;
   const dagger = S_story.equippedWeapon;
@@ -37649,7 +37653,7 @@ function storyRenderCharSheet() {
       <div class="cs-row"><span class="cs-row-lbl">HP</span><span class="cs-row-val">${S_story.hp} / ${S_story.hpMax}</span></div>
       <div class="cs-row"><span class="cs-row-lbl">AC</span><span class="cs-row-val">${ac}</span></div>
       <div class="cs-row"><span class="cs-row-lbl">Proficiency</span><span class="cs-row-val">${m(profBonus)}</span></div>
-      <div class="cs-row"><span class="cs-row-lbl">Attack Bonus</span><span class="cs-row-val">${m(atkTotal)} (STR${m(strMod)} + Prof${m(profBonus)}${S_story.atkBonus ? ' + bonus'+m(S_story.atkBonus-strMod) : ''})</span></div>
+      <div class="cs-row"><span class="cs-row-lbl">Attack Bonus</span><span class="cs-row-val">${m(atkTotal)} (STR${m(strMod)} + Prof${m(profBonus)}${lvlAtk ? ' + bonus'+m(lvlAtk) : ''})</span></div>
       <div class="cs-row"><span class="cs-row-lbl">Crit Range</span><span class="cs-row-val">${critMin}–20</span></div>
       <div class="cs-row"><span class="cs-row-lbl">XP</span><span class="cs-row-val">${(S_story.xp||0).toLocaleString()} / ${(XP_LEVELS[lv]||'—').toLocaleString()}</span></div>
       ${surgeCharges > 0 ? `<div class="cs-row"><span class="cs-row-lbl">⚡ Surge</span><span class="cs-row-val">${surgeCharges} charge${surgeCharges>1?'s':''}</span></div>` : ''}
@@ -38519,14 +38523,10 @@ document.getElementById('lu-asi-btns').addEventListener('click', e => {
   const scores = S_story.abilityScores || { str:16, dex:12, con:14, int:10, wis:12, cha:8 };
   if ((scores[st] || 10) >= 20) return;
 
-  const prevStr = scores.str || 16;
   const prevCon = scores.con || 14;
   scores[st] = Math.min(20, (scores[st] || 10) + 1);
   S_story.abilityScores = scores;
 
-  // Cascade STR mod → atkBonus
-  const strDelta = _statMod(scores.str) - _statMod(prevStr);
-  if (strDelta > 0) S_story.atkBonus = (S_story.atkBonus || 0) + strDelta;
   // Cascade CON mod → retroactive HP
   const conDelta = _statMod(scores.con) - _statMod(prevCon);
   if (conDelta > 0) {
