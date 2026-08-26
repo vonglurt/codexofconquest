@@ -358,7 +358,7 @@ The `From → To` columns are the *narrative* framing each condition was written
 
 | Narrative edge | Condition | Enforced by |
 |---|---|---|
-| any → TLS | 7 shards (+ level 20) | **data, not a gate** — `NODE_MAP.TLS.finalBattle:{minLevel:20,minShards:7}` read by `_finalBattleReady(code)`; the TLS quest itself lists one shard earlier, `gate:{ shardsMin:6, notBattles:['TLS'] }` |
+| any → TLS | 7 shards (+ level 20) | **data, not a gate** — `NODE_MAP.TLS.finalBattle:{minLevel:20,minShards:7}` read by `_finalBattleReady(code)`, the sole predicate behind the encounter card and both quest-list Fight buttons. The final quest `mq_7` *"The Reckoning"* is `gate:{}` — always listed; its hint carries the requirement. The only other shard threshold at TLS belongs to a different quest: the five-act skill-check arc `quest_d0210_a1…a5`, *"The Seventh Shard"*, `gate:{ shardsMin:6, notBattles:['TLS'] }` — you arrive holding six, and the arc is about the seventh. It has no Fight button (§DX-02hx). |
 | DAM → any | `saulConverted` | `quest_anath`, `gate:{ flags:['saulConverted'] }` |
 | DAM → any | `escapedDamascus` | **nothing.** Written as a `mission_bit` on one `onPass` and declared in `S_story`; no `gate` reads it |
 | HTY → CI2 | `commissionReceived` | `quest_ezzir` and `quest_philippi`, `gate:{ flags:['commissionReceived'] }` |
