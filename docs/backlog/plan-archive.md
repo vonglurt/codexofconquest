@@ -9,7 +9,7 @@
 
 ## Archived 2026-08-26 — §AUDIT-03ae (four surfaces, four meanings for one field, and a checkbox that made every weapon finesse)
 
-### §AUDIT-03ae — the attack roll adds DEX *and* STR, and the character sheet double-counts STR against itself (NEW 2026-08-12 during §DOC-02t, 🟢 no design call) ✅ SHIPPED 2026-08-26 `PENDING_SHA`
+### §AUDIT-03ae — the attack roll adds DEX *and* STR, and the character sheet double-counts STR against itself (NEW 2026-08-12 during §DOC-02t, 🟢 no design call) ✅ SHIPPED 2026-08-26 `801f1e8`
 
 - [x] **§AUDIT-03ae — three surfaces disagree about what a story attack roll is, and every identifier involved resolves.** `S_story.atkBonus` was specified (Layer 18) as a *levelling* bonus. At HEAD it carries the **STR modifier**: seeded at character creation by `S_story.atkBonus = Math.max(0, Math.floor((scores.str - 10) / 2));` *(deleted, §AUDIT-03ae)* and raised only by an ASI STR bump (`if (strDelta > 0) S_story.atkBonus` *(deleted, §AUDIT-03ae)*). The Layer-18 integration point survives unchanged as `const lvlAtk@25032`. Two individually-correct changes compose into a defect:
 > **(1) Combat adds both abilities.** `_overlayPlayerAttack` takes its ability modifier from `getAtkAbilityMod()`, which reads the dice-roller's own control — and that control is `<option value="dex" selected>@3719`. The story→simulator sync at `document.getElementById('char-level').value = _slv;@24677` writes level, AC, max HP and all six ability scores but **never repoints the select**, so every story swing rolls **d20 + DEX mod + prof + STR mod** (+ weapon/tome/lake/ally).
