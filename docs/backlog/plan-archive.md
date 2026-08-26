@@ -9,7 +9,7 @@
 
 ## Archived 2026-08-25 — §DX-02hg (the layer was more shipped than either the doc or the row thought)
 
-### §DX-02hg — the fifth `⚠️ PLANNED` heading, and two live pieces the section never mentioned ✅ SHIPPED 2026-08-25 `PENDING_SHA`
+### §DX-02hg — the fifth `⚠️ PLANNED` heading, and two live pieces the section never mentioned ✅ SHIPPED 2026-08-25 `932d0cd`
 
 - [x] **§DX-02hg — `world.md`'s Layer 59 heading read ⚠️ PLANNED for a layer that is mostly live.** **Measured at `4aecd1e`:** `world.md:1201` was `## ⚠️ PLANNED — The Pressure Cascade… (Layer 59)`, the fifth such heading after §DOC-02ar, §DOC-02bz and §AUDIT-03ak's four.
 > **The ground extended the row.** The row measured **two** halves — NPC lines live, monster injection unbuilt. Re-deriving `Layer 59` against `play.html` rather than reading the section found **four** live pieces: `const NPC_VOID_PRESSURE_LINES@26946` dispatched at `// Layer 59: void pressure line — Dear Friends at pressure ≥ 6@23621`; the two `voidTainted:true` monsters, statically rostered by §DX-02h; **`_voidFlavorLine@26954`**, a per-node void line appended to the story box on every render (`// Layer 59: void flavor line@34612`); and **the mercy window** (`// Increment void pressure at each tide event (Layer 59: mercy window)@36354`), which spends `S_story.void_mercy_count` instead of raising pressure, the counter armed at pressure 9 when the player holds ≥ 5 shards. **The last two had no entry in the section at all** — the doc was not merely mis-headed, it was short two shipped mechanics. Only `_applyVoidPressureMonsters()` was never built, and it still greps to **0**.
