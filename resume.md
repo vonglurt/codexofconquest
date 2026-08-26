@@ -378,6 +378,11 @@ Full reference: `docs/api/API-README.md`, `docs/api/wbapi-help.md`,
 - **Doc anchors name a symbol, not a line.** Write `` `symbol@1234` ``; the number
   is a cached hint refreshed by `npm run anchors:fix`. A bare line number rots —
   43 of 50 were stale when the policy was written.
+  **Run `npm run anchors:fix` only when a row needs it, and revert the sweep in files the
+  row does not touch** — it rewrites ~2,500 hint lines across 119 docs and buries the
+  increment in noise. And **every extraction breaks doc anchors** (§WEAP-FIN-FU broke
+  three, §DX-02er broke three): that is the anchor gate working, not a defect, but budget
+  for it inside the increment rather than meeting it at the gate.
 - **Tests run in the foreground, never piped.** A piped Playwright run returns the
   *last pipe stage's* exit code; 46 failures once reported `exit 0` twice. Redirect
   to a file and read the summary counts. **Stop the WBAPI server before running
