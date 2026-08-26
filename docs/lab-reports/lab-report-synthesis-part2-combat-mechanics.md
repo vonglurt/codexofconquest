@@ -215,7 +215,7 @@ elegant piece of economy design, and it is the register this report gets wrong.
 | `_rollD100Loot()` at 22,485 | ✅ exact |
 | `_rollMonsterWeaponDrop` → 1 base weapon, quality −4…0, never positive magic | ✅ exact at HEAD, comment included: `// FC06: monster drops capped at base tier` (`function _rollMonsterWeaponDrop(monsterDmgDie) {@24583`) |
 | `LAKE_MAGIC_DB` the exclusive positive-magic source | ⚠️ true of the data; **no live grant path at HEAD** — see §VI |
-| `LOOT_TABLE` *"dead code … marked in a comment"* | ❌ **the comment says the opposite.** `const LOOT_TABLE = [@24443` is annotated *"(d100 result → item; used by `_rollD100Loot()`)"* — naming a caller that reads `_D100_TABLE` instead. Zero readers, a comment asserting one. → **§DROP-01-FU (a)**, open |
+| `LOOT_TABLE` *"dead code … marked in a comment"* | ❌ **the comment says the opposite.** `const LOOT_TABLE = [` *(deleted 2026-08-26, §DROP-01-FU)* is annotated *"(d100 result → item; used by `_rollD100Loot()`)"* — naming a caller that reads `_D100_TABLE` instead. Zero readers, a comment asserting one. → **§DROP-01-FU (a)**, open |
 | `GET /api/loot-drop` unified query | ✅ shipped (`src/js/wbapi-server.js` `loot-drop`), with three defects filed as **§DX-02ab** |
 
 ---

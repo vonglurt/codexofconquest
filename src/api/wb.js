@@ -486,6 +486,33 @@ const CMD = {
     printResult(r.body, flags);
   },
 
+  async loot(pos, flags) {
+    await requireServer();
+    const sub = pos[1] || 'get';
+    if (sub === 'get') {
+      const r = await request('GET', '/api/loot');
+      if (r.status !== 200) { printError(r); process.exit(1); }
+      return printResult(r.body, flags);
+    }
+    if (sub !== 'put') die('Usage: ./bin/api loot [get] | ./bin/api loot put --index <n> weight=<n> [_type=<t>] [_magic=<n>] | ./bin/api loot put  (pipe {entries:[...]} for a full replace)');
+    const piped = await readStdin();
+    const kv = parseKV(pos.slice(2));
+    if (kv.weight !== undefined) kv.weight = Number(kv.weight);
+    if (kv._magic !== undefined) kv._magic = Number(kv._magic);
+    let r;
+    if (flags.index !== undefined) {
+      r = await request('PUT', `/api/loot/${encodeURIComponent(flags.index)}`, kv);
+    } else {
+      const body = (typeof piped === 'object' && piped) ? piped : null;
+      if (!body || !Array.isArray(body.entries)) die('A full replace needs {entries:[{weight,_type,_magic?},...]} on stdin. One entry: --index <n>.');
+      r = await request('PUT', '/api/loot', body);
+    }
+    if (r.status >= 400) { printError(r); process.exit(1); }
+    const sv = await request('POST', '/api/save', {});
+    if (sv.status >= 400) { printError(sv); process.exit(1); }
+    printResult(r.body, flags);
+  },
+
   async audit(pos, flags) {
     await requireServer();
     let auditPath;
@@ -3137,6 +3164,7 @@ const SYNOPSIS = [
   `  ${C.green}speak${C.reset} <npc-id> "<prompt>"           Claude NPC reply  [--state neutral|friendly|dearFriend]`,
   `  ${C.green}import${C.reset} <file.json>                 bulk import nodes + quest cycles`,
   `  ${C.green}audit${C.reset} [--map]                      integrity scan`,
+  `  ${C.green}loot${C.reset}  [get | put]                 d100 drop table  (put: --index N k=v… | pipe {entries:[…]})`,
   `  ${C.yellow}Directive: always use ./bin/api — never curl. Request a refactor if a feature is missing.${C.reset}`,
   `  ${C.yellow}Maintain the network: run ./bin/api verify after every change.${C.reset}`,
   ``,

@@ -248,7 +248,7 @@ On NG+ runs, the EB nodes show one-time atmospheric `EB_NG_PLUS_LINES` on first 
 | `S.opp.cond` | string or null | Active condition name on enemy block |
 | `S.char.baseAc` | number | AC snapshot at battle start; prevents shield-stack on re-entry |
 | `POTION_TIERS` | const object | Potion data keyed by tier name |
-| `LOOT_TABLE` | *(removed)* | Old d20 drop table — replaced by `_D100_TABLE` (§DROP-01 2026-06-05); definition now a comment stub |
+| `LOOT_TABLE` | *(deleted 2026-08-26, §DROP-01-FU)* | Old d20 drop table, superseded by `_D100_TABLE` (§DROP-01 2026-06-05). **The deletion was reverted three hours after it first shipped and the array stood, unread, for 82 days** while this row read *"removed; definition now a comment stub"* — it was neither. `grep -c LOOT_TABLE play.html` = 0 |
 | `XP_LEVELS` | const array[20] | Cumulative XP thresholds for levels 1–20 |
 | `SHIELD_ITEMS` | const array | 6 tiers: Small +1 → Kite +2 → Magic +3 → Large Magic +4 → Legendary +5 → Ancient +6; `_magicTierAllowed()` gates drops |
 | `DAGGER_ITEMS` | const array | 4 tiers: +1 Royal (Lv3) / +2 Painite (Lv7) / +3 Gaping (Lv13) / +4 Voidsteel (Lv20); **no random drop** since the §FC06 nerf (removed from d100) — authored-reward-only pool; vestigial `cost` field is unread |

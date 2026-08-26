@@ -671,7 +671,7 @@ The game is designed to be built in vertical slices. Each layer adds one complet
 - **Dynamic XP**: `XP = AC × maxHP` replaces flat tier values
 - **Heal on kill**: `floor(0.1 × AC × maxHP)` applied immediately on kill
 - **Gold drop**: same formula as heal — tougher enemies pay more
-- **d20 loot table** (`LOOT_TABLE`): 8 Minor / 2 Spell Scroll / 5 Healing / 3 Greater / 2 Superior — rolled automatically on kill
+- **d20 loot table** (`LOOT_TABLE`): 8 Minor / 2 Spell Scroll / 5 Healing / 3 Greater / 2 Superior — rolled automatically on kill. ⚠️ **Superseded and deleted** — `_D100_TABLE` + `_rollD100Loot()` have rolled combat drops since §DROP-01 (2026-06-05); the array itself was deleted 2026-08-26 (§DROP-01-FU). Annotated, not rewritten (§DX-02c)
 
 ### Layer 13 — ✅ IMPLEMENTED
 - **Short rests**: 3 charges/day; rest button always enabled (`btn-dpad-rest`); 0 rests → auto-BFS to nearest inn and sets `S_story.waypoint`
@@ -692,7 +692,7 @@ The game is designed to be built in vertical slices. Each layer adds one complet
 ### Layer 16 — ✅ IMPLEMENTED
 - **Condition rounds**: `conditionRoundsLeft` counts down each enemy turn; condition icon clears at 0
 - **DIS display**: `#sbo-dis-badge` with `has-dis` CSS class on overlay when player has disadvantage
-- **Spell Scrolls** in LOOT_TABLE (2/20 = 10%); use in bonus phase queues ADV on next attack
+- **Spell Scrolls** in LOOT_TABLE (2/20 = 10%) — ⚠️ that table is gone (see above); scrolls now come from `_D100_TABLE`. Use in bonus phase queues ADV on next attack
 - **`_renderSboSpells()`**: spell row in battle overlay
 
 ### Layer 17 — ✅ IMPLEMENTED

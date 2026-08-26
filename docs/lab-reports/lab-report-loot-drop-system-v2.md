@@ -95,7 +95,7 @@ The §IV-A "BEFORE" block was diffed against `440eb5d^`:
 
 | # | Report claim | Shipped? | Evidence |
 |---|--------------|----------|----------|
-| 1 | `LOOT_TABLE` removed, replaced by a comment stub | ⛔ **NOT SHIPPED at HEAD** *(shipped `440eb5d`, reverted `88d41d1`, never restored)* | `const LOOT_TABLE = [@24443`, all 20 entries, 0 readers |
+| 1 | `LOOT_TABLE` removed, replaced by a comment stub | ⛔ **NOT SHIPPED at HEAD** *(shipped `440eb5d`, reverted `88d41d1`, never restored)* | `const LOOT_TABLE = [` *(deleted 2026-08-26, §DROP-01-FU)*, all 20 entries, 0 readers |
 | 2 | `_D100_TABLE` purged of `dagger`/`mainweapon` | ✅ exact | 7 rows, `35·18·14·6·11·6·10` = 100 |
 | 3 | Revised weights (35/18/14/6/11/6/10) | ✅ **all seven exact** | `const _D100_TABLE = [@24518` |
 | 4 | `_rollD100Loot` retains dagger/mainweapon branches "for API compatibility" | ✅ shipped **and the rationale is sound** | `src/js/wbapi-server.js:WBAPI.d100Table = entries.map@3480` preserves `_magic` on write |
@@ -145,7 +145,7 @@ This is **CONTRIBUTING Hazard #1 caught in the act**: the WBAPI server holds the
 
 ### F2 — Two of the four §V-A fixes are still reverted, and one of them cannot be fixed where the report put it
 
-`const LOOT_TABLE = [@24443` is still declared, still holds its 20 entries (8 Minor / 2 Spell / 5 Healing / 3 Greater / 2 Superior), still has **zero readers**, and its own comment still credits `_rollD100Loot()` — the exact defect §II-B Defect 3 described, 68 days after it was fixed. §DOC-02b independently found it as a zero-reader structure; §DOC-02j independently found it as a d20 table mislabelled d100. **This report named it first, fixed it first, and had the fix taken away.**
+`const LOOT_TABLE = [` *(deleted 2026-08-26, §DROP-01-FU)* is still declared, still holds its 20 entries (8 Minor / 2 Spell / 5 Healing / 3 Greater / 2 Superior), still has **zero readers**, and its own comment still credits `_rollD100Loot()` — the exact defect §II-B Defect 3 described, 68 days after it was fixed. §DOC-02b independently found it as a zero-reader structure; §DOC-02j independently found it as a d20 table mislabelled d100. **This report named it first, fixed it first, and had the fix taken away.**
 
 The header comment is stranger and more useful. §V-A's fourth row is not merely absent — **it is un-shippable in the HTML**, because the block lives inside `◆◆◆ WORLDBUILDER:D100_TABLE ◆◆◆` anchors and its comment is a hard-coded string literal in `src/js/wbapi-server.js:function serializeD100Table(entries) {@1855`. HEAD's comment is that literal, character for character, including the `_magic?` field and the `'dagger'|'mainweapon'` type list the report set out to remove. Any API write to the loot table re-emits it. ***A fix applied to generated output survives exactly until the generator runs.*** → **§DROP-01-FU**
 
@@ -310,7 +310,7 @@ The freed 36 points went to consumable variety as specified. See §V-F5 for the 
 
 | Row | Premise | Call |
 |-----|---------|------|
-| **§DROP-01-FU** | Finish the reverted migration: delete `const LOOT_TABLE = [@24443` (0 readers), and fix the header literal in `src/js/wbapi-server.js:function serializeD100Table(entries) {@1855` so an API write stops re-emitting the `_magic?`/`dagger`/`mainweapon` comment | 🟢 none |
+| **§DROP-01-FU** | Finish the reverted migration: delete `const LOOT_TABLE = [` *(deleted 2026-08-26, §DROP-01-FU)* (0 readers), and fix the header literal in `src/js/wbapi-server.js:function serializeD100Table(entries) {@1855` so an API write stops re-emitting the `_magic?`/`dagger`/`mainweapon` comment | 🟢 none |
 | **§DX-02aa** | A WBAPI write from a stale server silently reverts hand-edited engine JS, and no gate, test or commit message can see it (Hazard #1, measured at 68 days). Wants `./api.sh` to refuse a write when the server's loaded source differs from the file on disk | 🟢 none |
 | **§DX-02ab** | `GET /api/loot-drop`: 20 day fish double-counted, 5 night fish silently dropped, no `./api.sh` wrapper, absent from `wbapi-help.md` and `API-README.md` | 🟢 none |
 | **§DX-02v** *(extended)* | `mechanics.md` contradicts itself on `LOOT_TABLE` — `:209` "removed" vs `:1016` "live `const array[20]`"; both `docs/mechanics/` rows carry the same dated claim | 🟢 none |

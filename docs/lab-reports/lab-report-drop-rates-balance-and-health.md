@@ -66,7 +66,7 @@ XP is `S.enemy.ac` × `S.opp.maxHp` × `partyMult`, rounded, one line above.
 
 **Loot** — `const _D100_TABLE =@24518` (7 weighted rows, total 100),
 `function _rollD100Loot@24535`, `const POTION_TIERS = {@24308`.
-`const LOOT_TABLE =@24443` — the 20-entry d20 array this report documents — is still
+`const LOOT_TABLE =` *(deleted 2026-08-26, §DROP-01-FU)* — the 20-entry d20 array this report documents — is still
 declared and has **no reader**.
 
 **Rest (Layer 13)** — `function storyShortRest@25819`, `const base  = Math.floor(S_story.hpMax * 0.25)@25840`,
@@ -206,7 +206,7 @@ Two copies of one formula, silently disagreeing on four consequences. → **§DX
 
 ### F6 — §II-B documents a table no surviving build has ever read
 
-`const LOOT_TABLE =@24443` is a 20-entry d20 array, exactly as described, and the
+`const LOOT_TABLE =` *(deleted 2026-08-26, §DROP-01-FU)* is a 20-entry d20 array, exactly as described, and the
 transcription is near-exact: **all four sell values (25/75/200/500) and three of four
 slot counts (5 Healing, 3 Greater, 2 Superior) are correct.** The single error is an
 **edit** — the array's 2 Spell Scroll slots are dropped and folded into Minor Healing

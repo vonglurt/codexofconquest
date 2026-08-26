@@ -1014,7 +1014,7 @@ Two servers sync only if their `(proto, engineVer, worldHash)` match exactly. `w
 | `S.opp.cond` | string or null | Active condition name on enemy block |
 | `S.char.baseAc` | number | AC snapshot at battle start; prevents shield-stack on re-entry |
 | `POTION_TIERS` | const object | Potion data keyed by tier name |
-| `LOOT_TABLE` | const array[20] | d20 drop table — 8 Minor / 2 Spell / 5 Healing / 3 Greater / 2 Superior |
+| `LOOT_TABLE` | *(deleted 2026-08-26, §DROP-01-FU)* | The d20 drop table `_D100_TABLE` replaced in §DROP-01. Zero readers for its last 82 days |
 | `XP_LEVELS` | const array[20] | Cumulative XP thresholds for levels 1–20 |
 | `SHIELD_ITEMS` | const array | 6 tiers: Small +1 → Kite +2 → Magic +3 → Large Magic +4 → Legendary +5 → Ancient +6; `_magicTierAllowed()` gates drops |
 | `DAGGER_ITEMS` | const array | 4 tiers: +1 Royal (Lv3) / +2 Painite (Lv7) / +3 Gaping (Lv13) / +4 Voidsteel (Lv20); drop-only |
