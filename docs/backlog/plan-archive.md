@@ -9,7 +9,7 @@
 
 ## Archived 2026-08-25 — §DX-02fz (four reproductions, three wrong causes, and a sampled stack that named the real one)
 
-### §DX-02fz — the hang is a V8 platform-worker deadlock inside `process.exit()`, not the runner and not npm ✅ SHIPPED 2026-08-25 `PENDING_SHA`
+### §DX-02fz — the hang is a V8 platform-worker deadlock inside `process.exit()`, not the runner and not npm ✅ SHIPPED 2026-08-25 `8ca6607`
 
 - [x] **§DX-02fz — `check:walk` hung at gate 4 after printing gate 4's ✓, intermittently, for three sessions.** The row had accumulated three reproductions and three candidate causes, each disproved by the next measurement: **the gate's own logic** (cleared — standalone 0.085 s, exit 0), **a live WBAPI server on :1367** (cleared — reproduced with the server both up and down), and finally **the `npm run` wrapper's stdio teardown**, which the row concluded was the culprit: *"The gate script exits promptly however its output is directed; only the `npm` wrapper hangs."*
 > **That conclusion is wrong, and a bounded 32-trial probe at HEAD is what broke it.** Four stdio shapes, 8 trials each: `npm run --silent … >/dev/null` **4/8 hung** · `npm run … >/dev/null` **6/8 hung** · `npm run --silent … | cat` **0/8** · and — the one the row had ruled out — **`node scripts/check-mover-behaviour.js >/dev/null` hung 1/8.** The bare `node` invocation hangs too. It was never npm.
