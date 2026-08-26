@@ -31352,6 +31352,27 @@ function _openBlueShuttersContent(wrap) {
 // `html` is reserved for STATIC authored markup only — never interpolate state into it (§DATA-01);
 // dynamic text uses `text` → textContent.
 const NODE_PANELS = [
+  // §SPARK-01 SEA: OW (NWI) — the Warmth Eel's four states, migrated from storyRender by
+  // §DX-02fu. Four entries rather than one because `css` is a string and each state paints a
+  // different border and colour; the `when` predicates reproduce the source if/else-if chain
+  // exactly, so at most one can ever match. NWI has no other panel, so the LIFO stacking the
+  // inline block relied on is preserved trivially.
+  { id:'story-ow-eel', nodes:['NWI'],
+    when:st => !!st.warmthEelEscorted,
+    css:'margin-top:10px;border-left-color:#2a5a2a;color:#70b880;font-size:12px;',
+    text:'\u2705 The eel is gone south. The water is choppy again. Both pirate crews are still here, watching the horizon. The Saltwick mate is teaching the Redmast man a figure-eight knot. They are going to fight each other again eventually. Not today.' },
+  { id:'story-ow-eel', nodes:['NWI'],
+    when:st => !st.warmthEelEscorted && !!st.warmthEelFound,
+    css:'margin-top:10px;border-left-color:#2a3a6a;color:#8090c8;font-size:12px;',
+    text:'\u{1F7E1} The Warmth Eel is below \u2014 sixty feet, amber, slow arcs under both keels. It belongs in deep water. The sea route and the fish stocks both require it to move. WIS Nature DC 14 to guide it south toward the trench depth.' },
+  { id:'story-ow-eel', nodes:['NWI'],
+    when:st => !st.warmthEelEscorted && !st.warmthEelFound && !!st.seaStrangenessNoticed,
+    css:'margin-top:10px;border-left-color:#3a3a2a;color:#a8a860;font-size:12px;',
+    text:'\u{1F7E1} Something large glows below the hull. Amber, moving slowly. The pirates from both ships are watching it over the rail. None of them appear to be trying to hurt each other. INT Investigation DC 13 to identify the creature.' },
+  { id:'story-ow-eel', nodes:['NWI'],
+    when:st => !st.warmthEelEscorted && !st.warmthEelFound && !st.seaStrangenessNoticed,
+    css:'margin-top:10px;border-left-color:#3a2a2a;color:#c08060;font-size:12px;',
+    text:'\u2693 The water here is absolutely still. Two wanted ships at anchor, no hostility between them. Something glows below. The gulls have gone. The fish are clustering oddly.' },
   { id:'story-ci-tagline', nodes:['LHR'],
     css:'text-align:center;border-left:none;border-top:1px solid #40607a;padding:10px 14px 8px;font-style:normal;color:#fea712;letter-spacing:0.05em;',
     html:'LETS GO &mdash; Codex of Conquest: Curse of Knowledge<br><span style="font-size:10px;color:#9ab0c0;letter-spacing:0.02em;">CodexOfConquest.com &middot; MIT Public Domain</span>' },
@@ -34197,6 +34218,24 @@ function _nodeHookSsjTournament(node, { row, _mkSection, _mkCard }) {
     }
   }
 }
+// §DX-02fu — Layer 41's "Void Below" descend chip, the last chip-row surface still gated by a
+// bare `node.code ===` below the migration front. Moved verbatim; `row` is the chip row the block
+// already appended to, so it rides in on ctx exactly as `cqDiv` does for the CDG market hook.
+function _nodeHookHkgVoidBelow(node, { row }) {
+  if (_npcFavor('crov') >= 1 && _npcFavor('auros') >= 1
+      && S_story.quests['quest_void_below'] === 'active'
+      && !S_story.defeatedBattles['CY_VOID']) {
+    const vb = document.createElement('div');
+    vb.className = 'info-chip battle-chip';
+    vb.innerHTML = '<span class="chip-icon">\u{1F534}</span><span class="chip-lbl">DESCEND</span>Void Corruption Node \u2014 Depths';
+    vb.addEventListener('click', () => {
+      const vNode = { ...node, code:'CY_VOID', battle:{label:'Void Corruption',key:'void_walker',count:2} };
+      storyPreBattle(vNode);
+    });
+    row.appendChild(vb);
+  }
+}
+
 const NODE_HOOKS = [ // ordered by former storyRender source position
   { id:'nue-lower-archive', nodes:['NUE'], fn:_nodeHookNueLowerArchive },
   { id:'void-archaeology', nodes:['LHR','BMA','ZRH','NUE','GVA'], fn:_nodeHookVoidArchaeology },
@@ -34259,6 +34298,7 @@ const NODE_HOOKS = [ // ordered by former storyRender source position
   { id:'lxx-da3-depth', nodes:['DA3'], fn:_nodeHookLxxDa3Depth },   // §VM-01-G-FU-e (done state → NODE_PANELS)
   { id:'lxx-dsj-eels', nodes:['DSJ'], fn:_nodeHookLxxDsjEels },     // §VM-01-G-FU-e (staged DSJ_EELS battle — the BN/LD shape)
   { id:'ssj-tournament', nodes:['SSJ'], fn:_nodeHookSsjTournament }, // §VM-01-G-FU-f (Class E bespoke UI — the §XLV accordion state machine over NPC_TOUR_OPPONENTS; ctx = the three storyRender section surfaces)
+  { id:'hkg-void-below', nodes:['HKG'], fn:_nodeHookHkgVoidBelow }, // §DX-02fu (the chip-row surface — its former source position is below every other block)
 ];
 function _runNodeHook(id, node, ctx) {
   for (const h of NODE_HOOKS) if (h.id === id) return h.fn(node, ctx);
@@ -35909,19 +35949,7 @@ function storyRender(node, prefix) {
     }
     row.appendChild(c);
   }
-  // ── Layer 41: Void Below — descend option at CY when both crov+auros are friendly ──
-  if (node.code === 'HKG' && _npcFavor('crov') >= 1 && _npcFavor('auros') >= 1
-      && S_story.quests['quest_void_below'] === 'active'
-      && !S_story.defeatedBattles['CY_VOID']) {
-    const vb = document.createElement('div');
-    vb.className = 'info-chip battle-chip';
-    vb.innerHTML = '<span class="chip-icon">🔴</span><span class="chip-lbl">DESCEND</span>Void Corruption Node — Depths';
-    vb.addEventListener('click', () => {
-      const vNode = { ...node, code:'CY_VOID', battle:{label:'Void Corruption',key:'void_walker',count:2} };
-      storyPreBattle(vNode);
-    });
-    row.appendChild(vb);
-  }
+  _runNodeHook('hkg-void-below', node, { row });   // ── Layer 41: CY — Void Below descend chip ── → NODE_HOOKS (§DX-02fu)
   // D-pad directions — disabled state set by _updateExitLinks() below
   // D-pad corner buttons
   document.getElementById('btn-dpad-npc').disabled  = !(node.npc && NPC_DIALOGUE[node.code]);
@@ -35990,27 +36018,7 @@ function storyRender(node, prefix) {
   _runNodeHook('lxx-can-doc', node);              // §LXXII: CAN — Conclave Annex post-event document (§VM-01-G-FU-e)
   _runNodeHook('lxx-da2-gate', node);             // §LXXI: DA2 — Tide Gate activation (§VM-01-G-FU-e; the tideGateOpened done state → NODE_PANELS)
   // §SPARK-01 SEA: OW — Warmth Eel investigation + escort
-  { const _owOld = document.getElementById('story-ow-eel'); if (_owOld) _owOld.remove();
-    if (node.code === 'NWI') {
-      const _owDiv = document.createElement('div');
-      _owDiv.id = 'story-ow-eel';
-      _owDiv.className = 'sweelinck-variant';
-      if (S_story.warmthEelEscorted) {
-        _owDiv.style.cssText = 'margin-top:10px;border-left-color:#2a5a2a;color:#70b880;font-size:12px;';
-        _owDiv.textContent = '✅ The eel is gone south. The water is choppy again. Both pirate crews are still here, watching the horizon. The Saltwick mate is teaching the Redmast man a figure-eight knot. They are going to fight each other again eventually. Not today.';
-      } else if (S_story.warmthEelFound) {
-        _owDiv.style.cssText = 'margin-top:10px;border-left-color:#2a3a6a;color:#8090c8;font-size:12px;';
-        _owDiv.textContent = '🟡 The Warmth Eel is below — sixty feet, amber, slow arcs under both keels. It belongs in deep water. The sea route and the fish stocks both require it to move. WIS Nature DC 14 to guide it south toward the trench depth.';
-      } else if (S_story.seaStrangenessNoticed) {
-        _owDiv.style.cssText = 'margin-top:10px;border-left-color:#3a3a2a;color:#a8a860;font-size:12px;';
-        _owDiv.textContent = '🟡 Something large glows below the hull. Amber, moving slowly. The pirates from both ships are watching it over the rail. None of them appear to be trying to hurt each other. INT Investigation DC 13 to identify the creature.';
-      } else {
-        _owDiv.style.cssText = 'margin-top:10px;border-left-color:#3a2a2a;color:#c08060;font-size:12px;';
-        _owDiv.textContent = '⚓ The water here is absolutely still. Two wanted ships at anchor, no hostility between them. Something glows below. The gulls have gone. The fish are clustering oddly.';
-      }
-      document.getElementById('story-text-box').insertAdjacentElement('afterend', _owDiv);
-    }
-  }
+  // §SPARK-01 SEA: OW — Warmth Eel investigation + escort → NODE_PANELS (§DX-02fu)
   _runNodeHook('spark-lcy-harmony', node);   // §SPARK-01: DK — Wren-Pembury/Smalt/Pip Harmony Chain (+ the writ-beat fix — see hook header)
   // §SPARK-01: MS — Clot + Brannick + Warmth mystery (3-state pure panel) → NODE_PANELS (§VM-01-G-FU-d)
   _runNodeHook('whodunit-sen-bilge', node);  // §WHODUNIT-01: MS — The Bilge Mystery

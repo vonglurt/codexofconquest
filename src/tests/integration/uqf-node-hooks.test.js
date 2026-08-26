@@ -52,8 +52,11 @@ test.describe('§VM-01-G2 — NODE_HOOKS registry + in-place dispatch', () => {
     // §VM-01-G-FU-f added the SSJ tournament (the §XLV accordion machine, the census's one
     // Class-E bespoke UI) after those — it sits below the §LXX region in source order;
     // uqf-node-ssj.test.js owns its behaviour.
-    expect(r.count).toBe(32);
-    expect(r.uniqueIds, 'ids are unique across the WHOLE registry, G2 + G2b + G4d + G-FU-a/b/c/d/e/f').toBe(32);
+    // §DX-02fu added the Layer-41 HKG descend chip at the very tail — its former source
+    // position is in the chip row, below every other block; dx02fu-block-inventory.test.js
+    // owns its behaviour, and it is the last entry the census ever owed the registry.
+    expect(r.count).toBe(33);
+    expect(r.uniqueIds, 'ids are unique across the WHOLE registry, G2 + G2b + G4d + G-FU-a/b/c/d/e/f + §DX-02fu').toBe(33);
     expect(r.allFns).toBe(true);
     expect(r.leadsRegistry, 'registry stays ordered by former source position: story-text-box-anchored blocks precede the G2b npc-row block').toBe(true);
     expect(r.ids).toEqual(['nue-lower-archive', 'void-archaeology', 'void-shaman-warden', 'corelli-merchant',
@@ -65,7 +68,7 @@ test.describe('§VM-01-G2 — NODE_HOOKS registry + in-place dispatch', () => {
       'spark-lcy-harmony', 'whodunit-sen-bilge', 'naval-gci-intercept',
       'port-dnf-access', 'spark-dnf-harmony', 'port-mme-saltwick',
       'lxx-can-doc', 'lxx-da2-gate', 'lxx-da3-depth', 'lxx-dsj-eels',
-      'ssj-tournament']);
+      'ssj-tournament', 'hkg-void-below']);
     expect(r.unknownIsNoop).toBe(true);
   });
 

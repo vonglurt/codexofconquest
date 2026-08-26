@@ -236,7 +236,7 @@ charged-preferred salt pick."* At HEAD the entry carries a **plain two-bit array
 `narrative`); §LXX-01-FU moved the salt pick into `quest_forge_02`'s `_legacy_fn`. This is the
 report's only claim about the file that no longer holds.
 
-**D6 — §11f's "THE BLOCK INVENTORY IS COMPLETE" is overstated. NOT SHIPPED: two blocks.**
+**D6 — §11f's "THE BLOCK INVENTORY IS COMPLETE" is overstated. NOT SHIPPED: two blocks.** ✅ **Both shipped 2026-08-26 (§DX-02fu) — the claim is true now, 47 of 47.**
 Below the front at HEAD, three comparisons remain. One is the HW1 `whisperSaintSeen` latch, kept
 inline **on purpose** and documented in place. The other two were never claimed by any slice:
 - **NWI — the §SPARK-01 SEA Warmth Eel block**, a 3-state `.sweelinck-variant` panel. It is
@@ -246,6 +246,22 @@ inline **on purpose** and documented in place. The other two were never claimed 
   `quest_void_below` active.
 
 The census was right at 47; the *arc partition* dropped two of them. **44 of 47 shipped.**
+
+> **✅ CLOSED 2026-08-26 (§DX-02fu) — 44 → 47 of 47, and the two blocks needed no new vocabulary.**
+> NWI became **four** `NODE_PANELS` entries sharing the `story-ow-eel` id with mutually exclusive
+> `when`s — the D7 *"DUS else-leg"* shape, which is why D7's fn-valued `css` is still not needed.
+> **Correction to this finding: NWI is a FOUR-state panel, not three.** Its source chain reads
+> `warmthEelEscorted` → `warmthEelFound` → `seaStrangenessNoticed` → else, and the else leg is a
+> real authored state (*"The water here is absolutely still"*), not a fallthrough. The pin asserts
+> exactly one entry matches across all **eight** flag combinations, which is the property the
+> if/else-if chain provided for free and a table has to earn.
+> HKG became a `NODE_HOOKS` entry moved **verbatim**, with the chip `row` riding in on the `ctx`
+> parameter exactly as `cqDiv` does for the CDG market hook. It sits at the **tail** of the
+> registry, because the registry is ordered by former source position and the chip row is below
+> every other block — the first placement, next to its alphabetical neighbours, broke both the
+> contiguous-run pin and the count, which is the registry's ordering rule enforcing itself.
+> **Below the front, the only bare node-code render gate left is the HW1 latch**, and that is
+> asserted rather than asserted-about.
 
 **D7 — NOT SHIPPED: fn-valued `css` on `NODE_PANELS`.** §11's chrome note predicted the per-state
 `border-left-color` problem would force it. Three slices found it "unneeded" — each 2-to-3-state
