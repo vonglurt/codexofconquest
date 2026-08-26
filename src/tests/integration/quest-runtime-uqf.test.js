@@ -458,13 +458,18 @@ test.describe('§WISDOM-01 wis_02–05 migrated to UQF (§ARCH-01 Phase 3)', () 
 // battles — no boolean-expression language needed.
 
 test.describe('§WISDOM-01 side quests wis_00/06/07 → UQF (§ARCH-01 Phase 3)', () => {
-  test('all three validate as UQF (completion gate, empty bits allowed)', async ({ page }) => {
+  test('all three validate as UQF (completion gate; wis_06 also carries the W6 check)', async ({ page }) => {
     await page.goto('/play.html');
     const r = await page.evaluate(() => ['quest_wis_00','quest_wis_06','quest_wis_07'].map(id => {
       const q = QUEST_DB[id];
-      return { id, schema:q.schema, completion:!!q.completion, bits:q.bits.length, valid:validateQuest(q).valid };
+      return { id, schema:q.schema, type:q.type, completion:!!q.completion, bits:q.bits.length, valid:validateQuest(q).valid };
     }));
-    expect(r.every(x => x.schema === 'UQF-1.0' && x.completion && x.bits === 0 && x.valid)).toBe(true);
+    expect(r.every(x => x.schema === 'UQF-1.0' && x.completion && x.valid)).toBe(true);
+    // wis_00 and wis_07 are completion-gated only — no roll of their own.
+    expect(r.filter(x => x.bits === 0).map(x => x.id)).toEqual(['quest_wis_00','quest_wis_07']);
+    // §AUDIT-03ad — wis_06 advertised "WIS 14 or combat" for 76 days and rolled nothing.
+    // It is a real skill_check now, and the completion OR-group still admits the fight.
+    expect(r.find(x => x.id === 'quest_wis_06')).toMatchObject({ type:'skill_check', bits:1 });
   });
 
   test('canComplete models wis_07 compound AND(pages) ∧ (flag OR battle)', async ({ page }) => {

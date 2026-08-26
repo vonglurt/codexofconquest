@@ -280,21 +280,26 @@ test.describe('§VM-01-G-FU-c — §WISDOM-01 manuscript hub (VS) behaves as the
       const btns = Array.from(p.querySelectorAll('button')).map(b => b.textContent);
       return { text: p.textContent, btns, cls: p.className };
     });
-    expect(r.text).toContain('Two paths: accept what it reflects, or fight what you find');
+    expect(r.text).toContain('Two paths: accept what it reflects (WIS Insight DC 14), or fight what you find');
     expect(r.btns.length, 'exactly the two exclusive options').toBe(2);
     expect(r.btns[0]).toContain('Accept the reflection');
     expect(r.btns[1]).toContain('Descend and fight the shadow construct');
     expect(r.cls, 'the options live INSIDE .sweelinck-variant chrome — the shape that keeps this a hook, not the second `choice` consumer').toBe('sweelinck-variant');
   });
 
-  test('VS accept: +350 XP, the Shadow Shard, wisPage6_shadow, the knowledge entry', async ({ page }) => {
-    await at(page, 'VS', Object.assign({}, LEG, { wisHookReceived: true, visbyUnderground: true }, P5));
+  test('VS accept: the WIS 14 roll, then +350 XP, the Shadow Shard, wisPage6_shadow, the knowledge entry', async ({ page }) => {
+    // §AUDIT-03ad — accepting is a roll now, not a gift. Seeded to clear DC 14 outright
+    // so this stays a parity test of the PASS payload rather than a test of the dice.
+    await at(page, 'VS', Object.assign({}, LEG, { wisHookReceived: true, visbyUnderground: true }, P5,
+      { level: 20, abilityScores: { str:10, dex:10, con:10, int:10, wis:20, cha:10 }, xp: 0 }));
     await clickIn(page, 'story-wis-vs', 'Accept the reflection');
     const r = await page.evaluate(() => ({
+      card: document.getElementById('story-hcard-container').textContent,
       xp: S_story.xp, p6: !!S_story.wisPage6_shadow,
       shard: (S_story.inventory || []).some(i => i.name === 'Shadow Shard'),
       know: (S_story.knowledge || []).some(k => k.indexOf('Ardley W6') === 0),
     }));
+    expect(r.card, 'the DC the portfolio advertises is the DC the engine rolls').toContain('vs DC 14');
     expect(r.xp).toBe(350);
     expect(r.p6).toBe(true);
     expect(r.shard).toBe(true);

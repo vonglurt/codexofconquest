@@ -13474,16 +13474,28 @@ const QUEST_DB = { // → doc: world.md §QUEST_DB
   // §ARCH-01 Phase 3 — migrated legacy → UQF v1.0 (2026-06-28). completion is an
   // OR-group: the wisPage6_shadow flag (accept the reflection) OR defeating the
   // VS_SHADOW construct (fight) — set by the VS storyRender block, unchanged.
-  quest_wis_06: { id:'quest_wis_06', schema:'UQF-1.0', type:'side',
+  quest_wis_06: { id:'quest_wis_06', schema:'UQF-1.0', type:'skill_check',
     title:'The Shadow Room',
     desc:'Ardley W6 — The Law of Repression: "The parts of yourself you have refused to examine do not disappear. They operate below the surface. They surface as overreactions, as inexplicable preferences, as patterns you cannot explain. The shadow is not your enemy — it is the part of you that has been waiting to be named." Roen: "There is a room in the lower level I have been in four times now. It shows you something. I will not say what it showed me. It was accurate, though. I gave it a formal nod. It seemed appropriate." The shadow room at Visby. Accept the reflection (Shadow Shard awarded) or fight the shadow construct.',
-    hint:'Enter the shadow room in Visby. Use the story panel at VS to choose: accept or fight.',
-    activateNode:'VS', gate:{ flags:['visbyUnderground'] },
-    completion:{ flagsAny:['wisPage6_shadow'], battles:['VS_SHADOW'] }, bits:[],
+    hint:'Enter the shadow room in Visby. Use the story panel at VS to choose: accept (WIS Insight DC 14) or fight.',
+    activateNode:'VS', gate:{ flags:['visbyUnderground'] }, retryable:true,
+    completion:{ flagsAny:['wisPage6_shadow'], battles:['VS_SHADOW'] },
+    bits:[
+      { kind:'skill_check', stat:'WIS', skill:'Insight', dc:14,
+        onPass:[
+          { kind:'mission_bit', flag:'wisPage6_shadow' },
+          { kind:'reward', xp:350, items:[{ name:'Shadow Shard', icon:'\u{1F52E}', type:'misc', desc:"A fragment of the VS mirror room, offered freely after you accepted what it reflected. It reflects nothing now \u2014 whatever was in it has been named. The room behind it is quiet.", sell:25 }], knowledge:"Ardley W6 \u2014 The Shadow: The mirror room in Visby's lower archive reflects a pattern the visitor has been navigating around \u2014 not a lie, not a flaw, but a part of the self that operates below acknowledgment. Roen gave it a formal nod. The mirror offered a shard. Accepting the shadow's observation is not defeat. It is the end of the cost of suppressing it." },
+          { kind:'narrative', msg:'\u{1F52E} The room below the archive has a mirror that should not exist here \u2014 polished obsidian, standing, no frame.\n\nIt shows you something. What it shows is specific and accurate. It names a pattern you have been navigating around for a long time.\n\nYou give it a formal nod. The mirror fractures cleanly at the center, offering a single shard. The room behind it goes quiet.' },
+        ],
+        onFail:[
+          { kind:'narrative', msg:'\u{1F52E} The mirror shows you something, and you look past it. Not a refusal \u2014 a reflex, the same one Ardley wrote the chapter about. The obsidian holds. The room stays cold.\n\nCome back when you can hold the look, or descend and fight what is standing in it.' },
+        ],
+      },
+    ],
     waypointNode:'VS', reward:0,
     disposition:'"I gave it a formal nod. It seemed appropriate." — Roen',
     passText:"I gave it a formal nod. It seemed appropriate. The shadow room has been faced.",
-    failText:"The shadow room at Visby has not been entered. The reflection is waiting.",
+    failText:"The shadow room at Visby has not been entered. The reflection is waiting. WIS Insight DC 14, or the construct.",
     npc:"solvak",
   },
 
@@ -33484,21 +33496,15 @@ function _nodeHookWisVsHub(node) {
           storyRender(node);
         });
         _wDiv.appendChild(_bindBtn);
-      } else if (S_story.wisHookReceived && _allFive && !_p6) {
-        _wDiv.textContent = '🔮 Five sections found. The sixth — Ardley\'s chapter on the repressed shadow — has been traced to a room in the lower Visby level. Roen has been there four times. He says: "It shows you something. I gave it a formal nod. It seemed appropriate." Two paths: accept what it reflects, or fight what you find.';
+      } else if (S_story.wisHookReceived && !_p6) {
+        const _foundSoFar = [_p1,_p2,_p3,_p4,_p5].filter(Boolean).length;
+        _wDiv.textContent = '🔮 ' + _foundSoFar + ' of the five scattered sections found. The sixth — Ardley\'s chapter on the repressed shadow — has been traced to a room in the lower Visby level, and it does not wait its turn. Roen has been there four times. He says: "It shows you something. I gave it a formal nod. It seemed appropriate." Two paths: accept what it reflects (WIS Insight DC 14), or fight what you find.';
         const _acceptBtn = document.createElement('button');
         _acceptBtn.className = 'inv-use-btn'; _acceptBtn.style.marginTop = '6px';
         _acceptBtn.textContent = '🔮 Accept the reflection (receive the shadow\'s observation)';
         _acceptBtn.addEventListener('click', () => {
           _acceptBtn.disabled = true;
-          S_story.wisPage6_shadow = true;
-          S_story.xp = (S_story.xp||0) + 350;
-          const inv = S_story.inventory = S_story.inventory || [];
-          inv.push({ name:'Shadow Shard', icon:'🔮', type:'misc', desc:"A fragment of the VS mirror room, offered freely after you accepted what it reflected. It reflects nothing now — whatever was in it has been named. The room behind it is quiet.", sell:25 });
-          storyMsg('🔮 The room below the archive has a mirror that should not exist here — polished obsidian, standing, no frame.\n\nIt shows you something. What it shows is specific and accurate. It names a pattern you have been navigating around for a long time.\n\nYou give it a formal nod. The mirror fractures cleanly at the center, offering a single shard. The room behind it goes quiet.\n\nArdley\'s W6 fragment collected. Shadow Shard added. Knowledge entry: "The shadow is not your enemy. It is the part of you that has been waiting to be named." +350 XP.');
-          S_story.knowledge = S_story.knowledge || [];
-          S_story.knowledge.push("Ardley W6 — The Shadow: The mirror room in Visby's lower archive reflects a pattern the visitor has been navigating around — not a lie, not a flaw, but a part of the self that operates below acknowledgment. Roen gave it a formal nod. The mirror offered a shard. Accepting the shadow's observation is not defeat. It is the end of the cost of suppressing it.");
-          storyRender(node);
+          _rollCeremonia('quest_wis_06');
         });
         const _shadowBtn = document.createElement('button');
         _shadowBtn.className = 'inv-use-btn'; _shadowBtn.style.marginTop = '4px';
