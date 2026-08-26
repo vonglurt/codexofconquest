@@ -44,6 +44,7 @@ _VOICES = [
 _RATE = "190"
 
 ROOT        = Path(__file__).resolve().parent.parent.parent
+_TOGGLE     = "./src/bin/wbapi-toggle.sh"
 PATCHES_DIR = ROOT / "milepoints" / "patches"
 SAY_LOG     = ROOT / "milepoints" / "say.log"
 SERVER_LOG  = ROOT / "milepoints" / "wbapi-server.log"
@@ -214,19 +215,20 @@ def _spawn_server_window():
     # Exit code contract (from wbapi-toggle.sh _run_once):
     #   0  — clean shutdown (POST /api/restart or port-in-use) — do NOT loop
     #   1  — crash / error                                     — loop: retry after 2 s
+    #   127 — the launcher itself is missing: retrying cannot fix it, so stop and say so
     cmd = (
         f"cd {root} && "
         f"export WBAPI_MANAGED_BY_MONITOR=1 && "
-        f"./wbapi-toggle.sh fg; "
-        f"EXIT=$?; "
-        f"if [ $EXIT -ne 0 ]; then "
+        f"LAUNCH={_TOGGLE}; "
+        f"if [ ! -x \"$LAUNCH\" ]; then "
+        f"  echo '[launcher missing: '$LAUNCH' — nothing to restart]'; exec bash; "
+        f"fi; "
+        f"while true; do "
+        f"  \"$LAUNCH\" fg; EXIT=$?; "
+        f"  [ $EXIT -eq 0 ] && break; "
+        f"  [ $EXIT -eq 127 ] && {{ echo '[launcher not runnable (127) — not retrying]'; break; }}; "
         f"  echo '[server crashed (exit '$EXIT') — restarting in 2 s…]'; sleep 2; "
-        f"  while true; do "
-        f"    ./wbapi-toggle.sh fg; EXIT=$?; "
-        f"    [ $EXIT -eq 0 ] && break; "
-        f"    echo '[server crashed (exit '$EXIT') — restarting in 2 s…]'; sleep 2; "
-        f"  done; "
-        f"fi"
+        f"done"
     )
 
     kind, path = _find_terminal()
@@ -250,7 +252,7 @@ def _spawn_server_window():
         subprocess.Popen(["osascript", "-e", script])
 
 
-_MANUAL_CMD = f"cd {ROOT}  &&  ./wbapi-toggle.sh fg"
+_MANUAL_CMD = f"cd {ROOT}  &&  {_TOGGLE} fg"
 
 
 def _set_trace_mode():
@@ -366,7 +368,7 @@ class Monitor:
                 self.srv_pid = pid
                 if not pid:
                     self.srv_msg = ("respawning…" if spawns < 2
-                                    else "DOWN — run: ./wbapi-toggle.sh fg")
+                                    else f"DOWN — run: {_TOGGLE} fg")
             if not pid:
                 if spawns < 2:
                     _spawn_server_window()
