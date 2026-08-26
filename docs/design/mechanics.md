@@ -1033,7 +1033,6 @@ Two servers sync only if their `(proto, engineVer, worldHash)` match exactly. `w
 | `S_story.ngPlusRun` | number | NG+ generation counter; 0 = first run |
 | `S_story.frobergerLastEntryRead` | boolean | true after player finds Journal Entry 41 |
 | `S_story.journalEntriesRead` | array | entryNums of FROBERGER_JOURNAL collectible entries found |
-| `S_story.ebReturnsCompleted` | object | ebCode → true; set on EB return quest completion; feeds curse score |
 | `S_story.ebNegotiatedPayments` | object | ebCode → gold accepted during payment negotiation |
 | `S_story.actNumber` | number | Current act (1–8); derived from current node's `act` field |
 | `S_story.currentCode` | string | Current node code; set on each navigation event |

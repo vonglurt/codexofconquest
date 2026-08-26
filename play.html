@@ -23090,7 +23090,7 @@ const _S_DEFAULTS = () => ({
   huntMode: false,  // §KG-01: Hunt Mode — ×2 encounter rate + 80/20 bias toward monsters at/below your level
   hireling: null,   // §MESH-01g: hired guide bot (single-player; persists in save)
   ebNegotiatedPayments: {}, ebReturnDone: {},
-  journalEntriesRead: [], ebReturnsCompleted: {},
+  journalEntriesRead: [],
   npcFavorability: {}, roughWhiskeyUsed: false, roughWhiskeyActive: false, yaelEscortUsed: false, pitTrainingWins: 0, slStalksWon: 0, muffatBerthReached: false, muffatManifestRead: false, station7LogRead: false, suppressorLogRead: false, antecedentMet: false, solmFound: false, cycle4NoteRead: false, bogDefeated: false, // §LI–§LVIII + CO-001
   dearFriendGranted: {},
   npcTalk: {},   // §NPC-01-D — key → { count, lastDay }: deliberate-talk progress toward Friendly (fav 1). Never raises above 1; Dear Friend stays quest/personal-act-earned.
@@ -28159,7 +28159,8 @@ function _buildEpilogueScroll() {
       "In sixteen of those runs, the Void opened again within a generation.",
       "In the seventeenth — not yet. That one is still running.",
       "He believes the eighteenth will be different.",
-      "He believes that about all of them, until the evidence arrives."
+      "He believes that about all of them, until the evidence arrives.",
+      FROBERGER_EPILOGUE.cursed
     ];
   }
   const lines = [];
@@ -30396,8 +30397,6 @@ function _storyEbReturnBeat(ebCode) {
   if (!S_story.ebReturnDone) S_story.ebReturnDone = {};
   if (S_story.ebReturnDone[ebCode]) return;
   S_story.ebReturnDone[ebCode] = true;
-  if (!S_story.ebReturnsCompleted) S_story.ebReturnsCompleted = {};
-  S_story.ebReturnsCompleted[ebCode] = true;
   const negotiated = (S_story.ebNegotiatedPayments || {})[ebCode];
   const gold = (negotiated !== undefined) ? negotiated : d.paymentFloor;
   if (gold > 0) {

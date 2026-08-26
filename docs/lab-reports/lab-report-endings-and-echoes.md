@@ -54,7 +54,7 @@ The nine subsystems: **(II)** the Covenant Ceremony · **(III)** Sweelinck's dyn
 | II | Covenant Ceremony | ✅ | Sigil is **amber `#FEA712`**, not "white against black"; **no pulse** keyframe; duration is 6.5 s / 13.2 s, not "8 seconds" (**F6**). Spec's CSS would have mis-drawn it (**F7**) |
 | III | Sweelinck's naming | ✅ byte-identical | Gate `missionDone && curse <= 0` is reachable **only at −5** — i.e. it silently requires **all 20** EB returns |
 | IV | NPC epilogues | ✅ byte-identical | EB block ships as **one summary count line**, not "one line each"; the gate field the spec names is the dead twin (**F4**) |
-| V | Cursed Seal echo | ✅ byte-identical | Predicate `!mc && cs >= 15` shipped exactly as written; `FROBERGER_EPILOGUE.cursed` has no selector (**F5**) |
+| V | Cursed Seal echo | ✅ byte-identical | Predicate `!mc && cs >= 15` shipped exactly as written; `FROBERGER_EPILOGUE.cursed` had no selector (**F5**) — ✅ §DX-02eo appended it to this block's tail 2026-08-26, which is the state it was written for |
 | VI | Rough Whiskey | ✅ 18/18 lines | **NOT SHIPPED: the use path.** `roughWhiskeyActive` has one writer, and the fight that sets it clears it on victory (**F3**) |
 | VII | Covenant Standing | ✅ sheet row | Unlock is `shards >= 1` (**Act II**), not "after Act III"; **NOT SHIPPED: the payoff** — no ending speaks the label (**F2**); the top rung is dead (**F1**) |
 | VIII | Pit Training perks | ⚠️ half | Unlock, message, persistence, badge all ship. **NOT SHIPPED: all five combat effects** (**F8**) |
@@ -125,7 +125,12 @@ What *did* ship is exact: disadvantage on every attack roll (`if (S_story._drunk
 
 ### F4 — the spec's own state field was created, written, and never read
 
-§IV gates the EB epilogue block on `ebReturnsCompleted >= 10`. The implementer created that field (`journalEntriesRead: [], ebReturnsCompleted: {},@23087`), writes it on every return (`S_story.ebReturnsCompleted[ebCode] = true;@30367`) — and then gated **every** consumer on the sibling `ebReturnDone`, which has nine live readers. `ebReturnsCompleted` has **zero**. A perfect parallel ledger, maintained for 90 days, that nothing has ever consulted.
+§IV gates the EB epilogue block on `ebReturnsCompleted >= 10`. The implementer created that field (`journalEntriesRead: [], ebReturnsCompleted: {},` *(the twin deleted, §DX-02eo)*), writes it on every return (`S_story.ebReturnsCompleted[ebCode] = true;` *(deleted, §DX-02eo)*) — and then gated **every** consumer on the sibling `ebReturnDone`, which has nine live readers. `ebReturnsCompleted` has **zero**. A perfect parallel ledger, maintained for 90 days, that nothing has ever consulted.
+
+> **✅ CLOSED 2026-08-26 (§DX-02eo).** Deleted whole — declaration, guard and write — rather than
+> repointed, because the spec's `>= 10` gate already exists and already works off `ebReturnDone`.
+> `world.md` had rationalised the second write as *"legacy write; kept for save forwards-compat"*,
+> which only means something if some reader is waiting for it; corrected there too.
 
 *(The block itself also ships as one summary line — `${ebReturns} of 20 EB contracts fulfilled. The people who sent you those contracts know your name.` — not "one line each" as §IV specifies.)* → **§DX-02eo** 🟢
 
@@ -140,6 +145,12 @@ else               lines.push(FROBERGER_EPILOGUE.efficient);
 ```
 
 `.cursed` — *"Froberger never finished his last entry… That someone was also very good at their work. They did not stay long either."* — is unreachable, because the state it was written for (`!mc && cs >= 15`) returns the Groundhog block earlier in the same function, before the Froberger append. The best line in the set is fenced off by the branch it belongs to. → **§DX-02eo**
+
+> **✅ CLOSED 2026-08-26 (§DX-02eo).** Appended to the Groundhog block's own tail — the cheapest
+> honest fix this finding named, and the only one that puts the line in the state it describes.
+> All four `FROBERGER_EPILOGUE` keys are now selectable, pinned by
+> `src/tests/integration/dx02eo-epilogue-and-twin.test.js` over four `(missionComplete, curseScore)`
+> pairs.
 
 ### F6 — the ceremony is not eight seconds, and it does not pulse
 
@@ -237,7 +248,7 @@ The same threshold gates §III: `missionDone && curse <= 0` is satisfiable **onl
 | Row | Weight | Premise |
 |---|---|---|
 | **§DX-02en** | 🟡 one design call | "Covenant Keeper" and the True ending are unreachable by one point; §VII's payoff line is in no branch |
-| **§DX-02eo** | 🟢 | `ebReturnsCompleted` is a write-only twin of `ebReturnDone`; `FROBERGER_EPILOGUE.cursed` has no selector |
+| **§DX-02eo** ✅ shipped 2026-08-26 | 🟢 | `ebReturnsCompleted` is a write-only twin of `ebReturnDone`; `FROBERGER_EPILOGUE.cursed` has no selector |
 | **§DX-02ep** | 🟡 one design call | The whiskey window is opened and closed by the same fight; 18 lines reachable only on a loss |
 | **§DX-02eq** | 🟡 implement-or-retire | Five pit perks set five flags nothing reads |
 | **§DX-02er** | 🟢 | `Math.random()` seeds the note node; one dead `→ doc:` pointer |

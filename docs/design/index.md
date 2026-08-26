@@ -668,7 +668,6 @@ All 54 source books are marked `[x]` in `books.md` — all have been processed t
 | `S_story.sleptAtNodes` | object | nodeCode → true; first sleep per location |
 | `S_story.departedNodes` | object | nodeCode → true; set in `storyMove` on the node being left (§AUDIT-03bk; `quest_inn_05` completes on `flagsPath:['departedNodes.INN']`) |
 | `S_story.journalEntriesRead` | array | entryNums of FROBERGER_JOURNAL entries found |
-| `S_story.ebReturnsCompleted` | object | ebCode → true; set on EB return quest completion |
 | `S_story.ebNegotiatedPayments` | object | ebCode → gold accepted |
 | `S_story.npcFavorability` | object | npcKey → 0/1/2/3. Raised only by `_setNpcFavor@23463`, which is monotonic |
 | `S_story.dearFriendGranted` | object | npcKey → true once `_checkDearFriendUpgrade@23482` has paid the Friendly→Dear-Friend `+1`. `DEAR_FRIEND_BITS@23465` names the second personal act for the **five** NPCs whose act grants the step; the check runs where each act is recorded, so either ordering earns it (§DX-02gb). auros is absent — `quest_void_below` writes his favor as an absolute `set:2`, which **is** the step (§DX-02gl). `_missionBits@23649` reads that table for 5 of the ending's 12 bits, relabelled through `MISSION_ACT_BITS@23641`, and seeds the sixth from `S_story.bruhnsDepthsReported` (§DX-02gk) |

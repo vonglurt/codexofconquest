@@ -104,7 +104,7 @@ Per the §DOC-02 house method, in order:
 | Specified artefact | Shipped as | Verdict |
 |---|---|---|
 | Curse Score, derived on demand | `function _curseScore() {@28193` | **Byte-exact to the spec formula** |
-| `S_story.journalEntriesRead: []` | `journalEntriesRead: [], ebReturnsCompleted: {},@23087` | Exact name, 5 readers |
+| `S_story.journalEntriesRead: []` | `journalEntriesRead: [], ebReturnsCompleted: {},` *(the twin deleted, §DX-02eo)* | Exact name, 5 readers |
 | `S_story.ebReturnsCompleted: {}` | same line | Exact name, **0 readers** (§DX-02n) |
 | `S_story.curseScore: 0` (spec: *never stored*) | an undeclared stored field, 0 readers | **Contradicted — see F3** |
 | `FROBERGER_JOURNAL` | `const FROBERGER_JOURNAL = [@27186` | Exact name; 4/4 field names; **41** entries |

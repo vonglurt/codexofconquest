@@ -1037,7 +1037,7 @@ MILEPOINT B  _curseScore() — EB engagement audit across all 20 EB codes
 
 ### FL9 — EB Quest Return Completion
 
-> Triggers `ebReturnsCompleted[ebCode] = true` (and simultaneously `ebReturnDone[ebCode] = true`). Both flags are set in the same call.
+> Triggers `ebReturnDone[ebCode] = true`. It used to set a second flag in the same call, `ebReturnsCompleted`, which no code ever read — deleted by §DX-02eo.
 
 ```
 TRIGGER  Player clicks "💰 RETURN [NPC] awaits" chip at the NPC's home node
@@ -1050,7 +1050,9 @@ MILEPOINT A  _storyEbReturnBeat(ebCode) called
 
 MILEPOINT B  Both flags set simultaneously:
              ebReturnDone[ebCode]      = true  ← guards re-fire; read by completeFn checks
-             ebReturnsCompleted[ebCode] = true  ← legacy write; kept for save forwards-compat
+             (the `ebReturnsCompleted[ebCode] = true` twin was deleted by §DX-02eo, 2026-08-26 —
+              it was written here and read nowhere, and "kept for save forwards-compat" only
+              means something if some reader is waiting for it)
 
 MILEPOINT C  Gold payment resolved:
              negotiated = ebNegotiatedPayments[ebCode] if set (player accepted lower offer)
