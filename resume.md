@@ -384,8 +384,19 @@ Full reference: `docs/api/API-README.md`, `docs/api/wbapi-help.md`,
   **Run `npm run anchors:fix` only when a row needs it, and revert the sweep in files the
   row does not touch** — it rewrites ~2,500 hint lines across 119 docs and buries the
   increment in noise. And **every extraction breaks doc anchors** (§WEAP-FIN-FU broke
-  three, §DX-02er broke three): that is the anchor gate working, not a defect, but budget
-  for it inside the increment rather than meeting it at the gate.
+  three, §DX-02er broke three, §ATKAB-01 broke two, §VM-01-B-FU broke nine): that is the
+  anchor gate working, not a defect, but budget for it inside the increment rather than
+  meeting it at the gate.
+  **Write the anchor as the literal source text.** §ATKAB-01 filed a row using
+  `` `#weapon-count` `` plus a line hint and the gate rejected four of them — the file says
+  `id="weapon-count"`, and an anchor is a quoted symbol copied from the source, not a CSS
+  selector for it.
+- **A number in a document is not a model.** Wherever a row hands you an arithmetic
+  claim, prefer an assertion that **re-derives** the number from the data over one that
+  restates it. §AUDIT-03bl's XP chain was done by hand wrong twice — once in the lab
+  report, and once again in the contingency that report wrote to catch itself; what
+  finally held was a test that recomputes the curve from `QUEST_DB` and `MONSTER_POOL`
+  on every run.
 - **Tests run in the foreground, never piped.** A piped Playwright run returns the
   *last pipe stage's* exit code; 46 failures once reported `exit 0` twice. Redirect
   to a file and read the summary counts. **Stop the WBAPI server before running
