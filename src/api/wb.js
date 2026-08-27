@@ -486,6 +486,47 @@ const CMD = {
     printResult(r.body, flags);
   },
 
+  async dialogue(pos, flags) {
+    await requireServer();
+    const [, key, field, ...rest] = pos;
+    if (!key) die('Usage: ./bin/api dialogue <npc-key> [meta k=v ...] [<array> --lines a --lines b]  ·  create: pipe {quote,meta{…},impartial[…]} with --create');
+    const piped = await readStdin();
+    const body  = Object.assign(
+      typeof piped === 'object' && piped ? piped : {},
+      parseKV(rest),
+    );
+
+    if (flags.create) {
+      if (!body.quote) die('A new dialogue entry needs quote=. Optional: meta{name,occupation,worldTruth,enemy,missionBit,node}, impartial[], friendly[], dearFriend[].');
+      const r = await request('POST', `/api/npc/${encodeURIComponent(key)}/dialogue`, body);
+      if (r.status === 409) { printError(r); info('An entry already exists. Edit it with: ./bin/api dialogue ' + key + ' meta k=v'); process.exit(1); }
+      if (r.status >= 400) { printError(r); process.exit(1); }
+      const sv = await request('POST', '/api/save', {});
+      if (sv.status >= 400) { printError(sv); process.exit(1); }
+      return printResult(r.body, flags);
+    }
+
+    if (!field) {
+      const r = await request('GET', `/api/npc/${encodeURIComponent(key)}/dialogue`);
+      if (r.status >= 400) { printError(r); process.exit(1); }
+      return printResult(r.body, flags);
+    }
+
+    const path = flags.index !== undefined
+      ? `/api/npc/${encodeURIComponent(key)}/dialogue/${encodeURIComponent(field)}/${encodeURIComponent(flags.index)}`
+      : `/api/npc/${encodeURIComponent(key)}/dialogue/${encodeURIComponent(field)}`;
+    if (field !== 'meta' && flags.index === undefined && !Array.isArray(body.value)) {
+      const lines = flags.lines === undefined ? null : [].concat(flags.lines);
+      if (!lines) die(`Replacing "${field}" needs the lines: --lines "…" (repeatable), or pipe {"value":[…]}.`);
+      body.value = lines;
+    }
+    const r = await request('PUT', path, body);
+    if (r.status >= 400) { printError(r); process.exit(1); }
+    const sv = await request('POST', '/api/save', {});
+    if (sv.status >= 400) { printError(sv); process.exit(1); }
+    printResult(r.body, flags);
+  },
+
   async loot(pos, flags) {
     await requireServer();
     const sub = pos[1] || 'get';
@@ -1980,6 +2021,7 @@ ${C.bold}═══════════════════════�
   ${C.green}post${C.reset} <type> [k=v]      Create a new entity
   ${C.green}del${C.reset} <type> <id>        Delete an entity
   ${C.green}drop${C.reset} <monster> name=…    Trophy drop (MONSTER_DROPS; --update to replace)
+  ${C.green}dialogue${C.reset} <npc> […]      NPC_DIALOGUES entry (--create to add; meta/array edits)
   ${C.green}audit${C.reset} [--map]          Integrity scan
   ${C.green}export${C.reset} <collection>    Export data as JSON / JS / ES module
   ${C.green}import${C.reset} <file.json>     Bulk import nodes + quest cycles
@@ -3164,6 +3206,7 @@ const SYNOPSIS = [
   `  ${C.green}speak${C.reset} <npc-id> "<prompt>"           Claude NPC reply  [--state neutral|friendly|dearFriend]`,
   `  ${C.green}import${C.reset} <file.json>                 bulk import nodes + quest cycles`,
   `  ${C.green}audit${C.reset} [--map]                      integrity scan`,
+  `  ${C.green}dialogue${C.reset} <npc> [meta k=v…]      NPC_DIALOGUES entry  (--create pipes {quote,meta,impartial}; --lines to replace an array)`,
   `  ${C.green}loot${C.reset}  [get | put]                 d100 drop table  (put: --index N k=v… | pipe {entries:[…]})`,
   `  ${C.yellow}Directive: always use ./bin/api — never curl. Request a refactor if a feature is missing.${C.reset}`,
   `  ${C.yellow}Maintain the network: run ./bin/api verify after every change.${C.reset}`,

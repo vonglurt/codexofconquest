@@ -210,7 +210,7 @@ before A (B without A crashes on the first lean node)."* It was obeyed; A landed
 | 5-C | `meta.enemy` at Friendly, mirroring the `worldTruth` footer | ✅ shipped under its own tag | `696539e` |
 | 5-D | Favor reach — marked *design call, not mechanical* | ✅ shipped as the **Talk verb** the same evening | `df990c3`; own lab report |
 | 6 | `src/scripts/check-npc-cardmap.js` added to `check:walk` | ❌ **NOT SHIPPED** — never existed in any build. Its three assertions are nonetheless covered: (a) and (c) by the integration test, (b) by `check:noderegs`, whose `NODE_FIELDS` list includes `node` | `src/scripts/check-noderegs.js:96` |
-| 6 | `src/tests/integration/npc-card-map.test.js` | ✅ shipped, and grew 9 → 16 → **22** tests | re-run below |
+| 6 | `src/tests/integration/npc-card-map.test.js` | ✅ shipped, and grew 9 → 16 → 22 → 27 → **30** tests | re-run below |
 
 **Why §3.2 was superseded rather than betrayed.** The locked design was *derive by default, override
 per node.* What shipped is the inverse polarity — *curated literal wins, derived map fills in* — and
@@ -285,8 +285,8 @@ within days of the lock; `check:walk` has been 16/16 green since.
 | Measure | Parent build | HEAD |
 |---|---|---|
 | Nodes that can show a card | 14 mapped | **125 of 416 (30.0%)** |
-| NPCs that produce a card | **11** | **203 of 204** |
-| NPCs mapped but rendering blank | 9 | **1** (`watcher_gvw`, §AUDIT-03bo) |
+| NPCs that produce a card | **11** | **204 of 204** (203 before §AUDIT-03bo) |
+| NPCs mapped but rendering blank | 9 | **0** (`watcher_gvw` was the last; §AUDIT-03bo 2026-08-26) |
 | Renderer throws | 1 class, all 191 lean profiles | **0** |
 
 **11 → 203.** The report predicted "~203" and hit it exactly. Its node figure was the one that
@@ -320,6 +320,13 @@ was **112**, and the union at HEAD is 125.
   > `NODE_MAP` must be reachable from the curated maximal set or the derived map. Measured at HEAD it
   > found exactly one orphan — this one — and it closes all three faces of the registry-mismatch
   > class, including §AUDIT-03bo's mirror, against silent reopening.
+  > **Correction, 2026-08-26 by §AUDIT-03bo:** that last clause was too generous, and the row that
+  > inherited it re-measured before believing it. The bp census enumerates **`NPC_DIALOGUES` keys**,
+  > so it cannot see a profile that has no dialogue at all — the mirror direction was still unwatched.
+  > §AUDIT-03bo added the assertion that does watch it: every profile in the derived render map whose
+  > `.node` resolves in `NODE_MAP` must resolve in `NPC_DIALOGUES`. Measured at HEAD before the fix it
+  > returned exactly one, `watcher_gvw@GVW`. *A census is blind in the direction of the registry it
+  > starts from; the mirror needs its own.*
 
 - **SF3 — `NODE_NPC_KEYS` stale comment.** ✅ **Correct and fixed.** The parent comment claimed the
   table was *"used by `_getNPCDialogue()` routing"*; its only readers were and are
@@ -354,7 +361,7 @@ SF6 (curated ∪ derived merge). SF5 and SF6 are downstream of §1 row 5 and §3
 - **§AUDIT-03bp** — `don_fluffissimo` is dialogue-only, declares `meta.node:'CDG'`, has no
   `BIRKA_NPC_PROFILES` entry and is absent from CDG’s curated list, so it renders on no node at HEAD.
   It is the tenth name in SF2 and the one the shipped nine-NPC fix did not reach. Mirror image of
-  §AUDIT-03bo (`watcher_gvw`: profile, no dialogue).
+  §AUDIT-03bo (`watcher_gvw`: profile, no dialogue) — **both closed 2026-08-26**.
 - **§DX-02dr** — this report’s two wrong census figures were **copied into the engine source**. The
   `_renderNpcCard` comment still says *"the ~194 non-Birka NPCs"* (191) and the `_deriveNpcRenderMap`
   header still says *"from ~20 NPCs to ~203"* (11 → 203). Annotation without verification launders a

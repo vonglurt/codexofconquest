@@ -636,3 +636,49 @@ test.describe('§AUDIT-03bp — no dialogue with a real node is unreachable from
     await expect(row).toContainText('Kenickie');
   });
 });
+
+// §AUDIT-03bo — the mirror of §NPC-01-SF2, and the direction §AUDIT-03bp's census cannot see.
+// SF2 closed "dialogue without profile"; bp closed "dialogue without profile AND unmapped".
+// Both start from an NPC_DIALOGUES key, so neither can see a BIRKA_NPC_PROFILES entry that
+// has no dialogue at all — and _renderNpcCard resolves the dialogue before it does anything
+// else, so such a profile renders nothing and gets no §NPC-01-D Talk button.
+//
+// `watcher_gvw` was the one instance: The Greenwood Watcher, node GVW, declared quest-giver
+// for clr_01_act3 and clr_01_act4 of the five-part "I Just Know This" chain, in the derived
+// render map, and with no NPC_DIALOGUES entry since the profile was written. `./api.sh audit`
+// reported errors:0 for a quest-giver the player could not see.
+//
+// The census below is the general assertion — it is what makes the mirror unable to reopen.
+test.describe('§AUDIT-03bo — no profile in the render map is without a voice', () => {
+
+  test('census: every derived-map profile with a real node resolves in NPC_DIALOGUES', async ({ page }) => {
+    await page.goto('/play.html');
+    const mute = await page.evaluate(() => {
+      const mapped = new Set();
+      for (const arr of Object.values(_deriveNpcRenderMap())) (arr || []).forEach(k => mapped.add(k));
+      return Object.entries(BIRKA_NPC_PROFILES)
+        .filter(([k, p]) => mapped.has(k) && p.node && NODE_MAP[p.node] && !NPC_DIALOGUES[k])
+        .map(([k, p]) => k + '@' + p.node);
+    });
+    expect(mute).toEqual([]);
+  });
+
+  test('every NPC_DIALOGUES entry carries a worldTruth, the Watcher included', async ({ page }) => {
+    await page.goto('/play.html');
+    const r = await page.evaluate(() => ({
+      without: Object.entries(NPC_DIALOGUES)
+        .filter(([, d]) => !(d.meta && d.meta.worldTruth)).map(([k]) => k),
+      watcher: NPC_DIALOGUES['watcher_gvw'] && NPC_DIALOGUES['watcher_gvw'].meta.worldTruth,
+    }));
+    expect(r.without).toEqual([]);
+    expect(r.watcher).toContain('two different skills');
+  });
+
+  test('GVW renders the Watcher card with her name and occupation', async ({ page }) => {
+    await seedAndLoad(page, { currentCode: 'GVW', checkpointNode: 'GVW', visited: { GVW: true } });
+    await dismissContinue(page);
+    const row = page.locator('#story-npc-cards-row');
+    await expect(row).toContainText('The Greenwood Watcher');
+    await expect(row).toContainText('Natural historian of cognition');
+  });
+});
