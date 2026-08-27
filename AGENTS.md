@@ -21,7 +21,7 @@
 first row by §3  →  plan, then goal  →  implement  →  close  →  commit  →  push  →  say.sh  →  next row
 ```
 
-**Do not stop at row boundaries.** The loop runs until the user stops it. Finish the row you are on, then take the next.
+**Do not stop at row boundaries.** The loop runs to the five-row-per-`continue` budget in `resume.md` §0. Finish the row you are on, then take the next; hand off after the fifth.
 
 **After every commit:** `git push`, then `src/bin/say.sh "<summary written for the ear>"` — never raw macOS `say`.
 

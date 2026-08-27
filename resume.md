@@ -11,7 +11,7 @@
 > done — the six `docs/backlog/BACKLOG-*.md` files and `docs/backlog/plan-archive.md`
 > do that. Written 2026-08-23; **§0 replaced the one-row-per-`continue` handshake with a
 > continuous loop on 2026-08-24**, and the token/time budget that paced it was removed on
-> 2026-08-25 — the loop now runs until the user stops it. Read §0 first, and treat §1 as
+> 2026-08-25; a **five-row budget per `continue`** replaced it on 2026-08-26. Read §0 first, and treat §1 as
 > the record of what it replaced.
 
 ---
@@ -34,8 +34,8 @@
   docs/design/index.md and the §RESUME chronology, commit, push,
   src/bin/say.sh "<summary>".
 
-  Then take the next row. The loop runs until I stop it; when you do
-  stop, hand off with a numbered next-steps list saying what stopped
+  Then take the next row. The loop runs to the five-row budget in §0, or
+  until I stop it; when you do stop, hand off with a numbered next-steps list saying what stopped
   you. Foreground only — no background jobs, no subagents.
   Comments CC-1..CC-6.
 
@@ -84,11 +84,14 @@ implement a plan you have already stopped believing.
 THEN KEEP GOING. Close the row properly, commit, push, announce it, and take the next
 one. Do not stop and ask at the row boundary. The loop continues.
 
-DO NOT STOP ON A ROW, OR ON A COUNT:
-  • The loop runs until the user stops it. Finish the row you are on, then take the next.
-  • Stop early only for something the loop cannot decide: an ASK row at the head of the
+ROW BUDGET — FIVE ROWS PER `continue` (set 2026-08-26):
+  • Take up to FIVE rows per user `continue`/`next`. Do not stop at rows 1–4's boundary;
+    finish the row you are on and take the next. After the FIFTH row closes — committed,
+    pushed, spoken — stop and hand off, saying the budget is what stopped you.
+  • Stop earlier only for something the loop cannot decide: an ASK row at the head of the
     work, a gate that will not go green, or a question whose answer changes what ships.
     Say which of those it is.
+  • The number is the user's dial. To change it, change it here.
 
 NEW ROWS GO AT THE TOP. Anything found on the path that is not the current row becomes a
 NEW ROW, written at the START of that phase file's open-items section — newest first, so
@@ -119,7 +122,7 @@ next
 
 That word means: **finish the increment you are on if it is open, then run the loop from
 §0 — first row by §3, plan, goal, implement, close, commit, push, speak, next row — and
-keep going until I stop you.**
+keep going to the five-row budget in §0.**
 
 ---
 
