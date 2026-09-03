@@ -13,7 +13,7 @@
 
 ### §DX-02ai — two naval-layer beats pay twice and announce once (NEW 2026-08-12 during §DOC-02z, 🟢 no design call)
 
-- [x] ✅ SHIPPED 2026-09-03 `<sha>` **§DX-02ai — a `storyRender` button that writes a quest's completion flag, when the quest also carries a reward, pays both.** Two live instances, both on **reachable** nodes, both player-facing today:
+- [x] ✅ SHIPPED 2026-09-03 `19afc7a` **§DX-02ai — a `storyRender` button that writes a quest's completion flag, when the quest also carries a reward, pays both.** Two live instances, both on **reachable** nodes, both player-facing today:
 >   - **`quest_sk_hull` (Saltwick dry dock, `MME`) — 400 XP paid, 200 announced.** The button pays its price correctly through the `cost` leaf (`kind:'cost', gold:200@33993`), then grants `S_story.xp = (S_story.xp||0) + 200;` (the hull button's line, deleted 2026-09-03) inline and toasts *"-200gp. +200 XP."* Its own `storyRender(node)` re-entry completes the quest (`completion:{ flags:['shipRepaired'] }`), whose `onComplete` carries a second `{ kind:'reward', xp:200 }`.
 >   - **`quest_spark2_05` (Fehn confrontation, `DNF`) — 1,000 XP paid, 400 announced.** The button grants +400 gold and +400 XP, sets `fehnConfessed`, and the quest then pays `xpAward:600` through `if (q.type === 'side' && q.xpAward) { S_story.xp += q.xpAward; _checkLevelUp(); }@30276`.
 > **The other nine button/quest pairs in the layer are clean** — payment sits on exactly one side each — so this is two sites, not a pattern in the arc's authoring. Same class as the four fixed by `3338def` (§SPARK-01-FU / §LXX-01-FU); these survived because that sweep was scoped to the harbour and §LXX stacks.
