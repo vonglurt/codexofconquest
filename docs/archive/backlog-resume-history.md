@@ -33,7 +33,7 @@
 
 | # | Date | Increment | Ship | Headline |
 |---:|---|---|---|---|
-| 1 | 2026-09-03 | §AUDIT-03bm | `PENDING` | the XP economy names its own edge: the failed-check dial is proportional, not a floor, so token-only checks pay a mission bit rather than XP by design; a flat `mission_bit` grant declined at 24,500 XP against the corpus's 22,307 XP of quest reward, and the census re-derived per run |
+| 1 | 2026-09-03 | §AUDIT-03bm | `12007f2` | the XP economy names its own edge: the failed-check dial is proportional, not a floor, so token-only checks pay a mission bit rather than XP by design; a flat `mission_bit` grant declined at 24,500 XP against the corpus's 22,307 XP of quest reward, and the census re-derived per run |
 | 2 | 2026-09-03 | §DX-02aq | `a1d97fa` | the inventory panel splits `S_story.knowledge` by shape into Necklace beads and Field Notes, so lore notes no longer render as `undefined` |
 | 3 | 2026-09-03 | §DX-02bt | `b545133` | the custom-waypoint and corpse quest cards build on `textContent` like the main renderer; the two dialogue maps name each other |
 | 4 | 2026-09-03 | §DX-02do | `fdf9589` | Entry 42 and the Defiant Fields secret, the two player-typed strings, reached the DOM as markup; both now escape through `_mpEsc` |
