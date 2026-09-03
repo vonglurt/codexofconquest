@@ -124,7 +124,7 @@ Every symbol below resolves at HEAD. Line numbers are refreshable hints; the sym
 | Miss branch, NAT 1 | `NAT 1 — Auto Miss@25066` | ✅ calls the helper |
 | Miss branch, ordinary | `function _overlayPlayerAttack@25022` | ✅ calls the helper (25066) |
 | Failed-check grant | `a failed check still earns effort XP@7003` | ✅ live |
-| Reward extraction | `const rewardXp = ((sc.onPass@7007` · `const effXp = Math.round@7008` | ✅ live |
+| Reward extraction | `const rewardXp = (sc.onPass@7018` · `const effXp = Math.round@7019` | ✅ live — **sums every `reward` bit in `onPass` since §DX-02ip (2026-09-03)**, matching what `execBits` pays on the pass side; the original `.find` read one bit, which no quest in the corpus could distinguish (0 skill checks carry a second reward bit) |
 | Once-per-quest guard | `effortXpQuests: {}@23151` in `_S_DEFAULTS` | ✅ live |
 | Sibling dial (§XP-02-A) | `const EXPLORE_XP@24437` | ✅ later work, same family |
 
@@ -369,6 +369,6 @@ not a defect, and it is filed as §AUDIT-03bm.
   mission-bit-check fail (`quest_spark_01`) `+0`. Spec run and deleted.
 - **Census:** `src/js/wbapi-core.js` `W.load('play.html')`, brace-walked entry bodies for the
   `_legacy_fn` scan — **0** of 77 `_legacy_fn` onPass bits carry an XP grant the reward-bit reader
-  would miss, so the extraction in `const rewardXp = ((sc.onPass@7007` sees everything there is to
+  would miss, so the extraction in `const rewardXp = (sc.onPass@7018` sees everything there is to
   see.
 - **Parse:** inline `<script>` block, 0 errors. **DUEL:CORE:** sha `511b93cc1b21` at all three trees.

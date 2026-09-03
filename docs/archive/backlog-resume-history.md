@@ -33,68 +33,69 @@
 
 | # | Date | Increment | Ship | Headline |
 |---:|---|---|---|---|
-| 1 | 2026-09-03 | §AUDIT-03bm | `12007f2` | the XP economy names its own edge: the failed-check dial is proportional, not a floor, so token-only checks pay a mission bit rather than XP by design; a flat `mission_bit` grant declined at 24,500 XP against the corpus's 22,307 XP of quest reward, and the census re-derived per run |
-| 2 | 2026-09-03 | §DX-02aq | `a1d97fa` | the inventory panel splits `S_story.knowledge` by shape into Necklace beads and Field Notes, so lore notes no longer render as `undefined` |
-| 3 | 2026-09-03 | §DX-02bt | `b545133` | the custom-waypoint and corpse quest cards build on `textContent` like the main renderer; the two dialogue maps name each other |
-| 4 | 2026-09-03 | §DX-02do | `fdf9589` | Entry 42 and the Defiant Fields secret, the two player-typed strings, reached the DOM as markup; both now escape through `_mpEsc` |
-| 5 | 2026-09-03 | §DX-02ae | `6464da3` | the Act VIII Brynn farewell accessor wrote a progression flag while rendering; now pure, with the write at the delivery site beside the latch, and the Yael scene comment names its own guard |
-| 6 | 2026-09-03 | §DX-02ac | `15ba42a` | seven dead `abilityScores` fallbacks named a starting character the game never made; collapsed, and the four documents that believed them corrected |
-| 7 | 2026-08-23 | §DOC-02dc + §VM-01-G4 | `f340143` | the child design pass whose one missing opcode was the last one the VM ever needed, whose only carried number is its only wrong one, and whose nominated pilot for the… |
-| 8 | 2026-08-23 | §DOC-02db + §VM-01 | — | the design that survived eleven slices and 26 days at 100% of its symbols, whose one unmodelled shape was a button on the wrong side of a `<div>`, and whose act number… |
-| 9 | 2026-08-06 | §11f + §11 | `3338def` | `NWI`'s Warmth Eel panel (named **first** in §11's own census table) and the `HKG` Void Below chip were censused and then dropped by the arc partition; the third… |
-| 10 | 2026-08-22 | §DOC-02cv + §BOARD-01 | `8dcca67` | the origin lock with a perfect anchor score and a census that measured half the corpus, whose two "pure transliteration" increments required two invented edits, and… |
-| 11 | 2026-08-22 | §DOC-02cu + §BOARD-01-FU7 | `e0051a8` | the design lock whose data table shipped byte-identical and is still byte-identical a month later, whose spec omitted the one edit that made half of it work, and whose… |
-| 12 | 2026-08-22 | §DOC-02ct + §BOARD-01-FU8 | `4af74b4` | the design lock that named an invariant in its first design call and violated it in its fourth section, and the prover that could not see the violation because it could… |
-| 13 | 2026-08-22 | §DOC-02cs + §VM-01-F | `c6be7f8` | eighteen of twenty-one anchors exact and the three misses are exactly the three the author hedged with a tilde; the gate learned to say `or`, has had one speaker for a… |
-| 14 | 2026-08-22 | §DOC-02cr + §3 | `549d6b4` | the design lock whose code shipped byte-identical and is still byte-identical a month later, and whose speedup is 3.6× rather than the thousand-fold its own big-O… |
-| 15 | 2026-08-22 | §DOC-02cq + §10 | `354b20a` | every one of the prover's own seven corpus figures reproduced exactly on the pinned build, and the increment credited with consuming the kernel turns out to have… |
-| 16 | 2026-07-28 | §RESUME + §DOC-02 | `549d6b4` | `check:anchors` ✅ **4,191 → 4,248 across 100 → 101 docs, +57, 0 dead** — **45 in the report** (which carried none before: it used the bare-number form throughout, so the… |
-| 17 | 2026-08-22 | §DOC-02cp | — | eighteen line numbers, eighteen exact — the cleanest anchor result the program has scored — and the one promise the kernel did not keep is the one that rolls the dice |
-| 18 | 2026-07-28 | §DX-02dv + §RESUME | — | `check:anchors` ✅ **4,149 → 4,191 across 99 → 100 docs, +42, 0 dead** — **23 in the report** and **19 across the two new rows, the §DX-02dv resolution, the program row… |
-| 19 | 2026-08-21 | §DOC-02co + §VM-01-C | `c22f4f0` | the destination file names the source — `src/scripts/check-questgraph.js:35` reads *"the written-by-nothing / read-by-nothing detector §VM-01-C deferred here."* **§6.1… |
-| 20 | 2026-08-21 | §DOC-02cn | — | 27 of 28 line numbers correct against a build that was never committed, and all four wrong figures are in the prose that frames them |
-| 21 | 2026-08-21 | §DOC-02cm | — | every code block byte-exact, 33 of 33 anchors resolving, the acceptance suite still 5/5 thirty days on — and all three wrong numbers in one paragraph, the one written… |
-| 22 | 2026-08-21 | §DOC-02cj | — | the report got four of its own counts wrong and three of its four open questions right, and the repo built every one of them |
-| 23 | 2026-08-21 | §DOC-02ci | — | the parent review shipped five of seven faces the day it was written, and every one of its four errors is a citation, three of them in the tier marked "no design call" |
-| 24 | 2026-08-18 | §DOC-02cg | — | the increment shipped ten of ten and deferred five of five, and the sentence it put on the opening screen is false in the direction that kills the player |
-| 25 | 2026-08-18 | §DOC-02cf | — | the lock has not drifted a byte in 37 days, and half of what it shipped has never once returned true |
-| 26 | 2026-08-18 | §DOC-02ce + §PLAY-01-A | — | §PLAY-01-A shipped the goal whole, and then a design reversal landed on one of its two surfaces |
-| 27 | 2026-08-18 | §DOC-02cd | — | the corpus's first perfect dating result, on a feature that ships the XP and withholds the telling |
-| 28 | 2026-08-18 | §DOC-02cc | — | the cleanest ship in the corpus, and every failure in it is a claim about its own surroundings |
-| 29 | 2026-08-13 | §DOC-02bc | — | the one row it certified in its own words is the one row its own line numbers disprove |
-| 30 | 2026-08-13 | §DOC-02bb | — | everything it read is right, and everything it added up is wrong |
-| 31 | 2026-08-13 | §DOC-02ba | — | the diagnosis outlived the remedy by two months; the remedy lasted four hours |
-| 32 | 2026-08-12 | §DOC-02am | — | the defect was a missing CALL, not a missing SYMBOL |
-| 33 | 2026-08-12 | §DOC-02aa | — | a flag written and read eleven lines apart deleted the middle layer of a three-layer design, and nobody noticed for 79 days because the line still arrives |
-| 34 | 2026-08-12 | §DOC-02w | — | the mechanism is perfect, the design is unreachable, and the decision that scoped it was reverted by a commit about book imports |
-| 35 | 2026-08-12 | §DOC-02v | — | the migration shipped complete, was silently reverted the same afternoon by a commit about book imports, and came back two-thirds |
-| 36 | 2026-08-12 | §DOC-02t | `3deef54` | the design the report explicitly FORBADE is the design that shipped — and two Layer-18 stat fields drifted away from their only readers |
-| 37 | 2026-08-12 | §DOC-02r | `33c2166` | a 100 % symbol census over a feature that is 55 % unreachable — and the arc's hardest check is a button |
-| 38 | 2026-08-12 | §DOC-02n | `c0a24eb` | the design was a TRADE — take magic weapons away from monsters, give them back through fishing — and only the taking half shipped |
-| 39 | 2026-08-12 | §DOC-02m | `33f09ad` | the report's design premise was right, was built, and was then extended fourfold — and nobody can reach any of it, because an arctic node is declared 59 lines before the… |
-| 40 | 2026-08-11 | §DOC-02j | `7e62f43` | a report whose own appendix says its subject was never built, and six of its seven mechanics are live code — while the table it wrote to persuade you names two monsters… |
-| 41 | 2026-08-11 | §DOC-02e + §DESIGN-03 | `3d0ab1d` | §7 of the report specified *"show the level-up modal immediately"* on a passing roll, and **HEAD does not do it** — `_checkLevelUp()` is a mutator that advances… |
-| 42 | 2026-08-06 | §VM-01-G-FU-f2 + §11 | `9c9fe42` | TLS authors `finalBattle:{minLevel:20,minShards:7}` (via `WBAPI.editStructuredField` in-process — 1-line data diff) and `_finalBattleReady(code)` replaces the three… |
-| 43 | 2026-08-06 | §SPARK-01-FU + §LXX-01-FU | `3338def` | stripping the button side alone was insufficient for the §LXX trio because their completions were *arrival-satisfiable* (`sunken_02` flags+itemsAll+atNode · `depth_01`… |
-| 44 | 2026-08-05 | §VM-01-G-FU-f + §XLV | `6a571de` | git diff +128/−124 (124 verbatim + 2-line wrapper + 1 registry + 1 dispatch), line-multiset 124/124 zero unmatched; 16-combo golden HEAD-vs-after over the full… |
-| 45 | 2026-08-05 | §VM-01-G-FU-e + §LXX | `3dfdc26` | `quest_sunken_02`/`quest_depth_01`/`quest_forge_02` each carry the button's entire effect in `onComplete` and auto-complete on the arrival that draws the button… |
-| 46 | 2026-08-05 | §VM-01-G-FU-d + §SPARK-01 | `8cdda7b` | 49-combo golden HEAD-vs-after over sibling DOM + bboxes + msg text/class + overlay/`_preBattNode` + state incl. 13 click combos — **46/49 byte-identical, the 3 deltas… |
-| 47 | 2026-08-05 | §VM-01-G-FU-c + §ALCHEMY-01 | `7d8cb39` | 37-combo golden HEAD-vs-after over sibling DOM + bounding boxes + msg text/class + pre-battle overlay/node + state (roen chain, wisdom pages, knowledge, inventory),… |
-| 48 | 2026-08-05 | §VM-01-G-FU-b + §HUNT-01 | `cf2fec8` | 22-combo golden HEAD-vs-after over sibling DOM + bounding boxes + msg text/class + pre-battle overlay/node + state, incl. 4 click-outcome combos — **22/22… |
-| 49 | 2026-08-05 | §VM-01-G-FU-a + §CROWN-01 | `56c08f1` | 26-combo golden HEAD-vs-after over DOM+bbox+msg+overlay+state — **14 byte-identical · 8 id-only (`story-*`→`verb-*`, every bounding box equal) · 4 named deltas, two of… |
-| 50 | 2026-08-05 | §VM-01-G-FU + §CROWN-01 | `02ff4aa` | after the generic sections sits a SECOND special-case stack, ~1,200 lines / ~38 blocks, accreted by the NEWER arcs (§CROWN-01 · §LXX-family · the… |
-| 51 | 2026-08-05 | §VM-01-G4d + §VM-01-G4 | `b0c2478` | CDG's three boss confrontations as `NODE_VERBS` group `cdg-boss-menu` rendered into the same `#cq-boss-buttons` container (`_renderNodeVerbs` grew the 4th `container`… |
-| 52 | 2026-08-04 | §VM-01-G4c + §VM-01-G4c-FU | `4c2a831` | four D1 surfaces as `NODE_VERBS` button entries — Sweelinck's S49 scene at `NUE`, Ori at `STN`, Yva at `TRD`, Brynn's firewood at `TLL` — plus the Junction Vignette's… |
-| 53 | 2026-08-04 | §VM-01-G4b + §9 | `f7a60a5` | `NODE_VERBS` + `_renderNodeVerbs` — the third small vocabulary beside `NODE_PANELS` (flavour a node *shows*) and `NODE_HOOKS` (an interface a node *owns*) — and Kern &… |
-| 54 | 2026-08-04 | §VM-01-G4a + §10 | `b905733` | the **`cost`** opcode, registered next to `reward` because it is `reward`'s inverse and because `reward` is precisely how you get this wrong — `gold:-50` computes… |
-| 55 | 2026-08-04 | §VM-01-G2b + §AUDIT-03 | `bedf2c1` | no **top-level `return`** (all 13 sit inside click handlers — one at block level would have gone from exiting nothing to exiting a hook early) and no **`var`** (nothing… |
-| 56 | 2026-07-31 | §DX-02g + §AUDIT-03d | `f229ede` | `void_rat_swarm → easy` settled itself (6 of 8 nearest stat-neighbours `easy`; exact AC/HP/atk twin is Jackalwere), while `void_shaman` was a real fork — its two… |
-| 57 | 2026-07-28 | §VM-01-G3 + §XX | `a721254` | (1) most of the 15 quests ALREADY carried an `activateNode` — appended as a DUPLICATE key below the authored `activateNode:null` by the `a721254`/`ea02faf` audit waves… |
-| 58 | 2026-07-28 | §VM-01-G2 + §D01-10 | `8973fd7` | the sketched single dispatch loop is order-UNSAFE — Corelli's gate is the computed `_checkCorelliAppearance` schedule (any of 5 nodes), so no single dispatch position… |
-| 59 | 2026-07-28 | §VM-01-G + §7 | `cf2c17c` | table order = old source order and every extracted block must precede, in old source, every block that can co-fire on its node — which excludes the BK approach panel… |
-| 60 | 2026-08-06 | §VM-01-G-FU-f2 | `9c9fe42` | The three engine specials — all three design asks answered |
-| 61 | 2026-08-06 | §SPARK-01-FU | `3338def` | The Aldous confrontation double-pays |
-| 62 | 2026-08-06 | §LXX-01-FU | `3338def` | All three §LXX-family button/quest pairs double-pay |
+| 1 | 2026-09-03 | §DX-02ip | `PENDING` | the failed-check effort grant scaled off the first `reward` bit rather than the sum the pass actually pays; now a `reduce`, provably behaviour-preserving at 0 multi-reward checks in the corpus, with a fixture red at HEAD |
+| 2 | 2026-09-03 | §AUDIT-03bm | `12007f2` | the XP economy names its own edge: the failed-check dial is proportional, not a floor, so token-only checks pay a mission bit rather than XP by design; a flat `mission_bit` grant declined at 24,500 XP against the corpus's 22,307 XP of quest reward, and the census re-derived per run |
+| 3 | 2026-09-03 | §DX-02aq | `a1d97fa` | the inventory panel splits `S_story.knowledge` by shape into Necklace beads and Field Notes, so lore notes no longer render as `undefined` |
+| 4 | 2026-09-03 | §DX-02bt | `b545133` | the custom-waypoint and corpse quest cards build on `textContent` like the main renderer; the two dialogue maps name each other |
+| 5 | 2026-09-03 | §DX-02do | `fdf9589` | Entry 42 and the Defiant Fields secret, the two player-typed strings, reached the DOM as markup; both now escape through `_mpEsc` |
+| 6 | 2026-09-03 | §DX-02ae | `6464da3` | the Act VIII Brynn farewell accessor wrote a progression flag while rendering; now pure, with the write at the delivery site beside the latch, and the Yael scene comment names its own guard |
+| 7 | 2026-09-03 | §DX-02ac | `15ba42a` | seven dead `abilityScores` fallbacks named a starting character the game never made; collapsed, and the four documents that believed them corrected |
+| 8 | 2026-08-23 | §DOC-02dc + §VM-01-G4 | `f340143` | the child design pass whose one missing opcode was the last one the VM ever needed, whose only carried number is its only wrong one, and whose nominated pilot for the… |
+| 9 | 2026-08-23 | §DOC-02db + §VM-01 | — | the design that survived eleven slices and 26 days at 100% of its symbols, whose one unmodelled shape was a button on the wrong side of a `<div>`, and whose act number… |
+| 10 | 2026-08-06 | §11f + §11 | `3338def` | `NWI`'s Warmth Eel panel (named **first** in §11's own census table) and the `HKG` Void Below chip were censused and then dropped by the arc partition; the third… |
+| 11 | 2026-08-22 | §DOC-02cv + §BOARD-01 | `8dcca67` | the origin lock with a perfect anchor score and a census that measured half the corpus, whose two "pure transliteration" increments required two invented edits, and… |
+| 12 | 2026-08-22 | §DOC-02cu + §BOARD-01-FU7 | `e0051a8` | the design lock whose data table shipped byte-identical and is still byte-identical a month later, whose spec omitted the one edit that made half of it work, and whose… |
+| 13 | 2026-08-22 | §DOC-02ct + §BOARD-01-FU8 | `4af74b4` | the design lock that named an invariant in its first design call and violated it in its fourth section, and the prover that could not see the violation because it could… |
+| 14 | 2026-08-22 | §DOC-02cs + §VM-01-F | `c6be7f8` | eighteen of twenty-one anchors exact and the three misses are exactly the three the author hedged with a tilde; the gate learned to say `or`, has had one speaker for a… |
+| 15 | 2026-08-22 | §DOC-02cr + §3 | `549d6b4` | the design lock whose code shipped byte-identical and is still byte-identical a month later, and whose speedup is 3.6× rather than the thousand-fold its own big-O… |
+| 16 | 2026-08-22 | §DOC-02cq + §10 | `354b20a` | every one of the prover's own seven corpus figures reproduced exactly on the pinned build, and the increment credited with consuming the kernel turns out to have… |
+| 17 | 2026-07-28 | §RESUME + §DOC-02 | `549d6b4` | `check:anchors` ✅ **4,191 → 4,248 across 100 → 101 docs, +57, 0 dead** — **45 in the report** (which carried none before: it used the bare-number form throughout, so the… |
+| 18 | 2026-08-22 | §DOC-02cp | — | eighteen line numbers, eighteen exact — the cleanest anchor result the program has scored — and the one promise the kernel did not keep is the one that rolls the dice |
+| 19 | 2026-07-28 | §DX-02dv + §RESUME | — | `check:anchors` ✅ **4,149 → 4,191 across 99 → 100 docs, +42, 0 dead** — **23 in the report** and **19 across the two new rows, the §DX-02dv resolution, the program row… |
+| 20 | 2026-08-21 | §DOC-02co + §VM-01-C | `c22f4f0` | the destination file names the source — `src/scripts/check-questgraph.js:35` reads *"the written-by-nothing / read-by-nothing detector §VM-01-C deferred here."* **§6.1… |
+| 21 | 2026-08-21 | §DOC-02cn | — | 27 of 28 line numbers correct against a build that was never committed, and all four wrong figures are in the prose that frames them |
+| 22 | 2026-08-21 | §DOC-02cm | — | every code block byte-exact, 33 of 33 anchors resolving, the acceptance suite still 5/5 thirty days on — and all three wrong numbers in one paragraph, the one written… |
+| 23 | 2026-08-21 | §DOC-02cj | — | the report got four of its own counts wrong and three of its four open questions right, and the repo built every one of them |
+| 24 | 2026-08-21 | §DOC-02ci | — | the parent review shipped five of seven faces the day it was written, and every one of its four errors is a citation, three of them in the tier marked "no design call" |
+| 25 | 2026-08-18 | §DOC-02cg | — | the increment shipped ten of ten and deferred five of five, and the sentence it put on the opening screen is false in the direction that kills the player |
+| 26 | 2026-08-18 | §DOC-02cf | — | the lock has not drifted a byte in 37 days, and half of what it shipped has never once returned true |
+| 27 | 2026-08-18 | §DOC-02ce + §PLAY-01-A | — | §PLAY-01-A shipped the goal whole, and then a design reversal landed on one of its two surfaces |
+| 28 | 2026-08-18 | §DOC-02cd | — | the corpus's first perfect dating result, on a feature that ships the XP and withholds the telling |
+| 29 | 2026-08-18 | §DOC-02cc | — | the cleanest ship in the corpus, and every failure in it is a claim about its own surroundings |
+| 30 | 2026-08-13 | §DOC-02bc | — | the one row it certified in its own words is the one row its own line numbers disprove |
+| 31 | 2026-08-13 | §DOC-02bb | — | everything it read is right, and everything it added up is wrong |
+| 32 | 2026-08-13 | §DOC-02ba | — | the diagnosis outlived the remedy by two months; the remedy lasted four hours |
+| 33 | 2026-08-12 | §DOC-02am | — | the defect was a missing CALL, not a missing SYMBOL |
+| 34 | 2026-08-12 | §DOC-02aa | — | a flag written and read eleven lines apart deleted the middle layer of a three-layer design, and nobody noticed for 79 days because the line still arrives |
+| 35 | 2026-08-12 | §DOC-02w | — | the mechanism is perfect, the design is unreachable, and the decision that scoped it was reverted by a commit about book imports |
+| 36 | 2026-08-12 | §DOC-02v | — | the migration shipped complete, was silently reverted the same afternoon by a commit about book imports, and came back two-thirds |
+| 37 | 2026-08-12 | §DOC-02t | `3deef54` | the design the report explicitly FORBADE is the design that shipped — and two Layer-18 stat fields drifted away from their only readers |
+| 38 | 2026-08-12 | §DOC-02r | `33c2166` | a 100 % symbol census over a feature that is 55 % unreachable — and the arc's hardest check is a button |
+| 39 | 2026-08-12 | §DOC-02n | `c0a24eb` | the design was a TRADE — take magic weapons away from monsters, give them back through fishing — and only the taking half shipped |
+| 40 | 2026-08-12 | §DOC-02m | `33f09ad` | the report's design premise was right, was built, and was then extended fourfold — and nobody can reach any of it, because an arctic node is declared 59 lines before the… |
+| 41 | 2026-08-11 | §DOC-02j | `7e62f43` | a report whose own appendix says its subject was never built, and six of its seven mechanics are live code — while the table it wrote to persuade you names two monsters… |
+| 42 | 2026-08-11 | §DOC-02e + §DESIGN-03 | `3d0ab1d` | §7 of the report specified *"show the level-up modal immediately"* on a passing roll, and **HEAD does not do it** — `_checkLevelUp()` is a mutator that advances… |
+| 43 | 2026-08-06 | §VM-01-G-FU-f2 + §11 | `9c9fe42` | TLS authors `finalBattle:{minLevel:20,minShards:7}` (via `WBAPI.editStructuredField` in-process — 1-line data diff) and `_finalBattleReady(code)` replaces the three… |
+| 44 | 2026-08-06 | §SPARK-01-FU + §LXX-01-FU | `3338def` | stripping the button side alone was insufficient for the §LXX trio because their completions were *arrival-satisfiable* (`sunken_02` flags+itemsAll+atNode · `depth_01`… |
+| 45 | 2026-08-05 | §VM-01-G-FU-f + §XLV | `6a571de` | git diff +128/−124 (124 verbatim + 2-line wrapper + 1 registry + 1 dispatch), line-multiset 124/124 zero unmatched; 16-combo golden HEAD-vs-after over the full… |
+| 46 | 2026-08-05 | §VM-01-G-FU-e + §LXX | `3dfdc26` | `quest_sunken_02`/`quest_depth_01`/`quest_forge_02` each carry the button's entire effect in `onComplete` and auto-complete on the arrival that draws the button… |
+| 47 | 2026-08-05 | §VM-01-G-FU-d + §SPARK-01 | `8cdda7b` | 49-combo golden HEAD-vs-after over sibling DOM + bboxes + msg text/class + overlay/`_preBattNode` + state incl. 13 click combos — **46/49 byte-identical, the 3 deltas… |
+| 48 | 2026-08-05 | §VM-01-G-FU-c + §ALCHEMY-01 | `7d8cb39` | 37-combo golden HEAD-vs-after over sibling DOM + bounding boxes + msg text/class + pre-battle overlay/node + state (roen chain, wisdom pages, knowledge, inventory),… |
+| 49 | 2026-08-05 | §VM-01-G-FU-b + §HUNT-01 | `cf2fec8` | 22-combo golden HEAD-vs-after over sibling DOM + bounding boxes + msg text/class + pre-battle overlay/node + state, incl. 4 click-outcome combos — **22/22… |
+| 50 | 2026-08-05 | §VM-01-G-FU-a + §CROWN-01 | `56c08f1` | 26-combo golden HEAD-vs-after over DOM+bbox+msg+overlay+state — **14 byte-identical · 8 id-only (`story-*`→`verb-*`, every bounding box equal) · 4 named deltas, two of… |
+| 51 | 2026-08-05 | §VM-01-G-FU + §CROWN-01 | `02ff4aa` | after the generic sections sits a SECOND special-case stack, ~1,200 lines / ~38 blocks, accreted by the NEWER arcs (§CROWN-01 · §LXX-family · the… |
+| 52 | 2026-08-05 | §VM-01-G4d + §VM-01-G4 | `b0c2478` | CDG's three boss confrontations as `NODE_VERBS` group `cdg-boss-menu` rendered into the same `#cq-boss-buttons` container (`_renderNodeVerbs` grew the 4th `container`… |
+| 53 | 2026-08-04 | §VM-01-G4c + §VM-01-G4c-FU | `4c2a831` | four D1 surfaces as `NODE_VERBS` button entries — Sweelinck's S49 scene at `NUE`, Ori at `STN`, Yva at `TRD`, Brynn's firewood at `TLL` — plus the Junction Vignette's… |
+| 54 | 2026-08-04 | §VM-01-G4b + §9 | `f7a60a5` | `NODE_VERBS` + `_renderNodeVerbs` — the third small vocabulary beside `NODE_PANELS` (flavour a node *shows*) and `NODE_HOOKS` (an interface a node *owns*) — and Kern &… |
+| 55 | 2026-08-04 | §VM-01-G4a + §10 | `b905733` | the **`cost`** opcode, registered next to `reward` because it is `reward`'s inverse and because `reward` is precisely how you get this wrong — `gold:-50` computes… |
+| 56 | 2026-08-04 | §VM-01-G2b + §AUDIT-03 | `bedf2c1` | no **top-level `return`** (all 13 sit inside click handlers — one at block level would have gone from exiting nothing to exiting a hook early) and no **`var`** (nothing… |
+| 57 | 2026-07-31 | §DX-02g + §AUDIT-03d | `f229ede` | `void_rat_swarm → easy` settled itself (6 of 8 nearest stat-neighbours `easy`; exact AC/HP/atk twin is Jackalwere), while `void_shaman` was a real fork — its two… |
+| 58 | 2026-07-28 | §VM-01-G3 + §XX | `a721254` | (1) most of the 15 quests ALREADY carried an `activateNode` — appended as a DUPLICATE key below the authored `activateNode:null` by the `a721254`/`ea02faf` audit waves… |
+| 59 | 2026-07-28 | §VM-01-G2 + §D01-10 | `8973fd7` | the sketched single dispatch loop is order-UNSAFE — Corelli's gate is the computed `_checkCorelliAppearance` schedule (any of 5 nodes), so no single dispatch position… |
+| 60 | 2026-07-28 | §VM-01-G + §7 | `cf2c17c` | table order = old source order and every extracted block must precede, in old source, every block that can co-fire on its node — which excludes the BK approach panel… |
+| 61 | 2026-08-06 | §VM-01-G-FU-f2 | `9c9fe42` | The three engine specials — all three design asks answered |
+| 62 | 2026-08-06 | §SPARK-01-FU | `3338def` | The Aldous confrontation double-pays |
+| 63 | 2026-08-06 | §LXX-01-FU | `3338def` | All three §LXX-family button/quest pairs double-pay |
 
 **61 completed entries.**
 

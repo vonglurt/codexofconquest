@@ -25,7 +25,7 @@ async function census(page) {
     const out = {
       quests: Object.keys(QUEST_DB).length,
       skillCheck: 0, onFailEmpty: 0, canPayEffort: 0, missionBitOnly: 0,
-      effortSum: 0, missionBits: 0, questRewardXp: 0, exploreXp: EXPLORE_XP, enginePays: 0,
+      effortSum: 0, missionBits: 0, questRewardXp: 0, exploreXp: EXPLORE_XP, enginePays: 0, multiReward: 0,
     };
     const walk = (o, fn) => {
       if (!o || typeof o !== 'object') return;
@@ -49,8 +49,9 @@ async function census(page) {
       if ((sc.onFail || []).length === 0) out.onFailEmpty++;
       const onPass = sc.onPass || [];
       const reward = onPass.find(b => b && b.kind === 'reward' && b.xp > 0);
-      // The engine reads the FIRST reward bit, not the first one carrying xp (§DX-02ip).
-      if (Math.round(((onPass.find(b => b.kind === 'reward') || {}).xp || 0) * EFFORT_XP_PCT) > 0) out.enginePays++;
+      const rewards = onPass.filter(b => b && b.kind === 'reward');
+      if (rewards.length > 1) out.multiReward++;
+      if (Math.round(rewards.reduce((n, b) => n + (b.xp || 0), 0) * EFFORT_XP_PCT) > 0) out.enginePays++;
       if (reward) { out.canPayEffort++; out.effortSum += Math.round(reward.xp * EFFORT_XP_PCT); }
       else if (onPass.some(b => b && b.kind === 'mission_bit')) out.missionBitOnly++;
     }
@@ -82,9 +83,40 @@ test.describe('§AUDIT-03bm — effort XP reaches the checks that pay a reward, 
   test('every check that carries pass XP is one the engine actually pays for (§DX-02ip)', async ({ page }) => {
     await seedAndLoad(page);
     const c = await census(page);
-    // _resolveQuestUQF takes the first `reward` bit, so a gold-only bit ahead of the
-    // XP one silently zeroes the grant. No quest is shaped that way — this holds it there.
+    // The grant scales off the whole pass value. Nothing in the corpus carries a second
+    // reward bit, so the census and the engine can only agree — this holds them there.
     expect(c.enginePays).toBe(c.canPayEffort);
+    expect(c.multiReward).toBe(0);
+  });
+
+  test('the grant is a quarter of the whole pass value, not of its first reward bit (§DX-02ip)', async ({ page }) => {
+    await seedAndLoad(page);
+    const r = await page.evaluate(() => {
+      storyNewGame({ str:8, dex:8, con:8, int:8, wis:8, cha:8 });
+      const mk = (id, onPass) => {
+        QUEST_DB[id] = {
+          schema:'UQF-1.0', type:'skill_check', title:id, activateNode:'TLL',
+          passText:'p', failText:'f',
+          bits:[{ kind:'skill_check', stat:'INT', dc:999, onPass, onFail:[] }],
+        };
+        const before = S_story.xp;
+        _resolveQuestUQF(id);
+        return S_story.xp - before;
+      };
+      return {
+        // a gold-only bit standing ahead of the XP one must not hide it
+        goldFirst: mk('_ip_gold_first', [{ kind:'reward', gold:50 }, { kind:'reward', xp:200 }]),
+        // two XP bits: the pass pays 300, so the effort is a quarter of 300
+        twoXp:     mk('_ip_two_xp',     [{ kind:'reward', xp:100 }, { kind:'reward', xp:200 }]),
+        // unchanged shape — the whole corpus looks like this
+        single:    mk('_ip_single',     [{ kind:'reward', xp:200 }]),
+        none:      mk('_ip_none',       [{ kind:'mission_bit', flag:'ipProbeBit' }]),
+      };
+    });
+    expect(r.goldFirst).toBe(50);   // round(200 * 0.25) — was 0
+    expect(r.twoXp).toBe(75);       // round(300 * 0.25) — was 25
+    expect(r.single).toBe(50);      // round(200 * 0.25) — unchanged
+    expect(r.none).toBe(0);         // a token pass is still a token pass
   });
 
   test('a flat mission-bit grant would out-mint every authored quest reward in the game', async ({ page }) => {

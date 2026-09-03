@@ -7015,7 +7015,7 @@ function _resolveQuestUQF(questId) {
     // pass would have granted, ONCE per quest (guarded so a retryable check can't farm it).
     S_story.effortXpQuests = S_story.effortXpQuests || {};
     if (!S_story.effortXpQuests[questId]) {
-      const rewardXp = ((sc.onPass || []).find(b => b.kind === 'reward') || {}).xp || 0;
+      const rewardXp = (sc.onPass || []).reduce((n, b) => n + (b.kind === 'reward' ? (b.xp || 0) : 0), 0);
       const effXp = Math.round(rewardXp * EFFORT_XP_PCT);
       S_story.effortXpQuests[questId] = true;
       if (effXp > 0) {
