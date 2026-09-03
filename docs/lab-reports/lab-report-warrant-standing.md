@@ -140,6 +140,10 @@ All five rows, all four fields, shipped verbatim from this block. Diffed at `e00
 > browser, the board at standing 7 and the board at standing 12 are **the same six cards in the same
 > order**. Five more completed bounties buy a rank name and nothing else. §8's own walk-through skips
 > `Sworn` — it names Marked, Trusted and Warrant's Own — because there is nothing to narrate.
+>
+> **Closed 2026-09-03 (§DX-02eh):** `Sworn` is `slate: 7` and `Warrant's Own` is `slate: 8` — the ladder
+> reads 4 → 5 → 6 → 7 → 8, and the block above is no longer verbatim at HEAD on those two rows. The FU7
+> test now pins standing 12 strictly wider than standing 7, and the table strictly increasing.
 
 ---
 
@@ -204,10 +208,13 @@ header names a function §7 named.
 > (2,760 board-eligible quests), not 142 side quests plus zero craft quests. *A hook described by the
 > line above it has been described by its neighbour, not by its guard.*
 
-**A stale comment FU7 introduced and no gate can see.** `run it ONLY over the ≤4 shown cards@37189`
+**A stale comment FU7 introduced and no gate can see.** `≤4 shown cards` (the §BOARD-01-FU3 comment, rewritten by §DX-02eh)
 is a §BOARD-01-FU3 comment defending a BFS cost bound. FU7 raised that bound to 7 and did not update
 it; it still says `≤4` at HEAD, thirty-two days later. Comments in `play.html` are outside the
 `.md`-only reach of `src/scripts/resolve-anchors.js:65` — the same blind spot §DX-02ef was filed for.
+
+> **Closed 2026-09-03 (§DX-02eh):** the comment names the bound by its source — *the tier's slate plus the
+> FU8 pin* — rather than a literal; `grep -c "≤4 shown cards" play.html` → 0.
 
 ---
 
@@ -223,6 +230,8 @@ builds agree on every figure.
 | 7 | `— Trusted (7)` | **6** | 500 | 1,075 | 500 |
 | 12 | `— Sworn (12)` | **6** | ∞ | 1,076 | 600 |
 | 20 | `— Warrant's Own (20)` | **7** | ∞ | 1,076 | 600 |
+
+> **At HEAD since §DX-02eh (2026-09-03):** standing 12 shows **7** cards and standing 20 shows **8**; the other rows hold.
 
 **What shipped and works.** The header reads exactly as §8 promised, rank name and count, at every
 rung. The slate widens 4 → 5 → 6 → 6 → 7. The tier-0 board is never emptied. The whole ladder is
@@ -331,7 +340,7 @@ the extracted script, every time. The tool is the liar, not the author.
 **2,850** quests · **2,820** UQF · **2,760** board-eligible · six non-empty eligible types.
 
 **Rows filed:** §DX-02eg 🟡 (the ceiling that filters a pool the player never reads) · §DX-02eh 🟢
-(the `Sworn` rung that changes nothing, and the stale `≤4` comment).
+(the `Sworn` rung that changes nothing, and the stale `≤4` comment) — **shipped 2026-09-03**.
 
 ---
 

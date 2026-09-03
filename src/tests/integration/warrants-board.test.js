@@ -901,6 +901,7 @@ test.describe('§BOARD-01 — The Warrant\'s Board', () => {
       // slate size grows with standing (no explicit limit ⇒ the tier drives it)
       S_story.warrantStanding = 0;   const n0 = _boardBounties(inn).length;
       S_story.warrantStanding = 7;   const n7 = _boardBounties(inn).length;
+      S_story.warrantStanding = 12;  const n12 = _boardBounties(inn).length;
       S_story.warrantStanding = 20;  const n20 = _boardBounties(inn).length;
       // reward ceiling: inspect the CANDIDATE POOL (huge limit so the slice can't hide it)
       const maxXpAt = (standing) => {
@@ -908,7 +909,8 @@ test.describe('§BOARD-01 — The Warrant\'s Board', () => {
         return _boardBounties(inn, 500).reduce((m, b) => Math.max(m, _boardRewardXp(QUEST_DB[b.id])), 0);
       };
       return {
-        n0, n7, n20, slate0: tier0.slate, slateMax: tierMax.slate, cap0: tier0.rewardCap,
+        n0, n7, n12, n20, slate0: tier0.slate, slate12: _warrantTier(12).slate, slateMax: tierMax.slate, cap0: tier0.rewardCap,
+        slates: WARRANT_TIERS.map(w => w.slate),
         tier0Name: tier0.name, tierMaxName: tierMax.name,
         maxXp0: maxXpAt(0), maxXpMax: maxXpAt(20),
       };
@@ -918,8 +920,11 @@ test.describe('§BOARD-01 — The Warrant\'s Board', () => {
     expect(r.n0).toBeGreaterThan(0);              // NON-EMPTY guard — a newcomer's board still has cards
     expect(r.n0).toBeLessThanOrEqual(r.slate0);   // ...capped at the tier-0 slate (4)
     expect(r.n7).toBeGreaterThanOrEqual(r.n0);    // monotone: the slate widens (or holds) as standing climbs
-    expect(r.n20).toBeGreaterThanOrEqual(r.n7);
-    expect(r.n20).toBe(r.slateMax);               // top rank shows the full 7-card slate
+    expect(r.n12).toBeGreaterThan(r.n7);          // §DX-02eh — every rung widens the board; Sworn is not a free rank name
+    expect(r.n12).toBe(r.slate12);
+    expect(r.n20).toBeGreaterThan(r.n12);
+    expect(r.n20).toBe(r.slateMax);               // top rank shows the full slate
+    for (let i = 1; i < r.slates.length; i++) expect(r.slates[i]).toBeGreaterThan(r.slates[i - 1]);   // the ladder is strictly increasing
     expect(r.n20).toBeGreaterThan(r.n0);          // ...strictly wider than a newcomer's board
     expect(r.maxXp0).toBeLessThanOrEqual(r.cap0); // tier-0 pool carries NO premium bounty (ceiling holds)
     expect(r.maxXpMax).toBeGreaterThan(r.cap0);   // ...but the top rank surfaces the Warrant's premium work

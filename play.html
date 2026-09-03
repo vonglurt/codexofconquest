@@ -37166,8 +37166,8 @@ const WARRANT_TIERS = [
   { min: 0,  name: 'Unknown',       slate: 4, rewardCap: 250 },
   { min: 3,  name: 'Marked',        slate: 5, rewardCap: 350 },
   { min: 7,  name: 'Trusted',       slate: 6, rewardCap: 500 },
-  { min: 12, name: 'Sworn',         slate: 6, rewardCap: Infinity },
-  { min: 20, name: "Warrant's Own", slate: 7, rewardCap: Infinity },
+  { min: 12, name: 'Sworn',         slate: 7, rewardCap: Infinity },
+  { min: 20, name: "Warrant's Own", slate: 8, rewardCap: Infinity },
 ];
 function _warrantTier(standing) {
   let t = WARRANT_TIERS[0]; const s = standing || 0;
@@ -37294,7 +37294,7 @@ function _boardBounties(node, limit) {
   const shown = out.slice(0, limit || tier.slate);            // §BOARD-01-FU7 — slate size scales with standing (explicit limit still overrides, e.g. tests)
   // §BOARD-01-FU3 — distance-labeled slate (label-only variant). Answer "is this
   // trip worth it?" by pairing reward with a leg count. _roadGridPath is a grid
-  // BFS, so we run it ONLY over the ≤4 shown cards (never the ~249 candidates) —
+  // BFS, so we run it ONLY over the shown cards — the tier's slate plus the FU8 pin — never the eligible pool —
   // computed AFTER the slice on purpose. Road-weighted (same net auto-travel uses),
   // from the live player position; 0 ⇒ no coords/here, so the label is omitted.
   for (const b of shown) {
