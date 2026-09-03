@@ -33,7 +33,7 @@
 
 | # | Date | Increment | Ship | Headline |
 |---:|---|---|---|---|
-| 1 | 2026-09-03 | §DX-02ew | `PENDING` | the inn ledger's ceiling is a balanced book at last — pantry +3→+2 closes at exactly 0 in all six orders, per §VII and world.md agreeing; the pantry narration stops asserting a sign it cannot know; the printed-figures mismatch withheld as §DX-02iq because it needs the author |
+| 1 | 2026-09-03 | §DX-02ew | `47cd24b` | the inn ledger's ceiling is a balanced book at last — pantry +3→+2 closes at exactly 0 in all six orders, per §VII and world.md agreeing; the pantry narration stops asserting a sign it cannot know; the printed-figures mismatch withheld as §DX-02iq because it needs the author |
 | 2 | 2026-09-03 | §DX-02et | `16ce65b` | Layer 44's six world notes get `S_story.worldLog` and a panel section under the design's own stranded `.journal-entry.world` rule, out of the movement breadcrumb array; storyMsg declined because the notes are meant to be missable; old saves migrated on load |
 | 3 | 2026-09-03 | §DX-02fv | `2cf3462` | `choice` gets its second consumer surface: TL Vonn sliced into NODE_VERBS with the answer as the choice prompt, and a self-guarding `when` — the driver's closing re-render draws verbs before quest completion, so a status-only guard redrew a payable button |
 | 4 | 2026-09-03 | §DX-02ip | `62fd7dc` | the failed-check effort grant scaled off the first `reward` bit rather than the sum the pass actually pays; now a `reduce`, provably behaviour-preserving at 0 multi-reward checks in the corpus, with a fixture red at HEAD |
