@@ -8436,6 +8436,7 @@ document.addEventListener('DOMContentLoaded', () => {
 const NODE_MAP = { // → doc: maps.md §NODE_MAP
   // ── ACT I — BIRKA
   LHR:{ num:1,  code:'LHR', name:'city',            label:"City Streets — Birka",       act:1, text:"Birka wakes in layers. The market carts come first, wheels finding the same ruts they found yesterday, and the gate lamps still burn pale against a sky that hasn't decided on morning. Cobbles slick with the night's damp; the smell of tar and fish and cold stone.\n\nThe city keeps a rhythm — corner posts, lamplighters, the watch changing without a word. On one corner stands the guard captain, Yael Scheidemann: square-shouldered in city colours, a duty log open in one hand, marking the street the way other people breathe. She misses nothing and hurries at nothing.\n\nNotices flutter on the board by the fountain. Down the hill the lower districts stay shuttered. Up here the day simply begins, the way it always does, whether or not anyone is ready for it.", npc:'City Guard Captain', battle:null, loot:'Bloodstained Map', sleep:false,
+    board:true,
   },
   BMA:{ num:51, code:'BMA', name:'city_slums',     label:'Birka Slums',                act:1, text:"The alleys north of the Birka market are too narrow for carts and too cramped for anything to move through quickly. This is their primary defense. The refuse heaps at each junction attract every pest the city produces — rats in the lower layers, cockroach swarms in the dry section above, wasps where the heat concentrates in the overhang. The city does not come here to clean. The city does not come here.\n\nThree children are playing a dare game at the gutter crossroads when you arrive. The rules are visible in how they stand: one touches the leech-covered stones, two watch. They have run this game long enough to know exactly how close you can get before a leech detaches and looks for warmer purchase.\n\nThey don't look at you when you pass. In the slums, ignoring strangers is the social courtesy — it means you have decided not to be a problem.\n\nThe road north goes to the Defiant Fields. The children don't go north.", npc:null, battle:null, loot:null, sleep:false,
   },
@@ -37123,7 +37124,7 @@ function _questsByNode(nodeCode) {
 // but-working `unlock` opcode (this is the file's first live use of it). Pure,
 // read-only selection; no movement gate; no jump travel; no new Math.random.
 // Design locked in lab-reports/lab-report-warrants-board.md.
-const BOUNTY_TYPES = new Set(['side','skill_check','craft','combat','hunt','delivery','escort','dialogue']);
+const BOUNTY_TYPES = new Set(['side','skill_check','hybrid','combat','hunt','delivery','escort','dialogue']);
 // host(node): opt-in `board:true`, else default = any rest node, unless `board:false` suppresses it.
 function _boardHost(node) { return !!node && (node.board === true || (node.board !== false && node.sleep === true)); }
 // FNV-1a hash — pure/replayable rotation seed (never Math.random; §VM-01-B-safe).

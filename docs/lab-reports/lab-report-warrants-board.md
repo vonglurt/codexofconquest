@@ -157,6 +157,11 @@ Shipped **byte-identical** as `const BOUNTY_TYPES@37019`, and byte-identical at 
    the parent and at HEAD; `hybrid` (13) is excluded and has never been named by this report or any of
    its eight children. → **§DX-02ej**.
 
+   > **Closed 2026-09-03 (§DX-02ej):** `craft` is out of `BOUNTY_TYPES` and `hybrid` is in — the 13 hybrids are
+   > flag-gated chain acts built from `skill_check` bits, the same shape as the eligible `skill_check` corpus.
+   > Board-eligible at HEAD **2,763 → 2,776** (of 2,823 UQF). `hunt` stays, with 0 quests: a declared type, not an
+   > item descriptor. Pinned in `warrants-board.test.js`.
+
 > ⚠ **AND THE COUNTEREXAMPLE IS ON THE CITED LINE.** §4 dismisses the four types with *"the `_flav`
 > map at 33178 is defensive for types that could exist but don't."* Line 33178 is
 > `const _flav = ({ combat:@35562` — `combat: FIGHT · delivery: DELIVER · escort: ESCORT · dialogue:
@@ -198,6 +203,10 @@ The view object shipped exactly as specified; FU5 later appended one field (`des
 > `storyRender(NODE_MAP.LHR)` → no `story-board-section`. The say/do gap that motivated the feature is
 > still open **at the node used to prove it existed**, and one token of data closes it (`board:true`) —
 > which is exactly what C2 was built for and has never been used for. → **§DX-02ej**.
+>
+> **Closed 2026-09-03 (§DX-02ej):** `./bin/api put node LHR board=true` — the first and only `board:` author.
+> `_boardHost(NODE_MAP.LHR)` → **true**, and the day-0 slate at LHR is non-empty. The host-gating test's
+> non-host example moved from `LHR` to `BMA`.
 
 ---
 
@@ -436,7 +445,7 @@ entries · **2,820** UQF-1.0 · **2,760** board-eligible · nine types present
 
 **Rows filed:** **§DX-02ei** 🟡 (the board has never posted a job within ten legs — one design call) ·
 **§DX-02ej** 🟢 (`board:` with zero authors and `LHR` therefore boardless; dead `craft` and unnamed
-`hybrid` in the allowlist).
+`hybrid` in the allowlist) — **shipped 2026-09-03**, both halves.
 
 ---
 

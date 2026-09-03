@@ -13,7 +13,7 @@ test.describe('§BOARD-01 — The Warrant\'s Board', () => {
     const r = await page.evaluate(() => {
       storyNewGame({ str: 10, dex: 8, con: 8, int: 8, wis: 8, cha: 8 });
       const inn = NODE_MAP.TLL;   // sleep:true → board host
-      const city = NODE_MAP.LHR;  // sleep:false, no board flag → not a host
+      const city = NODE_MAP.BMA;  // sleep:false, no board flag → not a host
       S_story.gameDay = 0;
       const a = _boardBounties(inn, 4).map(b => b.id);
       const b = _boardBounties(inn, 4).map(b => b.id);   // same call, same day → identical
@@ -28,6 +28,37 @@ test.describe('§BOARD-01 — The Warrant\'s Board', () => {
     expect(r.b).toEqual(r.a);               // deterministic within a (node, day)
     // (r.c may differ — rotation across days — but must not throw / stay ≤ limit)
     expect(r.c.length).toBeLessThanOrEqual(4);
+  });
+
+  test('§DX-02ej — LHR hosts the board its text describes, and the allowlist names live types', async ({ page }) => {
+    await page.goto('/play.html');
+    const r = await page.evaluate(() => {
+      storyNewGame({ str: 10, dex: 8, con: 8, int: 8, wis: 8, cha: 8 });
+      S_story.gameDay = 0;
+      const lhr = NODE_MAP.LHR;
+      const uqf = Object.values(QUEST_DB).filter(q => q.schema === 'UQF-1.0');
+      const perType = {};
+      for (const type of BOUNTY_TYPES) perType[type] = uqf.filter(q => q.type === type).length;
+      return {
+        sleep: lhr.sleep,
+        textNamesBoard: /board/.test(lhr.text),
+        host: _boardHost(lhr),
+        slate: _boardBounties(lhr, 4).length,
+        authors: Object.values(NODE_MAP).filter(n => 'board' in n).map(n => n.code),
+        perType,
+        eligible: uqf.filter(q => BOUNTY_TYPES.has(q.type)).length,
+      };
+    });
+    expect(r.sleep).toBe(false);                 // not a rest node — the default would never host it
+    expect(r.textNamesBoard).toBe(true);         // the say half of the say/do gap
+    expect(r.host).toBe(true);                   // opt-in via NODE_MAP.LHR.board
+    expect(r.slate).toBeGreaterThan(0);
+    expect(r.authors).toEqual(['LHR']);          // the one `board:` author in the world
+    expect(r.perType.craft).toBeUndefined();     // an item-descriptor type, never a quest type
+    expect(r.perType.hybrid).toBe(13);
+    expect(r.eligible).toBe(2776);
+    const empty = Object.entries(r.perType).filter(([, n]) => n === 0).map(([type]) => type);
+    expect(empty).toEqual(['hunt']);             // a declared type with no quest yet — §DX-02if
   });
 
   test('every posted bounty is legal: UQF, allowlisted type, real distant dest, gate-satisfied, not started', async ({ page }) => {
