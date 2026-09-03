@@ -28254,7 +28254,7 @@ function _buildEpilogueScroll() {
   ARC_EPILOGUE_CONDITIONS.forEach(({ cond, line }) => { if (cond()) lines.push(line); });
   // §D01-04 Secret Gate — anonymous recorded truth from the Defiant Fields toll rune
   if (S_story._voidTollSecret) {
-    lines.push('At the Defiant Fields, before the end, someone knelt at the void rune and spoke one true thing aloud. The rune recorded it. It is here now. Anonymous. Undated. Just the truth as it was said:\n\n"' + S_story._voidTollSecret + '"');
+    lines.push('At the Defiant Fields, before the end, someone knelt at the void rune and spoke one true thing aloud. The rune recorded it. It is here now. Anonymous. Undated. Just the truth as it was said:\n\n"' + _mpEsc(S_story._voidTollSecret) + '"');
   }
   return lines;
 }
@@ -30787,7 +30787,7 @@ function storyJournalToggle() {
       const e42JovDiv = document.createElement('div');
       e42JovDiv.className = 'jov-entry unlocked';
       const e42Body = S_story.entry42Text
-        ? S_story.entry42Text.replace(/\n/g,'<br>')
+        ? _mpEsc(S_story.entry42Text).replace(/\n/g,'<br>')
         : '<em style="color:#7a6040">[left blank]</em>';
       e42JovDiv.innerHTML = '<div class="jov-entry-title">Entry 42 ✦ — <span style="color:#f0c070">by you</span></div>'
         + '<div class="jov-entry-text journal-late">' + e42Body + '</div>';

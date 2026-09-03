@@ -179,7 +179,7 @@ its writers.** The census finds two, and both live *inside `storyRender`*, in th
 
 The Entry 42 text is not merely read; it round-trips. `entry42-write-btn@34636` stores it to
 `S_story.entry42Text`, `storyAutoSave()` persists it to `localStorage`, and `storyJournalToggle@30656`
-renders it back through **`e42JovDiv.innerHTML`@30682**, where `entry42Text.replace@30682` converts `\n` to
+renders it back through **`e42JovDiv.innerHTML`@30682**, where `_mpEsc(S_story.entry42Text).replace@30790` converts `\n` to
 `<br>` — the tell that the sink is markup, not text.
 
 **Executed in the browser, at the parent build and at HEAD, identically:** with `entry42Text` set to
@@ -325,7 +325,9 @@ repo has not answered.
 12. 🟡 **`_rollSkill` is labelled "Pure roll" and consumes the iodine buff.** True at HEAD; the original's
     severity is corrected — the comment discloses it (§V-D).
 13. ❌ **NOT SHIPPED — retained.** *"No free-text input anywhere in the story UI."* False on the day, in two
-    places the report itself names, and disproven by execution (§V-C). → **§DX-02do**.
+    places the report itself names, and disproven by execution (§V-C). → **§DX-02do**, closed 2026-09-03: both
+    sinks escape through `_mpEsc` (`_mpEsc(S_story.entry42Text).replace@30790`, and the secret's epilogue line), so
+    what the player typed is what the page shows; the claim stays false as a description of the UI.
 14. ❌ **Four census figures wrong**, two by exactly 17 (§V-A).
 
 ---
@@ -343,7 +345,7 @@ repo has not answered.
 | Quest resolution | `_rollCeremonia@7024` → `_resolveQuestUQF@6962` · retry `_ceremoRetryBlocked@6806` |
 | UI generation | `Section-based UI rendering@35302` → `_mkSection@35303` / `_mkCard@35316` |
 | State shape | `_S_DEFAULTS@23063` (authoritative) |
-| The free-text path | `entry42-textarea@34637` → `entry42Text.replace@30682` → `e42JovDiv.innerHTML@30684` |
+| The free-text path | `entry42-textarea@34637` → `_mpEsc(S_story.entry42Text).replace@30790` → `e42JovDiv.innerHTML@30684` |
 
 **Parity commands:** `npm run check:walk` (now **16** gates, not the six of 2026-07) ·
 `npm run check:duelparity` · `npm run test:mud`.
