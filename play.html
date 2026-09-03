@@ -4265,6 +4265,7 @@ body.act-three .npc-card-chip { filter: saturate(0.85); }
             </div>
           </div>
           <div id="story-farewell" style="display:none;"></div>
+          <!-- anything mounted after this card is transient: _clearStoryTransient() removes it on every render -->
           <div class="story-section-card" id="story-text-box" style="display:block">Arriving in Birka…</div>
         </div>
       </div>
@@ -28508,16 +28509,19 @@ function _inferTerrain(r, c) {
 // named nodes. Restored in §WALK-4 Inc 3: §MATH-01 had reintroduced a write to the
 // non-existent #story-content, which threw "Cannot set properties of null" on every
 // empty-cell step. The d-pad exit buttons convey exits (via _updateExitLinks below).
+// Every element after #story-text-box in its section body is a per-render panel, button or
+// prompt; each render removes them all before the node's own surfaces mount afterend of the box.
+function _clearStoryTransient() {
+  const box = document.getElementById('story-text-box');
+  while (box.nextElementSibling) box.nextElementSibling.remove();
+}
 function _renderNodeShell(numBadge, nameText, actText, badgeText, bodyText) {
   document.getElementById('story-act-badge').textContent = badgeText;
   document.getElementById('s-node-num').textContent = numBadge;
   document.getElementById('s-node-name').textContent = nameText;
   document.getElementById('s-node-act').textContent = actText;
   document.getElementById('story-text-box').textContent = bodyText;
-  // Clear the dynamic action cards (battle/npc/quest/…) between story-text-box and
-  // the static story-info-row so an empty cell shows no stale named-node actions.
-  let _el = document.getElementById('story-text-box').nextElementSibling;
-  while (_el && _el.id !== 'story-info-row') { const _next = _el.nextElementSibling; _el.remove(); _el = _next; }
+  _clearStoryTransient();
 }
 
 function _enterEmptyCell(r, c) {
@@ -34742,12 +34746,7 @@ function storyRender(node, prefix) {
   // Safe by construction — `choice` applies only the picked option's bits, AFTER the pick,
   // so an abandoned suspension has written nothing.
   _uqfPending = null;
-  // Clear all stale dynamic siblings between story-text-box and story-info-row
-  { let _el = document.getElementById('story-text-box').nextElementSibling;
-    while (_el && _el.id !== 'story-info-row') {
-      const _next = _el.nextElementSibling; _el.remove(); _el = _next;
-    }
-  }
+  _clearStoryTransient();
   // ── §VM-01-G1: data-driven flavor/arrival panels (former per-node special-case blocks) ──
   _renderNodePanels(node, S_story);
   // ── Layer 50: §XV Entry 42 — blank journal page at CI (qualifying NG+ run) ──

@@ -158,7 +158,7 @@ namespace is an *implicit global coupling surface* between quests (§X.B.2, §XI
    1. sync grid pos + act
    2. paint header slots  (#s-node-num / #s-node-name / #s-node-act)
    3. paint story text    (textVariants flag-substitution + void flavor)
-   4. clear stale dynamic siblings between #story-text-box and #story-info-row
+   4. clear the transient siblings after #story-text-box (`_clearStoryTransient`)
    5. per-node presentation: NODE_PANELS (data) → NODE_HOOKS (dispatch) → residual inline blocks
    6. TAIL SYNTHESIS  ◄── the load-bearing block
         storyUpdateStatus()
@@ -183,8 +183,8 @@ to `function _enterEmptyCell(@28422`, which paints the *same* slots via
 ### C. The renderer is an in-place DOM mutator
 
 `storyRender` never returns markup. It reads DOM nodes by fixed `id`, overwrites
-`.textContent`/`.innerHTML`, then *removes and rebuilds* the dynamic sibling range between
-`#story-text-box` and `#story-info-row` (`// Clear all stale dynamic siblings@34608`) — manual
+`.textContent`/`.innerHTML`, then *removes and rebuilds* the dynamic sibling range after
+`#story-text-box` (`function _clearStoryTransient@28514`; `#story-info-row` is not a sibling of the box, §DX-02dp) — manual
 double-buffering, static shell as frame, dynamic cards as swap. `textContent` carries author prose
 (XSS-safe, §DATA-01 residual); `innerHTML` only engine-authored markup.
 
@@ -622,7 +622,7 @@ and it is not architectural. **Make the prover fail.**
 | Navigation kernel | `function cellMove(dir) {@28347` |
 | Empty-cell shell | `function _renderNodeShell(@28410` · `function _enterEmptyCell(@28422` |
 | The page generator | `function storyRender(node, prefix) {@34550` |
-| Dynamic-sibling clear | `// Clear all stale dynamic siblings@34608` |
+| Dynamic-sibling clear | `function _clearStoryTransient@28514` |
 | Tail synthesis (the clock edge) | `const questMsgs = storyCheckQuests(node, true);@36024` |
 | Per-arrival quest scan | `function storyCheckQuests(node, indexFresh) {@30168` |
 | Activation pass (indexed) | `function _uqfActivateAtNode(node, indexFresh) {@30139` · `function _questsByNode(@36998` |

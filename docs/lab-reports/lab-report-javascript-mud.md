@@ -276,6 +276,8 @@ gap**, and rely on being swept. The original proposed a wrapper `<div id="story-
 contract explicit and delete both loops. **That suggestion was never filed** and appears nowhere in the repo
 but in this document. Filed now as **§DX-02dp**.
 
+**§DX-02dp ✅ 2026-09-03 — the ground corrected the finding before it fixed it.** `#story-info-row` was never a sibling of `#story-text-box`: the box is the last child of the Location section's `.story-section-body`, and the info row sits two levels up. Both loops therefore swept *every* following sibling of the box and their `!== 'story-info-row'` stop never fired. They are now one `_clearStoryTransient()`, called from `storyRender` and `_renderNodeShell`, and a one-line comment on the box's markup states the contract. The wrapper `<div>` was **not** built: 63 engine sites mount `afterend` of the box and ten specs census the panels by walking its siblings, so a container would have rewritten the test corpus that pins the mechanism.
+
 ---
 
 ## VIII. Quest acceptance — the finding that is still true, and still open
