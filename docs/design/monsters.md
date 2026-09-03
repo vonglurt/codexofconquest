@@ -33,6 +33,10 @@ Monsters go in through the API like every other entity — the old "hand-edit `M
 
 **Two corrections, derived from the corpus rather than tasted:** `void_shaman` (The Warden) `rare → hard` — its two exact stat-block twins (AC15/HP65/atk6: Bandit Captain, Pirate Captain) are both `hard`; `void_rat_swarm` `low → easy` — 6 of its 8 nearest stat-neighbours are `easy`, its exact AC/HP/atk twin is Jackalwere.
 
+### `voidTainted` — the explicit answer to press-vs-flee (§AUDIT-03bn / §DX-02dj, 2026-09-03)
+
+**`voidTainted` is an optional boolean, and when it is present it is the whole answer.** At ≤30 % HP a Void-touched enemy presses (a tier-scaled enrage) and a mundane beast rolls to flee (§PLAY-01-B). `_isVoidEnemy` decides in three steps and stops at the first that answers: the entry's `voidTainted` if it is a boolean; then any `fish_*` / `night_*` key is a beast, because the lake ladder is fish whatever they are called; then the name and key against the undead vocabulary in `_VOID_ENEMY_RE`. Three entries carry the field — `void_wolf:true`, `void_rat_swarm:true`, `fiend_beast:false` (the word *beast* is in its name and *Fiend* would otherwise match). **Author a new Void monster by name if the vocabulary already reaches it, and set the field only when the name would mislead the regex either way.** The census is pinned: `enemy-ai.test.js` asserts **52 of 399** tagged, so a vocabulary edit that changes the count fails a test rather than shipping silently. Write it through `./bin/api put monster <key> voidTainted=false` — it round-trips as a boolean.
+
 ### A pool entry is not content until a roster names it (§DX-02h, 2026-08-03)
 
 **`MONSTER_POOL` membership does not put a monster in the game.** A monster reaches play through a `WORLD_DB[terrain].monsters` roster (random/Hunt encounters via `_weightedMonsterPick`), a `node.battle`, a `type:'combat'` quest, or `EPIC_BOSS_POOL`. An entry named by **none** of those is authored content nothing can reach, and it is invisible: it has a stat block and a trophy drop, `./api.sh audit` is happy, and no gate fires.

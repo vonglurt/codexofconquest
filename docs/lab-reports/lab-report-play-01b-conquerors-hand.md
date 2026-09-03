@@ -261,6 +261,11 @@ source). Both tagged monsters classify Void anyway, **by name**, so there is no 
 now carries two competing answers to one question, one of which nothing consults. Classic Hazard #2, and the
 field's own sibling `void_rat_swarm` is already the subject of §DX-02h.
 
+> **Closed 2026-09-03 with §AUDIT-03bn — the override branch.** `_isVoidEnemy` now reads `voidTainted` first and returns it
+> when it is a boolean; the heuristic is the fallback. The field has three bearers: the two above and `fiend_beast:false`.
+> Pinned in `enemy-ai.test.js`: `void_wolf` classifies Void under a name the regex cannot match, `fiend_beast` classifies beast
+> under a name it does. §1's *"No alignment/kind field exists"* stays false as written; the field is now the authority.
+
 ### D3 — the vocabulary tags four things it should not and misses twenty-two it should (§AUDIT-03bn 🟡)
 
 With the terrain half inert, **the name regex is the entire classifier**, and it is a literary instrument doing
@@ -306,6 +311,13 @@ naming calls Void or undead — **61 % recall**.
 > with the risk stated, the risk landed, and nothing was watching for it. The fix is cheap and content-shaped:
 > widen the name vocabulary, exclude the `fish_*` / `night_*` pools, and either read `voidTainted` (D2) or
 > retire it.
+
+> **Closed 2026-09-03 (§AUDIT-03bn).** The loader census before the change counted **34 tagged, four fish** — one more fish
+> than the table above, because `night_02` *Void Gulper* is Void by name and a fish by pool. After: `voidTainted` first, then
+> `fish_*`/`night_*` keys are beasts by structure, then the regex with `zombie|vampire|mummy|ghost|banshee|bone|grave|draug|
+> fleder|bruxa|curse spirit|death knight` added — **52 tagged, 0 fish, deadly 7**, every name in the false-negative table
+> presses. The census, the four-key deny list and a fourteen-key allow list are assertions in `enemy-ai.test.js` (8/8).
+> The balance pass this section recommends was not run; the recommendation is carried in the archived row, not dropped.
 
 ### D4 — this increment created two of §DX-02g's four silent-fallback readers (corroborated, not re-filed)
 

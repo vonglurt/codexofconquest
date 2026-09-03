@@ -5628,7 +5628,9 @@ const MONSTER_POOL = { // → doc: monsters.md §Monster Pool
   striga:           { key:'striga',           name:'Striga',                   ac:15, hp:90,  atk:7,  dmgDie:8,  dmgCount:2, dmgFlat:5,  tier:'hard'   },
   leshen:           { key:'leshen',           name:'Leshen (Forest Demon)',    ac:14, hp:114, atk:7,  dmgDie:8,  dmgCount:2, dmgFlat:5,  tier:'hard'   },
   chort:            { key:'chort',            name:'Chort',                    ac:15, hp:105, atk:7,  dmgDie:8,  dmgCount:2, dmgFlat:5,  tier:'hard'   },
-  fiend_beast:      { key:'fiend_beast',      name:'Fiend Beast',              ac:15, hp:127, atk:7,  dmgDie:8,  dmgCount:3, dmgFlat:5,  tier:'hard'   },
+  fiend_beast:      { key:'fiend_beast',      name:'Fiend Beast',              ac:15, hp:127, atk:7,  dmgDie:8,  dmgCount:3, dmgFlat:5,  tier:'hard',
+    voidTainted:false,
+  },
   bruxa:            { key:'bruxa',            name:'Bruxa (Higher Vampire)',   ac:17, hp:127, atk:8,  dmgDie:8,  dmgCount:2, dmgFlat:5,  tier:'hard'   },
   grave_hag:        { key:'grave_hag',        name:'Grave Hag',                ac:15, hp:112, atk:7,  dmgDie:6,  dmgCount:3, dmgFlat:3,  tier:'hard'   },
   crones_witch:     { key:'crones_witch',     name:'Crone Witch',              ac:17, hp:143, atk:9,  dmgDie:8,  dmgCount:3, dmgFlat:5,  tier:'hard'   },
@@ -25146,13 +25148,20 @@ function _overlayOffhandAttack() {
   setTimeout(_storyEnemyTurn, 1200);
 }
 
-// §PLAY-01-B — enemy behavior helpers. Void-vs-mundane is a name/terrain HEURISTIC
-// (user-chosen): the monster reads as Void-touched if its name/key carries Void/undead
-// vocabulary OR the fight is on a Void-ish terrain; everything else is a mundane beast.
-const _VOID_ENEMY_RE   = /void|corrupt|wraith|shade|revenant|spectr|phantom|wight|ghoul|lich|undead|skeleton|skeletal|necro|hollow|dread|abyss|blight|cursed|haunt|wretch|shadow|demon|fiend/i;
+// §PLAY-01-B — enemy behavior helpers. Void-vs-mundane: an entry's `voidTainted` boolean
+// answers outright; otherwise a name/terrain HEURISTIC (user-chosen) — the monster reads as
+// Void-touched if its name/key carries Void/undead vocabulary OR the fight is on a Void-ish
+// terrain; everything else is a mundane beast.
+const _VOID_ENEMY_RE   = /void|corrupt|wraith|shade|revenant|spectr|phantom|wight|ghoul|lich|undead|skeleton|skeletal|necro|hollow|dread|abyss|blight|cursed|haunt|wretch|shadow|demon|fiend|zombie|vampire|mummy|ghost|banshee|bone|grave|draug|fleder|bruxa|curse spirit|death knight/i;
 const _VOID_TERRAIN_RE = /void|corrupt|blight|abyss|wither|graveyard|tomb|necro|dread|ash/i;
 function _isVoidEnemy() {
-  const nm = ((S.enemy && S.enemy.name) || '') + ' ' + ((S.enemy && S.enemy.key) || '');
+  const key = (S.enemy && S.enemy.key) || '';
+  // §DX-02dj: the per-monster field is the authority; the name vocabulary is the fallback.
+  const entry = MONSTER_POOL[key] || (typeof EPIC_BOSS_POOL === 'object' ? EPIC_BOSS_POOL[key] : null);
+  if (entry && typeof entry.voidTainted === 'boolean') return entry.voidTainted;
+  // §AUDIT-03bn: the twenty-rank lake ladder is fish. A fish in a lake is a beast, whatever it is called.
+  if (/^(fish|night)_/.test(key)) return false;
+  const nm = ((S.enemy && S.enemy.name) || '') + ' ' + key;
   if (_VOID_ENEMY_RE.test(nm)) return true;
   const node = NODE_MAP[S_story.currentCode];
   if (node && _VOID_TERRAIN_RE.test(node.name || '')) return true;

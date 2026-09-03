@@ -111,3 +111,80 @@ test.describe('§PLAY-01-B — enemy AI per tier (press vs flee)', () => {
     expect(r.stillFighting).toBe(true);
   });
 });
+
+// §AUDIT-03bn — the classifier's vocabulary, pinned as a census.
+//
+// §PLAY-01-B chose a name heuristic over a data pass with the hazard written down
+// ("fuzzy and can mis-tag", lab-report-play-01b-conquerors-hand.md §3 option (b)), and a
+// regex's membership drifts silently unless something counts it. Three things decide the
+// verdict, in order: the monster's explicit `voidTainted` boolean (§DX-02dj), the structural
+// rule that the fish_*/night_* lake ladder is beasts, and the undead vocabulary in
+// _VOID_ENEMY_RE. Each is pinned below, and the total is pinned so the set cannot drift.
+test.describe('§AUDIT-03bn — Void classification is a census, not a vibe', () => {
+
+  test('census: the tagged set is exactly the monsters the vocabulary means to tag', async ({ page }) => {
+    await page.goto('/play.html');
+    const r = await page.evaluate(() => {
+      const tag = (key) => {
+        S.enemy = Object.assign({}, S.enemy, { key, name: (MONSTER_POOL[key] || {}).name || key });
+        return _isVoidEnemy();
+      };
+      const keys = Object.keys(MONSTER_POOL);
+      const tagged = keys.filter(tag);
+      const byTier = {};
+      tagged.forEach(k => { const t = (MONSTER_POOL[k] || {}).tier || 'easy'; byTier[t] = (byTier[t] || 0) + 1; });
+      return { total: keys.length, tagged: tagged.length, byTier,
+               fishTagged: keys.filter(k => /^(fish|night)_/.test(k)).filter(tag) };
+    });
+    expect(r.tagged).toBe(52);
+    expect(r.byTier.deadly).toBe(7);
+    expect(r.fishTagged).toEqual([]);   // the lake ladder is beasts, all twenty ranks of it
+  });
+
+  test('deny list: the four the name regex used to catch by accident', async ({ page }) => {
+    await page.goto('/play.html');
+    const r = await page.evaluate(() => {
+      const out = {};
+      for (const k of ['fish_19', 'fish_20', 'night_04', 'fiend_beast']) {
+        S.enemy = Object.assign({}, S.enemy, { key: k, name: MONSTER_POOL[k].name });
+        out[k] = _isVoidEnemy();
+      }
+      return out;
+    });
+    expect(r).toEqual({ fish_19: false, fish_20: false, night_04: false, fiend_beast: false });
+  });
+
+  test('allow list: the undead the name regex used to miss', async ({ page }) => {
+    await page.goto('/play.html');
+    const r = await page.evaluate(() => {
+      const out = {};
+      for (const k of ['death_knight', 'vampire', 'mummy_lord', 'bruxa_corvo_bianco',
+                       'zombie', 'ghost', 'banshee', 'hym', 'bone_naga', 'draug',
+                       'protofleder', 'graveir', 'grave_hag', 'cyber_vampire']) {
+        S.enemy = Object.assign({}, S.enemy, { key: k, name: MONSTER_POOL[k].name });
+        out[k] = _isVoidEnemy();
+      }
+      return out;
+    });
+    for (const [k, v] of Object.entries(r)) expect(v, `${k} should classify Void`).toBe(true);
+  });
+
+  test('§DX-02dj: the voidTainted field beats the name vocabulary in both directions', async ({ page }) => {
+    await page.goto('/play.html');
+    const r = await page.evaluate(() => {
+      // fiend_beast carries voidTainted:false and a name the regex matches on "fiend".
+      const nameSaysVoid = /fiend/i.test(MONSTER_POOL['fiend_beast'].name);
+      S.enemy = Object.assign({}, S.enemy, { key:'fiend_beast', name: MONSTER_POOL['fiend_beast'].name });
+      const fieldWins = _isVoidEnemy() === false;
+      // void_wolf carries voidTainted:true; the field decides before the regex is consulted.
+      const wolfField = MONSTER_POOL['void_wolf'].voidTainted;
+      S.enemy = Object.assign({}, S.enemy, { key:'void_wolf', name:'Placid Herbivore' });
+      const fieldOverridesBlandName = _isVoidEnemy();
+      return { nameSaysVoid, fieldWins, wolfField, fieldOverridesBlandName };
+    });
+    expect(r.nameSaysVoid).toBe(true);
+    expect(r.fieldWins).toBe(true);
+    expect(r.wolfField).toBe(true);
+    expect(r.fieldOverridesBlandName).toBe(true);
+  });
+});
