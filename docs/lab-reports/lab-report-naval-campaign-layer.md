@@ -201,9 +201,9 @@ Final tally: **17 quests live by walking · 3 live only via the board · 13 unre
 
 ## VI. Secondary Findings
 
-**A. Two live double-pay sites (→ §DX-02ai).** Where a `storyRender` button writes the flag a quest completes on, both sides can pay. This layer has exactly two, and both are on **reachable** nodes:
+**A. Two live double-pay sites (→ §DX-02ai ✅ 2026-09-03 — one was real).** Where a `storyRender` button writes the flag a quest completes on, both sides can pay. This finding named two; measured by clicking each in Playwright, the hull site paid twice and the Fehn site paid once — `quest_spark2_05` has no `xpAward` at HEAD and had none when this report was written, so the figure below for it was wrong. The hull button's inline grant is deleted; the quest is the single payer. As written on 2026-08-12:
 
-- `quest_sk_hull` — the MME button grants `S_story.xp = (S_story.xp||0) + 200;@33911` and the toast says *"-200gp. +200 XP"*; `storyRender(node)` then completes the quest, whose `onComplete` carries `{ kind:'reward', xp:200 }`. **400 XP paid, 200 announced.**
+- `quest_sk_hull` — the MME button grants `S_story.xp = (S_story.xp||0) + 200;` (deleted by §DX-02ai) and the toast says *"-200gp. +200 XP"*; `storyRender(node)` then completes the quest, whose `onComplete` carries `{ kind:'reward', xp:200 }`. **400 XP paid, 200 announced.**
 - `quest_spark2_05` — the DNF Fehn-confrontation button grants +400 gold and +400 XP; the quest then pays `xpAward:600` through `if (q.type === 'side' && q.xpAward) { S_story.xp += q.xpAward; _checkLevelUp(); }@30204`. **1,000 XP paid, 400 announced.**
 
 The other nine button/quest pairs in this layer are clean — payment sits on exactly one side each. These two are the same class as the four fixed by `3338def` (§SPARK-01-FU / §LXX-01-FU) and survived that sweep because it was scoped to the harbour and §LXX stacks.
@@ -247,7 +247,7 @@ The cheapest repair is also the smallest: **`SEN`, `HFT`, `VAW` and `ATH` are `l
 - **§AUDIT-03x extended** — cell `10,191`: 6 nodes, 2 independent tracks, **5 stranded**; cell `18,180`: `SEN` + `STN` behind `LCY`. `SEN` carries 8 quests, a battle, loot, an NPC and `sleep:true`.
 - **§DX-02w confirmed, 4th independent reproduction** — the single-writer-inside-a-blocked-block shape, three instances in one layer.
 - **§DX-02ah (NEW, 🟡)** — the quest panel renders every active quest at every node, contradicting its own comment; load-bearing for §BOARD-01, and it makes §BOARD-01-FU3's leg-count label cosmetic for skill-check bounties.
-- **§DX-02ai (NEW, 🟢)** — two live double-pay sites, `quest_sk_hull` (400 XP paid / 200 announced) and `quest_spark2_05` (1,000 / 400).
+- **§DX-02ai ✅ 2026-09-03** — filed as two live double-pay sites; measured, `quest_sk_hull` paid 400 XP against 200 announced and is fixed, `quest_spark2_05` paid the 400 it announced and was never a double-pay.
 
 ---
 

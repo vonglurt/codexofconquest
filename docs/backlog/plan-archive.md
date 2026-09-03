@@ -9,6 +9,21 @@
 
 ---
 
+## Archived 2026-09-03 — §DX-02ai (one double-pay, and one that never was)
+
+### §DX-02ai — two naval-layer beats pay twice and announce once (NEW 2026-08-12 during §DOC-02z, 🟢 no design call)
+
+- [x] ✅ SHIPPED 2026-09-03 `<sha>` **§DX-02ai — a `storyRender` button that writes a quest's completion flag, when the quest also carries a reward, pays both.** Two live instances, both on **reachable** nodes, both player-facing today:
+>   - **`quest_sk_hull` (Saltwick dry dock, `MME`) — 400 XP paid, 200 announced.** The button pays its price correctly through the `cost` leaf (`kind:'cost', gold:200@33993`), then grants `S_story.xp = (S_story.xp||0) + 200;` (the hull button's line, deleted 2026-09-03) inline and toasts *"-200gp. +200 XP."* Its own `storyRender(node)` re-entry completes the quest (`completion:{ flags:['shipRepaired'] }`), whose `onComplete` carries a second `{ kind:'reward', xp:200 }`.
+>   - **`quest_spark2_05` (Fehn confrontation, `DNF`) — 1,000 XP paid, 400 announced.** The button grants +400 gold and +400 XP, sets `fehnConfessed`, and the quest then pays `xpAward:600` through `if (q.type === 'side' && q.xpAward) { S_story.xp += q.xpAward; _checkLevelUp(); }@30276`.
+> **The other nine button/quest pairs in the layer are clean** — payment sits on exactly one side each — so this is two sites, not a pattern in the arc's authoring. Same class as the four fixed by `3338def` (§SPARK-01-FU / §LXX-01-FU); these survived because that sweep was scoped to the harbour and §LXX stacks.
+> **Fix:** delete the inline grant and let the quest pay (matching the nine clean pairs), or drop the quest-side reward. **Prefer deleting the inline grant** — the toast text then agrees with the ledger without being edited, and §VM-01-G4a's whole argument is that value should move through the VM. **Verify with a Playwright pin on `S_story.xp` delta across one click**, not on the toast string.
+> **Detector wanted (mechanical):** for every `S_story.<flag> = true` inside a `storyRender` block, find the quest whose `completion.flags` names that flag and flag the pair if **both** carry a payout. That is a static scan over two registries the repo already parses.
+> **Shipped (2026-09-03) — one of the two instances was real.** **Measured before, by the row's own method** (a Playwright pin on the `S_story.xp` delta across one click, `dx02ai-naval-double-pay.test.js` run against HEAD): **hull, +400 XP per click** — the row held; **Fehn, +400 XP per click** — the row did not. `quest_spark2_05` carries no `xpAward` at HEAD and carried none at `00b7747`, the tree the row was written on (`git show 00b7747:roll2hit-v3.html`, the quest block reads `completion:{ flags:['fehnConfessed'] }, bits:[], waypointNode:'DNF', reward:0` and nothing else that pays), so the *"1,000 XP paid, 400 announced"* figure was never true: the confrontation pays 400 gold and 400 XP once, through the button, and the quest side pays nothing. **Change:** the hull button's inline `S_story.xp = (S_story.xp||0) + 200;` deleted, as the row preferred — the quest's `{ kind:'reward', xp:200 }` is the single payer and the toast's *"+200 XP"* is now true without being edited. The Fehn button is untouched. **Measured after:** hull +200 XP / −200 gp, quest `active → complete` in the same click; Fehn +400 XP / +400 gp, `active → complete`. Spec 2/2 (hull red at HEAD, Fehn green both ways). `check:walk` 21/21, full suite **1,163 passed, 0 flaky**. `wc -l play.html` 38,811 → 38,810. The naval report's §VI-A is corrected in place. **Not shipped, filed:** the static detector the row wanted is **§DX-02ig** (Phase 6).
+
+
+---
+
 ## Archived 2026-09-03 — §CHRON-01 (the ledger that did not survive its own reason)
 
 ### §CHRON-01 — the career ledger does not survive New Game+ (NEW 2026-08-12 during §DOC-02q, 🟢 no design call)
