@@ -23718,6 +23718,7 @@ function _renderNpcCard(key, container) {
         && _npcFavor(key) >= 1 && !S_story[flagKey]) {
       S_story[flagKey] = true;
       const beatText = typeof beat.text === 'function' ? beat.text() : beat.text;
+      if (beat.onDeliver) beat.onDeliver();
       if (beat.gift) {
         S_story.inventory.push({ ...beat.gift });
         setTimeout(() => storyMsg('🌅 ' + beatText + '\n\n[Received: ' + beat.gift.name + ' ' + beat.gift.icon + ']'), 200);
@@ -26992,7 +26993,6 @@ const ACT8_FAREWELL_BEATS = { // → doc: world.md §The Homecoming: Act VIII NP
       let lampLine;
       if (!S_story.brynnKeeperStoryTold) {
         lampLine = BRYNN_KEEPER_STORY.farewellNoStory;
-        S_story.brynnKeeperStoryTold = true;
       } else if (!S_story.brynnLightChoiceMade) {
         lampLine = BRYNN_KEEPER_STORY.farewellNoChoice;
       } else if (S_story.brynnLightKept) {
@@ -27002,6 +27002,7 @@ const ACT8_FAREWELL_BEATS = { // → doc: world.md §The Homecoming: Act VIII NP
       }
       return base + '\n\n' + lampLine;
     },
+    onDeliver: () => { S_story.brynnKeeperStoryTold = true; },
     gift: { name:"Brynn's Loaf", icon:'🍞', type:'potion', heal:8, sell:0, code:'TLL', _noSell:true },
   },
   quill: {
@@ -28146,7 +28147,7 @@ function _buildSweelinckNamingSequence() {
 }
 
 // ── Layer 74: §XXXIX Yael's Named Report Scene ──
-const YAEL_NAMED_REPORT_SCENE = { // → doc: world.md §Yael's Named Report Scene (Layer 74; fav >= 2 Act IV+; yaelNamedReportDelivered)
+const YAEL_NAMED_REPORT_SCENE = { // → doc: world.md §Yael's Named Report Scene (Layer 74; LHR, fav >= 2, Act VI+, yaelEscortUsed; yaelNamedReportDelivered)
   setup: '"You\'ve been in the archive. You\'ve seen what happens to records."\n\nShe isn\'t looking at you. She\'s watching the market corner from the CI door.\n\n"Three years ago there was a riot in this district. I worked it for six weeks. Names, times, the transaction record that paid for it. Four weeks after I filed it, the evidence was gone — pulled from the guard archive. Someone with access above my rank took it cleanly."\n\nShe finally looks at you.\n\n"I filed a report at the time. Anonymous. I didn\'t want to become the story. The report disappeared too."',
   decision: '"I\'m filing again. Under my name. I\'m keeping three copies — one with the Commissioner, one with a Scholar Kings archivist in Weimar, one with Weckmann. He had records of the operation that funded the riot. His training log. The financial ledger is gone but the training log survived because no one thought to look there."\n\nShe turns back to the market.\n\n"I\'m telling you because you know what it means when something disappears from an archive. If you want to hold a fourth copy, I\'ll give you one. If not — you know it exists. That\'s also something."',
   choiceHold:  '"Good. Then it\'s in four places now."',
@@ -32222,6 +32223,7 @@ function _nodeHookBirkaQuillCouperinFarewell(node) {
         const beatText = typeof ACT8_FAREWELL_BEATS.quill.text === 'function'
           ? ACT8_FAREWELL_BEATS.quill.text()
           : ACT8_FAREWELL_BEATS.quill.text;
+        if (ACT8_FAREWELL_BEATS.quill.onDeliver) ACT8_FAREWELL_BEATS.quill.onDeliver();
         setTimeout(() => storyMsg('Quill is at the archive desk — not his usual table, not his instrument.\n\n' + beatText), 500);
       }
 }
