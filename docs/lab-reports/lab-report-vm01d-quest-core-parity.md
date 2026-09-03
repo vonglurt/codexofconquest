@@ -79,7 +79,7 @@ Five instruments, in order:
 | D3 | `S_story` *"gates ×~30"* | **40** in the two gates, **50** in the whole literal | ❌ understated |
 | D4 | *"`check:quest` in `npm run check:walk`"* | shipped as **`check:questparity`** | ❌ name |
 | D5 | *"a `Math.random()` fallback exists … for a server that injects no rng"* | **no fallback exists, by decision** (§DX-02dw, 2026-09-03): `createQuestRuntime` throws a `TypeError` naming `effects.rng` when it is absent | ✅ corrected — the contract is loud, not lenient |
-| D6 | *"the first consumer is … §VM-01-E's static gate walker"* | E requires the kernel and **never calls it**; §VM-01-F is the real first consumer | ⚠ half → §DX-02dx |
+| D6 | *"the first consumer is … §VM-01-E's static gate walker"* | E required the kernel and **never called it**; §VM-01-F is the real first consumer | ⚠ half → §DX-02dx ✅ 2026-09-03 (import removed) |
 | D7 | *"server authoritative over quest state"* | `src/js/wbapi-server.js` still does not `require('./quest')`, 30 days on | ⚠ open debt |
 | D8 | *"286 passed / 17 env-quirk failures = the A/B/C env baseline"* | arithmetic **correct** (286+17 = 303 = the real suite); the **baseline** was retired 7 h 28 min later | ⚠ see below |
 | D9 | *"LOCKED … design-review-before-implementation"* | report and implementation are **the same commit** | ⚠ unprovable |
@@ -98,7 +98,7 @@ This is not hypothetical. `src/scripts/check-gate-parity.js:const rt = Q.createQ
 
 ### D6 — the prediction that landed in the wrong file
 
-§6 named two candidate first consumers: a future §MESH quest increment, or §VM-01-E's static gate walker. E's walker exists and it *does* carry `src/scripts/check-questgraph.js:const Q = require@63` — and **`Q` appears exactly once in that file, on its own declaration line.** The kernel is imported, credited in the header comment, and never called; the walker re-implements what it needs against its own brace matcher.
+§6 named two candidate first consumers: a future §MESH quest increment, or §VM-01-E's static gate walker. E's walker exists and, until §DX-02dx (2026-09-03), carried `const Q = require(path.join(__dirname, '..', 'js', 'quest.js'))` — with **`Q` appearing exactly once in that file, on its own declaration line.** The kernel was imported, credited in the header comment, and never called; the walker re-implements what it needs against its own brace matcher. The import and the header clause are gone; `src/scripts/check-questgraph.js` no longer names `quest.js` at all.
 
 The genuine first consumer is §VM-01-F's `check-gate-parity.js`, which was not on the list. The substrate paid off — one increment later than predicted and through a different door. Filed **§DX-02dx** (dead require).
 
@@ -151,7 +151,7 @@ The engine runs headless in Node. That is the thing that was structurally imposs
 ## VIII. Defects filed
 
 - **§DX-02dw** 🟢 — `const d20  = Math.ceil(E.rng() * 20)@22249` is the only unguarded effect call in a guards-in-the-host kernel, and `src/scripts/check-gate-parity.js:const rt = Q.createQuestRuntime@32` already injects no `rng`. Guard it, or document `rng` as the one required effect. §4 of this report promised a fallback that was never written.
-- **§DX-02dx** 🟢 — `src/scripts/check-questgraph.js:const Q = require@63` imports the kernel and never uses it. Either call it or drop the import and the header claim.
+- **§DX-02dx** ✅ SHIPPED 2026-09-03 — the walker's `require` of the kernel was never used (`Q` occurred once, on its own line); the import and the header claim are removed, and the questgraph report is byte-identical before and after.
 - **§DX-02dv** (already open) — resolved above: the ship record dropped the 17, the report did not.
 
 ---

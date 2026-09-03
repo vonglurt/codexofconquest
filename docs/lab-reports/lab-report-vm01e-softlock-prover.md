@@ -269,7 +269,7 @@ byte-exact · `parseSanitized` drops exactly `quest_sea_01` and `quest_sb_01` at
 | D3 | §8 | `scanFlagWrites` "captures each of its **eleven** write forms" | **Ten** forms across seven regexes; the selftest makes **eleven** assertions because `set:[…]` is exercised with two flags | **Off by one** — flags counted as forms |
 | D4 | §4 F1 | The counter tracks "are read by real gates (11–26 refs each)" | **Zero** quest gates read any of the five, at ship-day and at HEAD. `tribbleCount` occurs 6× in the whole file. The one intended gate read was demoted — `is not expressible in canActivate@13974` says so in the file | **Wrong**; conclusion survives, see §11 |
 | D5 | §7 | `check:questparity` "21,909 **bytes**" | The number is exact, but the gate prints `a.length` — UTF-16 code units. 21,909 chars = **22,135 UTF-8 bytes** | Figure right, **unit mislabelled by the tool itself** |
-| D6 | §5/§7 | E consumes §VM-01-D's kernel — "the kernel via `require('../js/quest.js')`" | `src/scripts/check-questgraph.js:const Q = require@63` binds `Q`, and `Q` occurs **exactly once in the file: on that line** — at ship-era and at HEAD. The prover rolls its own `gateSat` and `src/scripts/check-questgraph.js:function matchBrace@66`, and never calls the kernel | **The import is decorative.** C's scratch-state *concept* is used; D's code is not. Now §DX-02dx |
+| D6 | §5/§7 | E consumes §VM-01-D's kernel — "the kernel via `require('../js/quest.js')`" | `const Q = require(path.join(__dirname, '..', 'js', 'quest.js'))` bound `Q`, and `Q` occurred **exactly once in the file: on that line** — at ship-era and until §DX-02dx. The prover rolls its own `gateSat` and `src/scripts/check-questgraph.js:function matchBrace@66`, and never calls the kernel | **The import was decorative.** C's scratch-state *concept* is used; D's code is not. §DX-02dx ✅ 2026-09-03 removed the import and the header clause; the file no longer names `quest.js` |
 | D7 | §8 | `waw001a1` "only survives play because an NPC `missionBit` coincidentally grants it — the chain stalls at **act 3**" | §AUDIT-03bj measured both halves false: `meta.missionBit` has **zero readers** (§DX-02cx), so the scan over-credits it, and the first dead rung is **act 2** in all eight chains | **Both halves wrong** |
 
 **Drift since ship (not errors).** `check:gateast` 72 → **76** (`37f8ccb` added the `dayMin`/`dayMax` leaf the
@@ -313,7 +313,7 @@ one unguarded effect call in the kernel this report's port routes through).
 `seaStrangenessNoticed@12491` · `is not expressible in canActivate@13974` · `S_story[ngEbKey] = true;@35291`
 (the eleventh computed-key writer, omitted from the original §9-FU list of ten) ·
 `src/js/quest.js:resolveSkillCheck(bit, ctx)@322` · `src/js/quest.js:const d20  = Math.ceil(E.rng() * 20)@314` ·
-`src/scripts/check-questgraph.js:const Q = require@63` · `src/scripts/check-questgraph.js:function matchBrace@66` ·
+`src/scripts/check-questgraph.js:function matchBrace@66` ·
 `src/scripts/check-questgraph.js:function gateSat@273` · `src/scripts/check-questgraph.js:function scanFlagWrites@302` ·
 `src/scripts/check-quest-parity.js:quest parity: QUEST:CORE identical@25` ·
 `src/scripts/check-gate-parity.js:const rt = Q.createQuestRuntime@32` (§VM-01-F — the kernel's genuine first

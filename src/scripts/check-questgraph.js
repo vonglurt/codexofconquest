@@ -10,12 +10,11 @@
 // Design: lab-reports/lab-report-vm01e-softlock-prover.md — Option A (locked by
 // the user): port the one nondeterministic bit (done — quest_1367_f_plague's
 // coin-flip is now a seeded CON save), then analyse the graph with a DYNAMIC
-// effect-prober rather than a static parser. C (scratch-state env) + D (headless
-// requireable kernel) are exactly the seams this needs — it is "doubly-unblocked
-// by C+D".
+// effect-prober rather than a static parser. C (scratch-state env) is the seam
+// this needs.
 //
 // WHAT IT DOES over the live QUEST_DB (parsed headlessly via the worldbuilder
-// pipeline; the kernel via require('../js/quest.js')):
+// pipeline):
 //   1. WRITE-SET per quest — a tree-walk over its bit chain (bits + onComplete),
 //      unioning BOTH branches of every skill_check/choice (any branch is
 //      reachable). Declarative bits expose their write-set structurally;
@@ -60,7 +59,6 @@
 // ═══════════════════════════════════════════════════════════════════════════
 const fs = require('fs');
 const path = require('path');
-const Q = require(path.join(__dirname, '..', 'js', 'quest.js'));
 
 // ── string/comment-aware brace matcher (mirrors wbapi-core extractObj) ───────
 function matchBrace(src, openIdx) {
