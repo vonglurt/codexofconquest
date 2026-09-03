@@ -33,7 +33,7 @@
 
 | # | Date | Increment | Ship | Headline |
 |---:|---|---|---|---|
-| 1 | 2026-09-03 | §DX-02fv | `PENDING` | `choice` gets its second consumer surface: TL Vonn sliced into NODE_VERBS with the answer as the choice prompt, and a self-guarding `when` — the driver's closing re-render draws verbs before quest completion, so a status-only guard redrew a payable button |
+| 1 | 2026-09-03 | §DX-02fv | `2cf3462` | `choice` gets its second consumer surface: TL Vonn sliced into NODE_VERBS with the answer as the choice prompt, and a self-guarding `when` — the driver's closing re-render draws verbs before quest completion, so a status-only guard redrew a payable button |
 | 2 | 2026-09-03 | §DX-02ip | `62fd7dc` | the failed-check effort grant scaled off the first `reward` bit rather than the sum the pass actually pays; now a `reduce`, provably behaviour-preserving at 0 multi-reward checks in the corpus, with a fixture red at HEAD |
 | 3 | 2026-09-03 | §AUDIT-03bm | `12007f2` | the XP economy names its own edge: the failed-check dial is proportional, not a floor, so token-only checks pay a mission bit rather than XP by design; a flat `mission_bit` grant declined at 24,500 XP against the corpus's 22,307 XP of quest reward, and the census re-derived per run |
 | 4 | 2026-09-03 | §DX-02aq | `a1d97fa` | the inventory panel splits `S_story.knowledge` by shape into Necklace beads and Field Notes, so lore notes no longer render as `undefined` |
