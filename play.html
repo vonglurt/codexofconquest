@@ -37119,6 +37119,7 @@ function _questsByNodeRevalidate() {
   const n = Object.keys(QUEST_DB).length;
   if (_questsByNodeIndex && n === _questsByNodeCount) return;
   _questsByNodeIndex = new Map();
+  _questNodeSet = null;
   for (const q of Object.values(QUEST_DB)) {
     if (!q || q.type === 'epic' || !q.activateNode) continue;
     let arr = _questsByNodeIndex.get(q.activateNode);
