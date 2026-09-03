@@ -145,7 +145,7 @@ Layer 13's centrepiece shipped exactly as specified — `function _maybeAddKnowl
 
 It is now **1 of 15 writers.** The other fourteen push a **bare string** — investigation lore notes accumulated across the Warmth arc, the Relay Road, the Lake, Ardley's Laws, the Crone Bead, the Cycle-4 archive note — plus the UQF `reward` bit's `knowledge` field, which forwards whatever the quest author wrote.
 
-The inventory renderer at `S_story.knowledge.forEach(bead@31234` has no type test:
+The inventory renderer at `S_story.knowledge.forEach(bead` (as written until 2026-09-03) had no type test:
 
 ```js
 S_story.knowledge.forEach(bead => {          // @31231
@@ -155,6 +155,8 @@ S_story.knowledge.forEach(bead => {          // @31231
 ```
 
 On a string, `.icon` and `.name` are `undefined`. **Every lore note renders under 🔮 Necklace of Knowledge as the literal row `undefinedundefined memory`** — one row per note, player-visible, in the panel whose entire purpose is to be a legible record.
+
+**Closed by §DX-02aq, 2026-09-03 — normalised on read.** `storyRenderInventory` now splits the array by shape: objects render under 🔮 Necklace of Knowledge (`beads.forEach(bead => makeKnowledgeRow@31392`), bare strings under a new 📖 Field Notes section (`notes.forEach(note => makeKnowledgeRow@31396`), both through `textContent`. The string shape stays the VM's contract: the `reward.knowledge` handler is in the parity-fenced `src/js/quest.js`, and eight assertions across four suites pin it.
 
 **No gate can see it.** It is a *field-shape* contract, not a node or NPC reference: `check:noderegs`, `check:npcregs` and `check:dupkeys` are all blind to it. And both designs are documented — BACKLOG's mystery-arc row already treats `S_story.knowledge[]` as the clue store for cumulative mysteries, citing the same `.inv-item-knowledge` CSS. **Two features were designed onto one field, independently, and neither knows about the other.** This is §DX-02n's dead-consts family inverted: not a field with no readers, but **one reader serving two incompatible writer shapes**.
 

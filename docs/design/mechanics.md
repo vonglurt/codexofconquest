@@ -987,7 +987,7 @@ Two servers sync only if their `(proto, engineVer, worldHash)` match exactly. `w
 | `S_story.level` | number | Current player level (1–20) |
 | `S_story.abilityScores` | object | STR/DEX/CON/INT/WIS/CHA scores; default {str:10,dex:8,con:8,int:8,wis:8,cha:8} from `_S_DEFAULTS()`, always present — every load merges the defaults under the save |
 | `S_story.shortRests` | number | Remaining short rest charges today (0–3) |
-| `S_story.knowledge` | array | Necklace of Knowledge beads (one per unique rest location) |
+| `S_story.knowledge` | array | Necklace of Knowledge beads (objects, one per unique rest location) and bare-string lore notes from arcs and the VM `reward.knowledge` bit; rendered as two sections, 🔮 Necklace and 📖 Field Notes |
 | `S_story.checkpointNode` | string | Last inn slept at — respawn point for combat death |
 | `S_story.dropsCollected` | number | Trophy drop counter for sq_battling; also feeds notoriety |
 | `S_story.defeatedBattles` | object | Map of nodeCode → true; counts sq_leveling battles; feeds notoriety |

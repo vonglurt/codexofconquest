@@ -12289,7 +12289,7 @@ const QUEST_DB = { // → doc: quest.md §Quest Format
         S_story.knowledge = S_story.knowledge || [];
         S_story.knowledge.push('Atlantean Foundation: the Tide Gate was installed at bearing 047°, depth 18m, to hold something older than the coastal civilization itself. The chain of iodine reduction points here.');
         S_story.gold = (S_story.gold||0) + 250;
-        storyMsg("📋 Atlantean Foundation added to the Necklace of Knowledge. +250gp.");
+        storyMsg("📋 Atlantean Foundation added to your Field Notes. +250gp.");
       } }],
       onFail:[] }],
     disposition:'"The chain was laid from this end. It points outward toward whoever is following it inward." — The Stone Inscription, Sunken Hall',
@@ -31369,17 +31369,31 @@ function storyRenderInventory() {
     otherItems.forEach(item => makeItemRow(item, null));
   }
 
-  // ── 9. Necklace of Knowledge ──
-  if (S_story.knowledge.length) {
+  // ── 9. Necklace of Knowledge (bead objects) and Field Notes (bare-string lore) ──
+  function makeKnowledgeRow(icon, name, tag) {
+    const div = document.createElement('div');
+    div.className = 'inv-item inv-item-knowledge';
+    const iconSpan = document.createElement('span');
+    iconSpan.className = 'inv-icon';
+    iconSpan.textContent = icon;
+    const nameSpan = document.createElement('span');
+    nameSpan.className = 'inv-name';
+    nameSpan.textContent = name;
+    const tagSpan = document.createElement('span');
+    tagSpan.className = 'inv-tag';
+    tagSpan.textContent = tag;
+    div.append(iconSpan, nameSpan, tagSpan);
+    list.appendChild(div);
+  }
+  const beads = (S_story.knowledge || []).filter(k => typeof k !== 'string');
+  const notes = (S_story.knowledge || []).filter(k => typeof k === 'string');
+  if (beads.length) {
     makeSection('🔮 Necklace of Knowledge');
-    S_story.knowledge.forEach(bead => {
-      const div = document.createElement('div');
-      div.className = 'inv-item inv-item-knowledge';
-      div.innerHTML = '<span class="inv-icon">' + bead.icon + '</span>'
-        + '<span class="inv-name">' + bead.name + '</span>'
-        + '<span class="inv-tag">memory</span>';
-      list.appendChild(div);
-    });
+    beads.forEach(bead => makeKnowledgeRow(bead.icon, bead.name, 'memory'));
+  }
+  if (notes.length) {
+    makeSection('📖 Field Notes');
+    notes.forEach(note => makeKnowledgeRow('📖', note, 'note'));
   }
 
   // ── Character Tattoos ──
@@ -31635,13 +31649,13 @@ const NODE_PANELS = [
         S_story.knowledge.push('Swamp-lore — Crone Bead: one question of the deep swamp answered.');
         S_story.inventory = S_story.inventory || [];
         S_story.inventory.push({ name:'Crone Staff', icon:'🪄', sell:250, atkBonus:3, dmgDie:8, dmgCount:1, dmgFlat:0, type:'weapon', minLevel:1 });
-        _hcaText += 'Fifteen marks. The three crowns witnessed fully. WIS +1 (permanent). Crone Bead added to the Necklace of Knowledge. Crone Staff: 🪄 +3 ATK, 1d8.';
+        _hcaText += 'Fifteen marks. The three crowns witnessed fully. WIS +1 (permanent). Crone Bead added to your Field Notes. Crone Staff: 🪄 +3 ATK, 1d8.';
       } else if (m >= 10) {
         S_story.abilityScores = S_story.abilityScores || {};
         S_story.abilityScores.wis = (S_story.abilityScores.wis || 8) + 1;
         S_story.knowledge = S_story.knowledge || [];
         S_story.knowledge.push('Swamp-lore — Crone Bead: one question of the deep swamp answered.');
-        _hcaText += 'Ten marks. The attention was sufficient. WIS +1 (permanent). Crone Bead added to the Necklace of Knowledge.';
+        _hcaText += 'Ten marks. The attention was sufficient. WIS +1 (permanent). Crone Bead added to your Field Notes.';
       } else if (m >= 6) {
         S_story.abilityScores = S_story.abilityScores || {};
         S_story.abilityScores.wis = (S_story.abilityScores.wis || 8) + 1;

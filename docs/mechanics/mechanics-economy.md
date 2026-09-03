@@ -221,7 +221,7 @@ On NG+ runs, the EB nodes show one-time atmospheric `EB_NG_PLUS_LINES` on first 
 | `S_story.level` | number | Current player level (1–20) |
 | `S_story.abilityScores` | object | STR/DEX/CON/INT/WIS/CHA scores; set by character creation (base {str:10,dex:10,con:10,int:8,wis:8,cha:8} + point-buy); `_S_DEFAULTS()` holds {str:10,dex:8,con:8,int:8,wis:8,cha:8} and every load merges it under the save, so the field is never absent |
 | `S_story.shortRests` | number | Remaining short rest charges today (0–3) |
-| `S_story.knowledge` | array | Necklace of Knowledge beads (one per unique rest location) |
+| `S_story.knowledge` | array | Necklace of Knowledge beads (objects, one per unique rest location) and bare-string lore notes from arcs and the VM `reward.knowledge` bit; rendered as two sections, 🔮 Necklace and 📖 Field Notes |
 | `S_story.checkpointNode` | string | Last inn slept at — respawn point for combat death |
 | `S_story.dropsCollected` | number | Trophy drop counter for sq_battling; also feeds notoriety |
 | `S_story.defeatedBattles` | object | Map of nodeCode → true; counts sq_leveling battles; feeds notoriety |
