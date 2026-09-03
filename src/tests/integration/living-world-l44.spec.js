@@ -14,8 +14,8 @@ const { seedAndLoad, dismissContinue } = require('./helpers');
 
 test.describe('Layer 44 — Living World', () => {
 
-  // ── F1: the world-progression note is written into the movement trail ──
-  test('world-progression notes land in S_story.log, which has no text reader', async ({ page }) => {
+  // ── F1: the world-progression note has its own array and a reader (§DX-02et) ──
+  test('world-progression notes land in S_story.worldLog, and the panel renders them', async ({ page }) => {
     await seedAndLoad(page, {
       currentCode: 'LHR', visited: { LHR: true },
       actNumber: 3, bruhnsDepthsReported: true, worldEventsFired: [], log: ['TLL', 'MHQ'],
@@ -27,9 +27,12 @@ test.describe('Layer 44 — Living World', () => {
       S_story.bruhnsDepthsReported = true;
       S_story.worldEventsFired = [];
       S_story.log = ['TLL', 'MHQ'];
+      S_story.worldLog = [];
       _checkWorldProgressionEvents();
+      storyRenderInventory();
       return {
         log: S_story.log,
+        world: S_story.worldLog,
         fired: S_story.worldEventsFired,
         objectEntries: S_story.log.filter(e => typeof e === 'object').length,
         stringEntries: S_story.log.filter(e => typeof e === 'string').length,
@@ -37,17 +40,14 @@ test.describe('Layer 44 — Living World', () => {
     });
 
     expect(out.fired).toContain('auros_report');
-    // The note is unshifted into the SAME array that storyMove() push()es node
-    // codes onto and shift()s at 20 entries.
-    expect(out.objectEntries).toBe(1);
+    // The trail is node codes and only node codes — the note never costs it a slot.
+    expect(out.objectEntries).toBe(0);
     expect(out.stringEntries).toBe(2);
-    expect(out.log[0].text).toContain("Auros's name on the cover page");
+    expect(out.world[0].text).toContain("Auros's name on the cover page");
 
-    // ...and nothing renders it: the .journal-entry.world rule matches nothing.
+    // ...and §III's own rule is applied at last, by the panel the player opens.
     const styled = await page.locator('.journal-entry.world').count();
-    expect(styled).toBe(0);
-    const anyJournalEntry = await page.locator('.journal-entry').count();
-    expect(anyJournalEntry).toBe(0);
+    expect(styled).toBe(1);
   });
 
   // ── F2: Auros has farewells and no node to say them from ──

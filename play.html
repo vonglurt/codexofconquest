@@ -23036,6 +23036,7 @@ let S_story = {
   shards: 0,
   voidPressure: 0,
   log: [],
+  worldLog: [],
   inventory: [],
   visited: {},
   quests: {},
@@ -23123,7 +23124,7 @@ const _S_DEFAULTS = () => ({
   hoursElapsed: 0, hoursSinceSlept: 0,
   playerR: 0, playerC: 0,   // §CELL-03: current grid position
   visitedCells: {},          // §CELL-04: "r,c" → true — all cells stepped on (used by §CELL-10 minimap)
-  gameDay: 0, couperiDebtDegraded: false, worldEventsFired: [],
+  gameDay: 0, couperiDebtDegraded: false, worldEventsFired: [], worldLog: [],
   brynThirdStepFixed: false, brynFirewoodBrought: false, brynPantryRestocked: false,
   brynLedgerBalance: -8,
   brynnsJournalRead: false, pachelbelPaidBack: false, quillQuestComplete: false,
@@ -23844,6 +23845,17 @@ function storySaveCheckpoint() {
   try { localStorage.setItem('coc_checkpoint', JSON.stringify(S_story)); } catch(e) {}
 }
 
+/* Saves written before the world notes had their own array carry them inside `log`, the
+   node-code trail, where three minimap renders and the ending map read every element as a
+   code. Recover them rather than drop them: they are earned, and one occupies a trail slot. */
+function _splitWorldNotesFromTrail() {
+  if (!Array.isArray(S_story.log)) return;
+  const notes = S_story.log.filter(e => e && typeof e === 'object' && e.text);
+  if (!notes.length) return;
+  S_story.log = S_story.log.filter(e => typeof e === 'string');
+  S_story.worldLog = [...notes.map(e => ({ text: e.text, day: e.day || 1 })), ...(S_story.worldLog || [])];
+}
+
 function storyLoadSave(key) {
   try {
     const raw = localStorage.getItem(key);
@@ -23851,6 +23863,7 @@ function storyLoadSave(key) {
     // Defaults first: saves written before a field existed (e.g. pre-§CELL-04
     // visitedCells) must not leave it undefined — cellMove crashed on such saves.
     Object.assign(S_story, _S_DEFAULTS(), JSON.parse(raw));
+    _splitWorldNotesFromTrail();
     return true;
   } catch(e) { return false; }
 }
@@ -23867,6 +23880,7 @@ function storyCheckContinue() {
     const save = JSON.parse(raw);
     if (save.hp === 0) {
       Object.assign(S_story, _S_DEFAULTS(), save);
+      _splitWorldNotesFromTrail();
       const cpNode = NODE_MAP[S_story.checkpointNode] || NODE_MAP['LHR'];
       document.getElementById('gameover-cp').textContent = 'Last checkpoint: ' + (cpNode.label.split(' — ')[0]);
       _populateGameoverChronicle();
@@ -27685,6 +27699,14 @@ function _getFarewell(fromCode, toCode) {
   return farewells[routeKey] || farewells.default || null;
 }
 
+/* Layer 44 §III — the world's record of your absence. Newest first, and deliberately
+   passive: the design's premise is that a player who never opens the panel never sees
+   these, so nothing here speaks through storyMsg. Rendered by storyRenderInventory. */
+function _pushWorldNote(text) {
+  S_story.worldLog = S_story.worldLog || [];
+  S_story.worldLog.unshift({ text, day: S_story.day || 1 });
+}
+
 function _checkWorldProgressionEvents() {
   const fired = S_story.worldEventsFired || [];
   WORLD_PROGRESSION_EVENTS.forEach(ev => {
@@ -27692,10 +27714,7 @@ function _checkWorldProgressionEvents() {
     if (!ev.condition()) return;
     ev.action();
     S_story.worldEventsFired = [...fired, ev.id];
-    if (ev.journalNote) {
-      if (!S_story.log) S_story.log = [];
-      S_story.log.unshift({ type:'world', text: ev.journalNote, day: S_story.day || 1 });
-    }
+    if (ev.journalNote) _pushWorldNote(ev.journalNote);
   });
 }
 
@@ -31396,6 +31415,18 @@ function storyRenderInventory() {
     notes.forEach(note => makeKnowledgeRow('📖', note, 'note'));
   }
 
+  // ── Layer 44 §III: what the world did while you were elsewhere ──
+  const worldNotes = S_story.worldLog || [];
+  if (worldNotes.length) {
+    makeSection('🌍 The World Without You');
+    worldNotes.forEach(note => {
+      const div = document.createElement('div');
+      div.className = 'journal-entry world';
+      div.textContent = 'Day ' + (note.day || 1) + ' — ' + note.text;
+      list.appendChild(div);
+    });
+  }
+
   // ── Character Tattoos ──
   const tattoos = S_story.tattoos || [];
   if (tattoos.length) {
@@ -32405,8 +32436,7 @@ function _nodeHookBirkaNiversPasses(node, { npcRowDiv }) {
           askBtn.style.cssText = 'margin-top:4px;';
           askBtn.addEventListener('click', () => {
             S_story.niversNameLearned = true;
-            if (!S_story.log) S_story.log = [];
-            S_story.log.unshift({ type:'world', text:'The guard on the corner — Nivers. Eleven years.', day: S_story.day || 1 });
+            _pushWorldNote('The guard on the corner — Nivers. Eleven years.');
             storyMsg("Yael: \"Her name is Nivers. Eleven years on that corner. Same schedule. I keep meaning to tell her I notice. I keep not doing it.\"");
             askBtn.remove();
           });

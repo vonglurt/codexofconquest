@@ -15,6 +15,32 @@
 
 ---
 
+---
+
+## Archived 2026-09-03 — §DX-02et (six strings nobody could read)
+
+### §DX-02et — six world-progression notes are written into the movement breadcrumb array (NEW 2026-08-23 during §DOC-02cy, 🟡 one reader, ONE DESIGN CALL)
+
+- [x] ✅ SHIPPED 2026-09-03 `PENDING` **§DX-02et — `S_story.log` is the node-code trail, and Layer 44 posts journal entries into it.** 🟡 `S_story.log` has **eight** consumers. Six treat it as an array of node-code **strings**: `S_story.log.push(S_story.currentCode)@28430`, capped at twenty on the next line, read back as `new Set((S_story.log || []).slice(-20))` in three separate minimap renders plus `[...S_story.log, S_story.currentCode]@36000`. The other two `unshift` an **object** — `function _checkWorldProgressionEvents()@27653` writes `{ type:'world', text: ev.journalNote, day: … }`, and `@32249` does the same for one ambient note. **Nothing anywhere reads `.text` or `.type` off that array.** The `#journal-card` UI is Froberger's Journal, keyed on `entry.entryNum` — a different system. And the styling is stranded with it: `.journal-entry.world@2114` is a 5-line rule for a class the render path never applies; `document.querySelectorAll('.journal-entry')` returns **0** at every point in a run (measured in Chromium).
+> **Six authored strings no player has ever seen:** *"Structural assessment submitted — Auros's name on the cover page."* · *"A courier delivered something to BA. Pachelbel signed for it."* · *"A letter arrived for Brynn at the inn. The seal is from the Heartwood district."* · *"City records show a new internal affairs submission. Source: anonymous. It wasn't anonymous."* · *"Weckmann added a second training session. Thursdays, younger fighters."* · *"The guard on the corner — Nivers. Eleven years."* The note also quietly occupies one of the twenty breadcrumb slots on its way to being ignored.
+> **THE CALL — where should a world note go?** (a) **Route to the existing message stream** (`storyMsg`) with the `world` styling applied there — cheapest, visible immediately, but transient. (b) **Give the notes their own array** (`S_story.worldLog`) and a small panel or Journal tab that renders `.journal-entry.world` as designed — honors §III's *"the player may miss these entirely if they don't check the journal"*, which only works if there **is** a journal to check. **(b) recommended**; it is the design's stated intent and (a) contradicts §III's whole restraint premise. Either way the breadcrumb write must stop.
+> **Provenance:** §DOC-02cy, finding F2, `docs/lab-reports/lab-report-living-world.md` §III.
+
+> **Shipped (2026-09-03) — option (b), and §III's own closing sentence is what settled it.** *"The player may miss these entirely if they don't check the journal. They will miss them."* A note routed to `storyMsg` is a line the player **cannot** miss, which inverts the restraint the whole subsystem is built on — (a) does not just cost less than (b), it contradicts the design. So the notes get their own array and a surface you open on purpose.
+>
+> **`S_story.worldLog`**, `{text, day}`, newest first, written by `` `function _pushWorldNote@27705` `` at both former sites — the Layer 44 milestone loop and Layer 45's Nivers ambient — and rendered by `storyRenderInventory` as a **🌍 The World Without You** section. **Each row carries `.journal-entry.world`, so §III's five-line rule at `` `.journal-entry.world@2114` `` is applied for the first time.** The panel is the right home rather than the Froberger journal modal: that modal is an *interruption* fired on arrival by `storyCheckJournal`, keyed on `entry.entryNum` — the opposite of a thing you check — and the inventory panel had this exact shape added four commits ago by §DX-02aq's 📖 Field Notes section.
+>
+> **Measured before:** six authored strings, zero readers; `document.querySelectorAll('.journal-entry')` returns **0** at every point in a run. **After:** the same six strings, one reader, and the selector returns one element per earned note — asserted in Chromium in both directions, including a `before` assertion that the count is still 0 until a note exists.
+>
+> **Saves are migrated, not dropped.** A save written before today carries its notes as objects inside `log`, where three minimap renders and the ending-map trail read every element as a node code. `` `function _splitWorldNotesFromTrail@23851` `` runs on **both** load paths — `storyLoadSave` and the death branch of `storyCheckContinue` — moving each note into `worldLog` and leaving the trail as node-code strings only. It is idempotent and leaves a clean trail untouched; both properties are asserted.
+>
+> **The §DOC-02cy measurement spec that pinned the defect now pins the fix.** `living-world-l44.spec.js`'s F1 case asserted `objectEntries === 1` and `.journal-entry` count **0** — it was written to *prove* the finding, so leaving it green would have meant the finding was still true. It now asserts `objectEntries === 0` and one styled row, and the lab report's §III table row moves from ⚠️ half to ✅.
+>
+> **Verified:** `src/tests/integration/dx02et-world-log.test.js` **6/6** (routing, every authored `journalNote` reaching the array, the rendered rows and their day-stamped text, the message line proved untouched, the save migration, and its idempotence) · `living-world-l44.spec.js` **9/9** · **`check:walk` 21/21** · **`npm test` 1,186 passed, exit 0.** `play.html` **+30 lines**.
+>
+> **Not swept, and named because it is the next question this row raises:** `WORLD_PROGRESSION_EVENTS`'s `weckmann_class` asks `_npcFavor('crov') >= 3`, which §DOC-02cz measured as above crov's ceiling — §DX-02fb lifted that ceiling to 3 on 2026-08-23, so the event is now firable and its note reachable. That is recorded in the §III table already and needs no row.
+
+
 ## Archived 2026-09-03 — §DX-02fv (the choice opcode gets a second consumer)
 
 ### §DX-02fv — three surfaces the §VM-01-G4 design classified as choices and no slice ever took (NEW 2026-08-23 during §DOC-02dc, 🟡 ONE DESIGN CALL)
