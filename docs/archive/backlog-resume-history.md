@@ -33,7 +33,7 @@
 
 | # | Date | Increment | Ship | Headline |
 |---:|---|---|---|---|
-| 1 | 2026-09-03 | §DX-02aq | `PENDING` | the inventory panel splits `S_story.knowledge` by shape into Necklace beads and Field Notes, so lore notes no longer render as `undefined` |
+| 1 | 2026-09-03 | §DX-02aq | `a1d97fa` | the inventory panel splits `S_story.knowledge` by shape into Necklace beads and Field Notes, so lore notes no longer render as `undefined` |
 | 2 | 2026-09-03 | §DX-02bt | `b545133` | the custom-waypoint and corpse quest cards build on `textContent` like the main renderer; the two dialogue maps name each other |
 | 3 | 2026-09-03 | §DX-02do | `fdf9589` | Entry 42 and the Defiant Fields secret, the two player-typed strings, reached the DOM as markup; both now escape through `_mpEsc` |
 | 4 | 2026-09-03 | §DX-02ae | `6464da3` | the Act VIII Brynn farewell accessor wrote a progression flag while rendering; now pure, with the write at the delivery site beside the latch, and the Yael scene comment names its own guard |
