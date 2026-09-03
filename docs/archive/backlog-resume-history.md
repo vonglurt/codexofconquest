@@ -33,7 +33,7 @@
 
 | # | Date | Increment | Ship | Headline |
 |---:|---|---|---|---|
-| 1 | 2026-09-03 | §DX-02ae | `PENDING` | the Act VIII Brynn farewell accessor wrote a progression flag while rendering; now pure, with the write at the delivery site beside the latch, and the Yael scene comment names its own guard |
+| 1 | 2026-09-03 | §DX-02ae | `6464da3` | the Act VIII Brynn farewell accessor wrote a progression flag while rendering; now pure, with the write at the delivery site beside the latch, and the Yael scene comment names its own guard |
 | 2 | 2026-09-03 | §DX-02ac | `15ba42a` | seven dead `abilityScores` fallbacks named a starting character the game never made; collapsed, and the four documents that believed them corrected |
 | 3 | 2026-08-23 | §DOC-02dc + §VM-01-G4 | `f340143` | the child design pass whose one missing opcode was the last one the VM ever needed, whose only carried number is its only wrong one, and whose nominated pilot for the… |
 | 4 | 2026-08-23 | §DOC-02db + §VM-01 | — | the design that survived eleven slices and 26 days at 100% of its symbols, whose one unmodelled shape was a button on the wrong side of a `<div>`, and whose act number… |
