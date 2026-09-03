@@ -230,8 +230,8 @@ should cost more to work — and shipping the prose without the branch converts 
 
 `(16,12,14,10,12,8)` → product 2,580,480 → Luck 12, Mod +1. The arithmetic is exact. The statline
 is not a starting character and never has been: it exists only as the dead `||` fallback in
-`const s = S_story.abilityScores || { str:16, dex:12, con:14, int:10, wis:12, cha:8 };@23440`,
-which is unreachable because `_S_DEFAULTS()` and `storyNewGame` both always set the field. The real
+`const s = S_story.abilityScores || { str:16, dex:12, con:14, int:10, wis:12, cha:8 };` (collapsed to `const s = S_story.abilityScores;@23468` by §DX-02ac, 2026-09-03),
+which was unreachable because `_S_DEFAULTS()` and `storyNewGame` both always set the field. The real
 default `(10,8,8,8,8,8)` gives product 327,680 → **Luck 9, Mod −1** — a starting character whose
 Luck is a *penalty*, which materially changes the report's "invest broadly" advice.
 

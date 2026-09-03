@@ -271,7 +271,7 @@ Two details make this the cleanest instrument-12 instance in the corpus:
 
 ### D. A dead fallback literal became four documents' worth of wrong claims
 
-`const s = S_story.abilityScores || { str:16, dex:12, con:14, int:10, wis:12, cha:8 };@23440`
+`const s = S_story.abilityScores || { str:16, dex:12, con:14, int:10, wis:12, cha:8 };` (as written until 2026-09-03)
 
 That `||` branch is unreachable: `abilityScores: { str:10, dex:8, con:8, int:8, wis:8, cha:8 },@23047`
 is declared in `_S_DEFAULTS()`, and `const scores = startScores || { str:10, dex:8, con:8, int:8, wis:8, cha:8 };@23954`
@@ -286,6 +286,8 @@ CON:14…)"* — a character the game does not make.
 > ***This is the §DX-02n (e) "dead alternative in a fallback chain" class in its most expensive
 > form. A write-only field is dead weight. A dead `||` branch that names a plausible statline is a
 > documentation hazard: it reads exactly like a declaration, and four documents believed it.***
+
+**Closed by §DX-02ac, 2026-09-03.** The seven surviving fallbacks (one had already gone) were collapsed to `const s = S_story.abilityScores;@23468` and its siblings; `grep -c "str:16, dex:12, con:14" play.html` = 0. `mechanics.md` and `mechanics-combat.md` now derive Luck from the real default (327,680 → Luck 9, Mod −1), and the two `S_story` field tables say the field is never absent.
 
 ### E. Instrument 7 — one arithmetic slip, two reports, two home docs, partially self-corrected
 
@@ -369,7 +371,7 @@ range was too narrow and guessed the wrong bound in the safe direction.
 |---|---|
 | `function _calcLuck() {@23439` | geometric-mean computation, byte-identical since `3f11e5b` |
 | `function _luckMod() { return Math.floor((_calcLuck() - 10) / 2); }@23445` | standard modifier |
-| `const s = S_story.abilityScores || { str:16, dex:12, con:14, int:10, wis:12, cha:8 };@23440` | the dead fallback (§V-D) |
+| `const s = S_story.abilityScores;@23468` | the dead fallback (§V-D), collapsed by §DX-02ac 2026-09-03 |
 | `abilityScores: { str:10, dex:8, con:8, int:8, wis:8, cha:8 },@23047` | the real default |
 | `const scores = startScores || { str:10, dex:8, con:8, int:8, wis:8, cha:8 };@23954` | `storyNewGame` |
 | `const _CC_COST = [0,1,2,3,4,5,7,9];@38547` · `const CC_BUDGET = 27;@38548` | the space enumerated in §V-B |

@@ -354,8 +354,8 @@ function getLuck() {
 
 **Luck Modifier:** `floor((Luck − 10) / 2)` — identical to all other ability modifiers.
 
-**Default scores** (STR:16, DEX:12, CON:14, INT:10, WIS:12, CHA:8):  
-`⌈(16×12×14×10×12×8)^(1/6)⌉ = ⌈(25,804,800)^(1/6)⌉ = ⌈11.54⌉ = 12` → **Luck 12, Luck Mod +1**
+**Default scores** (`_S_DEFAULTS()`: STR:10, DEX:8, CON:8, INT:8, WIS:8, CHA:8):  
+`⌈(10×8×8×8×8×8)^(1/6)⌉ = ⌈(327,680)^(1/6)⌉ = ⌈8.31⌉ = 9` → **Luck 9, Luck Mod −1**
 
 **Reference table (sample scores):**
 
@@ -985,7 +985,7 @@ Two servers sync only if their `(proto, engineVer, worldHash)` match exactly. `w
 | `S_story.voidPressure` | number | Void Tide counter (0–10); defeat at 10 |
 | `S_story.xp / xpLastBattle` | number | Cumulative XP / last battle award |
 | `S_story.level` | number | Current player level (1–20) |
-| `S_story.abilityScores` | object | STR/DEX/CON/INT/WIS/CHA scores; default {str:16,dex:12,con:14,int:10,wis:12,cha:8} |
+| `S_story.abilityScores` | object | STR/DEX/CON/INT/WIS/CHA scores; default {str:10,dex:8,con:8,int:8,wis:8,cha:8} from `_S_DEFAULTS()`, always present — every load merges the defaults under the save |
 | `S_story.shortRests` | number | Remaining short rest charges today (0–3) |
 | `S_story.knowledge` | array | Necklace of Knowledge beads (one per unique rest location) |
 | `S_story.checkpointNode` | string | Last inn slept at — respawn point for combat death |

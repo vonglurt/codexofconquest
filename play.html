@@ -23465,7 +23465,7 @@ function _lakeMagicBonuses() {
 }
 
 function _calcLuck() {
-  const s = S_story.abilityScores || { str:16, dex:12, con:14, int:10, wis:12, cha:8 };
+  const s = S_story.abilityScores;
   const product = s.str * s.dex * s.con * s.int * s.wis * s.cha;
   if (product <= 0) return 0;
   return Math.ceil(Math.pow(product, 1 / 6));
@@ -25628,7 +25628,7 @@ function _syncStoryWeaponInto(w) {
 // default: `getAtkAbilityMod` reads `#atk-extra-mod` on every story swing, and a
 // control left unwritten is a control the player can set behind the sheet's back.
 function _syncStoryCharInto() {
-  const sc = S_story.abilityScores || { str:16, dex:12, con:14, int:10, wis:12, cha:8 };
+  const sc = S_story.abilityScores;
   document.getElementById('char-level').value = S_story.level || 1;
   document.getElementById('char-ac').value = _calcPlayerAc();
   document.getElementById('char-maxhp').value = S_story.hpMax;
@@ -25642,7 +25642,7 @@ function _syncStoryCharInto() {
 }
 
 function _storyAtkAbility() {
-  const sc = S_story.abilityScores || { str:16, dex:12, con:14, int:10, wis:12, cha:8 };
+  const sc = S_story.abilityScores;
   const strMod = _statMod(sc.str);
   const dexMod = _statMod(sc.dex);
   const wp = _storyWeaponProps();
@@ -25685,7 +25685,7 @@ let _lu_pending = { lvl:0, isASI:false, asiRemaining:0, asiChanged:[], hpResult:
 
 // ── Refresh the stats grid (called live as ASI points are spent) ──
 function _lu_refreshStats(changed) {
-  const scores = S_story.abilityScores || { str:16, dex:12, con:14, int:10, wis:12, cha:8 };
+  const scores = S_story.abilityScores;
   ['str','dex','con','int','wis','cha'].forEach(s => {
     const score = scores[s] || 10;
     const mod   = _statMod(score);
@@ -37710,7 +37710,7 @@ function storyCharToggle() {
 function storyRenderCharSheet() {
   const body = document.getElementById('char-sheet-body');
   if (!body) return;
-  const sc = S_story.abilityScores || { str:16, dex:12, con:14, int:10, wis:12, cha:8 };
+  const sc = S_story.abilityScores;
   const lv = S_story.level || 1;
   const profBonus = Math.floor((lv - 1) / 4) + 2;
   const ac = _calcPlayerAc();
@@ -38560,7 +38560,7 @@ document.getElementById('btn-lu-roll-hp').addEventListener('click', () => {
   btn.disabled = true;
 
   // Snapshot scores BEFORE rolling (for tattoo reconstruction)
-  const scoresBefore = Object.assign({}, S_story.abilityScores || { str:16, dex:12, con:14, int:10, wis:12, cha:8 });
+  const scoresBefore = Object.assign({}, S_story.abilityScores);
   const hpMaxBefore = S_story.hpMax;
   const hp = _rollLevelHp();
   const conTxt = hp.conMod >= 0 ? '+' + hp.conMod : '' + hp.conMod;
@@ -38629,7 +38629,7 @@ document.getElementById('lu-asi-btns').addEventListener('click', e => {
   const btn = e.target.closest('.lu-asi-btn');
   if (!btn || btn.disabled || _lu_pending.asiRemaining <= 0) return;
   const st = btn.dataset.stat;
-  const scores = S_story.abilityScores || { str:16, dex:12, con:14, int:10, wis:12, cha:8 };
+  const scores = S_story.abilityScores;
   if ((scores[st] || 10) >= 20) return;
 
   const prevCon = scores.con || 14;

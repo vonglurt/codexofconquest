@@ -333,8 +333,8 @@ function getLuck() {
 
 **Luck Modifier:** `floor((Luck − 10) / 2)` — identical to all other ability modifiers.
 
-**Default scores** (STR:16, DEX:12, CON:14, INT:10, WIS:12, CHA:8):  
-`⌈(16×12×14×10×12×8)^(1/6)⌉ = ⌈(25,804,800)^(1/6)⌉ = ⌈11.54⌉ = 12` → **Luck 12, Luck Mod +1**
+**Default scores** (`_S_DEFAULTS()`: STR:10, DEX:8, CON:8, INT:8, WIS:8, CHA:8):  
+`⌈(10×8×8×8×8×8)^(1/6)⌉ = ⌈(327,680)^(1/6)⌉ = ⌈8.31⌉ = 9` → **Luck 9, Luck Mod −1**
 
 **Reference table (sample scores):**
 
