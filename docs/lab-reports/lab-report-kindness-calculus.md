@@ -61,7 +61,7 @@ Eighteen-instrument §DOC-02 protocol. The material points for this report:
 3. Reachability was computed from `const CELL_GRID = (() => {@9852` over `NODE_COORDS`, with
    `S_story.currentCode` assigned at exactly two sites (`S_story.currentCode = destCode;@28375`,
    `S_story.checkpointNode || 'LHR'@26011`), then closed transitively over single-writer gate flags.
-   `function _uqfActivateAtNode(node) {@30139` keys on `node.code`.
+   `function _uqfActivateAtNode(node, indexFresh) {@30139` keys on `node.code`.
 
 ---
 

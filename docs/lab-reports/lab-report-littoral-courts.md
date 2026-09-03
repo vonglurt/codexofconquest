@@ -158,7 +158,7 @@ figures):
 | LCA Southern Anchorage | `35,213` | 2nd of 2 | ❌ `list[0]` = `CI2` |
 
 `LC4:{r:32,c:203},@9773` and `LCA:{r:35,c:213},@9812` are the coordinates that did it. Since
-`function _uqfActivateAtNode(node) {@30139` keys on `node.code`, **all five quests are stranded**;
+`function _uqfActivateAtNode(node, indexFresh) {@30139` keys on `node.code`, **all five quests are stranded**;
 since the arc-close is a node panel, **the ending cannot render either**.
 
 **This is the largest proportional casualty §AUDIT-03x has produced.** §CROWN-01 lost 24 of 34 quests

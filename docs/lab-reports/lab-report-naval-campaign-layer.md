@@ -154,7 +154,7 @@ The transcripts were not game-design documents; they were lectures. The extracti
 
 ### 5.1 Mechanism
 
-`const CELL_GRID = (() => {@9852` maps every cell to an **array** of node codes, built in `NODE_MAP` declaration order; `const cellCode   = (key) => CELL_GRID[key]?.[0] || null;@9861` returns `list[0]`, and `S_story.currentCode` is assigned at exactly two sites, both yielding the primary. `function _uqfActivateAtNode(node) {@30139` keys on `node.code`. **A non-primary node's quests never activate by arrival, its text never renders, its battle never fires, and `if (g.atNode && st.currentCode !== g.atNode) return false;@22125` makes any `atNode` completion there impossible.**
+`const CELL_GRID = (() => {@9852` maps every cell to an **array** of node codes, built in `NODE_MAP` declaration order; `const cellCode   = (key) => CELL_GRID[key]?.[0] || null;@9861` returns `list[0]`, and `S_story.currentCode` is assigned at exactly two sites, both yielding the primary. `function _uqfActivateAtNode(node, indexFresh) {@30139` keys on `node.code`. **A non-primary node's quests never activate by arrival, its text never renders, its battle never fires, and `if (g.atNode && st.currentCode !== g.atNode) return false;@22125` makes any `atNode` completion there impossible.**
 
 Four of this layer's host nodes are non-primary:
 

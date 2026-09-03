@@ -30231,8 +30231,9 @@ function storyCollectLoot(node) {
 // inline stanzas guaranteed). Idempotent: already-active quests are skipped, so the second
 // run inside storyCheckQuests emits nothing new. Epic quests activate explicitly via
 // modal/defeat. §VM-01-F-FU — _questsByNode(node.code) replaces the old O(2,850) scan; it
-// returns exactly the non-epic quests whose activateNode === node.code.
-function _uqfActivateAtNode(node) {
+// returns exactly the non-epic quests whose activateNode === node.code. indexFresh is
+// storyRender's word that it already ran the size guard this arrival (§DX-02ea).
+function _uqfActivateAtNode(node, indexFresh) {
   const msgs = [];
   // §AUDIT-03e SEAM — the backfill makes 2,283 quests newly reachable by arrival at the 287 nodes
   // that gained a `code`. Most are the §AUDIT-03d imported-chain corpus: a vacuous `gate:{}` and
@@ -30246,7 +30247,7 @@ function _uqfActivateAtNode(node) {
   // NUE at 31. The guard is scoped to backfilled nodes ONLY, so no shipped node changes behaviour.
   // DELETE this guard and NODE_CODE_BACKFILLED together when §AUDIT-03d lands.
   const _held = NODE_CODE_BACKFILLED.has(node.code);
-  _questsByNode(node.code).forEach(q => {
+  (indexFresh ? _questsByNodeUnchecked(node.code) : _questsByNode(node.code)).forEach(q => {
     if (_held && !q.completion && (!q.gate || Object.keys(q.gate).length === 0)) return;
     if (!S_story.quests[q.id]) {
       if (q.activateCond && !q.activateCond()) return;
@@ -30261,9 +30262,9 @@ function _uqfActivateAtNode(node) {
   });
   return msgs;
 }
-function storyCheckQuests(node) {
+function storyCheckQuests(node, indexFresh) {
   const msgs = [];
-  msgs.push(..._uqfActivateAtNode(node));
+  msgs.push(..._uqfActivateAtNode(node, indexFresh));
   // §GUIDE-01: Emmer Finch visible once arc is active
   if (!S_story.emmerMet && ['active','done','complete'].includes((S_story.quests||{}).quest_guide_01)) S_story.emmerMet = true;
   // §DESIGN-03: Track patrol route for quest_city_watch_patrol
@@ -34684,6 +34685,7 @@ function storyRender(node, prefix) {
     S_story.playerC = NODE_COORDS[node.code].c;
   }
   S_story.actNumber = node.act || 1;
+  _questsByNodeRevalidate();   // §DX-02ea — one size guard per arrival; both activation passes below get indexFresh
   const lootMsg  = storyCollectLoot(node);
   // §VM-01-G3 — activate this node's declaratively-gated quests BEFORE the render body, so
   // per-node UI (Solvak's button, the CDG boss buttons) keyed on 'active' status renders in
@@ -34691,7 +34693,7 @@ function storyRender(node, prefix) {
   // storyCheckQuests re-runs the same idempotent pass (no duplicate messages) and handles
   // completion; the strip below concatenates these activation messages in the same position
   // they always occupied.
-  const activationMsgs = _uqfActivateAtNode(node);
+  const activationMsgs = _uqfActivateAtNode(node, true);
   // Farewell line (L44-I)
   const farewellEl = document.getElementById('story-farewell');
   if (farewellEl) {
@@ -36117,7 +36119,7 @@ function storyRender(node, prefix) {
   // Status
   storyUpdateStatus();
   // Quests + messages
-  const questMsgs = storyCheckQuests(node);
+  const questMsgs = storyCheckQuests(node, true);
   const parts = [prefix, lootMsg, ...activationMsgs, ...questMsgs].filter(Boolean);
   storyMsg(parts.join('  ·  '));
   // Keep quest list DOM in sync so it's current when user opens the panel
@@ -37103,18 +37105,30 @@ function _questNodes() {
 // is preserved — we push in Object.values order — so a multi-quest node activates its
 // quests in the same order as the old scan and the 📋 msgs stream stays byte-identical.
 let _questsByNodeIndex = null, _questsByNodeCount = -1;
-function _questsByNode(nodeCode) {
+// §DX-02ea — the size guard is the whole cost of a lookup (Object.keys over ~2,850 entries,
+// ~300× the Map read behind it). storyRender runs it once per arrival and passes
+// indexFresh=true to both of its activation passes, which then read the index unchecked;
+// every other caller — chain completion, the worldbuilder, the console, the injection test —
+// goes through _questsByNode and pays the guard, so the zero-cooperation contract above holds
+// wherever an injection could precede the call.
+function _questsByNodeRevalidate() {
   const n = Object.keys(QUEST_DB).length;
-  if (!_questsByNodeIndex || n !== _questsByNodeCount) {
-    _questsByNodeIndex = new Map();
-    for (const q of Object.values(QUEST_DB)) {
-      if (!q || q.type === 'epic' || !q.activateNode) continue;
-      let arr = _questsByNodeIndex.get(q.activateNode);
-      if (!arr) _questsByNodeIndex.set(q.activateNode, arr = []);
-      arr.push(q);
-    }
-    _questsByNodeCount = n;
+  if (_questsByNodeIndex && n === _questsByNodeCount) return;
+  _questsByNodeIndex = new Map();
+  for (const q of Object.values(QUEST_DB)) {
+    if (!q || q.type === 'epic' || !q.activateNode) continue;
+    let arr = _questsByNodeIndex.get(q.activateNode);
+    if (!arr) _questsByNodeIndex.set(q.activateNode, arr = []);
+    arr.push(q);
   }
+  _questsByNodeCount = n;
+}
+function _questsByNode(nodeCode) {
+  _questsByNodeRevalidate();
+  return _questsByNodeIndex.get(nodeCode) || [];
+}
+function _questsByNodeUnchecked(nodeCode) {
+  if (!_questsByNodeIndex) _questsByNodeRevalidate();
   return _questsByNodeIndex.get(nodeCode) || [];
 }
 

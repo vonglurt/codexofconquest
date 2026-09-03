@@ -370,7 +370,7 @@ gate terms (§BOARD-01 Void-tide windows), the `any`/`not` expression AST (§VM-
   exactly 14 UQF `_legacyFn` gates + the 30 stubs — the same number, 51 days later. `xpAward` = **45**
   and still **100 % `type:'side'`** (the figure drifted from 50; the invariant did not).
 - **Wave 8c's ordering claim holds.** `_runNodeHook('la-riva-row', node);@35102` runs before
-  `const questMsgs = storyCheckQuests(node);@36024`, so inline hooks still precede the engine's
+  `const questMsgs = storyCheckQuests(node, true);@36024`, so inline hooks still precede the engine's
   completion pass — through an entire §VM-01 hook migration that rewrote the region around it.
 - **The report's own acceptance suite: 303 passed / 0 failed** (`quest-runtime-uqf.test.js`, 4.1 min).
   It was 288 at close; §MATH-01 and §VM-01-F added the rest.

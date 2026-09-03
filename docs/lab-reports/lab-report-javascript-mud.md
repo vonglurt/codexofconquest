@@ -217,7 +217,7 @@ questions were answered by named work tracks, every one of them adopting its dia
 
 **The scan.** Finding 9 diagnosed a linear pass over all 2,850 quests on every render and recommended *"an
 `activateNode → [quests]` index — the same shape `CELL_GRID` already builds for nodes."* On 2026-07-22,
-`549d6b4` shipped exactly that. At HEAD, `function storyCheckQuests(node)@30168` opens with
+`549d6b4` shipped exactly that. At HEAD, `function storyCheckQuests(node, indexFresh)@30168` opens with
 `_uqfActivateAtNode@30139`, whose comment names the track: *"§VM-01-F-FU — `_questsByNode@30137` replaces
 the old O(2,850) scan."* The report's §IX had recommended *leaving* it ("leave it, note it"). **Its
 diagnosis was adopted and its recommendation overruled** — the right outcome, and worth recording as such.
@@ -280,7 +280,7 @@ but in this document. Filed now as **§DX-02dp**.
 
 ## VIII. Quest acceptance — the finding that is still true, and still open
 
-**There is no accept step.** No button, no confirmation, no dialogue. Arrival runs `function storyCheckQuests(node)@30168`,
+**There is no accept step.** No button, no confirmation, no dialogue. Arrival runs `function storyCheckQuests(node, indexFresh)@30168`,
 the declarative gate passes, `S_story.quests[id] = 'active'`, and the player learns about it from a
 `📋 <title>` fragment in a `·`-joined message strip. *The player is told, never asked. Consent is implicit
 in arrival.*
@@ -337,7 +337,7 @@ repo has not answered.
 | Room description | `ROOMS:CORE@9985` → `describeCell@10150` → `_enterEmptyCell@28422` |
 | Auto-travel | `_travelTick@38044` → the halt guard at `_travelStepping@28349` |
 | Quest engine | `BIT_CONTRACTS@21971` → `createQuestRuntime(host)@22181` → `QuestRuntime@22340` |
-| Quest activation | `_questsByNode@30137` → `_uqfActivateAtNode@30139` → `function storyCheckQuests(node)@30168` |
+| Quest activation | `_questsByNode@30137` → `_uqfActivateAtNode@30139` → `function storyCheckQuests(node, indexFresh)@30168` |
 | Quest resolution | `_rollCeremonia@7024` → `_resolveQuestUQF@6962` · retry `_ceremoRetryBlocked@6806` |
 | UI generation | `Section-based UI rendering@35302` → `_mkSection@35303` / `_mkCard@35316` |
 | State shape | `_S_DEFAULTS@23063` (authoritative) |

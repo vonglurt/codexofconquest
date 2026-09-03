@@ -196,7 +196,7 @@ double-buffering, static shell as frame, dynamic cards as swap. `textContent` ca
 ### D. The tail synthesis block is the real contract
 
 Everything narratively *live* happens in eighteen lines, beginning at
-`const questMsgs = storyCheckQuests(node);@36024`. This is where the page stops being "prose in a
+`const questMsgs = storyCheckQuests(node, true);@36024`. This is where the page stops being "prose in a
 slot" and becomes "a state machine's current frame": the quest scan runs, its messages merge into
 the log stream, the quest panel and exits repaint, the world autosaves. **Every subsystem in this
 report converges here, on every step.** Verified unchanged in composition at 42 days.
@@ -219,7 +219,7 @@ declarative and the runtime is the only code path.
 
 ### B. The per-arrival scanner
 
-`function storyCheckQuests(node) {@30168` runs two passes inside the tail synthesis:
+`function storyCheckQuests(node, indexFresh) {@30168` runs two passes inside the tail synthesis:
 
 1. **Activation** — for each not-yet-started quest with `activateNode === node.code`, activate iff
    the declarative gate passes. Emits `📋 {title}`.
@@ -497,7 +497,7 @@ None of the five required a framework or a build step, and that was the point.
 | # | Recommendation | Outcome | Shipped as |
 |---|---|---|---|
 | 1 | Extract a `nodeCards` data schema — `{when, html\|text, onShow}` evaluated by one loop | ✅ **SHIPPED** (+21 d) | §VM-01-G1/G2 — `const NODE_PANELS = [@31321` (**29 entries**: `when`/`once`/`css`/`html`/`text`) + `const NODE_HOOKS = [@34173` (**61 entries**) behind `function _runNodeHook(@34236` |
-| 2 | Index quest activation by node, mirroring the editor's `_questsByNode` | ✅ **SHIPPED** (+15 d) | §VM-01-F-FU `549d6b4` — `function _questsByNode(@36998`, consumed by `function _uqfActivateAtNode(node) {@30139` |
+| 2 | Index quest activation by node, mirroring the editor's `_questsByNode` | ✅ **SHIPPED** (+15 d) | §VM-01-F-FU `549d6b4` — `function _questsByNode(@36998`, consumed by `function _uqfActivateAtNode(node, indexFresh) {@30139` | **§DX-02ea (2026-09-03):** the size guard was the whole cost of the lookup (0.141 ms guarded vs. a Map read below timer resolution, 2,853 entries); it now runs once per arrival as `_questsByNodeRevalidate()` at the top of `storyRender`, which passes `indexFresh` to its two activation passes so they read the index unchecked; every other caller of `storyCheckQuests` still pays the guard, so `uqf-activatenode-index.test.js` is unmodified.
 | 3 | A flag registry `FLAG_OWNERS` + collision assertion | ❌ **NOT SHIPPED** — 0 commits, any path, ever | see §XII |
 | 4 | Move state mutation out of `storyRender` into a declarative hook | ✅ **SHIPPED IN SUBSTANCE** (+21 d) | the `once:` field; the report's named example (`DAM`) is now `once:'saulConverted'@31335` |
 | 5 | A renderer idempotency test | ✅ **SHIPPED** (+21 d) | `src/tests/integration/uqf-node-panels.test.js:gone on re-render@28`, guarded at ship by a 24-combo golden-DOM diff |
@@ -623,9 +623,9 @@ and it is not architectural. **Make the prover fail.**
 | Empty-cell shell | `function _renderNodeShell(@28410` · `function _enterEmptyCell(@28422` |
 | The page generator | `function storyRender(node, prefix) {@34550` |
 | Dynamic-sibling clear | `// Clear all stale dynamic siblings@34608` |
-| Tail synthesis (the clock edge) | `const questMsgs = storyCheckQuests(node);@36024` |
-| Per-arrival quest scan | `function storyCheckQuests(node) {@30168` |
-| Activation pass (indexed) | `function _uqfActivateAtNode(node) {@30139` · `function _questsByNode(@36998` |
+| Tail synthesis (the clock edge) | `const questMsgs = storyCheckQuests(node, true);@36024` |
+| Per-arrival quest scan | `function storyCheckQuests(node, indexFresh) {@30168` |
+| Activation pass (indexed) | `function _uqfActivateAtNode(node, indexFresh) {@30139` · `function _questsByNode(@36998` |
 | Activation / completion gates | `canActivate(questId) {@22194` · `canComplete(questId) {@22206` |
 | The `atNode` term | `if (g.atNode && st.currentCode !== g.atNode) return false;@22125` |
 | Bit interpreter | `*execBits(bits, ctx) {@22224` · `HANDLERS: {@22265` |

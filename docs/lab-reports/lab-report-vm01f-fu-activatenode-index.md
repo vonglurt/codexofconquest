@@ -39,7 +39,7 @@ it. Indexing is how you keep *"add a quest"* a free action.
 
 **And there is a second payoff nobody planned for, which arrived a month later.** §VM-01-G3 needed to run the
 activation pass **before** `storyRender`'s render body, so per-node UI keyed on `active` status could see
-same-arrival activations. It extracted the loop into `function _uqfActivateAtNode(node)@30139` and called it
+same-arrival activations. It extracted the loop into `function _uqfActivateAtNode(node, indexFresh)@30139` and called it
 **twice per arrival** — once early, once from `storyCheckQuests` — relying on idempotence. That refactor is
 comfortable only because the pass is cheap. **A cheap operation can be called from two places; an O(n) one cannot.**
 The index did not make the game faster in a way a player can perceive; it made the *engine* editable in a way its
@@ -282,9 +282,9 @@ was never committed, so no diff can be measured. §VM-01-F's own commit message 
 callers of `storyCheckQuests` 5 → **4** · index population 2,803 → **2,804**, buckets unchanged at **348**.
 
 **The one structural change.** §VM-01-G3 **extracted the activation loop** out of `storyCheckQuests` into
-`function _uqfActivateAtNode(node)@30139`, carrying this increment's comment with it verbatim, and now calls it
+`function _uqfActivateAtNode(node, indexFresh)@30139`, carrying this increment's comment with it verbatim, and now calls it
 **twice per arrival** — from `function storyRender(node, prefix)@34550` before the render body, and again from
-`function storyCheckQuests(node)@30168`. The pass is idempotent, so this is correct; but it means **the size guard
+`function storyCheckQuests(node, indexFresh)@30168`. The pass is idempotent, so this is correct; but it means **the size guard
 now runs twice per arrival**, ~0.22 ms of Θ(n) work to look up a median of 3 quests. Filed as **§DX-02ea**.
 
 ---
@@ -307,8 +307,8 @@ this helper.
 
 ## 11. Anchors (HEAD, 2026-08-22)
 
-`const QUEST_DB = {@10615` · `function _gateFlagSet()@26135` · `function _uqfActivateAtNode(node)@30139` ·
-`function storyCheckQuests(node)@30168` · `function storyRender(node, prefix)@34550` ·
+`const QUEST_DB = {@10615` · `function _gateFlagSet()@26135` · `function _uqfActivateAtNode(node, indexFresh)@30139` ·
+`function storyCheckQuests(node, indexFresh)@30168` · `function storyRender(node, prefix)@34550` ·
 `function _questNodes()@36978` · `let _questsByNodeIndex = null@36997` · `function _questsByNode(nodeCode)@36998` ·
 `function _boardBounties(node, limit)@37166` · `src/js/wbapi-core.js:_questsByNode: {}@707` ·
 `src/scripts/check-quest-parity.js:quest parity: QUEST:CORE identical@25` ·

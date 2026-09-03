@@ -230,7 +230,7 @@ Two program corrections follow:
    exactly two sites — `S_story.currentCode = destCode@28375`, where `destCode = res.destCodes[0]`,
    and the respawn line `checkpointNode || 'LHR'@26011` — so **a non-primary code can never become
    `currentCode`**, and its `text`/`npc`/`battle`/`loot`/`sleep` never render. Because
-   `_uqfActivateAtNode(node)@30139` keys on `node.code`, **1,260 quests carry an `activateNode` on a
+   `_uqfActivateAtNode(node, indexFresh)@30139` keys on `node.code`, **1,260 quests carry an `activateNode` on a
    non-primary node; 486 are already held by the §AUDIT-03e guard, leaving 774 across 135 nodes that
    would activate on arrival and cannot.** Affected nodes include `BK` (89 quests, sharing a cell
    with the starting node `LHR`), `WM` (312, behind `ERF`) and `HCA` (behind `WG0`). The waypoint

@@ -98,8 +98,8 @@ nodes:
 
 **2. Evaluation order supports same-visit completion.** `storyRender` calls
 `` `const lootMsg  = storyCollectLoot(node);@34557` `` before
-`` `const questMsgs = storyCheckQuests(node);@36024` ``, and inside `storyCheckQuests` activation is
-the *first* statement — `` `msgs.push(..._uqfActivateAtNode(node));@30170` `` — ahead of the
+`` `const questMsgs = storyCheckQuests(node, true);@36024` ``, and inside `storyCheckQuests` activation is
+the *first* statement — `` `msgs.push(..._uqfActivateAtNode(node, indexFresh));@30170` `` — ahead of the
 completion loop. Arrive, receive the loot, complete on the same render. **Verified at HEAD**, and it
 survived the §VM-01-F-FU refactor that replaced the per-render activation scan with an index.
 

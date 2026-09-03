@@ -90,7 +90,7 @@ Each hunt carries a **disjoint, continuous** day window covering 21→49.
 
 The architectural claim is unchanged by the migration: **one** source of truth is consulted by
 **both** places that ask *is this quest available* — the arrival guard inside
-`function storyCheckQuests(node)@30181`, and `_bountyPostable`. What falls out for free:
+`function storyCheckQuests(node, indexFresh)@30181`, and `_bountyPostable`. What falls out for free:
 
 - **Missable.** Once the day crosses 35, the day-21 hunt is neither pinnable nor organically
   activatable. Unless it was already accepted — a taken bounty lives in `S_story.quests` and finishes

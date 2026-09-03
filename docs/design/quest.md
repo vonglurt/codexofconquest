@@ -141,7 +141,7 @@ surface a re-render would erase. The remaining D1 blocks (delayed beats, hand-st
 
 ## Arrival activation and the §AUDIT-03e seam (2026-07-29)
 
-A quest lists on arrival when `_uqfActivateAtNode` finds it via `_questsByNode(node.code)` and its
+A quest lists on arrival when `_uqfActivateAtNode` finds it in the `activateNode → [quests]` index (`_questsByNodeRevalidate` runs the size guard once per arrival at the top of `storyRender`, which passes `indexFresh` to its two activation passes, §DX-02ea; every other caller goes through `_questsByNode` and pays the guard) and its
 `gate` passes. Until §AUDIT-03e that lookup was **dead at 287 of the 416 nodes**: those NODE_MAP
 entries omit the redundant `code:` field, so `node.code` was `undefined` and the index returned
 nothing. **2,283 quests named one of them in `activateNode`** — including whole shipped arcs
