@@ -376,9 +376,9 @@ also still holds — **0 `label:` and 0 `title:` values in the file contain `<`*
 the same function that were left on string-concatenated `innerHTML`, and both interpolate
 **data-originated** strings, not code-generated ones:
 
-- `<span>Hunt: '@30807` — interpolates `customWp.label` twice and `dest.label` from
+- `<span>Hunt: '` (as written until 2026-09-03; now `titleSpan.textContent = 'Hunt: ' + customWp.label;@30920`) — interpolated `customWp.label` twice and `dest.label` from
   `NODE_MAP`. Node labels are authorable through the WBAPI worldbuilder.
-- `<span>🦴 Your body at '@30826` — interpolates `q.nodeName` from
+- `<span>🦴 Your body at '` (now `titleSpan.textContent = '🦴 Your body at ' + q.nodeName;@30959`) — interpolated `q.nodeName` from
   `S_story.corpsesQuests`, which is **persisted in the player's save file** and read back
   on load.
 
@@ -386,6 +386,8 @@ The corpse renderer is the more interesting of the two, because it takes the str
 place further outside the bundle than `QUEST_DB` ever was. The report's own §2 argument
 applies to both without modification: *the guarantee should not depend on the current
 content of the data.* Filed as **§DX-02bt**.
+
+**Closed by §DX-02bt, 2026-09-03.** Both cards are built the way the main renderer is: every data-originated string goes in through `textContent`, the code-generated badges through `insertAdjacentHTML`, and the two waypoint buttons through `addEventListener` instead of an inline `onclick` that interpolated the node code. Each map now carries a one-line comment naming the other (`const NPC_DIALOGUES = {@10410`, `const NPC_DIALOGUE = {@22473`).
 
 A related nuisance worth naming while in the file: `const NPC_DIALOGUES = {@10396` and
 `const NPC_DIALOGUE = {@22445` are two distinct live objects one character apart, with 5
@@ -401,7 +403,7 @@ and 9 readers respectively. `storyShowNpc` reads the singular.
   list as a soft-lock that does not exist. A gate reporting 50 candidates with a known
   blind spot understates its own confidence.
 - **§DX-02bt** 🟡 — two quest-panel renderers still concatenate data-originated strings
-  into `innerHTML` (`<span>Hunt: '@30807`, `<span>🦴 Your body at '@30826`); `q.nodeName`
+  into `innerHTML` (the `Hunt:` and `Your body at` cards, both rebuilt on `textContent` 2026-09-03); `q.nodeName`
   arrives from the save file. This is this report's §2 thesis, unfinished. Includes the
   `NPC_DIALOGUE`/`NPC_DIALOGUES` near-name collision as a sub-item.
 - **§DX-02bu** 🟢 — doc correction: the BACKLOG's §DATA-01-REVERTED row asserts UQF has

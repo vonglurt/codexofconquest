@@ -10406,6 +10406,7 @@ const DUEL = {
 
 /* ── Layer 42: NPC World-Truth Dialogue System ── */
 // ◆◆◆ WORLDBUILDER:NPC_DIALOGUES:START ◆◆◆
+// Keyed by NPC key (brynn, yael…); the per-node resident voices are the singular NPC_DIALOGUE.
 const NPC_DIALOGUES = { // → doc: docs/story/story-arc-npc-dialogues.md
   yael: { meta: { name:"Yael Scheidemann", occupation:"city guard captain", worldTruth:"Every riot that gets suppressed becomes three quiet riots.", enemy:"Commissioners who scrub evidence of unrest.", missionBit:"yaelEscortUsed" }, impartial: ["\"You — yes, you. Don't walk past me. You're new to Birka and it shows. Stand still for a moment and listen, because I am only going to say this once. Check your MAP. The known world has forty-two nodes and you can get lost in it, badly, fast. Open your QUEST LOG when you arrive somewhere new — quests are not optional, they are how the city tells you what actually matters. Watch your HP. Sleep at the Inn or any rest node before you are desperate; buy potions before you need them, not during. The First Inn is your Hearth — go there when the world gets loud. And every inn and rest node keeps a Warrant's Board — the Crimson Warrant nails its bounties there; read it, and take the work that points you somewhere worth going. The watch can't chase half those postings. You can. Pull up your CHARACTER SHEET. You are Level 1. Fighter. Strength carries you into the fight; Constitution keeps you upright afterward. Dexterity is built slowly — and so is the only edge that will hold against what is actually coming for you. The smiths in this city cannot sell it; the lake can. Go north to Yugurt, to the cabin, and find the old man who keeps it — they call him the Fisherman. He hands the rod to anyone who will use it, free, and asks nothing back. The water gives up what no shop stocks. I tell you plainly because the last three who came through, I met once and after that only read their reports. Go to the lake early. Bring patience for the hook. Your Charisma is not decoration: half this city speaks coin but listens to character, so talk to vendors, barter, negotiate. You came here to fight demons. You will. Real ones, with claws. But the ones behind your own eyes are older and meaner, and that is the real fight. The friends you make in these streets will not appear in your inventory. They will not show on a score screen because there is no score screen worth reading. There is only the loop — the same day, the same city, the same courier dying at the same crossroads — until you learn what you came here to learn. The loop ends when you decide it does. That is what it means to be a proud adventurer: you do not grind for points. You walk forward for the people beside you. Now get moving. I have a city to keep.\"","\"If you see anything that shouldn't be in the Slums, you didn't see me not seeing it either.\"","\"Patrol routes don't change without reason. The route changed twice this week.\"","\"Skalder's been on that corner eleven years. Nivers, twenty-three. They're the city's memory. I'm the one who reads it.\"","\"Three reports filed in the last month. The same report. The commissioners stamp it 'Noted.' Then they note nothing.\""], questActive: ["\"Three encounters cleared means the Slums are safe for another week. Possibly two. Thank you.\"","\"I can't go in there officially. But you can. Whatever you find — I don't need details.\"","\"The vermin aren't the problem. The vermin are a symptom. Clear them anyway.\"","\"Four children live on the third alley. Their mother knows your name now. I told her you were reliable.\"","\"You're making progress. Skalder noticed. That's the closest to a commendation you'll get around here.\""], friendly: ["\"Nivers hasn't called in sick in twenty-three years. I asked her once why not. She said: 'The city doesn't get sick days.' I've been thinking about that for four years.\"","\"There was a riot in the Lower Crypt district three months ago. I filed the report. The report disappeared. I filed a second one. Still have the copy.\"","\"Varga — the information broker near the market — changed his pigeon route again. That's the third time this season. Coins are moving somewhere.\"","\"The city talks if you know the language. Most people pass through and hear noise. The noise has a grammar.\"","\"I've been here long enough to know which cracks in the wall are load-bearing. The one near the crypt entrance has been growing for two years. Nobody has asked me about it.\""], dearFriend: ["\"I filed the second report. The one about the Void encroachment in the lower crypt district. The commissioners don't read second reports. I kept a copy. Someone should know it existed.\"","\"The grammar of the city includes what people don't say. Skalder hasn't said anything about the eastern alley in three weeks. That alley talks constantly. Something changed.\"","\"You know what the hardest part of this job is? The people who leave. You learn the city's grammar through the people in it. Every time someone goes, a word disappears.\"","\"I walk the same route every morning. It used to be to see what changed. Now it's also to see what stayed. That's different. I didn't notice when it changed.\""], quote: "" },
   brynn: { meta: { name:"Brynn Clerambault", occupation:"innkeeper", worldTruth:"Safety is a thing people carry in, not a thing rooms provide.", enemy:"Merchants who disappear without settling the account — not for the gold, for the not knowing.", missionBit:"brynnsJournalRead" }, impartial: ["\"He left this in the room. Paid three nights ahead, didn't sleep the third one.\"","\"Two merchants gone last week. Harbormaster Tula would know — she tracks the manifests.\"","\"The good room is available. It has a window. Some guests prefer no window. I keep both.\"","\"Breakfast is included. The innkeeper before me said breakfast was separate. He had fewer repeat customers.\"","\"The journal was in the room. I kept it because it felt like something someone would come asking for.\""], questActive: ["\"The ledger has a crease on the third page — that's how I know it's mine. Worn spine, brown cover.\"","\"If you find it in the Slums, bring it here first. Before you do anything else with it.\"","\"I lent it to a merchant named Rove. He had good credit and bad judgment. The judgment was the problem.\"","\"You don't have to explain how you got it. I don't need the story. I just need the ledger.\"","\"The pages that matter are 23 through 31. The rest is routine. Those eight pages are not routine.\""], friendly: ["\"My daughter wrote 'expedition' in her notebook last week. Very hard pencil. She means it.\"","\"The inn has been in this building for forty years. The building has been here longer. The stories go with the walls, not the owners.\"","\"I know which guests are running from something and which are running toward it. The ones toward something eat better.\"","\"She asked about the Void. My daughter. I said: there are people who know more than me, and you should find them. She said: you know one. I said: yes.\"","\"Rove came back once, months later. Didn't have the ledger. Didn't explain. Paid his tab in full and left. I appreciated that.\""], dearFriend: ["\"She came back. My daughter. Three cities in six weeks. She had a notebook full of expedition notes and she asked me to read them.\" Brynn refills the cup. \"I read them twice.\"","\"The good room has had forty-seven guests in the last three years. I remember each one. You're the only one who came back more than twice without needing something specific.\"","\"Safety is a thing people carry in. I've known that since the first week. Some guests arrive already safe. Some arrive carrying the absence of it. I can't fix the absence but I can make sure the room doesn't add to it.\"","\"She asked me if you'd come back. My daughter. I said: I don't know. She said: I think they will. She's been right about these things before.\""], quote: "" },
@@ -22468,6 +22469,7 @@ function _senHoldSpeaker() {
     || q['quest_spark_04'] === 'active' || q['quest_spark_04'] === 'complete');
 }
 
+// Keyed by node code; the per-NPC quote pools are the plural NPC_DIALOGUES.
 const NPC_DIALOGUE = { // → doc: story.md §FL7
   LHR: { name:'City Guard Captain',              quote:'"Move along. The lower districts are sealed after dark — third night running. Whatever came out of the crypt, it\'s not going back in on its own."' },
   TLL: { name:'Innkeeper Brynn',                 quote:'"He left this in the room. Paid three nights ahead, didn\'t sleep the third one. I kept it. Felt like someone would come asking."' },
@@ -30912,10 +30914,30 @@ function storyRenderQuests() {
       const div = document.createElement('div');
       div.className = 'quest-item side-quest';
       const dest = NODE_MAP[customWp.node];
-      div.innerHTML = '<div class="quest-title"><span>Hunt: ' + customWp.label + '</span><span class="quest-badge side">CUSTOM</span></div>'
-        + '<div class="quest-desc">Navigate to ' + (dest ? dest.label : customWp.node) + ' to explore ' + customWp.label + ' terrain.</div>'
-        + '<button class="quest-set-wp-btn active-wp" onclick="S_story.waypoint=\'' + customWp.node + '\';_updateWaypointBtn()">📍 Active Waypoint' + _wpDistTag(customWp.node) + '</button>'
-        + ' <button class="quest-set-wp-btn" onclick="S_story.waypoint=null;S_story.customQuestTerrain=null;_updateWaypointBtn();storyRenderQuests()" style="border-color:#c21717;color:#c21717">✕ Clear</button>';
+      const titleRow = document.createElement('div');
+      titleRow.className = 'quest-title';
+      const titleSpan = document.createElement('span');
+      titleSpan.textContent = 'Hunt: ' + customWp.label;
+      titleRow.appendChild(titleSpan);
+      titleRow.insertAdjacentHTML('beforeend', '<span class="quest-badge side">CUSTOM</span>');
+      div.appendChild(titleRow);
+      const descDiv = document.createElement('div');
+      descDiv.className = 'quest-desc';
+      descDiv.textContent = 'Navigate to ' + (dest ? dest.label : customWp.node) + ' to explore ' + customWp.label + ' terrain.';
+      div.appendChild(descDiv);
+      const wpBtn = document.createElement('button');
+      wpBtn.className = 'quest-set-wp-btn active-wp';
+      wpBtn.innerHTML = '📍 Active Waypoint' + _wpDistTag(customWp.node);
+      wpBtn.addEventListener('click', () => { S_story.waypoint = customWp.node; _updateWaypointBtn(); });
+      div.appendChild(wpBtn);
+      div.appendChild(document.createTextNode(' '));
+      const clearBtn = document.createElement('button');
+      clearBtn.className = 'quest-set-wp-btn';
+      clearBtn.style.borderColor = '#c21717';
+      clearBtn.style.color = '#c21717';
+      clearBtn.textContent = '✕ Clear';
+      clearBtn.addEventListener('click', () => { S_story.waypoint = null; S_story.customQuestTerrain = null; _updateWaypointBtn(); storyRenderQuests(); });
+      div.appendChild(clearBtn);
       list.appendChild(div);
     }
 
@@ -30931,10 +30953,21 @@ function storyRenderQuests() {
       S_story.corpsesQuests.forEach(q => {
         const div = document.createElement('div');
         div.className = 'quest-item quest-corpse';
-        div.innerHTML = '<div class="quest-title"><span>🦴 Your body at ' + q.nodeName + '</span>'
-          + '<span class="quest-badge side">RETRIEVE</span></div>'
-          + '<div class="quest-desc">' + q.items.length + ' item(s) · ' + q.goldDropped + ' gp — return to collect.</div>'
-          + '<div class="quest-hint">▶ Navigate to ' + q.nodeName + ' and click the 🦴 REMAINS chip.</div>';
+        const titleRow = document.createElement('div');
+        titleRow.className = 'quest-title';
+        const titleSpan = document.createElement('span');
+        titleSpan.textContent = '🦴 Your body at ' + q.nodeName;
+        titleRow.appendChild(titleSpan);
+        titleRow.insertAdjacentHTML('beforeend', '<span class="quest-badge side">RETRIEVE</span>');
+        div.appendChild(titleRow);
+        const descDiv = document.createElement('div');
+        descDiv.className = 'quest-desc';
+        descDiv.textContent = q.items.length + ' item(s) · ' + q.goldDropped + ' gp — return to collect.';
+        div.appendChild(descDiv);
+        const hintDiv = document.createElement('div');
+        hintDiv.className = 'quest-hint';
+        hintDiv.textContent = '▶ Navigate to ' + q.nodeName + ' and click the 🦴 REMAINS chip.';
+        div.appendChild(hintDiv);
         list.appendChild(div);
       });
     }
