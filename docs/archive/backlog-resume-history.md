@@ -33,7 +33,7 @@
 
 | # | Date | Increment | Ship | Headline |
 |---:|---|---|---|---|
-| 1 | 2026-09-03 | §DX-02ip | `PENDING` | the failed-check effort grant scaled off the first `reward` bit rather than the sum the pass actually pays; now a `reduce`, provably behaviour-preserving at 0 multi-reward checks in the corpus, with a fixture red at HEAD |
+| 1 | 2026-09-03 | §DX-02ip | `62fd7dc` | the failed-check effort grant scaled off the first `reward` bit rather than the sum the pass actually pays; now a `reduce`, provably behaviour-preserving at 0 multi-reward checks in the corpus, with a fixture red at HEAD |
 | 2 | 2026-09-03 | §AUDIT-03bm | `12007f2` | the XP economy names its own edge: the failed-check dial is proportional, not a floor, so token-only checks pay a mission bit rather than XP by design; a flat `mission_bit` grant declined at 24,500 XP against the corpus's 22,307 XP of quest reward, and the census re-derived per run |
 | 3 | 2026-09-03 | §DX-02aq | `a1d97fa` | the inventory panel splits `S_story.knowledge` by shape into Necklace beads and Field Notes, so lore notes no longer render as `undefined` |
 | 4 | 2026-09-03 | §DX-02bt | `b545133` | the custom-waypoint and corpse quest cards build on `textContent` like the main renderer; the two dialogue maps name each other |
