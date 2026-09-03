@@ -58,7 +58,7 @@ The eleven subsystems: **(II)** the off-screen character · **(III)** world prog
 | IV | Map warmth | ✅ | All five tiers exact (`#222`/`#555`/`#5a4a3a`/`#6a5a3a`/`#8a6a3a`/`#3a7a5a`). Spec's dead `warmth = fav * 20` line correctly dropped (**F10**). EB green is ending-map-only in practice |
 | V | Corridor farewells | ✅ 16/18 | Route lookup the spec punted on was **finished** by the implementer (**F10**). Threshold is `fav >= 1`, not the spec's `>= 2` (**F7**). Auros's 2 lines unreachable (**F4**) |
 | VI | Third Act weight | ✅ byte-identical | 6/6 lines; `body.act-three .npc-card-chip { filter: saturate(0.85); }` shipped exactly as written, chip class applied at `card.className@23723` |
-| VII | Brynn's maintenance | ✅ byte-identical | 3 tasks, narration + `brynn_after` exact, ledger panel, zero-balance line. Ledger arithmetic never balanced (**F6**); surplus reachable by 1 copper (**F6**); gate one tier low (**F7**) |
+| VII | Brynn's maintenance | ✅ byte-identical | 3 tasks, narration + `brynn_after` exact, ledger panel, zero-balance line. Ledger arithmetic never balanced (**F6** → §DX-02iq, ASK); surplus **closed 2026-09-03** at exactly 0 (**F6** ✅ §DX-02ew); gate one tier low (**F7**) |
 | VIII | Quiet receipts | ✅ 19/24 reachable | 5 Birka keys have no lookup path; `INV` has no receipt (**F5**) |
 | IX | Pachelbel's code | ✅ byte-identical | 4 rules exact, ungated and public **exactly as the spec asked** — the `→ doc:` comment claiming a Dear Friend gate is the thing that's wrong (**F11**) |
 | X | The Void's First Sign | ❌ | Not shipped, in any form (**F3b**) |
@@ -165,6 +165,10 @@ const balStr = bal < 0 ? bal + ' copper' : bal === 0 ? '0 copper (balanced)' : '
 ```
 
 — which renders that one copper in green. The design's line is off by exactly one, in a report already keeping company with §DOC-02cx's ending that missed by exactly one point.
+
+> **✅ RESOLVED 2026-09-03 (§DX-02ew) for the surplus half, option (b) of three.** The pantry task's shift is **+2**, not +3, so `−8 + 4 + 2 + 2` closes at exactly **0** in **all six task orders** — the offer is `gameDay % 3`, so any of the three can be the one that closes the book. **Two design documents said zero independently** — this section, and `world.md`'s *"all three together bring the balance to exactly 0"* — and the engine already carried a dedicated `0 copper (balanced)` branch for the terminal state, so the evidence settled the call without an author. **The pantry narration went with it:** it asserted *"the balance is still in the red"* unconditionally, which was already false whenever the pantry was the last task done, and a test now forbids any task narration from claiming a sign. Pinned by `src/tests/integration/dx02ew-brynn-ledger-ceiling.test.js` 4/4, which re-derives the model from the tasks' own `action()` closures rather than from the three numbers.
+>
+> **The arithmetic half above was deliberately NOT shipped, and is now `§DX-02iq` (ASK).** This report says the mismatch is *"arguably the correct call for a design lock and is certainly the funnier one"* — which is the honest position, and it is also the reason a grep cannot settle it. Whether Brynn's ledger is wrong in her favour *on purpose* is a fact about who Brynn is, and it wants the author, not a sweep. The F4 measurement spec below now asserts the gap without passing a verdict on it.
 
 ### F7 — two gates open one favor tier below spec
 

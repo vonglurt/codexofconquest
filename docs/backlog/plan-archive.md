@@ -17,6 +17,30 @@
 
 ---
 
+---
+
+## Archived 2026-09-03 — §DX-02ew (Brynn keeps prices fair)
+
+### §DX-02ew — the inn ledger prints +138 under a −8 balance, and reaches surplus a spec forbids (NEW 2026-08-23 during §DOC-02cy, 🟡 ONE DESIGN CALL)
+
+- [x] ✅ SHIPPED 2026-09-03 `PENDING` **§DX-02ew — Brynn's balance sheet does not close, and never did.** 🟡 The panel at `function _nodeHookBirkaBrynnMaintenance(node,@32229` prints `Room nights 235 · Meals 84 · Kitchen staff −45 · Supplies −112 · Repairs −24`, then a `BALANCE` line reading **−8 copper**. `235 + 84 − 45 − 112 − 24 = **+138**`; fixing the third step moves Repairs to −20 and the printed sum to **+142**. The `BALANCE` line is not computed from the lines above it — it renders `S_story.brynLedgerBalance`, a separate field initialised to `-8@23105`. **The lock had the same gap and the implementation reproduced it faithfully**, which is arguably the correct call for a design lock. Brynn's inn is, on its own printed evidence, comfortably profitable and being told otherwise.
+> **The second miss is exact.** §VII promises *"The deficit can be brought to zero but not into surplus — Brynn keeps prices fair."* The three tasks add `+4`, `+2`, `+3` to a `−8` start. Measured through the tasks' own `action()` closures: `−4 → −2 → **+1**`. The engine even has a dedicated branch for the state the design forbids — `bal === 0 ? '0 copper (balanced)' : '+' + bal + ' copper'` — rendering that one copper in green. **A design lock in this same corpus (§DX-02en) missed its best ending by exactly one point; this one misses its promise by exactly one copper.**
+> **THE CALL:** (a) **fix the promise, not the numbers** — change §VII's line to acknowledge a one-copper surplus (zero code); (b) **fix the surplus** — retune one task from +3 to +2 so the ceiling is exactly 0, honoring the lock; (c) **fix the ledger** — make the printed lines sum to the balance, which means re-authoring five figures and losing the joke. **(b) recommended** — one character, and Brynn keeps prices fair. Do **not** do (c) without a design call; the numbers are flavor, not simulation.
+> **Provenance:** §DOC-02cy, finding F6, `docs/lab-reports/lab-report-living-world.md` §VII.
+
+> **Shipped (2026-09-03) — option (b) for the surplus, and (c) deliberately withheld.** The row named one call and the ground showed it was two, with the evidence running out between them.
+>
+> **(b), and it decided itself.** *Restock the kitchen pantry* shifts **+2**, not +3, so `−8 + 4 + 2 + 2` closes at exactly **0**. **Three independent statements of intent, all pre-existing:** §VII's *"the deficit can be brought to zero but not into surplus — Brynn keeps prices fair"*; `world.md`'s *"all three together bring the balance to exactly 0"*; and the engine's own `bal === 0 ? '0 copper (balanced)'` branch, which exists to render a terminal state the code could not reach. Two documents and a code path agreeing is not a guess. **Measured before: `−4 → −2 → +1`. After: `−4 → −2 → 0`, in all six orders** — and all six matter, because the task offered is `` `const taskIdx = (S_story.gameDay || 0) % 3;` `` and any of the three can be the one that closes the book.
+>
+> **A fourth defect the row did not name, found because (b) touches the same object:** the pantry's narration read *"The ledger updates. The balance is still in the red — about five copper less red than before."* It asserts a **sign** the balance may not have — already false today whenever the pantry was played last (`−2 → +1`), and false under (b) too (`−2 → 0`). Re-authored to *"The ledger updates. A small correction, the kind that adds up. Brynn checks the column twice before she believes it."* — no sign, no arithmetic, and it keeps the beat. A test now forbids **any** task narration from claiming where the balance stands, because rotation means none of them can know.
+>
+> **(c) was NOT shipped, and that is the row's own instruction honoured rather than overridden.** *"Do not do (c) without a design call; the numbers are flavor, not simulation."* The lab report's F6 says the gap is *"arguably the correct call for a design lock and is certainly the funnier one"* — it cannot tell authored irony from an unchecked flavour block, and neither can a grep. Whether Brynn's ledger is wrong **in her favour** on purpose is a fact about who Brynn is. **Filed as §DX-02iq (ASK)** at the top of Phase 2 with three options and the note that this is the third time the mismatch has been written up.
+>
+> **The §DOC-02cy measurement spec that pinned the defect now pins the fix, minus the verdict.** `living-world-l44.spec.js`'s F4 case asserted `[-4,-2,1]` and `finalBalance === 1` — written to *prove* the miss, so leaving it green would have meant the miss survived. It asserts `[-4,-2,0]` now, and still asserts the printed lines sum to 138/142 **without saying whether that is wrong**, which is exactly what §DX-02iq is for.
+>
+> **Verified:** `src/tests/integration/dx02ew-brynn-ledger-ceiling.test.js` **4/4** — all six orderings, no partial state overshooting 0, the model re-derived from the tasks' own `action()` closures rather than from the three numbers, the panel rendering `0 copper (balanced)` and never `+1 copper`, Brynn's *"first time in three years"* line firing, and the no-sign-claim rule over every narration string · `living-world-l44.spec.js` **9/9** · **`check:walk` 21/21** · **`npm test` 1,189 passed, exit 0.** `play.html` net **+2 lines**.
+
+
 ## Archived 2026-09-03 — §DX-02et (six strings nobody could read)
 
 ### §DX-02et — six world-progression notes are written into the movement breadcrumb array (NEW 2026-08-23 during §DOC-02cy, 🟡 one reader, ONE DESIGN CALL)

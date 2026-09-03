@@ -585,9 +585,9 @@ Perks persist through NG+. Character sheet shows "Weckmann's Student" badge when
 |------|------|--------------|------|
 | Fix the third step | 0 gp | +4 | `brynThirdStepFixed` |
 | Bring firewood from the market | 2 gp | +2 | `brynFirewoodBrought` |
-| Restock the kitchen pantry | 3 gp | +3 | `brynPantryRestocked` |
+| Restock the kitchen pantry | 3 gp | +2 | `brynPantryRestocked` |
 
-All three together bring the balance to exactly 0. When `brynLedgerBalance >= 0`, a one-time message fires (`_brynLedgerZeroShown`). Each task has a `narration` (player perspective) and a `brynn_after` line. No favorability requirement; tasks are independent of the quest arc.
+All three together bring the balance to exactly 0 — `-8 + 4 + 2 + 2`, in any order — and **never into surplus**, which §VII states as a character fact: *Brynn keeps prices fair*. (§DX-02ew, 2026-09-03: the pantry shift was `+3` and the ceiling was `+1`, which both this line and §VII forbade; pinned by `src/tests/integration/dx02ew-brynn-ledger-ceiling.test.js`.) When `brynLedgerBalance >= 0`, a one-time message fires (`_brynLedgerZeroShown`). Each task has a `narration` (player perspective) and a `brynn_after` line. No favorability requirement; tasks are independent of the quest arc.
 
 **City at Night** (`NIGHT_AMBIENT`) — when `gameDay % 4 >= 2`, each Birka node shows a blue-tinted night ambient paragraph. Different per node.
 

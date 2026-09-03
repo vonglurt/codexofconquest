@@ -97,8 +97,8 @@ test.describe('Layer 44 — Living World', () => {
     expect(out.fav2).toContain("Brynn's fine");
   });
 
-  // ── F4: the ledger does not balance, and can be pushed into surplus ──
-  test('Brynn ledger: printed lines sum to +138 while the balance reads -8; max reachable is +1', async ({ page }) => {
+  // ── F4: the ceiling is a balanced book (§DX-02ew); the printed lines still do not sum to it (§DX-02iq) ──
+  test('Brynn ledger: the balance closes at 0, while the printed lines still sum to +142', async ({ page }) => {
     await seedAndLoad(page, { currentCode: 'TLL', visited: { TLL: true }, gold: 500 });
     await dismissContinue(page);
 
@@ -118,10 +118,11 @@ test.describe('Layer 44 — Living World', () => {
     });
 
     expect(out.taskCount).toBe(3);
-    expect(out.deltas).toEqual([-4, -2, 1]);
-    expect(out.finalBalance).toBe(1);   // spec: "can be brought to zero but not into surplus"
-    // ...and the printed lines never summed to -8 either: they sum to a healthy
-    // surplus, in both states, and always have.
+    expect(out.deltas).toEqual([-4, -2, 0]);
+    expect(out.finalBalance).toBe(0);   // §VII: "can be brought to zero but not into surplus"
+    // ...and the printed lines still do not sum to the balance beneath them, in
+    // either state. Whether that is authored irony or an unchecked flavour block
+    // is the open question (§DX-02iq); this asserts the gap, not a verdict on it.
     expect(out.printedBase).toBe(138);
     expect(out.printedFixed).toBe(142);
   });

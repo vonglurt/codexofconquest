@@ -27613,6 +27613,8 @@ const NPC_ROMANCE_VIGNETTES = { // → doc: docs/mechanics/mechanics-economy.md 
   auros:    "Bruhns reviews her manifests each morning before the city wakes. You have seen it three times now from the street: the candle, the papers, the absolute stillness of someone who is used to carrying things alone. You are going to have to fight her. She is going to have to let you. You do not know, and have stopped pretending to know, whether you are the right person for what comes after.",
 };
 
+// The three shifts sum to the opening deficit exactly: the design's ceiling is a balanced
+// ledger, never a surplus, because Brynn keeps prices fair (§VII / world.md).
 const BRYNN_MAINTENANCE_TASKS = [ // → doc: world.md §Brynn's Maintenance Tasks
   {
     label: 'Fix the third step', cost_gold: 0, flag: 'brynThirdStepFixed',
@@ -27628,8 +27630,8 @@ const BRYNN_MAINTENANCE_TASKS = [ // → doc: world.md §Brynn's Maintenance Tas
   },
   {
     label: 'Restock the kitchen pantry', cost_gold: 3, flag: 'brynPantryRestocked',
-    action: () => { S_story.brynPantryRestocked = true; S_story.brynLedgerBalance = (S_story.brynLedgerBalance || -8) + 3; },
-    narration: "The ledger updates. The balance is still in the red — about five copper less red than before. Small correction. The kind that adds up.",
+    action: () => { S_story.brynPantryRestocked = true; S_story.brynLedgerBalance = (S_story.brynLedgerBalance || -8) + 2; },
+    narration: "The ledger updates. A small correction, the kind that adds up. Brynn checks the column twice before she believes it.",
     brynn_after: "[She looks at the pantry for a moment.] I'll make soup tomorrow."
   }
 ];
