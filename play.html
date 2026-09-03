@@ -34518,6 +34518,28 @@ const NODE_VERBS = [
     label:'📜 Speak with Ori.', btnStyle:'margin-top:4px;',
     bits: [ { kind:'narrative', msg:'Ori: "I was on the Harrow. I\'m the only one who came back."\n\nShe describes what boarded them. Not pirates. Not storm. Something that came from below — "a shape in the water, very large, that didn\'t move like a fish or a whale. It moved like it was looking for something. Then it found the ship."\n\n"I went over the side before it hit. Three weeks on foot to get here. I needed to tell someone."' },
             { kind:'flag_write', set:['tlMissingShipSolved'] } ] },
+  // ── Q-TL-02: Adjutant Vonn at Tilbury — the second `choice` surface in the game (§DX-02fv).
+  //    Vonn's answer is the choice's PROMPT, not a narrative bit ahead of it: the words are the
+  //    context you decide against, so they have to be on screen while the options are. A narrative
+  //    bit would buffer into the driver's message join and land after the pick.
+  //    The `when` guards on the beat's OWN outcome flags, not on the quest status: a verb's
+  //    chain ends in a re-render, and verbs are drawn before storyCheckQuests marks the quest
+  //    complete, so a status-only guard redraws the button live in the same pass. ──
+  { id:'tl-vonn-manifest', group:'tl-vonn', nodes:['TL'],
+    when: st => st.tlLedgerRead && (st.quests || {})['quest_tl_02'] === 'active'
+                && !st.tlEmbargoChallenged && !st.tlEmbargoDismissed,
+    label:'⚖️ Speak with Adjutant Vonn.', btnStyle:'margin-top:6px;',
+    bits: [ { kind:'choice',
+      prompt:'Vonn: "The harbor is closed to non-Conclave vessels under Emergency Trade Protocol 7. I understand this is inconvenient. I can offer you a transit permit for a fee. The fee is fixed by the Conclave. I did not set it."\n\nYou show him the Harrow manifest.\n\nVonn: "Filed under Emergency Trade losses. I see. Thank you for bringing this to my attention. It will be noted."\n\nHe says this in a way that does not suggest he will do anything about it.',
+      options: [
+        { label:'📋 Report to Birka contacts.', bits:[
+          { kind:'flag_write', set:['tlEmbargoChallenged'] },
+          { kind:'reward', gold:150 },
+          { kind:'narrative', msg:'💰 +150gp from a Birka Council liaison. The manifest is on record.' } ] },
+        { label:'— Leave it.', bits:[
+          { kind:'flag_write', set:['tlEmbargoDismissed'] },
+          { kind:'narrative', msg:'You leave the manifest where it is. The harbor stays closed.' } ] },
+      ] } ] },
   // ── Q-VS-02: Yva the broker at TRD — the FIRST price in the game paid through the `cost` leaf
   //    (§VM-01-G4a). Refuse-at-click is the shipped contract, so the verb always renders and says
   //    what it wants; `cost` never contributes to a `when`. ──
@@ -34997,43 +35019,8 @@ function storyRender(node, prefix) {
     _renderNodeVerbs(node, S_story, 'stn-ori');
   }
   if (node.code === 'TL') {
-    const _tqs = S_story.quests || {};
-    // Q-TL-02 Vonn interaction
-    if (S_story.tlLedgerRead && _tqs['quest_tl_02'] === 'active') {
-      const vonnBtn = document.createElement('button');
-      vonnBtn.className = 'inv-use-btn';
-      vonnBtn.textContent = '⚖️ Speak with Adjutant Vonn.';
-      vonnBtn.style.cssText = 'margin-top:6px;';
-      vonnBtn.addEventListener('click', () => {
-        storyMsg('Vonn: "The harbor is closed to non-Conclave vessels under Emergency Trade Protocol 7. I understand this is inconvenient. I can offer you a transit permit for a fee. The fee is fixed by the Conclave. I did not set it."\n\nYou show him the Harrow manifest.\n\nVonn: "Filed under Emergency Trade losses. I see. Thank you for bringing this to my attention. It will be noted."\n\nHe says this in a way that does not suggest he will do anything about it.');
-        const choiceDiv = document.createElement('div');
-        choiceDiv.style.cssText = 'margin-top:6px;display:flex;flex-direction:column;gap:3px;';
-        const repBtn = document.createElement('button');
-        repBtn.className = 'inv-use-btn';
-        repBtn.textContent = '📋 Report to Birka contacts.';
-        repBtn.addEventListener('click', () => {
-          S_story.tlEmbargoChallenged = true;
-          S_story.gold += 150;
-          storyMsg('💰 +150gp from a Birka Council liaison. The manifest is on record.');
-          choiceDiv.remove();
-          storyAutoSave();
-        });
-        const leaveBtn = document.createElement('button');
-        leaveBtn.className = 'inv-use-btn';
-        leaveBtn.textContent = '— Leave it.';
-        leaveBtn.addEventListener('click', () => {
-          S_story.tlEmbargoDismissed = true;
-          storyMsg('You leave the manifest where it is. The harbor stays closed.');
-          choiceDiv.remove();
-          storyAutoSave();
-        });
-        choiceDiv.appendChild(repBtn);
-        choiceDiv.appendChild(leaveBtn);
-        vonnBtn.remove();
-        document.getElementById('story-text-box').insertAdjacentElement('afterend', choiceDiv);
-      });
-      document.getElementById('story-text-box').insertAdjacentElement('afterend', vonnBtn);
-    }
+    // → NODE_VERBS (§DX-02fv)
+    _renderNodeVerbs(node, S_story, 'tl-vonn');
   }
   // ── Layer 55: §XX Visby Underground — VS and GC nodes ──
   if (node.code === 'VS') {

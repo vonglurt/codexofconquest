@@ -232,6 +232,21 @@ complete against §4. **Consequence: `kind:'choice'` has exactly two occurrences
 both at `DUS`** — the opcode this whole report was written around still has one consumer surface, 19
 days on. → **§DX-02fv**.
 
+> **✅ RESOLVED 2026-09-03 (§DX-02fv), option (a) of three.** **TL Vonn is sliced** as
+> `tl-vonn-manifest`/group `tl-vonn`, and `choice` has **two consumer surfaces** now (three entries,
+> three occurrences). Vonn's answer rides in the choice's **`prompt`**, not a `narrative` bit ahead
+> of it: `narrative` buffers into `_uqfRunVerb`'s message join and would land *after* the pick, and
+> the answer is the context you decide against. **The other two ride their asks and are recorded
+> here as blocked, not as done** — the Memory Gate needs §VM-01-G4c-FU ask 3 (a bit that *starts* a
+> ceremonia) and the Prior Carrier needs ask 2 (panel chrome). **So §4 is now complete but for those
+> two, and the §10 status line is true of §10 only** — which is what it always said and what this
+> finding was about. **Found in the slicing, and it generalises past this beat:** a verb's chain ends
+> in a re-render, and `_renderNodeVerbs` draws before `storyCheckQuests` marks a quest complete, so a
+> `when` guarded on quest *status* alone redraws its own button live in the same pass — measured
+> re-clickable for a second +150gp. Every other migrated verb already guards on its own outcome flag
+> (`!st.tlMissingShipSolved`, `!st.vsWeaponsFound`, `!st.s49SweelinckDelivered`); this one now does
+> too. Pinned by `src/tests/integration/dx02fv-tl-vonn-choice.test.js` 5/5.
+
 **N4 — the `favor` correction is right, and its stated reason is wrong.** §12⅞ recorded: *"`add:1`
 would have **lowered** a favor already at 2."* `function _setNpcFavor(key, level)@23463` opens
 `if (level <= prev) return;` — **it cannot lower anything**. And the `favor` handler's `add` path
@@ -302,9 +317,10 @@ about the numbers it takes from the file and casual about the ones it takes from
 
 ## 9. Defects → BACKLOG
 
-- **§DX-02fv 🟡** — the three unsliced D2 surfaces (Memory Gate · Prior Carrier · TL Vonn), and the
-  status line that calls the plan COMPLETE without them. One design call: slice them, or record them
-  as deliberately-inline with a reason.
+- **§DX-02fv 🟡 ✅ SHIPPED 2026-09-03** — the three unsliced D2 surfaces (Memory Gate · Prior
+  Carrier · TL Vonn), and the status line that calls the plan COMPLETE without them. **Option (a):**
+  TL Vonn sliced as `choice`'s second consumer surface; the other two recorded as blocked behind
+  §VM-01-G4c-FU asks 3 and 2 respectively. See the resolution note in §N3 above.
 - **§DX-02fw 🟢** — the wrong `favor` rationale in the shipped comment at `play.html` l. 34361
   (and §12⅞ of this report, corrected here). Keep `set:1`; fix the reason.
 - **§VM-01-G4c-FU** — ask 3 amended in place: the second-consumer bar is already met (N5), and the

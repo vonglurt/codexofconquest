@@ -215,7 +215,7 @@ through the `hbBtn.remove()` that ends the handler).
 Instrument 8 verdict: **wrong the day it was written.**
 
 Consequence: `tlLedgerRead` is permanently `false`, so `quest_tl_02`'s gate never opens, Vonn's block
-(`S_story.tlLedgerRead && _tqs['quest_tl_02'] === 'active'@34824`) never renders, `quest_tl_03` is
+(`id:'tl-vonn-manifest'@34528`) never renders, `quest_tl_03` is
 never unlocked, Ori's verb never renders, Rennau never advances past Neutral, and Vonn never appears
 in the NPC row (`TL:S_story.tlLedgerRead ? ['vonn'] : []@35128`). **The Harrow Manifest is obtainable;
 the arc is not.**
