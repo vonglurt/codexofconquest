@@ -23173,8 +23173,8 @@ const _S_DEFAULTS = () => ({
   fav_corelli: 0, corelli_purchase_count: 0, corelli_encounter_count: 0, corelliRevelationDelivered: false,
   hour: 0,  // time-of-day clock 0-23; advances per battle (+1) and per sleep (+6)
   // Chronicle — permanent career ledger (never reset) and per-run ledger (reset on respawn)
-  careerStats: { kills:0, deaths:0, dmgDealt:0, dmgReceived:0, sleeps:0, battlesAttempted:0, attacksAttempted:0, attacksHit:0, exitsTaken:0, daysAdventuring:0 },
-  runStats:    { kills:0, deaths:0, dmgDealt:0, dmgReceived:0, sleeps:0, battlesAttempted:0, attacksAttempted:0, attacksHit:0, exitsTaken:0, daysAdventuring:0 },
+  careerStats: { kills:0, deaths:0, dmgDealt:0, dmgReceived:0, sleeps:0, battlesAttempted:0, attacksAttempted:0, attacksHit:0, exitsTaken:0 },
+  runStats:    { kills:0, deaths:0, dmgDealt:0, dmgReceived:0, sleeps:0, battlesAttempted:0, attacksAttempted:0, attacksHit:0, exitsTaken:0 },
   // §DESIGN-03: Ceremonia Roll + Skill Check Quest System
   skillCheckAttempts: {},
   effortXpQuests: {},   // §XP-01: quests that already granted failed-check effort XP (once-per-quest guard)
@@ -23894,7 +23894,6 @@ function _populateGameoverChronicle() {
     ['Damage received',   rs.dmgReceived      || 0],
     ['Exits taken',       rs.exitsTaken       || 0],
     ['Sleeps',            rs.sleeps           || 0],
-    ['Days adventuring',  rs.daysAdventuring  || 0],
   ];
   const hasData = rows.some(([, v]) => typeof v === 'number' ? v > 0 : v !== '—');
   if (!hasData) { el.classList.remove('has-data'); el.innerHTML = ''; return; }
@@ -23942,7 +23941,7 @@ function storyVoidDefeat(type) {
   document.getElementById('story-defeat-modal').classList.add('visible');
 }
 
-const _STAT_ZERO = () => ({ kills:0, deaths:0, dmgDealt:0, dmgReceived:0, sleeps:0, battlesAttempted:0, attacksAttempted:0, attacksHit:0, exitsTaken:0, daysAdventuring:0 });
+const _STAT_ZERO = () => ({ kills:0, deaths:0, dmgDealt:0, dmgReceived:0, sleeps:0, battlesAttempted:0, attacksAttempted:0, attacksHit:0, exitsTaken:0 });
 function _statTally(key, n) {
   if (!S_story.careerStats) S_story.careerStats = _STAT_ZERO();
   if (!S_story.runStats)    S_story.runStats    = _STAT_ZERO();
@@ -24056,6 +24055,7 @@ function storyNewGamePlus() {
   const savedEntry42Text       = S_story.entry42Text || '';
   const savedPriorQuestMinus1  = !!(S_story.questMinusOne);
   const savedPlayerKey         = S_story.playerKey || '';
+  const savedCareerStats       = Object.assign({}, S_story.careerStats || {});
   try { localStorage.removeItem('coc_autosave'); localStorage.removeItem('coc_checkpoint'); } catch(e) {}
   Object.assign(S_story, _S_DEFAULTS());
   S_story.npcFavorability   = savedFavorability;
@@ -24066,6 +24066,7 @@ function storyNewGamePlus() {
   S_story.entry42Text       = savedEntry42Text;
   S_story.priorQuestMinusOne = savedPriorQuestMinus1;
   S_story.playerKey         = savedPlayerKey;
+  S_story.careerStats       = savedCareerStats;
   S_story.active = true;
   S_story.equippedMainWeapon = Object.assign({}, STARTER_POINTY_STICK);
   S_story.equippedWeapon     = Object.assign({}, STARTER_FLINT_DAGGER);
@@ -36385,7 +36386,6 @@ function storyConfirmSleep() {
   // Record sleep
   S_story.sleptAtNodes[nodeCode] = true;
   _statTally('sleeps', 1);
-  _statTally('daysAdventuring', 1);
   S_story.hour = ((S_story.hour || 0) + 6) % 24;
   S_story.hoursElapsed  = (S_story.hoursElapsed  || 0) + 8;
   S_story.hoursSinceSlept = 0;
@@ -37827,9 +37827,8 @@ function storyRenderCharSheet() {
           ['Damage Received',    'dmgReceived'],
           ['Exits Taken',        'exitsTaken'],
           ['Sleeps',             'sleeps'],
-          ['Days Adventuring',   'daysAdventuring'],
         ];
-        const isFirstRun = (cs.deaths || 0) === 0;
+        const isFirstRun = (cs.deaths || 0) === 0 && (S_story.ngPlusRun || 0) === 0;
         return `<div style="display:grid;grid-template-columns:1fr auto auto;gap:2px 8px;font-size:11px;align-items:center">
           <span style="color:#2A3040;font-style:italic"></span>
           <span style="color:#1A4060;font-weight:bold;text-align:right;min-width:52px">This Life</span>

@@ -75,9 +75,9 @@ Before §XLII the game-over screen said gold, level, and *try again*. A player w
 - **Storage.** `careerStats: { kills:0@23147` and its `runStats` twin on the next line, both **inline ten-field literals** in `_S_DEFAULTS()`.
 - **Factory.** `const _STAT_ZERO = () =>@23916` — an arrow const, used by the lazy-init guard and the respawn reset **but not by `_S_DEFAULTS()`**.
 - **Writer.** `function _statTally(key, n) {@23917` increments both ledgers. **Fourteen call sites, and every one of them goes through it** — no direct mutation of either object exists. That contract, which is the report's real architectural claim, holds exactly.
-- **Fields, 10/10 live.** `kills` `deaths` `dmgDealt` `dmgReceived` `sleeps` `battlesAttempted` `attacksAttempted` `attacksHit` `exitsTaken` `daysAdventuring`.
+- **Fields, 10/10 live** at verification; **9 since §CHRON-01 (b), 2026-09-03** — `daysAdventuring` was permanently equal to `sleeps` and is retired. `kills` `deaths` `dmgDealt` `dmgReceived` `sleeps` `battlesAttempted` `attacksAttempted` `attacksHit` `exitsTaken`.
 - **Game-over surface.** `function _populateGameoverChronicle() {@23854` reads `const rs = S_story.runStats || {};@23857`, builds **nine** rows, and gates the div both ways — `el.classList.add('has-data')@23876` on data, `remove` on none, against `#gameover-chronicle.has-data@1722` (`display:block`, default `none`). The div exists at `id="gameover-chronicle"@5030` and `function storyGameOver() {@23879` populates it before revealing the modal, which is reached from `hp === 0`. The surface really renders.
-- **Character sheet.** Ten rows, **two columns** — `This Life` (`runStats`) and `All Lives` (`careerStats`), the career column blanked by `const isFirstRun = (cs.deaths || 0) === 0;@37711`.
+- **Character sheet.** Ten rows, **two columns** — `This Life` (`runStats`) and `All Lives` (`careerStats`), the career column blanked by `const isFirstRun@37831`.
 - **Respawn.** `const _survivingCareerStats@23927` copies the career ledger out, reloads the checkpoint, restores it, and zeroes `runStats`. Exactly as specified.
 
 ---
@@ -116,10 +116,10 @@ Legend: **✅** as specified · **±** shipped differently · **✗ NOT SHIPPED*
 | 26 | The ten row labels as tabulated | **3 of 10** match (`Damage dealt`, `Damage received`, `Days adventuring`) | ± |
 | 27 | `has-data` gates visibility | Both directions, plus CSS at `#gameover-chronicle.has-data@1722` | ✅ |
 | 28 | On respawn: career kept, run zeroed | Exact | ✅ |
-| 29 | **On NG+: `careerStats` preserved** | `function storyNewGamePlus() {@24003` preserves six named fields and `careerStats` is not one; `Object.assign(S_story, _S_DEFAULTS())` zeroes it. **False at `cab8865` too** | ⚠️ ✗ → **§CHRON-01** |
+| 29 | **On NG+: `careerStats` preserved** | `function storyNewGamePlus() {@24003` preserved six named fields and `careerStats` was not one; `Object.assign(S_story, _S_DEFAULTS())` zeroed it, **false at `cab8865` too**. **§CHRON-01 ✅ 2026-09-03:** `savedCareerStats` is saved before the reset and restored after, and the sheet's `All Lives` column now shows on any NG+ run | ✅ since §CHRON-01 |
 | 30 | Character sheet shows `careerStats` (not `runStats`) | Shows **both**, `runStats` in the first column, since `cab8865` | ⚠️ |
 | 31 | `daysAdventuring` ≠ `gameDay`, not aliased | Correct — `S_story.gameDay = (S_story.gameDay || 0) + 1;@36254` is a separate counter with its own readers | ✅ |
-| 32 | `sleeps` *"not equivalent to `daysAdventuring`"* | `_statTally('sleeps', 1);@36280` and `_statTally('daysAdventuring', 1);@36281` are adjacent, are each field's **only** writer, and are unconditional — the two fields are **permanently equal**, and the game-over screen prints both | ⚠️ → **§CHRON-01 (b)** |
+| 32 | `sleeps` *"not equivalent to `daysAdventuring`"* | `_statTally('sleeps', 1);@36280` and `_statTally('daysAdventuring', 1);` (retired by §CHRON-01 (b), 2026-09-03) are adjacent, are each field's **only** writer, and are unconditional — the two fields are **permanently equal**, and the game-over screen prints both | ⚠️ → **§CHRON-01 (b)** |
 
 ---
 
@@ -144,7 +144,7 @@ The report's *"What Could Be Better"* section, scored against the commits it was
 
 `careerStats` is the answer to the report's own question *"who are you across everything you have done"*, and its stated justification is NG+: *"a player on their fourth run is a different player than one on their first."* `storyNewGamePlus()` preserves `npcFavorability`, `pitPerks`, `ngPlusRun`, `entry42Written`, `entry42Text` and `questMinusOne`, then calls `Object.assign(S_story, _S_DEFAULTS())`. **`careerStats` is not on that list, so it is zeroed.** This is not rot: the same six-name preserve list is in `cab8865`, the chronicle's own birth commit. It has never worked.
 
-The consequence compounds rather than merely losing data. `ngPlusRun` **is** preserved, so the game knows it is on run four while the ledger says nothing has ever happened. And because the character sheet blanks the career column when `const isFirstRun = (cs.deaths || 0) === 0;@37711`, a zeroed career ledger **also hides itself** — an NG+3 player reads a character sheet byte-identical to a player who has never died. There is no error, no empty column, no zero: the surface silently agrees with the wipe, which is why 79 days of play have not surfaced it.
+The consequence compounds rather than merely losing data. `ngPlusRun` **is** preserved, so the game knows it is on run four while the ledger says nothing has ever happened. And because the character sheet blanks the career column when `const isFirstRun@37831`, a zeroed career ledger **also hides itself** — an NG+3 player reads a character sheet byte-identical to a player who has never died. There is no error, no empty column, no zero: the surface silently agrees with the wipe, which is why 79 days of play have not surfaced it.
 
 Fix is one line in the preserve list, mirroring `savedFavorability`. **No design call** — the report, the field name, and the sheet's own `All Lives` heading all specify the same behaviour.
 
@@ -211,8 +211,8 @@ The report filed one explicit maintenance risk — that hardcoding the 10% disco
 | `#gameover-chronicle.has-data@1722` | Visibility gate |
 | `const _survivingCareerStats@23927` | Respawn preserve — correct |
 | `function storyNewGamePlus() {@24003` | NG+ — **does not preserve `careerStats`** |
-| `const isFirstRun = (cs.deaths || 0) === 0;@37711` | Blanks the career column, hiding the wipe |
-| `_statTally('sleeps', 1);@36280` · `_statTally('daysAdventuring', 1);@36281` | The permanently-equal pair |
+| `const isFirstRun@37831` | Blanks the career column, hiding the wipe |
+| `_statTally('sleeps', 1);@36280` · `_statTally('daysAdventuring', 1);` (retired by §CHRON-01 (b), 2026-09-03) | The permanently-equal pair |
 
 ---
 *© 2026 Paul Richeson — MIT License. See [LICENSE](../LICENSE) for full text.*

@@ -226,7 +226,7 @@ conflated the two writes.
 | Game-over modal, "This Run" | `runStats`, 9 rows + hit rate | `function _populateGameoverChronicle()@23854` |
 | Character sheet, Progression | level-keyed tattoos | `const tattooByLvl = {};@37610` |
 | Character sheet, Deaths | death tattoos | `const deathTattoos = (S_story.tattoos || []).filter@37686` |
-| Character sheet, Chronicle | both ledgers, two columns | `const isFirstRun = (cs.deaths || 0) === 0;@37711` |
+| Character sheet, Chronicle | both ledgers, two columns | `const isFirstRun@37831` |
 | **Inventory sheet, Character Tattoos** | **all tattoos, newest first** | `makeSection('⚔ Character Tattoos');@31247` |
 
 The inventory sheet section is an **undocumented expansion** — the original claimed two render
