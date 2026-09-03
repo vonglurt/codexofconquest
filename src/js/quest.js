@@ -246,6 +246,11 @@ function _gatePred(node, mode) {
 function createQuestRuntime(host) {
   const H = host || {};
   const E = H.effects || {};
+  /* The die roll is the one effect with no host-side no-op: the kernel never falls back to
+     Math.random (§VM-01-B), so a runtime built without effects.rng fails here, by name,
+     rather than in _rollSkill on the first skill check. A consumer that never rolls injects
+     a stub that throws (check-gate-parity.js). */
+  if (typeof E.rng !== 'function') throw new TypeError('createQuestRuntime: effects.rng is required — inject the seeded stream, or a stub that throws if a roll is reached');
   const S = () => (typeof H.getState === 'function' ? H.getState() : undefined);
   const rt = {
     SCHEMA_VERSION,

@@ -94,7 +94,8 @@ test.describe('§VM-01-F — gate expression AST', () => {
       let cur = {}, curNode = null, curKind = 'activate';
       const rt = createQuestRuntime({
         getState: () => cur,
-        effects: { getQuest: id => (curKind === 'complete' ? { id, completion: curNode } : { id, gate: curNode }) },
+        effects: { getQuest: id => (curKind === 'complete' ? { id, completion: curNode } : { id, gate: curNode }),
+                   rng: () => { throw new Error('gate evaluation must never roll'); } },   // §DX-02dw
       });
       const kEval = (kind, node, st) => { cur = st; curKind = kind; curNode = node; return kind === 'complete' ? rt.canComplete('q') : rt.canActivate('q'); };
 
@@ -128,7 +129,7 @@ test.describe('§VM-01-F — gate expression AST', () => {
     await page.goto('/play.html');
     const r = await page.evaluate(() => {
       const q = QUEST_DB['quest_wm_01'];
-      const evalC = st => createQuestRuntime({ getState: () => st, effects: { getQuest: () => q } }).canComplete('quest_wm_01');
+      const evalC = st => createQuestRuntime({ getState: () => st, effects: { getQuest: () => q, rng: () => { throw new Error('gate evaluation must never roll'); } } }).canComplete('quest_wm_01');
       const seals = n => ({ inventory: Array.from({ length: n }, () => ({ name: "Scholar Kings' Seal" })) });
       // recursively scan every live gate + completion for the deleted term
       const hasIMA = node => {

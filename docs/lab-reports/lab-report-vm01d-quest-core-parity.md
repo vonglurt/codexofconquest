@@ -78,7 +78,7 @@ Five instruments, in order:
 | D2 | *"258-line engine"* | the region its own anchors bracket is **260** lines (249 non-blank) | ❌ off by 2 |
 | D3 | `S_story` *"gates ×~30"* | **40** in the two gates, **50** in the whole literal | ❌ understated |
 | D4 | *"`check:quest` in `npm run check:walk`"* | shipped as **`check:questparity`** | ❌ name |
-| D5 | *"a `Math.random()` fallback exists … for a server that injects no rng"* | **no fallback exists**; `E.rng()` is called unguarded | ❌ **NOT SHIPPED** → §DX-02dw |
+| D5 | *"a `Math.random()` fallback exists … for a server that injects no rng"* | **no fallback exists, by decision** (§DX-02dw, 2026-09-03): `createQuestRuntime` throws a `TypeError` naming `effects.rng` when it is absent | ✅ corrected — the contract is loud, not lenient |
 | D6 | *"the first consumer is … §VM-01-E's static gate walker"* | E requires the kernel and **never calls it**; §VM-01-F is the real first consumer | ⚠ half → §DX-02dx |
 | D7 | *"server authoritative over quest state"* | `src/js/wbapi-server.js` still does not `require('./quest')`, 30 days on | ⚠ open debt |
 | D8 | *"286 passed / 17 env-quirk failures = the A/B/C env baseline"* | arithmetic **correct** (286+17 = 303 = the real suite); the **baseline** was retired 7 h 28 min later | ⚠ see below |
@@ -93,6 +93,8 @@ Five instruments, in order:
 §4 states the kernel keeps *"a `Math.random()` fallback … only for a server that injects no rng."* There is no such fallback, at ship or at HEAD. The kernel contains **zero** occurrences of `Math.random()` — which is *better* than advertised for reproducibility — but `const d20  = Math.ceil(E.rng() * 20)@22249` calls the injected effect **bare**, and it is the **only** unguarded effect call among **13**. Every sibling is defended: `E.getQuest ? …`, `if (E.checkLevelUp)`, `if (E.mint)`, `if (E.preBattle)`, `mission_bit(bit, ctx)@22304` even carries an explicit env fallback.
 
 This is not hypothetical. `src/scripts/check-gate-parity.js:const rt = Q.createQuestRuntime@32` — a **shipped, green, in-`check:walk` consumer** — builds a runtime with `effects: { getQuest }` and no `rng`. It survives only because gate evaluation never reaches `_rollSkill`. It is one `skill_check` walk away from a `TypeError`. Filed **§DX-02dw**.
+
+> **Closed 2026-09-03 (§DX-02dw), branch (b):** the fallback stays unwritten on purpose — a silent default RNG in a kernel built for replay would be worse than a crash — and the contract is made loud instead: `createQuestRuntime` throws `TypeError: createQuestRuntime: effects.rng is required …` at construction. `check-gate-parity.js` now injects a stub that throws *"gate evaluation must never roll"*, which is the statement its survival depended on. Pinned by an eighth `uqf-quest-core` test; `check:questparity` re-inlined.
 
 ### D6 — the prediction that landed in the wrong file
 

@@ -29,7 +29,10 @@ const ok = (c, m) => { if (c) pass++; else { fail++; console.error('  ✗ FAIL:'
 // call; getState returns the scratch state, getQuest returns the one quest).
 function kernel(kind, gateObj, st) {
   const q = kind === 'complete' ? { id: 'q', completion: gateObj } : { id: 'q', gate: gateObj };
-  const rt = Q.createQuestRuntime({ getState: () => st, effects: { getQuest: () => q } });
+  const rt = Q.createQuestRuntime({ getState: () => st, effects: {
+    getQuest: () => q,
+    rng: () => { throw new Error('gate evaluation must never roll'); },   // §DX-02dw — the kernel requires rng; a gate walk has no business reaching it
+  } });
   return kind === 'complete' ? rt.canComplete('q') : rt.canActivate('q');
 }
 

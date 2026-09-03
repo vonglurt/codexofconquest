@@ -53,6 +53,19 @@ test.describe('§VM-01-D — QUEST:CORE runs headless in Node', () => {
     expect(bad.errors.join(' ')).toContain('Unknown bit kind: nope');
   });
 
+  // §DX-02dw — the die roll is the one effect with no host-side no-op, so its absence is
+  // refused at construction, by name, rather than discovered in _rollSkill.
+  test('createQuestRuntime refuses a host that injects no rng, and names the field', () => {
+    expect(() => Q.createQuestRuntime({ getState: () => ({}), effects: { getQuest: () => null } }))
+      .toThrow(/effects\.rng is required/);
+    expect(() => Q.createQuestRuntime({ getState: () => ({}), effects: {} })).toThrow(TypeError);
+    expect(() => Q.createQuestRuntime({ getState: () => ({}), effects: { rng: () => 0.5 } })).not.toThrow();
+    // a throwing stub satisfies the contract and only fires if a roll is actually reached
+    const rt = Q.createQuestRuntime({ getState: () => ({ quests: {} }), effects: { getQuest: () => ({ gate: {} }), rng: () => { throw new Error('rolled'); } } });
+    expect(rt.canActivate('q')).toBe(true);
+    expect(() => rt._rollSkill('wis')).toThrow(/rolled/);
+  });
+
   // 2. Gates evaluate against the INJECTED state (getState), not a global.
   test('canActivate / canComplete read the injected state', () => {
     const { rt, state } = makeRuntime({
