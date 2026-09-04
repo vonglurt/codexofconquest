@@ -448,4 +448,4 @@ Companion technical paper: `ieee-paper-cell-grid-navigation.md` (this repo) — 
 ---
 
 *© 2026 Paul Richeson — MIT License.*
-*Correspondence: Paul Richeson*
+*Correspondence: [vonglurt on GitHub](https://github.com/vonglurt)*

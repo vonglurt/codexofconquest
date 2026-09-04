@@ -531,4 +531,4 @@ The architecture is well-suited to any text-based role-playing game that require
 ---
 
 *© 2026 Paul Richeson — MIT License.*  
-*Correspondence: Paul Richeson*
+*Correspondence: [vonglurt on GitHub](https://github.com/vonglurt)*

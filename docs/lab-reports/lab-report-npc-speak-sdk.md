@@ -2,7 +2,7 @@
 
 # Dynamic NPC Speech Generation via the Anthropic Claude SDK: A First Exploration in Lightweight Character Instantiation
 
-**Paul Richeson** — Paul Richeson — CodexOfConquest.com
+**Paul Richeson** — CodexOfConquest.com
 **Original draft:** 2026-06-05 · **Verified against live source:** 2026-08-12 (§DOC-02ac)
 
 *Filed to `docs/lab-reports/lab-report-npc-speak-sdk.md`. Original peer review: "this document, on its second read-through, which it found acceptable." That review has now been repeated by a less agreeable party.*

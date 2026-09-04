@@ -3,8 +3,8 @@
 
 ## Reporting a vulnerability
 
-Email **Paul Richeson** with `[codexofconquest]` in the subject. Please do not
-open a public issue for anything exploitable. Expect an acknowledgement within
+Use [GitHub's private vulnerability reporting](https://github.com/vonglurt/codexofconquest/security/advisories/new).
+Please do not open a public issue for anything exploitable. Expect an acknowledgement within
 about a week; this is a personal project, not a staffed one.
 
 ## What is actually exposed
