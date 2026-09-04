@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 // SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson
-// Copyright (c) 2026 Paul Richeson <paulr@sdf.org> — CodexOfConquest.com
+// Copyright (c) 2026 Paul Richeson — CodexOfConquest.com
 // ============================================================
 // wbapi-server.js — Codex of Conquest World Builder API Server
-// MIT License — Copyright (c) 2026 paulr@sdf.org
+// MIT License — Copyright (c) 2026 Paul Richeson
 // SPDX-License-Identifier: MIT
 // ============================================================
 'use strict';
@@ -1977,7 +1977,7 @@ async function route(req, res) {
           '  Run:  GET /api/help/workflow  for the common search→inspect→edit cycle.',
           '',
           `Server: ${b}`,
-          'Source: paulr@sdf.org — MIT License',
+          'Source: Paul Richeson — MIT License',
         ].join('\n'),
       },
 
@@ -11527,7 +11527,7 @@ server.listen(PORT, BIND_ADDR, () => {
   const line = '═'.repeat(60);
   console.log(`\n${C.bold}${C.magenta}${line}${C.reset}`);
   console.log(`${C.bold}  WBAPI Server  —  http://localhost:${PORT}/api${C.reset}`);
-  console.log(`${C.dim}  paulr@sdf.org  —  MIT License  —  Public Domain${C.reset}`);
+  console.log(`${C.dim}  Paul Richeson  —  MIT License  —  Public Domain${C.reset}`);
   console.log(`${C.magenta}${line}${C.reset}`);
   console.log(`  Game file: ${C.cyan}${GAME_FILE}${C.reset}`);
   console.log(`  Log file:  ${C.cyan}${LOG_FILE}${C.reset}`);

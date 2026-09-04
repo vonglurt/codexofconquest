@@ -22,7 +22,7 @@
   "bugs": {
     "url": "https://github.com/vonglurt/codexofconquest/issues"
   },
-  "author": "Paul Richeson <paulr@sdf.org>",
+  "author": "Paul Richeson",
   "license": "MIT",
   "private": true,
   "engines": {

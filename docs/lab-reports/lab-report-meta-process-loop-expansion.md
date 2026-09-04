@@ -5,7 +5,7 @@
 **Original:** CodexOfConquest.com design session, 2026-05-26 · **Verified against HEAD:** 2026-08-12 (§DOC-02x)
 **Own commit:** `8abc606` (2026-05-26 19:57) — 19,378 lines · HEAD 38,712
 **Classification:** Design methodology / process engineering
-**License:** MIT — CodexOfConquest.com — Copyright (c) 2026
+**License:** MIT — CodexOfConquest.com — Copyright (c) 2026 Paul Richeson
 
 ---
 

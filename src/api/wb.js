@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson
-// Copyright (c) 2026 Paul Richeson <paulr@sdf.org> — CodexOfConquest.com
+// Copyright (c) 2026 Paul Richeson — CodexOfConquest.com
 'use strict';
 // api/wb.js — Codex of Conquest WBAPI CLI wrapper
 // SDK-pattern queue with retry/backoff; Claude AI assist via --ai

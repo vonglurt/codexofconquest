@@ -97,7 +97,7 @@ const unresolved = legacy.filter(l => !l.live);
 // ── render ────────────────────────────────────────────────────────────────────
 const esc = s => String(s).replace(/\|/g, '\\|');
 const lines = [];
-lines.push('<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 paulr@sdf.org -->');
+lines.push('<!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson -->');
 lines.push('<!-- GENERATED FILE — do not hand-edit. Regenerate with: npm run nodes  (scripts/node-index.js, §AUDIT-03l) -->');
 lines.push('# NODE INDEX — the live `NODE_MAP`');
 lines.push('');

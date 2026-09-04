@@ -2,7 +2,7 @@
 # Presence Without Consensus: Synchronization, Discovery, and Bootstrap in a Single-File Multiplayer World
 
 **CodexOfConquest Lab Report — §MESH-01 architecture retrospective**
-*paulr@sdf.org · written 2026-07-02 · amended 2026-07-06 · descriptive (shipped behaviour as of harness 75 / commit `9dd029b`)*
+*Paul Richeson · written 2026-07-02 · amended 2026-07-06 · descriptive (shipped behaviour as of harness 75 / commit `9dd029b`)*
 *Companion: [lab-report-mesh-multiuser.md](lab-report-mesh-multiuser.md) — the design-lock document this report narrates.*
 
 > **§DOC-02bv verification stamp (2026-08-17).** Every symbol, constant, excerpt, evaluation figure

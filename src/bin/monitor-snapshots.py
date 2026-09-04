@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson
 """
 Monitor-Snapshots  —  TUI monitor for codexofconquest snapshot archiving.
-paulr@sdf.org  MIT License
+Paul Richeson  MIT License
 
 Watches for new play-YYYYMMDD-HHMMSS.html files, waits until all
 file handles close (lsof), shows a scrollable unified diff between
@@ -56,8 +56,8 @@ SETTLE      = 0.0   # grace seconds after lsof shows no handles
 POLL        = 0.0   # directory scan interval
 
 _TITLE     = "Monitor-Snapshots"
-_COPYRIGHT = "paulr@sdf.org MIT License"
-_COPY_MED  = "paulr@sdf.org ..."
+_COPYRIGHT = "Paul Richeson MIT License"
+_COPY_MED  = "Paul Richeson ..."
 
 
 # ── file-close helpers ───────────────────────────────────────────────────────

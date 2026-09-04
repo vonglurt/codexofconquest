@@ -7,7 +7,7 @@
 **Original:** CodexOfConquest.com design session, 2026-05-25 · **Verified against HEAD:** 2026-08-12 (§DOC-02y)
 **Ship commit:** `43610d3` (2026-05-25 07:06) *"Layers 63–74: complete Tier 1 implementation"*
 **Report's own tree:** `585be8f`…`0a131f5` (2026-05-25 13:12–13:35) — all four cited line numbers exact
-**License:** MIT — CodexOfConquest.com — Copyright (c) 2026
+**License:** MIT — CodexOfConquest.com — Copyright (c) 2026 Paul Richeson
 
 ---
 

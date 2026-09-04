@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson
-// Copyright (c) 2026 Paul Richeson <paulr@sdf.org> — CodexOfConquest.com
+// Copyright (c) 2026 Paul Richeson — CodexOfConquest.com
 // layout-solve.js — exact constraint-propagation grid layout for N/E/S/W networks
 //
 // Springs are wrong for orthogonal grids: they converge to ~1-unit off-axis

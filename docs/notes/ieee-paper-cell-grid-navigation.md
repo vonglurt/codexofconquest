@@ -4,7 +4,7 @@
 
 **Paul Richeson**  
 *CodexOfConquest.com · Independent Game Research*  
-*paulr@sdf.org*
+*Paul Richeson*
 
 ---
 
@@ -531,4 +531,4 @@ The architecture is well-suited to any text-based role-playing game that require
 ---
 
 *© 2026 Paul Richeson — MIT License.*  
-*Correspondence: paulr@sdf.org*
+*Correspondence: Paul Richeson*

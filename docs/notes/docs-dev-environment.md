@@ -173,7 +173,7 @@ Running `python3 monitor-snapshots.py` does everything:
 ### TUI layout
 
 ```
-┌─ Monitor-Snapshots ──────────────────────── paulr@sdf.org ─┐
+┌─ Monitor-Snapshots ──────────────────────── Paul Richeson ─┐
 │ ⏱ 00:12:34   7 patched   watching…                                     │
 │ ● server pid 41203                                                      │
 │ ← play-20260610-144000.html                                      │

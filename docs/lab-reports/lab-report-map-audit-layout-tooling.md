@@ -2,7 +2,7 @@
 
 # Lab Report: Map Audit, Grid Layout Solver, and Tooling Infrastructure
 
-**Author:** Claude (Sonnet 4.6) + paulr@sdf.org
+**Author:** Claude (Sonnet 4.6) + Paul Richeson
 **Original:** 2026-06-04 / 2026-06-05 · §11 appended 2026-06-09
 **Verified & rewritten:** 2026-08-13 (§DOC-02av) — 448 → this
 **Classification:** Engineering / Developer Tooling / Map Graph Validation

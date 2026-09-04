@@ -917,7 +917,7 @@ This rule applies to `docs/api/api-data-audit.md`, `plan-archive.md §TTS`, and 
 
 *Last updated: 2026-07-02*
 *Codebase: `play.html` · 37,950 lines · Layers 0–104 complete · 416 nodes · 398 monsters · ~2,848 quests · geo-cell navigation (§CELL + §WALK + §NAV-01 roads/rooms/auto-travel, complete) · §ARCH-01 UQF ✅ CLOSED · §MESH-01 core + full gameplay ladder f–j (ledger trades incl. cross-origin, PvP duels) · all jump-travel removed (§CELL-13 re-applied 2026-07-03)*
-*MIT License — CodexOfConquest.com — Copyright (c) 2026 — Free to use, modify, and share.*
+*MIT License — CodexOfConquest.com — Copyright (c) 2026 Paul Richeson — Free to use, modify, and share.*
 
 ---
 *© 2026 Paul Richeson — MIT License. See [LICENSE](../../LICENSE) for full text.*

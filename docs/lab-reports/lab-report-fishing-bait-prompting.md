@@ -4,7 +4,7 @@
 
 **Original:** CodexOfConquest.com development session, 2026-05-24 · **Verified against HEAD:** 2026-08-12 (§DOC-02n)
 **Subject:** `play.html` — single-file browser D&D RPG (14,377 lines at authoring; 38,712 at HEAD)
-**License:** MIT — CodexOfConquest.com — Copyright (c) 2026
+**License:** MIT — CodexOfConquest.com — Copyright (c) 2026 Paul Richeson
 
 ---
 
@@ -312,7 +312,7 @@ carries `catch` (cast-roll bonus), `type` (rarity-roll bonus), `advantage`, and 
 
 *End of report.*
 
-**MIT License — CodexOfConquest.com — Copyright (c) 2026 — Free to use, modify, and share.**
+**MIT License — CodexOfConquest.com — Copyright (c) 2026 Paul Richeson — Free to use, modify, and share.**
 
 ---
 *© 2026 Paul Richeson — MIT License. See [LICENSE](../LICENSE) for full text.*

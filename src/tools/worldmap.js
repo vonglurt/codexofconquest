@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 // SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson
-// Copyright (c) 2026 Paul Richeson <paulr@sdf.org> — CodexOfConquest.com
+// Copyright (c) 2026 Paul Richeson — CodexOfConquest.com
 // worldmap.js — terminal world map of major cities + geographic coordinate seeding
 //
 // Draws an ASCII map of the game world oriented by real-world lat/long,

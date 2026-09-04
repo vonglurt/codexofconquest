@@ -5,7 +5,7 @@
 **Original:** CodexOfConquest.com development session, 2026-05-25 · **Verified against HEAD:** 2026-08-12 (§DOC-02w)
 **Subject:** `play.html` — single-file browser D&D RPG (17,631 lines at authoring; 38,712 at HEAD)
 **Ship commit:** `3f11e5b` (2026-05-24 22:35) *"implement Layer 48: Luck — The Seventh Stat"*
-**License:** MIT — CodexOfConquest.com — Copyright (c) 2026
+**License:** MIT — CodexOfConquest.com — Copyright (c) 2026 Paul Richeson
 
 ---
 

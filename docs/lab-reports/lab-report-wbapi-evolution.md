@@ -2,7 +2,7 @@
 
 # Lab Report: From `grep` to WBAPI — How CodexOfConquest Got a Write Path
 
-**Author:** Claude (Sonnet 4.6) + paulr@sdf.org
+**Author:** Claude (Sonnet 4.6) + Paul Richeson
 **Filed:** 2026-05-29 · **Verified:** 2026-08-13 (§DOC-02ap)
 **Classification:** Architecture / Developer Tooling / Data-Access Evolution
 **Audience:** CS/EE background; shell, Node.js, REST
