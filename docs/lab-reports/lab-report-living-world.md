@@ -54,7 +54,7 @@ The eleven subsystems: **(II)** the off-screen character · **(III)** world prog
 | § | Subsystem | Shipped? | Delta |
 |---|---|---|---|
 | II | Gigault, off-screen | ⚠️ half | 3 stall strings byte-identical and cycling. **NOT SHIPPED: the two NPC lines that name her** (**F1**). Renders at `LLA` — *The Rough Bar*, not a market |
-| III | World progression | ✅ | 6 events live; **6 of 6 can fire** — `weckmann_class` asks `_npcFavor('crov') >= 3`, and crov's ceiling of **2** (§DOC-02cz F1) was lifted to 3 by §DX-02fb ✅ 2026-08-23. **rendering shipped 2026-09-03** — `S_story.worldLog` + the inventory panel under `.journal-entry.world` (**F2** ✅ §DX-02et); flag polarity collides with Layer 69 (**F8**); fires on sleep, not visit (**F9**) |
+| III | World progression | ✅ | 6 events live; **6 of 6 can fire** — `weckmann_class` asks `_npcFavor('crov') >= 3`, and crov's ceiling of **2** (§DOC-02cz F1) was lifted to 3 by §DX-02fb ✅ 2026-08-23. **rendering shipped 2026-09-03** — `S_story.worldLog` + the inventory panel under `.journal-entry.world` (**F2** ✅ §DX-02et); flag polarity collided with Layer 69 (**F8** ✅ §DX-02ex 2026-09-05 — `couperiDebtReleased` split out); fires on sleep, not visit (**F9**) |
 | IV | Map warmth | ✅ | All five tiers exact (`#222`/`#555`/`#5a4a3a`/`#6a5a3a`/`#8a6a3a`/`#3a7a5a`). Spec's dead `warmth = fav * 20` line correctly dropped (**F10**). EB green is ending-map-only in practice |
 | V | Corridor farewells | ✅ 16/18 | Route lookup the spec punted on was **finished** by the implementer (**F10**). Threshold is `fav >= 1`, not the spec's `>= 2` (**F7**). Auros's 2 lines unreachable (**F4**) |
 | VI | Third Act weight | ✅ byte-identical | 6/6 lines; `body.act-three .npc-card-chip { filter: saturate(0.85); }` shipped exactly as written, chip class applied at `card.className@23723` |
@@ -191,6 +191,12 @@ if (npcKey === 'quill' && S_story.couperiDebtDegraded) { /* injects the release 
 ```
 
 A player who reaches Act IV having **never started** Quill's quest triggers Layer 44's writer, and Quill then philosophises at them about how *"a debt that has done its work becomes just a number. That's when you can release it"* — about a debt they left untouched. The spec's own intended line for this state was quieter and correct: *"The number is a number now. I don't look at it anymore."*
+
+> **✅ RESOLVED 2026-09-05 (§DX-02ex).** The flag is two flags. `couperiDebtDegraded` keeps Layer 44's meaning — *the quest was never taken and the debt got worse* — and `couperiDebtReleased`, new in `_S_DEFAULTS()`, carries Layer 69 Beat 3's. Both epilogue lines and Beat 3's own guard read the new one; the dialogue injection branches on it, and **the neglect branch speaks the line this report says it should**, which is authored and was never reachable: S30, *"The Bard's Debt as Living System"* — *"by Act V, the counter is so large that Quill's impartial dialogue changes: 'The number is a number now. I don't look at it anymore.'"*
+>
+> **The collision had a second victim this report did not name.** Beat 3 guarded on `!couperiDebtDegraded`, so a player who let the debt degrade in Act IV and *then* finished the arc could never reach Beat 3 at all — the scene was suppressed by the other writer's flag, and the epilogue then paid them the resolved line for a scene that never played. Splitting the flag makes that run reachable.
+>
+> **Saves are migrated, not blanket-mapped.** `_splitCouperiDebtMeaning()` runs on both load paths, and `quillQuestComplete` is what tells the two meanings apart: only Layer 69 could have set the merged flag while it was true, so a finished save becomes released and an abandoned one keeps the neglect meaning. Pinned by `src/tests/integration/dx02ex-couperi-debt.test.js`.
 
 ### F9 — §III's table and §III's code disagreed, and a third thing shipped
 

@@ -23124,7 +23124,7 @@ const _S_DEFAULTS = () => ({
   hoursElapsed: 0, hoursSinceSlept: 0,
   playerR: 0, playerC: 0,   // §CELL-03: current grid position
   visitedCells: {},          // §CELL-04: "r,c" → true — all cells stepped on (used by §CELL-10 minimap)
-  gameDay: 0, couperiDebtDegraded: false, worldEventsFired: [], worldLog: [],
+  gameDay: 0, couperiDebtDegraded: false, couperiDebtReleased: false, worldEventsFired: [], worldLog: [],
   brynThirdStepFixed: false, brynFirewoodBrought: false, brynPantryRestocked: false,
   brynLedgerBalance: -8,
   brynnsJournalRead: false, pachelbelPaidBack: false, quillQuestComplete: false,
@@ -23602,11 +23602,13 @@ function _getNPCDialogue(npcKey) {
     S_story.yaelOnboardingSeen = true;
     return { quote: d.impartial[0], meta: d.meta, fav };
   }
-  // L44-E / Layer 69: Quill debt degradation — inject distilled lesson into impartial pool
-  if (npcKey === 'quill' && S_story.couperiDebtDegraded) {
-    const lessonLine = '"Elder Couperin wrote \'just a number\' on the original debt notice. Not minimizing. Describing. A debt that has done its work becomes just a number. That\'s when you can release it."';
-    if (!pool.includes(lessonLine)) {
-      pool = [...pool, lessonLine];
+  // L44-E / Layer 69 / S30 — the debt Quill released, and the debt he stopped looking at
+  if (npcKey === 'quill' && (S_story.couperiDebtReleased || S_story.couperiDebtDegraded)) {
+    const debtLine = S_story.couperiDebtReleased
+      ? '"Elder Couperin wrote \'just a number\' on the original debt notice. Not minimizing. Describing. A debt that has done its work becomes just a number. That\'s when you can release it."'
+      : '"The number is a number now. I don\'t look at it anymore."';
+    if (!pool.includes(debtLine)) {
+      pool = [...pool, debtLine];
     }
   }
   // L44-J: Act III weight injection — one-time per NPC at Friendly+
@@ -23856,6 +23858,15 @@ function _splitWorldNotesFromTrail() {
   S_story.worldLog = [...notes.map(e => ({ text: e.text, day: e.day || 1 })), ...(S_story.worldLog || [])];
 }
 
+// Old saves carry both meanings in `couperiDebtDegraded`; only Layer 69's writer could set it while `quillQuestComplete` was true.
+function _splitCouperiDebtMeaning() {
+  if (S_story.couperiDebtReleased) return;
+  if (S_story.couperiDebtDegraded && S_story.quillQuestComplete) {
+    S_story.couperiDebtReleased = true;
+    S_story.couperiDebtDegraded = false;
+  }
+}
+
 function storyLoadSave(key) {
   try {
     const raw = localStorage.getItem(key);
@@ -23864,6 +23875,7 @@ function storyLoadSave(key) {
     // visitedCells) must not leave it undefined — cellMove crashed on such saves.
     Object.assign(S_story, _S_DEFAULTS(), JSON.parse(raw));
     _splitWorldNotesFromTrail();
+    _splitCouperiDebtMeaning();
     return true;
   } catch(e) { return false; }
 }
@@ -23881,6 +23893,7 @@ function storyCheckContinue() {
     if (save.hp === 0) {
       Object.assign(S_story, _S_DEFAULTS(), save);
       _splitWorldNotesFromTrail();
+      _splitCouperiDebtMeaning();
       const cpNode = NODE_MAP[S_story.checkpointNode] || NODE_MAP['LHR'];
       document.getElementById('gameover-cp').textContent = 'Last checkpoint: ' + (cpNode.label.split(' — ')[0]);
       _populateGameoverChronicle();
@@ -27136,7 +27149,7 @@ He closes the case.
 
 "Forty gold. And thank you."`;
 
-const S34_QUILL_BEAT3 = // → doc: world.md §Quill's Arc (Beat 3: debt released; couperiDebtDegraded = true)
+const S34_QUILL_BEAT3 = // → doc: world.md §Quill's Arc (Beat 3: debt released; couperiDebtReleased = true)
 `The borrowed instrument is gone. Quill has his lute.
 
 He's playing something quiet when you arrive — not performing, just playing. The tavern is half-empty or half-full, depending on how you count.
@@ -28220,10 +28233,10 @@ const ARC_EPILOGUE_CONDITIONS = [ // → doc: story.md §Epilogue (Layer 71; con
   { cond: () => !!(S_story.undercitySurveyDelivered),
     line: "Auros has the Year Ten pressure data. The sectors match her Year Twelve projections. She's drafting a unified report." },
   // §XXXIV — Couperin Ledger (arc complete + debt resolved)
-  { cond: () => !!(S_story.quillQuestComplete && S_story.couperiDebtDegraded),
+  { cond: () => !!(S_story.quillQuestComplete && S_story.couperiDebtReleased),
     line: "Quill plays the family theme on request. He calls it 'the one that came back.' The lute is still in tune." },
   // §XXXIV — Couperin Ledger (arc complete, debt not yet resolved)
-  { cond: () => !!(S_story.quillQuestComplete && !S_story.couperiDebtDegraded),
+  { cond: () => !!(S_story.quillQuestComplete && !S_story.couperiDebtReleased),
     line: "Quill has the lute. He knows what a number means. He hasn't found the words for the last part yet." },
   // §XXXV — First Inn Light (choice: keep)
   { cond: () => !!(S_story.brynnLightChoiceMade && S_story.brynnLightKept),
@@ -35473,9 +35486,9 @@ function storyRender(node, prefix) {
     //    handler's storyCheckQuests/storyUpdateStatus/storyAutoSave tail is the re-render the
     //    verb driver ends with — storyRender does all three, in that order, at its own tail.)
     _renderNodeVerbs(node, S_story, 'tll-brynn-firewood');
-    // Layer 69 §XXXIV — Quill Beat 3: The Debt Degradation (checked before Beat 2 so it can't fire same visit)
-    if (node.code === 'MHQ' && S_story.quillQuestComplete && !S_story.couperiDebtDegraded) {
-      S_story.couperiDebtDegraded = true;
+    // Layer 69 §XXXIV — Quill Beat 3: The Debt Released (checked before Beat 2 so it can't fire same visit)
+    if (node.code === 'MHQ' && S_story.quillQuestComplete && !S_story.couperiDebtReleased) {
+      S_story.couperiDebtReleased = true;
       setTimeout(() => storyMsg(S34_QUILL_BEAT3 + '\n\n── The Couperin debt has done its work. ──'), 600);
     }
     // Layer 69 §XXXIV — Quill Beat 2: Couperin's Song (fires first TV visit after lute returned)

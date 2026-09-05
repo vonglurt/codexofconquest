@@ -2589,8 +2589,10 @@ MILEPOINT E2 One-time special injections (checked before pool fallthrough):
                → "He didn't say goodbye…" (once; sets brynRoom6LineDelivered = true)
              • S29 Auros/Froberger theory: if bruhns && fav≥2 && frobergerLastEntryRead && !s29LineDelivered
                → "You found his note…" (once; sets s29LineDelivered = true)
-             • Couperin debt degradation: if couperin && couperiDebtDegraded && fav === 0
-               → injects "The number is a number now…" into impartial pool (persistent, not one-shot)
+             • Couperin debt: if quill && (couperiDebtReleased || couperiDebtDegraded)
+               → appends ONE line to the selected pool (persistent, not one-shot) —
+                 released → "Elder Couperin wrote 'just a number'…" (the L44-E lesson)
+                 degraded → "The number is a number now. I don't look at it anymore." (S30)
 
 MILEPOINT F  _renderNpcCard() builds DOM card
              Whiskey reaction: _checkRoughWhiskeyReaction(key) overrides displayQuote if roughWhiskeyActive
@@ -2839,8 +2841,8 @@ Two S-suggestion systems. Pre-existing flags: `archiveVisited`, `archiveLetterOb
 - `s29LineDelivered` → *"Auros had the complete picture. The structural survey and the tactical theory were filed together. That's new."*
 - `archiveLetterObtained` → *"The archive letter is in Weimar. The footnote that said 'no restriction required' is on record."*
 - `undercitySurveyDelivered` → *"Auros has the Year Ten pressure data. The sectors match her Year Twelve projections. She's drafting a unified report."*
-- `quillQuestComplete && couperiDebtDegraded` → *"Quill plays the family theme on request. He calls it 'the one that came back.' The lute is still in tune."*
-- `quillQuestComplete && !couperiDebtDegraded` → *"Quill has the lute. He knows what a number means. He hasn't found the words for the last part yet."*
+- `quillQuestComplete && couperiDebtReleased` → *"Quill plays the family theme on request. He calls it 'the one that came back.' The lute is still in tune."*
+- `quillQuestComplete && !couperiDebtReleased` → *"Quill has the lute. He knows what a number means. He hasn't found the words for the last part yet."*
 - `brynnLightChoiceMade && brynnLightKept` → *"The lamp at the First Inn is still burning. Brynn checked it this morning."*
 - `brynnLightChoiceMade && !brynnLightKept` → *"The lamp at the First Inn burned down quietly. Brynn says it did its work. She's right."*
 - `brynnKeeperStoryTold && !brynnLightChoiceMade` → *"Brynn never asked what you wanted for the lamp. She kept tending it. It's still burning."*
@@ -2869,15 +2871,15 @@ Two S-suggestion systems. Pre-existing flags: `archiveVisited`, `archiveLetterOb
 
 > ⚠️ **Unreachable at HEAD — §VM-01-G2b (2026-08-04).** Beats 1–3 are live; only the Act VIII `LLA` farewell branch (`actNumber === 8`, `LLA` is `act:1`) never fires. `storyRender` assigns `S_story.actNumber = node.act || 1` on **every** render, and every Birka-region node is `act:1`, so the act leg above can never be satisfied where the block lives. The block itself is intact and now extracted verbatim as `_nodeHookBirkaQuillCouperinFarewell`; re-gating it on a real progression signal is **§VM-01-G2b-FU** (design call), pinned by `uqf-npc-row-hooks.test.js`.
 
-**Trigger chain:** `quills_lute` item in inventory → Quill at `MHQ` (historical `TV`) → `LLA` (historical `BA`) Act VIII farewell branch. No new state flags — all three (`couperiSongReceived`, `couperiDebtDegraded`, `quillQuestComplete`) pre-existed in `_S_DEFAULTS()`.
+**Trigger chain:** `quills_lute` item in inventory → Quill at `MHQ` (historical `TV`) → `LLA` (historical `BA`) Act VIII farewell branch. Three of the four state flags (`couperiSongReceived`, `couperiDebtDegraded`, `quillQuestComplete`) pre-existed in `_S_DEFAULTS()`; `couperiDebtReleased` was split out of `couperiDebtDegraded` by §DX-02ex, which Layer 44's `quill_debt` event also writes with the opposite meaning.
 
 **Beat 1 — Lute Retrieval (pre-existing):** Pachelbel auto-gives lute when `quest_couperin_lute` is active and lute not in inventory (`_renderNpcCard` at `LLA` (historical `BA`)). Quest auto-completes at `MHQ` (historical `TV`) when lute present: +40gp, lute removed, `fav_quill → 1`, cipher scrap added. Consts: `S34_QUILL_BEAT2`, `S34_QUILL_BEAT3`.
 
 **Beat 2 — Couperin's Song (at `MHQ` (historical `TV`), !couperiSongReceived && quest === 'complete'):** `S34_QUILL_BEAT2` fires via `setTimeout(400ms)`. Quill plays the family theme — *"My grandmother taught me this. I haven't played it since before the pawn."* Sets `couperiSongReceived = true`, `quillQuestComplete = true`, calls `_checkDearFriendUpgrade('quill')`. Note: The +40gp and lute removal are handled by the quest auto-complete in the same render; the scene is the flavor layer.
 
-**Beat 3 — Debt Degradation (at `MHQ` (historical `TV`), quillQuestComplete && !couperiDebtDegraded):** Beat 3 block placed BEFORE Beat 2 in `MHQ` (historical `TV`) render to prevent same-visit co-fire (Beat 3 can't trigger when quillQuestComplete is still false on Beat 2's visit). `S34_QUILL_BEAT3` fires via `setTimeout(600ms)`. *"It's just a number. You can let it go."* Sets `couperiDebtDegraded = true`. Town Crier `quillQuestComplete` line pre-existing in `TOWN_CRIER_LINES`.
+**Beat 3 — Debt Released (at `MHQ` (historical `TV`), quillQuestComplete && !couperiDebtReleased):** Beat 3 block placed BEFORE Beat 2 in `MHQ` (historical `TV`) render to prevent same-visit co-fire (Beat 3 can't trigger when quillQuestComplete is still false on Beat 2's visit). `S34_QUILL_BEAT3` fires via `setTimeout(600ms)`. *"It's just a number. You can let it go."* Sets `couperiDebtReleased = true`; a run that let the debt degrade first still reaches it (§DX-02ex). Town Crier `quillQuestComplete` line pre-existing in `TOWN_CRIER_LINES`.
 
-**L44-E fix:** Bug: `_getNPCDialogue` stub used `npcKey === 'couperin'` (wrong key). Fixed to `npcKey === 'quill'`. Line updated to: *"Elder Couperin wrote 'just a number' on the original debt notice. Not minimizing. Describing. A debt that has done its work becomes just a number. That's when you can release it."*
+**L44-E:** `_getNPCDialogue` appends one line to Quill's selected pool, and which line is the state: `couperiDebtReleased` → *"Elder Couperin wrote 'just a number' on the original debt notice. Not minimizing. Describing. A debt that has done its work becomes just a number. That's when you can release it."*; `couperiDebtDegraded` → S30's *"The number is a number now. I don't look at it anymore."* (§DX-02ex).
 
 **Act VIII `LLA` farewell:** `ACT8_FAREWELL_BEATS.quill.text` converted to function. If `quillQuestComplete`: appends *"Pachelbel sent a note. 'Account closed, no remainder.' I keep it in the case."* `LLA` Act VIII block added (before L44-A Gigault stall): fires when `actNumber === 8 && fav_quill >= 1 && !act8FarewellQuill`, showing Quill at the archive desk. `act8FarewellQuill` flag prevents double-fire at `MHQ`.  *(historical: `BA`=`LLA` · `TV`=`MHQ`)*
 
