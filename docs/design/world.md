@@ -545,23 +545,27 @@ These six NPCs are fully implemented with `npcFavorability` states, `NPC_DIALOGU
 
 **Pit Training Perks** (`const PIT_PERK_UNLOCKS = {@27467`) — unlocked sequentially by `function _checkPitPerkUnlock()@28311` as `pitTrainingWins` accumulates. One perk per win threshold. Five total, in order:
 
-| # | Key | Title | Weckmann's line | Combat effect (`_applyPitPerks`) |
+| # | Key | Title | Weckmann's line | Combat effect |
 |---|---|---|---|---|
-| 1 | `controlledAggression` | Controlled Aggression | "You're not swinging harder. You're swinging when it counts." | `combatState.controlledAggression = true` |
-| 2 | `readTheRoom` | Read the Room | "Bruna could tell a fighter's gas tank by the third exchange." | `combatState.readTheRoom = true` |
-| 3 | `groundGame` | Ground Game | "When you put them down, keep them down." | `combatState.groundGame = true` |
-| 4 | `cornerWork` | Corner Work | "The corner is where you recover. Go to the corner." | `combatState.cornerWork = true` (`HKG` (historical `CY`)/`LCY` (historical `DK`) nodes only) |
-| 5 | `crovsLesson` | Weckmann's Lesson | "When everything goes wrong — stop, breathe, start again." | `combatState.crovsLesson = true` |
+| 1 | `controlledAggression` | Controlled Aggression | "You're not swinging harder. You're swinging when it counts." | **none — teaching, not mechanics** (§DX-02eq) |
+| 2 | `readTheRoom` | Read the Room | "Bruna could tell a fighter's gas tank by the third exchange." | **none — the pre-combat threat tier it would have granted is already shown to every player** at `function _renderPreBatt()` (§DX-02eq) |
+| 3 | `groundGame` | Ground Game | "When you put them down, keep them down." | **none — teaching, not mechanics** (§DX-02eq) |
+| 4 | `cornerWork` | Corner Work | "The corner is where you recover. Go to the corner." | **none — teaching, not mechanics** (§DX-02eq) |
+| 5 | `crovsLesson` | Weckmann's Lesson | "When everything goes wrong — stop, breathe, start again." | **Recompose** — cancels exhaustion disadvantage for one encounter, spent only when exhaustion is actually biting, returned by a long rest (`function _applyPitPerks(combatState)`, `S_story.crovsLessonUsed`) |
 
 Perks persist through NG+. Character sheet shows "Weckmann's Student" badge when all 5 are held.
 
-> **⚠️ MEASURED (§DOC-02cx, 2026-08-22) — the "Combat effect" column above is the WRITE, and there is no
-> reader.** `function _applyPitPerks(combatState)@28327` sets the five booleans on the live combat state
-> at `_showBattleOverlay`, and each of the five names occurs **exactly twice in the whole file** — once in
-> `perkList`, once in that assignment. Nothing in the duel engine consults any of them, so all five
-> specified effects (+1 when flanking · pre-combat HP tier · free shove on a crit · 1d4 between rounds ·
-> once-per-rest Recompose) are **inert**. The unlock, the message, the persistence and the badge are all
-> real; the mechanics are not. → §DX-02eq. Design source: `docs/lab-reports/lab-report-endings-and-echoes.md` §VIII/F8.
+> **✅ RESOLVED 2026-09-05 (§DX-02eq) — one wired, four retired.** The column above used to print the
+> *write* (`combatState.groundGame = true`) as the effect, and nothing read any of the five. **Weckmann's
+> Lesson is now real**: it is the perk §VIII argues for by name, and `function _applyPitPerks(combatState)`
+> spends it to cancel an exhausted fight's disadvantage, once per rest. **`readTheRoom` could not be
+> granted** — its specified effect, the pre-combat enemy tier, already ships to every player
+> unconditionally, so wiring it would have meant *withholding* the badge from players without the perk,
+> which is the §PLAY-01 defect class rather than a reward. The other three (+1 when flanking · free shove
+> on a crit · 1d4 between rounds) are combat systems that do not exist; they are **§DX-02is**, and their
+> dead writes are gone rather than left waiting. The unlock ladder, Weckmann's five lines, NG+ persistence
+> and the `Weckmann's Student` badge are untouched. Design source:
+> `docs/lab-reports/lab-report-endings-and-echoes.md` §VIII/F8.
 
 **Room 6** — locked room at `HKG` (historical `CY`). `storyShowRoom6()`. Available at Weckmann Dear Friend. Contains Froberger's last fighting note.
 

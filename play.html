@@ -23120,7 +23120,7 @@ const _S_DEFAULTS = () => ({
   npcTalk: {},   // §NPC-01-D — key → { count, lastDay }: deliberate-talk progress toward Friendly (fav 1). Never raises above 1; Dear Friend stays quest/personal-act-earned.
   npcVisitCounts: {}, couperiSongReceived: false, bruhnsDepthsReported: false, frobergerLastEntryRead: false,
   playerKey: '', pvpOff: false,
-  pitPerks: [], frobergerNoteNode: null, froberger_last_note_found: false, froberger_last_note_read: false, ngPlusRun: 0,
+  pitPerks: [], crovsLessonUsed: false, frobergerNoteNode: null, froberger_last_note_found: false, froberger_last_note_read: false, ngPlusRun: 0,
   hoursElapsed: 0, hoursSinceSlept: 0,
   playerR: 0, playerC: 0,   // §CELL-03: current grid position
   visitedCells: {},          // §CELL-04: "r,c" → true — all cells stepped on (used by §CELL-10 minimap)
@@ -24702,6 +24702,7 @@ function _storyRollInit() {
   S_story.spellAdvantageReady  = false;
   S_story._firstStrikeFired    = false; // §DROP-03: reset per encounter
   S.opp.enraged                = false; // §PLAY-01-B: one-time low-HP Void enrage, per encounter
+  S.recomposed                 = false; // §DX-02eq: Weckmann's Lesson, per encounter
   S.effortXpEarned             = 0;     // §XP-01: cumulative miss-XP this encounter (capped; transient, never saved)
   // surgeCharges persist across battles (rest-gated); no reset here
   _statTally('battlesAttempted', 1);
@@ -24721,7 +24722,9 @@ function _showBattleOverlay() {
   S.player.hp    = S_story.hp;
   S.player.maxHp = S_story.hpMax;
   // L43-R: apply pit perks to combat state
-  _applyPitPerks(S);
+  if (_applyPitPerks(S)) {
+    setTimeout(() => storyMsg('🧘 Recompose — Weckmann: "' + PIT_PERK_UNLOCKS.crovsLesson.crov + '"'), 400);
+  }
   // L17-G: restore to base first (prevents shield bonus stacking on re-entry)
   if (S.char.baseAc) S.char.ac = S.char.baseAc;
   S.char.baseAc  = S.char.ac;
@@ -25090,7 +25093,7 @@ function _overlayPlayerAttack() {
     // Layer 41: drunk fight — disadvantage on attack rolls, +3 flat damage on hit
     if (S_story._drunkFight) adv = 'dis';
     // P3 exhaustion: battleDis charges (missed rest) or awake ≥ 24h both impose DIS; ADV cancels to normal
-    if (S_story.battleDis > 0 || (S_story.hoursSinceSlept || 0) >= 24) {
+    if (_isExhausted() && !S.recomposed) {
       adv = (adv === 'adv') ? 'normal' : 'dis';
     }
     const d20Res  = rollD20(adv);
@@ -28317,13 +28320,20 @@ function _checkPitPerkUnlock() {
   }
 }
 
+function _isExhausted() {
+  return (S_story.battleDis || 0) > 0 || (S_story.hoursSinceSlept || 0) >= 24;
+}
+
 function _applyPitPerks(combatState) {
   const perks = S_story.pitPerks || [];
-  if (perks.includes('readTheRoom')) combatState.readTheRoom = true;
-  if (perks.includes('cornerWork') && ['HKG','LCY'].includes((S_story.pendingBattle||{}).nodeCode)) combatState.cornerWork = true;
-  if (perks.includes('controlledAggression')) combatState.controlledAggression = true;
-  if (perks.includes('groundGame')) combatState.groundGame = true;
-  if (perks.includes('crovsLesson')) combatState.crovsLesson = true;
+  combatState.crovsLesson = perks.includes('crovsLesson');
+  // Weckmann's Lesson is spent only when exhaustion is actually biting, and covers the encounter.
+  if (combatState.crovsLesson && !combatState.recomposed && !S_story.crovsLessonUsed && _isExhausted()) {
+    S_story.crovsLessonUsed = true;
+    combatState.recomposed = true;
+    return true;
+  }
+  return false;
 }
 
 
@@ -36477,6 +36487,7 @@ function storyConfirmSleep() {
   const _slv = S_story.level || 1;
   S_story.surgeCharges       = _slv >= 17 ? 2 : _slv >= 2 ? 1 : 0;
   S_story.indomitableCharges = _slv >= 9  ? 1 : 0;
+  S_story.crovsLessonUsed    = false;
   // Necklace of Knowledge bead
   _maybeAddKnowledgeBead(nodeCode);
   storySaveCheckpoint();
@@ -36643,12 +36654,14 @@ function _renderPreBatt() {
   // DIS warning from exhaustion (Layer 5 + P3)
   const disEl = document.getElementById('prebatt-dis-warning');
   const _awakeH = S_story.hoursSinceSlept || 0;
-  const _hasExhaustion = S_story.battleDis > 0 || _awakeH >= 24;
+  const _hasExhaustion = _isExhausted();
   if (_hasExhaustion) {
     const _msgs = [];
     if (S_story.battleDis > 0) _msgs.push(S_story.battleDis + ' battle(s) remaining from missed rest');
     if (_awakeH >= 24) _msgs.push(_awakeH + 'h without sleep');
-    disEl.textContent = '😴 Exhausted — attack rolls have DIS (' + _msgs.join('; ') + '). Sleep to recover.';
+    const _recompose = (S_story.pitPerks || []).includes('crovsLesson') && !S_story.crovsLessonUsed
+      ? ' 🧘 Weckmann\'s Lesson cancels it for this fight — once, until you sleep.' : '';
+    disEl.textContent = '😴 Exhausted — attack rolls have DIS (' + _msgs.join('; ') + '). Sleep to recover.' + _recompose;
     disEl.classList.add('show');
   } else {
     disEl.classList.remove('show');

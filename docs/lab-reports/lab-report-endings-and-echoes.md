@@ -57,7 +57,7 @@ The nine subsystems: **(II)** the Covenant Ceremony · **(III)** Sweelinck's dyn
 | V | Cursed Seal echo | ✅ byte-identical | Predicate `!mc && cs >= 15` shipped exactly as written; `FROBERGER_EPILOGUE.cursed` had no selector (**F5**) — ✅ §DX-02eo appended it to this block's tail 2026-08-26, which is the state it was written for |
 | VI | Rough Whiskey | ✅ 18/18 lines | **NOT SHIPPED: the use path.** `roughWhiskeyActive` has one writer, and the fight that sets it clears it on victory (**F3**) |
 | VII | Covenant Standing | ✅ sheet row | Unlock is `shards >= 1` (**Act II**), not "after Act III"; **NOT SHIPPED: the payoff** — no ending speaks the label (**F2**); the top rung is dead (**F1**) |
-| VIII | Pit Training perks | ⚠️ half | Unlock, message, persistence, badge all ship. **NOT SHIPPED: all five combat effects** (**F8**) |
+| VIII | Pit Training perks | ⚠️ half | Unlock, message, persistence, badge all ship. **1 of 5 combat effects shipped 2026-09-05** — Weckmann's Lesson (**F8** ✅ §DX-02eq); `readTheRoom` retired as ungrantable, the other three are §DX-02is |
 | IX | Froberger's Last Note | ✅ | Item, seeding, loot injection, read panel, 5-line body — all present; seeded with `Math.random()` (**F9**) |
 | X | NG+ memory hooks | ✅ greetings + overlay | **NOT SHIPPED:** "the tree resets and unlocks one win faster each run." Perks are *carried over* instead; the spec contradicts itself on this in adjacent sentences |
 
@@ -188,6 +188,12 @@ Each of the five names occurs **exactly twice in the whole file** — once in `p
 | 5 | Weckmann's Lesson | once per rest, cancel disadvantage | flag only |
 
 What *does* ship: sequential unlock at one win per perk, the unlock message in Weckmann's voice, persistence through NG+, and the `Weckmann's Student` badge on the character sheet at 5/5. So the tree is a fully-built ceremony around five no-ops — the player earns it, is told about it, sees it on their sheet, and it changes nothing. `world.md`'s perk table faithfully documents the *write* (`combatState.groundGame = true`) as the effect, which is honest and is also why nobody noticed. → **§DX-02eq** 🟡
+
+> **✅ RESOLVED 2026-09-05 (§DX-02eq) — one wired, four retired, and the row's own recommendation half-disproved.** The row proposed wiring *the two cheapest*, `readTheRoom` and `crovsLesson`. **`readTheRoom` cannot be granted:** its specified effect — row 2's *"pre-combat enemy HP tier"* — is `function _renderPreBatt()`'s threat badge, which renders `TIER · AC · HP ~ · ATK +` for **every** player whenever the monster resolves. Making it a perk means *withholding* it from players who lack the perk, which is a removal of shipped information and the §PLAY-01 defect class this report's own thesis is built on. It is retired.
+>
+> **Weckmann's Lesson is wired**, and it is the only one §VIII argues for by name. `_applyPitPerks` now decides as well as applies: it spends the charge **only when exhaustion is actually biting** (so a rested fight does not burn it), latches `S.recomposed` for the encounter (so re-entering the overlay mid-fight neither re-announces nor loses it), and `storyConfirmSleep` returns it beside `surgeCharges` and `indomitableCharges`. The exhaustion test itself is named once, as `_isExhausted()`, and the pre-battle warning says the perk will cancel it rather than leaving the player to discover it mid-fight.
+>
+> **The other three writes were deleted, not left waiting.** +1 when flanking, free shove on a crit and 1d4 between rounds are three combat systems that do not exist, and a flag nothing reads is the defect this row was filed about. They are **§DX-02is**. What survives untouched is everything that was already real: the sequential unlock, the five lines in Weckmann's voice, NG+ persistence, and the badge at 5/5. Pinned by `src/tests/integration/dx02eq-pit-perks.test.js`.
 
 ### F9 — the note is seeded off the unseeded stream
 
