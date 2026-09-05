@@ -60,11 +60,11 @@ Two program instruments carried this pass in particular:
 |---|---|---|---|
 | Nodes | 76 | 76 ✅ | **416** |
 | Acts | 8 | 8 ✅ | 8 ✅ |
-| Named NPCs | 6 | 6 ✅ (`const NPC_DIALOGUES = {@10396`) | **204 profiles / 213 dialogues** |
+| Named NPCs | 6 | 6 ✅ (`const NPC_DIALOGUES = {@10410`) | **204 profiles / 213 dialogues** |
 | Monsters | 370 | 370 ✅ | **398** |
 | Terrains | (66, §III.B) | 66 ✅ | **111** |
 | Froberger journal entries | 41 | 41 ✅ | **41** — unmoved in 80 days |
-| Codex Shards | 7 | 7 ✅ | 7 ✅ (`SHARD_GOAL = 7@36158`) |
+| Codex Shards | 7 | 7 ✅ | 7 ✅ (`SHARD_GOAL = 7@36356`) |
 | `_S_DEFAULTS()` fields | 107 (§III.B) | 107 ✅ | 104 of 107 survive |
 | HTML source lines | 14,377 | 14,377 ✅ | **38,712** |
 
@@ -82,8 +82,8 @@ Two program instruments carried this pass in particular:
 |---|---|---|---|---|
 | 1 | DM's Companion Guide, 80–120 pp | §I | **NOT SHIPPED** | no `codexofconquest-gm-guide` artefact; 0 occurrences repo-wide |
 | 2 | Fishing Guide, standalone 20–30 pp document | §II | **NOT SHIPPED** | superseded by row 3 |
-| 3 | Fishing Guide **as an in-game readable item** | §V | ✅ **SHIPPED** | `name:'Fishing Guide', icon:'📖', type:'readable'@13820` · `const FISHING_GUIDE_TEXT =@26661` |
-| 4 | …and it gates a mechanic, not just flavour | — | ✅ **exceeded** | `const hasGuide = (S_story.inventory@30408` reveals zone DCs |
+| 3 | Fishing Guide **as an in-game readable item** | §V | ✅ **SHIPPED** | `name:'Fishing Guide', icon:'📖', type:'readable'@13847` · `const FISHING_GUIDE_TEXT =@26793` |
+| 4 | …and it gates a mechanic, not just flavour | — | ✅ **exceeded** | `const hasGuide = (S_story.inventory@30562` reveals zone DCs |
 | 5 | Mission Explorer, a second HTML data browser | §III | ✅ **SHIPPED** `2d42ea2`, 2026-05-29 | `edit.html`, 10,685 lines, 17 tabs |
 | 6 | …read-only; C/U/D "intentionally excluded" | §III.D | ⚠️ **INVERTED** | 29 `POST` · 32 `PUT` · 4 `DELETE` call sites |
 | 7 | …cost: must externalize the data constants | §III.E | ❌ **cost never paid** | `<script src=` = **0** in `play.html`; the one-file invariant held |
@@ -91,12 +91,12 @@ Two program instruments carried this pass in particular:
 | 9 | …debug metadata (JS path · type · index) | §III.C | **NOT SHIPPED** → **§DX-02ao** | no detail view emits a reference path, a data type or an array position |
 | 10 | …Export as JSON, the "middle path" | §III.D | ✅ **SHIPPED + exceeded** | `edit.html:/api/export/all?format=json@2656`, `Export JS`, `Export Patched` |
 | 11 | …State Flag Browser ("which quest sets it") | §III.B | ◐ **HALF SHIPPED** | `edit.html:this._flagToQuests[f].writes.push(id)@1735` indexes reads/writes — **over `QUEST_DB` source only**, so the "which render functions read it" half is absent |
-| 12 | Yugurt Lake at nodes `YL`, `YC` | §II.1 | ✅ **RIGHT WHEN WRITTEN**, renamed since | archive `YL:{num:75, yugurt_lake}` → `BOO:{ num:75, code:'BOO'@8782`; `YC:{num:76}` → `SSJ:{ num:76, code:'SSJ'@8786` — `num`, terrain and label all preserved |
-| 13 | 20-rank fish pool | §II.2 | ✅ **exact** | `const FISH_POOL = [@26506`, 20 entries; plus `const NIGHT_FISH_POOL = [@26528` (5, §XLVIII) |
+| 12 | Yugurt Lake at nodes `YL`, `YC` | §II.1 | ✅ **RIGHT WHEN WRITTEN**, renamed since | archive `YL:{num:75, yugurt_lake}` → `BOO:{ num:75, code:'BOO'@8795`; `YC:{num:76}` → `SSJ:{ num:76, code:'SSJ'@8799` — `num`, terrain and label all preserved |
+| 13 | 20-rank fish pool | §II.2 | ✅ **exact** | `const FISH_POOL = [@26637`, 20 entries; plus `const NIGHT_FISH_POOL = [@26659` (5, §XLVIII) |
 | 14 | The Hooked condition | §II.1 | ✅ SHIPPED | `condition:'Hooked'` in the catch resolver |
 | 15 | 2d20 cast roll table | §II.1 | **RETIRED**, not never-shipped | archive carries the *"🎣 Cast Line (2d20)"* button; Layer 47 replaced it with a four-phase Catch system (§DOC-02m) |
-| 16 | `BAIT_FISH_POOL` apex predators | §II.3 | **NOT SHIPPED under that name** | 0 commits ever; apex predator shipped as `name:'Horned Shark'@5511` in `yugurt_lake:      { label:'Yugurt Lake'@6283` |
-| 17 | "Master of Yugurt" tournament, five rounds | §II.4 | ✅ **SHIPPED, six** | `title:'Master of Yugurt'@26721`; `const TOUR_TITLES = {@26724` names six ranks |
+| 16 | `BAIT_FISH_POOL` apex predators | §II.3 | **NOT SHIPPED under that name** | 0 commits ever; apex predator shipped as `name:'Horned Shark'@5508` in `yugurt_lake:      { label:'Yugurt Lake'@6284` |
+| 17 | "Master of Yugurt" tournament, five rounds | §II.4 | ✅ **SHIPPED, six** | `title:'Master of Yugurt'@26853`; `const TOUR_TITLES = {@26856` names six ranks |
 | 18 | The Fisherman: *"no quest, no connection to the main arc"* | §II.5 | ⚠️ **REVERSED** | he gives the rod, keeps a free-sleep cabin, and is named in Yael's Level-1 tutorial monologue |
 | 19 | Organ: 12 voices × 6 harmonics = 72 oscillators | §VI.B/H | ✅ **exact** | `src/sources/5thOrgan.html:const N_HARM   = 6;@142` · `src/sources/5thOrgan.html:const MAX_VOX  = 12;@143` |
 | 20 | Organ: `f = 440 × 2^((n−69)/12)` | §VI.C | ✅ **byte-exact** | `src/sources/5thOrgan.html:function midiHz(m)@185` |
@@ -223,11 +223,11 @@ This is instrument 12 in a form worth keeping, because it defeats the older inst
 | 2 | Fishing Guide (document) | ❌ not shipped in 80 days | — |
 | 3 | Mission Explorer | ✅ shipped +5 days, inverted on 3 axes | `edit.html` |
 | 4 | Pipe Organ Synthesizer | ✅ shipped +33 minutes | `src/sources/5thOrgan.html` — **not embedded** (§AUDIO-01) |
-| 5 | Fishing Guide **as an in-game item** (§V aside) | ✅ shipped | `const FISHING_GUIDE_TEXT =@26661` |
+| 5 | Fishing Guide **as an in-game item** (§V aside) | ✅ shipped | `const FISHING_GUIDE_TEXT =@26793` |
 
 **Three of five, and the ranking got them in the wrong order.** The one-paragraph aside outperformed the section it was an aside to. The concept given the most pages (the DM's Guide, six subsections and a nine-row field table) is the one with the least code behind it — which is not a coincidence but the same finding again: **pages are what you produce when the deliverable is pages.**
 
-There is one honest bright spot in the register's own reasoning, and it deserves saying. §I.A's argument for why a Guide is *possible* — *"the world is rich enough to support a tabletop session"* — has only got stronger: 76 → 416 nodes, 6 → 204 NPC profiles, and `function _missionComplete() {@23649` still counts exactly the twelve narrative bits the DM's Guide Part IV proposed to explain. The premise held. The medium did not.
+There is one honest bright spot in the register's own reasoning, and it deserves saying. §I.A's argument for why a Guide is *possible* — *"the world is rich enough to support a tabletop session"* — has only got stronger: 76 → 416 nodes, 6 → 204 NPC profiles, and `function _missionComplete() {@23696` still counts exactly the twelve narrative bits the DM's Guide Part IV proposed to explain. The premise held. The medium did not.
 
 **One caution for whoever eventually writes Part V.** The report specifies documenting *"all four endings … with the specific score conditions that trigger each."* At HEAD, **three of those four conditions cannot fire**: `_curseScore()` has a closed form of `20 + 2 × (EB bosses defeated)` and a floor of 20, because its `ebReturnDone` term is written only by a beat reachable through a quest id `QUEST_DB` does not hold (**§EPIC-01**, **§ENDING-01**). A DM's Guide written today would document three endings the game cannot reach. ***The Guide's stated prerequisite was "the game must be content-complete"; the real prerequisite is a two-site rename.***
 
@@ -245,7 +245,7 @@ There is one honest bright spot in the register's own reasoning, and it deserves
 
 - **§AUDIO-01** — this document's §VI.A is its originating requirement; the *"background music as the game is played"* framing is quoted here verbatim and remains the strongest argument for the row.
 - **§DX-02am** — explained, not duplicated: see §IX.
-- **§FISH-01** — `LYR:{ num:41, code:'LYR'@8723` (act 7) is declared 59 lines before `BOO:{ num:75, code:'BOO'@8782` (act 3) and both occupy cell `2,194`, so `isFishingLake:true@8782` never reads at a node the player can stand on. This report's §II and §V both describe a sub-game that is currently unreachable by walking. Owned by §DOC-02m; re-derived independently here.
+- **§FISH-01** — `LYR:{ num:41, code:'LYR'@8736` (act 7) is declared 59 lines before `BOO:{ num:75, code:'BOO'@8795` (act 3) and both occupy cell `2,194`, so `isFishingLake:true@8795` never reads at a node the player can stand on. This report's §II and §V both describe a sub-game that is currently unreachable by walking. Owned by §DOC-02m; re-derived independently here.
 - **§EPIC-01 / §ENDING-01** — the real blocker on the DM's Guide Part V (see §X).
 - **§AUDIT-03u** — Yael's Level-1 monologue still says *"the known world has forty-two nodes."* It is also, pleasingly, where she sends the player to the lake: *"Go north to Yugurt, to the cabin, and find the old man who keeps it — they call him the Fisherman. He hands the rod to anyone who will use it, free, and asks nothing back."* Which is the exact contradiction of §II.5's *"just a man who fishes"* — the Fisherman became load-bearing.
 

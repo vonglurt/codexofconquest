@@ -1512,7 +1512,7 @@ The ending is driven by `_curseScore()` — a measure of how many EB quest giver
 
 ### Curse Score Formula
 
-> **Source:** `function _curseScore()@28193`.
+> **Source:** `function _curseScore()@28340`.
 
 ```
 _curseScore():
@@ -1535,7 +1535,7 @@ _curseScore():
 
 ### Covenant Standing Tiers
 
-> **Source:** `const COVENANT_STANDING_LABELS = [@27358`. (Home doc: this section. The HTML comment on that
+> **Source:** `const COVENANT_STANDING_LABELS = [@27490`. (Home doc: this section. The HTML comment on that
 > line points here — repointed by §DX-02er, which also measured the class: **11 of the 70 distinct `→ doc:` pointers in `play.html` name a section that does not exist**.)
 
 | Curse Score | Tier | Description | Reachable? |
@@ -1555,11 +1555,11 @@ The sheet row unlocks at `(S_story.shards || 0) >= 1` — Act II, when the Trade
 | Condition | Variant | Description |
 |---|---|---|
 | `!_missionComplete() && curseScore >= 15` | **Cursed Seal Echo** | Groundhog Day text — Sweelinck has seen this 17 times. Mission failed but Void sealed. |
-| `_missionComplete() && curseScore <= -5` | **Covenant Keeper (True)** | `const _isTrue = missionDone && curse <= -5@28241` — the perfect 20-of-20 run, plus 5 pit wins and 5 negotiated payments. The threshold was `<= -6` against a score floor of −5 and had no satisfying state from the first commit until §DX-02en moved it. |
+| `_missionComplete() && curseScore <= -5` | **Covenant Keeper (True)** | `const _isTrue = missionDone && curse <= -5@28378` — the perfect 20-of-20 run, plus 5 pit wins and 5 negotiated payments. The threshold was `<= -6` against a score floor of −5 and had no satisfying state from the first commit until §DX-02en moved it. |
 | `_missionComplete() && curseScore <= 0` | **Covenant Keeper (naming ceremony)** | Reachable **only at −5**, i.e. all 20 returned. Sweelinck names every person the player helped, one line at a time on the sigil overlay. |
 | Otherwise | **Standard** | Score-based tier; epilogue reflects breadth of engagement. |
 
-**Note:** `function _covenantStanding()@28034` maps curse score to label using `COVENANT_STANDING_LABELS`. `function _buildEpilogueScroll()@28122` builds the **per-NPC** epilogue lines (six keys, fav-gated) plus **one summary count line** for the Epic Battlegrounds when ≥ 10 are returned — *not* a named list of the returned EB NPCs (corrected §DOC-02cx). It substitutes the Cursed Seal Echo text wholesale when `!missionComplete && score ≥ 15`, which is also why `FROBERGER_EPILOGUE.cursed` has no selector (§DX-02eo). **All four ending branches close on the standing** — `const standingSpoken = @28255` appends *“At the door he says the word the ledger has for you”* plus `_covenantStanding().label` to each, so the sheet label the player carried all run is spoken back (§DX-02en).
+**Note:** `function _covenantStanding()@28173` maps curse score to label using `COVENANT_STANDING_LABELS`. `function _buildEpilogueScroll()@28261` builds the **per-NPC** epilogue lines (six keys, fav-gated) plus **one summary count line** for the Epic Battlegrounds when ≥ 10 are returned — *not* a named list of the returned EB NPCs (corrected §DOC-02cx). It substitutes the Cursed Seal Echo text wholesale when `!missionComplete && score ≥ 15`, which is also why `FROBERGER_EPILOGUE.cursed` has no selector (§DX-02eo). **All four ending branches close on the standing** — `const standingSpoken = @28392` appends *“At the door he says the word the ledger has for you”* plus `_covenantStanding().label` to each, so the sheet label the player carried all run is spoken back (§DX-02en).
 
 ### Covenant Ceremony
 

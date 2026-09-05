@@ -54,14 +54,14 @@ Four measurements, all from HEAD (`play.html`, 38,707 lines, coc-3.104.0):
 
 | Claim | Status at HEAD | Anchor |
 |---|---|---|
-| `WORLD_DB` flat object keyed by terrain string, fields `{label, icon, monsters}` | **exact, unchanged** | `const WORLD_DB@6279` |
-| `monsters` arrays hold **direct object references**, no string lookup at encounter time | **exact** (via the `P` proxy) | `const WORLD_DB@6279` |
-| `NODE_MAP` flat, keyed by code; `name` is the terrain key linking node→`WORLD_DB` | **exact** — the one load-bearing link that held | `const NODE_MAP@8425` |
-| `NodeEntry` fields `num` · `code` · `name` · `label` · `act` · `text` · `npc` · `battle` · `loot` · `sleep` | **all 10 present** | `const NODE_MAP@8425` |
-| Five tier values `trivial\|easy\|medium\|hard\|deadly` | **exact** — now a pinned contract (§DX-02g) | `function _notorietyWeights@38195` |
-| `_weightedMonsterPick` | **name survives; signature and body both replaced** — see §III | `function _weightedMonsterPick@38220` |
+| `WORLD_DB` flat object keyed by terrain string, fields `{label, icon, monsters}` | **exact, unchanged** | `const WORLD_DB@6280` |
+| `monsters` arrays hold **direct object references**, no string lookup at encounter time | **exact** (via the `P` proxy) | `const WORLD_DB@6280` |
+| `NODE_MAP` flat, keyed by code; `name` is the terrain key linking node→`WORLD_DB` | **exact** — the one load-bearing link that held | `const NODE_MAP@8437` |
+| `NodeEntry` fields `num` · `code` · `name` · `label` · `act` · `text` · `npc` · `battle` · `loot` · `sleep` | **all 10 present** | `const NODE_MAP@8437` |
+| Five tier values `trivial\|easy\|medium\|hard\|deadly` | **exact** — now a pinned contract (§DX-02g) | `function _notorietyWeights@38408` |
+| `_weightedMonsterPick` | **name survives; signature and body both replaced** — see §III | `function _weightedMonsterPick@38433` |
 | `S_story.quests` as a key→status map | **exact** | — |
-| Battle pipeline `loadWorldMonster` → `pendingBattle` → prebattle overlay → `storyApplyOutcome` | **live**, though entered from `_startStoryBattle` | `function _startStoryBattle@38242` |
+| Battle pipeline `loadWorldMonster` → `pendingBattle` → prebattle overlay → `storyApplyOutcome` | **live**, though entered from `_startStoryBattle` | `function _startStoryBattle@38455` |
 | `MONSTER_POOL`, `QUEST_DB`, `storyRender`, `storyPreBattle`, `_renderPreBatt`, `storyGameOver` | **live** | — |
 
 **Live: 16 of 38.**
@@ -75,16 +75,16 @@ Twelve deltas. Each is **NOT SHIPPED** (never existed), **RETIRED** (shipped, la
 
 | # | Report claim | Outcome | Measured at HEAD |
 |---|---|---|---|
-| 1 | **`HUNTING_GROUNDS`** — bijective 42-terrain→42-node table; "the architectural backbone" | **RETIRED** | Deleted by §TIMELESS-01 (`7952752`, 2026-06-26). One tombstone comment remains: `§TIMELESS-01: HUNTING_GROUNDS removed@10392`. **Nothing replaced it** — see §V-2. |
-| 2 | **Stalk mechanic** — `stalkModal(node)` + `_stalkedMonsterPick` + `[Wait for Prey]`, guaranteed encounter, 3× quest-target boost | **RETIRED** | `§TIMELESS-01: Stalk Helpers@38252`. **But the §IX-C code listing never existed as written**: `git log -S` returns **0 commits** for `stalkModal`, `#story-stalk-overlay`, `#stalk-terrain-name`. The feature shipped 2026-05-24 (`32c10c5`) under different names — `storyStalk(nodeCode)`, `#story-stalk-modal`, `#btn-stalk-wait`. §TIMELESS-01's own removal inventory records that modal as *"already never shown — legacy/dead."* |
-| 3 | **Layer 9 Circuit Corridors** — `CORRIDOR_CELLS`, `CORRIDOR_TERRAIN`, `buildCorridorMap()`, `_routeSegments()`, `storyCorridorTravel()`, `_wireGlyph()`, `_corridorOnComplete` | **RETIRED — all 7** | `grep -c` = **0** for every one. Replaced by §WALK/§NAV-01: a 90×360 geo grid with cell-by-cell `Mover` movement and a real road net, `const ROAD_RUNS@9883`. The box-drawing wire mesh of Appendix C has no successor. |
-| 4 | **Warp travel mode** — "instant transit, no encounter" (§III-E table) | **RETIRED, then forbidden** | Hard invariant #3 is now **"No jump travel, ever"**; the engine states it in source: `no jump travel. checkpointNode@26050`. The report's Warp is not merely removed — it is a **banned design**. |
+| 1 | **`HUNTING_GROUNDS`** — bijective 42-terrain→42-node table; "the architectural backbone" | **RETIRED** | Deleted by §TIMELESS-01 (`7952752`, 2026-06-26). One tombstone comment remains: `§TIMELESS-01: HUNTING_GROUNDS removed@10405`. **Nothing replaced it** — see §V-2. |
+| 2 | **Stalk mechanic** — `stalkModal(node)` + `_stalkedMonsterPick` + `[Wait for Prey]`, guaranteed encounter, 3× quest-target boost | **RETIRED** | `§TIMELESS-01: Stalk Helpers@38465`. **But the §IX-C code listing never existed as written**: `git log -S` returns **0 commits** for `stalkModal`, `#story-stalk-overlay`, `#stalk-terrain-name`. The feature shipped 2026-05-24 (`32c10c5`) under different names — `storyStalk(nodeCode)`, `#story-stalk-modal`, `#btn-stalk-wait`. §TIMELESS-01's own removal inventory records that modal as *"already never shown — legacy/dead."* |
+| 3 | **Layer 9 Circuit Corridors** — `CORRIDOR_CELLS`, `CORRIDOR_TERRAIN`, `buildCorridorMap()`, `_routeSegments()`, `storyCorridorTravel()`, `_wireGlyph()`, `_corridorOnComplete` | **RETIRED — all 7** | `grep -c` = **0** for every one. Replaced by §WALK/§NAV-01: a 90×360 geo grid with cell-by-cell `Mover` movement and a real road net, `const ROAD_RUNS@9896`. The box-drawing wire mesh of Appendix C has no successor. |
+| 4 | **Warp travel mode** — "instant transit, no encounter" (§III-E table) | **RETIRED, then forbidden** | Hard invariant #3 is now **"No jump travel, ever"**; the engine states it in source: `no jump travel. checkpointNode@26181`. The report's Warp is not merely removed — it is a **banned design**. |
 | 5 | **Junction nodes J1–J7** with `junction:true`, "purely navigational waypoints" | **RETIRED, then made a CI failure** | **0** nodes carry `junction:true`. The two survivors of the class (J14/J15) failed `check:invariants` I1/I2 and were removed by §DX-01a; `./api.sh highway --execute`, which minted them, is **deprecated and refused** (§DX-01d). *(The two live `junction` string hits are a `TERRAIN_ENCOUNTER_RATE` key and an NPC key — not the node field.)* |
 | 6 | **`N`/`S`/`E`/`W` directional edge fields** on `NodeEntry` — the directed edge set the wire mesh was drawn from | **RETIRED** | **0** occurrences in `NODE_MAP`. §WALK deleted the compass graph outright. The corridor layer had no graph left to render even had it survived. |
 | 7 | **Quest-to-terrain coupling** — `targetTerrain`, `targetKeys`, `killCount`, `key`, `name` on `QuestEntry` (§V) | **NOT SHIPPED** | `targetTerrain` and `targetKeys` occur **0** times, at HEAD and in history. Quests are **UQF-1.0** (§ARCH-01): `id` · `schema` · `bits` · `gate` · `activateNode`. **The closed information loop of §V-A — the report's Principle 3 — has no data to run on and never did.** |
-| 8 | **Tier weights** fixed at `{trivial:35, easy:35, medium:25, hard:4, deadly:1}`; the ~32/32/23/4/1 distribution of §VII-D and Appendix B | **CHANGED** | Weights are now **notoriety-scaled across 6 bands** (Layer 23), `function _notorietyWeights@38195`. The report's fixed vector matches **no band** — the lowest is `40/35/20/4/1`. At high notoriety `trivial` reaches **0** and `deadly` **30**. Appendix B's fixed distribution is wrong everywhere. |
+| 8 | **Tier weights** fixed at `{trivial:35, easy:35, medium:25, hard:4, deadly:1}`; the ~32/32/23/4/1 distribution of §VII-D and Appendix B | **CHANGED** | Weights are now **notoriety-scaled across 6 bands** (Layer 23), `function _notorietyWeights@38408`. The report's fixed vector matches **no band** — the lowest is `40/35/20/4/1`. At high notoriety `trivial` reaches **0** and `deadly` **30**. Appendix B's fixed distribution is wrong everywhere. |
 | 9 | **`Math.random()`** in both pickers; "Stalk does not call `Math.random()`" as a design property | **CHANGED** | Both draws moved to the **seeded stream** `_seededNext()` (§VM-01-B) — now hard invariant #6, and replayable against the server's `seededNext`. |
-| 10 | **Hunt encounter probability** `min(0.90, 0.10 + activeQuestCount × 0.05)`, quest-scaled | **NOT SHIPPED** | No such expression exists at HEAD or in history. Encounter rate is **per-terrain data** (`const TERRAIN_ENCOUNTER_RATE@9892`), roads at 0, halved when travelling with co-present allies (§MESH-01f). *(§DOC-02b measured the same class of invented formula in the corridor section of the architectural review — the two reports agree, and both are wrong.)* |
+| 10 | **Hunt encounter probability** `min(0.90, 0.10 + activeQuestCount × 0.05)`, quest-scaled | **NOT SHIPPED** | No such expression exists at HEAD or in history. Encounter rate is **per-terrain data** (`const TERRAIN_ENCOUNTER_RATE@9905`), roads at 0, halved when travelling with co-present allies (§MESH-01f). *(§DOC-02b measured the same class of invented formula in the corridor section of the architectural review — the two reports agree, and both are wrong.)* |
 | 11 | **`storyMove(dir)`** intercepts non-adjacent destinations | **RETIRED** | **0** occurrences. Movement is `cellMove` over the `MOVER:CORE` kernel; a non-adjacent click is refused, not intercepted. |
 | 12 | **Scale claims** — 42 terrains · 42+7 nodes · "216+" monsters · 6,330 lines · 11×11 viewport | **CHANGED, all five** | **111** terrains · **416** nodes · **398** monsters · **38,707** lines (6.1×) · a **15×21** window (§NAV-01e) onto the 90×360 grid. |
 
@@ -110,9 +110,9 @@ The report's **Hunt** is a corridor travel mode (probabilistic encounter on a ro
 against Warp in a dialog). It was deleted whole by §TIMELESS-01 on 2026-06-26.
 
 **Twelve days later, §KG-01 (`8168f0e`, 2026-07-08) introduced a different mechanic under the same
-name.** Live "Hunt Mode" is a d-pad toggle (`huntMode: false@23084`) that doubles the wilderness
-encounter rate to a 0.8 cap (`if (S_story.huntMode) baseRate@28442`) and biases 80/20 toward
-monsters at or below the player's level via `function _monsterLevel@38214`. It has no dialog, no
+name.** Live "Hunt Mode" is a d-pad toggle (`huntMode: false@23114`) that doubles the wilderness
+encounter rate to a 0.8 cap (`if (S_story.huntMode) baseRate@28595`) and biases 80/20 toward
+monsters at or below the player's level via `function _monsterLevel@38427`. It has no dialog, no
 corridors, no Warp counterpart, and no quest-target weighting.
 
 **The two share only the word.** A reader who greps `huntMode` from this report will land on a
@@ -128,10 +128,10 @@ not get updated, so the collision is silent and permanent.*
 1. **§AUDIT-03t — 36 nodes carry `act:NaN`, and two render `undefined` to the player.** Traced
    directly from this report's `NodeEntry` typedef claim *"`act` — story act (1–8)"*. Verified:
    36 `NODE_MAP` entries have `act:NaN` (`num` 181–443, incl. `CI`/`DNG`/`BOR`/`RON`). The three
-   readers fail in three different ways — `S_story.actNumber = node.act || 1@34556` silently
-   coerces to Act 1 (NaN is falsy); `ACT_NAMES[node.act]@34590` yields `undefined`, so the act
+   readers fail in three different ways — `S_story.actNumber = node.act || 1@34822` silently
+   coerces to Act 1 (NaN is falsy); `ACT_NAMES[node.act]@34852` yields `undefined`, so the act
    badge renders **"— undefined —"** and `#s-node-act` renders **"undefined"**; the map panel
-   renders **"Act NaN"**. `const ACT_NAMES@9417` is a 9-element array with no NaN slot. Player-visible
+   renders **"Act NaN"**. `const ACT_NAMES@9430` is a 9-element array with no NaN slot. Player-visible
    at 36 of 416 nodes (8.7%). No design call.
 
 2. **§DESIGN-04 — nothing answers *"where do I find monster X?"*** The report's thesis question.

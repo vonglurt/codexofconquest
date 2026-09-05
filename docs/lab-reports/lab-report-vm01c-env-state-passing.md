@@ -48,7 +48,7 @@ Because every real call site already passes a `ctx` object and **none** passes `
 
 The pre-change form built a fresh `{}` **per bit**; the new form shares one `c` across the chain. That is observationally identical (every call site supplies a `ctx`, so the undefined branch was never taken) and is the correct shape for the `item_check → ctx._itemCheck` pattern, which needs the shared object.
 
-As shipped at `c22f4f0`, and structurally unchanged at HEAD (`*execBits(bits, ctx) {@22224`, `if (!c.state) c.state = S();@22226`):
+As shipped at `c22f4f0`, and structurally unchanged at HEAD (`*execBits(bits, ctx) {@22251`, `if (!c.state) c.state = S();@22253`):
 
 ```js
 *execBits(bits, ctx) {
@@ -69,17 +69,17 @@ Seven handlers change; **only the state access changes, all other logic is verba
 
 | Handler | Before | After | HEAD anchor |
 |---|---|---|---|
-| `flag_write` | `S_story[f] = true/false` | `st[f] = …` where `st = ctx.state` | `flag_write(bit, ctx)@22269` |
-| `reward` | `S_story.xp/gold/inventory/knowledge` | `st.xp/gold/inventory/knowledge` | `reward(bit, ctx) {@22270` |
-| `item_remove` | `S_story.inventory` | `ctx.state.inventory` | `item_remove(bit, ctx) {@22303` |
-| `mission_bit` | fallback `S_story[bit.flag] = true` | fallback `ctx.state[bit.flag] = true` | `mission_bit(bit, ctx) {@22304` |
-| `item_check` | reads `S_story.inventory` | reads `ctx.state.inventory` | `item_check(bit, ctx) {@22312` |
-| `unlock` | `S_story.quests[qid] = active` | `ctx.state.quests[qid] = active` | `unlock(bit, ctx) {@22313` |
-| `_legacy_fn` | `bit.fn(S_story, ctx)` | `bit.fn(ctx.state, ctx)` | `_legacy_fn(bit, ctx) {@22328` |
+| `flag_write` | `S_story[f] = true/false` | `st[f] = …` where `st = ctx.state` | `flag_write(bit, ctx)@22296` |
+| `reward` | `S_story.xp/gold/inventory/knowledge` | `st.xp/gold/inventory/knowledge` | `reward(bit, ctx) {@22297` |
+| `item_remove` | `S_story.inventory` | `ctx.state.inventory` | `item_remove(bit, ctx) {@22330` |
+| `mission_bit` | fallback `S_story[bit.flag] = true` | fallback `ctx.state[bit.flag] = true` | `mission_bit(bit, ctx) {@22331` |
+| `item_check` | reads `S_story.inventory` | reads `ctx.state.inventory` | `item_check(bit, ctx) {@22339` |
+| `unlock` | `S_story.quests[qid] = active` | `ctx.state.quests[qid] = active` | `unlock(bit, ctx) {@22340` |
+| `_legacy_fn` | `bit.fn(S_story, ctx)` | `bit.fn(ctx.state, ctx)` | `_legacy_fn(bit, ctx) {@22355` |
 
 ### 4.3 The host-fence handlers — unchanged, by design
 
-`combat(bit) { if (E.preBattle)@22301`, `narrative(bit, ctx) {@22302`, `favor(bit) {@22307` and the `skill_check(bit, ctx) {@22266` roll keep host access. These are host *effects*. A static reachability check never executes them; routing them through a scratch env would buy nothing and would falsely imply the host could be redirected. `_legacy_fn` still runs arbitrary code and remains E's stated blocker — giving it `ctx.state` makes it consistent, not analysable.
+`combat(bit) { if (E.preBattle)@22328`, `narrative(bit, ctx) {@22329`, `favor(bit) {@22334` and the `skill_check(bit, ctx) {@22293` roll keep host access. These are host *effects*. A static reachability check never executes them; routing them through a scratch env would buy nothing and would falsely imply the host could be redirected. `_legacy_fn` still runs arbitrary code and remains E's stated blocker — giving it `ctx.state` makes it consistent, not analysable.
 
 ## 5. Anchor ledger — the §7 table, re-scored
 
@@ -115,19 +115,19 @@ Both downstream increments needed to evaluate a quest chain against a hypothetic
 ## 7. Design decisions — LOCKED, and scored 30 days on
 
 ### 7.1 Env scope — the effect handlers only; gate readers and the roll stay on `S_story`
-`canActivate(questId) {@22194` / `canComplete(questId) {@22206` are **evaluators**, not effect handlers, and threading them then would have been speculative surface with no consumer. **Rejected axis:** *"thread `ctx.state` through everything that names `S_story`"* — larger blast radius, breaks the clean no-op.
+`canActivate(questId) {@22221` / `canComplete(questId) {@22233` are **evaluators**, not effect handlers, and threading them then would have been speculative surface with no consumer. **Rejected axis:** *"thread `ctx.state` through everything that names `S_story`"* — larger blast radius, breaks the clean no-op.
 
-> **Outcome: the deferral was right and the rejected axis was never taken.** §VM-01-D *did* thread the gate readers eight days later — but through `function createQuestRuntime(host) {@22181` and a call-time `getState()`, not through `ctx.state`. The engine comment records the debt in the right direction: *"resolved at CALL time, so §VM-01-C's per-call `execBits(chain,{state})` seam survives."* When a consumer finally arrived it wanted a **different shape** — which is exactly the argument §7.1 made for waiting.
+> **Outcome: the deferral was right and the rejected axis was never taken.** §VM-01-D *did* thread the gate readers eight days later — but through `function createQuestRuntime(host) {@22203` and a call-time `getState()`, not through `ctx.state`. The engine comment records the debt in the right direction: *"resolved at CALL time, so §VM-01-C's per-call `execBits(chain,{state})` seam survives."* When a consumer finally arrived it wanted a **different shape** — which is exactly the argument §7.1 made for waiting.
 
 ### 7.2 Env default — live `S_story`, seeded in `execBits`, never in `S_story` itself
 The env is a *call-time* parameter, not persisted state. It must never ride a save: a scratch state stored in `S_story` would serialise and corrupt the real one, and a self-reference is a `JSON.stringify` cycle.
 
-> **Outcome: HELD, verified at HEAD.** `const _S_DEFAULTS = () => ({@23063` carries no `state` and no `env` field, 30 days and six increments on.
+> **Outcome: HELD, verified at HEAD.** `const _S_DEFAULTS = () => ({@23092` carries no `state` and no `env` field, 30 days and six increments on.
 
 ### 7.3 Registry — deferred to §VM-01-E (the ASK, answered by the user)
 An enumerable flag namespace where a typo throws is the natural companion, but it is a *behaviour* change, not a no-op: it would surface every existing dead or mistyped flag as a new runtime error, muddying this increment's verdict. Better caught **statically**.
 
-> **Outcome: SHIPPED where promised, and the destination names this report as the source.** `src/scripts/check-questgraph.js:detector §VM-01-C deferred here.@36`. It runs green today and reports **50 written-by-nothing** and **982 read-by-nothing** flags as a review artifact. *A deferral is only honest if someone writes down where it went; this one is cited by name in the file that received it.*
+> **Outcome: SHIPPED where promised, and the destination names this report as the source.** `src/scripts/check-questgraph.js:detector §VM-01-C deferred here.@35`. It runs green today and reports **50 written-by-nothing** and **982 read-by-nothing** flags as a review artifact. *A deferral is only honest if someone writes down where it went; this one is cited by name in the file that received it.*
 
 ## 8. Invariants preserved
 
@@ -135,7 +135,7 @@ An enumerable flag namespace where a typo throws is the natural companion, but i
 - **Parity kernels** — **0 kernel sentinels in the `c22f4f0` diff**, measured, not asserted.
 - **§STATE-INIT** — `_S_DEFAULTS()` unchanged; still true at HEAD (§7.2).
 - **§VM-01-A coroutine contract** — `execBits` stays a generator; `ctx.state` is set before the loop, so a suspending `choice` resumes against the same env.
-- **§VM-01-B seeded rng** — `_seededNext` untouched. (The roll has since moved to the injected `const d20  = Math.ceil(E.rng() * 20)@22249` under §VM-01-D — still a host concern, new plumbing.)
+- **§VM-01-B seeded rng** — `_seededNext` untouched. (The roll has since moved to the injected `const d20  = Math.ceil(E.rng() * 20)@22276` under §VM-01-D — still a host concern, new plumbing.)
 - **No new bit kind.** The `HANDLERS` key-set was pinned at **12** by `src/tests/integration/quest-runtime-uqf.test.js:28` and stayed exactly 12. *(At HEAD it is 13 — `cost`, added by §VM-01-G4a. Growth after the fence, not through it.)*
 
 ## 9. Test plan and result

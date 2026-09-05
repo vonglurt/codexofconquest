@@ -51,7 +51,7 @@ The playability dividend is measurable rather than rhetorical. Junction screens:
 Reachable nodes from the start city: **416/416, one landmass**. And the shared kernel closed a
 latent server bug for free — before §WALK-2 the MUD server had no sea test at all, so a networked
 player could walk into the Atlantic. The engine says so itself, citing this report's own risk
-register: `` `src/js/wbapi-server.js:the shared kernel (mover.js) decides bounds/wrap/sea@8868` ``.
+register: `` `src/js/wbapi-server.js:the shared kernel (mover.js) decides bounds/wrap/sea@8880` ``.
 
 ---
 
@@ -68,16 +68,16 @@ the three §WALK gates run live; and a cross-check against the sibling report th
 
 | Spec element | Shipped as | Anchor |
 |---|---|---|
-| §2.1 grid `ROWS 90 / COLS 360` | exact | `` `const GEO_PROJ = { ROWS: 90, COLS: 360 }@9902` `` |
-| §2.2 locale lists (`CELL_GRID` → array) | exact | `` `const CELL_GRID = (() =>@9852` ``, `` `const cellCodes  = (key) => CELL_GRID[key] || []@9862` `` |
-| §2.3 sea mask | `SEA_RUNS` (run-length), 4,790 cells / 286 runs, rows 0–85 × cols 140–255 | `` `const IMPASSABLE_CELLS = (() =>@9871` `` |
-| §2.3 water crossings | **`SEA_LANES`** — 59 walkable channel cells, *not* ferry edges | `` `const SEA_LANES = new Set@9870` `` |
-| §2.4 `terrainAt` / `inferTerrain` | `_inferTerrain` — lanes→`ocean`, roads→`road`, else 4-neighbour majority, fallback `midlands` | `` `function _inferTerrain(r, c)@28385` `` |
+| §2.1 grid `ROWS 90 / COLS 360` | exact | `` `const GEO_PROJ = { ROWS: 90, COLS: 360 }@9915` `` |
+| §2.2 locale lists (`CELL_GRID` → array) | exact | `` `const CELL_GRID = (() =>@9865` ``, `` `const cellCodes  = (key) => CELL_GRID[key] || []@9875` `` |
+| §2.3 sea mask | `SEA_RUNS` (run-length), 4,790 cells / 286 runs, rows 0–85 × cols 140–255 | `` `const IMPASSABLE_CELLS = (() =>@9884` `` |
+| §2.3 water crossings | **`SEA_LANES`** — 59 walkable channel cells, *not* ferry edges | `` `const SEA_LANES = new Set@9883` `` |
+| §2.4 `terrainAt` / `inferTerrain` | `_inferTerrain` — lanes→`ocean`, roads→`road`, else 4-neighbour majority, fallback `midlands` | `` `function _inferTerrain(r, c)@28535` `` |
 | §4.1 `move(world,pos,dir) → MoveResult` | exact signature, pure, dual-export | `` `src/js/mover.js:function moverMove(world, pos, dir)@44` `` |
 | §4.2 inline-and-verify | `MOVER:CORE` sentinels, 1,847 bytes byte-identical | `src/scripts/check-mover-parity.js` |
-| §4.3 client caller | thin: kernel → `storyBlock` or side effects | `` `function cellMove(dir)@28347` `` |
+| §4.3 client caller | thin: kernel → `storyBlock` or side effects | `` `function cellMove(dir)@28495` `` |
 | §4.3 server caller | thin: kernel → session mutation + SSE | `` `src/js/wbapi-server.js:const Mover     = require('./mover')@37` `` |
-| §5 reachability | land-flood, sole surviving graph tool | `` `src/js/wbapi-server.js:GET /api/graph/reachability ─@5493` `` |
+| §5 reachability | land-flood, sole surviving graph tool | `` `src/js/wbapi-server.js:GET /api/graph/reachability ─@5505` `` |
 | §6.1 invariant proof I1/I2/I3 | `check:invariants`, CI gate #1 | `src/scripts/check-invariants.js` |
 | §6.2 walk parity (structural + behavioural) | `check:parity`, `check:behaviour`, gates #3/#4 | `src/scripts/check-mover-*.js` |
 | §7 MUD harness | `src/tests/mud-harness.mjs`, `npm run test:mud` | — |
@@ -194,7 +194,7 @@ here it is the strongest section.
   side does not. One node authored onto that terrain would produce a false red on CI gate #1.
 - **§DX-02bm** (already open, filed §DOC-02ay) — `TERRAIN_ENCOUNTER_RATE.junction:0` survived the
   junction purge. §WALK-4 removed the `WORLD_DB` twin and left a tombstone comment at
-  `` `terrain was removed here@6402` ``; the encounter-rate key two hundred lines below was missed.
+  `` `terrain was removed here@6403` ``; the encounter-rate key two hundred lines below was missed.
   Unreachable: no node carries `name:'junction'`, so `_inferTerrain` can never return it.
 
 ---

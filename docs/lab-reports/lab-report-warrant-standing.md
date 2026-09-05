@@ -47,7 +47,7 @@ proofs, re-run on the pinned parent:
 | 3 | the board records nothing the player earned from it | no read of player history anywhere in the selector | ✔ |
 
 One wording correction. §1 called the candidate pool *"unconditional."* It is not — the loop carries
-six guards (schema, `const BOUNTY_TYPES@37019` membership, a distant `activateNode`, not-already-
+six guards (schema, `const BOUNTY_TYPES@37239` membership, a distant `activateNode`, not-already-
 started, destination exists, and both activation gates). What is unconditional is that **no guard
 consults the player's history with the board**, which is the point being made and is correct.
 
@@ -66,7 +66,7 @@ will show you.
    destination stays reachable on foot at standing 0.
 4. **Determinism preserved.** Standing feeds `limit` and a numeric ceiling into the existing FNV-1a
    selection; no `Math.random`, replayable per `(node, gameDay, standing)`.
-5. **State in one place (§STATE-INIT).** Both fields go only in `const _S_DEFAULTS@23063`, so a fresh
+5. **State in one place (§STATE-INIT).** Both fields go only in `const _S_DEFAULTS@23092`, so a fresh
    game, a load-merge and a checkpoint reset inherit them for free.
 
 All five held. See §6.
@@ -77,12 +77,12 @@ All five held. See §6.
 
 | # | Concept | What it is | Shipped as |
 |---|---|---|---|
-| C1 | `S_story.warrantStanding` | integer count of completed board-accepted bounties | `warrantStanding: 0, warrantAccepted: {}@23083` |
+| C1 | `S_story.warrantStanding` | integer count of completed board-accepted bounties | `warrantStanding: 0, warrantAccepted: {}@23113` |
 | C2 | `S_story.warrantAccepted{}` | `id → true` on accept, flipped to `'credited'` on payout | *(same line)* |
-| C3 | `WARRANT_TIERS` + `_warrantTier(n)` | ordered rank table → `{name, slate, rewardCap}` | `const WARRANT_TIERS = [@37057` · `function _warrantTier(standing)@37064` |
-| C4 | `_creditWarrant(id)` | idempotent host credit, returns a rank-up line or `''` | `function _creditWarrant(id)@37100` |
-| C5 | `_boardRewardXp(q)` | numeric twin of the display reward scan | `function _boardRewardXp(q)@37072` |
-| C6 | standing-gated selection | tier drives slate size + reward ceiling | `const tier = _warrantTier(S_story.warrantStanding)@37169` |
+| C3 | `WARRANT_TIERS` + `_warrantTier(n)` | ordered rank table → `{name, slate, rewardCap}` | `const WARRANT_TIERS = [@37277` · `function _warrantTier(standing)@37284` |
+| C4 | `_creditWarrant(id)` | idempotent host credit, returns a rank-up line or `''` | `function _creditWarrant(id)@37320` |
+| C5 | `_boardRewardXp(q)` | numeric twin of the display reward scan | `function _boardRewardXp(q)@37292` |
+| C6 | standing-gated selection | tier drives slate size + reward ceiling | `const tier = _warrantTier(S_story.warrantStanding)@37389` |
 
 **C1 and C2 shipped as one physical line.** This matters downstream: see §11.
 
@@ -103,14 +103,14 @@ bounties surface only once you have earned its trust — the mechanical form of 
 > Measured with the real parser at the pinned parent, the board-eligible pool is **2,760 quests across
 > six types**: `skill_check` 2,454 · `side` 142 · **`combat` 78** · **`delivery` 57** · **`escort` 22**
 > · **`dialogue` 7**. Only `hunt` and `craft` are empty. **The declined option would have gated 164
-> quests.** The counterexample was seventeen lines above the report's own `function _boardReward(q)@37036`
-> anchor, in `const BOUNTY_TYPES@37019` — which names all eight types the board will post. A combat
+> quests.** The counterexample was seventeen lines above the report's own `function _boardReward(q)@37256`
+> anchor, in `const BOUNTY_TYPES@37239` — which names all eight types the board will post. A combat
 > bounty (*"The Hammer Returns"*) sits on the measured slate at standing 3 and above.
 > *(Instrument 135, again: grep the function you are about to edit — the counterexample is usually inside it.)*
 
 **Call 2 — What counts toward standing? → ONLY BOARD-ACCEPTED BOUNTIES.**
 Standing accrues only for quests taken through the board (the tag set in
-`function _acceptBounty(id)@37210`). Organic geographic discovery never counts. ✔ shipped as specified.
+`function _acceptBounty(id)@37430`). Organic geographic discovery never counts. ✔ shipped as specified.
 
 **Secondary calls (locked, tunable):** the ceiling is on **xp**; the tier-0 ceiling is set generously
 so a newcomer's board is never emptied (verified — see §9); the header shows rank + count.
@@ -133,7 +133,7 @@ const WARRANT_TIERS = [
 ```
 
 All five rows, all four fields, shipped verbatim from this block. Diffed at `e0051a8` and at HEAD
-(`rewardCap: 250@37058`) — **zero deltas in thirty-two days.**
+(`rewardCap: 250@37278`) — **zero deltas in thirty-two days.**
 
 > ⚠ **The ladder has a dead rung.** `Sworn` (min 12) carries **the same slate as `Trusted`** — 6 —
 > and its only other effect is lifting a ceiling that gates five quests out of 1,076. Measured in the
@@ -156,7 +156,7 @@ All five rows, all four fields, shipped verbatim from this block. Diffed at `e00
 | Economy untouched | ✔ no reward value changed anywhere in the diff |
 | No new game-state `Math.random` | ✔ zero occurrences in the diff |
 | Host/Script Separation | ✔ no new opcode, no control flow in a leaf handler; idempotent via the `'credited'` sentinel |
-| §STATE-INIT single source of truth | ✔ one hunk in `const _S_DEFAULTS@23063`, nowhere else |
+| §STATE-INIT single source of truth | ✔ one hunk in `const _S_DEFAULTS@23092`, nowhere else |
 | DUEL:CORE / MOVER:CORE / ROOMS:CORE untouched | ✔ 0 kernel sentinels in 9 hunks |
 
 Seven for seven. Notably, this is the invariant section the *next* increment failed: §BOARD-01-FU8
@@ -174,18 +174,18 @@ means every pre-FU7 save starts the ladder at zero with its in-progress Warrant 
 
 | §7 block | Specified | Shipped | Delta |
 |---|---|---|---|
-| (a) state | two fields after `waypoint`/`customQuestTerrain` (`22496`) | `warrantStanding: 0, warrantAccepted: {}@23083` | **exact**; comment lengthened |
-| (b) tier table | `WARRANT_TIERS` §5 | `const WARRANT_TIERS = [@37057` | **byte-identical** |
-| (b) `_warrantTier` | 2-line form | `function _warrantTier(standing)@37064` | reflowed to 4 lines, semantics identical |
-| (b) `_boardRewardXp` | 8-line body | `function _boardRewardXp(q)@37072` | identical modulo spacing |
-| (b) `_creditWarrant` | 9-line body | `function _creditWarrant(id)@37100` | identical; one inline comment promoted to a block |
-| (c) ceiling | `if (_boardRewardXp(q) > tier.rewardCap) continue;` | `if (_boardRewardXp(q) > tier.rewardCap) continue@37175` | **byte-identical** |
-| (c) slate | `out.slice(0, limit \|\| tier.slate)` | `const shown = out.slice(0, limit@37186` | **byte-identical** |
-| (d) accept tag | one line after the `unlock` execBits | `(S_story.warrantAccepted = S_story.warrantAccepted@37215` | **byte-identical** |
-| (e) hook A | `{ const _wp = _creditWarrant(id); … }` | `const _wp = _creditWarrant(id)@30205` | **byte-identical** |
-| (e) hook B | `{ const _wp = _creditWarrant(questId); … }` | `const _wp = _creditWarrant(questId)@6993` | **byte-identical** |
-| (f) header | `const _t = …` | `const _wt = _warrantTier(S_story.warrantStanding)@35686` | variable renamed `_t` → `_wt` |
-| — | *(not specified)* | `const _bounties = _boardBounties(node)@35684` | ⚠ **an edit §7 does not contain** |
+| (a) state | two fields after `waypoint`/`customQuestTerrain` (`22496`) | `warrantStanding: 0, warrantAccepted: {}@23113` | **exact**; comment lengthened |
+| (b) tier table | `WARRANT_TIERS` §5 | `const WARRANT_TIERS = [@37277` | **byte-identical** |
+| (b) `_warrantTier` | 2-line form | `function _warrantTier(standing)@37284` | reflowed to 4 lines, semantics identical |
+| (b) `_boardRewardXp` | 8-line body | `function _boardRewardXp(q)@37292` | identical modulo spacing |
+| (b) `_creditWarrant` | 9-line body | `function _creditWarrant(id)@37320` | identical; one inline comment promoted to a block |
+| (c) ceiling | `if (_boardRewardXp(q) > tier.rewardCap) continue;` | `if (_boardRewardXp(q) > tier.rewardCap) continue@37395` | **byte-identical** |
+| (c) slate | `out.slice(0, limit \|\| tier.slate)` | `const shown = out.slice(0, limit@37406` | **byte-identical** |
+| (d) accept tag | one line after the `unlock` execBits | `(S_story.warrantAccepted = S_story.warrantAccepted@37435` | **byte-identical** |
+| (e) hook A | `{ const _wp = _creditWarrant(id); … }` | `const _wp = _creditWarrant(id)@30360` | **byte-identical** |
+| (e) hook B | `{ const _wp = _creditWarrant(questId); … }` | `const _wp = _creditWarrant(questId)@7004` | **byte-identical** |
+| (f) header | `const _t = …` | `const _wt = _warrantTier(S_story.warrantStanding)@35911` | variable renamed `_t` → `_wt` |
+| — | *(not specified)* | `const _bounties = _boardBounties(node)@35909` | ⚠ **an edit §7 does not contain** |
 
 **Scope fence:** 4 files (this report, `play.html`, `warrants-board.test.js`, BACKLOG.md),
 **9 hunks, +53/−3**, net **+50** — **exactly the file's own line delta** (37,422 → 37,472). Every hunk
@@ -202,7 +202,7 @@ header names a function §7 named.
 
 > **A second, smaller mis-description, and it runs the other way — the report UNDERSELLS itself.**
 > §7(e) labels hook A the *"`storyCheckQuests` side/craft path."* It is not. The hook sits inside
-> `QuestRuntime.canComplete(id)@30189`, whose guard is `q.schema === 'UQF-1.0' && q.completion &&
+> `QuestRuntime.canComplete(id)@30343`, whose guard is `q.schema === 'UQF-1.0' && q.completion &&
 > canComplete(id)` — **type-agnostic**. The `q.type === 'side'` line above it is the preceding
 > statement, not the enclosing branch. So the hook covers the full declarative completion surface
 > (2,760 board-eligible quests), not 142 side quests plus zero craft quests. *A hook described by the

@@ -98,11 +98,11 @@ Instruments from the §DOC-02 program applied here:
 
 **Live under the specified name (18 of 20 identifiers, 90 %)**
 
-`const ROMANCE_QUOTES = [@22380` (21 entries) · `const NPC_ROMANCE_PREAMBLES = {@27481` ·
-`const NPC_ROMANCE_VIGNETTES = {@27491` · `const NPC_NG_MEMORY_LINES = {@27326` ·
-`function _mkSection(id, icon, label) {@35303` · `_mkCard` · `_rollCeremonia` ·
-`battleDis: 0,@23021` · `hoursElapsed: 0, hoursSinceSlept: 0,@23092` · `skillCheckAttempts: {},@23150` ·
-`romanceQuotesDelivered: [], npcRomanceVignetteDelivered: {},@23099` · `ngMemoryDelivered` ·
+`const ROMANCE_QUOTES = [@22407` (21 entries) · `const NPC_ROMANCE_PREAMBLES = {@27613` ·
+`const NPC_ROMANCE_VIGNETTES = {@27623` · `const NPC_NG_MEMORY_LINES = {@27458` ·
+`function _mkSection(id, icon, label) {@35528` · `_mkCard` · `_rollCeremonia` ·
+`battleDis: 0,@23051` · `hoursElapsed: 0, hoursSinceSlept: 0,@23124` · `skillCheckAttempts: {},@23182` ·
+`romanceQuotesDelivered: [], npcRomanceVignetteDelivered: {},@23131` · `ngMemoryDelivered` ·
 `priorQuestMinusOne` · `ngPlusRun` · `nexusQ01` · `nexusQ02` · `VOID_TIDE_EVENTS` · `storyConfirmSleep`.
 
 **Dead (2)**
@@ -110,14 +110,14 @@ Instruments from the §DOC-02 program applied here:
 | Symbol | Verdict | Evidence |
 |---|---|---|
 | `storyQuestHunt(id, forceKey)` | **RETIRED — correct when written** | born `e594848` (2026-05-25, the day before), deleted `7952752` §TIMELESS-01 |
-| `the_cat_king` | **NEVER SHIPPED** | **0 commits ever**; the monster shipped as `cat_king:         { key:'cat_king',@5404` |
+| `the_cat_king` | **NEVER SHIPPED** | **0 commits ever**; the monster shipped as `cat_king:         { key:'cat_king',@5401` |
 
 **Monster keys — 8 of 9 exact.** `stray_alley_cat` · `fluffy_cat` · `beefy_tom` · `honcho_cat_m` ·
 `honcho_cat_f` · `taz_devil` · `fat_merchant_cat` · `corrupted_cat` all live; only the Cat-King carries a
 spurious `the_` prefix the file has never held.
 
 **Node codes — 0 of 6 resolve.** `CQ`→`CDG` · `CY`→`HKG` · `SW`→`MSY` · `CO`→`TLS` · `FR`→`AMS` ·
-`MM`→`LIM:{ num:81, code:'LIM', name:'mimic_meadow'@8815`. The corpus rule applies: *a node code in a
+`MM`→`LIM:{ num:81, code:'LIM', name:'mimic_meadow'@8828`. The corpus rule applies: *a node code in a
 design doc is a citation, not an identifier.* **But two of the six are invisible to the gate that exists
 to annotate them** — see §V-D.
 
@@ -140,9 +140,9 @@ content migrated to `plan-archive.md`, which `quest.md` correctly points at.
 | 2 | SP4: "20 stale PLANNED markers" | exact — `9684ff6`'s own message | ✅ EXACT |
 | 3 | SP4: "5 mismatched `// → doc:` targets" | exact — `ded062e`'s own message | ✅ EXACT |
 | 4 | `ROMANCE_QUOTES`, 21 entries, "15 % per sleep, Act III+" | `Math.random() < 0.15`, `actNumber >= 3`, and the engine comment **byte-identical** | ✅ EXACT |
-| 5 | §DESIGN-02 P3 fixed `battleDis` never applying | live at `// P3 exhaustion: battleDis charges@25047`, still naming P3 | ✅ SHIPPED |
+| 5 | §DESIGN-02 P3 fixed `battleDis` never applying | live at `// P3 exhaustion: battleDis charges@25095`, still naming P3 | ✅ SHIPPED |
 | 6 | 5 section types: LOCATION / ENCOUNTER / STALK / SOCIAL / VENDOR | **1 of 5 names survives** (`Encounter`); 9 sections at HEAD; STALK deleted by §TIMELESS-01; SOCIAL + VENDOR re-expressed as `NODE_HOOKS`/`NODE_VERBS` (§VM-01-G) | ⚠️ EXPANDED + RENAMED |
-| 7 | `storyRenderSections()` | survives **only inside an HTML comment**, `<!-- storyRenderSections() writes .story-section divs here -->@4278`; 1 commit ever | ❌ DEAD POINTER |
+| 7 | `storyRenderSections()` | survives **only inside an HTML comment**, `<!-- storyRenderSections() writes .story-section divs here -->@4275`; 1 commit ever | ❌ DEAD POINTER |
 | 8 | Instance 6 §DESIGN-03 — "Integration: **PLANNED**" | 9 skill-check quests specified → **2,634 `skill_check` bits** live | ❌ **STALE — SHIPPED** |
 | 9 | Instance 7 §DUNGEON-01 — "Integration: **PLANNED**" | both P3+ nodes live (`SZG` 80, `LIM` 81); 26/26 state fields (§DOC-02k) | ❌ **STALE — SHIPPED** |
 | 10 | Instance 8 §DUNGEON-02 — "Integration: **PLANNED**" | **40 of 50** five-act ids live (8 of 10 chains) | ❌ **STALE — SHIPPED** |
@@ -244,9 +244,9 @@ map cannot see it. Two codes in one short report suggests the residue is larger 
 
 Instance 4's romance layer delivers through `storyConfirmSleep`, and both of its branches draw the
 **unseeded** stream while writing `_S_DEFAULTS()` fields:
-`romanceQuotesDelivered: [], npcRomanceVignetteDelivered: {},@23099`, written at
+`romanceQuotesDelivered: [], npcRomanceVignetteDelivered: {},@23131`, written at
 `Math.random() < 0.15` and at
-`S_story.npcRomanceVignetteDelivered = { ..._vDelivered, [_vKey]: true };@36333`. Same shape as §DOC-02m's
+`S_story.npcRomanceVignetteDelivered = { ..._vDelivered, [_vKey]: true };@36531`. Same shape as §DOC-02m's
 fishing cluster and §DOC-02n's death saves: **the UQF quest path is seeded and every hand-authored
 surface that rolls its own dice is not.** Cosmetic in effect — a flavour line either appears or does not
 — but it is persisted state, so a seeded replay diverges.
@@ -303,7 +303,7 @@ register the program has measured** — §DOC-02i's subject went 3 of 5, with tw
 - **§DX-02m (existing, +2 named instances)** — `romanceQuotesDelivered` and
   `npcRomanceVignetteDelivered` are `_S_DEFAULTS()` fields written from `Math.random()` inside
   `storyConfirmSleep`. Cosmetic in effect, persisted in fact.
-- **§AUDIT-03s family (existing, +1)** — `<!-- storyRenderSections() writes .story-section divs here -->@4278`
+- **§AUDIT-03s family (existing, +1)** — `<!-- storyRenderSections() writes .story-section divs here -->@4275`
   names a function with one commit ever and no definition at HEAD. Invisible to every gate:
   `check:noderegs` phase 6 is comment-aware *by design*, and `check:anchors` scans `.md` files, not
   markup. One-line fix, but the class is the point.
@@ -316,15 +316,15 @@ register the program has measured** — §DOC-02i's subject went 3 of 5, with tw
 
 | Anchor | Content |
 |---|---|
-| `const ROMANCE_QUOTES = [@22380` · `// ROMANCE_QUOTES: 15% per sleep, Act III+, no repeat@36314` | Instance 4, verbatim |
-| `const NPC_ROMANCE_PREAMBLES = {@27481` · `const NPC_ROMANCE_VIGNETTES = {@27491` | the romance consts |
-| `romanceQuotesDelivered: [], npcRomanceVignetteDelivered: {},@23099` · `S_story.npcRomanceVignetteDelivered = { ..._vDelivered, [_vKey]: true };@36333` | §DX-02m (§V-E) |
-| `const NPC_NG_MEMORY_LINES = {@27326` | Instance 10 |
-| `function _mkSection(id, icon, label) {@35303` · `<!-- storyRenderSections() writes .story-section divs here -->@4278` | Instance 3 — helper live, host a dead pointer |
-| `battleDis: 0,@23021` · `// P3 exhaustion: battleDis charges@25047` | Instance 3's bug fix, still live |
-| `hoursElapsed: 0, hoursSinceSlept: 0,@23092` · `skillCheckAttempts: {},@23150` | the two fields §3.1 names |
-| `cat_king:         { key:'cat_king',@5404` | Instance 5 — the Cat-King, without the `the_` |
-| `LIM:{ num:81, code:'LIM', name:'mimic_meadow'@8815` | `MM` resolved (§V-D) |
+| `const ROMANCE_QUOTES = [@22407` · `// ROMANCE_QUOTES: 15% per sleep, Act III+, no repeat@36512` | Instance 4, verbatim |
+| `const NPC_ROMANCE_PREAMBLES = {@27613` · `const NPC_ROMANCE_VIGNETTES = {@27623` | the romance consts |
+| `romanceQuotesDelivered: [], npcRomanceVignetteDelivered: {},@23131` · `S_story.npcRomanceVignetteDelivered = { ..._vDelivered, [_vKey]: true };@36531` | §DX-02m (§V-E) |
+| `const NPC_NG_MEMORY_LINES = {@27458` | Instance 10 |
+| `function _mkSection(id, icon, label) {@35528` · `<!-- storyRenderSections() writes .story-section divs here -->@4275` | Instance 3 — helper live, host a dead pointer |
+| `battleDis: 0,@23051` · `// P3 exhaustion: battleDis charges@25095` | Instance 3's bug fix, still live |
+| `hoursElapsed: 0, hoursSinceSlept: 0,@23124` · `skillCheckAttempts: {},@23182` | the two fields §3.1 names |
+| `cat_king:         { key:'cat_king',@5401` | Instance 5 — the Cat-King, without the `the_` |
+| `LIM:{ num:81, code:'LIM', name:'mimic_meadow'@8828` | `MM` resolved (§V-D) |
 | `8abc606` · `9684ff6` · `ded062e` · `213d14b` · `7952752` · `5e48dd7` | own commit · SP4 · SP4 validation · §DESIGN-02 · §TIMELESS-01 · the `plan.md` split |
 
 ---

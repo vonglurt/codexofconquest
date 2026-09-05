@@ -47,7 +47,7 @@ Both diagnosed bugs verify verbatim against the pre-fix build:
 - **Stale waypoint origin** — `_bfsGridDir(S_story.currentCode, wp)` at `01c5187` lines 32781 and 33062, resolving through `NODE_COORDS[fromCode]` with `playerR/playerC` only as a fallback. The arrow routed from the last *named node*, not from the player.
 - **Pre-§WALK-1.5 bounds** — `_bfsGridPath` still carried `if (nr < 1 || nc < 1 || nr > 500 || nc > 500) continue;`, a 1-indexed 500×500 clamp with no E/W wrap, while the kernel walked 90×360-with-wrap.
 
-`TERRAIN_ENCOUNTER_RATE` already contained `road:0` — the safe-highway rate existed and **no cell could ever resolve to `road`**, because there was no road data. The table is byte-identical from the diagnosis build to HEAD at `const TERRAIN_ENCOUNTER_RATE@9892`; the only correction is that it holds **15** keys, including a `junction:0` the report never named, and `city:0.05` below the stated floor.
+`TERRAIN_ENCOUNTER_RATE` already contained `road:0` — the safe-highway rate existed and **no cell could ever resolve to `road`**, because there was no road data. The table is byte-identical from the diagnosis build to HEAD at `const TERRAIN_ENCOUNTER_RATE@9905`; the only correction is that it holds **15** keys, including a `junction:0` the report never named, and `city:0.05` below the stated floor.
 
 ---
 
@@ -71,10 +71,10 @@ L0  GEOMETRY        GEO_PROJ 90×360 equirect 1° · mover.js kernel      (FROZE
 
 ## IV. Locked data shapes
 
-- **`ROAD_RUNS`** — RLE `{row:[[c0,c1],…]}` after `SEA_LANES`, exactly the `SEA_RUNS` shape (`const ROAD_RUNS@9883`); the `ROAD_CELLS` Set is built at load. The server parses the same literal via `getRoadCells()`, the `getSeaLanes()` pattern. **Net at close: 400 road cells (1.4% of passable), 88 intersections/T-junctions** — confirmed by the generator's own header comment in the shipped file at both `7b503d1` and `0b341d1`.
+- **`ROAD_RUNS`** — RLE `{row:[[c0,c1],…]}` after `SEA_LANES`, exactly the `SEA_RUNS` shape (`const ROAD_RUNS@9896`); the `ROAD_CELLS` Set is built at load. The server parses the same literal via `getRoadCells()`, the `getSeaLanes()` pattern. **Net at close: 400 road cells (1.4% of passable), 88 intersections/T-junctions** — confirmed by the generator's own header comment in the shipped file at both `7b503d1` and `0b341d1`.
 - **Terrain precedence** (both copies plus `src/scripts/check-terrain-parity.js`): `SEA_LANES → 'ocean'` ▸ `ROAD_CELLS → 'road'` (encounter rate 0) ▸ majority-of-named-neighbours ▸ `'midlands'`. Sea lanes deliberately stay `ocean` — crossings keep their 0.10 risk as texture. Boats are never free.
 - **`describeCell(world, pos) → room`** (`src/js/rooms.js:function describeCell@192`) returns `{icon, title, sub, terrain, prose, exits, signposts, landmarks}`. Prose variants are keyed by `hash(r,c)` — **no `Math.random` anywhere in the kernel**, which is what makes MUD parity and deterministic tests possible. Road cells name the next settlement along the road in each road direction; every empty cell lists its nearest landmarks (`src/js/rooms.js:__nearestLandmarks(world, pos, 12, 3)@233` — BFS radius 12, top 3). The `ROOMS:CORE` block is inlined byte-identically into the HTML (`check:roomsparity`) and `require()`d by the server — the MOVER:CORE pattern.
-- **Routing origin** — `function _playerPos@37732`, the player's cell, never the last named node.
+- **Routing origin** — `function _playerPos@37945`, the player's cell, never the last named node.
 - **`roads-pins.json`** (repo root at the time of writing; user-authored net edits): `{pins:[{r,c}], links:[[cellA,cellB]], locked:['CODE',…]}`. `build-roads.js` consumes pins as mandatory road vertices; `locked` city codes survive geo-seed regeneration.
 
 ---
@@ -124,7 +124,7 @@ All eleven commit hashes resolve at HEAD, in the stated order, on the stated dat
 
 **The net grew, and it grew through the sanctioned door.** `fa8f9e4` (§DX-01a, 2026-07-28) took the net from 400/88 to 410/89 by running `build-roads.js --apply` — the do-not-hand-edit path this report mandated — while laying the real Tungas–Station 7 road. Guard-rail #4 held under the one pressure that could have broken it.
 
-**Runtime constants unchanged.** `function _roadGridPathCore@37821` still weights the route at `ROAD_CELLS.has(k) || SEA_LANES.has(k)) ? 1 : 2@37851`; `function _travelTick@38017` still steps at `_travelTimer = setTimeout(_travelTick, 120)@38044` and still halts on all four interrupt classes. `function _enterEmptyCell@28422` renders the room, and the old sentence *"The path continues. No named location marks this ground."* occurs **zero** times in the file.
+**Runtime constants unchanged.** `function _roadGridPathCore@38034` still weights the route at `ROAD_CELLS.has(k) || SEA_LANES.has(k)) ? 1 : 2@38064`; `function _travelTick@38230` still steps at `_travelTimer = setTimeout(_travelTick, 120)@38257` and still halts on all four interrupt classes. `function _enterEmptyCell@28575` renders the room, and the old sentence *"The path continues. No named location marks this ground."* occurs **zero** times in the file.
 
 ---
 
@@ -175,9 +175,9 @@ Three of five closed within four days. The two that stayed open are where the co
 | # | Follow-up | Outcome |
 |---|---|---|
 | 1 | `_renderMiniMap`'s *"Void's First Sign"* special case targets pre-§WALK-1.5 cell (4,3) — re-anchor or retire | ✅ **RETIRED** `b872b8c` (2026-07-07, 4 days). Zero occurrences at HEAD. |
-| 2 | `_questNodes()` built once per session — invalidate if `QUEST_DB` mutates live | ✅ **§DX-02cl, 2026-09-03.** `function _questNodes@37092` is still `if (!_questNodeSet)`, and `_questsByNodeRevalidate` now nulls the Set whenever its entry-count guard fires, so the marker rebuilds on the next arrival. Before that fix: Its sibling index `_questsByNode` (§VM-01-F-FU) solved exactly this with an entry-count guard and documented the reasoning — **the answer was written one function below and never applied upward.** → **§DX-02cl**. |
-| 3 | Map-tab hover for road cells could name the road's destinations (reuse `__roadDestination`) | ✅ **DONE** `51bc5c7` (2026-07-07, 4 days), reusing `function __roadDestination@10080` precisely as proposed. |
-| 4 | GLOBE panel click → jump map tab / world panel to that region (read-only aid) | ⚠ **Superseded.** §MAP-NAV wired the globe canvas to `function _navClickCell@37974`, which **travels** there — auto-walk via `_navTravelTo`, never a warp, so invariant #3 is intact. The read-only *centering* variant was ruled out of scope pending a pannable-view design and is recorded deferred in BACKLOG. |
+| 2 | `_questNodes()` built once per session — invalidate if `QUEST_DB` mutates live | ✅ **§DX-02cl, 2026-09-03.** `function _questNodes@37185` is still `if (!_questNodeSet)`, and `_questsByNodeRevalidate` now nulls the Set whenever its entry-count guard fires, so the marker rebuilds on the next arrival. Before that fix: Its sibling index `_questsByNode` (§VM-01-F-FU) solved exactly this with an entry-count guard and documented the reasoning — **the answer was written one function below and never applied upward.** → **§DX-02cl**. |
+| 3 | Map-tab hover for road cells could name the road's destinations (reuse `__roadDestination`) | ✅ **DONE** `51bc5c7` (2026-07-07, 4 days), reusing `function __roadDestination@10093` precisely as proposed. |
+| 4 | GLOBE panel click → jump map tab / world panel to that region (read-only aid) | ⚠ **Superseded.** §MAP-NAV wired the globe canvas to `function _navClickCell@38187`, which **travels** there — auto-walk via `_navTravelTo`, never a warp, so invariant #3 is intact. The read-only *centering* variant was ruled out of scope pending a pannable-view design and is recorded deferred in BACKLOG. |
 | 5 | Migrate older worldbuilder specs to the Inc g hermetic pattern; **`worldbuilder-crud-arrays.test.js` itemChain tests still need the live server to dismiss the welcome screen** | ❌ **NOT DONE — and this sentence is the most expensive one in the report.** One of seven worldbuilder specs carries the `page.route` firewall (the one Inc g wrote). Two others dismiss the welcome screen by hand. `worldbuilder-crud-arrays.test.js` does **neither** — and that is the verbatim root cause of **§DX-02d**, four Playwright reds filed 2026-07-29 and left undiagnosed until 2026-08-17. **This report named the defect on 2026-07-03, twenty-six days before the row existed and forty-five before anyone diagnosed it.** |
 
 ***A follow-up register is not a wish list; it is a set of predictions with expiry dates.*** Item 5 was correct, specific, and unread for six weeks. Nothing filed it as a row, so nothing scheduled it, so a green feature carried four red tests through three sessions of "baseline reds".
@@ -208,7 +208,7 @@ The measured payoff, 46 days on: the net covers 1.5% of walkable ground and touc
 - `plan-archive.md` §"Archived 2026-07-03" — the full §NAV-01 section (diagnosis, flows, increment table, checkpoint). **Note the spec/increment-row disagreement documented in §VIII.**
 - `docs/lab-reports/lab-report-cell-map-mud-redesign.md`, `lab-report-terrain-field-mover-redesign.md`, `lab-report-walk5-mud-harness.md` — the §WALK substrate.
 - Docs synced at close: `maps.md` (road net + room layer), `docs/notes/docs-node-network.md` §13 (L0–L8 stack), `mechanics.md` (Roads, Rooms & Auto-Travel), `index.md` registry row, `docs/api/wbapi-help.md` (roads endpoints).
-- Server-side road surfaces: `src/js/wbapi-server.js:function roadJunctionCount@1055`.
+- Server-side road surfaces: `src/js/wbapi-server.js:function roadJunctionCount@1058`.
 
 **Test-run rules learned this arc (promoted to plan.md §I):** never trust a piped test run's exit code; stop the WBAPI server before Playwright suites.
 

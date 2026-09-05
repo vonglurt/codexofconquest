@@ -54,23 +54,23 @@ blocks.** Concretely, the layer adds four things to play.
 
 1. **It gives optional content stakes without gating it.** A player who completes zero Epic
    Battlegrounds still finishes the game — the victory check tests only the final battle
-   (`function storyCheckVictory(node) {@28209` returns unless `defeatedBattles['TLS']`). What
+   (`function storyCheckVictory(node) {@28356` returns unless `defeatedBattles['TLS']`). What
    changes is what the last screen is able to say about them.
 2. **It converts completionism into characterisation.** The score does not count kills. It counts
    contracts *started and abandoned* at triple weight — walking away from someone who asked is worse
    than never meeting them. That is a legible moral rule a player can learn from one playthrough and
    act on in the next.
 3. **It gives the journal a mechanical reason to be read.** Reading is otherwise unrewarded, so the
-   engine attaches consequences: `brynn: () => (S_story.journalEntriesRead||[]).includes(7)@23465` unlocks a
+   engine attaches consequences: `brynn: () => (S_story.journalEntriesRead||[]).includes(7)@23499` unlocks a
    Brynn beat from Entry 7, and a half-journal milestone (nine entries) is one of the twelve mission
    bits. The fragments are placed at nodes the route already crosses, so the reward for slowing down
    is content, not a detour.
-4. **It makes the ending a record, not a verdict.** `vic-returns').textContent@28225` prints
+4. **It makes the ending a record, not a verdict.** `vic-returns').textContent@28372` prints
    *People Returned To* beside *Shards Gathered* — the design's central claim is that the dramatic
    event happens once while the restored world is what the covenant was *for*.
 
 **The mid-run feedback loop matters most.** An ending computed from twenty invisible decisions would
-be an ambush. `id:'story-sweelinck-variant'@31376` renders a bracketed Sweelinck line at the
+be an ambush. `id:'story-sweelinck-variant'@31608` renders a bracketed Sweelinck line at the
 Scholar's Quarter and the Cosmic Realm, so the player is told, in character, which entry of
 Froberger's journal they are currently living in — early enough to change course. **This is the
 whole feature: the game shows you the shape you are making while you can still make a different
@@ -103,22 +103,22 @@ Per the §DOC-02 house method, in order:
 
 | Specified artefact | Shipped as | Verdict |
 |---|---|---|
-| Curse Score, derived on demand | `function _curseScore() {@28193` | **Byte-exact to the spec formula** |
+| Curse Score, derived on demand | `function _curseScore() {@28340` | **Byte-exact to the spec formula** |
 | `S_story.journalEntriesRead: []` | `journalEntriesRead: [], ebReturnsCompleted: {},` *(the twin deleted, §DX-02eo)* | Exact name, 5 readers |
 | `S_story.ebReturnsCompleted: {}` | same line | Exact name, **0 readers** (§DX-02n) |
 | `S_story.curseScore: 0` (spec: *never stored*) | an undeclared stored field, 0 readers | **Contradicted — see F3** |
-| `FROBERGER_JOURNAL` | `const FROBERGER_JOURNAL = [@27186` | Exact name; 4/4 field names; **41** entries |
-| `SWEELINCK_DIALOGUE_VARIANTS` | `const SWEELINCK_DIALOGUE_VARIANTS = [@27231` | Exact name; 4 specified brackets + 1 |
-| Ending variants in the victory sequence | `function storyCheckVictory(node) {@28209` | Live; **four** branches, not two |
-| Collectible pickup on node arrival | `function storyCheckJournal(node) {@30211`, called at `storyCheckJournal(node);@36030` | Live; toast **byte-exact** |
-| Epic Battleground register | `const EB_NPC_DIALOGUE = {@26301` · `const _EB_CODES = [@28032` | 20 entries, `category` field as classified |
-| Covenant Standing ladder | `const COVENANT_STANDING_LABELS = [@27358` | Live, 5 brackets — **not in the spec** |
+| `FROBERGER_JOURNAL` | `const FROBERGER_JOURNAL = [@27318` | Exact name; 4/4 field names; **41** entries |
+| `SWEELINCK_DIALOGUE_VARIANTS` | `const SWEELINCK_DIALOGUE_VARIANTS = [@27363` | Exact name; 4 specified brackets + 1 |
+| Ending variants in the victory sequence | `function storyCheckVictory(node) {@28356` | Live; **four** branches, not two |
+| Collectible pickup on node arrival | `function storyCheckJournal(node) {@30366`, called at `storyCheckJournal(node);@36223` | Live; toast **byte-exact** |
+| Epic Battleground register | `const EB_NPC_DIALOGUE = {@26432` · `const _EB_CODES = [@28171` | 20 entries, `category` field as classified |
+| Covenant Standing ladder | `const COVENANT_STANDING_LABELS = [@27490` | Live, 5 brackets — **not in the spec** |
 
 **The formula, transcribed and shipped.** The report's §VI pseudocode is
 `(ebQuestsStartedButNeverReturned × 3) + (ebQuestsNeverStarted × 1) − (allReturnBeatsCompleted ? 5 : 0)`.
 The engine computes `(startedNotReturned * 3) + (neverStarted * 1) - (allComplete ? 5 : 0)` with
-`const allComplete = returnsComplete === 20;@28205`, and its "started" test reads exactly the two
-state containers §X specified: `const started = !!(S_story.quests[primaryId])@28199` or a defeated
+`const allComplete = returnsComplete === 20;@28352`, and its "started" test reads exactly the two
+state containers §X specified: `const started = !!(S_story.quests[primaryId])@28346` or a defeated
 battle. Both stated thresholds shipped as written — `curse <= 0` selects a Covenant ending,
 `curse >= 15` the Cursed one. **Term for term, threshold for threshold, this specification is the
 function.**
@@ -140,21 +140,21 @@ something the report specified.
 | 6 | 12 collectible entries | All 12 present, `readAloud:false` | **SHIPPED exact** |
 | 7 | 17 quoted entry texts | **17 of 17 byte-identical** (modulo markdown italics) | **SHIPPED exact** |
 | 8 | 17 journal node codes | **17 of 17 correct at the archive**; 0 resolve today | Renamed, not wrong |
-| 9 | Toast *"📖 Froberger's Journal — Entry [N] found"* | `Journal — Entry ' + entry.entryNum + ' found.@30225` | **SHIPPED exact** |
-| 10 | Entry 41 sets a terminal flag (implied by *"the spine"*) | `S_story.frobergerLastEntryRead = true;@30217` | Shipped, unspecified |
+| 9 | Toast *"📖 Froberger's Journal — Entry [N] found"* | `Journal — Entry ' + entry.entryNum + ' found.@30381` | **SHIPPED exact** |
+| 10 | Entry 41 sets a terminal flag (implied by *"the spine"*) | `S_story.frobergerLastEntryRead = true;@30372` | Shipped, unspecified |
 | 11 | 4 Sweelinck variants by bracket (≤3 / 4–9 / 10–14 / ≥15) | All four brackets exact; texts 3/4 byte-exact, the 4th differs by one word (*"Long pause"* → *"A long pause"*) | **SHIPPED exact** |
-| 12 | Variant selected in `storyRender()` at SQ/CO | `id:'story-sweelinck-variant'@31376`, `nodes:['NUE','TLS']` — SQ→NUE, CO→TLS | **SHIPPED exact** |
-| 13 | Sweelinck is at *"SQ (Node 35)"* in Act VI | `NUE:{ num:35@8705`, `act:6` | **`num` and act exact** |
+| 12 | Variant selected in `storyRender()` at SQ/CO | `id:'story-sweelinck-variant'@31608`, `nodes:['NUE','TLS']` — SQ→NUE, CO→TLS | **SHIPPED exact** |
+| 13 | Sweelinck is at *"SQ (Node 35)"* in Act VI | `NUE:{ num:35@8718`, `act:6` | **`num` and act exact** |
 | 14 | **Two** ending variants | **Four** branches, plus a fifth NG+ question override | Expanded |
-| 15 | Victory screen shows *Shards Gathered* + *People Returned To* | `vic-shards` prints `7 / 7`; `vic-returns').textContent@28225` prints `N / 20` | **SHIPPED exact** |
+| 15 | Victory screen shows *Shards Gathered* + *People Returned To* | `vic-shards` prints `7 / 7`; `vic-returns').textContent@28372` prints `N / 20` | **SHIPPED exact** |
 | 16 | Ending injected into `story-defeat-modal` | Injected into `victory-ending`; `story-defeat-modal` is the **death** modal | Wrong element |
 | 17 | 12 EB NPCs classified A/B/C with codes | **12 of 12** name + code + `category` exact at the archive | **SHIPPED exact** |
 | 18 | Mordus pays 400gp; Izador 350gp | `paymentFloor:400` / `paymentFloor:350` | **SHIPPED exact** |
 | 19 | 9 quoted NPC lines | **7 verbatim**; Rona's condensed; **Aldous's has no source** | Mostly exact — F6 |
-| 20 | *"Kazrath's journal mentions Birka twice"* (§IV) | `mentions Birka. Twice.@26498` — correct | **SHIPPED exact** |
-| 21 | *"mentions Birka forty times"* (Entry 26) | `mentions Birka forty times.@27212` — also correct | **Engine self-contradiction — F5** |
+| 20 | *"Kazrath's journal mentions Birka twice"* (§IV) | `mentions Birka. Twice.@26629` — correct | **SHIPPED exact** |
+| 21 | *"mentions Birka forty times"* (Entry 26) | `mentions Birka forty times.@27344` — also correct | **Engine self-contradiction — F5** |
 | 22 | Journal Entry 1 quoted as *"The Codex is broken…"* | 0 occurrences, **0 commits ever**; live Entry 1 is the gate-officer entry | **NOT SHIPPED — F6** |
-| 23 | Epic boss: deadly tier, DANGER:EPIC banner, NPC warning verbatim | Banner revealed at `_epBanner.style.display = '';@24710`, printing `d.warning` + the NPC name | **SHIPPED exact** |
+| 23 | Epic boss: deadly tier, DANGER:EPIC banner, NPC warning verbatim | Banner revealed at `_epBanner.style.display = '';@24758`, printing `d.warning` + the NPC name | **SHIPPED exact** |
 | 24 | A player completing zero EBs still finishes | Victory tests only `defeatedBattles['TLS']` | **SHIPPED exact** |
 | 25 | The Covenant Ending is reachable | `curse` has a floor of **20** | **UNREACHABLE — F1** |
 | 26 | *"All 20 returns always yields the Covenant Ending"* | Arithmetically true (−5), operationally impossible | **UNREACHABLE — F1** |
@@ -167,11 +167,11 @@ something the report specified.
 
 ### F1 — The specification shipped, and both of its payoffs are unreachable (→ §ENDING-01, §EPIC-01)
 
-`function _curseScore() {@28193` is byte-identical between the archive and HEAD. It never changed,
+`function _curseScore() {@28340` is byte-identical between the archive and HEAD. It never changed,
 never failed and never threw. It simply stopped being able to return a low number.
 
 Its `returned` term reads `S_story.ebReturnDone`, whose only writer sits inside
-`_storyEbReturnBeat(ebCode) {@30360` — the function §EPIC-01 proved unreachable, because seven code
+`_storyEbReturnBeat(ebCode) {@30516` — the function §EPIC-01 proved unreachable, because seven code
 sites *compute* epic quest ids from node codes that `c1d5a94` (2026-05-29) renamed without renaming
 the forty `QUEST_DB` ids. With `returnsComplete` pinned at 0 and the all-complete bonus never paid,
 the score has a closed form: **`20 + 2 × (EB bosses defeated)`, range 20–60, floor 20.**
@@ -182,10 +182,10 @@ Consequences for this report's design, all measured:
   dead.** So are the Standard Covenant and Mixed branches. `Sweelinck sets the journal on the
   table@28258` fires 100 % of the time; the arc can produce only its failure ending.
 - **§V's thesis is dead with it.** *"The EB return beats are the real victory"* — none of the twenty
-  beats can fire, so `vic-returns').textContent@28225` prints **0 / 20** for every player who has
+  beats can fire, so `vic-returns').textContent@28372` prints **0 / 20** for every player who has
   ever reached the Cosmic Realm.
-- **Two of the twelve mission bits are permanently false:** `allEbReturns: Object.keys(NPC_DIALOGUES)@23657`
-  and `noHighCurse: _curseScore() < 10@23661`, so the ≥8-of-12 ending threshold effectively runs
+- **Two of the twelve mission bits are permanently false:** `allEbReturns: Object.keys(NPC_DIALOGUES)@23688`
+  and `noHighCurse: _curseScore() < 10@23692`, so the ≥8-of-12 ending threshold effectively runs
   against 10.
 
 **Verdict: engine-rot, dated.** At `32c10c5` the ids resolved and every branch here was reachable.
@@ -198,9 +198,9 @@ The score floor propagates past the ending screen into two graded ladders that r
 - **`SWEELINCK_DIALOGUE_VARIANTS` — 3 of 4 dead.** The selector matches `cs >= v.minScore && cs <= v.maxScore`
   and the score cannot fall below 20, so only the `minScore:15` variant is ever selected. The three
   graded lines this report wrote — the whole point of §VIII — never render. The one escape is the
-  Birka override (`_birkaVar || SWEELINCK_DIALOGUE_VARIANTS.find@31380`), which fires on three
+  Birka override (`_birkaVar || SWEELINCK_DIALOGUE_VARIANTS.find@31612`), which fires on three
   friendships regardless of score and was already present at the archive.
-- **`const COVENANT_STANDING_LABELS = [@27358` — 4 of 5 dead.** Its brackets are −6 / 0 / 7 / 14 / ∞,
+- **`const COVENANT_STANDING_LABELS = [@27490` — 4 of 5 dead.** Its brackets are −6 / 0 / 7 / 14 / ∞,
   so every player is a **"Wanderer"** — *"The Void will open again. Not your fault. Not entirely."*
   This one is on the **character sheet**, visible for the whole run, not only at the end.
 
@@ -211,8 +211,8 @@ player is told from the first reading that they are already lost, and nothing th
 ### F3 — `S_story.curseScore`: a promise that names a real variable and moves a different one
 
 `cc-destroy-btn` offers *"⚡ Destroy the housing — STR Ceremonia Roll DC 15 (bypass Auros,
-+curseScore)"* (`⚡ Destroy the housing — STR Ceremonia Roll DC 15@31828`) and, on success, writes
-`S_story.curseScore = (S_story.curseScore || 0) + 5;@31849` and prints *"[curseScore +5]"*.
++curseScore)"* (`⚡ Destroy the housing — STR Ceremonia Roll DC 15@32060`) and, on success, writes
+`S_story.curseScore = (S_story.curseScore || 0) + 5;@32081` and prints *"[curseScore +5]"*.
 
 `_curseScore()` recomputes from `_EB_CODES` on every call and **never reads that field**. The field
 has three occurrences in 38,712 lines — a button label, its own self-referencing write, and a
@@ -227,9 +227,9 @@ reader and a label and concludes the loop is closed.
 
 ### F4 — Four of this report's twelve collectible entries cannot be picked up (→ §AUDIT-03x)
 
-`function storyCheckJournal(node) {@30211` matches `e.nodeCode === node.code`, and only a cell's
-primary node can become `currentCode` (`const CELL_GRID = (() => {@9852`,
-`S_story.currentCode = destCode;@28375`). Walking all 41 entries against cell primacy:
+`function storyCheckJournal(node) {@30366` matches `e.nodeCode === node.code`, and only a cell's
+primary node can become `currentCode` (`const CELL_GRID = (() => {@9865`,
+`S_story.currentCode = destCode;@28525`). Walking all 41 entries against cell primacy:
 
 **35 of 41 reachable; 6 blocked** — Entry 10 (`SEN`, behind `LCY`), 16 (`SDQ`, behind `WG0`),
 19 (`MSY`, behind `WG0`), 21 (`NAS`, behind `VBY`), 24 (`BHD`, behind `HOR`), 37 (`HER`, behind
@@ -247,8 +247,8 @@ This is a new §AUDIT-03x casualty class: **collectible narrative**, not quests.
 ### F5 — The engine states two different counts of the same document, and the report faithfully quotes both
 
 Kazrath's journal *"mentions Birka. Twice."* in Mordus's negotiation line
-(`mentions Birka. Twice.@26498`) and *"mentions Birka forty times"* in Froberger's Entry 26
-(`mentions Birka forty times.@27212`). **Both strings are present at the archive**, so this was born
+(`mentions Birka. Twice.@26629`) and *"mentions Birka forty times"* in Froberger's Entry 26
+(`mentions Birka forty times.@27344`). **Both strings are present at the archive**, so this was born
 contradictory on or before 2026-05-22, and both surfaces are reachable — `negotiateLine` is read at
 three sites in the negotiation panel, and Entry 26 sits on `TRD`, a primary node.
 
@@ -306,7 +306,7 @@ quest" — are both downstream of one 2026-05-29 rename. The feature is not mis-
 disconnected, and every symbol in it resolves, which is why no gate and no census can see it.
 
 **Sections deleted in this pass, with the measurement that justified it.** The 17 verbatim journal
-entries (§III of the original) were removed: `const FROBERGER_JOURNAL = [@27186` is the single
+entries (§III of the original) were removed: `const FROBERGER_JOURNAL = [@27318` is the single
 source of truth, all 17 were measured byte-identical, and a second copy can only rot. The same
 applies to the four Sweelinck variant texts and the two ending texts. This is the §DOC-02h house
 move, and its §DOC-02n precondition is satisfied here — the live constant exists and is
@@ -322,7 +322,7 @@ authoritative. *Nothing was deleted without first measuring that it was actually
 | **§EPIC-01** (confirmed) | The origin of F1; this report is the specification the rename disconnected | No |
 | **§AUDIT-03ac** (NEW) | `S_story.curseScore` — a player-facing *"+curseScore +5"* penalty writing an undeclared field with 0 readers, shadowing the real `_curseScore()` | No |
 | **§AUDIT-03x** (extended) | 6 of 41 journal entries sit on non-primary nodes, 4 of them this report's own collectibles | Existing call |
-| **§DX-02n** (extended) | `const JOURNAL_ENTRIES = {@22425` — 5 authored texts, 1 occurrence, 0 readers; plus `S_story.curseScore` | No |
+| **§DX-02n** (extended) | `const JOURNAL_ENTRIES = {@22452` — 5 authored texts, 1 occurrence, 0 readers; plus `S_story.curseScore` | No |
 | **§EPIC-04** (NEW) | Kazrath's journal *"Twice"* vs *"forty times"* — two reachable surfaces, born contradictory | Small — which count is canon |
 
 ---

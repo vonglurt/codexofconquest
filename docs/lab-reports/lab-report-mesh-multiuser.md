@@ -85,13 +85,13 @@ All eight line citations land on the named symbol; §VIII.A. The session shape t
 
 **Timers** — `src/js/wbapi-server.js:const SESSION_TTL = parseInt@76` (30 min) · `src/js/wbapi-server.js:const TRADE_TTL = parseInt@264` (60 s) · `src/js/wbapi-server.js:const DUEL_TTL = parseInt@591` (30 s per phase).
 
-**Client** — `const MP = { base: null, session: null, pid: null@28493` (the sketched `{session, es, players}` grew to sixteen fields; all three named survive) · **exactly one** `EventSource` in the game file, which is the whole of Inc (a).
+**Client** — `const MP = { base: null, session: null, pid: null@28646` (the sketched `{session, es, players}` grew to sixteen fields; all three named survive) · **exactly one** `EventSource` in the game file, which is the whole of Inc (a).
 
-**Ladder** — `function _mpAllyCount() {@28650` · `function _partyHitBonus(allies) { return Math.min(2@28657` · `function _partyLootMult(allies) { return 1 + 0.1 *@28658` · `function _sentryHere() {@28663` · `function _partyEncounterRate(base) {@28669` · `const HIRELING_SPEC = { name: 'Bram the Trailhand'@28683` · read at battle start by `S.partyAllies   = _mpAllyCount();@24649`.
+**Ladder** — `function _mpAllyCount() {@28803` · `function _partyHitBonus(allies) { return Math.min(2@28810` · `function _partyLootMult(allies) { return 1 + 0.1 *@28811` · `function _sentryHere() {@28816` · `function _partyEncounterRate(base) {@28822` · `const HIRELING_SPEC = { name: 'Bram the Trailhand'@28836` · read at battle start by `S.partyAllies   = _mpAllyCount();@24713`.
 
 **Economy** — `src/js/wbapi-server.js:function playerKeyRegister(playerKey) {@290` · durable chain at `ledger/<serverId>.jsonl` · collision map persisted to `ledger/players.json`.
 
-**Guards** — `src/js/wbapi-server.js:if (parts[0] === 'world' && parts[1] === 'download'@2921` · `src/js/wbapi-server.js:reason: 'cross-origin'@9688` (the v1 duel scope, enforced with a 400 rather than a comment).
+**Guards** — `src/js/wbapi-server.js:if (parts[0] === 'world' && parts[1] === 'download'@2933` · `src/js/wbapi-server.js:reason: 'cross-origin'@9700` (the v1 duel scope, enforced with a 400 rather than a comment).
 
 ---
 

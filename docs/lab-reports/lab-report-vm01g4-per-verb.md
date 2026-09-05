@@ -128,7 +128,7 @@ between three slices. Recorded so neither is quietly dropped a fourth time.
 **F6 — the act-leg thread closes for this region.** One act comparison remains, `node.code === 'NUE'
 && (S_story.actNumber || 1) >= 3`. **`NUE` is `act:6`**, so the leg is not dead — it is **vacuously
 true**, and has been since it shipped. Nothing to fix; recorded so the next reader need not
-re-derive it. *(§DOC-02db later proved the general case: `S_story.actNumber = node.act || 1@34556` is
+re-derive it. *(§DOC-02db later proved the general case: `S_story.actNumber = node.act || 1@34822` is
 the field's only writer, so every such test asks "am I standing on an act-N tile." → §DX-02ft.)*
 
 **The ASK — one open knob.** *When a verb is unaffordable, show-and-refuse or hide/disable?*
@@ -140,18 +140,18 @@ alternative *"makes the world quieter about what it wants."* **User's call 2026-
 ## 4. As-built inventory
 
 **In the QUEST:CORE fence** (`src/js/quest.js`, re-inlined; 13 opcodes total):
-`src/js/quest.js:cost(bit, ctx)@354` — `{gold?, resource?, count?, refuse?}`, registered in
+`src/js/quest.js:cost(bit, ctx)@359` — `{gold?, resource?, count?, refuse?}`, registered in
 `BIT_CONTRACTS` beside `reward` because it is `reward`'s inverse. **Both currencies are tested
 before either is spent**, so a mixed price can never part-pay. Chain failure is `ctx._halt`, set by a
 handler and broken on by `execBits`; the flag is **deliberately never cleared in the loop**, because
 `ctx` is shared with the nested `execBits` a `choice` option runs.
 
-**Host layer, outside the fence:** `function _uqfRenderAsk(gen, ask, mount, step)@6885` ·
-`function _verbBits(verb, st)@6908` · `function _uqfRunVerb(verb, mount)@6914` ·
-`function _uqfRunChain(bits)@6949` · `function _mkAmbientLine(text)@6878`.
+**Host layer, outside the fence:** `function _uqfRenderAsk(gen, ask, mount, step)@6896` ·
+`function _verbBits(verb, st)@6919` · `function _uqfRunVerb(verb, mount)@6925` ·
+`function _uqfRunChain(bits)@6960` · `function _mkAmbientLine(text)@6889`.
 
-**The registry:** `const NODE_VERBS@34274`, rendered by
-`function _renderNodeVerbs(node, st, group, container)@34496`, dispatched **in place** at each
+**The registry:** `const NODE_VERBS@34518`, rendered by
+`function _renderNodeVerbs(node, st, group, container)@34762`, dispatched **in place** at each
 block's former source position — 12 call sites, one per group, so LIFO stacking is preserved by
 construction.
 
@@ -181,12 +181,12 @@ them identical until a screenshot disagreed. The bounding box is now part of the
 
 | # | Claim as locked | Live at HEAD 2026-08-23 | Verdict |
 |---|---|---|---|
-| 1 | `renderChoiceBlock` never existed; `_uqfPending` read by nothing | now read at `_uqfRenderAsk@6885` (l. 6897) and cleared in `storyRender` (l. 34624). `renderChoiceBlock` occurs **once** — in the comment recording that it never existed | ✅ **built, and it is the slice's point** |
+| 1 | `renderChoiceBlock` never existed; `_uqfPending` read by nothing | now read at `_uqfRenderAsk@6896` (l. 6897) and cleared in `storyRender` (l. 34624). `renderChoiceBlock` occurs **once** — in the comment recording that it never existed | ✅ **built, and it is the slice's point** |
 | 2 | Only `cost` is missing; no other grammar | 13 opcodes; `cost` is the **last one added**. `src/js/quest.js` has **one commit since** (`b905733`); `check:quest-parity` still prints **25,030 bytes** | ✅ **held for 11 further slices** |
 | 3 | `cost` is not single-use (bar: 2 consumers) | **3**, at three prices in three surfaces: Yva 50gp@34356 · junction 10gp@35257 · `MME` hull 200gp@33924 (§VM-01-G-FU-d) | ✅ **cleared** |
 | 4 | Refuse-at-click, byte-identical | `src/js/quest.js:cost` sets `_halt` + `_refused` and emits `refuse`; never contributes to `when` | ✅ |
 | 5 | `combat`'s `nodeCode` covers D3; no new grammar | 3 boss verbs share `group:'cdg-boss-menu'` into one container | ✅ |
-| 6 | Free text stays inline (§3-F3) | `entry42Text@34648` block live at 34634; `_voidTollSecret` block at 34768 | ✅ **deliberate** |
+| 6 | Free text stays inline (§3-F3) | `entry42Text@34901` block live at 34634; `_voidTollSecret` block at 34768 | ✅ **deliberate** |
 | 7 | Kenickie + Lower Archive → `NODE_HOOKS` verbatim | `nue-lower-archive` before `void-archaeology`; `cdg-kenickie-market` between `codex-core-chamber` and `la-riva-row` — **both orderings exact** | ✅ |
 | 8 | `NUE` act-leg vacuously true, not dead | at 34696 (was 34691); `NUE` is `act:6`@8705 | ✅ **drifted 5 lines, unchanged** |
 | 9 | 13 D1 surfaces migrate as one unit (§10) | measured down to **4** in-slice; 9 blocked by three unnamed gaps → §VM-01-G4c-FU | ⚠ **self-corrected at ship** |
@@ -248,7 +248,7 @@ days on. → **§DX-02fv**.
 > too. Pinned by `src/tests/integration/dx02fv-tl-vonn-choice.test.js` 5/5.
 
 **N4 — the `favor` correction is right, and its stated reason is wrong.** §12⅞ recorded: *"`add:1`
-would have **lowered** a favor already at 2."* `function _setNpcFavor(key, level)@23463` opens
+would have **lowered** a favor already at 2."* `function _setNpcFavor(key, level)@23505` opens
 `if (level <= prev) return;` — **it cannot lower anything**. And the `favor` handler's `add` path
 reads the live level through `E.getFavor` (bound `2026-07-22`, twelve days *before* G4c) and clamps
 at 3, so `add:1` on a favor of 2 **raises it to Dear Friend**. `set:1` is still the correct bit — it
@@ -331,16 +331,16 @@ about the numbers it takes from the file and casual about the ones it takes from
 
 ## 10. Anchors
 
-`function storyRender(node, prefix)@34550` · `function _mkSection(id, icon, label)@35303` ·
-`const NODE_PANELS@31321` · `function _renderNodePanels(node, st)@31596` · `const NODE_HOOKS@34173` ·
-`function _runNodeHook(id, node, ctx)@34236` · `const NODE_VERBS@34274` ·
-`function _renderNodeVerbs(node, st, group, container)@34496` · `let _uqfPending@6824` ·
-`function _uqfPump(gen, answer)@6827` · `function _uqfRunToCompletion(gen)@6840` ·
-`function _mkAmbientLine(text)@6878` · `function _uqfRenderAsk(gen, ask, mount, step)@6885` ·
-`function _verbBits(verb, st)@6908` · `function _uqfRunVerb(verb, mount)@6914` ·
-`function _uqfRunChain(bits)@6949` · `*execBits(bits, ctx)@22224` · `*choice(bit, ctx)@22320` ·
-`reward(bit, ctx)@22270` · `combat(bit)@22301` · `item_remove(bit, ctx)@22303` ·
-`function _setNpcFavor(key, level)@23463` · `src/js/quest.js:cost(bit, ctx)@354`
+`function storyRender(node, prefix)@34816` · `function _mkSection(id, icon, label)@35528` ·
+`const NODE_PANELS@31532` · `function _renderNodePanels(node, st)@31828` · `const NODE_HOOKS@34416` ·
+`function _runNodeHook(id, node, ctx)@34480` · `const NODE_VERBS@34518` ·
+`function _renderNodeVerbs(node, st, group, container)@34762` · `let _uqfPending@6835` ·
+`function _uqfPump(gen, answer)@6838` · `function _uqfRunToCompletion(gen)@6851` ·
+`function _mkAmbientLine(text)@6889` · `function _uqfRenderAsk(gen, ask, mount, step)@6896` ·
+`function _verbBits(verb, st)@6919` · `function _uqfRunVerb(verb, mount)@6925` ·
+`function _uqfRunChain(bits)@6960` · `*execBits(bits, ctx)@22251` · `*choice(bit, ctx)@22347` ·
+`reward(bit, ctx)@22297` · `combat(bit)@22328` · `item_remove(bit, ctx)@22330` ·
+`function _setNpcFavor(key, level)@23505` · `src/js/quest.js:cost(bit, ctx)@359`
 
 ---
 

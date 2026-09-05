@@ -99,20 +99,20 @@ needs no design authority, so it never queued behind an ASK.
 
 | Claim in the review | Measured at HEAD | Verdict |
 |---|---|---|
-| Win condition: 7 Shards + Level 20 + beat the Commander | `function _finalBattleReady(code) {@28000`, and TLS carries `minLevel:20, minShards:7` | ✅ exact |
-| Final boss AC 22 / HP 300 | `const BOSS_COMMANDER_AUROS = {@26248` — `ac: 22, hp: 300` | ✅ exact |
-| Void Tide on days 3/7/14/21/28/35/42 | `const VOID_TIDE_EVENTS = {@22369` — exactly those 7 keys | ✅ exact |
-| Sleeping is the only day advance | `S_story.day = Math.min(49, S_story.day + 1);@36253` | ✅ exact |
-| voidPressure 10 = defeat | `S_story.voidPressure = Math.min(10, prev + n);@26980` | ✅ exact |
-| XP = AC × maxHP | `function _storyBattleVictory() {@25282` — the code comment reads *"XP = AC × maxHP"* | ✅ verbatim |
+| Win condition: 7 Shards + Level 20 + beat the Commander | `function _finalBattleReady(code) {@28139`, and TLS carries `minLevel:20, minShards:7` | ✅ exact |
+| Final boss AC 22 / HP 300 | `const BOSS_COMMANDER_AUROS = {@26379` — `ac: 22, hp: 300` | ✅ exact |
+| Void Tide on days 3/7/14/21/28/35/42 | `const VOID_TIDE_EVENTS = {@22396` — exactly those 7 keys | ✅ exact |
+| Sleeping is the only day advance | `S_story.day = Math.min(49, S_story.day + 1);@36451` | ✅ exact |
+| voidPressure 10 = defeat | `S_story.voidPressure = Math.min(10, prev + n);@27112` | ✅ exact |
+| XP = AC × maxHP | `function _storyBattleVictory() {@25339` — the code comment reads *"XP = AC × maxHP"* | ✅ verbatim |
 | Heal and gold each = 0.1 × AC × maxHP | same function — *"HPGive = goldDrop = 0.1 × AC × HPLoss"* | ✅ verbatim |
-| 20 Epic Battleground bosses | `const EPIC_BOSS_POOL = {@26259` — 20 entries | ✅ exact |
-| `WEAPON_ITEMS` is 70 | `const _BASE_WEAPONS = [@24473` (14) × `const WEAPON_ITEMS = [0, 1, 2, 3, 4]@24496` | ✅ exact |
-| `_magicTierAllowed` = level ≥ magic × 5 | `function _magicTierAllowed(magic) {@24511` | ✅ exact |
+| 20 Epic Battleground bosses | `const EPIC_BOSS_POOL = {@26390` — 20 entries | ✅ exact |
+| `WEAPON_ITEMS` is 70 | `const _BASE_WEAPONS = [@24527` (14) × `const WEAPON_ITEMS = [0, 1, 2, 3, 4]@24550` | ✅ exact |
+| `_magicTierAllowed` = level ≥ magic × 5 | `function _magicTierAllowed(magic) {@24567` | ✅ exact |
 | ~2,848 quests | 2,850 at the parent build, 2,853 at HEAD | ✅ within its own hedge |
-| 6 curated Birka NPCs | `const birkaNpcs = {@35122` — Yael, Brynn, Quill, Pachelbel, Weckmann, Bruhns | ✅ exact |
-| Start node is `LHR` | `LHR:{ num:1,@8427` | ✅ exact |
-| Final fight at **node CO** | `CO` resolves in no build, ever; the node is `TLS:{ num:42,@8726` | ❌ **§VII** |
+| 6 curated Birka NPCs | `const birkaNpcs = {@35347` — Yael, Brynn, Quill, Pachelbel, Weckmann, Bruhns | ✅ exact |
+| Start node is `LHR` | `LHR:{ num:1,@8439` | ✅ exact |
+| Final fight at **node CO** | `CO` resolves in no build, ever; the node is `TLS:{ num:42,@8739` | ❌ **§VII** |
 | The literal `"49 days"` appears **once** | occurs **zero** times, parent and HEAD | ❌ **§VI** |
 | `_rollMainWeaponDrop` / `_rollWeaponDrop` **deleted** | 0 commits ever, in any `*.html` | ❌ **§VIII** |
 | All +1…+4 gear is **fishing-exclusive** | no live grant path exists, fishing included | ❌ **§V** |
@@ -130,7 +130,7 @@ around them looks impeccable.
 | Face | Diegetic name | Shipped | Commit (2026-07-12) | Outcome |
 |---|---|---|---|---|
 | **A** | The Courier's Map | ✅ | `b46d3f0` | goal surfaced whole; a later design reversal landed on one of its two surfaces (§DOC-02ce) |
-| **B** | The Conqueror's Hand | ✅ | `0883fa9` spec → `8eb909e` | Void enrage live at `S.opp.enraged@24641`; the mundane-flee half has never once returned true (§DOC-02cf) |
+| **B** | The Conqueror's Hand | ✅ | `0883fa9` spec → `8eb909e` | Void enrage live at `S.opp.enraged@24704`; the mundane-flee half has never once returned true (§DOC-02cf) |
 | **C** | No Postponements | ✅ | `caa489e` | user chose **option (c)** — reframe the deadline honest; 10/10 shipped, 5/5 deferrals still deferred (§DOC-02cg) |
 | **D** | Friendships With Magic | ✅ | `cfdeb21` | signpost through Yael — **and see §V** (§DOC-02ch) |
 | **E** | The Tools Regain Their Weight | ⏸ by design | — | correctly predicted to fall out of B+C; no standalone work |
@@ -150,17 +150,17 @@ second half is false in a more expensive way.
 **Measured:** there is **no live grant path for positive-magic equipment of any kind** — and that
 includes fishing.
 
-- `function _rollMonsterWeaponDrop(monsterDmgDie) {@24583` caps its pool at `magicBonus === 0` and
+- `function _rollMonsterWeaponDrop(monsterDmgDie) {@24641` caps its pool at `magicBonus === 0` and
   degrades it to −4…0. That part the review describes correctly.
-- The second vector, `function _rollD100Loot() {@24535`, *does* branch on `dagger` and
-  `mainweapon` with a magic tier — but `const _D100_TABLE = [@24518` holds **seven rows totalling
+- The second vector, `function _rollD100Loot() {@24593`, *does* branch on `dagger` and
+  `mainweapon` with a magic tier — but `const _D100_TABLE = [@24576` holds **seven rows totalling
   weight 100** (potions, scroll, flashbang, gold) and contains **neither type**. Both branches were
   already unreachable **at the parent build**: the table is 7 rows there too. `_magicTierAllowed`
   is reachable from nowhere else.
 - The specified fishing grant, `_fishingMagicWeaponDrop`, has **0 commits ever**. It was never
   built. Fishing pays out in *sell value* and in §DROP-03's eight passive `LAKE_MAGIC_DB`
   trinkets — **0 of which are weapons**.
-- `const DAGGER_ITEMS = [@24460` — the four magic daggers, priced to 8,000 gp — has exactly one
+- `const DAGGER_ITEMS = [@24514` — the four magic daggers, priced to 8,000 gp — has exactly one
   consumer in 38,712 lines: the unreachable branch. No vendor stocks them.
 
 So of the 70 generated main weapons, **56 have no grant path**, and so do 4 of 4 magic daggers.
@@ -206,17 +206,17 @@ transcribed from a line the author had open.
 
 §1 places the final battle *"at node CO."* **`CO` resolves in no build** — not the parent, not
 HEAD, and it is not in `NODE_MAP` in any tree searched. The final battle is at
-`TLS:{ num:42,@8726`, *Cosmic Realm — The Convergence*, reached through
-`_isFinalBoss: true };@28013`.
+`TLS:{ num:42,@8739`, *Cosmic Realm — The Convergence*, reached through
+`_isFinalBoss: true };@28152`.
 
 This is §AUDIT-03m's rule — *never read a node code off a doc table* — and the review broke it in
 §1 while **correctly diagnosing the same class in §7 (G)**, where it flags the docs for citing a
 start node of `CI` when the real one is `LHR`.
 
 And the G diagnosis is itself half-wrong, in the opposite direction. **`CI` is a live node** —
-`CI: { num:429, name:"city"@9229`, *Chancery Court* — at the parent build and at HEAD. It is not
+`CI: { num:429, name:"city"@9242`, *Chancery Court* — at the parent build and at HEAD. It is not
 a stale code; it is a real node that is simply **not** the start node. The distinction is not
-pedantry: it is why `const birkaNpcs = {@35122` was broken. The literal keyed Yael to `CI`, so her
+pedantry: it is why `const birkaNpcs = {@35347` was broken. The literal keyed Yael to `CI`, so her
 card did not *fail* to render — it rendered **at the wrong node**, which is a different bug with a
 different signature, and is what §DOC-02ch had to separate in a browser to establish. Of the five
 original Birka keys, `IN`/`TV`/`BA`/`CY` are genuinely dead; `CI` never was.
@@ -263,7 +263,7 @@ in the one file `prompt.md` §2 step 6 requires every increment to sync. → cor
 **§AUDIT-03ab**, no new row.
 
 A rider worth recording: the boss's rendered name is **Commander Seraphine Bruhns**
-(`const BOSS_COMMANDER_AUROS = {@26248`); *"Commander Auros"* is the identifier and survives in
+(`const BOSS_COMMANDER_AUROS = {@26379`); *"Commander Auros"* is the identifier and survives in
 five prose strings. The review's *"Commander Auros (AC 22 / HP 300)"* has the statline exactly
 right and the player-visible name wrong — the final-battle button reads *"Commander Bruhns."*
 Already owned by the §AUDIT-03n naming cluster.
@@ -274,7 +274,7 @@ Already owned by the §AUDIT-03n naming cluster.
 
 Every **design** judgement in this document survived contact with the engine.
 
-- **The enemy-AI diagnosis is fair and complete.** `function _storyEnemyTurn() {@25193` at the
+- **The enemy-AI diagnosis is fair and complete.** `function _storyEnemyTurn() {@25250` at the
   parent build is, as described, roll `d20 + atk`, apply damage, end turn — no heal, no flee, no
   defend, no condition application. The only other actors in it are the player's own hireling and
   sentry. Summarising a 69-line function as three operations is a fair reading, not a lazy one.

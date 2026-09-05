@@ -9,11 +9,11 @@
 
 ## 1. Abstract
 
-The WBAPI server carries a per-session deterministic PRNG — `src/js/wbapi-server.js:function seededNext(s)@1147`, a mulberry32 advancing `s.rngState` — and its own comment names the gap it leaves: *"a known SP/MP divergence logged in lab-report-walk5-mud-harness.md"* (`src/js/wbapi-server.js:divergence logged in lab-report-walk5-mud-harness.md@1157`). The server rolls each encounter from that seeded stream; the client rolled the same encounter from `Math.random()` — an unseeded, unrecordable generator one line outside the fenced kernel, where no parity script can see it.
+The WBAPI server carries a per-session deterministic PRNG — `src/js/wbapi-server.js:function seededNext(s)@1150`, a mulberry32 advancing `s.rngState` — and its own comment names the gap it leaves: *"a known SP/MP divergence logged in lab-report-walk5-mud-harness.md"* (`src/js/wbapi-server.js:divergence logged in lab-report-walk5-mud-harness.md@1160`). The server rolls each encounter from that seeded stream; the client rolled the same encounter from `Math.random()` — an unseeded, unrecordable generator one line outside the fenced kernel, where no parity script can see it.
 
-The irony the parent report flagged: `DUEL:CORE` hand-writes a synchronous SHA-256 rather than trust `crypto.subtle` to agree across environments, ships commit-reveal, and carries its own mulberry32 (`function __duelRng(seed)@10304`). The duel path is paranoid about cross-machine determinism — and then the most-rolled event in the game was left unseeded. **The parity contract covered the kernel and stopped where the dice landed.**
+The irony the parent report flagged: `DUEL:CORE` hand-writes a synchronous SHA-256 rather than trust `crypto.subtle` to agree across environments, ships commit-reveal, and carries its own mulberry32 (`function __duelRng(seed)@10317`). The duel path is paranoid about cross-machine determinism — and then the most-rolled event in the game was left unseeded. **The parity contract covered the kernel and stopped where the dice landed.**
 
-Inc B ports `seededNext` to the client as `function _seededNext()@6434`, backs it with a persisted `S_story.rngState`, converts four named roll pipelines to draw from it, and adds a CI guard asserting the two implementations can never drift. It is **not** behaviour-neutral like Inc A: it deliberately changes *which numbers come out* of the converted sites, while changing **no distribution, no rule, and no message**.
+Inc B ports `seededNext` to the client as `function _seededNext()@6436`, backs it with a persisted `S_story.rngState`, converts four named roll pipelines to draw from it, and adds a CI guard asserting the two implementations can never drift. It is **not** behaviour-neutral like Inc A: it deliberately changes *which numbers come out* of the converted sites, while changing **no distribution, no rule, and no message**.
 
 ---
 
@@ -24,7 +24,7 @@ The inspiration is the oldest bug-report problem in games: *"it happened once an
 Three concrete playability payoffs, in the order a player would meet them:
 
 1. **A save file becomes a reproducible world.** Load the same save and the same encounters, the same loot, the same skill checks follow. That turns "the game ate my run" from an anecdote into a reproducible artifact — and it is what makes a soft-lock *provable* rather than suspected.
-2. **The wandering monster stops being a rumour.** The encounter roll at `if (_seededNext() < baseRate)@28443` is the single most-fired event in the game. Once it and the monster draw share one stream, the same seed produces the same road — so terrain balance, Hunt Mode, and notoriety weighting can be tuned against a fixed trace instead of against vibes.
+2. **The wandering monster stops being a rumour.** The encounter roll at `if (_seededNext() < baseRate)@28596` is the single most-fired event in the game. Once it and the monster draw share one stream, the same seed produces the same road — so terrain balance, Hunt Mode, and notoriety weighting can be tuned against a fixed trace instead of against vibes.
 3. **Single-player and multiplayer start speaking the same dialect.** The client and the MUD server now advance byte-identical generators, so one roll is server-verifiable. That is the first brick of an honest shared world, and it costs the player nothing today.
 
 The deliberate cost, locked in §5.3: **combat stays unseeded.** A battle is still a fresh coin every time. That is a design choice about where determinism helps (diagnosis) and where it would flatten the experience (the swing of a fight), and it is revisited in §8.
@@ -71,11 +71,11 @@ The stated payoff *is* the answer: replay-from-save is only possible if the seed
 
 ### 5.2 Save-migration — none required
 
-Load is `Object.assign(S_story, _S_DEFAULTS(), JSON.parse(raw))@23821`. A pre-§VM-01-B save has no `rngState`, so the merge supplies the sentinel `0`; the first draw sees `!rngState` and bootstraps. No version bump, no backfill, no migration branch. *Micro-edge:* the advanced state could land on `0` roughly once every 4·10⁹ draws, triggering a one-step re-bootstrap — harmless, and documented in the helper.
+Load is `Object.assign(S_story, _S_DEFAULTS(), JSON.parse(raw))@23876`. A pre-§VM-01-B save has no `rngState`, so the merge supplies the sentinel `0`; the first draw sees `!rngState` and bootstraps. No version bump, no backfill, no migration branch. *Micro-edge:* the advanced state could land on `0` roughly once every 4·10⁹ draws, triggering a one-step re-bootstrap — harmless, and documented in the helper.
 
 ### 5.3 Roll-site scope — the four named pipelines only
 
-Converted: encounter fire · `_rollSkill` · the generic loot/drop pipeline (`_rollD100Loot` + `_rollMonsterWeaponDrop`) · `_weightedMonsterPick`. Left on `Math.random()`: the generic dice `function roll(sides)@6417` / `function rollN(sides, count)@6421`, story-battle d20s, fishing, death saves, flavour text, and bespoke one-off quest-item drops. Rationale: the combat surface is larger and riskier, and the MP duel path already has its own seeded stream.
+Converted: encounter fire · `_rollSkill` · the generic loot/drop pipeline (`_rollD100Loot` + `_rollMonsterWeaponDrop`) · `_weightedMonsterPick`. Left on `Math.random()`: the generic dice `function roll(sides)@6418` / `function rollN(sides, count)@6422`, story-battle d20s, fishing, death saves, flavour text, and bespoke one-off quest-item drops. Rationale: the combat surface is larger and riskier, and the MP duel path already has its own seeded stream.
 
 ---
 
@@ -96,19 +96,19 @@ Exit 0 iff all hold; exit 1 with the first divergence's seed and draw index.
 
 | # | Locked claim | Status at HEAD | Evidence |
 |---|--------------|----------------|----------|
-| 1 | `rngState` added to `_S_DEFAULTS()`, sentinel `0` | **exact** — the second field in the literal | `const _S_DEFAULTS = () => ({@23063`, `rngState: 0,@23065` |
-| 2 | `_seededNext` byte-identical to the server | **exact** — four arithmetic lines identical; only the state cell differs | `function _seededNext()@6434` vs `src/js/wbapi-server.js:function seededNext(s)@1147` |
-| 3 | Lazy `Date.now()` bootstrap, never `Math.random()` | **exact** | `if (!S_story.rngState) S_story.rngState = (Date.now() >>> 0) || 1;@6440` |
+| 1 | `rngState` added to `_S_DEFAULTS()`, sentinel `0` | **exact** — the second field in the literal | `const _S_DEFAULTS = () => ({@23092`, `rngState: 0,@23094` |
+| 2 | `_seededNext` byte-identical to the server | **exact** — four arithmetic lines identical; only the state cell differs | `function _seededNext()@6436` vs `src/js/wbapi-server.js:function seededNext(s)@1150` |
+| 3 | Lazy `Date.now()` bootstrap, never `Math.random()` | **exact** | `if (!S_story.rngState) S_story.rngState = (Date.now() >>> 0) || 1;@6442` |
 | 4 | 9 one-line substitutions | **9 of 9 live** — 8 direct, 1 now injected (row 5) | `@24546` `@24556` `@24569` `@24590` `@24591` `@28441` `@38245` `@38255` |
-| 5 | `_rollSkill` d20 draws the seeded stream | **contract exact, form changed** — §VM-01-D moved `_rollSkill` inside `QUEST:CORE` and the d20 now draws an injected effect | `const d20  = Math.ceil(E.rng() * 20)@22249`, wired at `rng:       () => _seededNext()@22347` in `const QuestRuntime = createQuestRuntime({@22342` |
-| 6 | "Pure roll" comment becomes honest | **exact and extended** — the header now names both §VM-01-B and §VM-01-D | `Pure roll@22236` |
+| 5 | `_rollSkill` d20 draws the seeded stream | **contract exact, form changed** — §VM-01-D moved `_rollSkill` inside `QUEST:CORE` and the d20 now draws an injected effect | `const d20  = Math.ceil(E.rng() * 20)@22276`, wired at `rng:       () => _seededNext()@22374` in `const QuestRuntime = createQuestRuntime({@22369` |
+| 6 | "Pure roll" comment becomes honest | **exact and extended** — the header now names both §VM-01-B and §VM-01-D | `Pure roll@22263` |
 | 7 | `check:rng` wired into `check:walk` | **exact** — gate 10 of 16 | `package.json` `check:rng` |
 | 8 | P1 6,000 draws / 12 seeds; P2; P3; P4 | **all four green, figures exact** | run this session: `P1 = 6000`, `P3 = 6000`, P2/P4 true |
 | 9 | `rng-seed.test.js` 5/5 | **5/5 green 30 days on** | `npx playwright test src/tests/integration/rng-seed.test.js` → 5 passed (3.6 s) |
 | 10 | No new game-state `Math.random()` | **exact** — 59 sites before, 52 after; 9 removed, 0 added | the 2 apparent additions at `c22f4f0` are both *comment text* |
-| 11 | Board rotation stays `Math.random()`-free | **exact** | `FNV-1a hash@37022` — the *"never Math.random; §VM-01-B-safe"* note still true |
-| 12 | Save-migration = none | **exact** | `Object.assign(S_story, _S_DEFAULTS(), JSON.parse(raw))@23821`, `function storyAutoSave()@23807` |
-| 13 | Three kernels untouched | **exact** — and a fourth was added later without disturbing the stream | `function __duelRng(seed)@10304` is read by the guard, never edited |
+| 11 | Board rotation stays `Math.random()`-free | **exact** | `FNV-1a hash@37242` — the *"never Math.random; §VM-01-B-safe"* note still true |
+| 12 | Save-migration = none | **exact** | `Object.assign(S_story, _S_DEFAULTS(), JSON.parse(raw))@23876`, `function storyAutoSave()@23842` |
+| 13 | Three kernels untouched | **exact** — and a fourth was added later without disturbing the stream | `function __duelRng(seed)@10317` is read by the guard, never edited |
 
 **Anchor discipline — the strongest result the §DOC-02 program has measured.** Of the report's **28 line-number claims, 27 resolve exactly** against the build it names. The offsets against `c22f4f0^` are `+0` / `+31` / `+37` / `+47`, strictly monotonic — the insertion profile of the uncommitted §VM-01-A change the header says was in the tree. **This independently settles a doubt §DOC-02cm raised.** That pass noted §VM-01-A claims an HTML diff of *"+56/−9"* for a commit whose own message calls the landing indivisible at **+106/−30**, and so could not verify the attribution from the commit. The offsets can: §VM-01-A's share is net **+47**, exactly `+56 − 9`; the whole commit's net is `37,694 − 37,618 = +76`, exactly `+106 − 30`; and B+C therefore account for the remaining +29. Three figures from three sources, and the arithmetic closes. The anchors are not approximate; they are a different, correctly-measured build.
 

@@ -45,15 +45,15 @@ say where everything is; adjacency is a question you ask them, not a fact you wr
 **What the player actually gets, and why it matters for playability:**
 
 - **The world became walkable instead of navigable.** Previously the map was ~416 destinations joined by
-  invisible rails. Now the space *between* the cities is real: `_enterEmptyCell@28422` gives every blank cell
+  invisible rails. Now the space *between* the cities is real: `_enterEmptyCell@28529` gives every blank cell
   prose, a terrain, a signpost toward the next settlement, and an encounter roll. The map went from a menu of
   places to a place.
 - **Movement became legible.** One key, one cell, no dialog. A player can form a plan ("go west four, then
   north") and have it be true.
-- **Roads became a real decision.** `const TERRAIN_ENCOUNTER_RATE@9892` sets `road:0` while `forest:0.25` and
+- **Roads became a real decision.** `const TERRAIN_ENCOUNTER_RATE@9905` sets `road:0` while `forest:0.25` and
   `hag_swamp:0.35`. The road is *safe and slow*; the wilderness is *fast and expensive*. That trade-off was
   impossible when travel was a teleport.
-- **Discovery became a mechanic.** Fog-of-war is tracked per **cell**, not per node (`visitedCells@23094`), so
+- **Discovery became a mechanic.** Fog-of-war is tracked per **cell**, not per node (`visitedCells@23126`), so
   the map fills in as a record of where you have physically been — not a checklist of nodes you have unlocked.
 - **The world became shareable.** §CELL-07's session layer put other live players on the same grid, in the same
   cell, with chat and arrival events. A MUD is only possible once "where you are" is a coordinate.
@@ -79,14 +79,14 @@ guard defused `cluster-bridge`; a live 400 proved it. All probes ran against a b
 
 | § | Claim | Anchor | Verdict |
 |---|---|---|---|
-| CELL-01 | All `N:`/`E:`/`S:`/`W:` stripped from `NODE_MAP` | — | ✅ **0** in `NODE_MAP`. The 4 surviving hits are direction-*name* lookups (`_MAP_OPP@36618`, `ARROWS@37499`) — not edges. |
-| CELL-02 | `CELL_GRID` built once from `NODE_COORDS` | `const CELL_GRID@9852` | ✅ live, single source of adjacency truth |
-| CELL-03 | `cellMove(dir)` replaces `storyMove(dir)` | `function cellMove@28347` | ✅ live; `storyMove` **0 occurrences** |
-| CELL-04 | Empty-cell traversal + terrain inference + encounter roll | `_enterEmptyCell@28422`, `_inferTerrain@28385`, `const TERRAIN_ENCOUNTER_RATE@9892` | ✅ shipped — precedence since revised, see Δ4 |
+| CELL-01 | All `N:`/`E:`/`S:`/`W:` stripped from `NODE_MAP` | — | ✅ **0** in `NODE_MAP`. The 4 surviving hits are direction-*name* lookups (`_MAP_OPP@36818`, `ARROWS@37484`) — not edges. |
+| CELL-02 | `CELL_GRID` built once from `NODE_COORDS` | `const CELL_GRID@9865` | ✅ live, single source of adjacency truth |
+| CELL-03 | `cellMove(dir)` replaces `storyMove(dir)` | `function cellMove@28495` | ✅ live; `storyMove` **0 occurrences** |
+| CELL-04 | Empty-cell traversal + terrain inference + encounter roll | `_enterEmptyCell@28529`, `_inferTerrain@28535`, `const TERRAIN_ENCOUNTER_RATE@9905` | ✅ shipped — precedence since revised, see Δ4 |
 | CELL-05 | Junctions bulk-deleted; `J13`/`WRO` promoted | `POST /api/graph/nuke-junctions` | ✅ done — **and it is the origin of a live hazard**, see Finding 3 |
 | CELL-05b | Zombie J-stubs purged; `junction` field removed | — | ✅ `junction:true` **0**, `junction:false` **0**, `name:'junction'` **0** |
-| CELL-09 | Quest triggers + waypoints on the cell grid | `_enterEmptyCell@28422` (§CELL-09 encounter block) | ✅ live |
-| CELL-10 | Per-cell fog-of-war + live minimap cursor | `visitedCells@23094` (3 render sites) | ✅ live |
+| CELL-09 | Quest triggers + waypoints on the cell grid | `_enterEmptyCell@28529` (§CELL-09 encounter block) | ✅ live |
+| CELL-10 | Per-cell fog-of-war + live minimap cursor | `visitedCells@23126` (3 render sites) | ✅ live |
 | CELL-11A | 13 corridor symbols deleted | — | ✅ **all 13 return 0**, incl. `buildCorridorMap`, `_buildNodeExits`, `storyCorridorTravel`, `CORRIDOR_CELLS`, `story-corridor-overlay` |
 
 **A clean sweep on the client.** For a 2-month-old report describing a 5.4 MB single-file engine, 13 deletions
@@ -97,10 +97,10 @@ claim. §CELL-11A was written from the diff, and it shows.
 
 | § | Claim | Anchor | Verdict |
 |---|---|---|---|
-| CELL-06 | 5 graph algorithms → cell-grid BFS | `src/js/wbapi-server.js:function buildCellGrid@948`, `src/js/wbapi-server.js:const MOVES4@944`, `src/js/wbapi-server.js:const DIR_NAMES@945` | ⚠️ **1 of 5** — see Δ1 |
+| CELL-06 | 5 graph algorithms → cell-grid BFS | `src/js/wbapi-server.js:function buildCellGrid@951`, `src/js/wbapi-server.js:const MOVES4@947`, `src/js/wbapi-server.js:const DIR_NAMES@948` | ⚠️ **1 of 5** — see Δ1 |
 | CELL-07 | MUD session layer, 7 endpoints, SSE, 30-min TTL | `src/js/wbapi-server.js:const SESSIONS@71` | ✅ shipped, now **9** endpoints (Δ3) |
-| CELL-08 | 5 read-only cell/grid endpoints | `src/js/wbapi-server.js:→ node at grid cell@11532` (help table `@11532`–`@11536`) | ✅ all 5 live |
-| CELL-08 | `POST`/`PUT /api/node` reject direction fields | `src/js/wbapi-server.js:_badNodeFields@10145`, `src/js/wbapi-server.js:_badPutFields@11043` | ✅ **live and load-bearing — empirically proven below** |
+| CELL-08 | 5 read-only cell/grid endpoints | `src/js/wbapi-server.js:→ node at grid cell@11555` (help table `@11532`–`@11536`) | ✅ all 5 live |
+| CELL-08 | `POST`/`PUT /api/node` reject direction fields | `src/js/wbapi-server.js:_badNodeFields@10157`, `src/js/wbapi-server.js:_badPutFields@11066` | ✅ **live and load-bearing — empirically proven below** |
 
 ---
 
@@ -109,11 +109,11 @@ claim. §CELL-11A was written from the diff, and it shows.
 | # | Report says | HEAD does | Class |
 |---|---|---|---|
 | **Δ1** | "All server-side graph algorithms (highway, reweave, fill-gap, fix-diagonal, reachability) replaced with cell-grid BFS." | **One** was: `GET /api/graph/reachability` (src/js/wbapi-server.js:parts[1] === 'reachability' && method === 'GET'@5501), and it went further than promised — it floods the **90×360 terrain field**, not the cell grid. `fill-gap` · `rip-and-connect` · `reweave-all` were **retired to 410** by §WALK-3. `cluster-bridge`, `junction-audit` and `smart-connect` still walk `node.N/S/E/W`. `highway` and `fix-diagonal` do not exist at HEAD under those names. | **PARTIAL — the report's headline defect** |
-| **Δ2** | (unstated) `POST /api/graph/cluster-bridge --execute` bridges isolated clusters. | It **cannot**. Its two writes are `PUT /api/node/:code {N:…}` (`src/js/wbapi-server.js:const putA = await httpReq@7036`) — rejected 400 by §CELL-08's own guard. See Finding 2. | **INERT — contained by this report** |
+| **Δ2** | (unstated) `POST /api/graph/cluster-bridge --execute` bridges isolated clusters. | It **cannot**. Its two writes are `PUT /api/node/:code {N:…}` (`src/js/wbapi-server.js:const putA = await httpReq@7048`) — rejected 400 by §CELL-08's own guard. See Finding 2. | **INERT — contained by this report** |
 | **Δ3** | Seven session endpoints: `start`, `move`, `look`, `who`, `say`, `end`, `events`. | **Nine.** `POST /api/session/pos` (src/js/wbapi-server.js:POST /api/session/pos@8918) and `GET /api/session/chat` (src/js/wbapi-server.js:§MESH-02(h) chat history@8718) (§MESH-02h chat history) were added later. | GROWTH — report accurate when written |
 | **Δ4** | `_inferTerrain` = "nearest named neighbor's terrain, with road fallback". | Road is a **precedence rule, not a fallback** — and it is now third: `SEA_LANES → 'ocean'` (§WALK-1.5), then `ROAD_CELLS → 'road'` (§NAV-01b), then a **plurality vote** across the 4 orthogonal neighbours. "Nearest" was never the algorithm. | STALE + imprecise-when-written |
 | **Δ5** | "Net result: **419** clean named nodes… 419 is the authoritative count from `GET /api/ping`." | **416** nodes / 416 coords. The report's care here was right and its number aged. | STALE (world drift) |
-| **Δ6** | §CELL-05b removed the `junction` field from all surviving nodes. | True — but `const TERRAIN_ENCOUNTER_RATE@9892` still carries the key `junction:0`, now **unreachable**: `_inferTerrain` can only return `'ocean'`, `'road'`, or a live `NODE_MAP.name`, and `name:'junction'` is **0**. The engine even documents the removal 3,400 lines earlier (`@6402`) without removing the key. | **DEAD KEY** → §DX-02bm |
+| **Δ6** | §CELL-05b removed the `junction` field from all surviving nodes. | True — but `const TERRAIN_ENCOUNTER_RATE@9905` still carries the key `junction:0`, now **unreachable**: `_inferTerrain` can only return `'ocean'`, `'road'`, or a live `NODE_MAP.name`, and `name:'junction'` is **0**. The engine even documents the removal 3,400 lines earlier (`@6402`) without removing the key. | **DEAD KEY** → §DX-02bm |
 | **Δ7** | "Files Changed" lists 13 paths at repo root. | 4 moved (`wbapi-server.js` → `src/js/`, `wbapi-help.md`/`API-README.md` → `docs/api/`, `spec-corridors.md` → `docs/spec/`, `docs-node-network.md` → `docs/notes/`). Content claims hold. | STALE (path only) |
 
 ---
@@ -165,7 +165,7 @@ filed under *"Non-Obvious Decisions"* — **reject, don't silently ignore** — 
 has never once corrupted the world file. It is the single most valuable line in the original document, and its
 author justified it in one sentence about masking caller bugs. They were more right than they knew.
 
-**Corollary defect:** the 68-line **auto-junction rule** (`src/js/wbapi-server.js:const autoJunctionEnabled@11054`) — which mints new `J\d+`
+**Corollary defect:** the 68-line **auto-junction rule** (`src/js/wbapi-server.js:const autoJunctionEnabled@11077`) — which mints new `J\d+`
 nodes when a 4th direction is set — is **unreachable**. Its trigger requires `body[dirField]` to be truthy;
 the guard eight lines above returns 400 on exactly that condition. It is live-looking code that re-creates the
 entities §CELL-05 was written to destroy, and it cannot run. → §DX-02bn.
@@ -176,7 +176,7 @@ entities §CELL-05 was written to destroy, and it cannot run. → §DX-02bn.
 `J13` did not. It is now the **only** `J`-prefixed node in the world — `The Western Sea Road`, and the home of
 **The Cartographer**, one of the game's seven roadside vignette NPCs.
 
-`POST /api/graph/nuke-junctions` (src/js/wbapi-server.js:parts[1] === 'nuke-junctions'@6643) selects by *code pattern* — `src/js/wbapi-server.js:const jCodeRe@6656` (`/^J\d+$/`) — and guards
+`POST /api/graph/nuke-junctions` (src/js/wbapi-server.js:parts[1] === 'nuke-junctions'@6643) selects by *code pattern* — `src/js/wbapi-server.js:const jCodeRe@6668` (`/^J\d+$/`) — and guards
 with two reference sets: quest `activateNode`/`waypointNode`, and `WBAPI.birkaNpcs[].node`. Live dry-run:
 
 ```
@@ -186,7 +186,7 @@ with two reference sets: quest `activateNode`/`waypointNode`, and `WBAPI.birkaNp
 ```
 
 The safety check passes because The Cartographer is not in either set. She lives in
-`const JUNCTION_VIGNETTES@26556` — a map keyed **by node code**, with **no `node:` field on any entry** — and
+`const JUNCTION_VIGNETTES@26687` — a map keyed **by node code**, with **no `node:` field on any entry** — and
 `nuke-junctions` reads `BIRKA_NPC_PROFILES` instead. The guard is not reading the wrong field; it is reading a
 different map. This pins the mechanism behind §DX-02bk.
 
@@ -213,8 +213,8 @@ after the thing it stopped being is the whole bug.
 | Row | Sev | Defect |
 |---|---|---|
 | **§DX-02bl** (sharpened) | 🟠 | Three connectivity endpoints, three answers (416 · 2 · 1). Mechanism now pinned: only `graph/reachability` is correct; `cluster-bridge`/`junction-audit` read `N/S/E/W` (deleted §CELL-01); `grid/reachability` reads the right graph but reports a meaningless metric. |
-| **§DX-02bk** (mechanism pinned) | 🟠 | `nuke-junctions` deletes `J13`/The Cartographer. Confirmed by live dry-run (`safe=1 dead-end=1`). Cause: safety net reads `BIRKA_NPC_PROFILES`; the vignette lives in `JUNCTION_VIGNETTES@26556`, which has no `node:` field and is never consulted. |
-| **§DX-02bm** *(new)* | 🟢 | `const TERRAIN_ENCOUNTER_RATE@9892` key `junction:0` is unreachable — `_inferTerrain` cannot return `'junction'` (`name:'junction'` = 0). Delete the key; the removal is already documented at `@6402`. |
+| **§DX-02bk** (mechanism pinned) | 🟠 | `nuke-junctions` deletes `J13`/The Cartographer. Confirmed by live dry-run (`safe=1 dead-end=1`). Cause: safety net reads `BIRKA_NPC_PROFILES`; the vignette lives in `JUNCTION_VIGNETTES@26687`, which has no `node:` field and is never consulted. |
+| **§DX-02bm** *(new)* | 🟢 | `const TERRAIN_ENCOUNTER_RATE@9905` key `junction:0` is unreachable — `_inferTerrain` cannot return `'junction'` (`name:'junction'` = 0). Delete the key; the removal is already documented at `@6402`. |
 | **§DX-02bn** *(new)* | 🟡 | The 68-line auto-junction rule (`@11054`) is dead code behind the §CELL-08 PUT guard (`@11043`) — and it mints `J\d+` codes, the exact hazard class of §DX-02bk. Delete with the retirement sweep. |
 | **§AUDIT-03az** (unchanged) | 🟡 | Re-code `J13` to a non-`J` key — the permanent close for §DX-02bk. This report is its origin: §CELL-05 promoted the node and kept the name. |
 

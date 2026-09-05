@@ -178,7 +178,7 @@ later. The paragraph was not measured; it was inherited.
 
 This is the finding worth the whole pass, because the number is load-bearing.
 
-`FROBERGER_JOURNAL@27186` runs `entryNum:1` through `entryNum:41@27227` — **41 entries, unchanged
+`FROBERGER_JOURNAL@27318` runs `entryNum:1` through `entryNum:41@27359` — **41 entries, unchanged
 since `32c10c5`, the earliest surviving build.** The report says 17, twice: once in §I.A and once in
 §I.B, where it becomes the document's central structural parallel — *"Froberger left 17 journal
 entries. Each entry is a lab report."*
@@ -195,7 +195,7 @@ player writing the 42nd entry. **41 + 1 = 42 is the arithmetic the argument requ
 42 is not the next page; it is nowhere in particular. The document's thesis and its data section
 disagree, and the thesis is the half that is right.
 
-*(A near-miss worth recording: `const JOURNAL_ENTRIES@22425` is a **different**, dead structure —
+*(A near-miss worth recording: `const JOURNAL_ENTRIES@22452` is a **different**, dead structure —
 five node-keyed Froberger quotes, superseded by the `FROBERGER_JOURNAL` delivery system and marked
 dead in its own header comment. It is not the source of the 17 either; it holds five.)*
 
@@ -204,23 +204,23 @@ dead in its own header comment. It is not the source of the 17 either; it holds 
 ## VI. Finding 3 — Two Node Codes Read Out of Code Comments → §AUDIT-03ba
 
 Seven of the report's nine node codes are right, including one the sibling synthesis got wrong:
-`CDG:{ num:77, code:'CDG', name:'cat_quarter', label:'The Cat Quarter'@8798` (part 6 wrote `CQ`),
-`LIM:{ num:81, code:'LIM', name:'mimic_meadow', label:'The Mimic Meadows'@8815`,
-`AMS:{ num:79, code:'AMS', name:'ruins', label:"Fishmonger's Row"@8801` (the La Riva grief arc),
-`NUE:{ num:35, code:'NUE', name:'scholars_qtr'@8705` (*Scholar's Quarter — Weimar*), plus `TLS`,
+`CDG:{ num:77, code:'CDG', name:'cat_quarter', label:'The Cat Quarter'@8811` (part 6 wrote `CQ`),
+`LIM:{ num:81, code:'LIM', name:'mimic_meadow', label:'The Mimic Meadows'@8828`,
+`AMS:{ num:79, code:'AMS', name:'ruins', label:"Fishmonger's Row"@8814` (the La Riva grief arc),
+`NUE:{ num:35, code:'NUE', name:'scholars_qtr'@8718` (*Scholar's Quarter — Weimar*), plus `TLS`,
 `MHQ` and `GVA`.
 
 Two are wrong, and both are wrong the same way.
 
 **`CO` — "Loop Heart".** The string *"Loop Heart"* occurs **exactly once in the entire file**, at both
-builds, and it is inside a comment: `(CO — Loop Heart / Codex Core Chamber)@21718`. `CO` was never a
+builds, and it is inside a comment: `(CO — Loop Heart / Codex Core Chamber)@21740`. `CO` was never a
 `NODE_MAP` key; every block under that comment guards on `TLS`. The sibling `synthesis-part6` read the
 **same comment** 53 minutes earlier and made the same error.
 
 **`CY` — "CY madness".** `CY` is likewise never a `NODE_MAP` key. `// ── Layer 41: Drunk Pit Fight (CY
-only)@24686` sits **two lines above** `_pb41.nodeCode === 'HKG'`. `CY` is `HKG:{ num:6,  code:'HKG', name:'cyberpunk_streets', label:'Neon Undercity'@8439`.
+only)@24686` sits **two lines above** `_pb41.nodeCode === 'HKG'`. `CY` is `HKG:{ num:6,  code:'HKG', name:'cyberpunk_streets', label:'Neon Undercity'@8452`.
 
-The engine settles both, and three more, in exactly one place — `const birkaNpcs@35122`:
+The engine settles both, and three more, in exactly one place — `const birkaNpcs@35347`:
 
 > *"dead pre-§WALK sublocation codes remapped to real nodes … IN→TLL … TV→MHQ … BA→LLA … CY→HKG. No
 > NODE_MAP entry ever existed for CI/IN/TV/BA/CY."*
@@ -435,8 +435,8 @@ contains none of these terms. All four verified at `89fa13b`.
    shadow state. ✅
 2. **Renders are idempotent.** `storyRender()` can be called any number of times and produces the same
    result from the same state; it destroys and rebuilds its DOM targets. ✅
-3. **One BFS.** `function _bfsGridPath@37742` is the single pathfinding primitive;
-   `function _bfsGridDir@37786` is a four-line wrapper that calls it and reads the first step. There is
+3. **One BFS.** `function _bfsGridPath@37955` is the single pathfinding primitive;
+   `function _bfsGridDir@37999` is a four-line wrapper that calls it and reads the first step. There is
    no second pathfinder. ✅
 4. **Modes are booleans.** Battle Mode and Story Mode are not states of a state machine — `S_story.active`
    is set `true`/`false` at six sites. The game is always in both modes, with one suppressed. ✅

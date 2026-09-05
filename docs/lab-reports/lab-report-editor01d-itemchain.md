@@ -115,20 +115,20 @@ inlining pushes, filters, gold, favor and `msgs.push`.
 
 | Surface | Anchor at HEAD |
 |---|---|
-| Runtime applier | `` `function _applyItemChain(q) {@26171` `` |
-| Idempotent grant (`once`) | `` `if (s.once !== false && inv.some(i => i.name === s.name)) break@26178` `` |
-| Rich-field allow-list (FU-b1) | `` `for (const f of ['desc', 'readText', 'passive'@26184` `` |
-| Silent-grant suppression (FU-b) | `` `if (!s.silent) msgs.push(item.icon@26191` `` |
-| `take all` — spliced in place | `` `if (s.all) { for (let i = inv.length - 1@26197` `` |
-| `takeBit` dispatch | `` `case 'takeBit':  _takeMissionBit(s.flag); break@26201` `` |
-| Mission-bit removal | `` `function _takeMissionBit(flagName) {@26155` `` |
-| §MBIT-02-E gate safety | `` `kept gate-referenced flag@26162` `` |
-| The one live hook | `` `msgs.push(..._applyItemChain(q)); // §EDITOR-01-D@30200` `` |
-| Ladder's obituary, in the engine | `` `W7c folded the per-id hardcoded effects block (61 ids@30195` `` |
+| Runtime applier | `` `function _applyItemChain(q) {@26302` `` |
+| Idempotent grant (`once`) | `` `if (s.once !== false && inv.some(i => i.name === s.name)) break@26309` `` |
+| Rich-field allow-list (FU-b1) | `` `for (const f of ['desc', 'readText', 'passive'@26315` `` |
+| Silent-grant suppression (FU-b) | `` `if (!s.silent) msgs.push(item.icon@26322` `` |
+| `take all` — spliced in place | `` `if (s.all) { for (let i = inv.length - 1@26328` `` |
+| `takeBit` dispatch | `` `case 'takeBit':  _takeMissionBit(s.flag); break@26332` `` |
+| Mission-bit removal | `` `function _takeMissionBit(flagName) {@26286` `` |
+| §MBIT-02-E gate safety | `` `kept gate-referenced flag@26293` `` |
+| The one live hook | `` `msgs.push(..._applyItemChain(q)); // §EDITOR-01-D@30355` `` |
+| Ladder's obituary, in the engine | `` `W7c folded the per-id hardcoded effects block (61 ids@30350` `` |
 | Pipe codec (parse) | `` `edit.html:function parseItemChainText(txt) {@8533` `` |
 | `desc` re-join — the limitation that dissolved | `` `edit.html:if (p[5]) step.desc = p.slice(5)@8542` `` |
 | CRUD field declaration | `` `edit.html:arr:'itemchain',ta:true@6146` `` |
-| Quest-create serializer (§ARCH-01 W8b) | `` `src/js/wbapi-server.js:const JSONF@1710` `` |
+| Quest-create serializer (§ARCH-01 W8b) | `` `src/js/wbapi-server.js:const JSONF@1713` `` |
 | Parity guard's live branch tally | `` `src/scripts/check-ladder-migration.js:ladder branches@265` `` |
 
 **Ten of ten line citations byte-exact at the reference build:** `_rollCeremonia` 6246–6251 (6246 =

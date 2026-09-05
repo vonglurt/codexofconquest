@@ -31,7 +31,7 @@ Nine instruments, in the order run:
 1. **Batch census.** Every named quest id, flag, item, NPC and node code through one `grep -c` loop *before* reading a line of prose (§DOC-02b).
 2. **Archive comparison.** `git show e339aeb:play.html` — the report's own ship commit — is the only thing that can adjudicate a claim about 2026-05-28 (§DOC-02f, instrument 8).
 3. **Rename resolution by triple-match.** A dead node code is presumed a *rename*, not a deletion, until `num` + terrain key + label all fail (§DOC-02y).
-4. **Cell-primacy census.** `const CELL_GRID = (() => {@9852` builds each cell in `NODE_MAP` declaration order; only `list[0]` can ever become `S_story.currentCode` (§AUDIT-03x).
+4. **Cell-primacy census.** `const CELL_GRID = (() => {@9865` builds each cell in `NODE_MAP` declaration order; only `list[0]` can ever become `S_story.currentCode` (§AUDIT-03x).
 5. **Reachability closure over gate flags.** For every gate term, find *all* writers; a single writer inside a blocked block kills the whole downstream chain (§DOC-02r, instrument 19).
 6. **Second-route search.** Before declaring a quest dead, check `unlock` edges and the Warrant's Board — the closure runs in the *positive* direction too.
 7. **Recommendation register.** Score the report's own ⚙️ deferrals against HEAD (§DOC-02i).
@@ -137,7 +137,7 @@ The transcripts were not game-design documents; they were lectures. The extracti
 | 8 | §3.2 *"storyMove gate on LN→LD"* | `storyMove` does not exist; mover refuses only `oob`/`impassable` | ❌ **NOW FORBIDDEN** (invariant #1) |
 | 9 | §3.5 *"storyMove gate at HL→DF checks `defeatedBattles['HL']`"* | same | ❌ **NOW FORBIDDEN** (invariant #1) |
 | 10 | *"Running total: ~151 live"* quests | 2,853 at HEAD; **402 top-level `QUEST_DB` entries at `e339aeb`** | ⚠️ **UNVERIFIABLE** — see §VI-D |
-| 11 | Hull repair costs 200gp at Saltwick | `kind:'cost', gold:200@33907` (*"Dorit looks at your coin. 'Short. Come back when the purse is right.'"*) | ✅ **SHIPPED** — and now a `cost` leaf (§VM-01-G4a) |
+| 11 | Hull repair costs 200gp at Saltwick | `kind:'cost', gold:200@34133` (*"Dorit looks at your coin. 'Short. Come back when the purse is right.'"*) | ✅ **SHIPPED** — and now a `cost` leaf (§VM-01-G4a) |
 | 12 | §HUNT-01 investigation gates the den | gate is *quest-side* only; the den node is walk-open | ✅ **RE-EXPRESSED**, invariant-correct |
 | 13 | REF-03 ⚙️ boarding combat | 0 hits | ❌ **NOT SHIPPED** (kept) |
 | 14 | REF-03 ⚙️ `travelCompanion` state system | **0 occurrences** | ❌ **NOT SHIPPED** (kept) |
@@ -154,7 +154,7 @@ The transcripts were not game-design documents; they were lectures. The extracti
 
 ### 5.1 Mechanism
 
-`const CELL_GRID = (() => {@9852` maps every cell to an **array** of node codes, built in `NODE_MAP` declaration order; `const cellCode   = (key) => CELL_GRID[key]?.[0] || null;@9861` returns `list[0]`, and `S_story.currentCode` is assigned at exactly two sites, both yielding the primary. `function _uqfActivateAtNode(node, indexFresh) {@30139` keys on `node.code`. **A non-primary node's quests never activate by arrival, its text never renders, its battle never fires, and `if (g.atNode && st.currentCode !== g.atNode) return false;@22125` makes any `atNode` completion there impossible.**
+`const CELL_GRID = (() => {@9865` maps every cell to an **array** of node codes, built in `NODE_MAP` declaration order; `const cellCode   = (key) => CELL_GRID[key]?.[0] || null;@9874` returns `list[0]`, and `S_story.currentCode` is assigned at exactly two sites, both yielding the primary. `function _uqfActivateAtNode(node, indexFresh) {@30293` keys on `node.code`. **A non-primary node's quests never activate by arrival, its text never renders, its battle never fires, and `if (g.atNode && st.currentCode !== g.atNode) return false;@22147` makes any `atNode` completion there impossible.**
 
 Four of this layer's host nodes are non-primary:
 
@@ -165,7 +165,7 @@ Four of this layer's host nodes are non-primary:
 | **`VAW`** *North Shore Den* | 10,191 | 6 | `ALF` | 1 quest + the drowner den |
 | **`ATH`** *Athens — The Market Hill* | 32,203 | 17 | `SEA` | 4 quests |
 
-`SEN` is the layer's hub. It is also a `sleep:true` node, therefore a **Warrant's Board host that no player can ever stand on** (`function _boardHost(node)@37021`).
+`SEN` is the layer's hub. It is also a `sleep:true` node, therefore a **Warrant's Board host that no player can ever stand on** (`function _boardHost(node)@37241`).
 
 Cell **10,191** deserves its own note: it holds the entire lake sub-map — `ALF` *North Shore Path*, `HVG` *East Coast — Upper Shore*, `HFT` *South Shore*, `VAW` *North Shore Den* — **plus two Volsunga-saga halls from an unrelated track**, `ODD` *Oddrun's Estate* and `SIG` *Siggeir's Hall*. **5 of 6 stranded, across 2 independent tracks.** This is the §DOC-02x "score by cell, not by arc" result reproduced in a second cell.
 
@@ -175,25 +175,25 @@ The cell map alone would strand 9 quests. The **flag closure** takes it to 13, b
 
 | Flag | Sole writer | Blocked by | Kills |
 |---|---|---|---|
-| `huntHookReceived` | `if (node.code === 'HFT' && !S_story.huntHookReceived) {@33207` | `HFT` non-primary | `quest_hunt_01`'s completion → `_02` → `_03` → `_04` — **§HUNT-01, 4 of 4** *(§DOC-02r first)* |
-| `whodunit2HookReceived` | inside `if (node.code === 'SEN' && S_story.saltwickAccessed) {@33605` | `SEN` non-primary | `quest_bilge_01`'s completion → `_02` → `_03` → `_04` — **§WHODUNIT-01, 4 of 4** *(§DOC-02r first)* |
-| `roenAtSea` | `if (node.code === 'SEN' && S_story.roenMidlandsWisdom && !S_story.roenAtSea) {@33363` | `SEN` non-primary | `quest_alch_03`'s completion → `_04` → `_05` → `_06` → `_07` — **§ALCHEMY-01, 5 of 7** — **NEW** |
+| `huntHookReceived` | `if (node.code === 'HFT' && !S_story.huntHookReceived) {@33439` | `HFT` non-primary | `quest_hunt_01`'s completion → `_02` → `_03` → `_04` — **§HUNT-01, 4 of 4** *(§DOC-02r first)* |
+| `whodunit2HookReceived` | inside `if (node.code === 'SEN' && S_story.saltwickAccessed) {@33831` | `SEN` non-primary | `quest_bilge_01`'s completion → `_02` → `_03` → `_04` — **§WHODUNIT-01, 4 of 4** *(§DOC-02r first)* |
+| `roenAtSea` | `if (node.code === 'SEN' && S_story.roenMidlandsWisdom && !S_story.roenAtSea) {@33595` | `SEN` non-primary | `quest_alch_03`'s completion → `_04` → `_05` → `_06` → `_07` — **§ALCHEMY-01, 5 of 7** — **NEW** |
 
-(`roenAlchemistMet`, written at `if (node.code === 'ATH' && S_story.roenMaltaCrisis && !S_story.roenAlchemistMet) {@33386`, is blocked the same way — but the arc is already dead two beats upstream, so `ATH` is a *redundant* casualty.)
+(`roenAlchemistMet`, written at `if (node.code === 'ATH' && S_story.roenMaltaCrisis && !S_story.roenAlchemistMet) {@33618`, is blocked the same way — but the arc is already dead two beats upstream, so `ATH` is a *redundant* casualty.)
 
 **Blast radius, per arc:** §HUNT-01 loses the Elder Fisherwoman's ninety-one years of lake reading, the Drowned Compass, the drowner den and the Guild's two-season theory correction. §WHODUNIT-01 loses the entire template's only instance — the port drain, Delt's memory, the bilge fight, and the cook who never apologises. §ALCHEMY-01 stops at the Midlands and never reaches the oracle, the Malta crisis, the Alchemist, or the Loch Gold Flake — *so the one arc built to prove that the grandmother spoke literally never gets to prove it.*
 
 ### 5.3 The §BOARD-01-FU6 diamond loses its apex
 
 `quest_hunt_01` is not an ordinary casualty: its `onComplete` carries
-`{ kind:'unlock', quests:['sq_2','quest_hunt2_01'] }@12902` — the referral graph's **one geo-spanning diamond**, forking to a highland kelpie and a relay-road hag and reconverging on the reopened harbour at `DNF`. Its completion requires `huntHookReceived`. **The apex can activate and can never complete, so the diamond's fork never fires.** Both arms remain independently reachable by arrival, so the *content* survives; what is lost is the Warrant reader's line that connects them — the sentence that turns two hunts into one pattern.
+`{ kind:'unlock', quests:['sq_2','quest_hunt2_01'] }@12917` — the referral graph's **one geo-spanning diamond**, forking to a highland kelpie and a relay-road hag and reconverging on the reopened harbour at `DNF`. Its completion requires `huntHookReceived`. **The apex can activate and can never complete, so the diamond's fork never fires.** Both arms remain independently reachable by arrival, so the *content* survives; what is lost is the Warrant reader's line that connects them — the sentence that turns two hunts into one pattern.
 
 ### 5.4 What survives, and why — the closure in the positive direction
 
 Two mechanisms rescue part of the layer, and both were found by looking for a *second route* before writing anything off:
 
-1. **The Warrant's Board pre-activates across the map.** `function _bountyPostable(q, node)@37132` requires only that the destination exist in `NODE_MAP` — **it never tests primacy** — and `_acceptBounty` fires the file's first live `unlock`. So `quest_sea_01` (gate `{}`, `xp:100` ≤ the Unknown tier's 250 cap) *is* postable, and its completion is `completion:{ atNode:'NWI' }` — a **primary** node. **§SPARK-01 SEA is fully playable, but only for a player who finds it on a board.**
-2. **The quest panel is not node-scoped.** `// ── QUESTS section (active quests at this node) ────@35528` is followed by `.filter(([, s]) => s === 'active')@35531` over the *whole* `S_story.quests` map, with no node filter. The Ceremonia roll card therefore renders for **any** active skill_check quest at **any** node. This is what makes board-accepted skill-check bounties completable at all — and it is a divergence between a comment and its code that nobody has recorded. → **§DX-02ah**.
+1. **The Warrant's Board pre-activates across the map.** `function _bountyPostable(q, node)@37352` requires only that the destination exist in `NODE_MAP` — **it never tests primacy** — and `_acceptBounty` fires the file's first live `unlock`. So `quest_sea_01` (gate `{}`, `xp:100` ≤ the Unknown tier's 250 cap) *is* postable, and its completion is `completion:{ atNode:'NWI' }` — a **primary** node. **§SPARK-01 SEA is fully playable, but only for a player who finds it on a board.**
+2. **The quest panel is not node-scoped.** `// ── QUESTS section (active quests at this node) ────@35753` is followed by `.filter(([, s]) => s === 'active')@35756` over the *whole* `S_story.quests` map, with no node filter. The Ceremonia roll card therefore renders for **any** active skill_check quest at **any** node. This is what makes board-accepted skill-check bounties completable at all — and it is a divergence between a comment and its code that nobody has recorded. → **§DX-02ah**.
 
 Final tally: **17 quests live by walking · 3 live only via the board · 13 unreachable.**
 
@@ -204,7 +204,7 @@ Final tally: **17 quests live by walking · 3 live only via the board · 13 unre
 **A. Two live double-pay sites (→ §DX-02ai ✅ 2026-09-03 — one was real).** Where a `storyRender` button writes the flag a quest completes on, both sides can pay. This finding named two; measured by clicking each in Playwright, the hull site paid twice and the Fehn site paid once — `quest_spark2_05` has no `xpAward` at HEAD and had none when this report was written, so the figure below for it was wrong. The hull button's inline grant is deleted; the quest is the single payer. As written on 2026-08-12:
 
 - `quest_sk_hull` — the MME button grants `S_story.xp = (S_story.xp||0) + 200;` (deleted by §DX-02ai) and the toast says *"-200gp. +200 XP"*; `storyRender(node)` then completes the quest, whose `onComplete` carries `{ kind:'reward', xp:200 }`. **400 XP paid, 200 announced.**
-- `quest_spark2_05` — the DNF Fehn-confrontation button grants +400 gold and +400 XP; the quest then pays `xpAward:600` through `if (q.type === 'side' && q.xpAward) { S_story.xp += q.xpAward; _checkLevelUp(); }@30204`. **1,000 XP paid, 400 announced.**
+- `quest_spark2_05` — the DNF Fehn-confrontation button grants +400 gold and +400 XP; the quest then pays `xpAward:600` through `if (q.type === 'side' && q.xpAward) { S_story.xp += q.xpAward; _checkLevelUp(); }@30359`. **1,000 XP paid, 400 announced.**
 
 The other nine button/quest pairs in this layer are clean — payment sits on exactly one side each. These two are the same class as the four fixed by `3338def` (§SPARK-01-FU / §LXX-01-FU) and survived that sweep because it was scoped to the harbour and §LXX stacks.
 

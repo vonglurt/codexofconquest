@@ -28,7 +28,7 @@ The architecture it certifies as "structurally true right now" was true for **th
 
 - **The two-engine split is why the game can be balanced at all.** Battle Mode (`S`, reset every refresh) and Story Mode (`S_story`, persisted) share the dice library — `roll(` 18 sites, `resolveAdv` 8 — and never merge state. A designer can retune a monster's damage die without any risk of corrupting a save, because the two engines meet at exactly two documented seams. Both are unchanged in structure since the report.
 - **The anchor contract is why 2,853 quests exist.** Twelve `WORLDBUILDER:*:START/END` comment pairs let the WBAPI find and rewrite a data section in a five-megabyte file without a parser for the rest of it. Every quest, node, monster and NPC authored since is authored through that seam. Hand-editing at this scale is not slower — it is impossible.
-- **The Cooperative DM Principle is the part a player actually feels**, and it is the oldest claim in the document: enemies must always be beatable, death must always be recoverable. All three of its named mechanisms are live and player-reachable at HEAD — `const _D100_TABLE@24518` (loot that always gives *something*), `void_mercy_count--@36349` (the void's one free pass), and `function storyRespawnFromCheckpoint@23924`, wired to the game-over button. Two months, five thousand lines, and a total quest-format migration later, the promise the game makes to a losing player is byte-for-byte the promise it made in May.
+- **The Cooperative DM Principle is the part a player actually feels**, and it is the oldest claim in the document: enemies must always be beatable, death must always be recoverable. All three of its named mechanisms are live and player-reachable at HEAD — `const _D100_TABLE@24576` (loot that always gives *something*), `void_mercy_count--@36547` (the void's one free pass), and `function storyRespawnFromCheckpoint@23982`, wired to the game-over button. Two months, five thousand lines, and a total quest-format migration later, the promise the game makes to a losing player is byte-for-byte the promise it made in May.
 
 The finding in §6 is the counterweight: on the day this document certified the quest architecture sound, **36 quests across nine chains and twelve nodes could not advance**, for a reason the document itself describes in the abstract one page earlier.
 
@@ -206,7 +206,7 @@ Four forward-looking claims, all falsifiable, checked at HEAD.
 | Prediction | Outcome |
 |---|---|
 | *"A future WBAPI-02 could convert `completeFn`/`activateCond` to declarative predicates"* | ✅ **Delivered** by §ARCH-01 UQF. `completeFn:` 166 → **3**; `activateCond:` 1,767 → **46**. 98 % / 97 % converted. |
-| *"`QuestRuntime.adaptLegacyQuest()` remains the bridge… Phase 3–5 is the next architecture milestone"* | ✅ **Delivered.** `QuestRuntime` 1 → 21 occurrences; the "stub" is now the sole execution surface (`const QuestRuntime@22342`). |
+| *"`QuestRuntime.adaptLegacyQuest()` remains the bridge… Phase 3–5 is the next architecture milestone"* | ✅ **Delivered.** `QuestRuntime` 1 → 21 occurrences; the "stub" is now the sole execution surface (`const QuestRuntime@22369`). |
 | *"WORLDBUILDER anchor pairs are a contract"* | ✅ **Held perfectly.** 24 comments / 12 sections at the reference commit; **byte-identical at HEAD** two months and 4,991 lines later. Not one collection was added without its anchor. |
 | *"An §API-03 review of `combat.md`'s function reference would find all entries stale"* · *"SP5 is overdue"* | ⚠️ **Correct, unactioned, and 175× larger than described** → §DX-02bv. Zero commits mention SP5 or §API-03. |
 
@@ -232,7 +232,7 @@ The sting is that the repo built a gate for exactly this. `check:anchors` walks 
 
 - **The one-file, one-scope model is permanent**, and every pattern that looks unusual is downstream of it. Unchanged.
 - **The two-engine split** (`S` / `S_story`, shared dice, never-merged state) governs the codebase. Unchanged in structure at 38,712 lines.
-- **`_S_DEFAULTS()` is the canonical new-game/NG+ reset** — `const _S_DEFAULTS@23063`, 187 → 193 fields. Still the single source of truth for save initialisation.
+- **`_S_DEFAULTS()` is the canonical new-game/NG+ reset** — `const _S_DEFAULTS@23092`, 187 → 193 fields. Still the single source of truth for save initialisation.
 - **The anchor pair is a contract.** If you add a top-level data collection, add the pair. Two months of perfect compliance is evidence it works.
 - **Never `JSON.parse` a JS object literal from the HTML.** Unquoted keys, trailing commas, arrow functions. `extractObj` + `removeFns` + comment-aware brace counting, all live in `src/js/wbapi-core.js`.
 - **`removeFns` is a data-loss boundary, not a formatting detail.** §7 is what it costs when the round trip is assumed rather than tested — and the standing acceptance test for any write path remains: *save, re-parse, assert the change survived.*

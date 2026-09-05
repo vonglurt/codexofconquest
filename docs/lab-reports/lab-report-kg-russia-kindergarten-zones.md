@@ -126,7 +126,7 @@ Tallinn TLL `10,204`, Moscow SVO `14,217`, The Tungas TGS `7,217` — all four e
 | `fabrika_enforcer` | Fabrika Enforcer | 13 | 16 | 1d8+1 | easy | 26.85 | **3** | Cortex Shunt (8) | 208 |
 | `trainer_bot_prime` | Malfunctioning Trainer-Bot | 15 | 26 | 2d6+1 | easy | 36.10 | **4** | Prime Core (12) | 390 |
 
-**Terrain pools**, deepening west→east, at `const WORLD_DB = {@6279`; `P.commoner` (Rabid Monkey,
+**Terrain pools**, deepening west→east, at `const WORLD_DB = {@6280`; `P.commoner` (Rabid Monkey,
 mLevel 1) pads the two gentlest. All five verified order-exact:
 
 ```
@@ -173,12 +173,12 @@ removals; all five §KG nodes are still present.
 
 | Report claim | Live | Verdict |
 |---|---|---|
-| road cells return `road`, encounter rate 0 | `const TERRAIN_ENCOUNTER_RATE = {@9892` holds `road:0` | ✓ |
-| off-road cell adjacent to a node inherits that terrain | `function _inferTerrain(r, c) {@28385` — orthogonal-neighbour majority | ✓ |
-| Hunt Mode 80/20 at-or-below bias | `if (S_story.huntMode && _seededNext() < 0.8) {@38228` | ✓ |
-| Hunt Mode roughly doubles the rate | `if (S_story.huntMode) baseRate = Math.min(0.8, baseRate * 2);@28442` | ✓ |
-| battle XP = AC · maxHP | `const xpAward = Math.round((S.enemy.ac@25294` | ✓ |
-| Level 6 costs 5,500 XP | `const XP_LEVELS = [@24420` — index 5 is 5,500 | ✓ **exact** |
+| road cells return `road`, encounter rate 0 | `const TERRAIN_ENCOUNTER_RATE = {@9905` holds `road:0` | ✓ |
+| off-road cell adjacent to a node inherits that terrain | `function _inferTerrain(r, c) {@28535` — orthogonal-neighbour majority | ✓ |
+| Hunt Mode 80/20 at-or-below bias | `if (S_story.huntMode && _seededNext() < 0.8) {@38441` | ✓ |
+| Hunt Mode roughly doubles the rate | `if (S_story.huntMode) baseRate = Math.min(0.8, baseRate * 2);@28595` | ✓ |
+| battle XP = AC · maxHP | `const xpAward = Math.round((S.enemy.ac@25351` | ✓ |
+| Level 6 costs 5,500 XP | `const XP_LEVELS = [@24482` — index 5 is 5,500 | ✓ **exact** |
 | all six at or below Techno-Thug, *"mLevel ~4"* | Techno-Thug is **exactly** 4; band max is 4 | ✓ |
 | node prose ≤ the HKG/SVO exemplars | §KG 635–739 chars; HKG 953, SVO 1,192 | ✓ |
 
@@ -196,7 +196,7 @@ component · R3 0 · R4 410 cells). `check:anchors` — 4,423 anchors across 106
 
 §6 tables the road as *"6 legs · `./api.sh highway --execute`"*; §7 step 4 repeats it; §8 certifies
 *"API-first: nodes + highways via `./api.sh`"*. The ship diff contains **no highway calls**. It contains a
-single-line replacement of `const ROAD_RUNS = {@9883` adding runs on rows 10–14, totalling the eleven
+single-line replacement of `const ROAD_RUNS = {@9896` adding runs on rows 10–14, totalling the eleven
 cells the census confirms. The commit message states why, as a lesson:
 
 > *"`./api.sh highway` lays sparse `junction:true` nodes (violate check-invariants I1/I2, ugly 'The The…'
@@ -236,8 +236,8 @@ the leg through the row-8 TUO corridor.
 ### F3 — The five signature lines shipped mute, for twenty days ⚠ proven in a browser at both builds
 
 §5's whole contribution is *"name + one signature line"* per node. At ship, none of them could be heard.
-The render path is `const _npcDial = NPC_DIALOGUE[node.code];@35801`, the d-pad gate is
-`!(node.npc && NPC_DIALOGUE[node.code])@35907` — and none of the five NODE_MAP
+The render path is `const _npcDial = NPC_DIALOGUE[node.code];@36026`, the d-pad gate is
+`!(node.npc && NPC_DIALOGUE[node.code])@36120` — and none of the five NODE_MAP
 entries carries a `code:` field. `NPC_DIALOGUE[undefined]` is `undefined`.
 
 Measured in Chromium, seeded at each node:
@@ -248,7 +248,7 @@ Measured in Chromium, seeded at each node:
 | HEAD | SPB…TVR ×5 | true ×5 | 1 ×5 | enabled ×5 | 1 ×5 |
 
 The NPC card still drew the name — *🧙 Recruiter Volkov* — with no button under it. The rescue is
-`if (!NODE_MAP[k].code) NODE_MAP[k].code = k;@9415`, one
+`if (!NODE_MAP[k].code) NODE_MAP[k].code = k;@9428`, one
 normalisation line shipped by **`f08f70f` §AUDIT-03e on 2026-07-29 11:06:46** — an unrelated repo-health
 increment. **Inert for 20 days, 16 hours, 45 minutes.**
 
@@ -305,14 +305,14 @@ stale, and FBR/TVR being adjacent means one "leg" of a six-leg corridor is a sin
 ### F6 — The five zone terrains have no encounter rate of their own
 
 None of `soviet_checkpoint`, `komsomol_school`, `gladiator_zavod`, `skill_fabrika`, `soviet_transit`
-appears in `const TERRAIN_ENCOUNTER_RATE = {@9892`. All five fall through the `?? _default` guard to
+appears in `const TERRAIN_ENCOUNTER_RATE = {@9905`. All five fall through the `?? _default` guard to
 **0.15 — the generic midlands rate**, doubled to 0.30 under Hunt Mode. The report never specifies a rate,
 so nothing was violated; but a band whose entire purpose is to be *ground* paces identically to open
 wilderness, while `city` (0.05) and `forest` (0.25) are deliberately tuned. → **§DX-02ek**
 
 ### F7 — Every §KG node renders its own name twice
 
-§4 gives each terrain the node's display name as its `label` (`soviet_checkpoint:{ label:@6294`), and §5 gives the node the same string. The header composes
+§4 gives each terrain the node's display name as its `label` (`soviet_checkpoint:{ label:@6295`), and §5 gives the node the same string. The header composes
 `nodeLabel · terrainLabel`, so all five stutter:
 
 ```
@@ -367,10 +367,10 @@ be met.
 177.5, so the band is roughly **31 average kills**, or 123 Sparring Droids, or 15 Trainer-Bots for
 someone who can survive one. At 0.30 hunting, with node arrivals not rolling, that is about one fight per
 6.7 steps — call it **~200 steps of deliberate oscillation** between a zone node and the cell beside it.
-Exploration XP (`const EXPLORE_XP = 10;@24437`) and effort XP (`const EFFORT_XP_PCT = 0.25;@24428`, added
+Exploration XP (`const EXPLORE_XP = 10;@24499`) and effort XP (`const EFFORT_XP_PCT = 0.25;@24490`, added
 four days later) both shorten it; neither existed on the day this was designed.
 
-**Hunt Mode does what the report says.** `function _weightedMonsterPick(terrain) {@38220` filters to
+**Hunt Mode does what the report says.** `function _weightedMonsterPick(terrain) {@38433` filters to
 monsters at or below the player level on 80% of picks. At the Zavod a Level-1 player therefore meets the
 Spar-Bot far more often than the Trainer-Bot, while the 20% full-pool draw still surfaces the mLevel-4
 capstone for a genuine fight. Notoriety weighting is flat inside the band — trivial 40 / easy 35 — because

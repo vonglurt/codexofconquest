@@ -74,7 +74,7 @@ one claim no static read can settle, **a live acceptance test in the browser** (
 ### A. The five anchors — all present, all resolving
 
 Audit rule: `node.npc.toLowerCase().replace(/\s/g,'_') === q.npc`
-(`src/js/wbapi-core.js:const norm = s => String(s).toLowerCase().replace(/\s/g,'_');@1072`). Hyphens
+(`src/js/wbapi-core.js:const norm = s => String(s).toLowerCase().replace(/\s/g,'_');@1088`). Hyphens
 survive slugification because the replace touches whitespace only — the lock said so and was right.
 
 | Node | Label | `node.npc` | Quest key | Role |
@@ -85,14 +85,14 @@ survive slugification because the replace touches whitespace only — the lock s
 | FBR | The Skill Fabrika | Technician Iosif | `technician_iosif` | deliveries + capstone |
 | TVR | Rzhev Transit Waystation | Quartermaster Lena | `quartermaster_lena` | resupply + Station 7 |
 
-`SPB: { num:63991, name:"soviet_checkpoint", label:"Nevsky Checkpoint"@9390` still carries
+`SPB: { num:63991, name:"soviet_checkpoint", label:"Nevsky Checkpoint"@9403` still carries
 `loot:"Sealed Recruit Manifest"`. Card battles exact:
-`battle:{"label":"Honor Duel — Rusted Gladiator Bot","key":"gladiator_bot"@9394` and the FBR twin on
+`battle:{"label":"Honor Duel — Rusted Gladiator Bot","key":"gladiator_bot"@9407` and the FBR twin on
 `trainer_bot_prime`.
 
 ### B. The chain — 11/11 shipped to the lock
 
-Head: `quest_kg_01: { id:'quest_kg_01', type:'side', schema:'UQF-1.0'@13569`.
+Head: `quest_kg_01: { id:'quest_kg_01', type:'side', schema:'UQF-1.0'@13596`.
 
 | # | id · giver | Completion | Gate | XP/gold → flag or item |
 |---|-----------|-----------|------|------------------------|
@@ -114,11 +114,11 @@ labels are the report's prose taxonomy, not engine values.
 
 ### C. The mechanic — three edits, all present
 
-- **Default** — ✅ verbatim: `catKills: {}, monsterKills: {}, catKingDefeated: false,@23121`
+- **Default** — ✅ verbatim: `catKills: {}, monsterKills: {}, catKingDefeated: false,@23153`
 - **Increment** — ✅ verbatim, and inert (§IV):
-  `S_story.monsterKills[S.enemy.key] = (S_story.monsterKills[S.enemy.key] || 0) + 1;@25347`
+  `S_story.monsterKills[S.enemy.key] = (S_story.monsterKills[S.enemy.key] || 0) + 1;@25412`
 - **HUD read** — ✅ verbatim, back-compat preserved:
-  `const k = S_story[q.killCounter || 'catKills'] || {};@30761`
+  `const k = S_story[q.killCounter || 'catKills'] || {};@30915`
 
 `catKills` is untouched behind its eight-key whitelist. The structural claim — *one generic counter,
 not a per-arc clone* — is architecturally sound and remains the right call.
@@ -129,9 +129,9 @@ not a per-arc clone* — is architecturally sound and remains the right call.
 
 `S.opp` is declared with `adv · condition · cond · tier · hp · maxHp · dmgMod` and **no `key`**. The
 combat loader assigns the monster key to the other half of the pair —
-`S.enemy.key      = m.key;@8148`. Across the whole file `S.opp.key` has **four read sites and zero
+`S.enemy.key      = m.key;@8160`. Across the whole file `S.opp.key` has **four read sites and zero
 write sites**, and `git log -S "catKills[S.enemy.key]" --all` returns **no commit, ever**. The guard
-at `if (S.enemy && S.enemy.key) {@25344` read `S.opp.key` when this report was written, and had been false since the line was authored.
+at `if (S.enemy && S.enemy.key) {@25409` read `S.opp.key` when this report was written, and had been false since the line was authored.
 
 > ⚠️ **ANNOTATION 2026-08-23 — §DX-02cy CLOSED.** The finding in §IV was acted on: the four sites were re-pointed from `S.opp.key` to `S.enemy.key`, and the anchors above were repaired to match the live code. **The measurements in this section describe the file as it stood on 2026-08-18** — `monsterKills`, `catKills` and `frCatKillCount` all move on a real victory now, pinned by `src/tests/integration/dx02cy-kill-counter-writer.test.js`.
 
@@ -160,7 +160,7 @@ sit under the same guard, taking §GR's payoff with them.
 §KG chain copied the idiom 44 days later. Neither has ever incremented in live play.
 
 **Why no gate caught it.** `check:questgraph` registers counters as resources —
-`src/scripts/check-questgraph.js:out.resources.add('count:' + c.path.split('.')[0])@253` — then
+`src/scripts/check-questgraph.js:out.resources.add('count:' + c.path.split('.')[0])@251` — then
 classifies every `countMin` clause *monotone-satisfiable* because a counter only goes up. True, and
 irrelevant: **a counter that never moves is monotone too.** The written-by-nothing detector covers
 flags, not counters.
@@ -189,7 +189,7 @@ proves `QuestRuntime.canComplete` honours it. The reader was verified; the write
 | 7 | Six item grants incl. Field Ration as heal consumable | all six as `itemChain grant`; Field Ration `heal:20` | ✅ exact |
 | 8 | Bout Token (kg_05) · Prime Core (kg_09) tabled as **items** | shipped as `mission_bit` **labels** | ⚠ form differs — kg_01's papers were correctly marked mission_bit; these two were not |
 | 9 | skill_check `bits` with `onPass[…]` / `onFail[…]` | `onPass` populated, **`onFail:[]` on both** | ⚠ narrowed — a failed check is silent |
-| 10 | *"the entire mechanical footprint of Inc 3"* | ship also widened the itemChain grant allow-list with `'dmgFlat', 'heal']) {@26185`, in lockstep across `edit.html:const GRANT_RICH = ['readText','passive'@8607` and `check-itemchain.js`, and repaired a pre-existing `_gateFlagSet` crash in that harness | ⚠ **understated at ship** — 5 sites tabled, 6 engine sites + 2 support files needed |
+| 10 | *"the entire mechanical footprint of Inc 3"* | ship also widened the itemChain grant allow-list with `'dmgFlat', 'heal']) {@26316`, in lockstep across `edit.html:const GRANT_RICH = ['readText','passive'@8607` and `check-itemchain.js`, and repaired a pre-existing `_gateFlagSet` crash in that harness | ⚠ **understated at ship** — 5 sites tabled, 6 engine sites + 2 support files needed |
 | 11 | §6 XP model → *"≈5,697, just past L6"* | **5,301** — 199 short of 5,500 | ❌ **wrong when written** (§VI) — **resolved 2026-08-26, §AUDIT-03bl**: capstones +300, minimum path now **5,601** |
 | 12 | *"Gold ≈ 550 across the chain"* | **450** | ❌ wrong when written — the report's error, not the chain's; left at 450 (§AUDIT-03bl) |
 | 13 | *"winning a node card battle … increments the kill counter"* | nothing increments the kill counter | ❌ **NOT SHIPPED** (§IV) |
@@ -202,8 +202,8 @@ proves `QuestRuntime.canComplete` honours it. The reader was verified; the write
 
 ## VI. THE XP MODEL, RE-DERIVED
 
-`0, 400, 1000, 2000, 3500, 5500, 8000, 11000, 15000, 20000,@24421` — Level 6 = **5,500**, unchanged.
-Kill XP is `const xpAward = Math.round((S.enemy.ac || 10) * (S.opp.maxHp || 10)@25294` × `partyMult`,
+`0, 400, 1000, 2000, 3500, 5500, 8000, 11000, 15000, 20000,@24483` — Level 6 = **5,500**, unchanged.
+Kill XP is `const xpAward = Math.round((S.enemy.ac || 10) * (S.opp.maxHp || 10)@25351` × `partyMult`,
 which is 1.0 solo: the report's `AC·maxHP` metric was and is correct. All six per-monster products
 are exact as tabled — sparring_droid **45** · komsomol_cadet **96** · gladiator_bot **196** ·
 zavod_sparbot **130** · fabrika_enforcer **208** · trainer_bot_prime **390**. Three errors follow
@@ -221,7 +221,7 @@ kg_11 500→600)."* That is **+150**, reaching 5,451 — **still 49 short.** The
 against the wrong total, so it could not have worked either.
 
 Two later mitigations, neither of them tuning and neither available on 2026-07-08: §XP-01 added
-effort XP for misses and failed checks (`const EFFORT_XP_PCT = 0.25;@24428`, 2026-07-12) and §XP-02-A
+effort XP for misses and failed checks (`const EFFORT_XP_PCT = 0.25;@24490`, 2026-07-12) and §XP-02-A
 added flat first-arrival exploration XP. A player walking the corridor today would clear Level 6 on
 those grants plus incidental encounters. **The pacing survives by accident, not by design** — and it
 is moot until §IV is fixed.

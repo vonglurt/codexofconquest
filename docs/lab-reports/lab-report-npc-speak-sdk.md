@@ -45,7 +45,7 @@ The log is the decisive instrument in this pass. This report is unusual in the c
 GET /api/npc/{id}/speak?prompt={text}&state={neutral|friendly|dearFriend}&model={model-id}
 ```
 
-Live at `src/js/wbapi-server.js:action === 'speak'@10598`, reading `WBAPI.birkaNpcs` (i.e. `const BIRKA_NPC_PROFILES = {@22713`, 206 entries).
+Live at `src/js/wbapi-server.js:action === 'speak'@10610`, reading `WBAPI.birkaNpcs` (i.e. `const BIRKA_NPC_PROFILES = {@22741`, 206 entries).
 
 | Parameter | Required | Default | Notes |
 |---|---|---|---|
@@ -54,11 +54,11 @@ Live at `src/js/wbapi-server.js:action === 'speak'@10598`, reading `WBAPI.birkaN
 | `state` | No | `neutral` | Relationship state |
 | `model` | No | `claude-haiku-4-5-20251001` | Override for testing |
 
-Response fields: `npc`, `name`, `state`, `prompt`, `reply`, `model`, `location`, `usage`. Output is capped at `src/js/wbapi-server.js:max_tokens: 256@10658`; the longest reply ever logged is 163 tokens, so no call has been truncated.
+Response fields: `npc`, `name`, `state`, `prompt`, `reply`, `model`, `location`, `usage`. Output is capped at `src/js/wbapi-server.js:max_tokens: 256@10670`; the longest reply ever logged is 163 tokens, so no call has been truncated.
 
 ### B. System prompt
 
-Assembled at request time from live game data at `src/js/wbapi-server.js:const systemText =@10643`:
+Assembled at request time from live game data at `src/js/wbapi-server.js:const systemText =@10655`:
 
 ```
 You are {name}, {occupation} at {nodeLabel}.
@@ -82,7 +82,7 @@ No stage directions. No asterisks.
 
 ### C. Fallback
 
-Absent `ANTHROPIC_API_KEY`, the endpoint replays `greeting + dialogue` for the requested state with a status flag (`src/js/wbapi-server.js:SEED FALLBACK@10623`). Verified live. Also a second form: at birth the endpoint returned **503**; the seed replay landed at 14:59 (`109d4b3`, §NPC-SPEAK-03). The fallback is wooden by design — it is the seed text, not a voiced response.
+Absent `ANTHROPIC_API_KEY`, the endpoint replays `greeting + dialogue` for the requested state with a status flag (`src/js/wbapi-server.js:SEED FALLBACK@10635`). Verified live. Also a second form: at birth the endpoint returned **503**; the seed replay landed at 14:59 (`109d4b3`, §NPC-SPEAK-03). The fallback is wooden by design — it is the seed text, not a voiced response.
 
 ### D. Logging
 
@@ -135,7 +135,7 @@ The report noticed the zeroes and explained them:
 
 That explanation is refuted by the adjacent column. A first call cannot *read* a cache — but it must **write** one. Twenty first calls across two days, all writing nothing, is not a cold cache; it is a cache that does not exist.
 
-**Cause:** Claude Haiku 4.5's minimum cacheable prefix is **4096 tokens**. The system block measures **451–546 tokens** — about one-eighth of the threshold. Below the minimum, `cache_control` is silently a no-op: no error, no warning, `cache_creation_input_tokens: 0`. The endpoint at `src/js/wbapi-server.js:cache_control: { type: 'ephemeral' }@10659` is correct code that cannot fire on the model directly above it at `src/js/wbapi-server.js:claude-haiku-4-5-20251001@10607`.
+**Cause:** Claude Haiku 4.5's minimum cacheable prefix is **4096 tokens**. The system block measures **451–546 tokens** — about one-eighth of the threshold. Below the minimum, `cache_control` is silently a no-op: no error, no warning, `cache_creation_input_tokens: 0`. The endpoint at `src/js/wbapi-server.js:cache_control: { type: 'ephemeral' }@10671` is correct code that cannot fire on the model directly above it at `src/js/wbapi-server.js:claude-haiku-4-5-20251001@10619`.
 
 This is CONTRIBUTING Hazard #2 in a new domain — *a write into a real-but-wrong object never throws* — with the object being an API parameter. And it is load-bearing: §II-B chose Haiku **because** "the system prompt is the expensive part, not the reply. Prompt caching on the system block amortizes that cost." Neither clause survives measurement. Per call the input averages 500 tokens ($0.000500) against 71 output tokens ($0.000356) — a cost ratio of **1.40 : 1**, not the order of magnitude "the expensive part" implies. The entire 20-call corpus cost **$0.017**.
 
@@ -145,23 +145,23 @@ Appendix A's forecast — "calls 2–N would show cache reads equal to the syste
 
 The conclusion asks for "a BIRKA_NPC profile for the Fisherman (who is currently a string and cannot be asked anything)."
 
-He is not a string, and he can be asked things. `the_fisherman: { key:"the_fisherman"@22951` is a complete `BIRKA_NPC_PROFILES` entry — `name`, `occupation:"fisherman"`, `node:"SSJ"`, and all three endpoint-required states with greeting and dialogue. `GET /api/npc/the_fisherman/speak` resolves today.
+He is not a string, and he can be asked things. `the_fisherman: { key:"the_fisherman"@22979` is a complete `BIRKA_NPC_PROFILES` entry — `name`, `occupation:"fisherman"`, `node:"SSJ"`, and all three endpoint-required states with greeting and dialogue. `GET /api/npc/the_fisherman/speak` resolves today.
 
 It shipped at **19:29:51 on 2026-06-05** — the same evening — in commit `240ae1a`, whose subject is *"map: layout solver applied, 81 nodes reachable from BK"*. Nothing in that subject line mentions an NPC. This is instrument 21 again: **a content addition hidden inside a commit that describes something else.** The recommendation was right, was actioned immediately, and left no trace an author could find by reading the log.
 
 His dearFriend line is worth the trip: *"The rod I set on the table — I made it the first week I was here. Eleven years ago. I did not know what I was making yet. I know now. Keep it."*
 
-`SSJ:{ num:76@8786` still carries `npc:'The Fisherman'` as a display-name string, which is correct per §AUDIT-03h — the inline `npc` field is *supposed* to be a display name.
+`SSJ:{ num:76@8799` still carries `npc:'The Fisherman'` as a display-name string, which is correct per §AUDIT-03h — the inline `npc` field is *supposed* to be a display name.
 
 ### Finding 3 — Recommendation 1 is not "Small": it crosses a registry boundary the paper never names
 
-§V-A states that `worldTruth` and `enemy` "exist. They are in `NPC_DIALOGUES[key].meta`." **Correct** — `const NPC_DIALOGUES = {@10396` holds 204 entries, 220 `worldTruth` occurrences, 203 `enemy`.
+§V-A states that `worldTruth` and `enemy` "exist. They are in `NPC_DIALOGUES[key].meta`." **Correct** — `const NPC_DIALOGUES = {@10410` holds 204 entries, 220 `worldTruth` occurrences, 203 `enemy`.
 
 But the endpoint reads `BIRKA_NPC_PROFILES`, not `NPC_DIALOGUES`. These are two registries for the same people, and they **disagree on their state vocabulary**: the endpoint requires `neutral` / `friendly` / `dearFriend`; `NPC_DIALOGUES` uses `impartial` / `questActive` / `friendly` / `dearFriend`. There is no `neutral` in `NPC_DIALOGUES` at all.
 
 So "add worldTruth + enemy to system prompt — Small" requires a cross-registry join, keyed on a slug the two tables are not guaranteed to share. This is the §AUDIT-03n family in miniature: one character, two registries, divergent key vocabularies.
 
-It is also incomplete for the tested subject. Emmer's meta at `worldTruth:"Unconscious competence@10415` carries **`worldTruth` but no `enemy`** — so the recommendation half-fires on the one NPC the paper measured. (The Fisherman has both: `the_fisherman: { meta:@10571`, `worldTruth:"The lake is the same every day. The fish are not."`, `enemy:"Anyone who rushes the line."`) → **§DX-02al**.
+It is also incomplete for the tested subject. Emmer's meta at `worldTruth:"Unconscious competence@10429` carries **`worldTruth` but no `enemy`** — so the recommendation half-fires on the one NPC the paper measured. (The Fisherman has both: `the_fisherman: { meta:@10585`, `worldTruth:"The lake is the same every day. The fish are not."`, `enemy:"Anyone who rushes the line."`) → **§DX-02al**.
 
 ### Finding 4 — Sonnet is 3×, not 5×
 
@@ -181,21 +181,21 @@ Claude Sonnet 4.6 is $3/$15 per MTok; Claude Haiku 4.5 is $1/$5. That is exactly
 
 | # | Specified | Status | Evidence |
 |---|---|---|---|
-| 1 | `GET /api/npc/{id}/speak` endpoint | **SHIPPED** | `src/js/wbapi-server.js:action === 'speak'@10598`, born `ea02faf` 2026-06-05 14:27 |
+| 1 | `GET /api/npc/{id}/speak` endpoint | **SHIPPED** | `src/js/wbapi-server.js:action === 'speak'@10610`, born `ea02faf` 2026-06-05 14:27 |
 | 2 | Four query params, four defaults | **SHIPPED** | all four verbatim, incl. `'Good afternoon.'` |
 | 3 | Eight response fields | **SHIPPED** | `npc`·`name`·`state`·`prompt`·`reply`·`model`·`location`·`usage` |
-| 4 | System prompt template (§III-B) | **SHIPPED, byte-exact** | `src/js/wbapi-server.js:const systemText =@10643`, unchanged since `2ebe8a6` 15:09 |
-| 5 | Haiku 4.5 as default model | **SHIPPED** | `src/js/wbapi-server.js:claude-haiku-4-5-20251001@10607` |
-| 6 | Seed fallback + status flag | **SHIPPED** | `src/js/wbapi-server.js:SEED FALLBACK@10623`, landed `109d4b3` 14:59 (birth returned 503) |
+| 4 | System prompt template (§III-B) | **SHIPPED, byte-exact** | `src/js/wbapi-server.js:const systemText =@10655`, unchanged since `2ebe8a6` 15:09 |
+| 5 | Haiku 4.5 as default model | **SHIPPED** | `src/js/wbapi-server.js:claude-haiku-4-5-20251001@10619` |
+| 6 | Seed fallback + status flag | **SHIPPED** | `src/js/wbapi-server.js:SEED FALLBACK@10635`, landed `109d4b3` 14:59 (birth returned 503) |
 | 7 | Append-only verbose log | **SHIPPED** | `src/js/wbapi-server.js:const SPEAK_LOG_FILE@815`; 20 entries survive |
 | 8 | Node description in prompt | **SHIPPED** | `2ebe8a6` §NPC-SPEAK-04 |
-| 9 | **Prompt caching on system block** | **CODE SHIPPED / EFFECT NEVER** | `src/js/wbapi-server.js:cache_control@10659` present; `cache_write:0` × 20 — below Haiku's 4096-token minimum (Finding 1) |
+| 9 | **Prompt caching on system block** | **CODE SHIPPED / EFFECT NEVER** | `src/js/wbapi-server.js:cache_control@10671` present; `cache_write:0` × 20 — below Haiku's 4096-token minimum (Finding 1) |
 | 10 | "Cache hit rates will be high in production" | **NOT SHIPPED — unreachable as built** | impossible at ~500-token prefix on this model |
 | 11 | "System prompt is the expensive part" | **NOT SHIPPED — measured 1.40:1** | $0.000500 in vs $0.000356 out per call |
 | 12 | "5× cost" for Sonnet | **NOT SHIPPED — measured 3.00×** | $3/$15 vs $1/$5 per MTok |
 | 13 | Rec 1: worldTruth + enemy in prompt | **NOT SHIPPED** | fields exist in the *other* registry (Finding 3) |
 | 14 | Rec 2: `?questId=&questStatus=` | **NOT SHIPPED** | 0 occurrences repo-wide |
-| 15 | Rec 3: `the_fisherman` profile | **SHIPPED same day** | `the_fisherman: { key:"the_fisherman"@22951`, `240ae1a` 19:29 |
+| 15 | Rec 3: `the_fisherman` profile | **SHIPPED same day** | `the_fisherman: { key:"the_fisherman"@22979`, `240ae1a` 19:29 |
 | 16 | Rec 4: pre-render cache, `STANDARD_PROMPTS` | **NOT SHIPPED** | 0 occurrences repo-wide |
 | 17 | Rec 5: improve Emmer's friendly seeds | **NOT SHIPPED** | friendly seeds unchanged; still the weakest state |
 | 18 | Rec 6: Yugurt watershed source-book pass | **NOT SHIPPED** | — |

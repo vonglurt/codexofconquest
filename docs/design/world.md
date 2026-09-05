@@ -105,7 +105,7 @@ Dead-end west of `ZRH` (historical `DF`).
 
 ### **[✅ Layer 46 — Implemented]** The Cat Quarter (Node CDG, cell 21,182)
 
-CDG in NODE_MAP: `` `CDG:{ num:77@8798` ``. Quest chain `quest_cat_01`–`quest_cat_void` in QUEST_DB from `` `quest_cat_01: { id:'quest_cat_01'@13689` ``. Full design + the 2026-08-11 spec→shipped verification in `docs/lab-reports/lab-report-ally-cat.md`; original §IX spec in `plan-archive.md`.
+CDG in NODE_MAP: `` `CDG:{ num:77@8811` ``. Quest chain `quest_cat_01`–`quest_cat_void` in QUEST_DB from `` `quest_cat_01: { id:'quest_cat_01'@13716` ``. Full design + the 2026-08-11 spec→shipped verification in `docs/lab-reports/lab-report-ally-cat.md`; original §IX spec in `plan-archive.md`.
 
 **CDG — The Cat Quarter (Node 77, cell `r:21,c:182`)**
 `cat_quarter` terrain. *(Coordinates corrected 2026-08-11 — the historical `R04,C17` is the retired 26×16 grid; the live geo grid is 90×360.)* Authored as a dead-end east of `BMA` (historical `SL`), but `NODE_MAP` no longer carries compass connections at all — §WALK/§NAV-01 replaced them with the `ROAD_RUNS` net and the `mover.js` kernel.
@@ -248,7 +248,7 @@ The First Researcher did not merely study the Void — she built the Antecedent 
 
 New items — **corrected 2026-08-17 (§DOC-02bz), all three claims were wrong:** the relic ships as `name:'Antecedent Seal'` (`void_architect_seal` occurs only as the rumour key `void_architect_seal_inv`) and the readable as `name:"The Constructor's Log"`, `type:'readable'`, opened by its `readText` (the item carries no lookup key — §DX-02ge); and neither is NG+-persistent — `storyNewGamePlus` re-assigns from `_S_DEFAULTS()`, whose `inventory: []` wipes both. Persistence is not needed: the arc runs *inside* the NG+ run that grants them. No new monsters. No new nodes.
 
-The **Constructor's Log** (7 entries, First Researcher's own words) surfaces as Document 4 in the `NUE` (historical `WM`) lower archive after all five sites are visited. Benedikt Rasp delivers the final confirmation of the four-author chain — **and he is not one of the four.** The engine's line names First Researcher → Froberger → **the player** → **Entry 42**; Benedikt is the narrator who assembled it (`S_story.vaArchitectureKnown = true;@31692`).
+The **Constructor's Log** (7 entries, First Researcher's own words) surfaces as Document 4 in the `NUE` (historical `WM`) lower archive after all five sites are visited. Benedikt Rasp delivers the final confirmation of the four-author chain — **and he is not one of the four.** The engine's line names First Researcher → Froberger → **the player** → **Entry 42**; Benedikt is the narrator who assembled it (`S_story.vaArchitectureKnown = true;@31924`).
 
 See plan-archive.md §XVII for the full Constructor's Log text, investigation site descriptions, state flags, and `TLS` (historical `CO`) outro addendum.
 
@@ -283,7 +283,7 @@ The shaman is Layer 56+ content. §XX names the threat; it does not resolve it. 
 
 #### ✅ Layer 56 — The Void Shaman: The Antecedent's Last Warden (plan-archive.md §XXI)
 
-*(Status corrected 2026-08-25 by §AUDIT-03ak: this block read ⚠️ PLANNED while `story.md:1708` recorded it ✅ — the same two-home-docs contradiction §DOC-02ar and §DOC-02bz repaired at Layers 51 and 52. Live at HEAD: the four state fields `vshamanFound@23141`, the statblock `void_shaman@5410` (AC 15 / HP 65, as specified below), its drop table `void_shaman@5853`, the quest block `// ── Layer 56: Void Shaman quest ──@13550` and the combat outcome `// ── Layer 56: Void Shaman combat outcome ──@25394`.)*
+*(Status corrected 2026-08-25 by §AUDIT-03ak: this block read ⚠️ PLANNED while `story.md:1708` recorded it ✅ — the same two-home-docs contradiction §DOC-02ar and §DOC-02bz repaired at Layers 51 and 52. Live at HEAD: the four state fields `vshamanFound@23173`, the statblock `void_shaman@5407` (AC 15 / HP 65, as specified below), its drop table `void_shaman@5852`, the quest block `// ── Layer 56: Void Shaman quest ──@13575` and the combat outcome `// ── Layer 56: Void Shaman combat outcome ──@25449`.)*
 
 Prerequisites: `vsShamanKnown` (§XX) + `vaLastWardVisited` (§XVII). The Warden has been living in the `GVA` (historical `MT`) tunnel for 6 months.
 
@@ -297,7 +297,7 @@ If persuaded: Benedikt Rasp (WM, Dear Friend after §XVI) reflects on the First 
 
 #### ✅ Layer 57 — Codex Shard Origin Stories (plan-archive.md §XXII)
 
-*(Status corrected 2026-08-25 by §AUDIT-03ak: this block read ⚠️ PLANNED while `story.md:1727` recorded it ✅. Live at HEAD as `SHARD_NOTES@27171` — **seven** notes, one per placer, matching the seven named below — auto-added at `// Layer 57: auto-add shard origin note@30122` and rendered at `// ── Layer 57: Readable Notes (shard origin stories) ──@31180`. The sidebar entry is `FROBERGER_JOURNAL@27196`. `SHARD_NOTES`' own header comment says *5 shard_note readable items* and the collection holds 7 → §DX-02hf.)*
+*(Status corrected 2026-08-25 by §AUDIT-03ak: this block read ⚠️ PLANNED while `story.md:1727` recorded it ✅. Live at HEAD as `SHARD_NOTES@27293` — **seven** notes, one per placer, matching the seven named below — auto-added at `// Layer 57: auto-add shard origin note@30263` and rendered at `// ── Layer 57: Readable Notes (shard origin stories) ──@31351`. The sidebar entry is `FROBERGER_JOURNAL@27318`. `SHARD_NOTES`' own header comment says *5 shard_note readable items* and the collection holds 7 → §DX-02hf.)*
 
 Seven readable items auto-added to inventory when each Codex Shard is collected. Each names the person who placed that shard and why. The 7 placers: Elder Couperin (Quill's ancestor), Scholar Marzena (Conclave-adjacent), Researcher Aldric (unaffiliated), Archivist Hendrika (Scholar Kings defector), the First Researcher (Shard 5, `GVA` (historical `MT`)), the original Warden (Shard 6, WM — recognized if `wardensLegacyKnown`), and Froberger himself (Shard 7, `TLS` (historical `CO`) — *"I couldn't carry it any further. Someone else will have to finish."*).
 
@@ -543,7 +543,7 @@ These six NPCs are fully implemented with `npcFavorability` states, `NPC_DIALOGU
 
 **Weckmann Training Log** — available at `HKG` (historical `CY`) after Dear Friend. Shows pit fight history. `_buildWeckmannLog()` builds it dynamically. Contains personal combat philosophy.
 
-**Pit Training Perks** (`const PIT_PERK_UNLOCKS = {@27335`) — unlocked sequentially by `function _checkPitPerkUnlock()@28171` as `pitTrainingWins` accumulates. One perk per win threshold. Five total, in order:
+**Pit Training Perks** (`const PIT_PERK_UNLOCKS = {@27467`) — unlocked sequentially by `function _checkPitPerkUnlock()@28311` as `pitTrainingWins` accumulates. One perk per win threshold. Five total, in order:
 
 | # | Key | Title | Weckmann's line | Combat effect (`_applyPitPerks`) |
 |---|---|---|---|---|
@@ -556,7 +556,7 @@ These six NPCs are fully implemented with `npcFavorability` states, `NPC_DIALOGU
 Perks persist through NG+. Character sheet shows "Weckmann's Student" badge when all 5 are held.
 
 > **⚠️ MEASURED (§DOC-02cx, 2026-08-22) — the "Combat effect" column above is the WRITE, and there is no
-> reader.** `function _applyPitPerks(combatState)@28183` sets the five booleans on the live combat state
+> reader.** `function _applyPitPerks(combatState)@28327` sets the five booleans on the live combat state
 > at `_showBattleOverlay`, and each of the five names occurs **exactly twice in the whole file** — once in
 > `perkList`, once in that assignment. Nothing in the duel engine consults any of them, so all five
 > specified effects (+1 when flanking · pre-combat HP tier · free shove on a crit · 1d4 between rounds ·
@@ -1202,7 +1202,7 @@ Read-only derived stat. Never stored in `S_story`. `_calcLuck()` = `⌈(STR×DEX
 
 ## ✅ The Pressure Cascade: Void-Touched Monsters and NPC Reactions — core shipped, runtime injection ⚠️ PLANNED (plan-archive.md §XXIV, Layer 59)
 
-*(Status corrected 2026-08-25 by §DX-02hg: this heading read ⚠️ PLANNED for the whole layer while most of it is live — the fifth such heading, after §DOC-02ar, §DOC-02bz and §AUDIT-03ak's four. **The heading states the split rather than the section being cut in two**, following the `Layer 47` precedent above (*"Core mechanic implemented … Tournament circuit is ⚠️ PLANNED follow-on"*), because the two halves already have their own subheadings and their own status notes. **Live at HEAD, four pieces:** the NPC lines `const NPC_VOID_PRESSURE_LINES@26946`, dispatched at `// Layer 59: void pressure line — Dear Friends at pressure ≥ 6@23621`; the two `voidTainted:true` monsters, statically rostered (§DX-02h); `_voidFlavorLine@26954`, the per-node void flavor line appended to the story box at `// Layer 59: void flavor line@34612`; and the tide-event mercy window at `// Increment void pressure at each tide event (Layer 59: mercy window)@36354`. **The last two were not documented in this section at all** and were found by re-deriving `Layer 59` against `play.html` rather than reading the section. **Never built:** the `voidPressure`-gated runtime monster injection — `_applyVoidPressureMonsters()` occurs **0 times** — which is §TIDE-01's territory and is marked as such below.)*
+*(Status corrected 2026-08-25 by §DX-02hg: this heading read ⚠️ PLANNED for the whole layer while most of it is live — the fifth such heading, after §DOC-02ar, §DOC-02bz and §AUDIT-03ak's four. **The heading states the split rather than the section being cut in two**, following the `Layer 47` precedent above (*"Core mechanic implemented … Tournament circuit is ⚠️ PLANNED follow-on"*), because the two halves already have their own subheadings and their own status notes. **Live at HEAD, four pieces:** the NPC lines `const NPC_VOID_PRESSURE_LINES@27068`, dispatched at `// Layer 59: void pressure line — Dear Friends at pressure ≥ 6@23655`; the two `voidTainted:true` monsters, statically rostered (§DX-02h); `_voidFlavorLine@27076`, the per-node void flavor line appended to the story box at `// Layer 59: void flavor line@34865`; and the tide-event mercy window at `// Increment void pressure at each tide event (Layer 59: mercy window)@36545`. **The last two were not documented in this section at all** and were found by re-deriving `Layer 59` against `play.html` rather than reading the section. **Never built:** the `voidPressure`-gated runtime monster injection — `_applyVoidPressureMonsters()` occurs **0 times** — which is §TIDE-01's territory and is marked as such below.)*
 
 `voidPressure` reaching thresholds (3, 6, 9) produces visible world changes. See `story.md §XXIV stub` for the full flavor text and threshold event table. This section covers the world-layer additions: void-touched monster variants and NPC pressure responses.
 
@@ -1240,8 +1240,8 @@ Stored in `NPC_VOID_PRESSURE_LINES`. Fires when `fav[npc] ≥ 2` and `voidPressu
 
 Two further Layer 59 pieces ship and had no entry in this section:
 
-- **`_voidFlavorLine(nodeCode)`** (`_voidFlavorLine@26954`) returns a per-node void line, appended to the story text box on every render (`// Layer 59: void flavor line@34612`).
-- **The mercy window.** A tide event spends `S_story.void_mercy_count` instead of raising pressure (`// Increment void pressure at each tide event (Layer 59: mercy window)@36354`); the counter is armed at pressure 9 when the player holds ≥ 5 shards.
+- **`_voidFlavorLine(nodeCode)`** (`_voidFlavorLine@27076`) returns a per-node void line, appended to the story text box on every render (`// Layer 59: void flavor line@34865`).
+- **The mercy window.** A tide event spends `S_story.void_mercy_count` instead of raising pressure (`// Increment void pressure at each tide event (Layer 59: mercy window)@36545`); the counter is armed at pressure 9 when the player holds ≥ 5 shards.
 
 ---
 

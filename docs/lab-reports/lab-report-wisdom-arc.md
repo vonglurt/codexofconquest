@@ -100,14 +100,14 @@ Fourteen instruments from the §DOC-02 program. The load-bearing ones here:
 
 | Structure | Shipped as | Anchor |
 |---|---|---|
-| 8 quests | `quest_wis_00`–`_07`, all `schema:'UQF-1.0'` | `quest_wis_00: { id:'quest_wis_00'@13333` |
-| 10 state flags | 8 specified + `visbyUnderground` + `wisArchiveLetter` | `// §WISDOM-01: The Book of Human Nature@23276` |
-| Hub surface | one node hook, four exclusive states | `_runNodeHook('wis-vs-hub', node);@36012` |
-| Underground | separate hook, one descent button | `S_story.visbyUnderground = true;@33422` |
-| Hook writer | **the arc's only entry point** | `S_story.wisHookReceived = true;@33503` |
-| Resolution | +400gp, +600 XP, item swap, knowledge entry | `S_story.personalLegendMature = true;@33455` |
-| Shadow branch A | accept — flag, Shadow Shard, +350 XP | `Accept the reflection (receive the shadow@33472` |
-| Shadow branch B | fight — synthetic battle code `VS_SHADOW` | `label:'Shadow — The Mirror Construct'@33489` |
+| 8 quests | `quest_wis_00`–`_07`, all `schema:'UQF-1.0'` | `quest_wis_00: { id:'quest_wis_00'@13348` |
+| 10 state flags | 8 specified + `visbyUnderground` + `wisArchiveLetter` | `// §WISDOM-01: The Book of Human Nature@23307` |
+| Hub surface | one node hook, four exclusive states | `_runNodeHook('wis-vs-hub', node);@36205` |
+| Underground | separate hook, one descent button | `S_story.visbyUnderground = true;@33654` |
+| Hook writer | **the arc's only entry point** | `S_story.wisHookReceived = true;@33729` |
+| Resolution | +400gp, +600 XP, item swap, knowledge entry | `S_story.personalLegendMature = true;@33687` |
+| Shadow branch A | accept — flag, Shadow Shard, +350 XP | `Accept the reflection (receive the shadow@33705` |
+| Shadow branch B | fight — synthetic battle code `VS_SHADOW` | `label:'Shadow — The Mirror Construct'@33715` |
 | 3 items | Pages 📖 · Shadow Shard 🔮 · Complete Laws 📚 | all three live, `sell:0/25/50` as specified |
 
 The three quests carrying no roll (`_00`, `_06`, `_07`) ship as `type:'side'` with declarative
@@ -128,9 +128,9 @@ is exactly the compound the migration comment claims. **The gate semantics are c
 | 4 | §2.1: **W4 = INT History 12 @ BK** | INT **Investigation** 12 — skill changed **at birth** | ⚠️ delta |
 | 5 | §2.2: W4 = *"Birka … a guild city"*, timber-supply deal, `birkaAccessed`, `birkaRepImproved` | **Never built.** Shipped as the Mordus/shaman stalemate at Visby's Broken Tooth, retitled *"The Stalemate Cost"* | ❌ NOT SHIPPED (see §VI) |
 | 6 | §2.1: **W6 = WIS Save 14 @ VS** | `quest_wis_06` was `type:'side'`, `bits:[]`; the accept path an unconditional button, **no d20 anywhere** — ✅ **shipped 2026-08-26 by §AUDIT-03ad** as `type:'skill_check'` with a WIS Insight DC 14 bit, resolved through `_resolveQuestUQF` like its five siblings. The spec said *save*; the arc's other five are *checks*, and the check is what shipped | ✅ shipped late (§AUDIT-03ad) |
-| 7 | W5 sets `stoic_letter` | shipped as `{ kind:'flag_write', set:['wisArchiveLetter'] }@13457` — **1 writer, 0 readers** | ⚠️ renamed + inert |
+| 7 | W5 sets `stoic_letter` | shipped as `{ kind:'flag_write', set:['wisArchiveLetter'] }@13472` — **1 writer, 0 readers** | ⚠️ renamed + inert |
 | 8 | W6 fail → *"Shadow Construct (medium)"* | `MONSTER_POOL.shadow`, ac 12 / hp 16, `tier:'easy'` — no such monster name; tier one band lower | ⚠️ delta |
-| 9 | Hook grants +100 XP on accept | `S_story.xp = (S_story.xp||0) + 100;@33504` | ✅ exact |
+| 9 | Hook grants +100 XP on accept | `S_story.xp = (S_story.xp||0) + 100;@33451` | ✅ exact |
 | 10 | Resolution: +600 XP, +400gp, splice Pages, push Complete Laws, knowledge entry | all five, in order | ✅ exact |
 | 11 | Item table (3 rows: icon, sell, source) | all three exact | ✅ 3/3 |
 | 12 | *"Running total after §WISDOM-01: ~159 live"* | **2,853 quests** at HEAD (17.9×) | 🕰 corpus grew |
@@ -164,8 +164,8 @@ Re-derived this pass: **244 cells, reproduced exactly.**
 | `KIR` | `17,170` | 1 | `KIR` | ✅ reachable — the §ALCHEMY-01 handoff |
 
 **The failure is not five separate accidents — it is one flag.** `wisHookReceived` has exactly one
-writer, `S_story.wisHookReceived = true;@33503`, and it sits inside
-`if (node.code === 'VS' && S_story.personalLegendComplete) {@33437`. `VS` is never `currentCode`, so
+writer, `S_story.wisHookReceived = true;@33729`, and it sits inside
+`if (node.code === 'VS' && S_story.personalLegendComplete) {@33669`. `VS` is never `currentCode`, so
 the flag is `false` forever, so **W1/W2/W3/W5 never list even though their own nodes are fine**, and
 W4/W6 inherit it transitively. Three quests die by node, five by flag, and **the three reachable
 nodes hold quests that can never be offered.**
@@ -180,7 +180,7 @@ true. The library is the 5th of 5 occupants of its cell.
 **Born dead, then accidentally revived (instrument 18).** `VS` is **absent from `NODE_MAP` in the
 arc's own birth tree** — `grep -c "^  VS:" e339aeb` returns **0**. Every `node.code === 'VS'` guard
 in `e339aeb` was unrunnable the minute it shipped (the §AUDIT-03p born-dead class). On 2026-06-03,
-`cb0fc35` — a worldbuilder import whose message names two other nodes — added `VS: { num:279@9088`
+`cb0fc35` — a worldbuilder import whose message names two other nodes — added `VS: { num:279@9101`
 *"Visby Underground — Fence Quarter"*, a label so apt that nothing looked wrong. The arc went
 **born-dead → accidentally resolved → cell-stranded**, and was playable at no point in between.
 
@@ -219,7 +219,7 @@ Tavern.'@13426`), and the hub's own fragment tally agrees: *"W4 at Visby Tavern 
 
 Then the world moved. §WALK/§NAV-01 remapped the four codes that **broke** — `DK`→`LCY`,
 `SK`→`MME`, `SB`→`GCI`, `AE`→`ATH` — and skipped the one that still **resolved**. Today
-`activateNode:'BK', gate:{ flags:['wisHookReceived'] }@13427` points at `BK: { num:241@9011`,
+`activateNode:'BK', gate:{ flags:['wisHookReceived'] }@13442` points at `BK: { num:241@9024`,
 **"Birka Shore — Northern Longship Landing"**, a beach.
 
 > ***38th instrument — a migration repairs the references that BREAK and walks past the one that
@@ -243,7 +243,7 @@ surface.
 |---|---|
 | **Q1** *"Does W6 need a §DUNGEON-01 gate?"* — recommended a VS `storyRender` block | ✅ **Built as recommended.** `_nodeHookWisVsUnderground` ships a descent button writing `visbyUnderground`; `quest_wis_06` gates on that flag, whose only writer already requires the hook. |
 | **Q2** *"Does Roen appear at every fragment node?"* — recommended Option B | ✅ **Option B.** Roen's commentary lives in the six `desc` strings; no per-node panels. |
-| **Q3** *"What does `personalLegendMature` enable?"* — deferred | ✅ **Answered by (a).** `if (S_story.personalLegendMature) {@33446` and the `KIR` epilogue both read it: *"Roen sits at the loch on Tuesdays. He reads."* |
+| **Q3** *"What does `personalLegendMature` enable?"* — deferred | ✅ **Answered by (a).** `if (S_story.personalLegendMature) {@33504` and the `KIR` epilogue both read it: *"Roen sits at the loch on Tuesdays. He reads."* |
 | **Q4** *"How much Keel resolution is too much?"* | ✅ **Held.** W3 names the Baltic survey data and closes nothing. |
 | *(unfiled)* | ⚠️ **The risk nobody filed: can the player stand at `VS`?** Every reachability assumption in the report is implicit, and it is the only one that failed. |
 
@@ -251,14 +251,14 @@ surface.
 relation rather than the name space** (instrument 37):
 
 1. **`wisArchiveLetter` — one writer, zero readers.** Three occurrences in 38,712 lines: the
-   migration comment, `wisArchiveLetter: false,@23285`, and the `flag_write` that sets it. The
+   migration comment, `wisArchiveLetter: false,@23316`, and the `flag_write` that sets it. The
    Stoic's letter of introduction to the Visby archive is written, saved across reloads, and
    consulted by nothing — and its stated destination is the room the player must already be
    standing in for the arc to have started. §DX-02n's write-only class.
 2. **W6 is not parallel and says nothing about it.** `quest_wis_06` activates the moment
    `visbyUnderground` is set, and its `hint` says *"Use the story panel at VS to choose: accept or
    fight."* That panel's choice branch is
-   `} else if (S_story.wisHookReceived && !_p6) {@33499` *(the `_allFive` leg dropped by §AUDIT-03ad)* — it rendered **only after the
+   `} else if (S_story.wisHookReceived && !_p6) {@33700` *(the `_allFive` leg dropped by §AUDIT-03ad)* — it rendered **only after the
    other five fragments are complete**. Before that the player saw a fragment tally and no buttons,
    with an active quest telling them to press one. So the arc's headline design property —
    "fragments in any order" — holds for five of six, and the sixth is silently last.
@@ -273,7 +273,7 @@ relation rather than the name space** (instrument 37):
 | **§DX-02n extended** | `wisArchiveLetter` — 1 writer, 0 readers (write-only class, new member) | 🟢 none |
 | **§AUDIT-03ad extended** ✅ shipped 2026-08-26 | same block, second defect: W6's choice branch was `_allFive`-gated while its quest activates early and points at it. Both defects closed in one edit — the branch is `!_p6`, and the accept path is a real DC 14 roll | 🟡 small |
 | **§DOC-02as-DOC (new)** | **15 shipped quests across §WISDOM-01 + §ALCHEMY-01 have no row in any maintained home doc** — `quest.md` 0/8 and 0/7, `story.md`/`world.md` zero mentions of Roen or Ardley, while `index.md:175` still lists §WISDOM-01 as future work | 🟢 none |
-| **§AUDIT-03s corroborated** | `// §ALCHEMY-01: HL — The Shepherd's Dream@33266` guards `if (node.code === 'KIR') {@33268` — retired code surviving in an engine comment, gate-invisible by design | 🟢 none |
+| **§AUDIT-03s corroborated** | `// §ALCHEMY-01: HL — The Shepherd's Dream@33498` guards `if (node.code === 'KIR') {@33500` — retired code surviving in an engine comment, gate-invisible by design | 🟢 none |
 
 Already on the board and **corroborated, not re-filed**: §AUDIT-03x / §DX-02w (`VS`←`VBY`,
 `BK`←`LHR`, `ATH`←`SEA`), §AUDIT-03ad (the DC 14 that is not a roll), §DX-02q (the reissued-code
@@ -301,7 +301,7 @@ program has measured, second only to §AUDIT-03at. Repointing `quest_wis_04` to 
 identifier and independently correct.
 
 > *"These are not rules. They are a pair of glasses."* — Roen's foreword, shipped verbatim at
-> `inv.push({ name:"Ardley's Complete Laws"@33461`, written for a book no save file has ever
+> `inv.push({ name:"Ardley's Complete Laws"@33693`, written for a book no save file has ever
 > contained.
 
 ---

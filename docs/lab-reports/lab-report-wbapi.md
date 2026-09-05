@@ -244,8 +244,8 @@ five tiers now sum to 398 of 398.**
 | Patch | `patchStringField` regex, quoted | real regex anchors on `${entryKey}\s*:` — the key's own **declaration**, not any occurrence of its text | ⚠️ near-verbatim, not verbatim |
 | Delete | cascade guard blocks on quests/NPCs/terrains/flags | still there; quest list **double-counts** and the flag leg is empty | ❌ **LIVE DEFECT** — §VI-1, §VI-2 |
 | Export | `DIFF.json()` shape | `edit.html:const DIFF = {@2448`, `json()` returns exactly that shape | ✅ — *browser-side, not a `wbapi-core` export* |
-| Export | *The original file is **never modified**. Every `save()` produces a new timestamped copy.* | **inverted** — writes persist per-write via `saveGameFile()`; `src/js/wbapi-core.js:save() requires a destination path@1662` refuses the argless call | 🕳 **RETIRED** — §VI-4 |
-| Export | `wbapi-cli.js export ./world` / `sync ./world` | `src/js/wbapi-core.js:exportWorld(dir) {@1694` / `src/js/wbapi-core.js:syncWorld(dir) {@1743` | ✅ mechanism survives its CLI |
+| Export | *The original file is **never modified**. Every `save()` produces a new timestamped copy.* | **inverted** — writes persist per-write via `saveGameFile()`; `src/js/wbapi-core.js:save() requires a destination path@1716` refuses the argless call | 🕳 **RETIRED** — §VI-4 |
+| Export | `wbapi-cli.js export ./world` / `sync ./world` | `src/js/wbapi-core.js:exportWorld(dir) {@1748` / `src/js/wbapi-core.js:syncWorld(dir) {@1797` | ✅ mechanism survives its CLI |
 | Browser | ⚙ API tab: GET/PUT/DELETE/MOVE, schema tables, pre-fill | all present | ✅ |
 | Bugs | 3 bugs found during testing | all three fixes verified in place | ✅ 3/3 |
 | Node codes | `CY`, `CI` | `CY`→**`HKG`**, `CI`→**`LHR`** (by `num`) | ⚠️ **`CI` is worse-than-dead** — §VI-5 |
@@ -264,7 +264,7 @@ traced flags has gone **down** (141 → 93) while the corpus grew 13.6×.
 The cause is in this report's own §"Quest chain tracing", stated as a design note: the graph is
 *"extracted by regex from the raw QUEST_DB source text."* §ARCH-01 moved every quest to declarative
 UQF-1.0, where flags live in `bits[].flag` and `gate.flags` — shapes an `S_story.(\w+)` regex cannot
-see. `src/js/wbapi-core.js:chain(id) {@1089` reads `_questFlags` / `_flagToQuests` and nothing else.
+see. `src/js/wbapi-core.js:chain(id) {@1105` reads `_questFlags` / `_flagToQuests` and nothing else.
 
 `_questFlags` has an entry for all 2,853 quests. **It is built for every quest and empty for 98.2 %
 of them** — a 100 % index in front of a dead consumer, which is why nothing ever went red. And
@@ -276,7 +276,7 @@ quests.** A safety mechanism did not fail; it quietly stopped applying.
 
 ### VI-2 🔴 LIVE — the node index counts a quest twice, and has since day one
 
-`src/js/wbapi-core.js:this._questsByNode[q[field]].push(id);@775` sits inside
+`src/js/wbapi-core.js:this._questsByNode[q[field]].push(id);@791` sits inside
 `for (const field of ['activateNode','waypointNode'])` with no dedupe. A quest whose two node fields
 name the same node is indexed **twice**.
 
@@ -291,7 +291,7 @@ twice**. The ellipsis hid a live bug for 76 days. → **§DX-02bd NEW.**
 ### VI-3 ⚠️ The precedence that never existed
 
 *"`_findKey` searches: `key` → `label` → `name` → `title` (in that order)."* The **set** is right and
-key-first is right. The rest is not: `src/js/wbapi-core.js:_findKey(col, idOrTitle) {@833` makes a single
+key-first is right. The rest is not: `src/js/wbapi-core.js:_findKey(col, idOrTitle) {@849` makes a single
 pass over the collection testing `[v?.label, v?.name, v?.title].some(…)` **per entry**, so if one
 entry's `title` matches and another's `label` matches, the winner is whichever comes first in
 insertion order. Byte-identical archive → HEAD: **wrong when written, wrong now.** A four-word
@@ -340,20 +340,20 @@ block — is filed as **§DX-02be NEW**.
 own; `FEATURE INCOMPLETE — NEED TO SETUP SAFE SEEDS` is verbatim; the three states are exactly the
 three the handler accepts; the default model `claude-haiku-4-5-20251001` and the
 `--model claude-sonnet-4-6` override are both still live in
-`src/js/wbapi-server.js:claude-haiku-4-5-20251001@10607` and `src/api/wb.js`; port 1367 is right; and the
+`src/js/wbapi-server.js:claude-haiku-4-5-20251001@10619` and `src/api/wb.js`; port 1367 is right; and the
 `.env` activation guide is exact down to `wbapi-toggle.sh` line 31 — the `PASTE-YOUR-KEY-HERE` guard
 that skips the placeholder so an unedited `.env` breaks nothing. Its **152 NPC greetings** was
 *measured* — `BIRKA_NPC` held exactly 152 entries at that tree.
 
 **And the stub shipped.** The endpoint now carries a real Claude call, falling back to seed replay
-with `src/js/wbapi-server.js:SEED FALLBACK — set ANTHROPIC_API_KEY@10623` when no key is set. The
+with `src/js/wbapi-server.js:SEED FALLBACK — set ANTHROPIC_API_KEY@10635` when no key is set. The
 *"wired and waiting for an API key"* promise held.
 
 ### 🔴 The one table that was reasoned rather than copied
 
 | Claim | Measured |
 |---|---|
-| *"NPC system prompt cached 5 min — repeated calls cost ~10 % of first call"* | The code does set `src/js/wbapi-server.js:cache_control: { type: 'ephemeral' }@10659`. **Claude Haiku 4.5's minimum cacheable prefix is 4096 tokens; this system block measures 451–546.** Below the minimum the API caches nothing and reports nothing — no error, `cache_creation_input_tokens: 0`. All 20 calls in `milepoints/npc-speak.log` show cache_read **and** cache_write at 0. |
+| *"NPC system prompt cached 5 min — repeated calls cost ~10 % of first call"* | The code does set `src/js/wbapi-server.js:cache_control: { type: 'ephemeral' }@10671`. **Claude Haiku 4.5's minimum cacheable prefix is 4096 tokens; this system block measures 451–546.** Below the minimum the API caches nothing and reports nothing — no error, `cache_creation_input_tokens: 0`. All 20 calls in `milepoints/npc-speak.log` show cache_read **and** cache_write at 0. |
 | *"Repeat calls (cache hit): ~0.002¢"* | That is 250 input tokens × 0.1, i.e. **the input only**. It drops the 60-token reply the same paragraph specifies — which at Haiku's output rate is ~0.03¢, an order of magnitude larger than the whole figure. |
 | *"10,000 NPC greetings ≈ $0.20"* | ~**$3** at the report's own token counts, and the cache discount it assumes never applies. |
 

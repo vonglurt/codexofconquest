@@ -168,7 +168,7 @@ identifier, string template or operator, so it is unambiguously a marker and nev
 token. Nine sections carried anchors at filing; **twelve do now** (`NPC_DIALOGUES`,
 `ITEM_DB`, `D100_TABLE` were added later). The pair is also the last-resort escape
 hatch: with the server down, `grep -n "◆◆◆" play.html` still prints every
-section boundary. Anchor `` `◆◆◆ WORLDBUILDER:BIRKA_NPC:START@22712` ``.
+section boundary. Anchor `` `◆◆◆ WORLDBUILDER:BIRKA_NPC:START@22740` ``.
 
 A write finds the `:START`/`:END` pair, reconstructs the whole block from in-memory
 state, and splices. **Every save is a full-section rewrite, never a surgical line
@@ -222,7 +222,7 @@ safety claim was optimism.
 | Single-use | ✅ consumed on validate |
 | Bound to one `{type, id}` | ✅ `` `src/js/wbapi-server.js:Nonce was issued for@61` `` |
 | "16-character **random** token" | ⚠️ salted SHA-512 of `type:key:salt`, sliced to 16 — random-*seeded*, and the identity binding is baked into the token itself |
-| DELETE requires a nonce | ✅ `` `src/js/wbapi-server.js:DELETE requires a nonce token@11245` `` |
+| DELETE requires a nonce | ✅ `` `src/js/wbapi-server.js:DELETE requires a nonce token@11268` `` |
 | POST "accepts nonces optionally" | ⚠️ POST consumes no nonce at all; only DELETE and the snapshot sweep do |
 | PUT requires none | ✅ |
 
@@ -242,10 +242,10 @@ commit, and lived **seven days**. `7e2239a` (2026-06-05) replaced it with in-mem
 hot-reload; `wbapi-toggle.sh` no longer contains a restart loop at all. The server now
 states the repudiation in its own source: *"The server never exits with code 67. All
 restart/relaunch is handled by an external process… POST /api/restart exits 0."*
-(`` `src/js/wbapi-server.js:The server never exits with code 67@11638` ``)
+(`` `src/js/wbapi-server.js:The server never exits with code 67@11661` ``)
 
 The commit/reset **cycle** survived its mechanism: writes still persist per-operation
-(`` `src/js/wbapi-server.js:const r = WBAPI.save(tmp)@1465` ``, §DX-02k), and on-disk state
+(`` `src/js/wbapi-server.js:const r = WBAPI.save(tmp)@1468` ``, §DX-02k), and on-disk state
 is still the authority a restart re-parses. → **§DX-02ba** (a live doc still teaches
 the dead protocol).
 
@@ -273,9 +273,9 @@ still there:
 - **Audit severities: 4 of 4** — `error` · `warning` · `suggestion` · `parse`.
 - **Both "api.sh v1" audit rules are live and near-verbatim**:
   *"quest has no npc field — every quest must be anchored to an NPC"*
-  (`` `src/js/wbapi-server.js:every quest must be anchored to an NPC@4681` ``) and
+  (`` `src/js/wbapi-server.js:every quest must be anchored to an NPC@4693` ``) and
   *"has no quests — NPC has no gameplay function"*
-  (`` `src/js/wbapi-server.js:NPC has no gameplay function@4721` ``). Note for readers:
+  (`` `src/js/wbapi-server.js:NPC has no gameplay function@4733` ``). Note for readers:
   §AUDIT-03b later established that `q.npc` is **authoring metadata only** — the engine
   does not route on it — so the ERROR rule enforces bookkeeping, not behaviour.
 - **The ✦ Wizard tab: 6 of 6 steps exact** — Vignette · Token · Location · Monster ·
@@ -298,7 +298,7 @@ still there:
 | 1 | `BIRKA_NPCS` is the NPC table | **NOT SHIPPED — never existed** | 0 commits ever in the game file's history. The anchor is **`BIRKA_NPC`**, singular; the in-engine roster is the function-local `birkaNpcs`. The sibling report filed the same day has it right (§VIII). |
 | 2 | Pipeline step 1: extract `<script>` text with one regex | **NOT SHIPPED — never existed** | 0 commits ever in `wbapi-core.js`. The parser has always anchored directly on `◆◆◆` in the raw HTML — which this report's own §III describes correctly. It contradicts itself, and §III is the half that cites the mechanism. |
 | 3 | `P = new Proxy({}, { get: (_, k) => k })` → `P.dock_rat` is the string `"dock_rat"` | **Wrong when written** | Actual, byte-identical archive → HEAD: `` `src/js/wbapi-core.js:const Pp = new Proxy(P@290` `` proxies the **real** `P` and falls back to an **object** `{ key: String(k) }`, not a string. |
-| 4 | *"`goblin: { name:'Goblin', ac:13, hp:7, atk:4, dmg:5, xp:50, tier:1 }` … // 391 more entries"* | **3 of 7 fields wrong when written** | Actual, byte-identical archive → HEAD: `` `goblin:        { name:'Goblin'@5339` `` is `ac:15 … dmgDie:6, dmgCount:1, dmgFlat:2`, and `tier:'easy'` — a **string**, from a five-member enum (`` `src/js/wbapi-server.js:values:['trivial','easy','medium','hard','deadly']@1306` ``). `dmg` and `xp` are not monster fields. The count "391 more" is **exact**. |
+| 4 | *"`goblin: { name:'Goblin', ac:13, hp:7, atk:4, dmg:5, xp:50, tier:1 }` … // 391 more entries"* | **3 of 7 fields wrong when written** | Actual, byte-identical archive → HEAD: `` `goblin:        { name:'Goblin'@5336` `` is `ac:15 … dmgDie:6, dmgCount:1, dmgFlat:2`, and `tier:'easy'` — a **string**, from a five-member enum (`` `src/js/wbapi-server.js:values:['trivial','easy','medium','hard','deadly']@1309` ``). `dmg` and `xp` are not monster fields. The count "391 more" is **exact**. |
 | 5 | Monster creation takes `cr=1/8` | **NOT SHIPPED — never existed** | `cr:` — 0 at HEAD, 0 at the archive, 0 commits ever. |
 | 6 | The `<script>` block is **300 KB** (stated 3×) | **Wrong when written, by 5.1×** | 1,539,946 bytes at its own tree; whole file 1.79 MB. Never true: the earliest surviving build (2026-05-24) is already 0.86 MB. |
 | 7 | `GET /api/source` is how `edit.html` loads the game file | **Wrong when written** | 1 hit at the archive, 1 at HEAD — a documentation row. The UI drove typed endpoints then (`/api/schema` ×10, `/api/list` ×9) and drives them now (`/api/list` ×56, `/api/count` ×33). |
@@ -353,13 +353,13 @@ Both example codes are retired, and the archive resolves them in one step becaus
 `num` was preserved across the 26×16 → 90×360 world migration:
 
 - **`CY`** (archive `num:6`, *cyberpunk_streets*, "Neon Undercity") → **`HKG`**,
-  `` `HKG:{ num:6@8439` ``. Corroborated independently by the engine's own remap
+  `` `HKG:{ num:6@8452` ``. Corroborated independently by the engine's own remap
   comment in `birkaNpcs`.
 - **`BK`** (archive `num:25`, "Broken Tooth Tavern", Visby) → **`VBY`**,
-  `` `VBY:{ num:25@8684` ``.
+  `` `VBY:{ num:25@8697` ``.
 
 `BK` is the §AUDIT-03m *worse-than-dead* class in pure form. A code that no longer
-exists fails loudly. **`BK` still exists** — as `` `BK: { num:241@9011` ``, "Birka
+exists fails loudly. **`BK` still exists** — as `` `BK: { num:241@9024` ``, "Birka
 Shore — Northern Longship Landing", a beach in a different act on the other side of the
 map. A reader who runs this report's `./api.sh location BK` gets a confident, correct,
 completely wrong answer. Existence checks pass; the sentence stays false.

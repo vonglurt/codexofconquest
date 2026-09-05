@@ -97,7 +97,7 @@ document aged far better than its two siblings: **its subject survived the after
 **The two dead identifiers.**
 
 - **`_onStoryVictory()` — 0 commits in the file's entire history.** The victory host is and always
-  was `function _storyBattleVictory() {@25282`. This is **inherited, not invented**: §DOC-02v found
+  was `function _storyBattleVictory() {@25339`. This is **inherited, not invented**: §DOC-02v found
   the identical fabrication in this register's own source report. A citation carries no evidential
   weight — copying a wrong name from a cited document reproduces it at full confidence.
 - **`baitSatchel`** in the quoted fishing line — the field is `S_story.fishingBaitSatchel`. The rest
@@ -132,19 +132,19 @@ combat reads as tactical rather than fiddly.
 
 | Claim | Verdict |
 |---|---|
-| `XP_LEVELS` — 20 levels, 0 → 195,000 | ✅ **exact, and byte-identical at HEAD** (`const XP_LEVELS = [@24420`) |
+| `XP_LEVELS` — 20 levels, 0 → 195,000 | ✅ **exact, and byte-identical at HEAD** (`const XP_LEVELS = [@24482`) |
 | *"was 10 levels at report time"* | ⚠️ **UNVERIFIABLE / likely never shipped** — §DOC-02t measured the specified 10-level literal at **0 commits ever**; inherited claim |
 | `CONDITION_GOLD` active, annotated `// → doc:` | ✅ exact, comment verbatim |
-| *"specific values may have been rebalanced"* | ❌ **hedge, and wrong** — all 12 entries **byte-identical** from the earliest surviving build to HEAD (`const CONDITION_GOLD = {@24620`) |
+| *"specific values may have been rebalanced"* | ❌ **hedge, and wrong** — all 12 entries **byte-identical** from the earliest surviving build to HEAD (`const CONDITION_GOLD = {@24677`) |
 | *"repriced … to hundreds"*, *"spends 300gp on Blinded/Restrained"* | ❌ live prices are **1,000–5,000gp**; Blinded (Smoke Bomb) is **2,000**, Restrained (Binding Web) **1,500** — the worked example is 5–7× low |
-| `CONDITION_ITEMS` — *"11 conditions with name/icon/effect/sell"* | ❌ **12 entries**, fields `match / condition / effect / icon` — **there is no `sell` field**; prices live in the separate `CONDITION_GOLD` two thousand lines away (`const CONDITION_ITEMS = [@22410`) |
-| `CONDITION_ADV` active | ✅ exact (`const CONDITION_ADV = {@7283`) |
+| `CONDITION_ITEMS` — *"11 conditions with name/icon/effect/sell"* | ❌ **12 entries**, fields `match / condition / effect / icon` — **there is no `sell` field**; prices live in the separate `CONDITION_GOLD` two thousand lines away (`const CONDITION_ITEMS = [@22437`) |
+| `CONDITION_ADV` active | ✅ exact (`const CONDITION_ADV = {@7295`) |
 | Flashbang `{weight:4, _type:'flashbang'}` | ✅ byte-exact then · **weight 6 at HEAD** |
 | Flashbang `{name:'Flashbang', cost:150, sell:75}` | ✅ every field exact, then and now |
 | `_checkLevelUp()` · `_lu_applyGiftsAndFinish()` | ✅ both exact |
-| *"`_lu_applyGiftsAndFinish()` awards HP, gold, shield, tattoo"* | ⚠️ **half right** — it applies gold, the shield gift and the `levelUpLog` row (`function _lu_applyGiftsAndFinish(lvl, hp) {@38471`); **HP is applied by the modal's roll handlers** and the tattoo is written at a different site |
+| *"`_lu_applyGiftsAndFinish()` awards HP, gold, shield, tattoo"* | ⚠️ **half right** — it applies gold, the shield gift and the `levelUpLog` row (`function _lu_applyGiftsAndFinish(lvl, hp) {@38684`); **HP is applied by the modal's roll handlers** and the tattoo is written at a different site |
 | *"the only guaranteed-ADV consumable"* | ⚠️ **true narrowly** — the Spell Scroll sets the same flag on a DC check, so the Flashbang is the only *unconditional* one; but a purchased condition grants ADV for the **whole battle**, which the same report priced one paragraph earlier |
-| *"the 1.5 AP economy is the structural spine"* | ✅ enforced at every consumable (`function _storyUseFlashbang(invIdx) {@24936` guards on `usedMainAttack`/`usedBonusAction`) |
+| *"the 1.5 AP economy is the structural spine"* | ✅ enforced at every consumable (`function _storyUseFlashbang(invIdx) {@24984` guards on `usedMainAttack`/`usedBonusAction`) |
 
 *Note kept from §DOC-02t:* `_playerHasBonusOptions()` tests five inventory conditions and then
 returns `true` regardless — closing comment `// wimper always available`. The bonus phase is never
@@ -167,12 +167,12 @@ souvenir per location, evidence of where you have been, with no combat effect at
 |---|---|
 | `XP = AC × maxHP` | ✅ exact — `xpAward = (S.enemy.ac) * (S.opp.maxHp)` |
 | `reward = floor(0.1 × AC × HPLoss)` (prose) vs `× maxHP` (table) | ✅ **not a contradiction** — the report copied both halves of one line; the engine's own comment reads *"HPGive = goldDrop = 0.1 × AC × HPLoss (HPLoss = maxHP on kill)"* |
-| Attributed to `_onStoryVictory()` at 23,244 | ❌ function **never existed**; the formula is at the head of `function _storyBattleVictory() {@25282`, 99 lines above the cited line |
-| Checkpoint respawn preserves tattoos | ✅ exact, and byte-identical to its 2026-05-25 spec (`function storyRespawnFromCheckpoint()@23924`) |
-| **Necklace: *"first arrival at each node awards a Knowledge Bead"*** | ❌ **INVERTED MECHANISM.** Beads are awarded on **rest**, not arrival — two call sites, both rest paths (`function _maybeAddKnowledgeBead(nodeCode) {@25810`, called from `storyShortRest` and `storyConfirmSleep`). **The source report says "rests" five times.** |
-| *"Short rests (3/day, 50gp, partial heal)"* | ⚠️ 3/day ✅; **no gold cost has ever existed** (`shortRestCost` = 0 occurrences, then and now); heal is 25 % of max HP **at an inn** and **50 % away from one** (`const heal  = isInn ? base : base * 2;@25841`) |
+| Attributed to `_onStoryVictory()` at 23,244 | ❌ function **never existed**; the formula is at the head of `function _storyBattleVictory() {@25339`, 99 lines above the cited line |
+| Checkpoint respawn preserves tattoos | ✅ exact, and byte-identical to its 2026-05-25 spec (`function storyRespawnFromCheckpoint()@23982`) |
+| **Necklace: *"first arrival at each node awards a Knowledge Bead"*** | ❌ **INVERTED MECHANISM.** Beads are awarded on **rest**, not arrival — two call sites, both rest paths (`function _maybeAddKnowledgeBead(nodeCode) {@25941`, called from `storyShortRest` and `storyConfirmSleep`). **The source report says "rests" five times.** |
+| *"Short rests (3/day, 50gp, partial heal)"* | ⚠️ 3/day ✅; **no gold cost has ever existed** (`shortRestCost` = 0 occurrences, then and now); heal is 25 % of max HP **at an inn** and **50 % away from one** (`const heal  = isInn ? base : base * 2;@25972`) |
 | Long rest = full heal + day advance, cost varies by node | ✅ `sleepCost` 3–5gp per inn node |
-| *"`void_mercy_count` prevents the Void Tide from killing a player who is actively playing"* | ❌ **materially overstated** — it is **one** reprieve, granted only at pressure 9 **and only with ≥5 of 7 shards** (`S_story.void_mercy_count = (S_story.shards >= 5) ? 1 : 0;@26986`), spent at the next tide with the line *"💤 You sleep fitfully. The Void holds its breath with you."* A player at 4 shards gets nothing. |
+| *"`void_mercy_count` prevents the Void Tide from killing a player who is actively playing"* | ❌ **materially overstated** — it is **one** reprieve, granted only at pressure 9 **and only with ≥5 of 7 shards** (`S_story.void_mercy_count = (S_story.shards >= 5) ? 1 : 0;@27118`), spent at the next tide with the line *"💤 You sleep fitfully. The Void holds its breath with you."* A player at 4 shards gets nothing. |
 | *"Gate locks (e.g. DAM blind-days) must have a reachable resolution"* | ⚠️ corroborated by §DOC-02ba, which found the quoted DAM blind-days console trace has **no referent in the file** |
 
 ---
@@ -190,8 +190,8 @@ that made the loot layer *legible* enough to be redesigned.
 | *"max 680,000 XP"* in the old table | ⚪ **UNVERIFIABLE** — `680000` has 0 occurrences in the file's entire committed history, but the report predates the earliest surviving build by three days (instrument 18) |
 | XP table compressed to 0–195,000 over 20 levels | ✅ exact |
 | `_D100_TABLE` unified all consumable drops | ⚠️ true of the *design*, **false of the file it was written against** — see Register 4 |
-| `_magicTierAllowed()` gates on `S_story.level` | ✅ exact and unchanged: `return (S_story.level || 1) >= magic * 5;` (`function _magicTierAllowed(magic) {@24511`) |
-| Offhand dagger and shield mutually exclusive | ✅ **enforced in both directions and twice over** — equipping either returns the other to inventory *("Dagger moved to inventory" / "Shield moved to inventory")*, and the offhand attack refuses outright while a shield is worn (`if (S_story.equippedShield) { _sboLog('🗡 Unequip shield to use offhand.'); return; }@25107`) |
+| `_magicTierAllowed()` gates on `S_story.level` | ✅ exact and unchanged: `return (S_story.level || 1) >= magic * 5;` (`function _magicTierAllowed(magic) {@24567`) |
+| Offhand dagger and shield mutually exclusive | ✅ **enforced in both directions and twice over** — equipping either returns the other to inventory *("Dagger moved to inventory" / "Shield moved to inventory")*, and the offhand attack refuses outright while a shield is worn (`if (S_story.equippedShield) { _sboLog('🗡 Unequip shield to use offhand.'); return; }@25155`) |
 
 ---
 
@@ -213,7 +213,7 @@ elegant piece of economy design, and it is the register this report gets wrong.
 | `_D100_TABLE` anchor 22,456–22,477 | ✅ **both line numbers exact** |
 | **`_D100_TABLE` *"Active — consumables only, no magic weapons"*** | ❌ **INVERTED AT ITS OWN COMMIT.** That exact 22-line range held **16 rows**: 7 consumable and **9 weapon rows — 4 magic daggers (+1…+4), 1 base and 4 magic mainweapons.** See §V-A. |
 | `_rollD100Loot()` at 22,485 | ✅ exact |
-| `_rollMonsterWeaponDrop` → 1 base weapon, quality −4…0, never positive magic | ✅ exact at HEAD, comment included: `// FC06: monster drops capped at base tier` (`function _rollMonsterWeaponDrop(monsterDmgDie) {@24583`) |
+| `_rollMonsterWeaponDrop` → 1 base weapon, quality −4…0, never positive magic | ✅ exact at HEAD, comment included: `// FC06: monster drops capped at base tier` (`function _rollMonsterWeaponDrop(monsterDmgDie) {@24641`) |
 | `LAKE_MAGIC_DB` the exclusive positive-magic source | ⚠️ true of the data; **no live grant path at HEAD** — see §VI |
 | `LOOT_TABLE` *"dead code … marked in a comment"* | ❌ **the comment says the opposite.** `const LOOT_TABLE = [` *(deleted 2026-08-26, §DROP-01-FU)* is annotated *"(d100 result → item; used by `_rollD100Loot()`)"* — naming a caller that reads `_D100_TABLE` instead. Zero readers, a comment asserting one. → **§DROP-01-FU (a)**, open |
 | `GET /api/loot-drop` unified query | ✅ shipped (`src/js/wbapi-server.js` `loot-drop`), with three defects filed as **§DX-02ab** |
@@ -231,7 +231,7 @@ file, and the one most in danger of being "cleaned up" by someone who prefers ar
 
 | Claim | Verdict |
 |---|---|
-| Formula and modifier | ✅ **byte-identical from birth to HEAD**, `product <= 0` guard included (`function _calcLuck() {@23439`, `function _luckMod()@23445`) |
+| Formula and modifier | ✅ **byte-identical from birth to HEAD**, `product <= 0` guard included (`function _calcLuck() {@23470`, `function _luckMod()@23476`) |
 | All six table rows (decl · loot · death save · fishing DC · sheet) | ✅ **6 of 6 line-exact** |
 | Loot integration quote | ✅ exact in substance; the roll is now `_seededNext()` (§VM-01-B) |
 | Death-save integration quote | ✅ **byte-identical at HEAD**, `Math.random()` and all — see §V-C |
@@ -255,13 +255,13 @@ did.
 | Claim | Verdict |
 |---|---|
 | `tattoos: []` in `_S_DEFAULTS` at both paths | ✅ both lines exact |
-| `careerStats` / `runStats`, **10 fields each** | ✅ **exact**, in the stated order (`careerStats: { kills:0@23147`, `runStats:    { kills:0@23148`) |
+| `careerStats` / `runStats`, **10 fields each** | ✅ **exact**, in the stated order (`careerStats: { kills:0@23179`, `runStats:    { kills:0@23180`) |
 | `_survivingTattoos` / `_survivingCareerStats` on respawn | ✅ both exact |
 | `kenickieMarketUsed` in `_S_DEFAULTS` | ✅ exact |
 | `levelUpLog` is the machine-readable twin | ✅ written by the gifts handler |
-| Sheet text *"…They outlive you — the body remembers."* | ✅ **verbatim** — but it renders on the **character-creation** screen (`id="charcreate-sub"@4963`), not the character sheet |
-| Section header *"⚫ Your Tattoos"* | ❌ **0 occurrences, then or now.** The section is `makeSection('⚔ Character Tattoos');@31247` |
-| Time-of-day: `hour` +1 per battle, +6 per sleep, 0–23 | ✅ both exact — the +1 fires at battle **start** (`function _storyRollInit() {@24626`), not at victory |
+| Sheet text *"…They outlive you — the body remembers."* | ✅ **verbatim** — but it renders on the **character-creation** screen (`id="charcreate-sub"@4960`), not the character sheet |
+| Section header *"⚫ Your Tattoos"* | ❌ **0 occurrences, then or now.** The section is `makeSection('⚔ Character Tattoos');@31458` |
+| Time-of-day: `hour` +1 per battle, +6 per sleep, 0–23 | ✅ both exact — the +1 fires at battle **start** (`function _storyRollInit() {@24689`), not at victory |
 | *"Do not reset `careerStats` on death"* | ⚠️ upheld on death; **§CHRON-01** records that NG+ destroys it |
 
 ---
@@ -279,10 +279,10 @@ by quest state — is the correct model for every post-quest surface change sinc
 | Claim | Verdict |
 |---|---|
 | Unlock at `quest_cat_05 === 'complete'` | ✅ exact (cited line off by 7, hedged) |
-| The single announcement *"Kenickie's Black Market is open"* | ✅ **verbatim**, inside the completion narrative bit at `Kenickie's Black Market is open.@13745` |
-| `kenickieMarketUsed = true` on first purchase | ✅ exact (`S_story.kenickieMarketUsed = true;@33039`) |
+| The single announcement *"Kenickie's Black Market is open"* | ✅ **verbatim**, inside the completion narrative bit at `Kenickie's Black Market is open.@13772` |
+| `kenickieMarketUsed = true` on first purchase | ✅ exact (`S_story.kenickieMarketUsed = true;@33271`) |
 | No quest entry, no map marker | ✅ still true |
-| *"run stats first ('This run'), career stats second ('All time')"* at game-over | ❌ **three ways wrong.** The game-over modal shows **one** column — `<div class="goc-title">This Run` — with **nine** rows and **no career figures at all**, then and now (`function _populateGameoverChronicle() {@23854`). The two-column ledger lives on the **character sheet** (`function storyRenderCharSheet() {@37592`) and its headers are **"This Life" / "All Lives"**, the second suppressed until the first death. |
+| *"run stats first ('This run'), career stats second ('All time')"* at game-over | ❌ **three ways wrong.** The game-over modal shows **one** column — `<div class="goc-title">This Run` — with **nine** rows and **no career figures at all**, then and now (`function _populateGameoverChronicle() {@23913`). The two-column ledger lives on the **character sheet** (`function storyRenderCharSheet() {@37804`) and its headers are **"This Life" / "All Lives"**, the second suppressed until the first death. |
 | *"presented without blame or judgment — just numbers"* | ✅ **exactly right** — nine labelled rows, no commentary anywhere |
 
 ---
@@ -329,7 +329,7 @@ create a parallel 'first visit' mechanic."*
 
 Both halves fail. There is no first-visit reward in the game at all (`visitedCells` feeds the
 minimap and grants nothing), and the parallel mechanic the rule forbids **was already in the file**:
-the Boyscout Token for a first short rest at a node (`// Boyscout Token — first short rest at this location@25851`)
+the Boyscout Token for a first short rest at a node (`// Boyscout Token — first short rest at this location@25982`)
 and Boyscout Night for a first sleep — *"🏕 Boyscout Night! Double rolls"*. Three
 first-time-here rewards keyed to the same act, and the rule written to prevent exactly that.
 
@@ -343,10 +343,10 @@ Any new XP source should call it."* Following that advice today produces a silen
 `_checkLevelUp()` is a **mutator that only queues**: it raises `S_story.level` and pushes the level
 onto `_levelUpQueue`, while every benefit — the HP roll, the ASI, the Fighter feature, the gold and
 shield gifts — is delivered by `_showLevelUpModal`. On the skill-check **pass** path the queue is
-never drained, and `function _grantExplorationXp@30079` opens by clearing it, so the next step onto
+never drained, and `function _grantExplorationXp@30232` opens by clearing it, so the next step onto
 new ground discards the pending entry: **the player keeps the level and loses everything in it.**
 The *failing* branch, added later by §XP-01, does it correctly three lines away
-(`The attempt was not wasted.@7014`) — so failing a Ceremonia Roll can open the level-up modal and
+(`The attempt was not wasted.@7025`) — so failing a Ceremonia Roll can open the level-up modal and
 passing one cannot. Filed as **§DX-02p** (§DOC-02e), open, blast radius all 2,453 `skill_check`
 quests. The advice is right about the call and silent about the drain, which is the whole defect.
 
@@ -355,9 +355,9 @@ quests. The advice is right about the call and silent about the drain, which is 
 The report's unified-loot thesis is architecturally clean and **half-seeded**. `_rollD100Loot()`
 and `_rollMonsterWeaponDrop()` both draw the seeded stream (§VM-01-B), so a save determines them.
 The trophy channel does not: **13 of the 398 `MONSTER_DROPS` entries are arrays** — multi-drop
-tables picked by `function _pickDrop(table) {@7041`, which rolls `Math.random()` and writes the
-result to persisted inventory through `const _rawDrop = MONSTER_DROPS[S.enemy.key];@7049`. The
-death save is the same shape: `let d20 = Math.ceil(_combatRng() * 20) + _luckMod();@25977` decides
+tables picked by `function _pickDrop(table) {@7053`, which rolls `Math.random()` and writes the
+result to persisted inventory through `const _rawDrop = MONSTER_DROPS[S.enemy.key];@7061`. The
+death save is the same shape: `let d20 = Math.ceil(_combatRng() * 20) + _luckMod();@26029` decides
 whether the character lives, off the unseeded stream, while the loot roll eleven hundred lines away
 was converted. Both are instances of **§DX-02m** (open, 🟠), whose stated first job is to measure
 how many of the file's **51** `Math.random()` sites reach persisted state; these are four of them,
@@ -375,7 +375,7 @@ copies are its evidence; the words it supplies around them are its claims.**
 ### V-F. Corpus correction — `q.xpAward` is read
 
 §DX-02n carries a sub-item stating that `q.xpAward` (53 occurrences) has **0 readers**. It has two:
-`// §D02 xpAward on side-type quest completion@30203` in the quest-completion loop, shipped
+`// §D02 xpAward on side-type quest completion@30358` in the quest-completion loop, shipped
 2026-05-26 in a commit named *"ui stuff"*, and the Warrant's Board honest-reward preview, whose own
 comment calls it *"the live payout"* and names `q.reward` as the dead field instead. Measured:
 **51 quests carry `xpAward`, 46 of them `type:'side'` — the exact shape the reader requires.** The

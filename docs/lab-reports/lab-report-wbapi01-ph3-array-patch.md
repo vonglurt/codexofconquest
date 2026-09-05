@@ -131,11 +131,11 @@ evidence.*
 
 | Symbol | Location at HEAD | Signature |
 |---|---|---|
-| `serializeJsLiteral` | `src/js/wbapi-core.js:function serializeJsLiteral(v) {@447` | identical |
-| value-extent scanner | `src/js/wbapi-core.js:function _valueEnd(body, i) {@473` | (unnamed in spec) |
-| `patchLiteralField` | `src/js/wbapi-core.js:function patchLiteralField(sectionSrc, entryKey@506` | identical |
-| `editStructuredField` | `src/js/wbapi-core.js:editStructuredField(type, idOrTitle, field, value) {@1323` | identical |
-| server dispatch | `src/js/wbapi-server.js:const r = WBAPI.editStructuredField(type, resolvedKey@11133` | as specified |
+| `serializeJsLiteral` | `src/js/wbapi-core.js:function serializeJsLiteral(v) {@463` | identical |
+| value-extent scanner | `src/js/wbapi-core.js:function _valueEnd(body, i) {@489` | (unnamed in spec) |
+| `patchLiteralField` | `src/js/wbapi-core.js:function patchLiteralField(sectionSrc, entryKey@522` | identical |
+| `editStructuredField` | `src/js/wbapi-core.js:editStructuredField(type, idOrTitle, field, value) {@1339` | identical |
+| server dispatch | `src/js/wbapi-server.js:const r = WBAPI.editStructuredField(type, resolvedKey@11156` | as specified |
 
 The `~8905` wiring pointer is exact to the line: at `a105e0e`, line 8905 is the new
 `} else if (Array.isArray(value) …` branch itself.
@@ -226,7 +226,7 @@ into memory.
 2026-08-03) needed to write terrain rosters and deliberately did **not** reuse `editStructuredField`:
 `WORLD_DB`'s `monsters` array holds *code identifiers* (`P.giant_rat`), so `serializeJsLiteral` would
 emit `["giant_rat"]` — which re-parses without error, and then drives `_monsterLevel` to 1 for the whole
-terrain. It built `src/js/wbapi-core.js:editTerrainRoster(terrainKey, monsterKeys) {@1360` instead, reusing
+terrain. It built `src/js/wbapi-core.js:editTerrainRoster(terrainKey, monsterKeys) {@1376` instead, reusing
 `patchLiteralField` under its own serializer and adding a re-parse-before-commit guard. The lesson is
 this report's own defect class returning by the front door: *JSON-safe is not the same as
 source-correct.*

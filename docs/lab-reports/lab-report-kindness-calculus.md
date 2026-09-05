@@ -58,10 +58,10 @@ Eighteen-instrument §DOC-02 protocol. The material points for this report:
    was taken before the §WISDOM-01 commit that shipped the arc Sections VI, VII and XII analyse.**
    The counting regex was validated against `npm run stats` at HEAD (2,853 — exact match) before
    any delta was derived from it (instrument 14).
-3. Reachability was computed from `const CELL_GRID = (() => {@9852` over `NODE_COORDS`, with
-   `S_story.currentCode` assigned at exactly two sites (`S_story.currentCode = destCode;@28375`,
-   `S_story.checkpointNode || 'LHR'@26011`), then closed transitively over single-writer gate flags.
-   `function _uqfActivateAtNode(node, indexFresh) {@30139` keys on `node.code`.
+3. Reachability was computed from `const CELL_GRID = (() => {@9865` over `NODE_COORDS`, with
+   `S_story.currentCode` assigned at exactly two sites (`S_story.currentCode = destCode;@28525`,
+   `S_story.checkpointNode || 'LHR'@26142`), then closed transitively over single-writer gate flags.
+   `function _uqfActivateAtNode(node, indexFresh) {@30293` keys on `node.code`.
 
 ---
 
@@ -69,18 +69,18 @@ Eighteen-instrument §DOC-02 protocol. The material points for this report:
 
 | Structure | Shipped as | Status |
 |---|---|---|
-| §SPARK-01 cat chain | `quest_spark_01: { id:'quest_spark_01'@12340` … `_05`; root gate `{}` at `LCY` | 5 quests live |
-| §SPARK-01 SEA | `quest_sea_01`–`_03`; `Warmth Eel: progenitor organism@12518` (CR 4, non-aggressive) | 3 quests live |
+| §SPARK-01 cat chain | `quest_spark_01: { id:'quest_spark_01'@12355` … `_05`; root gate `{}` at `LCY` | 5 quests live |
+| §SPARK-01 SEA | `quest_sea_01`–`_03`; `Warmth Eel: progenitor organism@12533` (CR 4, non-aggressive) | 3 quests live |
 | §NAVAL-01 | `quest_sb_01` / `_fight` / `_parley` / `_examine`, role enum `sbChosenRole` | 4 quests live |
 | §PORT-01 | `quest_df_01`–`_02`, `quest_sk_01` / `_hull` / `_02` | 5 quests live |
-| §HUNT-01 | `quest_hunt_01`–`_04`; entry flag `S_story.huntHookReceived = true;@33218` | 4 quests live |
+| §HUNT-01 | `quest_hunt_01`–`_04`; entry flag `S_story.huntHookReceived = true;@33450` | 4 quests live |
 | §HUNT-02 | `quest_hunt2_01`–`_04` | 4 quests live |
 | §SPARK-02 | `quest_spark2_01`–`_05`; 4-token chain | 5 quests live |
 | §WHODUNIT-01 | `quest_bilge_01`–`_04`; combat fallback `completion:{ battles:['MS_BILGE'] }` | 4 quests live |
 | §ALCHEMY-01 | `quest_alch_01`–`_07`, strict linear flag relay | 7 quests live |
-| §WISDOM-01 | `quest_wis_00`–`_07`; hub `_runNodeHook('wis-vs-hub', node)@36012` | 8 quests live |
-| Token objects | `name:"Smalt's Trust"@12354` · `name:"Bram's Fish Scale"@13021` · `name:"Oat's Harbor Bead"@33807` · `name:'Dunfall Drift Spore'@13073` · `name:'Highland Letter of Clearance'@33786` | all 5 live |
-| Arc monsters | `shadow:          { key:'shadow'@5438` (ac 12) · `night_hag:       { key:'night_hag'@5503` · `sea_spawn:           { key:'sea_spawn'@5556` · `drowner:          { key:'drowner'@5606` | all 4 live |
+| §WISDOM-01 | `quest_wis_00`–`_07`; hub `_runNodeHook('wis-vs-hub', node)@36205` | 8 quests live |
+| Token objects | `name:"Smalt's Trust"@12369` · `name:"Bram's Fish Scale"@13036` · `name:"Oat's Harbor Bead"@34033` · `name:'Dunfall Drift Spore'@13088` · `name:'Highland Letter of Clearance'@34012` | all 5 live |
+| Arc monsters | `shadow:          { key:'shadow'@5435` (ac 12) · `night_hag:       { key:'night_hag'@5500` · `sea_spawn:           { key:'sea_spawn'@5553` · `drowner:          { key:'drowner'@5603` | all 4 live |
 
 **Census: 51 arc quests, all present under their originally specified ids. Zero identifier rot.**
 This is among the strongest name-survival results in the §DOC-02 corpus — and it is precisely why a
@@ -93,19 +93,19 @@ symbol census alone would have declared this report clean.
 | # | Original claim | Shipped | Verdict |
 |---|---|---|---|
 | 1 | Table I: 13 of 14 prosocial DC rows | All 13 exact in stat, skill and DC | ✅ EXACT |
-| 2 | Table I row 14 — §WISDOM-01 W6, "Accept the shadow", WIS **DC 14** | `quest_wis_06` is `type:'side'`, `bits:[]`; the accept path is a button (`Accept the reflection (receive the shadow@33472`) that always succeeds | ❌ **NOT SHIPPED — born so** (absent at `e339aeb` too) |
+| 2 | Table I row 14 — §WISDOM-01 W6, "Accept the shadow", WIS **DC 14** | `quest_wis_06` is `type:'side'`, `bits:[]`; the accept path is a button (`Accept the reflection (receive the shadow@33705`) that always succeeds | ❌ **NOT SHIPPED — born so** (absent at `e339aeb` too) |
 | 3 | Table IV: 6 behavioural laws → DC/stat mappings | W1 WIS 13 · W2 WIS 12 · W3 INT 11 · W4 INT 12 · W5 WIS 12 all exact | ✅ 5/6 EXACT (W6 = row 2) |
 | 4 | Table II: 4-token automaton, creator and destroyer per token | 8 of 8 cells correct; each destroy and the next create are **adjacent statements in one handler**, so the mutual-exclusion claim holds by construction | ✅ EXACT (token names abbreviated: shipped names carry owner prefixes) |
 | 5 | Table V: monster roles and encounter counts | drowner ×3 · night_hag ×1 · sea_spawn ×2 · Warmth Eel CR 4 non-aggressive, no statline | ✅ EXACT |
 | 6 | §III-C: one organism spans §SPARK-01, §SPARK-02, §ALCHEMY-01 | Confirmed at all three sites (tick glow; `Dunfall Drift Spore` *"related to Warmth Eel bioluminescence"*; the loch-shore finder stone) | ✅ EXACT |
 | 7 | §III-A: §WISDOM-01 reads `roenAlchemistMet` and `sbResolved` as activation conditions "for two of its six fragment quests" | `quest_wis_05` gates `roenAlchemistMet`; `quest_wis_03` gates `sbResolved`. Exactly two, exactly those | ✅ EXACT |
-| 8 | §IV-B cascade: `smaltBefriended` → `_02` → `pipMet` → `_03` → `_04` → `_05` → `aldousConfessed` | Gate chain confirmed — **and understated**: `gate:{ flags:['whodunitSolved','wrenpemburyInconsistencyNoticed'] }@12461` makes the final link a **cross-arc join**, the report's own best example of its §III-A thesis | ✅ + correction |
+| 8 | §IV-B cascade: `smaltBefriended` → `_02` → `pipMet` → `_03` → `_04` → `_05` → `aldousConfessed` | Gate chain confirmed — **and understated**: `gate:{ flags:['whodunitSolved','wrenpemburyInconsistencyNoticed'] }@12476` makes the final link a **cross-arc join**, the report's own best example of its §III-A thesis | ✅ + correction |
 | 9 | §IV-A: fighting the cat is the alternative path — "CR 0, trivially won", "the cat moves. That's it." | **There is no cat combat.** No `MONSTER_POOL` key, no `node.battle`, no battle id. The EV comparison has no second term | ❌ **NOT SHIPPED** |
 | 10 | §II-A: "DC 10 — the lowest difficulty class in the entire system" | True at `e339aeb` (min = 10). HEAD has four `dc:8` | ⚠️ STALE (right when written) |
-| 11 | §II-A: monster AC "ranging from 11 (shadow, easy tier) to 20 (elite tier)" | shadow is **ac:12** (`key:'shadow',          name:'Shadow'@5438`, identical at birth); max AC is **22**; there is no `elite` tier — the vocabulary is trivial/easy/medium/hard/deadly (§DX-02g) | ❌ **3 errors, all wrong when written** — and footnote 2, two lines later, states AC 12 correctly |
+| 11 | §II-A: monster AC "ranging from 11 (shadow, easy tier) to 20 (elite tier)" | shadow is **ac:12** (`key:'shadow',          name:'Shadow'@5435`, identical at birth); max AC is **22**; there is no `elite` tier — the vocabulary is trivial/easy/medium/hard/deadly (§DX-02g) | ❌ **3 errors, all wrong when written** — and footnote 2, two lines later, states AC 12 correctly |
 | 12 | §II-A: mean prosocial DC **11.9** (σ = 1.1) | Over the report's own 14 rows: 11.86, σ 0.99. Over **all 24** skill checks actually shipped in the six arcs: **12.08, σ 1.00** | ⚠️ ARITHMETIC OK, SAMPLE SELECTIVE — the selection omits both real DC 14s and includes the one DC 14 that does not exist |
-| 13 | §IV-C: "Bram is a harbor seal, four hundred pounds… seals are fundamentally agreeable" presented as a corpus quotation | `The dock cat is Bram.@13010` — byte-identical at birth and HEAD. Bram is a **cat**. The single `harbor seal` string in the file is a **wax seal impression** on a port document | ❌ **FABRICATED QUOTATION** |
-| 14 | §X: "The cook has never apologized. Ord has not asked for one." — quoted twice as corpus text | Live string: `Ord the passenger is owed an apology@33611` *"…the cook has declined to give."* The first half is a paraphrase; **the second half has no source in the file** | ❌ PARAPHRASE + fabrication |
+| 13 | §IV-C: "Bram is a harbor seal, four hundred pounds… seals are fundamentally agreeable" presented as a corpus quotation | `The dock cat is Bram.@13025` — byte-identical at birth and HEAD. Bram is a **cat**. The single `harbor seal` string in the file is a **wax seal impression** on a port document | ❌ **FABRICATED QUOTATION** |
+| 14 | §X: "The cook has never apologized. Ord has not asked for one." — quoted twice as corpus text | Live string: `Ord the passenger is owed an apology@33837` *"…the cook has declined to give."* The first half is a paraphrase; **the second half has no source in the file** | ❌ PARAPHRASE + fabrication |
 | 15 | Theorem 5: "The flag `cookApologized` remains false" | `cookApologized`: 0 occurrences, **0 commits in the file's entire history**. An undeclared flag is absent, not false | ❌ **NOT SHIPPED** (the observation about the *design* is correct; the identifier is invented) |
 | 16 | §IX-A: Inspector's contradiction — *"My wife Elspeth — we relocated from Saltwick six months ago."* | `Elspeth`: 0 occurrences, **0 commits ever**. The sibling quote, `the late Admiral Pembury`, is verbatim | ❌ **FABRICATED QUOTATION** |
 | 17 | §IX-A: scene note *"No combat. No roll required."* | No such string; `No roll required` = 0 hits | ❌ NOT SHIPPED (as a quotation) |
@@ -131,7 +131,7 @@ become `S_story.currentCode`. Six of the nineteen nodes these arcs activate on a
 | Node | Cell | Blocked by | Cell size |
 |---|---|---|---|
 | `SEN` | 18,180 | **`LCY`** | 3 |
-| `VS` (`VS: { num:279@9088`) | 12,198 | `VBY` | 5 |
+| `VS` (`VS: { num:279@9101`) | 12,198 | `VBY` | 5 |
 | `ATH` | 32,203 | `SEA` | 17 |
 | `HFT` | 10,191 | `ALF` | 6 |
 | `VAW` | 10,191 | `ALF` | 6 |
@@ -143,12 +143,12 @@ entered through a **single-writer flag**, and that one writer sits inside a bloc
 
 | Flag | Sole writer | Enclosing guard | Consequence |
 |---|---|---|---|
-| `wisHookReceived` | `S_story.wisHookReceived = true;@33503` | `if (node.code === 'VS' && S_story.personalLegendComplete) {@33437` | **All 8 §WISDOM-01 quests dead** — `wis_01`/`_02`/`_03` sit on *live* nodes and can still never open |
-| `visbyUnderground` | `S_story.visbyUnderground = true;@33422` | `node.code === 'VS'` | `activateNode:'VS', gate:{ flags:['visbyUnderground'] }@13479` — W6 dead a second way |
-| `huntHookReceived` | `S_story.huntHookReceived = true;@33218` | `if (node.code === 'HFT' && !S_story.huntHookReceived) {@33207` | **All 4 §HUNT-01 quests dead** |
-| `whodunitSolved` | `S_story.whodunitSolved = true;@12436` | inside `quest_spark_04` (`activateNode:'SEN'`) | `quest_spark_05` dead; **the Aldous confession branch `S_story.whodunitSolved && S_story.wrenpemburyInconsistencyNoticed && !S_story.aldousConfessed@33565` never fires** |
-| `roenAtSea` | `S_story.roenAtSea = true;@33373` | `node.code === 'SEN'` | `activateNode:'PDL', gate:{ flags:['roenAtSea'] }@13251` and the whole §ALCHEMY relay below it dead |
-| `seaStrangenessNoticed` | `set:['seaStrangenessNoticed']@12491` | inside `quest_sea_01` (`SEN`) | `quest_sea_02` → `warmthEelFound` → `quest_sea_03` dead |
+| `wisHookReceived` | `S_story.wisHookReceived = true;@33729` | `if (node.code === 'VS' && S_story.personalLegendComplete) {@33669` | **All 8 §WISDOM-01 quests dead** — `wis_01`/`_02`/`_03` sit on *live* nodes and can still never open |
+| `visbyUnderground` | `S_story.visbyUnderground = true;@33654` | `node.code === 'VS'` | `activateNode:'VS', gate:{ flags:['visbyUnderground'] }@13494` — W6 dead a second way |
+| `huntHookReceived` | `S_story.huntHookReceived = true;@33450` | `if (node.code === 'HFT' && !S_story.huntHookReceived) {@33439` | **All 4 §HUNT-01 quests dead** |
+| `whodunitSolved` | `S_story.whodunitSolved = true;@12451` | inside `quest_spark_04` (`activateNode:'SEN'`) | `quest_spark_05` dead; **the Aldous confession branch `S_story.whodunitSolved && S_story.wrenpemburyInconsistencyNoticed && !S_story.aldousConfessed@33791` never fires** |
+| `roenAtSea` | `S_story.roenAtSea = true;@33605` | `node.code === 'SEN'` | `activateNode:'PDL', gate:{ flags:['roenAtSea'] }@13266` and the whole §ALCHEMY relay below it dead |
+| `seaStrangenessNoticed` | `set:['seaStrangenessNoticed']@12506` | inside `quest_sea_01` (`SEN`) | `quest_sea_02` → `warmthEelFound` → `quest_sea_03` dead |
 
 **Per-family outcome:**
 
@@ -186,11 +186,11 @@ of the flags was misspelled. §WALK/§NAV-01's 90×360 migration co-located the 
 
 `quest_wis_06` is `type:'side'` with `bits:[]`. Both W6 paths are `storyRender` buttons: **Accept**
 grants `wisPage6_shadow`, a Shadow Shard and +350 XP unconditionally; **Fight** launches
-`label:'Shadow — The Mirror Construct'@33489` (`key:'shadow'`, ac 12), whose defeat sets the same
+`label:'Shadow — The Mirror Construct'@33715` (`key:'shadow'`, ac 12), whose defeat sets the same
 flag. There is no `skill_check` bit and no d20 anywhere in the block.
 
 The engine nevertheless advertises the DC. Roen's portfolio line enumerates the six fragments and
-ends: **`W6 here (WIS 14 or combat)@33495`**. Its first five entries — W1 WIS 13, W2 WIS 12, W3 INT
+ends: **`W6 here (WIS 14 or combat)@33721`**. Its first five entries — W1 WIS 13, W2 WIS 12, W3 INT
 11, W4 INT 12, W5 WIS 12 — are all **exact against the shipped bits**. The sixth is the only one
 with nothing behind it.
 
@@ -285,8 +285,8 @@ in these arcs was still its own cell.
 | Row | Defect |
 |---|---|
 | **§AUDIT-03x extended** | 28 of 51 quests across §SPARK-01, §SPARK-01 SEA, §HUNT-01, §WHODUNIT-01, §ALCHEMY-01 and §WISDOM-01 unreachable via `SEN`←`LCY`, `VS`←`VBY`, `ATH`←`SEA`, `HFT`/`VAW`←`ALF`, `BK`←`LHR`. **Largest single-family casualty measured in the program.** New sub-class: a **single-writer entry flag inside a blocked node's block** propagates the failure to quests on live nodes |
-| **§AUDIT-03ad (NEW, 🟢 no design call)** | `W6 here (WIS 14 or combat)@33495` advertises a DC that has never existed. Fix is either a `skill_check` bit or a two-word string edit — **but the string's other five DCs are exact, so the detector wanted is "a DC named in prose with no matching `dc:` in the quest it names"** |
-| **§AUDIT-03s extended** | `Ord the passenger is owed an apology@33611` — the §WHODUNIT-01 resolution line renders only at non-primary `SEN` |
+| **§AUDIT-03ad (NEW, 🟢 no design call)** | `W6 here (WIS 14 or combat)@33721` advertises a DC that has never existed. Fix is either a `skill_check` bit or a two-word string edit — **but the string's other five DCs are exact, so the detector wanted is "a DC named in prose with no matching `dc:` in the quest it names"** |
+| **§AUDIT-03s extended** | `Ord the passenger is owed an apology@33837` — the §WHODUNIT-01 resolution line renders only at non-primary `SEN` |
 | **§DX-02w (NEW)** | An `activateNode` whose node is non-primary is unreportable by every existing gate: `check:noderegs` proves the code *resolves*, and it does. Wants a `check:cellprimacy` phase failing on any `activateNode`/`waypointNode` that is not `list[0]`, with explicit classification for deliberate co-location |
 
 ---

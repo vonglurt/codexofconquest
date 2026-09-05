@@ -91,30 +91,30 @@ consts land on the cited lines.
 
 **Scene consts — 4 of 4 live**
 
-`const BRYNN_KEEPER_STORY = {@27039` (10 keys: 2 beats, prompt, 2 choices, 4 farewells) ·
-`const BRUHNS_CO_SCENE = {@28064` (3 variants) · `const YAEL_NAMED_REPORT_SCENE = {@28050` (setup,
-decision, 2 choices) · `const YAEL_PATROL_NODES = [@27730` (pre-existing, L45-G; the addendum entry
+`const BRYNN_KEEPER_STORY = {@27171` (10 keys: 2 beats, prompt, 2 choices, 4 farewells) ·
+`const BRUHNS_CO_SCENE = {@28203` (3 variants) · `const YAEL_NAMED_REPORT_SCENE = {@28189` (setup,
+decision, 2 choices) · `const YAEL_PATROL_NODES = [@27869` (pre-existing, L45-G; the addendum entry
 added here).
 
 **State flags — 5 of 5 live under their specified names, in the specified order, one contiguous block**
 
-`brynnKeeperStoryTold: false, brynnLightChoiceMade: false, brynnLightKept: false,@23118` ·
-`bruhnsCoSceneDelivered: false,@23119` · `yaelNamedReportDelivered: false,@23120`.
+`brynnKeeperStoryTold: false, brynnLightChoiceMade: false, brynnLightKept: false,@23150` ·
+`bruhnsCoSceneDelivered: false,@23151` · `yaelNamedReportDelivered: false,@23152`.
 
 **Trigger predicates — 3 of 3 verbatim**
 
 | Layer | HEAD | Report §2.1/§3.1/§4.1 |
 |---|---|---|
-| 70 Beat 1 | `if (node.code === 'TLL' && _npcFavor('brynn') >= 1@32798` + `actNumber >= 2` + `!brynnKeeperStoryTold` | identical |
-| 70 Beat 2 | `if (node.code === 'TLL' && _npcFavor('brynn') >= 2@32823` + `brynnKeeperStoryTold` + `!brynnLightChoiceMade` | identical |
-| 74 | `if (node.code === 'LHR' && _npcFavor('yael') >= 2@32472` + `actNumber >= 6` + `yaelEscortUsed` + `!yaelNamedReportDelivered` | identical |
+| 70 Beat 1 | `if (node.code === 'TLL' && _npcFavor('brynn') >= 1@33030` + `actNumber >= 2` + `!brynnKeeperStoryTold` | identical |
+| 70 Beat 2 | `if (node.code === 'TLL' && _npcFavor('brynn') >= 2@33055` + `brynnKeeperStoryTold` + `!brynnLightChoiceMade` | identical |
+| 74 | `if (node.code === 'LHR' && _npcFavor('yael') >= 2@32704` + `actNumber >= 6` + `yaelEscortUsed` + `!yaelNamedReportDelivered` | identical |
 
 **Never shipped — 3 identifiers, 0 commits ever**
 
 | Name | Where the report puts it | What actually happened |
 |---|---|---|
 | `fav_brynn` | **the opening sentence** of §1, as one of three favor accessors | the accessor is `_npcFavor('brynn')`; this field has never existed |
-| `TC_BRYNN_LAMP` | §2.1, the Town Crier integration | the **feature shipped** under `brynnKeeperStoryTold:      'The lamp at the First Inn@26777`, reached through `qOrder = @26867` |
+| `TC_BRYNN_LAMP` | §2.1, the Town Crier integration | the **feature shipped** under `brynnKeeperStoryTold:      'The lamp at the First Inn@26909`, reached through `qOrder = @26999` |
 | `NODE_ARRIVAL_QUOTES` | §3.1, the named injection point | no such const has ever existed |
 
 **Node codes — 0 of 4 resolve.** `IN`→`TLL` · `CO`→`TLS` · `CI`→`LHR` · `SW`→`MSY`. All four are
@@ -131,14 +131,14 @@ dead" class, so an existence check passes while the sentence stays wrong.
 | 1 | `BRYNN_KEEPER_STORY` + 3 flags | live, all keys present | ✅ EXACT |
 | 2 | `BRUHNS_CO_SCENE` 3 variants; theory addendum *appends*, does not replace | `coSceneText += '\n\n' + BRUHNS_CO_SCENE.dearFriendWithTheory` — exactly as specified | ✅ EXACT |
 | 3 | `YAEL_NAMED_REPORT_SCENE` + trigger triple | verbatim | ✅ EXACT |
-| 4 | Bruhns variant gate `_npcFavor('bruhns')` | **0 occurrences**; HEAD reads `const fav = _npcFavor('auros');@34977` | ⚠️ REPAIRED BY §AUDIT-03n (§V-C) |
+| 4 | Bruhns variant gate `_npcFavor('bruhns')` | **0 occurrences**; HEAD reads `const fav = _npcFavor('auros');@35197` | ⚠️ REPAIRED BY §AUDIT-03n (§V-C) |
 | 5 | Beat 2 `keep`/`rest` set `brynnLightKept` | live, both branches | ✅ EXACT |
 | 6 | Four-branch Act VIII farewell, **"one inert branch, unreachable by design"** | a **three-flag priority chain, zero inert branches**, whose first branch is a catch-up delivery | ❌ **REVERSED — and better** (§V-D) |
 | 7 | Yael choice labels "Affirm" / "Acknowledge risk" | shipped as `📋 I'll hold it.` / `🗂 Three copies is enough.` (`choiceHold`/`choiceThree`); structure identical, both set the flag, neither branches | ⚠️ PARAPHRASE |
-| 8 | SW patrol addendum gated on `yaelNamedReportDelivered` | shipped: `nodeSlug:'MSY'@27735` — **and cannot render** (§V-B) | ⛔ STRANDED |
+| 8 | SW patrol addendum gated on `yaelNamedReportDelivered` | shipped: `nodeSlug:'MSY'@27870` — **and cannot render** (§V-B) | ⛔ STRANDED |
 | 9 | §XXXVI epilogue line, *"intentionally passive voice… Yael's name is not in the epilogue text"* | *"Yael kept three copies of the second report. She knows exactly where each one is."* — active voice, her name first | ❌ SELF-DESCRIPTION WRONG |
-| 10 | Cross-dependency `s29LineDelivered`, one-directional and read-only | correct: written once at `S_story.s29LineDelivered = true;@32653`, read once here | ✅ EXACT |
-| 11 | `yaelEscortUsed` set by the escort mechanic | one writer, `S_story.yaelEscortUsed = true;@23800` | ✅ EXACT |
+| 10 | Cross-dependency `s29LineDelivered`, one-directional and read-only | correct: written once at `S_story.s29LineDelivered = true;@32885`, read once here | ✅ EXACT |
+| 11 | `yaelEscortUsed` set by the escort mechanic | one writer, `S_story.yaelEscortUsed = true;@23835` | ✅ EXACT |
 | 12 | §6: *"the implementation cost is eight state flags"* | the tables list **five**; eight only if `yaelEscortUsed`, `s29LineDelivered` and `fav_brynn` are counted — and the last has never existed | ❌ ARITHMETIC |
 | 13 | Four cited line numbers (L11573 · L12611 · L12625 · L12306) and the flag block (L8419–8421) | **all exact**, window `585be8f`…`0a131f5` | ✅ EXACT |
 | 14 | *(engine-side)* `YAEL_NAMED_REPORT_SCENE`'s own `// → doc:` comment | says **"fav >= 2 Act IV+"**; the guard says `>= 6` | ❌ COMMENT/CODE |
@@ -150,7 +150,7 @@ dead" class, so an existence check passes while the sentence stays wrong.
 
 ### A. Eight "never existed" claims, seven false — and the sweep §AUDIT-03af asked for, closed
 
-Chasing this report's four dead node codes into the archive lands on an engine comment. `const birkaNpcs@35122`
+Chasing this report's four dead node codes into the archive lands on an engine comment. `const birkaNpcs@35347`
 remaps five Birka NPC codes and justifies itself like this:
 
 > *"§PLAY-01-G: dead pre-§WALK sublocation codes remapped to real nodes, each proved by its NPC's
@@ -197,10 +197,10 @@ point at. **So: fix the comments, keep the remaps.** → **§AUDIT-03af scoped a
 
 ### B. The patrol addendum shipped, was remapped correctly, and cannot render — §AUDIT-03x extended
 
-`{ condition: () => !!(S_story.yaelNamedReportDelivered), nodeSlug:'MSY'@27735` — *"The second report
+`{ condition: () => !!(S_story.yaelNamedReportDelivered), nodeSlug:'MSY'@27874` — *"The second report
 is filed. I'm not watching to see if it disappears."* The SW→MSY remap is right and the gate is right.
 
-`MSY:{r:25,c:206},@9672` puts it in a cell with **twelve** occupants, and `const CELL_GRID = (() => {@9852`
+`MSY:{r:25,c:206},@9685` puts it in a cell with **twelve** occupants, and `const CELL_GRID = (() => {@9865`
 builds each cell in `NODE_MAP` declaration order with only `list[0]` able to become `currentCode`.
 `WG0` is first. MSY is **ninth**. The render test is `yaelPatrol.nodeSlug === node.code`, so it never
 passes.
@@ -209,7 +209,7 @@ passes.
 recorded.** §DOC-02h scored it for §CROWN-01 and stranded seven swamp nodes there. The full occupant
 list is `WG0 · HW1 · HJ1 · HG1 · HJ2 · HN1 · HJ3 · HCA · MSY · SDQ · OTP · DBN` — **11 of 12
 stranded**, and the last four belong to three unrelated tracks: **MSY** (this arc's patrol beat),
-`SDQ:{ num:16@8664` (The Crones' Domain), `OTP:{ num:62@8761` (Trench Titan, an **§EPIC-01**
+`SDQ:{ num:16@8677` (The Crones' Domain), `OTP:{ num:62@8774` (Trench Titan, an **§EPIC-01**
 battleground) and `DBN` (Danube Ferry Crossing).
 
 > ***A cell-primacy casualty is not an arc-level event. One cell can take content from four
@@ -225,7 +225,7 @@ battleground) and `DBN` (Danube Ferry Crossing).
 > character. The CO boss fight is a confrontation with the NPC the player has been building favor with
 > across the arc."*
 
-That sentence is precisely what justifies HEAD's `const fav = _npcFavor('auros');@34977`. The report's
+That sentence is precisely what justifies HEAD's `const fav = _npcFavor('auros');@35197`. The report's
 own spec says `_npcFavor('bruhns')`, which has **0 occurrences** at HEAD — it was one of §AUDIT-03n's
 five gate sites keyed to a surname the favor ledger never writes, each guarding a whole scene. Without
 the repair, `fav` is `0` and neither variant fires: **Bruhns says nothing at the last fight, for every
@@ -248,7 +248,7 @@ HEAD ships a **three-flag priority chain with no dead branch at all**: `!storyTo
 
 > `farewellNoStory:  '"There's a lamp in the corner that's been burning since your first night. I wanted you to know that."'`
 
-`lampLine = BRYNN_KEEPER_STORY.farewellNoStory;@26895` is immediately followed by
+`lampLine = BRYNN_KEEPER_STORY.farewellNoStory;@27027` is immediately followed by
 `S_story.brynnKeeperStoryTold = true`, so a player who never found Beat 1 still gets the lamp told to
 them at the door in Act VIII, and the epilogue row keyed on that flag then reads truthfully rather than
 inventing a conversation. Scored against the report's own thesis — *the arcs close because the
@@ -257,7 +257,7 @@ inattentive player with nothing.
 
 **One shape worth noting rather than filing loudly:** that write happens inside a `text: () => {…}`
 getter — a *render* path mutating a *progression* flag that two downstream consumers read (the Town
-Crier's `qOrder = @26867`, and the epilogue). It is safe today only because `_renderNpcCard` latches
+Crier's `qOrder = @26999`, and the epilogue). It is safe today only because `_renderNpcCard` latches
 `act8FarewellBrynn` **before** calling `beat.text()`. Remove that latch, or call the getter twice for a
 preview, and the branch silently advances. → a small §DX row.
 
@@ -271,7 +271,7 @@ post-mortem paragraph praising the passive voice of a line that is active and st
 
 The `TC_BRYNN_LAMP` case is the corpus's recurring pattern in miniature: **the feature shipped and the
 name did not.** The Town Crier does reference the lamp — through
-`brynnKeeperStoryTold:      'The lamp at the First Inn@26777` — exactly as designed, under no name at
+`brynnKeeperStoryTold:      'The lamp at the First Inn@26909` — exactly as designed, under no name at
 all. A reader grepping the const would conclude the integration was never built.
 
 ### F. Reachability closure (instrument 19)
@@ -293,7 +293,7 @@ had almost nothing of this layer to catch. *Structural minimalism turned out to 
 
 ## VI. Defects Filed
 
-- **§AUDIT-03af (existing, SCOPED AND ANSWERED)** — the sweep it requested is done. `const birkaNpcs@35122`
+- **§AUDIT-03af (existing, SCOPED AND ANSWERED)** — the sweep it requested is done. `const birkaNpcs@35347`
   and the §NPC-01-SF4 note make **eight** "no NODE_MAP entry ever existed" claims; **seven are false**
   against `32c10c5` (only `CQ` holds). All seven remaps are nonetheless **correct renames**
   (`num` + terrain key + label match). **Fix the comments; keep the remaps** — the opposite verdict to
@@ -310,7 +310,7 @@ had almost nothing of this layer to catch. *Structural minimalism turned out to 
   beside the latch. Also in the same row: `YAEL_NAMED_REPORT_SCENE`'s own `// → doc:` comment says
   *"fav >= 2 Act IV+"* while the guard reads `>= 6`.
 - **§AUDIT-03s (existing, +2 player-facing hits)** — `YAEL_NAMED_REPORT_SCENE.setup` says *"watching
-  the market corner from the **CI** door"*, and `const S29_AUROS_THEORY@27052`'s header comment says
+  the market corner from the **CI** door"*, and `const S29_AUROS_THEORY@27184`'s header comment says
   *"fires at **CY**"*. `CI` is the worse of the two: it resolves to a **different live node**, so every
   existence check passes while the sentence is wrong.
 - **§AUDIT-03z (b) (existing, independently re-confirmed)** — `S29_AUROS_THEORY`'s comment still states
@@ -326,19 +326,19 @@ had almost nothing of this layer to catch. *Structural minimalism turned out to 
 
 | Anchor | Content |
 |---|---|
-| `const BRYNN_KEEPER_STORY = {@27039` · `farewellNoStory:@27045` | Layer 70, and the catch-up branch |
-| `brynnKeeperStoryTold: false, brynnLightChoiceMade: false, brynnLightKept: false,@23118` | the three flags, one line, specified order |
-| `if (node.code === 'TLL' && _npcFavor('brynn') >= 1@32798` · `if (node.code === 'TLL' && _npcFavor('brynn') >= 2@32823` | Beats 1 and 2, verbatim triggers |
-| `lampLine = BRYNN_KEEPER_STORY.farewellNoStory;@26895` · `qOrder = @26867` · `brynnKeeperStoryTold:      'The lamp at the First Inn@26777` | §V-D and the Town Crier that shipped without `TC_BRYNN_LAMP` |
-| `const BRUHNS_CO_SCENE = {@28064` · `bruhnsCoSceneDelivered: false,@23119` | Layer 72 |
-| `if (node.code === 'TLS' && !S_story.defeatedBattles@34976` · `const fav = _npcFavor('auros');@34977` | the §AUDIT-03n repair this report justifies (§V-C) |
-| `const S29_AUROS_THEORY@27052` · `S_story.s29LineDelivered = true;@32653` | the one cross-dependency |
-| `const YAEL_NAMED_REPORT_SCENE = {@28050` · `yaelNamedReportDelivered: false,@23120` | Layer 74 |
-| `if (node.code === 'LHR' && _npcFavor('yael') >= 2@32472` · `S_story.yaelEscortUsed = true;@23800` | the trigger triple and its one writer |
-| `const YAEL_PATROL_NODES = [@27730` · `nodeSlug:'MSY'@27735` · `MSY:{r:25,c:206},@9672` · `const CELL_GRID = (() => {@9852` | the stranded addendum (§V-B) |
-| `SDQ:{ num:16@8664` · `OTP:{ num:62@8761` | cell `25,206`'s other tracks |
-| `cond: () => !!(S_story.yaelNamedReportDelivered)@28118` · `Yael kept three copies@28119` | the epilogue row, active voice |
-| `const birkaNpcs@35122` | the eight "never existed" claims (§V-A) |
+| `const BRYNN_KEEPER_STORY = {@27171` · `farewellNoStory:@27177` | Layer 70, and the catch-up branch |
+| `brynnKeeperStoryTold: false, brynnLightChoiceMade: false, brynnLightKept: false,@23150` | the three flags, one line, specified order |
+| `if (node.code === 'TLL' && _npcFavor('brynn') >= 1@33030` · `if (node.code === 'TLL' && _npcFavor('brynn') >= 2@33055` | Beats 1 and 2, verbatim triggers |
+| `lampLine = BRYNN_KEEPER_STORY.farewellNoStory;@27027` · `qOrder = @26999` · `brynnKeeperStoryTold:      'The lamp at the First Inn@26909` | §V-D and the Town Crier that shipped without `TC_BRYNN_LAMP` |
+| `const BRUHNS_CO_SCENE = {@28203` · `bruhnsCoSceneDelivered: false,@23151` | Layer 72 |
+| `if (node.code === 'TLS' && !S_story.defeatedBattles@35196` · `const fav = _npcFavor('auros');@35197` | the §AUDIT-03n repair this report justifies (§V-C) |
+| `const S29_AUROS_THEORY@27184` · `S_story.s29LineDelivered = true;@32885` | the one cross-dependency |
+| `const YAEL_NAMED_REPORT_SCENE = {@28189` · `yaelNamedReportDelivered: false,@23152` | Layer 74 |
+| `if (node.code === 'LHR' && _npcFavor('yael') >= 2@32704` · `S_story.yaelEscortUsed = true;@23835` | the trigger triple and its one writer |
+| `const YAEL_PATROL_NODES = [@27869` · `nodeSlug:'MSY'@27870` · `MSY:{r:25,c:206},@9685` · `const CELL_GRID = (() => {@9865` | the stranded addendum (§V-B) |
+| `SDQ:{ num:16@8677` · `OTP:{ num:62@8774` | cell `25,206`'s other tracks |
+| `cond: () => !!(S_story.yaelNamedReportDelivered)@28257` · `Yael kept three copies@28258` | the epilogue row, active voice |
+| `const birkaNpcs@35347` | the eight "never existed" claims (§V-A) |
 | `32c10c5` · `43610d3` · `585be8f`…`0a131f5` | archive · ship commit · the report's own tree |
 
 ---

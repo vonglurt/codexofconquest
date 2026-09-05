@@ -229,11 +229,11 @@ that would stop it* (instrument 40, a third confirmed instance in this cluster).
 
 ## 10. Status at HEAD (2026-08-13)
 
-`POST /api/graph/reweave-all` returns **410** (`src/js/wbapi-server.js:reweave-all is deprecated@6912`);
+`POST /api/graph/reweave-all` returns **410** (`src/js/wbapi-server.js:reweave-all is deprecated@6924`);
 its ~3,200-line body was deleted by §WALK-3 Inc 3. `NODE_MAP` carries **0** `N:`/`S:`/`E:`/`W:` link
 fields, **0** `junction:true`, 416 nodes. `netNodes`, `mesh-entry`, `already-connected`, `actualFrom`,
 `actualTo`, `walkLeg`, `PRIORITY_HIGHWAYS`: **0 occurrences anywhere.** `buildHighway` survives as one
-word in a tombstone comment (`src/js/wbapi-server.js:Historically this reused buildHighway@6993`), and that
+word in a tombstone comment (`src/js/wbapi-server.js:Historically this reused buildHighway@7005`), and that
 comment is accurate for the site it annotates — the standalone endpoint always used its own inline
 bridge; it was the in-pipeline P5.5 phase (`f1449f5`, three hours after this shipped) that called
 `buildHighway`, and that phase went with the body.
@@ -254,7 +254,7 @@ anything; the two that are wrong are both wired to write.*
 
 **§DX-02bl (🟠) — `cluster-bridge` and `junction-audit` read the retired edge graph and report a
 shattered world; one of them can act on it.** `POST /api/graph/cluster-bridge`
-(`src/js/wbapi-server.js:const cbAdj = new Map()@6930`) builds its adjacency from `node[d]` for
+(`src/js/wbapi-server.js:const cbAdj = new Map()@6942`) builds its adjacency from `node[d]` for
 `N`/`S`/`E`/`W`. There are zero such fields at HEAD, so every adjacency set is empty and
 `bfsReach('LHR')` returns `{LHR}`. Live dry-run confirms: `hub=LHR reachable=1/416 unreachable=415`,
 **415 isolated clusters of one node each.** With `{execute:true}` it iterates all 415, calling
@@ -263,7 +263,7 @@ writes that re-introduce the exact `N`/`S`/`E`/`W` link fields §CELL-01/§WALK-
 It is published as a green CLI verb under *"§22 NETWORK HEALTH & REPAIR"* (`src/api/wb.js:3153`,
 `docs/api/API-README.md:295`) and shares its no-timeout streaming path with `nuke-junctions`.
 `junction-audit` is the second site, reporting 413 of 415 named nodes unreachable from a
-cell-touching BFS (`src/js/wbapi-server.js:function degree(code)@5385`); it also disagrees with itself
+cell-touching BFS (`src/js/wbapi-server.js:function degree(code)@5397`); it also disagrees with itself
 inside one response — `junctionDegreeDist` puts `J13` at degree 2 while `nukePreview` classifies the
 same node `deadEndDelete` (degree ≤ 1), because the two figures are computed from different graphs.
 **Recommend 410 for `cluster-bridge`; teach `junction-audit` to source reachability from the

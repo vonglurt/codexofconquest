@@ -54,7 +54,7 @@ Verification ran read-only. `play.html` was not modified.
 
 > There is **no dedicated "arc" runtime object** — an arc is an emergent property of correctly-wired flags. Mission Builder's whole job is to generate those flags correctly.
 
-**HOLDS, and more strongly than the report knew.** At HEAD there is no `QUEST_ARCS`, no `ARC_DB`, no arc structure of any kind; the six matches for `arcs` in the engine are prose about will-o'-wisps and a Warmth Eel. Grouping is derived on demand from the id convention (`src/js/wbapi-core.js:arcs() { return Object.keys(WBAPI._questArcs); }@1096`), and chaining is derived from flag reads versus writes. Not only is there no arc object — the `q.arc` *display* field the compiler sets on every step is carried by **0 of 2,853** quests.
+**HOLDS, and more strongly than the report knew.** At HEAD there is no `QUEST_ARCS`, no `ARC_DB`, no arc structure of any kind; the six matches for `arcs` in the engine are prose about will-o'-wisps and a Warmth Eel. Grouping is derived on demand from the id convention (`src/js/wbapi-core.js:arcs() { return Object.keys(WBAPI._questArcs); }@1112`), and chaining is derived from flag reads versus writes. Not only is there no arc object — the `q.arc` *display* field the compiler sets on every step is carried by **0 of 2,853** quests.
 
 The corollary the report drew from this is the reason the whole design is sound: if an arc is only its wiring, then a tool that generates the wiring correctly *is* an arc builder, and no engine change is needed. That reasoning was correct.
 
@@ -142,11 +142,11 @@ Compile rules as locked: `id = <arcId>_<n>` (1-based) · `arc = arcLabel` · pro
 
 It shipped at `edit.html:9196` in `e2dcd76`, and the spec asserted it: `expect(q.activateCond).toMatch(/^\(s\)\s*=>\s*s\./)`. **The test was written to enforce the defect.**
 
-**The engine calls the condition with no argument.** At the reference build, `play.html:25845` reads `if (q.activateCond && !q.activateCond()) return;` — and at HEAD the same line is `if (q.activateCond && !q.activateCond()) return;@30156`, with a second, later call site that at least catches: `ok = q.activateCond(); } catch (e) { ok = false; }@37138`. So `s` is `undefined` and `s.<flag>` is a `TypeError` — thrown, at the reference build, inside the quest sweep with no `try`.
+**The engine calls the condition with no argument.** At the reference build, `play.html:25845` reads `if (q.activateCond && !q.activateCond()) return;` — and at HEAD the same line is `if (q.activateCond && !q.activateCond()) return;@30310`, with a second, later call site that at least catches: `ok = q.activateCond(); } catch (e) { ok = false; }@37358`. So `s` is `undefined` and `s.<flag>` is a `TypeError` — thrown, at the reference build, inside the quest sweep with no `try`.
 
 **Three mechanisms in the same toolchain already held the right answer.**
 
-1. **The server's serializer does the conversion for you.** `src/js/wbapi-server.js:const isBareIdent = /^[A-Za-z_$][A-Za-z0-9_$]*$/.test(v);@1724` — a plain flag name posted to `/api/quest` is written into the file as `() => !!S_story.<flag>`; anything containing JS syntax passes through **verbatim**. The bare identifier §8 calls forbidden is exactly the required *input*, and the arrow form §8 mandates is exactly what escapes conversion. The server's own CLI help had spelled the recipe out: *`Act 2+: add "activateCond":"stnAct1Done" (prev act checkPassFlag — serialized as () => !!S_story.stnAct1Done)`*.
+1. **The server's serializer does the conversion for you.** `src/js/wbapi-server.js:const isBareIdent = /^[A-Za-z_$][A-Za-z0-9_$]*$/.test(v);@1727` — a plain flag name posted to `/api/quest` is written into the file as `() => !!S_story.<flag>`; anything containing JS syntax passes through **verbatim**. The bare identifier §8 calls forbidden is exactly the required *input*, and the arrow form §8 mandates is exactly what escapes conversion. The server's own CLI help had spelled the recipe out: *`Act 2+: add "activateCond":"stnAct1Done" (prev act checkPassFlag — serialized as () => !!S_story.stnAct1Done)`*.
 2. **Every authored condition in the game disagreed.** The reference build's quest database is wall-to-wall `activateCond:() => !!S_story.someFlag` — zero-arg, closing over the global. `activateCond:(s)` has **0** occurrences at HEAD and **0 commits ever** in `play.html`. The counterexamples numbered in the hundreds and sat in the file the report was written against.
 3. **The flag index cannot see `s.`** `_questFlags` derives reads and writes by matching `/S_story\.(\w+)/` over each quest's source text. `(s)=>s.quest_yael_1_passed` contains no `S_story.`, so its `reads` set is **empty** — meaning `WBAPI.quests.chain(id)`, the very derivation §2 names as the definition of an arc, would report **no upstream and no downstream** for a chain this compiler built. Preview Chain would draw the `↓ reads <flag>` connector from the compiler's own knowledge and be the only surface in the system that believed the arc existed.
 
@@ -164,7 +164,7 @@ The report checked `POST /api/quest` and correctly reported that the route exist
 
 `arc` appeared in the reference server only as a query-string *filter*, never as a stored field. So every step this compiler produced would have been written to the file having silently lost its arc label and its entire item chain — the `grantBit` producer flag among them, which is to say **the non-skill chaining mechanism §4 depends on would have evaporated on write.**
 
-The fix landed at W8b: `src/js/wbapi-server.js:const JSONF@1710` now serialises `gate` · `bits` · `completion` · `itemChain` · `targetMonsterKeys` · `killGoals`, and `arc` and `checkSkill` joined the `STR` list. The commit records it plainly — *"all silently dropped before — API-posted UQF quests arrived stripped dead."*
+The fix landed at W8b: `src/js/wbapi-server.js:const JSONF@1713` now serialises `gate` · `bits` · `completion` · `itemChain` · `targetMonsterKeys` · `killGoals`, and `arc` and `checkSkill` joined the `STR` list. The commit records it plainly — *"all silently dropped before — API-posted UQF quests arrived stripped dead."*
 
 This is the second consecutive report in the §DOC-02 series to be bitten in the same place: §EDITOR-01-D's `itemChain` was dropped by the same POST path for the same seven days. **The lesson generalises: "no change required" is a claim about a path you must therefore measure end to end.** A route that accepts your request and returns 200 has not agreed to remember your fields.
 
@@ -172,7 +172,7 @@ This is the second consecutive report in the §DOC-02 series to be bitten in the
 
 ## 9. A defect in the convention §1 cites
 
-§1 grounds the id convention on the arc-prefix strip at `wbapi-core.js:588` / `edit.html:1653`, which is still live at `src/js/wbapi-core.js:.replace(/_[a-z]{2}$/, '')@804` and `edit.html:.replace(/_[a-z]{2}$/, '')@1742`:
+§1 grounds the id convention on the arc-prefix strip at `wbapi-core.js:588` / `edit.html:1653`, which is still live at `src/js/wbapi-core.js:.replace(/_[a-z]{2}$/, '')@820` and `edit.html:.replace(/_[a-z]{2}$/, '')@1742`:
 
 ```js
 const arc = id.replace(/_\d+$/, '').replace(/_[a-z]{2}$/, '');

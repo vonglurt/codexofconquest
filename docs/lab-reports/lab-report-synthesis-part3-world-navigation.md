@@ -34,7 +34,7 @@ The Circuit Corridor model's answer was a sparse world **embedded in a real grid
 
 **Why a player cares.** This is the most directly player-facing of the seven synthesis parts, because navigation is the verb the player performs most:
 
-- **§CELL is why the world is walkable at all.** Before it, movement consulted a stored edge list, `_buildNodeExits()` ran on every page load, and pressing *North* could open a dialog because the nearest node was five cells away. After it, one keypress is one cell, adjacency is arithmetic on `(r,c)`, and there is no edge graph left to break. `function cellMove@28347` and `function _enterEmptyCell@28422` are live at HEAD.
+- **§CELL is why the world is walkable at all.** Before it, movement consulted a stored edge list, `_buildNodeExits()` ran on every page load, and pressing *North* could open a dialog because the nearest node was five cells away. After it, one keypress is one cell, adjacency is arithmetic on `(r,c)`, and there is no edge graph left to break. `function cellMove@28495` and `function _enterEmptyCell@28575` are live at HEAD.
 - **The world remembers your walk.** `visitedCells` records every cell stepped on and drives the 11×17 fog-of-war minimap. Empty ground is not blank: *"The path continues. No named location marks this ground"* — with the terrain named, the exits listed, and a real chance of an encounter.
 - **Free movement became an invariant one commit after this was written.** At the reference commit `cellMove` still refused steps for story reasons — the Convergence shard gate, the Damascus blind-days gate, the Antioch commission gate, the Jerusalem vouch gate. `120d617`, two hours and forty minutes later, is titled *"gate removal"*. **This report is a photograph of the last afternoon on which a quest flag could refuse a step**, which is now Invariant #1: a step is refused for exactly two reasons, off-grid or sea.
 - **Twenty Epic Battlegrounds are the report's most durable content**, and all twenty are live. Each is a dead-end node where a named person with a visible wound asks for help in their own voice: *"I'm not asking you to be a woodsman. I'm asking you to go where a woodsman can't."* Every profile, every payment, every return beat verified intact at HEAD.
@@ -159,7 +159,7 @@ Report 2 carries the header **"Still active: Yes — the battleground model and 
 
 The last row is the interesting one. The two-mode design was *probabilistic Hunt* against *guaranteed Stalk*. What shipped is a single mode: `S_story.huntMode` sets the encounter rate to **1.0 on every empty cell**, and dispatches to a function literally named `_stalkedMonsterPick`. **The guarantee shipped; the place it was supposed to be anchored to did not.** Hunt is Stalk without the battleground — the anti-search primitive with the anti-search removed.
 
-The corpus agrees independently. §DOC-02c measured the same source report and found `stalkModal` and its two DOM ids at **0 commits ever**, while §TIMELESS-01 (`7952752`, ten days after this synthesis) recorded the shipped Stalk modal as *"already never shown — legacy/dead"* and deleted the whole family. At HEAD both are tombstones: `// §TIMELESS-01: HUNTING_GROUNDS removed with the Hunt/Stalk feature.@10392` and its `_stalkedMonsterPick` twin at 38,269.
+The corpus agrees independently. §DOC-02c measured the same source report and found `stalkModal` and its two DOM ids at **0 commits ever**, while §TIMELESS-01 (`7952752`, ten days after this synthesis) recorded the shipped Stalk modal as *"already never shown — legacy/dead"* and deleted the whole family. At HEAD both are tombstones: `// §TIMELESS-01: HUNTING_GROUNDS removed with the Hunt/Stalk feature.@10405` and its `_stalkedMonsterPick` twin at 38,269.
 
 This is instrument 8 firing on a second, independent target: **a design doc cannot distinguish a shipped screen from markup that merely exists in the file.** Four stylesheet rules, a `<div>`, and three correctly-labelled buttons read exactly like a feature. Grep for what *reveals* the surface, never for the surface's own id.
 
@@ -176,7 +176,7 @@ Report 2's current-state table opens:
 
 Both rows are real measurements of the file — taken three and four weeks earlier. The coincidence is that **the first row's number is the second row's current value**: `WORLD_DB` was 66 in May, and `HUNTING_GROUNDS` is 66 in June. Two rows, two fossils, one month apart, and they cross.
 
-The `42` has a longer life than the table. It is the source report's node count *and* its terrain count (*"exactly 42 are named nodes"*, *"all 42 terrain types in `WORLD_DB` are covered"*) from a 6,330-line file on a 26×16 grid. **It is also still in the game.** Yael's Level-1 tutorial monologue — the first paragraph of instruction a new player reads — opens `known world has forty-two nodes@10397`, and the Map Shop hands over the Real Map *"all forty-two nodes"*. The world has **416**. Both strings are unchanged since the earliest surviving build, and both are already filed as **§AUDIT-03u**.
+The `42` has a longer life than the table. It is the source report's node count *and* its terrain count (*"exactly 42 are named nodes"*, *"all 42 terrain types in `WORLD_DB` are covered"*) from a 6,330-line file on a 26×16 grid. **It is also still in the game.** Yael's Level-1 tutorial monologue — the first paragraph of instruction a new player reads — opens `known world has forty-two nodes@10411`, and the Map Shop hands over the Real Map *"all forty-two nodes"*. The world has **416**. Both strings are unchanged since the earliest surviving build, and both are already filed as **§AUDIT-03u**.
 
 So the doc-side symptom and the engine-side symptom are the same fossil: **a constant that was true when it was written, in a document that outlived the world it counted.**
 
@@ -194,7 +194,7 @@ They are no longer usable, and the failure mode is loud:
 | *"`rip-and-connect` for stray node relocation"* | **HTTP 410** — *"reachability is now a terrain-field land flood"* |
 | *"The three repair tools still exist in `wbapi-server.js`"* | `fix-all-broken` **0**, `fix-bidirectional` **0**, `rip-and-connect` 410 |
 | *"The wither-pass lives in MegaReWeave Phase P7"* | `wither` **0**, `derelict` **0**, P0–P8 **0** |
-| *"Coordinates should stay well within (10–490, 10–490)"* | `const GEO_PROJ@9902` = `{ ROWS: 90, COLS: 360 }` — **row 490 does not exist** |
+| *"Coordinates should stay well within (10–490, 10–490)"* | `const GEO_PROJ@9915` = `{ ROWS: 90, COLS: 360 }` — **row 490 does not exist** |
 | *"`_enterEmptyCell` rolls `Math.random()`"* | `_seededNext()` since §VM-01-B — invariant #6 |
 
 The 500×500 row is the one that would actively mislead. The report's own world occupied rows 10–188 and columns 207–230 — a 179×24 sliver of a 250,000-cell grid — and the advice to leave headroom to row 490 is now a coordinate that cannot be represented.
@@ -210,7 +210,7 @@ Report 13's node codes fail the same way, and the §DOC-02d/§AUDIT-03m lesson a
 - **`IMPASSABLE_CELLS` is a Set, not a node.** Blocking a cell means adding its `"r,c"` string. Never a node with `battle:null` — and never quest state, which is Invariant #1.
 - **Terrain inference by majority vote of named neighbours** (`§CELL-04`) is the fallback for empty ground and drives encounter rate and monster pool. It is not authoritative for content: authored content is a `NODE_MAP` entry.
 - **`road`/`junction` encounter rate 0 is intentional.** Roads are safe passage; wilds are not. Preserved at HEAD.
-- **The five-part Epic Battleground pattern is canonical**: a named person with a visible wound → an honest warning → a payment → one deadly-tier boss → a return beat. All 20 live. The moral holds — *the NPC tells you the risk accurately, and paying more does not make it safer.* One correction to the spec: the negotiation is a real CHA DC 17 check, but `const canNegotiate@30270` is `paymentCeiling > paymentFloor`, and **16 of 20 contracts have ceiling == floor**, so the button renders at four battlegrounds (→ **§EPIC-03**).
+- **The five-part Epic Battleground pattern is canonical**: a named person with a visible wound → an honest warning → a payment → one deadly-tier boss → a return beat. All 20 live. The moral holds — *the NPC tells you the risk accurately, and paying more does not make it safer.* One correction to the spec: the negotiation is a real CHA DC 17 check, but `const canNegotiate@30426` is `paymentCeiling > paymentFloor`, and **16 of 20 contracts have ceiling == floor**, so the button renders at four battlegrounds (→ **§EPIC-03**).
 - **Reachability is the map contract, and the tool changed.** `./api.sh reachability` (BFS from `LHR`) is the authority. The report's `GET /api/…` curl forms are historical; author through `./api.sh` (CONTRIBUTING Hazard #7).
 - **The three arc templates are live and still the right models** — §SPARK (5-step friendship chain to a mechanical payoff), §WHODUNIT (evidence accumulation at one place), §ALCHEMY (escort along the existing graph, no new nodes). Read them by name, not by node code.
 - **RETIRED — do not run:** MegaReWeave, `rip-and-connect`, `fix-all-broken`, `fix-bidirectional`, the wither and derelict passes, and any coordinate advice framed against a 500×500 grid.
@@ -237,13 +237,13 @@ Report 13's node codes fail the same way, and the §DOC-02d/§AUDIT-03m lesson a
 | 14 | `_enterEmptyCell` dispatches on `huntMode` | ✅ exact, incl. both function names | — |
 | 15 | `TERRAIN_ENCOUNTER_RATE` road/junction 0, wilds .15–.35 | ✅ exact | 7/7 wilderness terrains in band |
 | 16 | EB "5-field NPC profile" | ⚠️ **13 fields**; the five named are the first five | prose says "…", table says "5 fields each" |
-| 17 | EB negotiation floor/ceiling on each | ⚠️ **4 of 20**; 16 have ceiling == floor | `const canNegotiate@30270` → §EPIC-03 |
+| 17 | EB negotiation floor/ceiling on each | ⚠️ **4 of 20**; 16 have ceiling == floor | `const canNegotiate@30426` → §EPIC-03 |
 | 18 | Flashbang "enforced in `_sboLog()` @22,880" | ⚠️ **line exact, wrong function** | guard is in `_storyUseFlashbang` |
 | 19 | Report 13's "nine new nodes" (7 named) | ❌ **5 of 7 codes never existed**; content shipped elsewhere | Saltwick=`MME`, Dunfall=`DNF`, Bilge=`MS` |
 | 20 | "Ben Barleigh" | ❌ **0 occurrences, ever** | — |
 | 21 | MegaReWeave / repair toolchain | ⚠️ **accurate then, RETIRED now** | `reweave-all` + `rip-and-connect` → **410** |
 | 22 | `--no-wither` flag | ✅ **real at the reference commit** | `emit('[p7] skipped (--no-wither)')` |
-| 23 | 500×500 grid, "stay within 10–490" | ⚠️ **true then; now `{ROWS:90, COLS:360}`** | `const GEO_PROJ@9902` |
+| 23 | 500×500 grid, "stay within 10–490" | ⚠️ **true then; now `{ROWS:90, COLS:360}`** | `const GEO_PROJ@9915` |
 | 24 | "35+ Playwright tests in navigation.test.js" | ✅ **39** | — |
 | 25 | Movement gates in `cellMove` | ❌ **NOT MEASURED** — the mover consulted quest state | removed by `120d617`, +2 h 40 m |
 | 26 | `E`/`W` orphan `NODE_COORDS` keys | ❌ **NOT MEASURED** — live for 6 h 52 m | born `30f18b4`, died `120d617` |

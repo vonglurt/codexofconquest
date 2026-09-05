@@ -59,7 +59,7 @@ three things a player feels directly:
   (`` `src/js/mover.js:function moverMove(world, pos, dir)@44` ``) and timeless (§TIMELESS-01). Quartering the
   cell quadruples the keypresses between any two places without adding a single new place to visit.
 - **How dangerous the road is.** Each step on an unnamed cell rolls against the terrain's base rate
-  (`` `function _enterEmptyCell(r, c)@28422` ``, `` `midlands:0.15@9893` ``). Four times the steps is four
+  (`` `function _enterEmptyCell(r, c)@28575` ``, `` `midlands:0.15@9906` ``). Four times the steps is four
   times the encounters over the same journey — a combat-density change disguised as a coordinate change.
 - **Whether two real places feel like two places.** This is the honest half of the ask. London and its
   four neighbours genuinely occupy distinct ground; the 1° grid says otherwise.
@@ -123,14 +123,14 @@ beside them.
 - Content bbox **72 rows × 96 cols = 6,912 cells** at 1° → **288 × 384 = 110,592 at 0.25° (16×)**. Both
   figures still exact: HEAD's nodes span rows 2–73, cols 154–249.
 - **~4× the steps** along each axis, and therefore ~4× the per-step encounter rolls unless every rate in
-  `` `midlands:0.15@9893` `` is rescaled.
+  `` `midlands:0.15@9906` `` is rescaled.
 - Touches the whole locked coordinate system: the geo-seed projection
-  (`` `src/js/wbapi-server.js:row(lat) = clamp(floor(LAT_N - lat), 0, ROWS-1)@7804` ``), the grid constants
-  (`` `const GEO_PROJ = { ROWS: 90, COLS: 360 }@9902` ``), `` `const CELL_GRID = (() => {@9852` `` and its
-  read sites, and a regeneration of `` `const SEA_RUNS = {0:@9867` `` (4,790 sea cells in 286 runs) plus a
-  re-carve of all 59 `` `const SEA_LANES = new Set(@9870` `` — which at 4× width would pinch to sub-cell.
+  (`` `src/js/wbapi-server.js:row(lat) = clamp(floor(LAT_N - lat), 0, ROWS-1)@7816` ``), the grid constants
+  (`` `const GEO_PROJ = { ROWS: 90, COLS: 360 }@9915` ``), `` `const CELL_GRID = (() => {@9865` `` and its
+  read sites, and a regeneration of `` `const SEA_RUNS = {0:@9880` `` (4,790 sea cells in 286 runs) plus a
+  re-carve of all 59 `` `const SEA_LANES = new Set(@9883` `` — which at 4× width would pinch to sub-cell.
 
-> **The cost has since gone up, not down.** §NAV-01b later laid `` `const ROAD_CELLS = (() => {@9884` `` —
+> **The cost has since gone up, not down.** §NAV-01b later laid `` `const ROAD_CELLS = (() => {@9897` `` —
 > **410 road cells and 89 junctions across all 244 settlement cells** — which would also need a full
 > re-lay. Every week Option A holds, Option B gets more expensive.
 
@@ -185,11 +185,11 @@ dependency.
 > **one commit — `ebf88c8`, the commit that added this file.** The phrase appears nowhere in any engine,
 > at any point in the repository's history. `destCodes[1]` has never been read by anything, ever.
 >
-> The locale list is real: `` `const CELL_GRID = (() => {@9852` `` maps `"r,c"` to an **array**, and its
+> The locale list is real: `` `const CELL_GRID = (() => {@9865` `` maps `"r,c"` to an **array**, and its
 > own comment states the contract — *"`primaryOf = list[0]` is the node you arrive at, the rest are
-> intra-cell sub-locations"* (`` `primaryOf = list[0]@9850` ``). But the single-player client reads only
-> the head of that array: `` `const destCode = res.destCodes[0]@28357` ``, on this report's own tree as
-> well as at HEAD. `` `const cellCodes  = (key) => CELL_GRID[key]@9862` `` — the full list — had exactly
+> intra-cell sub-locations"* (`` `primaryOf = list[0]@9863` ``). But the single-player client reads only
+> the head of that array: `` `const destCode = res.destCodes[0]@28505` ``, on this report's own tree as
+> well as at HEAD. `` `const cellCodes  = (key) => CELL_GRID[key]@9875` `` — the full list — had exactly
 > **one** consumer on 2026-06-26, the mover kernel that computes `destCodes` and hands back a list nobody
 > unpacks. Its first real reader, the MUD room describer, shipped **five days later** (§NAV-01c,
 > `3568fcc`), and it describes rooms on the server; it does not let a browser player stand anywhere new.
@@ -223,7 +223,7 @@ dependency.
 - **§DX-02cb 🟢 NEW — the geo gazetteer has drifted 7 nodes behind `NODE_MAP`, and geo-seed says so only
   in a field nobody reads.** `DNF`, `TGS`, `SPB`, `KMS`, `ZVD`, `FBR`, `TVR` (§CELL-14-FU and the §KG
   Russia corridor) have live `NODE_COORDS` but **no resolvable lat/lon in any source** — not `GEO2`, not
-  `realPlaces`, not `anchors`, and no chain. `` `src/js/wbapi-server.js:if (!ll) { skipped.push(code)@7909` ``
+  `realPlaces`, not `anchors`, and no chain. `` `src/js/wbapi-server.js:if (!ll) { skipped.push(code)@7921` ``
   drops each into a `skipped` array returned in the dry-run JSON; nothing fails, warns or counts. Because
   the apply path merges rather than clears, those seven keep their coordinates — so the world is fine and
   the *derivation* is not: **the projection can no longer be re-derived for 409 of 416 nodes and no gate

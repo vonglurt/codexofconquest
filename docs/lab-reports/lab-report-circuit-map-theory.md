@@ -66,13 +66,13 @@ Five measurements, all reproducible (`play.html`, 38,707 lines, coc-3.104.0):
 
 | Claim | Status at HEAD | Anchor |
 |---|---|---|
-| `NODE_MAP` flat, keyed by code; `name` is the terrain key; content fields `npc`/`battle`/`loot`/`sleep` | **exact** | `const NODE_MAP@8425` |
-| `NODE_COORDS` maps every node code to `{r, c}` | **exact shape**, different grid — see delta 8 | `const NODE_COORDS@9421` |
-| `WORLD_DB` terrain table drives the corridor monster pool | **live**; still the encounter pool, reached from terrain not corridor | `const WORLD_DB@6279` |
-| `_weightedMonsterPick(terrain)` — tier-weighted pool draw | **live**, signature intact; body now notoriety-scaled + seeded | `function _weightedMonsterPick@38220` |
-| `_setActivePath(fromCode, toCode, dir)` | **live** — the last surviving line of the runtime layer, see §IV-B | `function _setActivePath@38183` |
-| `S_story.lastExitCode` / `lastExitDir`; the `mc-exit-active` gold exit arrow | **live**, still wired exactly as §IX describes | `mc-exit-active@36702` |
-| Battle pipeline `loadWorldMonster` → `pendingBattle` → `#story-prebatt-overlay` → `storyApplyOutcome` → `btn-outcome-win` | **live** | `function _startStoryBattle@38242` |
+| `NODE_MAP` flat, keyed by code; `name` is the terrain key; content fields `npc`/`battle`/`loot`/`sleep` | **exact** | `const NODE_MAP@8437` |
+| `NODE_COORDS` maps every node code to `{r, c}` | **exact shape**, different grid — see delta 8 | `const NODE_COORDS@9434` |
+| `WORLD_DB` terrain table drives the corridor monster pool | **live**; still the encounter pool, reached from terrain not corridor | `const WORLD_DB@6280` |
+| `_weightedMonsterPick(terrain)` — tier-weighted pool draw | **live**, signature intact; body now notoriety-scaled + seeded | `function _weightedMonsterPick@38433` |
+| `_setActivePath(fromCode, toCode, dir)` | **live** — the last surviving line of the runtime layer, see §IV-B | `function _setActivePath@38396` |
+| `S_story.lastExitCode` / `lastExitDir`; the `mc-exit-active` gold exit arrow | **live**, still wired exactly as §IX describes | `mc-exit-active@36911` |
+| Battle pipeline `loadWorldMonster` → `pendingBattle` → `#story-prebatt-overlay` → `storyApplyOutcome` → `btn-outcome-win` | **live** | `function _startStoryBattle@38455` |
 | `storyRender`, `_renderPreBatt`, `_renderMapGrid`, `refreshLeftPanel`, `storyCheckMissedSleep` | **live** | — |
 | `S_story.quests` key→status map; `.log`; `.currentCode`; `.hp`/`.hpMax` | **live** | — |
 | `mc-current` map cursor class | **live** | — |
@@ -88,7 +88,7 @@ Twelve deltas. Each is **NOT SHIPPED** (never existed), **RETIRED** (shipped, la
 
 | # | Report claim | Outcome | Measured |
 |---|---|---|---|
-| 1 | **The corridor mesh** — `CORRIDOR_CELLS`, `CORRIDOR_TERRAIN`, `WIRE_GLYPH`, `buildCorridorMap()`, `_routeSegments()`, `_wireGlyph()`, `_corridorTerrain()` | **RETIRED — all 7** | Present and correct at `32c10c5`; `grep -c` = **0** at HEAD. Deleted by **§CELL-11A** (`85cc43e`, 2026-06-14, *"remove corridor dead code"*). Superseded by the §WALK/§NAV-01 geo grid + `const ROAD_RUNS@9883`. |
+| 1 | **The corridor mesh** — `CORRIDOR_CELLS`, `CORRIDOR_TERRAIN`, `WIRE_GLYPH`, `buildCorridorMap()`, `_routeSegments()`, `_wireGlyph()`, `_corridorTerrain()` | **RETIRED — all 7** | Present and correct at `32c10c5`; `grep -c` = **0** at HEAD. Deleted by **§CELL-11A** (`85cc43e`, 2026-06-14, *"remove corridor dead code"*). Superseded by the §WALK/§NAV-01 geo grid + `const ROAD_RUNS@9896`. |
 | 2 | **The Hunt/Warp dialog** — `#story-corridor-overlay` fires whenever Manhattan distance ≥ 2; player picks Warp or Hunt | **RETIRED, and never functional — see §III-A** | The markup, CSS and all three buttons shipped verbatim. **No code ever showed it.** |
 | 3 | **`corridor-from` · `corridor-to` · `corridor-terrain` DOM writes** (§VII Trace A) | **NOT SHIPPED as named** | Shipped ids are `corridor-from-name`, `corridor-to-name`, `corridor-terrain-name`. The report drops the suffix on all three. |
 | 4 | **`corridor-quest-count` · `corridor-pct`** DOM writes | **NOT SHIPPED** | `git log -S` returns **0 commits ever** for both. The shipped card has one readout, `corridor-encounter-rate`. |
@@ -97,7 +97,7 @@ Twelve deltas. Each is **NOT SHIPPED** (never existed), **RETIRED** (shipped, la
 | 7 | **`pendingBattle` shape** `{nodeCode:'_corridor', name, label:'Corridor — midlands', isCorridor:true}` | **NOT SHIPPED — 3 of 4 fields** | Shipped: `{nodeCode: destCode, name: pick.name, label: destNode.label, corridor: true}`. `isCorridor` and the `'_corridor'` sentinel have **0 commits ever**. The real path also sets `S_story.surpriseAdvantage`, which the report does not mention. |
 | 8 | **The grid** — 16 rows × 26 columns = 416 cells, **42 named nodes**, ~90% sparsity | **CHANGED, all three** | A **90×360** geo grid (equirectangular, sea-masked) with a 15×21 window (§NAV-01e), and **416 nodes** — *the world now has as many named places as the original grid had cells.* The "42" was already stale at `32c10c5` three days later: **67** nodes. |
 | 9 | **Junction nodes `J1`–`J7`** with `junction:true`; "named, traversable, no services" | **RETIRED, then made a CI failure** | All 7 shipped exactly as specified, `J1` included (`num:43`, `label:'Midlands Road Fork'`, all content fields `null`). Purged by **§CELL-05** (`6dea804`, *"abolish junction nodes"*) and **§CELL-14** (`30f18b4`). **0** carry `junction:true` at HEAD; the two later strays (J14/J15) failed `check:invariants` I1/I2 and the tool that minted them is deprecated and refused (§DX-01d). |
-| 10 | **Warp mode** — "instant teleport to destination", encounter 0% | **RETIRED, then forbidden** | Hard invariant #3 is now **"No jump travel, ever"**, stated in source: `no jump travel. checkpointNode@26050`. Warp is not merely removed — it is a **banned design**. *(It also never was a choice: see delta 11.)* |
+| 10 | **Warp mode** — "instant teleport to destination", encounter 0% | **RETIRED, then forbidden** | Hard invariant #3 is now **"No jump travel, ever"**, stated in source: `no jump travel. checkpointNode@26181`. Warp is not merely removed — it is a **banned design**. *(It also never was a choice: see delta 11.)* |
 | 11 | **Travel mode is chosen per leg**, in the dialog, against the alternative | **NOT SHIPPED** | The shipped `storyCorridorTravel` branches on the *persistent* `S_story.huntMode` toggle and emits a `storyMsg` either way. There was no per-leg choice, no cancel, and no moment at which the two modes were offered side by side. **The report's central mechanic — "the choice is the mechanic" (§VII-B) — is the one thing the layer never implemented.** |
 | 12 | **`Math.random()`** drives the encounter roll and the monster pick; **`node.portal`** short-circuits corridor routing; **`storyMove(dir)`** intercepts non-adjacent destinations | **CHANGED / RETIRED** | Both draws moved to the seeded stream `_seededNext()` (§VM-01-B, now hard invariant #6). `portal` was removed by §CELL-13 — the 3 remaining hits are tombstone comments. `storyMove` = **0**; movement is `cellMove` over the `MOVER:CORE` kernel. |
 
@@ -175,7 +175,7 @@ function _setActivePath(fromCode, toCode, dir) {   // @38195
 }
 ```
 
-Its only consumer is the map overlay's gold exit arrow (`mc-exit-active@36702`) — the last item in
+Its only consumer is the map overlay's gold exit arrow (`mc-exit-active@36911`) — the last item in
 the report's own §IX runtime diagram, and the only one still running. The parameter `toCode` is now
 unused: a **dead parameter** left by the amputation, and a minor member of the §DX-02n dead-code
 family.
@@ -224,20 +224,20 @@ Two program corrections follow:
 1. **§AUDIT-03x — 172 of 416 nodes can never be arrived at, blocking 774 quests.** Traced from this
    report's §VIII Step 2 rule, *"no two nodes should share the same (r, c)."* That rule was
    **deliberately retired** by §WALK-1.5, which merged 1°-collided cities into shared **locales**:
-   `const CELL_GRID@9852` maps each cell to an *array* of codes, `list[0]` being "the node you
+   `const CELL_GRID@9865` maps each cell to an *array* of codes, `list[0]` being "the node you
    arrive at" and the rest "intra-cell sub-locations." Measured: **416 nodes occupy 244 cells**, so
    **172 are non-primary** (worst cell `32,203` holds **17**). `S_story.currentCode` is assigned at
-   exactly two sites — `S_story.currentCode = destCode@28375`, where `destCode = res.destCodes[0]`,
-   and the respawn line `checkpointNode || 'LHR'@26011` — so **a non-primary code can never become
+   exactly two sites — `S_story.currentCode = destCode@28525`, where `destCode = res.destCodes[0]`,
+   and the respawn line `checkpointNode || 'LHR'@26142` — so **a non-primary code can never become
    `currentCode`**, and its `text`/`npc`/`battle`/`loot`/`sleep` never render. Because
-   `_uqfActivateAtNode(node, indexFresh)@30139` keys on `node.code`, **1,260 quests carry an `activateNode` on a
+   `_uqfActivateAtNode(node, indexFresh)@30293` keys on `node.code`, **1,260 quests carry an `activateNode` on a
    non-primary node; 486 are already held by the §AUDIT-03e guard, leaving 774 across 135 nodes that
    would activate on arrival and cannot.** Affected nodes include `BK` (89 quests, sharing a cell
    with the starting node `LHR`), `WM` (312, behind `ERF`) and `HCA` (behind `WG0`). The waypoint
    system already knows — `storyWaypoint`/`_travelTick` accept arrival **by cell** precisely because
    "co-located locale nodes share a cell" — so the player is told *"You have reached the waypoint:
    \<label\>"* for a node the engine then declines to render. The MUD path is honest about it
-   (`locales share this ground@10207`); the browser path is not. **Design call:** aggregate
+   (`locales share this ground@10220`); the browser path is not. **Design call:** aggregate
    sub-location quests into the primary's arrival, or give the primary a surface for entering its
    locale siblings. Overlaps §AUDIT-03d — that row's staging decision should be made knowing 774 of
    its quests are unreachable for a second, independent reason.

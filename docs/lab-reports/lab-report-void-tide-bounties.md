@@ -26,9 +26,9 @@ legible to the soft-lock prover. The mechanism was replaced; the reasoning that 
 
 ## 1. Problem and motivation
 
-`const VOID_TIDE_EVENTS@22366` is a table of seven day-keyed dread beats (days 3, 7, 14, 21, 28, 35,
-42) fired on sleep by `function storyCheckVoidTide()@36349`, reached from
-`function storyConfirmSleep()@36235`. Beat **#21** narrates a Warrant bounty the engine never
+`const VOID_TIDE_EVENTS@22396` is a table of seven day-keyed dread beats (days 3, 7, 14, 21, 28, 35,
+42) fired on sleep by `function storyCheckVoidTide()@36539`, reached from
+`function storyConfirmSleep()@36425`. Beat **#21** narrates a Warrant bounty the engine never
 modelled:
 
 > *"A Void Walker was spotted north of Visby. It moved through a stone wall without slowing. The
@@ -62,14 +62,14 @@ absent mechanic, written by the world about itself. FU8's job is to make it coll
 
 | name | kind | anchor (HEAD) | purpose |
 |---|---|---|---|
-| `VOID_TIDE_FEATURED` | const map, tideDay → `{quest, standing, rumor}` | `const VOID_TIDE_FEATURED@37095` | the featured roster, per-quest standing bonus, dread hook |
-| `VOID_FEATURED_IDS` | derived `Set` | `const VOID_FEATURED_IDS@37100` | ids excluded from the normal rotation pool |
-| `quest_void_tide_21/35/42` | 3 UQF `combat` quests | `quest_void_tide_21@21311` · `quest_void_tide_35@21314` · `quest_void_tide_42@21317` | the completable featured bounties |
-| `_bountyPostable(q,node)` | pure predicate | `function _bountyPostable(q, node)@37140` | shared legality gate; deliberately excludes the FU7 reward ceiling |
-| `_voidFeatured(node)` | pure selector | `function _voidFeatured(node)@37154` | the active featured bounty, or `null` |
-| `_voidBonus(id)` | pure lookup | `function _voidBonus(id)@37102` | escalated standing for a Void bounty, else 1 |
+| `VOID_TIDE_FEATURED` | const map, tideDay → `{quest, standing, rumor}` | `const VOID_TIDE_FEATURED@37307` | the featured roster, per-quest standing bonus, dread hook |
+| `VOID_FEATURED_IDS` | derived `Set` | `const VOID_FEATURED_IDS@37312` | ids excluded from the normal rotation pool |
+| `quest_void_tide_21/35/42` | 3 UQF `combat` quests | `quest_void_tide_21@21336` · `quest_void_tide_35@21339` · `quest_void_tide_42@21342` | the completable featured bounties |
+| `_bountyPostable(q,node)` | pure predicate | `function _bountyPostable(q, node)@37352` | shared legality gate; deliberately excludes the FU7 reward ceiling |
+| `_voidFeatured(node)` | pure selector | `function _voidFeatured(node)@37366` | the active featured bounty, or `null` |
+| `_voidBonus(id)` | pure lookup | `function _voidBonus(id)@37314` | escalated standing for a Void bounty, else 1 |
 
-**No new `S_story` field.** FU7's `warrantStanding: 0, warrantAccepted: {}@23082` already carries the
+**No new `S_story` field.** FU7's `warrantStanding: 0, warrantAccepted: {}@23113` already carries the
 reputation state; the escalated bonus is derived from the const table at credit time. **Verified:**
 the shipped diff adds no state field, and the two fields sit on one source line.
 
@@ -85,12 +85,12 @@ Each hunt carries a **disjoint, continuous** day window covering 21→49.
 | 35 | `35 ≤ d < 42` | `activateCond` closure | `gate:{ dayMin:35, dayMax:42 }` |
 | 42 | `d ≥ 42` | `activateCond` closure | `gate:{ dayMin:42 }` |
 
-`dayMax` is **exclusive** — `if (g.dayMax != null && d >= g.dayMax) return false;@22095` in
-`function _matchActivationLeaf(g, st)@22046` — so the migration is behaviour-preserving to the day.
+`dayMax` is **exclusive** — `if (g.dayMax != null && d >= g.dayMax) return false;@22120` in
+`function _matchActivationLeaf(g, st)@22071` — so the migration is behaviour-preserving to the day.
 
 The architectural claim is unchanged by the migration: **one** source of truth is consulted by
 **both** places that ask *is this quest available* — the arrival guard inside
-`function storyCheckQuests(node, indexFresh)@30181`, and `_bountyPostable`. What falls out for free:
+`function storyCheckQuests(node, indexFresh)@30322`, and `_bountyPostable`. What falls out for free:
 
 - **Missable.** Once the day crosses 35, the day-21 hunt is neither pinnable nor organically
   activatable. Unless it was already accepted — a taken bounty lives in `S_story.quests` and finishes
@@ -116,9 +116,9 @@ entry is `_bountyPostable`, and it returns the first that is.
 Every cell above was re-measured against the shipped `QUEST_DB` entries and `NODE_MAP` labels: **the
 table is exact.** Threat climbs by DC and by fiction (a drifting Walker → a thing learning that the
 signal fire is only a fire → an outrider who holds a ford the way the tide holds it). Reward climbs
-two honest ways: the quest's own `reward` XP bit, read by the existing `function _boardReward@37044`
+two honest ways: the quest's own `reward` XP bit, read by the existing `function _boardReward@37256`
 path (never fake gold, per FU1), and the escalated standing applied at
-`function _creditWarrant(id)@37108`. Standing is host bookkeeping, not an economy change.
+`function _creditWarrant(id)@37320`. Standing is host bookkeeping, not an economy change.
 
 **Reconciliation with the FU7 reward ceiling** (a deliberate refinement of design call #2, flagged
 for veto at lock time and never vetoed). The option text mused that deep-tide rewards should top the
@@ -127,7 +127,7 @@ ceiling so only high-standing players see them. Taken literally alongside call #
 hunt *and* it would then expire — unreachable forever, for exactly the players who most need
 standing. Resolution: **the pin bypasses the ceiling.** Escalation is delivered by threat and
 standing, not by hiding the card. Verified in the browser at HEAD: at standing 0 the tier is
-*Unknown* (`rewardCap: 250@37066`, slate 4) and the day-42 pin still renders **⭐320 xp** as a fifth
+*Unknown* (`rewardCap: 250@37278`, slate 4) and the day-42 pin still renders **⭐320 xp** as a fifth
 row. The bypass works, and because Void hunts are excluded from the pool, 320 never pollutes the FU7
 ceiling tests either.
 
@@ -135,11 +135,11 @@ ceiling tests either.
 
 ## 6. Selection and render wiring
 
-- `function _boardBounties(node, limit)@37174`: (a) the loop's legality checks were factored into
-  `_bountyPostable`; (b) one skip added — `if (VOID_FEATURED_IDS.has(q.id)) continue;@37182`; (c)
-  after distance labelling, `const vf = _voidFeatured(node);@37208` and `shown.unshift(vf);@37212`.
+- `function _boardBounties(node, limit)@37386`: (a) the loop's legality checks were factored into
+  `_bountyPostable`; (b) one skip added — `if (VOID_FEATURED_IDS.has(q.id)) continue;@37394`; (c)
+  after distance labelling, `const vf = _voidFeatured(node);@37420` and `shown.unshift(vf);@37424`.
   The pin is an **extra** row, unshifted past the slate slice, always first. Pure and read-only.
-- Render, at `lbl: b.void ?@35698` inside `function storyRender(node, prefix)@34565`: the card
+- Render, at `lbl: b.void ?@35915` inside `function storyRender(node, prefix)@34816`: the card
   branches on `b.void` — label `⚠️ VOID` (else `BOUNTY`), a `⚠️ ` prefix on the main line, a
   `· 🗡️+N standing` tail on the sub-line, button `Hunt it` (else `Take`), and the roster's `rumor`
   as the hint.
@@ -170,7 +170,7 @@ That trailing *"Yet."* is the whole increment in one word.
 | No jump travel — accepting sets a waypoint, never moves the player | ✅ held, asserted by test |
 | `unlock` never activates out of sequence — `_bountyPostable` still calls `canActivate` | ✅ held |
 | No new game-state `Math.random()` — the pin is a pure function of `S_story.day` and a const table | ✅ held, zero added |
-| Data-driven, no per-node `if` — the pin rides the node-flag path via `function _boardHost(node)@37029` | ✅ held |
+| Data-driven, no per-node `if` — the pin rides the node-flag path via `function _boardHost(node)@37241` | ✅ held |
 | Pure selection — `_boardBounties`/`_voidFeatured` mutate no `S_story` | ✅ held, asserted by test |
 | **Host/Script Separation — "fully in-grammar, no bespoke path"** (design call #1) | ❌ **VIOLATED at ship.** See §10.1 |
 
@@ -275,7 +275,7 @@ finishable. Its silence about them was **indistinguishable from a proof**. After
 ### 10.3 `retryGateDays: 0` is inert
 
 All three hunts carry `retryable:true, retryGateDays:0` — the author's notation for *no cooldown*.
-The single consumer is `S_story.day < att.lastDay + (q.retryGateDays || 1)@6813`, and `0` is falsy,
+The single consumer is `S_story.day < att.lastDay + (q.retryGateDays || 1)@6822`, and `0` is falsy,
 so the coercion yields the **one-day default**. Measured at HEAD: after a forced failure on day 42
 the retry is blocked the same day and unblocked on day 43. **42 `QUEST_DB` entries carry
 `retryGateDays: 0` and every one of them is inert.** Filed as **§DX-02ee**.
@@ -283,16 +283,16 @@ the retry is blocked the same day and unblocked on day 43. **42 `QUEST_DB` entri
 > **✅ CLOSED 2026-08-26 by §DX-02ee, call (b).** All 42 zeros were deleted through `./bin/api put quest <id> retryGateDays=null`, and the `|| 1` coercion was kept, so the field now carries exactly one meaning and the data says what the engine does. The three Void-tide hunts still take the one-day gate — **the behaviour above is unchanged, and it is now written down**. Removing them exposed a second defect on the write path: `=null` cleared **quoted** values only, so a numeric or boolean field was refused as *not found* — `src/js/wbapi-core.js:function removeStringField@437` gained an unquoted-scalar pass. Pinned by `src/tests/integration/dx02ee-scalar-field-clear.test.js` 8/8.
 
 *The accident is a better threat model than the design.* Because the clock advances at exactly one
-site — `S_story.day = Math.min(49, S_story.day + 1)@36261`, inside `storyConfirmSleep` — a retry
+site — `S_story.day = Math.min(49, S_story.day + 1)@36451`, inside `storyConfirmSleep` — a retry
 costs one sleep, and a sleep costs one day of the window. Failing the day-42 hunt costs a seventh of
 the time left to pass it. The lock promised escalation through danger and got it through arithmetic.
 
 ### 10.4 What a failed hunt actually costs
 
 Measured at HEAD on the day-42 hunt: HP, gold, day and standing are all unchanged, the quest stays
-`active`, and `onFail` is empty. The only movement is §XP-01 effort XP — `const EFFORT_XP_PCT@24430`
+`active`, and `onFail` is empty. The only movement is §XP-01 effort XP — `const EFFORT_XP_PCT@24490`
 = 0.25 of the pass reward, paid **once per quest** (80 of the 320; a second failure pays nothing).
-The measured delta was 90, of which the remaining 10 is `const EXPLORE_XP@24439` for first arrival at
+The measured delta was 90, of which the remaining 10 is `const EXPLORE_XP@24499` for first arrival at
 the node. Design call #2's word *"lethal"* is fiction, not mechanics: nothing about a failed hunt is
 lethal, and the report should not have used the word.
 
@@ -303,7 +303,7 @@ lethal, and the report should not have used the word.
   §DX-02dz "bytes-that-are-characters" hazard's **earliest** known instance and the first found in a
   commit message rather than a report. `node --check` at 0 errors reproduces exactly.
 - **The engine comment this increment shipped carries a line number that was wrong the day it was
-  written.** `beats at 21821@37089` points at `VOID_TIDE_EVENTS`, which sits at **21822** in the very
+  written.** `beats at 21821@37301` points at `VOID_TIDE_EVENTS`, which sits at **21822** in the very
   build that comment shipped in, and at **22368** today. Nothing can catch it: the anchor gate walks
   `*.md` only (`src/scripts/resolve-anchors.js:65`). Filed as **§DX-02ef**.
 - **Three parity fences, not four.** §9's *"0 kernel sentinels (`MOVER`/`ROOMS`/`DUEL:CORE`
@@ -330,7 +330,7 @@ and the new one is at the top with a warning label and a button that says *Hunt 
 board, which is the only way a clock in an RPG becomes a threat rather than a countdown.
 
 The fit is better than the lock knew. The day badge has turned amber at day 35 and red at day 42
-since the initial commit — `dayEl.className@36096` — so FU8's second and third windows open on
+since the initial commit — `dayEl.className@36281` — so FU8's second and third windows open on
 exactly the days the HUD already changed colour. The player was being told the tide was rising two
 months before there was anything to do about it.
 

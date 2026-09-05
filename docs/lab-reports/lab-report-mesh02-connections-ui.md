@@ -84,14 +84,14 @@ POST /api/mesh/connect      {addr:'host:port'} | {tracker:'http(s)://…'} — d
 GET  /api/session/chat      ?limit=1..200 (default 100), optional &r=&c= cell filter
 ```
 
-- `src/js/wbapi-server.js:if (parts[0] === 'mesh' && parts[1] === 'acl'@2978` — the GET reply is
+- `src/js/wbapi-server.js:if (parts[0] === 'mesh' && parts[1] === 'acl'@2990` — the GET reply is
   rebuilt from a whitelist of keys, so `'//'`-comment keys are stripped on the way out and
   **preserved in the file** on the way in (merge-write).
 - PUT validation: mode ∈ {open, allowlist}; lists are arrays of ≤200 non-empty strings
-  (`src/js/wbapi-server.js:ab[k].length <= 200@3006`), trimmed and deduped through a `Set`;
+  (`src/js/wbapi-server.js:ab[k].length <= 200@3018`), trimmed and deduped through a `Set`;
   `shareBlocklist` boolean. The write bumps the file mtime and `getAcl()` hot-reloads on the
   next mesh packet — **no restart between an edit and its effect**.
-- `src/js/wbapi-server.js:return json(res, 403, { ok: false, reason: 'not-shared' });@3019` — the
+- `src/js/wbapi-server.js:return json(res, 403, { ok: false, reason: 'not-shared' });@3031` — the
   D3 gate, and the exact string the client renders as *"does not share its blocklist."*
 - `src/js/mesh.js:function aclAllows({ serverId, ip, worldHash }) {@63` — blocks are checked
   first and beat an allowlist match. **`shareBlocklist` occurs zero times in `src/js/mesh.js`**:
@@ -99,27 +99,27 @@ GET  /api/session/chat      ?limit=1..200 (default 100), optional &r=&c= cell fi
 - Footprints (j): `src/js/wbapi-server.js:const FOOTPRINT_TTL = 30 * 60 * 1000, FOOTPRINT_PER_CELL = 8;@175`,
   written by `src/js/wbapi-server.js:function recordFootprint(pid, name, r, c) {@177` from
   `session/move` and `session/pos`, served by
-  `src/js/wbapi-server.js:footprints: footprintsAt(s.r, s.c),@8698` — one entry per player per
+  `src/js/wbapi-server.js:footprints: footprintsAt(s.r, s.c),@8710` — one entry per player per
   cell, a re-pass refreshing the ts.
 
 ### B. Client surface (`play.html`)
 
-- Shell: `<div id="map-subtab-bar">@4585` + `function msubSwitch(id) {@36621`, which is a
+- Shell: `<div id="map-subtab-bar">@4582` + `function msubSwitch(id) {@36821`, which is a
   pure pane toggle plus one `on-open` hook per pane. 25 test hooks are exported at
-  `window.__mesh02 = Object.assign@38349`.
-- Connect: status card from `/api/manifest`, reusing `async function mpResolveMagnet(ui) {@29364`
+  `window.__mesh02 = Object.assign@38562`.
+- Connect: status card from `/api/manifest`, reusing `async function mpResolveMagnet(ui) {@29517`
   — the one resolver, parameterised by container ids, shared with the modal and Discover.
-- Discover: `async function _mdProbeManifest(base, ms) {@29505` fired in parallel across
-  `const _MD_SCAN_PORTS = [1360, 1380];@29514`; list parsing in
-  `function mpParseServerList(text) {@29479`; D4 gate in `function _mdHostApproved(url) {@29534`.
-- Lists: `const _ML_ACL_LISTS = ['blockServerIds'@29641` drives six textareas; the D2 flow is
-  fetch → preview → `function mlPeerMerge() {@29745`, which is unreachable except from the
+- Discover: `async function _mdProbeManifest(base, ms) {@29658` fired in parallel across
+  `const _MD_SCAN_PORTS = [1360, 1380];@29667`; list parsing in
+  `function mpParseServerList(text) {@29632`; D4 gate in `function _mdHostApproved(url) {@29687`.
+- Lists: `const _ML_ACL_LISTS = ['blockServerIds'@29794` drives six textareas; the D2 flow is
+  fetch → preview → `function mlPeerMerge() {@29898`, which is unreachable except from the
   button the preview renders.
 - Enforcement is two lines, and they are the reason the blacklist feels absolute:
-  `rows = rows.filter(s => !_mpBlacklisted(s));@29350` on every rendered server list, and
-  `if (_mpBlacklisted(addr))@29404` inside Join. Matching is by addr, bare host, serverId or
-  world hash — `function _mpBlacklisted(s) {@29645`.
-- Presence: `const MP_CHAT_CAP = 200;@28505` ring, and `function _mpFootprints(look) {@29171`,
+  `rows = rows.filter(s => !_mpBlacklisted(s));@29503` on every rendered server list, and
+  `if (_mpBlacklisted(addr))@29557` inside Join. Matching is by addr, bare host, serverId or
+  world hash — `function _mpBlacklisted(s) {@29798`.
+- Presence: `const MP_CHAT_CAP = 200;@28658` ring, and `function _mpFootprints(look) {@29324`,
   which announces **once per cell arrival**, excluding yourself and anyone standing there —
   prints are for who you *missed*.
 
@@ -166,7 +166,7 @@ than a feature to postpone. A property has a test; a postponed feature has good 
 
 ## VI. Defects Found (2026-08-17)
 
-- **§DX-02cs 🟢** — `src/js/wbapi-server.js:const parsed = JSON.parse(buf || '{}');@1616` resolves
+- **§DX-02cs 🟢** — `src/js/wbapi-server.js:const parsed = JSON.parse(buf || '{}');@1619` resolves
   non-object JSON verbatim, and the 44 handlers that dereference it are unguarded. Measured
   live: `PUT /api/mesh/acl` with body `null` or `5` returns **500 and a raw JS TypeError
   string** instead of this report's documented 400; `POST /api/mesh/connect` and
@@ -191,7 +191,7 @@ than a feature to postpone. A property has a test; a postponed feature has good 
    lock, unedited. Both halves are dated in the header above so a later reader cannot
    mistake the retrospective table for a prediction.
 3. **Instrument 70 (run the acceptance test).** `src/tests/integration/mesh-connections-ui.test.js:sub-tab shell: 6 tabs / 6 panes@48`
-   — **8/8 green** (4.7 s). Harness section `src/tests/mud-harness.mjs:const aclR2 = path.join(tmp,@1365`
+   — **8/8 green** (4.7 s). Harness section `src/tests/mud-harness.mjs:const aclR2 = path.join(tmp,@1377`
    — **18/18 green**, covering GET-defaults, PUT roundtrip, disk persistence, comment-key
    survival, five validation 400s, and the 403→200→403 share flip. `npm run test:mud` overall:
    **267 ✓ / 2 ✗**, both failures the carried §DX-02ca `[D]` idle-TTL reds — a different

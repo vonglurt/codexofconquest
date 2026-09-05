@@ -83,32 +83,32 @@ increment is four coordinates and one field per quest, which is why it took 23 m
 
 ## III. As-built findings at design time (2026-07-07) — all verified
 
-**1. The collection mechanism already existed.** `` `function storyCollectLoot(node) {@30094` `` splits
+**1. The collection mechanism already existed.** `` `function storyCollectLoot(node) {@30247` `` splits
 `node.loot` on ` · ` and pushes each entry into `S_story.inventory` under its exact name. It is a
 strict once-ever grant, guarded by
-`` `if (S_story.visited[node.code] || !node.loot)@30096` ``. All five documents were already on the
+`` `if (S_story.visited[node.code] || !node.loot)@30249` ``. All five documents were already on the
 nodes:
 
 | Node | `loot` | Verified |
 |---|---|---|
 | EHZ — Event Horizon — Math Station | `Hamadani Failure Record` | ✅ byte-exact |
 | MONS — The Monster's Manifold | `12-Symmetry Manuscript` | ✅ |
-| ZERO — The Zero Corridor | `` `loot:"Zero Treatise · Counting Document Bundle"@9385` `` | ✅ |
+| ZERO — The Zero Corridor | `` `loot:"Zero Treatise · Counting Document Bundle"@9398` `` | ✅ |
 | CNTR — Cantor's Attic | `Moonshine Memo · ∞-Fragment` | ✅ |
 
 **2. Evaluation order supports same-visit completion.** `storyRender` calls
-`` `const lootMsg  = storyCollectLoot(node);@34557` `` before
-`` `const questMsgs = storyCheckQuests(node, true);@36024` ``, and inside `storyCheckQuests` activation is
-the *first* statement — `` `msgs.push(..._uqfActivateAtNode(node, indexFresh));@30170` `` — ahead of the
+`` `const lootMsg  = storyCollectLoot(node);@34824` `` before
+`` `const questMsgs = storyCheckQuests(node, true);@36217` ``, and inside `storyCheckQuests` activation is
+the *first* statement — `` `msgs.push(..._uqfActivateAtNode(node, indexFresh));@30324` `` — ahead of the
 completion loop. Arrive, receive the loot, complete on the same render. **Verified at HEAD**, and it
 survived the §VM-01-F-FU refactor that replaced the per-render activation scan with an index.
 
 **3. Three of the four nodes were unreachable.** At the design-lock build, `EHZ`, `MONS` and `ZERO`
 all sat at `(38,215)` — a copy of Jerusalem's cell — alongside `JRS`, `PKR`, `JAR`, `OLN` and `JER`,
 eight codes on one cell. `CELL_GRID` treats `list[0]` as the arrival code, and the client has exactly
-one walking entry point: `` `const destCode = res.destCodes[0] || null;@28357` `` feeding
-`` `S_story.currentCode = destCode;@28375` ``. The only other writer in the whole file is the death
-respawn, `` `S_story.currentCode = S_story.checkpointNode || 'LHR';@26011` ``. **A non-primary code on
+one walking entry point: `` `const destCode = res.destCodes[0] || null;@28505` `` feeding
+`` `S_story.currentCode = destCode;@28525` ``. The only other writer in the whole file is the death
+respawn, `` `S_story.currentCode = S_story.checkpointNode || 'LHR';@26142` ``. **A non-primary code on
 a shared cell is therefore unreachable, permanently** — so `quest_math_02` (activates at EHZ) and
 `quest_math_05` (activates at MONS) could never fire, and three nodes' loot could never be granted.
 `CNTR` alone at `(37,215)` was reachable. *Corrected:* the report calls this a "copy-paste of
@@ -116,7 +116,7 @@ Jerusalem's cell"; the mechanism is §WALK-1.5's 1° locale merge, and the same 
 repo-wide (§AUDIT-03x).
 
 **4. The prose already specified the correct placement.** HKG "Neon Undercity" sits at
-`` `HKG:{r:29,c:246},@9739` ``, and at the design-lock build its north-east quadrant —
+`` `HKG:{r:29,c:246},@9752` ``, and at the design-lock build its north-east quadrant —
 `(29,247)`, `(28,247)`, `(29,248)`, `(28,248)` — was **entirely free**: no sea run, no road cell, no
 `NODE_COORDS` occupant. Re-measured against the parent tree: **4 of 4 free, confirmed.** *Corrected:*
 `IMPASSABLE_CELLS` is *derived from* `SEA_RUNS`, not a second independent set, so the report's
@@ -128,12 +128,12 @@ repo-wide (§AUDIT-03x).
 live and unchanged.
 
 **6. Test pins.** The activate-only status was pinned three times in
-`` `src/tests/integration/quest-runtime-uqf.test.js:the full non-UQF residue is exactly@9371` `` and its
+`` `src/tests/integration/quest-runtime-uqf.test.js:the full non-UQF residue is exactly@9389` `` and its
 two holdout lists. All three cited line numbers are **exact at the design-lock build**.
 
 **7. Register check — passes.** The station still says *"I have been waiting five hundred and twelve
 years. Time runs differently near an event horizon — which is here, technically"*
-(`` `I have been waiting five hundred and twelve years@9383` ``), still explains that it speaks using
+(`` `I have been waiting five hundred and twelve years@9396` ``), still explains that it speaks using
 Noether's theorem, the Manifold's walls still complain that you perceive only three of their
 dimensions, and Cantor's shade still stands at the window. **4 of 4 live at HEAD.**
 
@@ -143,10 +143,10 @@ dimensions, and Cantor's shade still stands at the window. **4 of 4 live at HEAD
 
 | # | Decision | Verdict at HEAD |
 |---|---|---|
-| **D1** | Relocate to the Undercity pocket: EHZ `(29,247)`, ZERO `(28,247)`, MONS `(29,248)`, CNTR `(28,248)`, one code per cell | ✅ **Exact.** `` `EHZ:{r:29,c:247},@9740` `` · `` `ZERO:{r:28,c:247},@9722` `` · `` `MONS:{r:29,c:248},@9741` `` · `` `CNTR:{r:28,c:248},@9723` ``. Each is still the sole occupant of its cell; none is sea or road |
+| **D1** | Relocate to the Undercity pocket: EHZ `(29,247)`, ZERO `(28,247)`, MONS `(29,248)`, CNTR `(28,248)`, one code per cell | ✅ **Exact.** `` `EHZ:{r:29,c:247},@9753` `` · `` `ZERO:{r:28,c:247},@9735` `` · `` `MONS:{r:29,c:248},@9754` `` · `` `CNTR:{r:28,c:248},@9736` ``. Each is still the sole occupant of its cell; none is sea or road |
 | **D2** | Free-Movement upheld — the *"carry 3 documents to enter"* gate **rejected**; no mover, terrain or `IMPASSABLE` change | ✅ **Proved by the diff.** The ship commit's HTML change is exactly three hunks: one `NODE_COORDS` line, three more `NODE_COORDS` lines, and the `QUEST_DB` block. Zero hunks in `SEA_RUNS`, `ROAD_RUNS`, `IMPASSABLE_CELLS` or the mover |
-| **D3** | Five UQF completions `{itemsAll:[document], atNode:collect node}`; gold 300/350/350/500/600 via `onComplete` reward bits; `xpAward` 350/400/400/500/600 engine-paid; **no `itemChain`** | ✅ **Byte-exact**, e.g. `` `completion:{itemsAll:['Zero Treatise'],atNode:'ZERO'},@21900` `` and `` `completion:{itemsAll:['Moonshine Memo'],atNode:'CNTR'},@21936` ``. ⚠ The stated *reason* for "no `itemChain`" is wrong — see §IX |
-| **D4** | `gate:{}` everywhere; independent side quests, no sequencing | ⚠ **Letter holds, spirit superseded.** All five gates are still `{}` — and §BOARD-01-FU6 (`f7350b0`, +14 d) added four `` `unlock(bit, ctx) { (bit.quests@22313` `` edges making 01→02→03→04→05 a forward chain, plus `rumor` fields putting all five on the Warrant's Board. A mechanism D4 could not have weighed, because it did not exist |
+| **D3** | Five UQF completions `{itemsAll:[document], atNode:collect node}`; gold 300/350/350/500/600 via `onComplete` reward bits; `xpAward` 350/400/400/500/600 engine-paid; **no `itemChain`** | ✅ **Byte-exact**, e.g. `` `completion:{itemsAll:['Zero Treatise'],atNode:'ZERO'},@21922` `` and `` `completion:{itemsAll:['Moonshine Memo'],atNode:'CNTR'},@21958` ``. ⚠ The stated *reason* for "no `itemChain`" is wrong — see §IX |
+| **D4** | `gate:{}` everywhere; independent side quests, no sequencing | ⚠ **Letter holds, spirit superseded.** All five gates are still `{}` — and §BOARD-01-FU6 (`f7350b0`, +14 d) added four `` `unlock(bit, ctx) { (bit.quests@22340` `` edges making 01→02→03→04→05 a forward chain, plus `rumor` fields putting all five on the Warrant's Board. A mechanism D4 could not have weighed, because it did not exist |
 | **D5** | `atNode` = the collect node, uniformly; accepted edge — both ZERO documents drop on one visit, so a late-activated `quest_math_04` completes on a re-visit | ✅ **Still the only edge**, and it is pinned by a test that deliberately exercises it |
 | **D6** | Five `onComplete` narrative lines, recited before writing | ✅ **5 of 5 byte-identical** at HEAD, including *"the north wall, grudgingly: 'You perceived three of them correctly. That deserves something.'"* and *"the difference between 196,883 and 196,884 is 1. The gold, however, is real."* |
 | **D7** | No new state fields; a `mathArcComplete` capstone flag is out of scope | ✅ `mathArcComplete` = **0 occurrences**, 42 days on |
@@ -218,11 +218,11 @@ sequences the arc naturally"* — was correct but fragile; the referral chain ma
 **The pocket grew a road (unplanned).** On 2026-07-28 `fa8f9e4` re-ran the road generator, which laid
 `(29,249)` — directly east of the Manifold. MONS and CNTR are now highway-adjacent, and road cells
 carry an encounter rate of zero. The eastern half of the pocket has a safe approach that nobody
-designed. (`` `410 road cells, 89 junctions.@9881` `` — the generator stamps its own count above the
+designed. (`` `410 road cells, 89 junctions.@9894` `` — the generator stamps its own count above the
 data it writes, which is why that figure can be trusted.)
 
 **The documents cannot be lost.** `storyCollectLoot` mints them without a `sell` field, and both sell
-paths filter on `` `S_story.inventory.filter(i => i.sell > 0 && !_isLastWeapon(i))@24277` ``. A player
+paths filter on `` `S_story.inventory.filter(i => i.sell > 0 && !_isLastWeapon(i))@24339` ``. A player
 cannot accidentally vendor a quest document into a soft-lock — a real hazard for a once-ever grant,
 closed by accident rather than by design, but closed.
 
@@ -235,7 +235,7 @@ closed by accident rather than by design, but closed.
 | D5's double-grant at ZERO forces a re-visit for a late-activated `quest_math_04` | **Live and accepted.** Pinned by test 3 of the §MATH-01 describe, which asserts the *same-visit* case; the re-visit case follows from the same `atNode` rule used everywhere in `QUEST_DB` |
 | `∞-Fragment` stays quest-less flavour | **Held.** 1 occurrence in the file, the CNTR loot string |
 | `mathArcComplete` capstone out of scope | **Held.** 0 occurrences |
-| PKR/JAR/OLN/JER remain sub-locations of JRS — "pre-existing, not math-related" | ⚠ **Held, and it is the report's most expensive dismissal.** Those four are still non-primary on `` `JRS:{r:38,c:215},@9824` `` at HEAD, and **28 quests are authored to activate on them** (JAR 12, PKR 10, OLN 5, JER 1). §MATH-01 fixed three instances of this class 35 days before it was filed as §AUDIT-03x |
+| PKR/JAR/OLN/JER remain sub-locations of JRS — "pre-existing, not math-related" | ⚠ **Held, and it is the report's most expensive dismissal.** Those four are still non-primary on `` `JRS:{r:38,c:215},@9837` `` at HEAD, and **28 quests are authored to activate on them** (JAR 12, PKR 10, OLN 5, JER 1). §MATH-01 fixed three instances of this class 35 days before it was filed as §AUDIT-03x |
 
 ---
 
@@ -243,11 +243,11 @@ closed by accident rather than by design, but closed.
 
 **(a) The premise error — `npc` (→ new row §DX-02cv).** D3 reasoned: *"No `itemChain` — the documents
 are keepsakes; no recipient NPC exists ('Collect it' is the whole contract)."* The second clause was
-false at the design-lock build. EHZ already carried `` `npc:"Johannes von Weisheit"@9383` `` and gave
+false at the design-lock build. EHZ already carried `` `npc:"Johannes von Weisheit"@9396` `` and gave
 him four paragraphs of node text: *"He looks like a man who has been calculating the exact probability
 of your arrival and found it satisfying."* CNTR carries `npc:"Cantor's Shade"`. Both render an NPC
 chip; **neither can be talked to**, because the Talk button is gated on
-`` `!(node.npc && NPC_DIALOGUE[node.code])@35907` `` and neither code is a key in that table. Measured
+`` `!(node.npc && NPC_DIALOGUE[node.code])@36120` `` and neither code is a key in that table. Measured
 through the project's parser: **71 of 416 nodes carry an `npc` chip; 6 have no dialogue entry, and two
 of the six are this arc's.** The design decision (no delivery step) may still be the right one — but
 it was made on a wrong fact, and the visible result is a named scholar in a room full of documents
@@ -258,12 +258,12 @@ would fall 35 → 30 and be exactly the `blq_05`–`10` stubs. §DX-02as (e), fi
 asserts the true figure is **50** and names 15 additional ids. All 15 carry `schema:"UQF-1.0"` at
 HEAD; `play.html` has not changed since that row was written; and two independent instruments
 return **30** — a comment- and string-aware brace walk over all 2,853 entries, and the live assertion
-`` `src/tests/integration/quest-runtime-uqf.test.js:expect(r.ids.length).toBe(30);@9382` `` running in the
+`` `src/tests/integration/quest-runtime-uqf.test.js:expect(r.ids.length).toBe(30);@9400` `` running in the
 real JS engine. The 15 mis-counted entries are single lines of 1,436–2,655 characters with `schema:`
 near the *end*. **The newer measurement was not the better one.** Row corrected in place, not re-filed.
 
 **(c) Two engine comments still describe the world this increment ended** (→ appended to §DX-02as).
-`` `q.schema === 'UQF-1.0' && q.completion && QuestRuntime.canComplete(id)@30189` `` sits directly
+`` `q.schema === 'UQF-1.0' && q.completion && QuestRuntime.canComplete(id)@30343` `` sits directly
 beneath a comment stating that *"the remaining non-UQF entries (quest_math_01–05 §MATH-01 gap …) never
 had a completion mechanism and stay activate-only"* — three lines above the code that completes them.
 The `adaptLegacyQuest` copy of the same sentence is already tracked as §DX-02as (e); this is its

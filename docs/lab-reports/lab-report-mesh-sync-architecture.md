@@ -46,7 +46,7 @@ forking the world. Measured at the report's own commit `9dd029b`:
 | Figure | As written | At `9dd029b` | At HEAD |
 |---|---|---|---|
 | Lines | "~34,000" | **34,494** ✅ | 38,712 |
-| Cell grid | "90×360" | **`const GEO_PROJ = { ROWS: 90, COLS: 360 }@9902`** ✅ | unchanged |
+| Cell grid | "90×360" | **`const GEO_PROJ = { ROWS: 90, COLS: 360 }@9915`** ✅ | unchanged |
 | Monsters | "216+" | **392** ❌ | 398 |
 | Terrains | "40" | **106** ❌ | 111 |
 | Quests | "hundreds" | **2,839** ⚠ short by an order of magnitude | 2,853 |
@@ -118,13 +118,13 @@ The mesh supplies exactly that, and deliberately not more:
   people at once. The `☺` on the minimap is a person, and they arrived by walking — there is no jump
   travel in this game for anyone.
 - **Company changes the arithmetic, gently.** §MESH-01f grants **+1 to hit per co-present ally,
-  capped at +2** (`function _partyHitBonus(allies)@28657`), **+10 % XP and gold per ally, capped at
-  +20 %** (`function _partyLootMult(allies)@28658`), and **halves the wilderness encounter rate**
-  for a party travelling together (`function _partyEncounterRate(base)@28669`). The doom clock is the
+  capped at +2** (`function _partyHitBonus(allies)@28810`), **+10 % XP and gold per ally, capped at
+  +20 %** (`function _partyLootMult(allies)@28811`), and **halves the wilderness encounter rate**
+  for a party travelling together (`function _partyEncounterRate(base)@28822`). The doom clock is the
   real currency: a halved encounter rate is *days*, and days are shards.
 - **Somebody can hold the road.** §MESH-01h sentry bots suppress encounters in the cell they garrison
   and auto-assist a battle there — and are explicitly excluded from the party bonus, so a garrisoned
-  junction cannot inflate anyone's to-hit (`function _mpAllyCount()@28650`).
+  junction cannot inflate anyone's to-hit (`function _mpAllyCount()@28803`).
 - **A world is a thing you can hand someone.** The file *is* the game, so forking is copying, and the
   world tag (`CodexOfConquest-131ea`) tells two strangers at a glance whether they are playing the same
   world at all. A mod author brands their fork and gets their own swarm free.
@@ -289,7 +289,7 @@ if (!isPlayer && MP.on && MP.nearby.some(p => p.r === r && p.c === c)) {
 }
 ```
 
-*(Byte-identical at HEAD — `MP.nearby.some(p => p.r === r && p.c === c)@37351`.)*
+*(Byte-identical at HEAD — `MP.nearby.some(p => p.r === r && p.c === c)@37571`.)*
 
 This report made four claims about that rule. **Three held for 46 days; one was retired in three, by
 a rung on this report's own roadmap.**
@@ -304,10 +304,10 @@ a rung on this report's own roadmap.**
   mitigation is real and worth the record — ally count is snapshotted **once, at battle start**, into
   transient state, with the reason written at the site: *"a party member wandering off mid-fight
   can't strip a buff already earned. Transient battle state (`S`, never `S_story`): a save file must
-  not carry mesh state."* (`S.partyAllies   = _mpAllyCount()@24649`.)
+  not carry mesh state."* (`S.partyAllies   = _mpAllyCount()@24713`.)
 - ⚠ **"MP state … never in the save file."** **CORRECTED.** The session id still lives only in
   `sessionStorage`, so the hazard the sentence guarded — *a save carrying a dead session id* — never
-  occurred. But two mesh fields now persist: `S_story.playerKey` (`function _mpPlayerKey()@28982`,
+  occurred. But two mesh fields now persist: `S_story.playerKey` (`function _mpPlayerKey()@29135`,
   the durable trade credential) and `S_story.pvpOff`. Neither was declared in `_S_DEFAULTS()`, with a
   consequence the ledger design did not intend — a New Game inherited the previous character's
   ledger chain. ✅ **Both declared 2026-08-26 (§DX-02cn)**; a New Game clears the key and NG+
@@ -532,7 +532,7 @@ coc:?p=1&ev=coc-3.104.0&wh=131eabc131eabc00&tr=http://tracker.example:1368
 Modelled on BitTorrent magnet URIs [5]: `wh` plays the infohash role — it names the *world-swarm*,
 not any server — and `tr` names a rendezvous that resolves it to live addresses. The Mesh tab
 **copies** this link; the game's 🌐 server browser **parses** it
-(`function mpParseMagnet(str)@29298`): resolve `tr`, filter the group by `wh`, ping each candidate
+(`function mpParseMagnet(str)@29451`): resolve `tr`, filter the group by `wh`, ping each candidate
 from the browser, render `name · worldTag · players · ping`, and *Join* — which does nothing but
 rewrite the stored server address and reconnect. The flow is exercised end-to-end as a Playwright
 test against a real spawned tracker, because it is the most important user journey the architecture
@@ -732,7 +732,7 @@ days is a plan; one unfiled prediction ageing 26 days is a defect.*
 ### D. Defects filed
 
 - **§DX-02cn** 🟢 — `S_story.playerKey` and `S_story.pvpOff` are undeclared in `_S_DEFAULTS()`
-  (`const _S_DEFAULTS = () => ({@23063`). Because `storyNewGame` does `Object.assign(S_story,
+  (`const _S_DEFAULTS = () => ({@23092`). Because `storyNewGame` does `Object.assign(S_story,
   _S_DEFAULTS())` on the live object rather than replacing the binding, a field absent from the
   defaults shape **survives a New Game** — so a fresh character inherits the previous character's
   bearer credential and, with it, its economy chain.

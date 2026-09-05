@@ -112,24 +112,24 @@ withheld from a player who did one.
 
 | Item | Spec | HEAD | Verdict |
 |------|------|------|---------|
-| Statline | `ac:13 hp:22 atk:4 dmgDie:6 dmgCount:1 dmgFlat:2 tier:'easy'` | `name:'Hollow Hands Guard'@5408` | **byte-exact** |
+| Statline | `ac:13 hp:22 atk:4 dmgDie:6 dmgCount:1 dmgFlat:2 tier:'easy'` | `name:'Hollow Hands Guard'@5405` | **byte-exact** |
 | Drop | → "Hollow Hands Seal", 🖤, `sell:0` | `hollow_hands_guard:   { name:'Hollow Hands Seal'@5850` | **byte-exact** |
-| Terrain pool | added to `goblin_cave` | `P.hollow_hands_guard ] }@6312`, 13th of 13 | **live** |
+| Terrain pool | added to `goblin_cave` | `P.hollow_hands_guard ] }@6313`, 13th of 13 | **live** |
 
 ### B. State fields — 8 of 8 live under their specified names
 
-`tlLedgerRead: false@23137` (with `tlEmbargoChallenged` · `tlEmbargoDismissed` ·
-`tlMissingShipSolved`) and `vsDebtProbed: false@23139` (with `vsWeaponsFound` · `vsDebtSettled` ·
-`vsShamanKnown`). Cross-arc: `wardensLegacyKnown: false@23141`, `vaLastWardVisited: false@23135`.
+`tlLedgerRead: false@23169` (with `tlEmbargoChallenged` · `tlEmbargoDismissed` ·
+`tlMissingShipSolved`) and `vsDebtProbed: false@23171` (with `vsWeaponsFound` · `vsDebtSettled` ·
+`vsShamanKnown`). Cross-arc: `wardensLegacyKnown: false@23173`, `vaLastWardVisited: false@23167`.
 
 ### C. NPC profiles — 4 of 4 live, canonical keys
 
 | Key | Name | Node (spec → HEAD) |
 |-----|------|--------------------|
-| `rennau: { meta: { name:"Harbor Master Rennau"@10411` | Harbor Master, Conclave Tier 2 | SF → **STN** |
-| `vonn: { meta: { name:"Adjutant Vonn"@10412` | Adjutant, Tier 3 | TL → **TL** (a different TL — §V-B) |
-| `solvak: { meta: { name:"Debt Agent Solvak"@10413` | Debt Agent, Tier 3 | VS → **VS** (likewise) |
-| `yva: { meta: { name:"Yva"@10414` | Goblin broker | GC → **TRD** |
+| `rennau: { meta: { name:"Harbor Master Rennau"@10425` | Harbor Master, Conclave Tier 2 | SF → **STN** |
+| `vonn: { meta: { name:"Adjutant Vonn"@10426` | Adjutant, Tier 3 | TL → **TL** (a different TL — §V-B) |
+| `solvak: { meta: { name:"Debt Agent Solvak"@10427` | Debt Agent, Tier 3 | VS → **VS** (likewise) |
+| `yva: { meta: { name:"Yva"@10428` | Goblin broker | GC → **TRD** |
 
 All four survived §AUDIT-03n's key audit under the keys the favor ledger actually writes — no
 surname split. Every quoted line verifies verbatim: Rennau's *"The ledger goes back eleven
@@ -140,31 +140,31 @@ removed"*, Yva's *"I don't know who they answer to."*
 
 | Quest | Title | Completion (HEAD) | Payout |
 |-------|-------|-------------------|--------|
-| `quest_tl_01: { id:'quest_tl_01'@11170` | Rennau: The Ledger | `flags:['tlLedgerRead']` | Harrow Manifest, Rennau → Friendly |
+| `quest_tl_01: { id:'quest_tl_01'@11185` | Rennau: The Ledger | `flags:['tlLedgerRead']` | Harrow Manifest, Rennau → Friendly |
 | `quest_tl_02` | Rennau: The Embargo | `flagsAny:['tlEmbargoChallenged','tlEmbargoDismissed']` | +150gp if challenged |
 | `quest_tl_03` | Rennau: The Missing Ship | `flags:['tlMissingShipSolved']` | +300gp, Ori's Account, Dear Friend |
-| `quest_vs_01: { id:'quest_vs_01'@13504` | Solvak: The Collector | `flags:['vsDebtProbed']` | Solvak → Friendly |
+| `quest_vs_01: { id:'quest_vs_01'@13531` | Solvak: The Collector | `flags:['vsDebtProbed']` | Solvak → Friendly |
 | `quest_vs_02` | Yva: The Broker | `flags:['vsWeaponsFound']` | Hollow Hands Seal, Yva → Friendly |
 | `quest_vs_03` | Mordus Pays | `flags:['vsDebtSettled']` | +400gp, sets `vsShamanKnown` |
-| `quest_vs_warden: { id:'quest_vs_warden'@13549` | The Warden | `flags:['wardensLegacyKnown']` | +600gp, Warden's Token |
+| `quest_vs_warden: { id:'quest_vs_warden'@13576` | The Warden | `flags:['wardensLegacyKnown']` | +600gp, Warden's Token |
 
 All seven migrated cleanly through §ARCH-01 (`a79c76a`, Wave 7c), which replaced a 61-id hardcoded
 effects block with per-quest `onComplete` bit chains.
 
 ### E. Player-facing surfaces — all built, all verbatim
 
-- **Harbor board**, ten ships: `Harbor Board — Empty berths: HARROW (Day 17)@34798` — identical to
+- **Harbor board**, ten ships: `Harbor Board — Empty berths: HARROW (Day 17)@35059` — identical to
   the report's transcription, including the Harbor Master's appended note.
-- **Vonn's two-button choice** at `if (node.code === 'TL') {@34821` — Report (+150gp) / Leave it.
-- **Ori**, migrated to the verb registry: `id:'stn-ori'@34327`.
-- **Solvak + Mordus** two-beat dialogue at `if (node.code === 'VS') {@34861`, 800 ms delay intact;
-  the cross-reference `const harrowNote = S_story.tlLedgerRead@34873` is byte-verbatim.
+- **Vonn's two-button choice** at `if (node.code === 'TL') {@35076` — Report (+150gp) / Leave it.
+- **Ori**, migrated to the verb registry: `id:'stn-ori'@34571`.
+- **Solvak + Mordus** two-beat dialogue at `if (node.code === 'VS') {@35081`, 800 ms delay intact;
+  the cross-reference `const harrowNote = S_story.tlLedgerRead@35093` is byte-verbatim.
 - **Yva**, migrated to the verb registry as the **first price in the game paid through the `cost`
-  opcode**: `{ kind:'cost', gold:50, refuse:@34339`. Her Tilbury cross-reference
+  opcode**: `{ kind:'cost', gold:50, refuse:@34605`. Her Tilbury cross-reference
   (*"Whatever got that ship wasn't them"*) is verbatim inside the same bit chain.
 - **Seal delivery** at VS, 600 ms Mordus response, verbatim.
-- **§XXI Warden hook**: `function _nodeHookVoidShamanWarden(node) {@31697`, gated on
-  `node.code === 'GVA' && S_story.vsShamanKnown@31699` — the specified information order
+- **§XXI Warden hook**: `function _nodeHookVoidShamanWarden(node) {@31929`, gated on
+  `node.code === 'GVA' && S_story.vsShamanKnown@31931` — the specified information order
   (know the shaman exists, *then* seek them) survived a full re-architecture unchanged.
 
 ---
@@ -175,11 +175,11 @@ effects block with per-quest `onComplete` bit chains.
 |---|-----------|------|---------|
 | 1 | 32 named identifiers | 32 resolve | **100 % — the strongest census in the program** |
 | 2 | All quoted dialogue | verbatim at 79 days | **exact** |
-| 3 | Node **SF** (Rennau, board) | retired; = `label:'The Map Shop'@8636` (`STN`, `num:9`) | **remapped, correct by `num`** |
-| 4 | Node **DK** (the harbor, §I-A) | retired; = `label:'Harbor Docks — Tilbury'@8632` (`LCY`, `num:7`) | **remapped** |
+| 3 | Node **SF** (Rennau, board) | retired; = `label:'The Map Shop'@8649` (`STN`, `num:9`) | **remapped, correct by `num`** |
+| 4 | Node **DK** (the harbor, §I-A) | retired; = `label:'Harbor Docks — Tilbury'@8645` (`LCY`, `num:7`) | **remapped** |
 | 5 | Node **GC** (Yva) | retired; = `TRD`, `num:26`, `goblin_cave` | **remapped** |
 | 6 | Node **MT** (the Warden) | retired; = `GVA`, `num:50` | **remapped** |
-| 7 | Node **BK** (Broken Tooth Tavern) | = `label:'Broken Tooth Tavern'@8684` (`VBY`, `num:25`); live `BK` is a *Birka beach* | **§AUDIT-03y — resolves, wrong place** |
+| 7 | Node **BK** (Broken Tooth Tavern) | = `label:'Broken Tooth Tavern'@8697` (`VBY`, `num:25`); live `BK` is a *Birka beach* | **§AUDIT-03y — resolves, wrong place** |
 | 8 | Node **TL** (Vonn) | **never existed at `194a810`** | **BORN DEAD** → §V-B |
 | 9 | Node **VS** (Solvak/Mordus) | **never existed at `194a810`** | **BORN DEAD** → §V-B |
 | 10 | `quest_tl_01` activates on SF arrival | `activateNode:'STN'`, `gate:{}` | shipped |
@@ -203,11 +203,11 @@ different predicates, and nothing in the 2026-05-25 toolchain could tell them ap
 ### A. Blocker 1 — `tlLedgerRead` has no writer outside its own completion handler
 
 `quest_tl_01`'s completion condition is `flags:['tlLedgerRead']`. The **only** write to that flag in
-38,712 lines is `{ kind:'flag_write', set:['tlLedgerRead'] }@11172` — inside that same quest's
+38,712 lines is `{ kind:'flag_write', set:['tlLedgerRead'] }@11187` — inside that same quest's
 `onComplete`, which by definition runs *after* the completion test passes.
 
 **The flag is its own precondition.** The harbor board — the surface the report names as the thing
-that sets it — grants the Harrow Manifest and never touches the flag (`if (!S_story.tlManifestFound) {@34796`
+that sets it — grants the Harrow Manifest and never touches the flag (`if (!S_story.tlManifestFound) {@35053`
 through the `hbBtn.remove()` that ends the handler).
 
 **This is not migration rot.** At the arc's own commit `194a810` the shape was identical:
@@ -215,9 +215,9 @@ through the `hbBtn.remove()` that ends the handler).
 Instrument 8 verdict: **wrong the day it was written.**
 
 Consequence: `tlLedgerRead` is permanently `false`, so `quest_tl_02`'s gate never opens, Vonn's block
-(`id:'tl-vonn-manifest'@34528`) never renders, `quest_tl_03` is
+(`id:'tl-vonn-manifest'@34583`) never renders, `quest_tl_03` is
 never unlocked, Ori's verb never renders, Rennau never advances past Neutral, and Vonn never appears
-in the NPC row (`TL:S_story.tlLedgerRead ? ['vonn'] : []@35128`). **The Harrow Manifest is obtainable;
+in the NPC row (`TL:S_story.tlLedgerRead ? ['vonn'] : []@35353`). **The Harrow Manifest is obtainable;
 the arc is not.**
 
 This is the second instance of the class §AUDIT-03ai named on `quest_ng_02` — *the write-only defect
@@ -227,7 +227,7 @@ invisible to every existing gate: the symbol resolves, the quest parses, the bit
 ### B. Blocker 2 — three of four render nodes are non-primary
 
 `CELL_GRID` maps a cell to an **array** built in `NODE_MAP` declaration order, `cellCode` returns
-`CELL_GRID[key]?.[0]`, and `S_story.currentCode = destCode;@28375` can only ever be that primary
+`CELL_GRID[key]?.[0]`, and `S_story.currentCode = destCode;@28525` can only ever be that primary
 (§AUDIT-03x). A `node.code === 'XX'` block on a non-primary node is unreachable code.
 
 | Node | Cell | Occupants (declaration order) | Primary? |
@@ -268,24 +268,24 @@ Mordus debt inside Mordus's tavern. No design call required.
 ### C. Blocker 3 — the one live path, and the character who is invisible on it
 
 `quest_vs_02` is reachable, but not by the route the report specifies. Its gate
-(`flags:['vsDebtProbed']`) is unsatisfiable, because `S_story.vsDebtProbed = true;@34877` lives in the
-dead VS block. What saves it is a later pass: §BOARD-01-FU6 gave `quest_pachelbel_shipment:@21279`
+(`flags:['vsDebtProbed']`) is unsatisfiable, because `S_story.vsDebtProbed = true;@35097` lives in the
+dead VS block. What saves it is a later pass: §BOARD-01-FU6 gave `quest_pachelbel_shipment:@21293`
 and `quest_couperin_lute` each an `{ kind:'unlock', quests:['quest_vs_02'] }` edge, and
-`unlock(bit, ctx)@22313` sets a quest active **without consulting its gate**. Both source quests
+`unlock(bit, ctx)@22340` sets a quest active **without consulting its gate**. Both source quests
 complete at MHQ and LLA, which are primaries.
 
 So Yva's verb fires, the 50gp is paid, the Seal is granted, and `quest_vs_02` completes. **This is
 the only one of the seven quests a player can finish.**
 
 One casualty on that path: the NPC row gates Yva's *card* on a different condition from her *button*
-— `TRD:S_story.vsDebtProbed && !S_story.vsWeaponsFound@35129`. On the live route `vsDebtProbed` is
+— `TRD:S_story.vsDebtProbed && !S_story.vsWeaponsFound@35354`. On the live route `vsDebtProbed` is
 false, so **the button to talk to Yva renders and Yva does not.** Two surfaces for one character,
 gated on two conditions, one of them dead.
 
 ### D. Blocker 4 — the shared payoff is unreachable
 
 `vsShamanKnown` is written at exactly one site: `quest_vs_03`'s `onComplete`. That quest completes on
-`vsDebtSettled`, written only at `S_story.vsDebtSettled = true;@34896` — inside the dead VS block.
+`vsDebtSettled`, written only at `S_story.vsDebtSettled = true;@35116` — inside the dead VS block.
 So `vsShamanKnown` is permanently false, the Warden hook's guard at `@31696` never opens,
 `quest_vs_warden` never activates, the `MT_WARDEN` battle has no other entry point, and the
 Warden's Token, the 600gp, and the three-way resolution (persuade / fight / neither) are all
@@ -337,7 +337,7 @@ Per instrument 10, a report's self-criticism is a claim like any other.
 3. **"The Seal drops from `hollow_hands_guard` but collecting it has no effect."** ✅ **Correct and
    still open** — and now slightly worse: the trophy drop and Yva's `reward` bit mint two items with
    the identical name `Hollow Hands Seal`, while the delivery step strips them by name
-   (`filter(i => i.name !== 'Hollow Hands Seal')@34897`). → §AUDIT-03ap.
+   (`filter(i => i.name !== 'Hollow Hands Seal')@35117`). → §AUDIT-03ap.
 
 ---
 
@@ -357,13 +357,13 @@ Per instrument 10, a report's self-criticism is a claim like any other.
 
 | Target | Anchor |
 |--------|--------|
-| Monster | `name:'Hollow Hands Guard'@5408` · drop `hollow_hands_guard:   { name:'Hollow Hands Seal'@5850` · pool `P.hollow_hands_guard ] }@6312` |
-| Nodes | `label:'Harbor Docks — Tilbury'@8632` · `label:'The Map Shop'@8636` · `label:'Broken Tooth Tavern'@8684` · `TL: { num:278@9085` · `VS: { num:279@9088` |
-| NPCs | `rennau: { meta: { name:"Harbor Master Rennau"@10411` … `yva: { meta: { name:"Yva"@10414` |
-| Quests | `quest_tl_01: { id:'quest_tl_01'@11170` · `quest_vs_01: { id:'quest_vs_01'@13504` · `quest_vs_warden: { id:'quest_vs_warden'@13549` |
-| State | `tlLedgerRead: false@23137` · `vsDebtProbed: false@23139` · `wardensLegacyKnown: false@23141` |
-| Render | `Harbor Board — Empty berths: HARROW (Day 17)@34798` · `if (node.code === 'TL') {@34821` · `if (node.code === 'VS') {@34861` · `id:'stn-ori'@34327` · `id:'trd-yva'@34335` |
-| Engine | `unlock(bit, ctx)@22313` · `S_story.currentCode = destCode;@28375` · `function _nodeHookVoidShamanWarden(node) {@31697` |
+| Monster | `name:'Hollow Hands Guard'@5405` · drop `hollow_hands_guard:   { name:'Hollow Hands Seal'@5850` · pool `P.hollow_hands_guard ] }@6313` |
+| Nodes | `label:'Harbor Docks — Tilbury'@8645` · `label:'The Map Shop'@8649` · `label:'Broken Tooth Tavern'@8697` · `TL: { num:278@9098` · `VS: { num:279@9101` |
+| NPCs | `rennau: { meta: { name:"Harbor Master Rennau"@10425` … `yva: { meta: { name:"Yva"@10428` |
+| Quests | `quest_tl_01: { id:'quest_tl_01'@11185` · `quest_vs_01: { id:'quest_vs_01'@13531` · `quest_vs_warden: { id:'quest_vs_warden'@13576` |
+| State | `tlLedgerRead: false@23169` · `vsDebtProbed: false@23171` · `wardensLegacyKnown: false@23173` |
+| Render | `Harbor Board — Empty berths: HARROW (Day 17)@35059` · `if (node.code === 'TL') {@35076` · `if (node.code === 'VS') {@35081` · `id:'stn-ori'@34571` · `id:'trd-yva'@34601` |
+| Engine | `unlock(bit, ctx)@22340` · `S_story.currentCode = destCode;@28525` · `function _nodeHookVoidShamanWarden(node) {@31929` |
 | Home docs | `world.md` §Layer 54 / §Layer 55 · `quest.md` §Tilbury Harbor Arc / §Visby Underground Arc · `docs/story/story-arc-coastal.md` |
 | Siblings | `docs/lab-reports/lab-report-void-shaman.md` (§XXI downstream of `vsShamanKnown`) · `docs/lab-reports/lab-report-weimar-scholar-gate.md` (`archiveLetterObtained` path) |
 

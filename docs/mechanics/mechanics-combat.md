@@ -251,7 +251,7 @@ XP accumulates across the run. On each victory, `_checkLevelUp()` fires — if X
 
 **XP Thresholds (Levels 1–20):**
 
-> **Source:** `const XP_LEVELS = [@24430`. Cumulative XP to reach each level. *(§DOC-02t: the former bare pointer "HTML line 8608" was an archive-era line number — the const has been at 24418 since the file grew past 14,377 lines. Bare numeric anchors are invisible to `check:anchors`; write `` `symbol@line` `` per §DX-01e.)*
+> **Source:** `const XP_LEVELS = [@24482`. Cumulative XP to reach each level. *(§DOC-02t: the former bare pointer "HTML line 8608" was an archive-era line number — the const has been at 24418 since the file grew past 14,377 lines. Bare numeric anchors are invisible to `check:anchors`; write `` `symbol@line` `` per §DX-01e.)*
 
 | Lv | XP | Lv | XP | Lv | XP | Lv | XP |
 |---|---|---|---|---|---|---|---|
@@ -273,7 +273,7 @@ The player is a **Fighter Champion** with a **d10 Hit Die**. Every level-up roll
 
 **ASI Levels:** 4, 6, 8, 12, 14, 16, 19
 
-At ASI levels **the player allocates two points**, one at a time, across the six abilities. The level-up modal shows six `.lu-asi-btn@5235` buttons (`STR +1` … `CHA +1`); `_lu_pending.asiRemaining` starts at **2** and the Continue button unlocks only when both are spent. **No ability may pass 20** — `_lu_refreshAsiBtns` disables a button at that ceiling.
+At ASI levels **the player allocates two points**, one at a time, across the six abilities. The level-up modal shows six `.lu-asi-btn@3143` buttons (`STR +1` … `CHA +1`); `_lu_pending.asiRemaining` starts at **2** and the Continue button unlocks only when both are spent. **No ability may pass 20** — `_lu_refreshAsiBtns` disables a button at that ceiling.
 
 > **There is no ASI roll, and there never was one in shipped code.** A six-entry `_ASI_TABLE` describing a d6 roll (Might / Endurance / Agility / Power / Speed / Guard) stood in `play.html` with **zero readers** until §ASI-01 deleted it on 2026-08-26; six docs, this one included, described that table as the live mechanic. The `→ doc:` pointer on `` const _ASI_LEVELS@25531 `` is the surviving half.
 
@@ -307,7 +307,7 @@ Shield gifts are added to inventory and auto-equipped if better than the current
 
 > **⚠️ Corrected 2026-08-12 (§DOC-02t).** This paragraph previously read *"`atkBonus` and `acBonus` in `S_story` are updated immediately."* Neither is true of the level-up path:
 > - **`S_story.atkBonus` no longer exists either.** It was never a level bonus — it was a *cache of the STR modifier*, seeded at character creation and raised only by an ASI STR bump, and it drifted from `_statMod(str)` by a silent `Math.max(0, …)` floor the ASI path never mirrored. **§AUDIT-03ae deleted it 2026-08-26**; every reader now derives the STR modifier from `S_story.abilityScores`, so the three surfaces that disagreed about one number cannot disagree again. Levelling by itself never granted attack bonus and still does not — an ASI that raises STR moves the roll through the score alone.
-> - **`S_story.acBonus` no longer exists.** It had no writer at any point in the repository's history — two declarations, one reader in `function _calcPlayerAc() {@24624`, and zero assignments — so it was permanently 0 and contributed nothing to the AC the player was shown. **§DX-02y deleted the field and its `_calcPlayerAc` term 2026-08-26.** AC is `baseAc + equippedShield.acBonus + _lakeMagicBonuses().ac`; `acBonus` is now a **shield-item** field only. Levelled AC is not a shipped mechanic — if it is ever wanted, it is a new design, not a repair.
+> - **`S_story.acBonus` no longer exists.** It had no writer at any point in the repository's history — two declarations, one reader in `function _calcPlayerAc() {@24670`, and zero assignments — so it was permanently 0 and contributed nothing to the AC the player was shown. **§DX-02y deleted the field and its `_calcPlayerAc` term 2026-08-26.** AC is `baseAc + equippedShield.acBonus + _lakeMagicBonuses().ac`; `acBonus` is now a **shield-item** field only. Levelled AC is not a shipped mechanic — if it is ever wanted, it is a new design, not a repair.
 
 ---
 
@@ -495,9 +495,9 @@ total = d20 + proficiencyBonus + S_story.atkBonus (level)
 
 **14 base types (die size ascending):** Pointy Stick d4 Lv1, Sickle d4 Lv1, Axe d6 Lv1, Bow d6 Lv2, Scimitar d6 Lv2, Flail d8 Lv3, Long Sword d8 Lv3, Morningstar d8 Lv4, Rapier d8 Lv4, Crossbow d10 Lv5, Glaive d10 Lv5, Halberd d10 Lv6, Maul 2d6 Lv7, Lance d12 Lv8.
 
-**Finesse (§WEAP-FIN):** exactly **two** base types declare `finesse: true` — **Scimitar** and **Rapier** — which is **10 of the 70** items once the five magic tiers expand. A finesse weapon keys its attack and damage off whichever of STR/DEX is higher; every other weapon keys off STR. **`function _storyWeaponIsFinesse@25595` is the single source**, and it resolves the equipped weapon's `tier` against `WEAPON_ITEMS` rather than trusting the stored flag, so saves written before the field existed are correct on load. `function _storyAtkAbility@25613` returns `{mod, label}` and the character sheet prints the label, so the sheet cannot name STR while the engine rolls DEX (§AUDIT-03ae). **Bow and Crossbow are NOT finesse (§WEAP-RANGED)** — they declare `ranged: true` instead, also 10 of the 70, and a ranged attack keys off DEX **outright**, penalty included, rather than `max(STR, DEX)`. The two sets do not overlap. At STR 18 / DEX 8 a maul rolls +4, a rapier +4 (finesse, STR wins) and a bow **−1**; marking a bow finesse would have made it +4 and hidden the difference on every high-STR character. `function _storyWeaponProps@25588` returns both flags from one tier lookup, and both story→simulator syncs point `#atk-ability` at `_storyAtkAbility().label` rather than a hardcoded `str`, so the roller select, the sheet's printed label and the rolled modifier are one function's output.
+**Finesse (§WEAP-FIN):** exactly **two** base types declare `finesse: true` — **Scimitar** and **Rapier** — which is **10 of the 70** items once the five magic tiers expand. A finesse weapon keys its attack and damage off whichever of STR/DEX is higher; every other weapon keys off STR. **`function _storyWeaponIsFinesse@25629` is the single source**, and it resolves the equipped weapon's `tier` against `WEAPON_ITEMS` rather than trusting the stored flag, so saves written before the field existed are correct on load. `function _storyAtkAbility@25677` returns `{mod, label}` and the character sheet prints the label, so the sheet cannot name STR while the engine rolls DEX (§AUDIT-03ae). **Bow and Crossbow are NOT finesse (§WEAP-RANGED)** — they declare `ranged: true` instead, also 10 of the 70, and a ranged attack keys off DEX **outright**, penalty included, rather than `max(STR, DEX)`. The two sets do not overlap. At STR 18 / DEX 8 a maul rolls +4, a rapier +4 (finesse, STR wins) and a bow **−1**; marking a bow finesse would have made it +4 and hidden the difference on every high-STR character. `function _storyWeaponProps@25622` returns both flags from one tier lookup, and both story→simulator syncs point `#atk-ability` at `_storyAtkAbility().label` rather than a hardcoded `str`, so the roller select, the sheet's printed label and the rolled modifier are one function's output.
 
-**Magic-tier level gate:** `_magicTierAllowed(magic)` (`function _magicTierAllowed@24523`) = player `level ≥ magic × 5` — so **+1 → Lv5, +2 → Lv10, +3 → Lv15, +4 → Lv20** (no `baseLv` term in the gate). Each item also carries a per-entry `minLevel = min(20, max(magic × 5, baseLv + magic × 4))` used for display/sort.
+**Magic-tier level gate:** `_magicTierAllowed(magic)` (`function _magicTierAllowed@24567`) = player `level ≥ magic × 5` — so **+1 → Lv5, +2 → Lv10, +3 → Lv15, +4 → Lv20** (no `baseLv` term in the gate). Each item also carries a per-entry `minLevel = min(20, max(magic × 5, baseLv + magic × 4))` used for display/sort.
 
 **Acquisition (§FC06 nerf — fishing-exclusive positive magic):** Only the **base tier (magicBonus 0)** drops from combat, via `_rollMonsterWeaponDrop()` (see §Equipment Drops — one guaranteed weapon per battle, d6 quality −4..0). The +1..+4 tiers **no longer drop from any monster kill** — the old `_rollMainWeaponDrop()` 15%/battle path is retired and the d100 table is consumables-only. Positive-magic gear reaches the player only from **Yugurt Lake fishing** (`LAKE_MAGIC_DB` passive trinkets) and **hand-authored quest/Epic-Boss rewards** (e.g. Sea Element +2, Rod of Self-Discovery +1). The +N `WEAPON_ITEMS` pool remains defined for save reconstruction and possible future authored grants, but nothing rolls it.
 
@@ -520,7 +520,7 @@ Daggers are offhand weapons — they are not sold at vendor nodes. `DAGGER_ITEMS
 
 ### Starting Kit (New Game)
 
-Every new game begins at City Streets — Birka (**`LHR`**, `num:1`, `LHR:{ num:1@8426`; set by `storyNewGame() → storyRender(NODE_MAP['LHR'])`) with:
+Every new game begins at City Streets — Birka (**`LHR`**, `num:1`, `LHR:{ num:1@8439`; set by `storyNewGame() → storyRender(NODE_MAP['LHR'])`) with:
 
 | Slot | Item | Stats | Notes |
 |---|---|---|---|

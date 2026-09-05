@@ -39,7 +39,7 @@ it. Indexing is how you keep *"add a quest"* a free action.
 
 **And there is a second payoff nobody planned for, which arrived a month later.** §VM-01-G3 needed to run the
 activation pass **before** `storyRender`'s render body, so per-node UI keyed on `active` status could see
-same-arrival activations. It extracted the loop into `function _uqfActivateAtNode(node, indexFresh)@30139` and called it
+same-arrival activations. It extracted the loop into `function _uqfActivateAtNode(node, indexFresh)@30293` and called it
 **twice per arrival** — once early, once from `storyCheckQuests` — relying on idempotence. That refactor is
 comfortable only because the pass is cheap. **A cheap operation can be called from two places; an O(n) one cannot.**
 The index did not make the game faster in a way a player can perceive; it made the *engine* editable in a way its
@@ -48,7 +48,7 @@ authors could act on, and someone did, without ever having to think about it.
 **Where the design came from.** Nowhere clever — the idiom already existed in the file, twice, and the second
 instance had left a note for whoever came next:
 
-> *"Lazy + cached like `_questNodes()`; QUEST_DB is static at runtime."* — `function _gateFlagSet()@26135`
+> *"Lazy + cached like `_questNodes()`; QUEST_DB is static at runtime."* — `function _gateFlagSet()@26266`
 
 Both precedents build once and never rebuild, banking on that second clause. **That clause is what §VM-01-F
 tripped over**, and closing the gap it hides is the whole content of this increment.
@@ -81,7 +81,7 @@ consumers mutate the database after first render:
 | 2 | **The worldbuilder** | emits an `applyPatch(NODE_MAP, QUEST_DB, …)` script that adds, modifies and **deletes** `QUEST_DB` keys | ✅ live — but see §9 C4: it is a *separate page emitting a patch*, not an in-page editor |
 | 3 | **A future §MESH-delivered quest** | same shape, over the peer mesh | ⏳ speculative |
 
-`QUEST_DB` is declared `const QUEST_DB = {@10615`, and reassigning it in the running game throws a `TypeError` —
+`QUEST_DB` is declared `const QUEST_DB = {@10630`, and reassigning it in the running game throws a `TypeError` —
 verified live. So the *binding* is frozen and the *object* is not, which is precisely the gap: a cache keyed on
 "the const never changes" is keyed on the wrong noun.
 
@@ -282,9 +282,9 @@ was never committed, so no diff can be measured. §VM-01-F's own commit message 
 callers of `storyCheckQuests` 5 → **4** · index population 2,803 → **2,804**, buckets unchanged at **348**.
 
 **The one structural change.** §VM-01-G3 **extracted the activation loop** out of `storyCheckQuests` into
-`function _uqfActivateAtNode(node, indexFresh)@30139`, carrying this increment's comment with it verbatim, and now calls it
-**twice per arrival** — from `function storyRender(node, prefix)@34550` before the render body, and again from
-`function storyCheckQuests(node, indexFresh)@30168`. The pass is idempotent, so this is correct; but it means **the size guard
+`function _uqfActivateAtNode(node, indexFresh)@30293`, carrying this increment's comment with it verbatim, and now calls it
+**twice per arrival** — from `function storyRender(node, prefix)@34816` before the render body, and again from
+`function storyCheckQuests(node, indexFresh)@30322`. The pass is idempotent, so this is correct; but it means **the size guard
 now runs twice per arrival**, ~0.22 ms of Θ(n) work to look up a median of 3 quests. Filed as **§DX-02ea**.
 
 ---
@@ -301,16 +301,16 @@ now runs twice per arrival**, ~0.22 ms of Θ(n) work to look up a median of 3 qu
 the row filed against it names *this* helper as the reference implementation to copy. §NAV-01 asked for that guard
 on 2026-07-03; it has now been open for over a month with the answer sitting thirteen lines below it in the same
 file. · **§DX-02dz** (C9, the parity gate's "bytes") · **§DX-02bd** — note the **name collision**:
-`src/js/wbapi-core.js:_questsByNode: {}@707` is a *different object* in a *different program* (an authoring-time map of
+`src/js/wbapi-core.js:_questsByNode: {}@723` is a *different object* in a *different program* (an authoring-time map of
 node code → quest **ids**, built across several node fields), and the defect filed against that name is not about
 this helper.
 
 ## 11. Anchors (HEAD, 2026-08-22)
 
-`const QUEST_DB = {@10615` · `function _gateFlagSet()@26135` · `function _uqfActivateAtNode(node, indexFresh)@30139` ·
-`function storyCheckQuests(node, indexFresh)@30168` · `function storyRender(node, prefix)@34550` ·
-`function _questNodes()@36978` · `let _questsByNodeIndex = null@36997` · `function _questsByNode(nodeCode)@36998` ·
-`function _boardBounties(node, limit)@37166` · `src/js/wbapi-core.js:_questsByNode: {}@707` ·
+`const QUEST_DB = {@10630` · `function _gateFlagSet()@26266` · `function _uqfActivateAtNode(node, indexFresh)@30293` ·
+`function storyCheckQuests(node, indexFresh)@30322` · `function storyRender(node, prefix)@34816` ·
+`function _questNodes()@37185` · `let _questsByNodeIndex = null@37204` · `function _questsByNode(nodeCode)@37224` ·
+`function _boardBounties(node, limit)@37386` · `src/js/wbapi-core.js:_questsByNode: {}@723` ·
 `src/scripts/check-quest-parity.js:quest parity: QUEST:CORE identical@25` ·
 `edit.html:function applyPatch(NODE_MAP, QUEST_DB@2513`.
 

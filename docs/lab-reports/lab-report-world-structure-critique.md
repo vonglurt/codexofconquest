@@ -159,14 +159,14 @@ this, and the closure is why the row was worth doing.
 **§II.B verified in full.** Fourteen codes are deliberately outside GEO and all fourteen check out: the
 fantasy locations `DSF` (The Atlantean Forge), `DSJ` (The Kelp Channel), `HCA` (The Deeper Clearing), `LSO`
 (The Fog Bank — Open Water); the out-of-bounds expansion codes `BKK`, `CAN`, `CTU`, `HKG`, `SEA`, `HAV`, `MSY`,
-`BGI`; and `LIM` (`LIM:{ num:81, code:'LIM', name:'mimic_meadow', label:'The Mimic Meadows'@8815`), left out
+`BGI`; and `LIM` (`LIM:{ num:81, code:'LIM', name:'mimic_meadow', label:'The Mimic Meadows'@8828`), left out
 because Lima, Peru is incoherent with a medieval European setting.
 
 > **`DFL` — kept, not deleted.** The original's fifth fantasy code was correct at the reference build. The
 > commit that published this report renamed `DFL` to `ZRH`, colliding with the live
-> `ZRH:{ num:72, code:'ZRH', name:'defi_land', label:'The Unbanked Quarter'@8789` — and a JavaScript object
+> `ZRH:{ num:72, code:'ZRH', name:'defi_land', label:'The Unbanked Quarter'@8802` — and a JavaScript object
 > literal keeps the last key, so the harbour node silently ceased to exist. It was recovered under a third code
-> and is `DNF:{ num:143, code:'DNF', name:'highlands', label:'Dunfall — The Loch Harbor'@8739` today. The claim
+> and is `DNF:{ num:143, code:'DNF', name:'highlands', label:'Dunfall — The Loch Harbor'@8752` today. The claim
 > was true when written; only the code moved.
 
 ---
@@ -202,12 +202,12 @@ and 7 (8) are the genuinely thin ones. Act 3, at 76, is now the second-largest a
 **The density inversion loses its evidence.** The claim — that narrative density and node count are inversely
 correlated — rested on Act 6 having 11 nodes against Act 4's 53. Act 6 has **44**. The gap is 44 against 53, and
 the correlation the section names is not visible in the data. Act 6 is still the most narratively concentrated
-region in the game (`NUE:{ num:35, code:'NUE', name:'scholars_qtr'@8705` — the Weimar Scholar's Quarter, with
+region in the game (`NUE:{ num:35, code:'NUE', name:'scholars_qtr'@8718` — the Weimar Scholar's Quarter, with
 Sweelinck's archive, the Froberger journal and the Entry 42 mechanic), and the *design* argument for spatial
 compactness is intact. Only the arithmetic supporting it is gone.
 
 > **Also corrected:** §IV places the Void Archaeology arc in Act 6. It is a **four**-quest arc
-> (`quest_va_01` … `quest_va_04`) hosted at `GVA:{ num:50, code:'GVA', name:'mountains'@8733`,
+> (`quest_va_01` … `quest_va_04`) hosted at `GVA:{ num:50, code:'GVA', name:'mountains'@8746`,
 > which is **act 3**.
 
 ---
@@ -219,12 +219,12 @@ compactness is intact. Only the arithmetic supporting it is gone.
 
 | Code | GEO says | The node actually is | Act |
 |---|---|---|---|
-| `TRD` | Trondheim | `TRD:{ num:26, code:'TRD', name:'goblin_cave',     label:'Goblin Warrens'@8686` | 5 |
+| `TRD` | Trondheim | `TRD:{ num:26, code:'TRD', name:'goblin_cave',     label:'Goblin Warrens'@8699` | 5 |
 | `MOL` | Molde | Lake Approach — West Shore | 3 |
 | `KSU` | Kristiansund | The Lake Harbor | 3 |
-| `MJF` | Mosjøen | `MJF:{ num:77, code:'MJF', name:'shale_drop',   label:'The Shale Drop'@8784` | 3 |
-| `SDR` | Santander | `SDR:{ num:54, code:'SDR', name:'epic_swamp',           label:'Sunken Altar'@8745` | 3 |
-| `MAD` | Madrid | `MAD:{ num:69, code:'MAD', name:'epic_heavenly_clouds', label:"Shattered Seraph's Spire"@8775` | 7 |
+| `MJF` | Mosjøen | `MJF:{ num:77, code:'MJF', name:'shale_drop',   label:'The Shale Drop'@8797` | 3 |
+| `SDR` | Santander | `SDR:{ num:54, code:'SDR', name:'epic_swamp',           label:'Sunken Altar'@8758` | 3 |
+| `MAD` | Madrid | `MAD:{ num:69, code:'MAD', name:'epic_heavenly_clouds', label:"Shattered Seraph's Spire"@8788` | 7 |
 
 These are not thin waypoints. `TRD` is the Void Shaman's warrens with three goblin clans at war over which of
 them a false god loves best; `MAD` is a Seraph suspended mid-fall. The report walked past a boss node to declare
@@ -342,7 +342,7 @@ Per the Lab Report Policy a failed claim is corrected in place and kept, never d
 - **"The remaining 74"** (nodes outside GEO) — **333**. The trio 80/74/154 is internally consistent and
   externally unrelated to the file.
 - **"Acts 1, 2, 5, 6, 7 and 8 together hold 51 nodes"** — **217**.
-- **`const WORLD_DB@6279`** is the registry the status line meant to name — a terrain table, addressed as
+- **`const WORLD_DB@6280`** is the registry the status line meant to name — a terrain table, addressed as
   `WORLD_DB[node.name]` where `name` is the terrain key.
 
 ## Appendix B — Corroborated, not re-filed

@@ -51,8 +51,8 @@ character, scored in §V.
 1. **Node text worth reading.** An arc this long is carried by its prose or not at all, and the lines
    that survived are the ones behaving like observation rather than summary — the altar inscription
    that is *"administrative, a hedge against omission"*, the staircase with
-   `seven steps, then a landing, then five more@8480`, the request closing a letter from house arrest:
-   `the cloak I left at the waypoint@8503`.
+   `seven steps, then a landing, then five more@8493`, the request closing a letter from house arrest:
+   `the cloak I left at the waypoint@8516`.
 2. **The object inventory as a memory device.** One object recurring in both a node text and its quest
    is how a player tracks a thirteen-stop journey with no journal UI. Four of nine shipped that way.
 3. **A consistency contract for future authoring.** With `plan.md` deleted, this file and its sibling
@@ -103,7 +103,7 @@ space before any prose census.**
 **`CI2` is the only node code that both survives and points at the right place.** It was minted with
 a digit because `CI` was already taken — and `CI` is the §AUDIT-03m *worse-than-dead* code that now
 resolves to Chancery Court. The collision that forced the ugly key is the reason the key is still
-correct: `CI2:{ num:89, code:'CI2'@8453` is Cyprus, which is the Copper Isle.
+correct: `CI2:{ num:89, code:'CI2'@8466` is Cyprus, which is the Copper Isle.
 
 **Instrument 4 result, and it refines §DOC-02ai's naming finding.** The fictionalisation was never
 applied uniformly even at birth. `Herath` (4 commits), `Kesra` (3), `Tarsis` (3) and `Anthos` (4) are
@@ -112,9 +112,9 @@ applied uniformly even at birth. `Herath` (4 commits), `Kesra` (3), `Tarsis` (3)
 stops, authored *after* the 2026-05-29 reversion. So the policy did not fail halfway; it was
 overtaken halfway, which is a different and more forgivable thing.
 
-The twelfth reachable node is the exception that costs the most: `ATH:{ num:92, code:'ATH'@8487` is
-**non-primary** in cell `32,203` behind `SEA:{ num:97, code:'SEA'@8477`, so Athens cannot be arrived
-at and `quest_areopagus@11461` cannot activate. That is **§AUDIT-03x's cheapest instance** — a
+The twelfth reachable node is the exception that costs the most: `ATH:{ num:92, code:'ATH'@8500` is
+**non-primary** in cell `32,203` behind `SEA:{ num:97, code:'SEA'@8490`, so Athens cannot be arrived
+at and `quest_areopagus@11476` cannot activate. That is **§AUDIT-03x's cheapest instance** — a
 declaration-order swap, ten lines apart, no design call — and it happens to strand the exact scene
 this spec nominated as its model (Voice Rule 5: *"The Aethon speech is the model."*).
 
@@ -143,7 +143,7 @@ Voice Rule 3 asks for the stoning to be documented as a sequence. The spec's que
 > The road northeast runs out of Lythros past the south gate marker. **You** take it. **You** get up
 > from the square first, and then **you** take it. The sequence is the documentation.
 
-`runs out of Lythros@11417` at HEAD reads:
+`runs out of Lythros@11432` at HEAD reads:
 
 > The road northeast runs out of Lythros past the south gate marker. **He** takes it. **He** gets up
 > from the square first, and then **he** takes it. The sequence matters.
@@ -155,7 +155,7 @@ no reason to look at a proper noun. §DOC-02ai found the fossil; this is its mec
 **The cost, measured.** Across the arc's 18 quests, 99 prose fields, **21 fields mix both persons**
 and **11 of 18 quests** do. Most of that mixing is legitimate — a companion narrating Paul's action
 must use both. The genuine defect is narrow and sits in the worst possible place: the arc's **first
-mission**, `quest_road_damascus@11310`, addresses the player *as Saul* in two adjacent lines —
+mission**, `quest_road_damascus@11325`, addresses the player *as Saul* in two adjacent lines —
 *"The warrants are in your coat"*, and the completion line *"The warrants are still in your coat.
 You will not use them again."* — while the sentence between them says *"He leaves at first light."*
 Everywhere else in the arc, "you" is the companion. **The one place the spec's protagonist-Paul POV
@@ -175,11 +175,11 @@ kept; the long §II drafts are pointed at rather than reprinted.*
 | # | Rule | At HEAD |
 |---|---|---|
 | 1 | **The body is specific.** Small, bald, beaten with rods three times, stoned once, shipwrecked three times, snake-bitten; a recurring condition, likely the eyes; weak bodily presence, unanswerable letters. *Do not resolve the paradox.* | **NOT SHIPPED.** The enumeration appears nowhere: *"beaten with rods"* and *"thrice beaten"* are 0 occurrences. |
-| 2 | **Work is not suffering.** Goat-hair cloth, seams that hold in wind. The workshop is a rest from the argument. | **PARTIAL.** Tentmaking shipped (`They make tents. It is precise@8492`, `Tentmaking Tools` loot). *"goat-hair"*, *"seam"* in this arc, and *"rest from the argument"* are all 0. |
+| 2 | **Work is not suffering.** Goat-hair cloth, seams that hold in wind. The workshop is a rest from the argument. | **PARTIAL.** Tentmaking shipped (`They make tents. It is precise@8505`, `Tentmaking Tools` loot). *"goat-hair"*, *"seam"* in this arc, and *"rest from the argument"* are all 0. |
 | 3 | **The suffering is enumerated, not dramatized.** *"After the stoning at Lythros: he gets up."* | **SHIPPED**, near-verbatim, transposed to third person — see §IV. |
-| 4 | **He notices things.** Warrants in the inner pocket · the stairs at Phillam · the altar inscription · the loaf of bread in the blind days · the father's mark in the Tarsis lintel. | **3 of 5.** Warrants ✅ (*"inner pocket"* became *"your coat"*) · stairs ✅ `seven steps, then a landing, then five more@8480` · inscription ✅ `TO AN UNKNOWN ONE@8488` · **bread ❌** (replaced by *"The innkeeper brings food at noon"*) · **lintel ❌ — 0 occurrences and 0 commits ever, NEVER SHIPPED.** |
-| 5 | **His rhetoric has a structure** — find the entry point, move, land. | **SHIPPED.** `quest_areopagus@11461` passText: *"He begins with the altar. He does not begin with a correction."* |
-| 6 | **The conversion scene is external, not internal.** | **SHIPPED, exactly.** `quest_road_damascus@11310` passText: *"At noon a light struck the road. He fell. A voice said his name. When he rose, he could not see."* Four sentences, no interior. |
+| 4 | **He notices things.** Warrants in the inner pocket · the stairs at Phillam · the altar inscription · the loaf of bread in the blind days · the father's mark in the Tarsis lintel. | **3 of 5.** Warrants ✅ (*"inner pocket"* became *"your coat"*) · stairs ✅ `seven steps, then a landing, then five more@8493` · inscription ✅ `TO AN UNKNOWN ONE@8501` · **bread ❌** (replaced by *"The innkeeper brings food at noon"*) · **lintel ❌ — 0 occurrences and 0 commits ever, NEVER SHIPPED.** |
+| 5 | **His rhetoric has a structure** — find the entry point, move, land. | **SHIPPED.** `quest_areopagus@11476` passText: *"He begins with the altar. He does not begin with a correction."* |
+| 6 | **The conversion scene is external, not internal.** | **SHIPPED, exactly.** `quest_road_damascus@11325` passText: *"At noon a light struck the road. He fell. A voice said his name. When he rose, he could not see."* Four sentences, no interior. |
 | 7 | **He argues with people he respects.** Herath visit 2, *"I opposed him to his face."* | **NOT SHIPPED.** No Cephas, no confrontation scene; the phrase is 0 occurrences. Barnach/Timael/Silar are warm, never contradicted. |
 | 8 | **The letters are not secondary.** | **SHIPPED**, and it is the arc's ending — see §V's cloak row. |
 
@@ -199,18 +199,18 @@ mapping, the sentence each node was built around, and what HEAD did with it.
 
 | Spec | HEAD | The line the node was built on | Delta |
 |---|---|---|---|
-| **HR — Herath** *(the law-city)* | `JRS` Jerusalem | *"Fourteen warrants issued in the last quarter. Fourteen correctly processed."* | Desk and warrants kept (`has a desk in the lower court@8444`); ledger, corridor and second person gone. **Fourteen became three** (`loot:'Three Jerusalem Warrants'`) — and `quest_road_damascus` tests for that item by name, so a number in the fiction is now a number in a gate. |
-| **KS — Kesra** *(the blind days)* | `DAM` Damascus | *"The bread on the table arrived on the first day. You know it is still there because you can smell it."* | Bread ❌. Stairs relocated to Philippi. Three blind days shipped as a **literal counter**, `blindDaysKS@22513`, one per sleep — §AUDIT-03aj's first exhibit. The man on the landing became `I was told to come@22514`. |
+| **HR — Herath** *(the law-city)* | `JRS` Jerusalem | *"Fourteen warrants issued in the last quarter. Fourteen correctly processed."* | Desk and warrants kept (`has a desk in the lower court@8457`); ledger, corridor and second person gone. **Fourteen became three** (`loot:'Three Jerusalem Warrants'`) — and `quest_road_damascus` tests for that item by name, so a number in the fiction is now a number in a gate. |
+| **KS — Kesra** *(the blind days)* | `DAM` Damascus | *"The bread on the table arrived on the first day. You know it is still there because you can smell it."* | Bread ❌. Stairs relocated to Philippi. Three blind days shipped as a **literal counter**, `blindDaysKS@22541`, one per sleep — §AUDIT-03aj's first exhibit. The man on the landing became `I was told to come@22542`. |
 | **DR — The Dust Roads** | `RUH` Arabia | *"It has no opinion about what you believed four months ago… It is a clean surface."* | Argument kept, prose rewritten — *"The road to Damascus changed what he was. The desert changed what he does with it."* Three months → *"a season"*; `RUH` also gained a `Desert Wanderer ×2` battle nobody asked for. |
-| **TS — Tarsis** *(home)* | `ADA` Tarsus | *"You look for your father's mark in the lintel as a reflex… It will be there next time."* | The arc's most-developed object: **`lintel` = 0 occurrences, 0 commits ever. NEVER SHIPPED.** `ADA` does the same work in four words — `He does not knock@8464`. |
+| **TS — Tarsis** *(home)* | `ADA` Tarsus | *"You look for your father's mark in the lintel as a reflex… It will be there next time."* | The arc's most-developed object: **`lintel` = 0 occurrences, 0 commits ever. NEVER SHIPPED.** `ADA` does the same work in four words — `He does not knock@8477`. |
 | **AO — Anthos** *(the commissioning)* | `HTY` Antioch | *"Someone outside the community named them first… The name travels."* | Naming beat kept and moved onto the protagonist: *"He is called Paul here for the first time in this record."* Grain merchant, fire, breaking of bread ❌. |
-| **CI2 — The Copper Isle** | **`CI2`** Cyprus | *"The governor watches the way a man watches who has already decided to act on the outcome but does not want to be seen deciding."* | **Highest-fidelity node in the arc** — copper, seat, title and that posture survive almost sentence-for-sentence (`CI2:{ num:89, code:'CI2'@8453`). Only the closing certainty is gone: HEAD makes it a `WIS/Insight DC 14` roll that can fail. |
+| **CI2 — The Copper Isle** | **`CI2`** Cyprus | *"The governor watches the way a man watches who has already decided to act on the outcome but does not want to be seen deciding."* | **Highest-fidelity node in the arc** — copper, seat, title and that posture survive almost sentence-for-sentence (`CI2:{ num:89, code:'CI2'@8466`). Only the closing certainty is gone: HEAD makes it a `WIS/Insight DC 14` roll that can fail. |
 | **LT — Lythros** *(the lame man)* | `KYA` Lystra | *"The road out of Lythros runs northeast. You take it. You get up from the square first, then you take it. The order matters."* | The document's **closest survival** — nineteen words, every pronoun swapped (§IV). *"You see him"* became *"He is watching Paul specifically"*, which reverses the gaze and is the whole POV change in five words. |
-| **PL — Phillam** *(Lyra; the prison)* | `KVA` Philippi | *"Seven stairs, a landing, five more… The stairs are reliable."* | **Best-served node.** Bridge, two days of watching, earthquake, singing, the citizenship invocation and the magistrates walking them out all shipped — plus the stairs, promoted to a quest title: `quest_prison_phillam@11449` *"Seven Stairs, Then Five"* (`seven steps, then a landing, then five more@8480`). Two naming fossils live here (§VII). |
-| **AE — Aethon** *(the altars)* | `ATH` Athens | *"The hedge covers everything unaccounted for. It is the most honest thing in the city."* | Argument shipped intact — *"if you maintain all the altars you have covered all your bases"* — altar moved to the east end of the market as `TO AN UNKNOWN ONE@8488`. **And the node is unreachable** (§III). The one scene this spec named as its model is the one a player cannot reach. |
-| **KR — Korath** *(the workshop)* | `ZTH` Corinth | *"The seam has to hold in wind — this is a real problem with a correct answer, and working on it is a rest from the argument."* | Prisca, Akil, eighteen months and the letters ✅; the **entire craft layer** ❌ — no looms, no bench, no `goat-hair`, no seam. Voice Rule 2 survives as a claim (`They make tents. It is precise@8492`) and not as an observation. |
+| **PL — Phillam** *(Lyra; the prison)* | `KVA` Philippi | *"Seven stairs, a landing, five more… The stairs are reliable."* | **Best-served node.** Bridge, two days of watching, earthquake, singing, the citizenship invocation and the magistrates walking them out all shipped — plus the stairs, promoted to a quest title: `quest_prison_phillam@11464` *"Seven Stairs, Then Five"* (`seven steps, then a landing, then five more@8493`). Two naming fossils live here (§VII). |
+| **AE — Aethon** *(the altars)* | `ATH` Athens | *"The hedge covers everything unaccounted for. It is the most honest thing in the city."* | Argument shipped intact — *"if you maintain all the altars you have covered all your bases"* — altar moved to the east end of the market as `TO AN UNKNOWN ONE@8501`. **And the node is unreachable** (§III). The one scene this spec named as its model is the one a player cannot reach. |
+| **KR — Korath** *(the workshop)* | `ZTH` Corinth | *"The seam has to hold in wind — this is a real problem with a correct answer, and working on it is a rest from the argument."* | Prisca, Akil, eighteen months and the letters ✅; the **entire craft layer** ❌ — no looms, no bench, no `goat-hair`, no seam. Voice Rule 2 survives as a claim (`They make tents. It is precise@8505`) and not as an observation. |
 | **EF — Ephrath** *(the hall; Demetrios)* | `EF2` Ephesus | *"He is correct about what your presence costs him. He is very effective at translating a business problem into a street."* | Economics kept exactly — *"He is not wrong about the numbers"*. Hall of Tyrannus and the north gate ❌. *Demetrios* reverted to **Demetrius**; the *Threaded Lady* survives in a quest disposition, not in the node. |
-| **MT — Melta** *(276; the snake)* | `MLA` Malta | *"They watch the window. The window passes. You continue. The crowd revises its theory about who you are."* | Number shipped and became a quest title (`Two Hundred and Seventy-Six@11531`); `MLA` counts it three times. Two-wrong-theories structure shipped — *"first: murderer. Then: god. He corrects them."* HEAD's heaviest person-mixing node (9 vs 12), because the player is now the one distributing bread. |
+| **MT — Melta** *(276; the snake)* | `MLA` Malta | *"They watch the window. The window passes. You continue. The crowd revises its theory about who you are."* | Number shipped and became a quest title (`Two Hundred and Seventy-Six@11546`); `MLA` counts it three times. Two-wrong-theories structure shipped — *"first: murderer. Then: god. He corrects them."* HEAD's heaviest person-mixing node (9 vs 12), because the player is now the one distributing bread. |
 | **ST — The Seat** *(house arrest)* | `FCO` Rome | *"The record ends here. This is not an error… The text does not close. The apartment door is open."* | Open ending shipped, reworded to the arc's best closing line: *"The arc does not end here. It stops here."* Guards, Luke, the third floor and Rule 1's enumeration ❌. **The only thing that shipped verbatim came from §V, not from here** — see the cloak row. |
 
 
@@ -218,15 +218,15 @@ mapping, the sentence each node was built around, and what HEAD did with it.
 
 | Spec id / title | HEAD | Title | Prose |
 |---|---|---|---|
-| `quest_road_kesra` — *The Light at Noon* | `quest_road_damascus@11310` | ✅ **byte-exact** | rewritten |
+| `quest_road_kesra` — *The Light at Noon* | `quest_road_damascus@11325` | ✅ **byte-exact** | rewritten |
 | `quest_anath` — *The House on the Lower Road* | `quest_anath` ✅ id exact | ✅ **byte-exact** | rewritten; `hint` opens *"Wait."* as specified |
 | `quest_barnach_vouches` — *Vouched For* | — | ❌ **NOT SHIPPED** | beat shipped as the state flag `barnachVouchedHR` + an NPC dialogue branch, never as a quest |
-| `quest_ezzir` — *The Sorcerer's Opposition* | `quest_ezzir@11357` ✅ | ✅ **byte-exact** | rewritten, argument preserved |
-| `quest_stoning_lythros` — *Left for Dead* | `quest_stoning_lystra@11407` | ✅ **byte-exact** | **desc → passText, transposed** (§IV) |
-| `quest_unknown_altar` — *The Unknown Altar* | `quest_areopagus@11461` | ❌ *To An Unknown One* | rewritten; retitled to match the shipped inscription |
+| `quest_ezzir` — *The Sorcerer's Opposition* | `quest_ezzir@11372` ✅ | ✅ **byte-exact** | rewritten, argument preserved |
+| `quest_stoning_lythros` — *Left for Dead* | `quest_stoning_lystra@11422` | ✅ **byte-exact** | **desc → passText, transposed** (§IV) |
+| `quest_unknown_altar` — *The Unknown Altar* | `quest_areopagus@11476` | ❌ *To An Unknown One* | rewritten; retitled to match the shipped inscription |
 | `quest_temple_riot` — *Riot in the Marketplace* | `quest_ephesus_riot` | ❌ *The Silversmith's Meeting* | rewritten |
-| `quest_shipwreck_melta` — *Two Hundred and Seventy-Six* | `quest_shipwreck_melta@11531` ✅ | ✅ **byte-exact** | rewritten |
-| `quest_snake_melta` — *It Did Nothing* | `quest_snake_melta@11543` ✅ | ✅ **byte-exact** | rewritten |
+| `quest_shipwreck_melta` — *Two Hundred and Seventy-Six* | `quest_shipwreck_melta@11546` ✅ | ✅ **byte-exact** | rewritten |
+| `quest_snake_melta` — *It Did Nothing* | `quest_snake_melta@11558` ✅ | ✅ **byte-exact** | rewritten |
 
 **6 of 9 titles byte-exact across 77 days and the §ARCH-01 UQF migration; 0 of 9 descriptions.** The
 spec's `disposition` lines — original, oblique, no scripture — were replaced almost uniformly by
@@ -239,7 +239,7 @@ alternative was last argued for.*
 
 | Key | Line as specified | At HEAD |
 |---|---|---|
-| `anath` | *"I was told to come. I am here. That is the extent of what I can tell you about why I am here."* | **partial** — `I was told to come@22514` survives inside a rebuilt sentence; the reluctance did not |
+| `anath` | *"I was told to come. I am here. That is the extent of what I can tell you about why I am here."* | **partial** — `I was told to come@22542` survives inside a rebuilt sentence; the reluctance did not |
 | `barnach` | *"He will stay with me. I am not asking for a discussion about this."* | rewritten — *"I have been looking for you for a year. It's time."* |
 | `silar` | *"You realize that singing in a prison cell is unusual behavior."* | ❌ NOT SHIPPED — and `silarJoined` is write-only (§DOC-02ai, §DX-02n) |
 | `timael` | *"I will go where you go…"* | rewritten — *"He got up. Everyone else left. I decided to stay."* |
@@ -259,15 +259,15 @@ analysed and closed; recorded, not re-filed.
 | The bread on the table | KS | the only sensory anchor in blindness | ❌ replaced by *"food at noon"* |
 | The father's mark in the lintel | TS | what remains when everything changed | ❌ **0 commits ever** |
 | The seam on the tent | KR | skilled work; the standard Prisca sets | ❌ **0 commits ever** |
-| The Aethon altar inscription | AE | their hedge becomes his entry point | ✅ `TO AN UNKNOWN ONE@8488` |
+| The Aethon altar inscription | AE | their hedge becomes his entry point | ✅ `TO AN UNKNOWN ONE@8501` |
 | The cloak at the waypoint inn | *(letter)* | *"Bring the cloak I left at the waypoint with Carpus." — the most human line he writes* | ✅ **and then some** — see below |
 | The ship's log number (276) | MT | 276 specific people, documented | ✅ node text + quest title |
-| The snake on the fire | MT | the crowd's theory, wrong twice | ✅ `quest_snake_melta@11543` |
+| The snake on the fire | MT | the crowd's theory, wrong twice | ✅ `quest_snake_melta@11558` |
 | The letters from the apartment | ST | they reach where he cannot walk | ✅ `FCO` + `quest_rome_arrest` |
 
 **The cloak row is the finding.** The table's third column is *design rationale* — a note **about** the
 line, written for the implementer. It shipped as **narration**, at two sites:
-`the cloak I left at the waypoint@8503` (node text) and `most human line he writes@11502` (quest
+`the cloak I left at the waypoint@8516` (node text) and `most human line he writes@11517` (quest
 passText). HEAD tells the player, in the game, that this is the most human line he writes.
 
 ***A spec's analysis column is not inert. If it is well phrased, it will be transcribed along with the
@@ -289,8 +289,8 @@ the Fishing Guide, they will know how to read a stat line and will notice it.
 This is not a puzzle. There is no quest to remove it. The answer has already been given.
 
 > **Δ — 4 of 5 details exact, and the section corrects a sibling report.**
-> ✅ `Thorn (Permanent)@37659` renders under `S_story.saulConverted`, on the character sheet, with the
-> specified label byte-exact · ✅ **no mechanical penalty** · ✅ no tooltip · ✅ `Fishing Guide@13817`
+> ✅ `Thorn (Permanent)@37873` renders under `S_story.saulConverted`, on the character sheet, with the
+> specified label byte-exact · ✅ **no mechanical penalty** · ✅ no tooltip · ✅ `Fishing Guide@13844`
 > exists (Q-BAIT-00), so the cross-reference still holds 77 days on · ❌ **HEAD supplies the
 > explanation the spec forbade** — a 2 Cor 12:9 subtitle under the label, in a modern rendering
 > (*"my power is made perfect in weakness"*) against the spec's KJV *"my strength"*.
@@ -308,9 +308,9 @@ This is not a puzzle. There is no quest to remove it. The answer has already bee
 ## VI. Finding 2 — Five completion narratives that cannot execute
 
 Census across all **2,824** UQF quests: **2,454** are `type:'skill_check'`, and **all 2,454 carry no
-`completion` block**. That is by design — `S_story.quests[questId] = 'done'@6990` is the skill-check
-terminal state, written on the pass path, while `q.completion && QuestRuntime.canComplete@30189` inside
-`function storyCheckQuests@30168` is the *only* route to `'complete'`.
+`completion` block**. That is by design — `S_story.quests[questId] = 'done'@7001` is the skill-check
+terminal state, written on the pass path, while `q.completion && QuestRuntime.canComplete@30343` inside
+`function storyCheckQuests@30322` is the *only* route to `'complete'`.
 
 The residue: **exactly 8 skill-check quests in the file carry an `onComplete[]` chain that can
 therefore never run**, and the migration author flagged all eight in place (*"⚠ dead in legacy too"*).
@@ -329,11 +329,11 @@ grants `xp:150`. → **§DX-02av**, 🟢, no design call.
 
 | Row | Severity | Summary |
 |---|---|---|
-| **§FUTURE-01-FU2** *(new)* | 🟢 no design call | `quest_road_damascus@11310` addressed the player *as Saul* at what is now `The warrants are in his coat@11314` and in its completion line, one sentence away from *"He leaves at first light."* Two lines; the arc's first mission card. **✅ SHIPPED 2026-08-25 — both repointed to the companion.** |
+| **§FUTURE-01-FU2** *(new)* | 🟢 no design call | `quest_road_damascus@11325` addressed the player *as Saul* at what is now `The warrants are in his coat@11327` and in its completion line, one sentence away from *"He leaves at first light."* Two lines; the arc's first mission card. **✅ SHIPPED 2026-08-25 — both repointed to the companion.** |
 | **§DX-02av** *(new)* | 🟢 no design call | 8 skill-check quests file-wide carry an unreachable `onComplete[]`; 5 in this arc; one misstates its own XP. Move the narrative into `onPass` or delete it. |
-| **§FUTURE-01-FU** *(extended)* | 🟡 design call | Two naming fossils added: `quest_prison_phillam@11449` and `phillippiJailerConverted@11449` — the latter a **blend** of fictional *Phillam* and historical *Philippi*, not a straggler of either. Plus a second player-facing straggler: *"the waypoint"* for Troas, at `@8503` and `@11502`. |
-| **§AUDIT-03x** | 🟡 design call *(cheapest instance needs none)* | `ATH`←`SEA` strands `quest_areopagus@11461` — this spec's own nominated model scene. |
-| **§AUDIT-03aj** | 🟡 design call | `blindDaysKS@22513` / `hrHellenistDays@23176` — this document is where the three days and the fifteen days were first written as scene beats. |
+| **§FUTURE-01-FU** *(extended)* | 🟡 design call | Two naming fossils added: `quest_prison_phillam@11464` and `phillippiJailerConverted@11464` — the latter a **blend** of fictional *Phillam* and historical *Philippi*, not a straggler of either. Plus a second player-facing straggler: *"the waypoint"* for Troas, at `@8503` and `@11502`. |
+| **§AUDIT-03x** | 🟡 design call *(cheapest instance needs none)* | `ATH`←`SEA` strands `quest_areopagus@11476` — this spec's own nominated model scene. |
+| **§AUDIT-03aj** | 🟡 design call | `blindDaysKS@22541` / `hrHellenistDays@23208` — this document is where the three days and the fifteen days were first written as scene beats. |
 | **§DOC-02ai** *(corrected)* | — | The Thorn is not an §AUDIT-03v/w-cluster member; see §V. |
 
 ---

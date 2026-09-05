@@ -67,13 +67,13 @@ That division is what makes Yugurt Lake read as a **destination** rather than as
 
 ### III-A. The three channels, at HEAD
 
-All three fire in order inside the battle-victory path (`const lootResult = _rollD100Loot();@25416`, `const _wpDrop = _rollMonsterWeaponDrop(_monDmgDie);@25430`), exactly as tabulated in the original §II-A:
+All three fire in order inside the battle-victory path (`const lootResult = _rollD100Loot();@25481`, `const _wpDrop = _rollMonsterWeaponDrop(_monDmgDie);@25495`), exactly as tabulated in the original §II-A:
 
 | Order | System | Implementation | Output | Verdict |
 |-------|--------|----------------|--------|---------|
 | 1 | Trophy drop | `MONSTER_DROPS[enemy.key]` → `S._pendingDrop` | 1 themed sell-item | ✅ live |
-| 2 | Unified d100 | `function _rollD100Loot() {@24535` → `const _D100_TABLE = [@24518` | potion · scroll · flashbang · gold | ✅ live, equipment purged |
-| 3 | Monster weapon | `function _rollMonsterWeaponDrop(monsterDmgDie) {@24583` | 1 base weapon, quality −4 to 0 | ✅ live, d6 shipped |
+| 2 | Unified d100 | `function _rollD100Loot() {@24593` → `const _D100_TABLE = [@24576` | potion · scroll · flashbang · gold | ✅ live, equipment purged |
+| 3 | Monster weapon | `function _rollMonsterWeaponDrop(monsterDmgDie) {@24641` | 1 base weapon, quality −4 to 0 | ✅ live, d6 shipped |
 
 The host function is **`_storyBattleVictory`**, not `_onStoryVictory`. The latter has **0 commits in the file's entire history** — a name supplied by memory, not read from the file (instrument 4). *The report was right about the mechanism and wrong about the doorplate.*
 
@@ -97,24 +97,24 @@ The §IV-A "BEFORE" block was diffed against `440eb5d^`:
 |---|--------------|----------|----------|
 | 1 | `LOOT_TABLE` removed, replaced by a comment stub | ⛔ **NOT SHIPPED at HEAD** *(shipped `440eb5d`, reverted `88d41d1`, never restored)* | `const LOOT_TABLE = [` *(deleted 2026-08-26, §DROP-01-FU)*, all 20 entries, 0 readers |
 | 2 | `_D100_TABLE` purged of `dagger`/`mainweapon` | ✅ exact | 7 rows, `35·18·14·6·11·6·10` = 100 |
-| 3 | Revised weights (35/18/14/6/11/6/10) | ✅ **all seven exact** | `const _D100_TABLE = [@24518` |
-| 4 | `_rollD100Loot` retains dagger/mainweapon branches "for API compatibility" | ✅ shipped **and the rationale is sound** | `src/js/wbapi-server.js:WBAPI.d100Table = entries.map@3480` preserves `_magic` on write |
-| 5 | d6 quality roll, `deg = min(0, d6−5)` | ✅ **byte-exact incl. the comment** | `const deg = Math.min(0, d6 - 5)@24594` |
-| 6 | Prefix array `['Wrecked ','Rusted ','Chipped ','Worn ','','']` | ✅ byte-exact | `['Wrecked ','Rusted ','Chipped ','Worn ','','']@24595` |
-| 7 | `_D100_TABLE` header comment updated to consumables-only | ⛔ **NOT SHIPPED — and un-shippable in the HTML** | the header is emitted by `src/js/wbapi-server.js:function serializeD100Table(entries) {@1855` |
-| 8 | Key invariant: monsters never drop +1…+4 equipment | ✅ **enforced** | `// FC06: monster drops capped at base tier@24588`, `magicBonus === 0` filter |
+| 3 | Revised weights (35/18/14/6/11/6/10) | ✅ **all seven exact** | `const _D100_TABLE = [@24576` |
+| 4 | `_rollD100Loot` retains dagger/mainweapon branches "for API compatibility" | ✅ shipped **and the rationale is sound** | `src/js/wbapi-server.js:WBAPI.d100Table = entries.map@3492` preserves `_magic` on write |
+| 5 | d6 quality roll, `deg = min(0, d6−5)` | ✅ **byte-exact incl. the comment** | `const deg = Math.min(0, d6 - 5)@24652` |
+| 6 | Prefix array `['Wrecked ','Rusted ','Chipped ','Worn ','','']` | ✅ byte-exact | `['Wrecked ','Rusted ','Chipped ','Worn ','','']@24653` |
+| 7 | `_D100_TABLE` header comment updated to consumables-only | ⛔ **NOT SHIPPED — and un-shippable in the HTML** | the header is emitted by `src/js/wbapi-server.js:function serializeD100Table(entries) {@1867` |
+| 8 | Key invariant: monsters never drop +1…+4 equipment | ✅ **enforced** | `// FC06: monster drops capped at base tier@24646`, `magicBonus === 0` filter |
 | 9 | Fishing is the exclusive source of positive-magic equipment | ⚠️ **vacuously true** — no live grant path exists for *any* +N equipment | §V-F4 |
-| 10 | `LAKE_MAGIC_DB` = 8 items, `base + floor(lv×levelScale) + floor(luck×luckScale)` | ✅ 8 items; formula live, one guard added | `function _lakeMagicBonuses() {@23421`, `if (bonus <= 0) return;` |
-| 11 | Luck applies to the d100 roll as `min(99, floor(rand×100) + max(0,luckMod))` | ✅ exact (RNG now seeded) | `Math.min(99, Math.floor(_seededNext() * 100) + Math.max(0, _luckMod())@24548` |
+| 10 | `LAKE_MAGIC_DB` = 8 items, `base + floor(lv×levelScale) + floor(luck×luckScale)` | ✅ 8 items; formula live, one guard added | `function _lakeMagicBonuses() {@23452`, `if (bonus <= 0) return;` |
+| 11 | Luck applies to the d100 roll as `min(99, floor(rand×100) + max(0,luckMod))` | ✅ exact (RNG now seeded) | `Math.min(99, Math.floor(_seededNext() * 100) + Math.max(0, _luckMod())@24606` |
 | 12 | Superior potion odds rise ~3 % → ~9 % with luck +3 | ⛔ **wrong** — 3 % → 6 %, and luck contributes exactly **0** | §V-F5 |
 | 13 | Luck "biases the roll toward higher-indexed entries" | ⚠️ **only the last entry** — a uniform shift moves *L* weight from the first row to the last | §V-F5 |
 | 14 | Max practical luck mod +3, theoretical +4 | ⛔ wrong, and self-contradictory (§II-C says +5) | all-18s = **+4**, all-20s = **+5** |
 | 15 | Weapon dropped is "the closest available type at or below that die" | ⚠️ **uniform-random** over the whole eligible pool, not the closest | `pool[Math.floor(_seededNext() * pool.length)]` |
 | 16 | Base weapon on 5 or 6 → 2-in-6 (33.3 %) | ✅ exact | `pfx ? {...} : base` |
 | 17 | Channel host is `_onStoryVictory()` | ⛔ **NEVER SHIPPED** (0 commits ever); host is `_storyBattleVictory` | instrument 4 |
-| 18 | `GET /api/loot-drop` with the five query params | ✅ shipped, near byte-exact to §IV-C | `src/js/wbapi-server.js:if (parts[0] === 'loot-drop' && method === 'GET') {@3491` |
-| 19 | `_meta.qualityTable` as a static constant in the response | ✅ byte-exact, en-dash included | `src/js/wbapi-server.js:{ roll:'1',   bonus:-4, prefix:'Wrecked'@3500` |
-| 20 | §IV-C's `lake_mag_04` sample record (8 fields) | ✅ **all 8 exact** | `lake_mag_04: { key:'lake_mag_04'@26542` |
+| 18 | `GET /api/loot-drop` with the five query params | ✅ shipped, near byte-exact to §IV-C | `src/js/wbapi-server.js:if (parts[0] === 'loot-drop' && method === 'GET') {@3503` |
+| 19 | `_meta.qualityTable` as a static constant in the response | ✅ byte-exact, en-dash included | `src/js/wbapi-server.js:{ roll:'1',   bonus:-4, prefix:'Wrecked'@3512` |
+| 20 | §IV-C's `lake_mag_04` sample record (8 fields) | ✅ **all 8 exact** | `lake_mag_04: { key:'lake_mag_04'@26673` |
 | 21 | `wbapi-help.md` gains a "Loot Drop System" section | ⛔ **NOT SHIPPED** — 0 hits in `docs/api/wbapi-help.md` *or* `API-README.md` | §V-F7 |
 | 22 | `wbapi-server.js` help text + endpoint index updated | ✅ shipped | `src/js/wbapi-server.js:2133`, `:11591` |
 | 23 | Ten §V-B verification criteria | ⛔ **0 of 10 became a test** | no file under `src/tests/` mentions `loot-drop`, `_D100_TABLE` or `_rollMonsterWeaponDrop` |
@@ -147,7 +147,7 @@ This is **CONTRIBUTING Hazard #1 caught in the act**: the WBAPI server holds the
 
 `const LOOT_TABLE = [` *(deleted 2026-08-26, §DROP-01-FU)* is still declared, still holds its 20 entries (8 Minor / 2 Spell / 5 Healing / 3 Greater / 2 Superior), still has **zero readers**, and its own comment still credits `_rollD100Loot()` — the exact defect §II-B Defect 3 described, 68 days after it was fixed. §DOC-02b independently found it as a zero-reader structure; §DOC-02j independently found it as a d20 table mislabelled d100. **This report named it first, fixed it first, and had the fix taken away.**
 
-The header comment is stranger and more useful. §V-A's fourth row is not merely absent — **it is un-shippable in the HTML**, because the block lives inside `◆◆◆ WORLDBUILDER:D100_TABLE ◆◆◆` anchors and its comment is a hard-coded string literal in `src/js/wbapi-server.js:function serializeD100Table(entries) {@1855`. HEAD's comment is that literal, character for character, including the `_magic?` field and the `'dagger'|'mainweapon'` type list the report set out to remove. Any API write to the loot table re-emits it. ***A fix applied to generated output survives exactly until the generator runs.*** → **§DROP-01-FU**
+The header comment is stranger and more useful. §V-A's fourth row is not merely absent — **it is un-shippable in the HTML**, because the block lives inside `◆◆◆ WORLDBUILDER:D100_TABLE ◆◆◆` anchors and its comment is a hard-coded string literal in `src/js/wbapi-server.js:function serializeD100Table(entries) {@1867`. HEAD's comment is that literal, character for character, including the `_magic?` field and the `'dagger'|'mainweapon'` type list the report set out to remove. Any API write to the loot table re-emits it. ***A fix applied to generated output survives exactly until the generator runs.*** → **§DROP-01-FU**
 
 ### F3 — The "doc rot" three later reports found is not rot; it is a dated casualty of F1
 
@@ -157,15 +157,15 @@ The header comment is stranger and more useful. §V-A's fourth row is not merely
 
 ### F4 — The invariant shipped perfectly and the exception it points at cannot be reached
 
-The **taking** leg is airtight. `_rollMonsterWeaponDrop` filters `w.magicBonus === 0` on both its primary and fallback pools, under a comment that states the policy out loud (`// FC06: monster drops capped at base tier@24588`). No monster can drop positive-magic equipment. That is exactly what the report asked for.
+The **taking** leg is airtight. `_rollMonsterWeaponDrop` filters `w.magicBonus === 0` on both its primary and fallback pools, under a comment that states the policy out loud (`// FC06: monster drops capped at base tier@24646`). No monster can drop positive-magic equipment. That is exactly what the report asked for.
 
 The **giving** leg is where the design has gone quiet:
 
-- `const DAGGER_ITEMS = [@24460` — the +1 Royal / +2 Painite / +3 Gaping / +4 Voidsteel daggers, priced 300 / 900 / 2 500 / 8 000 gp — has **exactly one consumer in 38,712 lines**, and it is the now-dormant `dagger` branch of `_rollD100Loot`. **No vendor stocks them.** Four authored items, four prices, no path.
-- `const WEAPON_ITEMS = [0, 1, 2, 3, 4]@24496` flat-maps `const _BASE_WEAPONS = [@24473`'s 14 into 70; the 56 with `magicBonus ≥ 1` are reachable only through the same dormant branch (§FISH-02).
-- `const LAKE_MAGIC_DB = {@26538`'s 8 items are granted at exactly one site (`const eligible = Object.values(LAKE_MAGIC_DB).filter@7078`), gated on `S_story._fishBattleRank`, whose only writer is `S_story._fishBattleRank = fish.rank || 0@30611` — **inside `function storyFishing() {@30394`**.
+- `const DAGGER_ITEMS = [@24514` — the +1 Royal / +2 Painite / +3 Gaping / +4 Voidsteel daggers, priced 300 / 900 / 2 500 / 8 000 gp — has **exactly one consumer in 38,712 lines**, and it is the now-dormant `dagger` branch of `_rollD100Loot`. **No vendor stocks them.** Four authored items, four prices, no path.
+- `const WEAPON_ITEMS = [0, 1, 2, 3, 4]@24550` flat-maps `const _BASE_WEAPONS = [@24527`'s 14 into 70; the 56 with `magicBonus ≥ 1` are reachable only through the same dormant branch (§FISH-02).
+- `const LAKE_MAGIC_DB = {@26669`'s 8 items are granted at exactly one site (`const eligible = Object.values(LAKE_MAGIC_DB).filter@7090`), gated on `S_story._fishBattleRank`, whose only writer is `S_story._fishBattleRank = fish.rank || 0@30765` — **inside `function storyFishing() {@30548`**.
 
-And fishing does not render. `const CELL_GRID = (() => {@9852` grants node identity to `list[0]` only, and `BOO:{r:2,c:194},@9422` shares its cell with `LYR:{r:2,c:194},@9423`, which is declared 59 lines earlier in `NODE_MAP` — so `const hasFish = node.isFishingLake;@35349` is never true and the *Cast a Line* verb never draws (**§FISH-01**).
+And fishing does not render. `const CELL_GRID = (() => {@9865` grants node identity to `list[0]` only, and `BOO:{r:2,c:194},@9435` shares its cell with `LYR:{r:2,c:194},@9436`, which is declared 59 lines earlier in `NODE_MAP` — so `const hasFish = node.isFishingLake;@35574` is never true and the *Cast a Line* verb never draws (**§FISH-01**).
 
 **Net result at HEAD: there is no live grant path for positive-magic equipment of any kind.** The main hand is permanently capped at base tier or degraded, and the two magic tiers the game has authored — 4 daggers and 56 main weapons — are inert data.
 
@@ -198,11 +198,11 @@ A high-luck character was **2.5× to 3.5× more likely to receive the rarest mag
 
 ### F6 — The report contradicts itself on the luck ceiling
 
-§II-C: *"At all stats = 20: luck_score = 20, luck_mod = +5"* — **correct**. Appendix A: *"Max practical luck mod +3 (all stats ~18–20) · +4 theoretical max at all 20"* — **wrong twice**, and it contradicts §II-C two pages earlier. All-18s yields **+4**; all-20s yields **+5**; the shipped default statline (16/12/14/10/12/8) yields **+1** via `function _calcLuck() {@23439` and `function _luckMod() {@23445`, both of which reproduce the specified formula exactly. Same signature as §DOC-02n's finding on the same helper: *the formula is copied and exact, the worked illustration beside it is composed and wrong.*
+§II-C: *"At all stats = 20: luck_score = 20, luck_mod = +5"* — **correct**. Appendix A: *"Max practical luck mod +3 (all stats ~18–20) · +4 theoretical max at all 20"* — **wrong twice**, and it contradicts §II-C two pages earlier. All-18s yields **+4**; all-20s yields **+5**; the shipped default statline (16/12/14/10/12/8) yields **+1** via `function _calcLuck() {@23470` and `function _luckMod() {@23476`, both of which reproduce the specified formula exactly. Same signature as §DOC-02n's finding on the same helper: *the formula is copied and exact, the worked illustration beside it is composed and wrong.*
 
 ### F7 — The endpoint shipped almost byte-exact, and carries two live defects
 
-`src/js/wbapi-server.js:if (parts[0] === 'loot-drop' && method === 'GET') {@3491` implements §IV-C with all five query parameters, the documented response shape, the `bonusFormula` string, and a `_meta` block matching the report's JSON down to the `5–6` en-dash and the phrasing *"magic weapons are fishing-only."* This is the most faithful API transcription the program has measured.
+`src/js/wbapi-server.js:if (parts[0] === 'loot-drop' && method === 'GET') {@3503` implements §IV-C with all five query parameters, the documented response shape, the `bonusFormula` string, and a `_meta` block matching the report's JSON down to the `5–6` en-dash and the phrasing *"magic weapons are fishing-only."* This is the most faithful API transcription the program has measured.
 
 Two defects were introduced with it, both in the fishing branch:
 
@@ -270,7 +270,7 @@ The freed 36 points went to consumable variety as specified. See §V-F5 for the 
 
 ### VI-D. Why the dagger and mainweapon branches were kept (rationale upheld)
 
-§IV-A retains the two equipment branches in `_rollD100Loot()` "for API compatibility." **The measurement supports this and narrows an earlier finding.** `src/js/wbapi-server.js:WBAPI.d100Table = entries.map@3480` explicitly preserves `_magic` on write, and `serializeD100Table` emits it — so an author can `PUT /api/loot` a `{weight, _type:'dagger', _magic:2}` row and the branch fires immediately. The branches are **dormant by data, deliberately and reversibly**, not dead by accident; `function _magicTierAllowed(magic) {@24511` is their live guard, not a corpse. §FISH-02 and §DX-02n should be read with that correction. *(Corpus rule, third instance: before filing a spec-vs-engine gap, check whether a sibling report specifies the thing you are about to call a defect.)*
+§IV-A retains the two equipment branches in `_rollD100Loot()` "for API compatibility." **The measurement supports this and narrows an earlier finding.** `src/js/wbapi-server.js:WBAPI.d100Table = entries.map@3492` explicitly preserves `_magic` on write, and `serializeD100Table` emits it — so an author can `PUT /api/loot` a `{weight, _type:'dagger', _magic:2}` row and the branch fires immediately. The branches are **dormant by data, deliberately and reversibly**, not dead by accident; `function _magicTierAllowed(magic) {@24567` is their live guard, not a corpse. §FISH-02 and §DX-02n should be read with that correction. *(Corpus rule, third instance: before filing a spec-vs-engine gap, check whether a sibling report specifies the thing you are about to call a defect.)*
 
 ---
 
@@ -290,8 +290,8 @@ The freed 36 points went to consumable variety as specified. See §V-F5 for the 
 
 | Variable | Formula | Verified |
 |----------|---------|----------|
-| Luck score | `ceil((STR×DEX×CON×INT×WIS×CHA)^(1/6))` | ✅ `function _calcLuck() {@23439` |
-| Luck mod | `floor((luck_score − 10) / 2)` | ✅ `function _luckMod() {@23445` |
+| Luck score | `ceil((STR×DEX×CON×INT×WIS×CHA)^(1/6))` | ✅ `function _calcLuck() {@23470` |
+| Luck mod | `floor((luck_score − 10) / 2)` | ✅ `function _luckMod() {@23476` |
 | Luck mod range | **+1** at the default statline · **+4** at all 18s · **+5** at all 20s | ⛔ report said "+3 practical / +4 theoretical" |
 | d100 roll with luck | `min(99, floor(rand×100) + max(0, luckMod))` | ✅ exact; moves `L` weight from row 1 to row 7, nothing else |
 | Monster weapon die | `die ≤ monster.dmgDie`, then **uniform random** | ⚠️ report said "closest available" |
@@ -310,7 +310,7 @@ The freed 36 points went to consumable variety as specified. See §V-F5 for the 
 
 | Row | Premise | Call |
 |-----|---------|------|
-| **§DROP-01-FU** | Finish the reverted migration: delete `const LOOT_TABLE = [` *(deleted 2026-08-26, §DROP-01-FU)* (0 readers), and fix the header literal in `src/js/wbapi-server.js:function serializeD100Table(entries) {@1855` so an API write stops re-emitting the `_magic?`/`dagger`/`mainweapon` comment | 🟢 none |
+| **§DROP-01-FU** | Finish the reverted migration: delete `const LOOT_TABLE = [` *(deleted 2026-08-26, §DROP-01-FU)* (0 readers), and fix the header literal in `src/js/wbapi-server.js:function serializeD100Table(entries) {@1867` so an API write stops re-emitting the `_magic?`/`dagger`/`mainweapon` comment | 🟢 none |
 | **§DX-02aa** | A WBAPI write from a stale server silently reverts hand-edited engine JS, and no gate, test or commit message can see it (Hazard #1, measured at 68 days). Wants `./api.sh` to refuse a write when the server's loaded source differs from the file on disk | 🟢 none |
 | **§DX-02ab** | `GET /api/loot-drop`: 20 day fish double-counted, 5 night fish silently dropped, no `./api.sh` wrapper, absent from `wbapi-help.md` and `API-README.md` | 🟢 none |
 | **§DX-02v** *(extended)* | `mechanics.md` contradicts itself on `LOOT_TABLE` — `:209` "removed" vs `:1016` "live `const array[20]`"; both `docs/mechanics/` rows carry the same dated claim | 🟢 none |

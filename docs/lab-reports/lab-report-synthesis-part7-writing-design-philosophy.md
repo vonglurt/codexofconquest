@@ -139,7 +139,7 @@ transcription records in the §DOC-02 corpus.
 
 | # | Source report | Part 7's verdict | Measured at HEAD | Status |
 |---|---------------|------------------|------------------|--------|
-| 1 | `game-story-codex-of-conquest` | "The narrative architecture is fully live" | Architecture live; `storyCheckVictory@28209` does read `_missionComplete@23649` and `_curseScore@28193`. **But §EPIC-01 severed the `returned` writer on 2026-05-29 — the score is pinned at a floor of 20 and neither payoff can be reached** (§DOC-02p) | ⚠ **LIVE BUT UNREACHABLE** |
+| 1 | `game-story-codex-of-conquest` | "The narrative architecture is fully live" | Architecture live; `storyCheckVictory@28356` does read `_missionComplete@23696` and `_curseScore@28174`. **But §EPIC-01 severed the `returned` writer on 2026-05-29 — the score is pinned at a floor of 20 and neither payoff can be reached** (§DOC-02p) | ⚠ **LIVE BUT UNREACHABLE** |
 | 2 | `story-codoex-curse-of-knowedge` *(the filename's two typos are real and still on disk)* | "The sensory standard is the current style of all node text" | The **principles** shipped and are measurable (28 % → 62 % concrete numbers). The **prose** did not: **1 of ~26 specimens survives** (§DOC-02al) | ✅ principle · ❌ examples |
 | 3 | `void-shaman` | "Yes — fully live; encounter node changed from report" | 20/20 identifiers resolve, dialogue byte-verbatim — **and the arc has been unreachable since the hour it shipped: `vsShamanKnown` has never had a settable writer** (§DOC-02ao) | ⚠ **LIVE BUT UNREACHABLE** |
 | 4 | `wisdom-arc` | "Yes — fully live" | 8 quests, 8 flags, 5/6 DC pairs byte-exact — **and 8 of 8 are dead: the hub `VS` is the 5th of 5 occupants of cell `12,198`, so `storyRender` never reaches it** (§DOC-02as) | ⚠ **LIVE BUT UNREACHABLE** |
@@ -183,7 +183,7 @@ GVA:{ num:50, code:'GVA', name:'mountains', label:'The Mountain Pass — High Cr
 **`GVA` *is* the Mountain Pass.** `MT` was not a `NODE_MAP` key in the baseline and is not one at
 HEAD — it is the retired code for this very node, and the arc was never relocated. Worse, the
 invented distinction is refuted by a line eight above the one the report quotes: `vaLastWardVisited`
-is written inside `node.code === 'GVA' && S_story.vaLogFound@31665`. The tunnel and the
+is written inside `node.code === 'GVA' && S_story.vaLogFound@31897`. The tunnel and the
 Warden are the same place. The report read a code off a guard, could not place it, supplied "some
 cave node," and then promoted the guess to a **"What still applies"** bullet. *A correction is the
 most dangerous sentence in a design document: it is the one a later reader will not re-check.*
@@ -289,7 +289,7 @@ and is now enforced; only the filename retired.
 | Part | Title | Reports | Key finding, as re-measured |
 |------|-------|---------|------------------------------|
 | 1 | Architecture & Systems | 12 | WBAPI at `:1367` live; QuestRuntime shipped (§ARCH-01, all ~2,853 quests UQF-1.0); §CELL replaced J-nodes |
-| 2 | Combat & Mechanics | 7 | "Monster drop nerf NOT implemented" **still holds** — `battKillEvent@7048` writes `MONSTER_DROPS[key]` unconditionally, no probability gate |
+| 2 | Combat & Mechanics | 7 | "Monster drop nerf NOT implemented" **still holds** — `battKillEvent@7060` writes `MONSTER_DROPS[key]` unconditionally, no probability gate |
 | 3 | World & Navigation | 13 | ⚠ **"126 `NODE_MAP` + 411 `NODE_COORDS`" — 411 is byte-exact, 126 is a census artifact.** The baseline held **409** nodes; a `CODE:{` pattern matches **127** of them and misses the **282** written `CODE: {`. Live: **416 / 416**. The mismatch was its own tell — a world cannot have 411 coordinates for 126 places. Same artifact as §DOC-02bd |
 | 4 | Monsters & Fishing | 2 | `BAIT_TABLES` ≠ `BAIT_FISH_POOL`; `LAKE_MAGIC_DB` live — but the fishing economy is unreachable (§FISH-01) |
 | 5 | NPC & Narrative | 8 | `NPC_DIALOGUES` + `BIRKA_NPC_PROFILES` dual structure live and scaled to 204/213; La Riva = `AMS` ✓ |
@@ -313,8 +313,8 @@ which is itself the finding — the residue this synthesis sits on is known and 
 |---|---|---|
 | Yael's tutorial: *"forty-two nodes"* vs. a live 416, unchanged since `32c10c5` | **§AUDIT-03u** | already filed; the first instruction a new player reads |
 | *"the stone alignment from the DF node"* in the Warden's arrival text | **§AUDIT-03s** | 6th of 6 known player-facing dead-code strings |
-| `const JOURNAL_ENTRIES@22425` — 5 authored quotes, 1 occurrence, **0 readers**, and it numbers the same texts differently from the live journal (its `LCY:{num:7}` holds Muffat, who is Entry **14**) | **§DX-02n** (l) | a dead const that reads as the numbering authority |
-| Unseeded `Math.random()` into persisted state across the drop and lake-magic channels | **§DX-02m** | `_pickDrop(table)@7041` already named |
+| `const JOURNAL_ENTRIES@22452` — 5 authored quotes, 1 occurrence, **0 readers**, and it numbers the same texts differently from the live journal (its `LCY:{num:7}` holds Muffat, who is Entry **14**) | **§DX-02n** (l) | a dead const that reads as the numbering authority |
+| Unseeded `Math.random()` into persisted state across the drop and lake-magic channels | **§DX-02m** | `_pickDrop(table)@7053` already named |
 | Curse Score floor of 20 → both endings unreachable | **§EPIC-01**, **§ENDING-01(b)** | highest player impact in the queue |
 | `VS` cell-primacy loss → 8 Wisdom quests dark | **§DX-02w** | `check:cellprimacy` is the gate that would catch it |
 | The game is silent — organ built, never embedded | **§AUDIO-01** | Report 7's own stated purpose, unbuilt |

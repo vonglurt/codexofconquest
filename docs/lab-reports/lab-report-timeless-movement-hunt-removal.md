@@ -86,11 +86,11 @@ catch a *re-added*; spec line numbers replayed against `git show 017d7d8:play.ht
 | **D** | `1d6263a` | Quest comment · map-click wording · doc sync |
 | **FU** | `790d4f3` | *(unplanned)* Hunt/Stalk residue swept from 7 deeper spec docs |
 
-`function cellMove(dir)@28347` holds zero clock writers and says so at line 28366. Exactly **four**
+`function cellMove(dir)@28495` holds zero clock writers and says so at line 28366. Exactly **four**
 `hoursElapsed` writers survive, all on the D1 keep-list: the short-rest button (7149),
-`function _storyRollInit()@24626` at battle start (24650), `function storyShortRest(nodeCode)@25819`
-(25841), and `function storyConfirmSleep()@36227` at +8 (36300). The `⏱ Hours` HUD
-(`id="s-hours"@4190`) and the 24-hour fatigue rule (25046) are live.
+`function _storyRollInit()@24689` at battle start (24650), `function storyShortRest(nodeCode)@25950`
+(25841), and `function storyConfirmSleep()@36425` at +8 (36300). The `⏱ Hours` HUD
+(`id="s-hours"@4186`) and the 24-hour fatigue rule (25046) are live.
 
 The **Stalk** half is gone and stayed gone: `storyQuestHunt`, `storyQuickWait`, `btn-hunt-toggle`,
 `btn-stalk-wait`, `btn-stalk-abandon`, `stalk-card` are all **0 occurrences**; `HUNTING_GROUNDS`,
@@ -107,7 +107,7 @@ Criteria 1–6 are the spec's own, adjudicated in place.
 |---|---|---|---|
 | 1 | **AC1** — movement leaves `hoursElapsed` unchanged; battle/sleep still advance it | 0 writers in `cellMove`; 4 elsewhere, all keep-list | ✅ |
 | 2 | **AC2** — no hunt/stalk identifier remains (grep-clean) | Stalk clean; **Hunt live** | ❌ split (§5) |
-| 3 | **AC3** — no HUNT card, no 🎯 button | button back at `id="btn-hunt"@4752` | ❌ (§5) |
+| 3 | **AC3** — no HUNT card, no 🎯 button | button back at `id="btn-hunt"@4749` | ❌ (§5) |
 | 4 | **AC4** — `quest_slums_cleanup` completes on 3 BMA wins | true; §ARCH-01 migrated it to UQF-1.0 `completion.countMin` | ✅ |
 | 5 | **AC5** — encounters still roll on movement at terrain rate | plain path at 28437 | ✅ |
 | 6 | **AC6** — docs synced | synced then, **wrong now** | ❌ (§6-A) |
@@ -138,7 +138,7 @@ genuinely different mechanic:
 
 Same name, same state field, same two function names, different behaviour. The new design is
 **better** and consistent with D1 — a grinding aid that costs no clock — and it lives entirely in
-`function _enterEmptyCell(r, c)@28422` and `function _weightedMonsterPick(terrain)@38220`, whose only
+`function _enterEmptyCell(r, c)@28575` and `function _weightedMonsterPick(terrain)@38433`, whose only
 caller is that function; named-node battles never consult it.
 
 The defect is not the feature. It is that **nothing updated its predecessor's paperwork**, and the
@@ -146,7 +146,7 @@ paperwork was thorough. Most vividly, line 38113 still reads:
 
 > `// §TIMELESS-01: _updateHuntBtn / storyToggleHunt removed with the Hunt feature.`
 
-`function _updateHuntBtn()@38057` and `function storyToggleHunt()@38068` are defined 39 and 28 lines
+`function _updateHuntBtn()@38270` and `function storyToggleHunt()@38281` are defined 39 and 28 lines
 **above** that sentence. *The tombstone outlived the corpse, and the corpse got up.*
 
 The general hazard, in its sharpest form: **a retired feature's vocabulary is not free to re-use.**

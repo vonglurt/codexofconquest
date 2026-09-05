@@ -72,7 +72,7 @@ one. §VI measures that.
 ### C. Not the same as Kazrath
 
 `TBS` (historical `GC`/`EG`) holds the epic battleground and Void High Shaman Kazrath — Act V's
-main-quest villain, a separate `void_high_shaman@26279` statline (tier `deadly`, AC 16 / HP 255).
+main-quest villain, a separate `void_high_shaman@26410` statline (tier `deadly`, AC 16 / HP 255).
 The Warden operates under an older and administrative mandate. *Kazrath's motivations are
 aggressive; the Warden's are clerical.*
 
@@ -85,7 +85,7 @@ aggressive; the Warden's are clerical.*
 
 ### A. Monster and trophy
 
-`void_shaman@5410` — `ac:15, hp:65, atk:6, dmgDie:6, dmgCount:2, dmgFlat:4`, all exact as
+`void_shaman@5407` — `ac:15, hp:65, atk:6, dmgDie:6, dmgCount:2, dmgFlat:4`, all exact as
 specified. `name:'The Warden'` so the battle overlay reads as a named encounter rather than a
 type.
 
@@ -107,8 +107,8 @@ if (node.code === 'GVA' && S_story.vsShamanKnown@31696
     && S_story.vaLastWardVisited && !S_story.wardensLegacyKnown)
 ```
 
-Registered as `{ id:'void-shaman-warden', nodes:['GVA']@34176` in `NODE_HOOKS`, dispatched in
-place at `_runNodeHook('void-shaman-warden', node)@34911`. On the first qualifying visit,
+Registered as `{ id:'void-shaman-warden', nodes:['GVA']@34419` in `NODE_HOOKS`, dispatched in
+place at `_runNodeHook('void-shaman-warden', node)@35131`. On the first qualifying visit,
 `vshamanFound = true`, `quest_vs_warden` activates, and the intro fires:
 
 > *"You came to stop me. Or to understand. Either is fine. I have been working for eleven years
@@ -120,7 +120,7 @@ invited to argue, not ambushed.
 
 ### C. Dual resolution
 
-**Persuasion** — rendered only when `_hasLog = (S_story.inventory || []).some@31708` finds
+**Persuasion** — rendered only when `_hasLog = (S_story.inventory || []).some@31940` finds
 *The Constructor's Log*. The Warden reads Entry 2, then Entry 7:
 
 > *"The cage is closed. It was closed 200 years ago. I have been eleven years trying to re-open
@@ -131,8 +131,8 @@ Sets `vsShamanPersuaded` + `wardensLegacyKnown`, grants the Token, pays **+600gp
 Downstream fiction: *"The sub-clan walked back in. All of them. Mordus didn't ask what changed.
 He logged them as returned."*
 
-**Combat** — `storyPreBattle({ ...node, code:'MT_WARDEN'@31733`. Victory is caught by
-`pb.nodeCode === 'MT_WARDEN'@25385`, which sets `vshamanDefeated` + `wardensLegacyKnown`, grants
+**Combat** — `storyPreBattle({ ...node, code:'MT_WARDEN'@31965`. Victory is caught by
+`pb.nodeCode === 'MT_WARDEN'@25450`, which sets `vshamanDefeated` + `wardensLegacyKnown`, grants
 the Token and pushes it to `dropsThisBattle`. The sub-clan **scatters** instead of returning —
 the combat path disperses the Hollow Hands rather than reintegrating them.
 
@@ -148,14 +148,14 @@ the combat path disperses the Hollow Hands rather than reintegrating them.
 | `wardensLegacyKnown` | arc complete, either path | 2 (both paths) + quest `onComplete` |
 | `vsShamanBenediktDelivered` | Benedikt callback fired, once per run | 1 (callback) |
 
-Declared contiguously at `vshamanFound: false@23141`. `vshamanDefeated` and
+Declared contiguously at `vshamanFound: false@23173`. `vshamanDefeated` and
 `vsShamanPersuaded` are mutually exclusive by construction; both set `wardensLegacyKnown`.
 
 ### E. Quest
 
-`quest_vs_warden: { id:'quest_vs_warden'@13549` — migrated to UQF-1.0 by §ARCH-01 W7c:
+`quest_vs_warden: { id:'quest_vs_warden'@13576` — migrated to UQF-1.0 by §ARCH-01 W7c:
 `completion:{ flags:['wardensLegacyKnown'] }`, `activateNode:null` (hook-driven),
-`waypointNode:'GVA', reward:600@13560`. The `onComplete` chain writes the flag, then a
+`waypointNode:'GVA', reward:600@13587`. The `onComplete` chain writes the flag, then a
 `_legacy_fn` narrates the three-way close (persuaded / defeated / neither).
 
 The hint is unchanged from the spec and is doing real work: *"Enter the MT tunnel and confront
@@ -164,7 +164,7 @@ there is an item-based alternative **before** walking into an AC 15 fight.
 
 ### F. Benedikt callback
 
-`node.code === 'NUE' && S_story.vsShamanPersuaded && _npcFavor('benedikt_rasp') >= 2@34914`.
+`node.code === 'NUE' && S_story.vsShamanPersuaded && _npcFavor('benedikt_rasp') >= 2@35134`.
 Persuasion-only, once per run:
 
 > *"She planted a guardian at the tunnel and didn't write it down anywhere official. … She
@@ -178,10 +178,10 @@ investigation* rather than under *combat*. See delta D-6: it cannot fire.
 
 | Surface | Anchor | Keyed on |
 |---|---|---|
-| Town-crier news | `say the MT pass is open@26770` | `S_story.warden_resolved` — **no writer, ever** (D-5) |
-| Shard Note **6** *The Chaconne Piece* | `flag:'wardensLegacyKnown', addText@27179` | `wardensLegacyKnown` |
-| Inn dream | `flag:'vaArchitectureKnown'@27154` | `vaArchitectureKnown` — **independent of this arc** (D-7) |
-| Froberger Entry 26 | `entryNum:26, nodeCode:'TRD'@27212` | none — always readable |
+| Town-crier news | `say the MT pass is open@26902` | `S_story.warden_resolved` — **no writer, ever** (D-5) |
+| Shard Note **6** *The Chaconne Piece* | `flag:'wardensLegacyKnown', addText@27311` | `wardensLegacyKnown` |
+| Inn dream | `flag:'vaArchitectureKnown'@27275` | `vaArchitectureKnown` — **independent of this arc** (D-7) |
+| Froberger Entry 26 | `entryNum:26, nodeCode:'TRD'@27344` | none — always readable |
 
 Entry 26 was written before Layer 56 existed and reads like the Warden seen from outside:
 *"The data was on page seven. I wish I had taken longer with the first read."* It is the only
@@ -198,7 +198,7 @@ because they failed a check. **Held** — no skill check was ever added.
 **B. The combat path is honourable, not a punishment.** The Warden knew he might be stopped and
 says so. The sub-clan scattering is the path's *consequence*, not its penalty. **Held.**
 
-**C. `MT_WARDEN` as a synthetic battle code.** `S_story.defeatedBattles[pb.nodeCode] = true@25320`
+**C. `MT_WARDEN` as a synthetic battle code.** `S_story.defeatedBattles[pb.nodeCode] = true@25377`
 runs before the Layer 56 handler, so a fight keyed to the real node would stamp
 `defeatedBattles['GVA']` and corrupt a node the player revisits for §XVII and the callback.
 Using a synthetic code keeps the node's state clean.
@@ -221,18 +221,18 @@ existed and was removed; **RENAMED** = the thing survived under a different key.
 
 | # | Report says | HEAD | Verdict |
 |---|---|---|---|
-| D-1 | Gate at node `MT` | `GVA` — `GVA:{ num:50, code:'GVA'@8733`, *The Mountain Pass — High Crest*, `act:3` | **RENAMED.** `MT` was `num:50` with the identical label at `194a810`. Same node, new key. |
-| D-2 | Benedikt callback at `SQ` | `NUE:{ num:35, code:'NUE'@8705`, *Scholar's Quarter — Weimar* | **RENAMED**, `num:35` both sides. |
-| D-3 | Warrens / battleground at `GC` / `EG` | `TRD:{ num:26, code:'TRD'@8686` and `TBS:{ num:71, code:'TBS'@8779` | **RENAMED**, `num` preserved on both. |
+| D-1 | Gate at node `MT` | `GVA` — `GVA:{ num:50, code:'GVA'@8746`, *The Mountain Pass — High Crest*, `act:3` | **RENAMED.** `MT` was `num:50` with the identical label at `194a810`. Same node, new key. |
+| D-2 | Benedikt callback at `SQ` | `NUE:{ num:35, code:'NUE'@8718`, *Scholar's Quarter — Weimar* | **RENAMED**, `num:35` both sides. |
+| D-3 | Warrens / battleground at `GC` / `EG` | `TRD:{ num:26, code:'TRD'@8699` and `TBS:{ num:71, code:'TBS'@8792` | **RENAMED**, `num` preserved on both. |
 | D-4 | `tier:'rare'` | `tier:"hard"` | **Transcribed exactly — and `rare` was never a legal value.** Fixed by `9df7a2b` (2026-06-04). See §V. |
 | D-5 | *"News item `warden_resolved` fires on resolution"* | The line exists; `S_story.warden_resolved` has **no writer in the file's entire history** | **NOT SHIPPED, and wrong the day it was written.** → §AUDIT-03aq |
-| D-6 | *"callback requires fav ≥ 2 (Dear Friend), i.e. `quest_wm_03`"* | `quest_wm_03` sets `npc:"benedikt_rasp", set:1@11097` — the **only** favor writer for Benedikt in 38,712 lines | **Unreachable.** `fav >= 2 ? '💛 Dear Friend'@23713` is the threshold. → §AUDIT-03ar |
-| D-7 | *"Inn dream requires `wardensLegacyKnown` to precede it"* | `vaArchitectureKnown` is set at `node.code === 'NUE' && S_story.vaLastWardVisited@31688` — Warden not consulted | **Never true.** Good news: the fifth ending does not depend on this arc. |
-| D-8 | *"`void_shaman` … not in the random drop table"*; §I.C *"connected only thematically"* | `monsters:[ P.goblin, P.hobgoblin, P.void_shaman ]@6362` + a 4-row `MONSTER_DROPS` table | **True when written** (`monsters:[]` at birth), **inverted by `9df7a2b`.** → §AUDIT-03as |
+| D-6 | *"callback requires fav ≥ 2 (Dear Friend), i.e. `quest_wm_03`"* | `quest_wm_03` sets `npc:"benedikt_rasp", set:1@11112` — the **only** favor writer for Benedikt in 38,712 lines | **Unreachable.** `fav >= 2 ? '💛 Dear Friend'@23748` is the threshold. → §AUDIT-03ar |
+| D-7 | *"Inn dream requires `wardensLegacyKnown` to precede it"* | `vaArchitectureKnown` is set at `node.code === 'NUE' && S_story.vaLastWardVisited@31920` — Warden not consulted | **Never true.** Good news: the fifth ending does not depend on this arc. |
+| D-8 | *"`void_shaman` … not in the random drop table"*; §I.C *"connected only thematically"* | `monsters:[ P.goblin, P.hobgoblin, P.void_shaman ]@6363` + a 4-row `MONSTER_DROPS` table | **True when written** (`monsters:[]` at birth), **inverted by `9df7a2b`.** → §AUDIT-03as |
 | D-9 | Shard Note **#5** | The `wardensLegacyKnown` conditional is on note **6**, *The Chaconne Piece* | **Wrong when written** — note 6 at the report's own tree. The cited *line* is exact. |
 | D-10 | `completeFn:() => !!(S_story.wardensLegacyKnown)` | `completion:{ flags:['wardensLegacyKnown'] }` | Migrated by §ARCH-01 W7c. Contract identical. |
 | D-11 | Quest `desc` as quoted | Rewritten; `hint` and `disposition` byte-verbatim | Prose revision, not rot. |
-| D-12 | *"Reward: +600gp"* | `+600` inline **and** `reward:600` on the entry — but `q.reward` `is intentionally NOT read@37033` | **No double-pay.** Display-only field; the inline grant is the only payer. |
+| D-12 | *"Reward: +600gp"* | `+600` inline **and** `reward:600` on the entry — but `q.reward` `is intentionally NOT read@37253` | **No double-pay.** Display-only field; the inline grant is the only payer. |
 
 **Everything not in this table verified exact**, including all six statline fields, both Token
 descriptions, the intro, both resolution monologues, the sub-clan outcomes, the quest hint and
@@ -247,7 +247,7 @@ The report filed no risks. Three appear in hindsight; all three closed or are fi
 | Risk | Outcome |
 |---|---|
 | `tier:'rare'` outside the five-value contract | **CLOSED and gated.** Every tier reader falls back silently — `_voidEnrage` gives the boss `{atk:1,dmg:1}`, initiative `+0` instead of `+3`, encounter weight a flat 10, and the threat badge renders `RARE`. `dx02g-monster-tier-contract.test.js` was written **because of this monster** and names it in its own header comment. *The single wrong value in this report is now the founding case of a CI gate.* |
-| Exact name matching on `i.name === "The Constructor's Log"` (the report's own §IV worry) | **Still true, still fragile** — and now *two* grant sites push the item (`action:'grant',name:'The Constructor@11138` and `27868`). A rename in either breaks the persuasion path silently. Low risk while both are literal. |
+| Exact name matching on `i.name === "The Constructor's Log"` (the report's own §IV worry) | **Still true, still fragile** — and now *two* grant sites push the item (`action:'grant',name:'The Constructor@11153` and `27868`). A rename in either breaks the persuasion path silently. Low risk while both are literal. |
 | Intro fires once and never re-fires | **Verified as designed** (`if (!S_story.vshamanFound)`). A player who dismisses the render sees only the buttons afterwards. Cosmetic while the arc is unreachable; worth a re-read affordance if D-5/D-6 are fixed. |
 
 ---
@@ -257,7 +257,7 @@ The report filed no risks. Three appear in hindsight; all three closed or are fi
 Implementation completeness and *playability* are different measurements, and this arc is the
 program's cleanest separation of them. The census is 100 %. The playable surface is 27 %.
 
-**The render node is fine.** `GVA:{r:23,c:186}@9641` is **alone in its cell** — no §AUDIT-03x
+**The render node is fine.** `GVA:{r:23,c:186}@9654` is **alone in its cell** — no §AUDIT-03x
 primacy problem, unlike seven of the nine §CROWN-01 nodes or three of four in Layers 54/55.
 
 **The entry flag is not.** `vsShamanKnown` has exactly one writer in the file:
@@ -377,7 +377,7 @@ here are annotated, never rewritten.
 | **§AUDIT-03aq** | 🟠 | Three town-crier lines keyed to flags with **no writer in the file's history** — `warden_resolved`, `vs_hollow_seal_taken`, `tl_ori_account_read`, all born in `4c06f05` (Layer 62, 2026-05-24, the day *before* the arcs they describe). All three are the top of `qOrder`. No design call. |
 | **§AUDIT-03ar** | 🟢 | `quest_wm_03` sets Benedikt's favor to **1** while announcing *"Benedikt is Dear Friend"* (threshold 2). Kills the Layer 56 callback and Benedikt's whole `dearFriend` dialogue pool. |
 | **§AUDIT-03as** | 🟡 | `P.void_shaman` in the `epic_goblin_cave` roster makes The Warden a wandering encounter in Kazrath's sanctum, against §I.C. Small design call: separate key, or accept it. |
-| **§AUDIT-03s** | — | *(existing, +2)* `say the MT pass is open@26770` and `"the DF node"` in the arc's intro — retired node codes in **player-facing strings**. |
+| **§AUDIT-03s** | — | *(existing, +2)* `say the MT pass is open@26902` and `"the DF node"` in the arc's intro — retired node codes in **player-facing strings**. |
 
 **Doc rot found (filed, not repaired here):** `world.md:280` heads this arc **⚠️ PLANNED** while
 `story.md:1697` heads it **✅**; both claim `void_shaman` is scripted-only / in no pool (D-8),

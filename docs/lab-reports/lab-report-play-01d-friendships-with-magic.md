@@ -44,7 +44,7 @@ would become the one durable edge — a reward for patience rather than for grin
 good intent, and it created a bad shape: the single most important power vector in the game
 sat behind a sub-system a player could complete the entire campaign without ever noticing.
 A player who never finds it is capped at base gear all the way to Commander Bruhns
-(`const BOSS_COMMANDER_AUROS = {@26248`, AC 22 / HP 300) and never learns why the fight feels
+(`const BOSS_COMMANDER_AUROS = {@26379`, AC 22 / HP 300) and never learns why the fight feels
 impossible. Nothing on screen is lying, but nothing on screen is telling, either — the
 signature §PLAY-01 failure: *the engine knows things it will not transmit.*
 
@@ -94,21 +94,21 @@ character every player meets on turn one *choose* to hand it over.
 
 | Artefact | Anchor (HEAD) | State |
 |---|---|---|
-| The rewritten monologue | `yael: { meta: { name:"Yael Scheidemann"@10397` | byte-exact to spec |
-| One-time delivery guarantee | `!(S_story.ngPlusRun > 0) && !S_story.yaelOnboardingSeen) {@23580` | byte-identical ship → HEAD |
-| Its state field | `yaelOnboardingSeen: false,@23172` | declared in `_S_DEFAULTS()` |
-| Pool selection it overrides | `function _getNPCDialogue(npcKey) {@23561` | unchanged |
-| Cycling rule cited in §1 | `return { quote: pool[count % pool.length], meta: d.meta, fav };@23640` | unchanged |
-| The card key that was remapped | `const birkaNpcs = { LHR:['yael'], TLL:['brynn']@35122` | remapped again by §PLAY-01-G |
-| Card renderer | `function _renderNpcCard(key, container) {@23684` | unchanged |
-| The alternate discovery, preserved | `quest_no_fishing_sign: {@13879` | live |
-| Its lamppost hook | `function _nodeHookBirkaNoFishingSign(node, { npcRowDiv }) {@32400` | live at LHR |
-| The second person in the chain | `the_fisherman: { key:"the_fisherman"@22951` | profile live; card fixed later |
-| The drop nerf the thesis rests on | `function _rollMonsterWeaponDrop(monsterDmgDie) {@24583` | byte-exact to §1 |
-| Its degrade term | `const deg = Math.min(0, d6 - 5);@24594` | −4…0 on a d6 |
-| The loot table §1 calls empty | `const _D100_TABLE = [@24518` | 7 rows, weight 100, no weapons |
-| The weapon set | `const WEAPON_ITEMS = [0, 1, 2, 3, 4].flatMap(magic =>@24496` | 70 items, 56 unreachable |
-| The lake reward that did ship | `const LAKE_MAGIC_DB = {@26538` | 8 passive items, 0 weapons |
+| The rewritten monologue | `yael: { meta: { name:"Yael Scheidemann"@10411` | byte-exact to spec |
+| One-time delivery guarantee | `!(S_story.ngPlusRun > 0) && !S_story.yaelOnboardingSeen) {@23601` | byte-identical ship → HEAD |
+| Its state field | `yaelOnboardingSeen: false,@23204` | declared in `_S_DEFAULTS()` |
+| Pool selection it overrides | `function _getNPCDialogue(npcKey) {@23582` | unchanged |
+| Cycling rule cited in §1 | `return { quote: pool[count % pool.length], meta: d.meta, fav };@23663` | unchanged |
+| The card key that was remapped | `const birkaNpcs = { LHR:['yael'], TLL:['brynn']@35347` | remapped again by §PLAY-01-G |
+| Card renderer | `function _renderNpcCard(key, container) {@23718` | unchanged |
+| The alternate discovery, preserved | `quest_no_fishing_sign: {@13906` | live |
+| Its lamppost hook | `function _nodeHookBirkaNoFishingSign(node, { npcRowDiv }) {@32632` | live at LHR |
+| The second person in the chain | `the_fisherman: { key:"the_fisherman"@22979` | profile live; card fixed later |
+| The drop nerf the thesis rests on | `function _rollMonsterWeaponDrop(monsterDmgDie) {@24641` | byte-exact to §1 |
+| Its degrade term | `const deg = Math.min(0, d6 - 5);@24652` | −4…0 on a d6 |
+| The loot table §1 calls empty | `const _D100_TABLE = [@24576` | 7 rows, weight 100, no weapons |
+| The weapon set | `const WEAPON_ITEMS = [0, 1, 2, 3, 4].flatMap(magic =>@24550` | 70 items, 56 unreachable |
+| The lake reward that did ship | `const LAKE_MAGIC_DB = {@26669` | 8 passive items, 0 weapons |
 
 ---
 
@@ -119,7 +119,7 @@ character every player meets on turn one *choose* to hand it over.
 | 1 | `_rollMonsterWeaponDrop` filters `magicBonus === 0` | **EXACT** | filter and the −4…0 prefix ladder byte-identical parent → HEAD |
 | 2 | `_D100_TABLE` carries no mainweapon/dagger rows | **EXACT** | 7 rows at both builds; 20,000 live rolls at L20 returned 0 weapons, 0 daggers |
 | 3 | Monster kills cannot drop positive magic | **PROVED BY EXECUTION** | 20,000 drops across every damage die: 0 positive, 13,369 degraded (66.8 %, the d6 predicts 66.7 %) |
-| 4 | Final fight is AC 22 / HP 300 | **EXACT** | `const BOSS_COMMANDER_AUROS = {@26248` |
+| 4 | Final fight is AC 22 / HP 300 | **EXACT** | `const BOSS_COMMANDER_AUROS = {@26379` |
 | 5 | The lamppost coupon is the first touch of the path | **EXACT** | hook live at LHR; grants a Free Rod Coupon redeemable at SSJ |
 | 6 | The Fisherman is at Yugurt Cabin | **EXACT** | `SSJ` = Yugurt Cabin; profile `node:'SSJ'` |
 | 7 | The old line was geographically loose | **UNDERSTATED** | 15 dock/river labels in the world, 1 fishable node |
@@ -173,7 +173,7 @@ scope promise was kept — this increment did not sprawl.
 
 **Measured, at the parent build and at HEAD:**
 
-- `CI: { num:429, name:"city"@9229` is a **live node** — *Chancery Court — The Officer's Pen* —
+- `CI: { num:429, name:"city"@9242` is a **live node** — *Chancery Court — The Officer's Pen* —
   minted on 2026-06-05 by `76f6133`, the Grimm's Fairy Tales importer, 37 days before this
   report. One quest activates there (`erf_01_act5`, *"Falada Speaks — The Officer's Pen"*).
 - `NODE_COORDS` contains **zero keys that are not `NODE_MAP` keys**, at both builds. The line
@@ -181,7 +181,7 @@ scope promise was kept — this increment did not sprawl.
 - The card genuinely did not render. Browser-proved on the parent build: **0 cards at CI.**
   The cause is that `CI` is one of **291 of 418** `NODE_MAP` entries at the parent build
   (289 of 416 at HEAD) carrying no source-level `code:` field, so `birkaNpcs[node.code]`
-  looked up `undefined`. `LHR:{ num:1,  code:'LHR'@8427`
+  looked up `undefined`. `LHR:{ num:1,  code:'LHR'@8439`
   is one of the 127 that do — which is the entire reason the fix worked.
 - That defect had no name yet. The runtime backfill arrived on 2026-07-29 in `f08f70f`
   (§AUDIT-03e, *"287 nodes stop sharing one `undefined` state slot"*) — **17 days later**.
@@ -189,7 +189,7 @@ scope promise was kept — this increment did not sprawl.
   fairy-tale chancery; the remap incidentally prevented that.
 
 **Why this is worth recording rather than scolding.** The file itself teaches the wrong lesson.
-In the same render layer, the comment `// ── No Fishing Sign at CI ──@32401` sits directly
+In the same render layer, the comment `// ── No Fishing Sign at CI ──@32633` sits directly
 above `if (node.code === 'LHR')` — a rename that moved the code and left the comment. And
 `src/scripts/legacy-codes.js` opens by stating that codes like `CI` *"name nodes that no longer
 exist under those names"*, carries `CI` in its ambiguity set, and offers an `--annotate` mode
@@ -252,9 +252,9 @@ what no shop stocks."*
   1–4 and have no live grant path.** `DAGGER_ITEMS` holds 4 entries, all with a positive
   `atkBonus`, and its **only** reader is the unreachable `_D100_TABLE` branch — the whole
   table is dead.
-- `const LAKE_MAGIC_DB = {@26538` holds **8** items, all `type:'lake_magic'`, **none** a
+- `const LAKE_MAGIC_DB = {@26669` holds **8** items, all `type:'lake_magic'`, **none** a
   weapon: AC, first-strike, fishing-DC, attack, night-type and all-ability trinkets.
-- `function _magicTierAllowed(magic) {@24511` has two call sites, both inside branches the
+- `function _magicTierAllowed(magic) {@24567` has two call sites, both inside branches the
   table can never select.
 
 So the trade §FC06 describes is one-sided: the taking shipped, the giving did not. This is

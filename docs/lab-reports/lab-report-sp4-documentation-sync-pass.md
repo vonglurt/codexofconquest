@@ -31,7 +31,7 @@ report's own stated test. The pass verified what it changed and assumed what it 
 
 ### I-A. Why an annotation system helps the *game*
 
-CodexOfConquest.com is one static HTML file. A reader who opens it finds `const S29_AUROS_THEORY@27052` — a
+CodexOfConquest.com is one static HTML file. A reader who opens it finds `const S29_AUROS_THEORY@27184` — a
 template literal of dialogue — with no indication of who Auros is, what he is theorising about, when the
 scene fires, or which of the game's several hundred narrative threads it closes. The prose reads as
 orphaned text. The design intent lives in `world.md`, in a paragraph the reader has no way to find.
@@ -89,16 +89,16 @@ where the claim concerns the past (instruments 11/18).
 | 2 | 94 consts annotated | 94 at both ship commits; 93 at HEAD | ✅ exact |
 | 3 | *"27 from earlier passes + 67 new"* | **0** at `9684ff6^` — the string `doc:` occurs **zero times in any form** | ❌ **never shipped** |
 | 4 | 9 template-literal splits | all 9 live, still in 2-line form | ✅ 9/9 |
-| 5 | `surveyDeliveredToAuros` → `undercitySurveyDelivered` | correction survives as engine comment `not surveyDeliveredToAuros@28096`; spec name has 1 occurrence, that comment | ✅ exact |
+| 5 | `surveyDeliveredToAuros` → `undercitySurveyDelivered` | correction survives as engine comment `not surveyDeliveredToAuros@28235`; spec name has 1 occurrence, that comment | ✅ exact |
 | 6 | 20 stale markers cleared | 19 (`world.md`) + 2 (`story.md`) = **21** | ✅ within rounding |
 | 7 | §IV: *"story.md — 13 markers cleared"* | story.md held **6** marker lines in total pre-pass | ❌ **arithmetically impossible** |
 | 8 | Phase 4: 5 targets corrected | 4 of 5 hold at HEAD (`§Inn Dreams`, `§FL3`, `§FL7`, `§Covenant Ceremony`) | ✅ 4/5 |
 | 9 | New section `story.md §Gate Locks` | created; `GATE_LOCKS` **0 occurrences** (retired `5123f5a`, two days later) | ❌ **orphaned** (Finding 3) |
 | 10 | 89 of 94 targets valid | HEAD: **45/82** by SP4's heading test, **73/82 (89 %)** by content | ⚠️ instrument decayed, not corpus (Finding 4) |
-| 11 | FC06 `magicBonus = max(0, base − floor(random()×4))` | pool pre-filtered `magicBonus === 0`; `deg = Math.min(0, d6 - 5)@24594` → **−4…0** | ❌ different mechanism (Finding 5) |
+| 11 | FC06 `magicBonus = max(0, base − floor(random()×4))` | pool pre-filtered `magicBonus === 0`; `deg = Math.min(0, d6 - 5)@24652` → **−4…0** | ❌ different mechanism (Finding 5) |
 | 12 | FC07 `FISHING_GUIDE_TEXT` + `quest_fishing_guide` | both live | ✅ |
-| 13 | V-B: zone gating UI *"deferred"*, *"all three zones always accessible"* | shipped `59cc13b`, **10 h 47 m later** — `Unlocks after landing a Large fish@30476` | ❌ inverted (Finding 6) |
-| 14 | `baitFishingActive` *"wired"* | **1 occurrence** — `tackleboxZoneUnlocks: {shore:true@23108` — declared, never read | ❌ → §DX-02n |
+| 13 | V-B: zone gating UI *"deferred"*, *"all three zones always accessible"* | shipped `59cc13b`, **10 h 47 m later** — `Unlocks after landing a Large fish@30630` | ❌ inverted (Finding 6) |
+| 14 | `baitFishingActive` *"wired"* | **1 occurrence** — `tackleboxZoneUnlocks: {shore:true@23140` — declared, never read | ❌ → §DX-02n |
 | 15 | V-A: 8 layers *"do not yet exist in the HTML"* | **0 of 8** — all carry `// ── Layer N ──` markers at `9684ff6` | ❌ **total** (Finding 1) |
 | 16 | F4 = 29 entries, F6 = 23 | F4 = **26**, F6 = **55**; both still bare line numbers | ❌ → §DX-02aw (Finding 8) |
 | 17 | Annotation target `froberger-journal-all-entries.txt` | file lives at `src/sources/…`; path unresolvable | ❌ path stale |
@@ -118,15 +118,15 @@ eight carries an implementation marker comment **in the commit SP4 shipped**:
 | Layer | Feature | Evidence at `9684ff6` |
 |-------|---------|----------------------|
 | 49 | Quest −1 / World Creator | `// ── Layer 49: §XIV Quest -1 — The Open Door ──` |
-| 51 | Weimar Scholar Gate | 6 marker comments + `// Layer 51: Weimar Scholar Gate@23128` **inside `_S_DEFAULTS()`** |
+| 51 | Weimar Scholar Gate | 6 marker comments + `// Layer 51: Weimar Scholar Gate@23160` **inside `_S_DEFAULTS()`** |
 | 52 | Void Archaeology | 4 markers + `// Layer 52: Void Archaeology` inside `_S_DEFAULTS()` |
 | 54 | Tilbury Harbor | 26 references (nodes, quests) |
 | 55 | Visby Underground | 29 references; `vsDebtProbed`/`vsWeaponsFound`/`vsDebtSettled` |
 | 56 | Void Shaman | `// ── Layer 56: The Void Shaman ──`; node `EG` *"Void Shaman's Sanctum"*; `quest_eg_primary` |
 | 57 | Codex Shard Origin Stories | `// ── Layer 57: Codex Shard Origin Stories ──` + readable-note table |
-| 59 | Pressure Cascade | `// ── Layer 59: Pressure Cascade ──@26935` — **and SP4's own Phase 2 annotated its const** |
+| 59 | Pressure Cascade | `// ── Layer 59: Pressure Cascade ──@27067` — **and SP4's own Phase 2 annotated its const** |
 
-Layer 59 is the sharpest instance: Phase 2 wrote `const NPC_VOID_PRESSURE_LINES@26936` pointing at
+Layer 59 is the sharpest instance: Phase 2 wrote `const NPC_VOID_PRESSURE_LINES@27068` pointing at
 `world.md §The Pressure Cascade`, while §V-A of the same report declared that layer unimplemented. One
 commit contradicts itself.
 
@@ -208,13 +208,13 @@ that bent the pointer are the two that describe content the reader still cannot 
 
 ### Finding 5 — FC06 shipped a different mechanism than the one described
 
-| | Report | HEAD (`_rollMonsterWeaponDrop(monsterDmgDie)@24583`) |
+| | Report | HEAD (`_rollMonsterWeaponDrop(monsterDmgDie)@24641`) |
 |---|--------|------|
 | Pool | all weapons; degrade after selection | pre-filtered `w.magicBonus === 0` — a magic weapon is **never selected** |
-| Formula | `max(0, base − floor(random()×4))` | `deg = Math.min(0, d6 - 5)@24594` |
+| Formula | `max(0, base − floor(random()×4))` | `deg = Math.min(0, d6 - 5)@24652` |
 | Range | *"−3…0"* — which `max(0, …)` cannot produce | −4…0 |
 | Result | *"a base +4 weapon drops as +1, +2, or +3"* | `Wrecked`/`Rusted`/`Chipped`/`Worn` prefixes on a **negative** bonus |
-| Rationale | protect the vendor economy from full-quality drops | `capped at base tier@24588` — *"fishing is the only source of +bonus weapons"* |
+| Rationale | protect the vendor economy from full-quality drops | `capped at base tier@24646` — *"fishing is the only source of +bonus weapons"* |
 
 The design goal held; the implementation inverted it. The report describes degrading a magic drop toward
 zero. The engine never grants one, and instead degrades a *mundane* weapon **below** base — so FC06's
@@ -229,11 +229,11 @@ prevents access to locked zones. All three zones are currently always accessible
 
 Shipped at `59cc13b`, 2026-05-26 21:26 — **10 h 47 m** after SP4's close, in the same day's session. HEAD
 renders locked zones as disabled buttons with a 🔒 suffix, 45 % opacity, and unlock hints
-(`Unlocks after landing a Large fish@30476`), with auto-unlock driven by the catch log. §DOC-02j's
+(`Unlocks after landing a Large fish@30630`), with auto-unlock driven by the catch log. §DOC-02j's
 inversion recurs: read against HEAD alone, a deferral block is indistinguishable from a live gap.
 
 The companion field did **not** ship. `baitFishingActive` has exactly one occurrence in 38,712 lines —
-its own declaration at `tackleboxZoneUnlocks: {shore:true@23108`. Declared, never written, never read.
+its own declaration at `tackleboxZoneUnlocks: {shore:true@23140`. Declared, never written, never read.
 → **§DX-02n**.
 
 ---

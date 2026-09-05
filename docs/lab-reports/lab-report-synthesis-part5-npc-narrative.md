@@ -49,28 +49,28 @@ Anchors resolve at HEAD unless a reference-build line is named explicitly.
 
 | System | Anchor | Role |
 |---|---|---|
-| Cycling quote pools | `const NPC_DIALOGUES = {@10396` | 4 states per NPC key |
-| Portrait / greeting data | `const BIRKA_NPC_PROFILES = {@22713` | parallel structure, both required |
-| State selection | `function _getNPCDialogue(npcKey) {@23561` | `questActive` from `_hasActiveQuestFor` |
-| Card renderer | `function _renderNpcCard(key, container) {@23684` | reads both structures |
-| Mission ledger | `function _missionComplete() {@23649` | 12 bits, returns `>= 8` |
-| Off-screen character | `const PETRA_STALL_STATES = [@27400` · `function _getGigaultState() {@27560` | cycles on `gameDay % 3` |
-| Corridor farewells | `const NPC_FAREWELLS = {@27429` · `function _getFarewell(fromCode, toCode) {@27577` | Friendly+ only |
-| Act III one-liners | `const NPC_ACT_THREE_LINES = {@27471` | priority injection, additive |
-| Node→NPC routing | `const NODE_NPC_KEYS = {@27415` | read by colour *and* farewell |
-| Map warmth gradient | `function _getNodeMapColor(nodeSlug) {@27564` | **live** — see §IV-A |
-| Final map render | `function _renderFinalMap() {@27607` | **live** — see §IV-A |
-| Brynn's chores | `const BRYNN_MAINTENANCE_TASKS = [@27500` | `{label, cost_gold, flag, action, narration}` |
-| Romance layer | `const ROMANCE_QUOTES = [@22380` (21) · `const NPC_ROMANCE_PREAMBLES = {@27481` (6) · `const NPC_ROMANCE_VIGNETTES = {@27491` (6) · `const INN_DREAMS = {@27133` | counts verified |
-| Preamble delivery | `const _preamble = (fav >= 2 && NPC_ROMANCE_PREAMBLES[key])@23742` | italic line before the card |
-| Companion scenes | `const BRYNN_KEEPER_STORY = {@27039` · `const BRUHNS_CO_SCENE = {@28064` · `const YAEL_NAMED_REPORT_SCENE = {@28050` | three arcs, five flags |
-| Corelli arc | `const CORELLI_ITEMS = {@26588` · `const CORELLI_APPEARANCES = [@26610` | 5 items, 5 stops |
-| Death-save bonus | `const _kingsSealBonus@7502` | `kings_seal` grants +1 |
-| La Riva arc | `AMS:{ num:79@8801` · `quest_la_riva_01: { id:'quest_la_riva_01'@13785` · `S_story.frCatKillCount = (S_story.frCatKillCount || 0) + 1;@25357` | node code is `AMS`, never `FR` |
+| Cycling quote pools | `const NPC_DIALOGUES = {@10410` | 4 states per NPC key |
+| Portrait / greeting data | `const BIRKA_NPC_PROFILES = {@22741` | parallel structure, both required |
+| State selection | `function _getNPCDialogue(npcKey) {@23582` | `questActive` from `_hasActiveQuestFor` |
+| Card renderer | `function _renderNpcCard(key, container) {@23718` | reads both structures |
+| Mission ledger | `function _missionComplete() {@23696` | 12 bits, returns `>= 8` |
+| Off-screen character | `const PETRA_STALL_STATES = [@27532` · `function _getGigaultState() {@27694` | cycles on `gameDay % 3` |
+| Corridor farewells | `const NPC_FAREWELLS = {@27561` · `function _getFarewell(fromCode, toCode) {@27711` | Friendly+ only |
+| Act III one-liners | `const NPC_ACT_THREE_LINES = {@27603` | priority injection, additive |
+| Node→NPC routing | `const NODE_NPC_KEYS = {@27547` | read by colour *and* farewell |
+| Map warmth gradient | `function _getNodeMapColor(nodeSlug) {@27698` | **live** — see §IV-A |
+| Final map render | `function _renderFinalMap() {@27746` | **live** — see §IV-A |
+| Brynn's chores | `const BRYNN_MAINTENANCE_TASKS = [@27634` | `{label, cost_gold, flag, action, narration}` |
+| Romance layer | `const ROMANCE_QUOTES = [@22407` (21) · `const NPC_ROMANCE_PREAMBLES = {@27613` (6) · `const NPC_ROMANCE_VIGNETTES = {@27623` (6) · `const INN_DREAMS = {@27265` | counts verified |
+| Preamble delivery | `const _preamble = (fav >= 2 && NPC_ROMANCE_PREAMBLES[key])@23777` | italic line before the card |
+| Companion scenes | `const BRYNN_KEEPER_STORY = {@27171` · `const BRUHNS_CO_SCENE = {@28203` · `const YAEL_NAMED_REPORT_SCENE = {@28189` | three arcs, five flags |
+| Corelli arc | `const CORELLI_ITEMS = {@26719` · `const CORELLI_APPEARANCES = [@26742` | 5 items, 5 stops |
+| Death-save bonus | `const _kingsSealBonus@7514` | `kings_seal` grants +1 |
+| La Riva arc | `AMS:{ num:79@8814` · `quest_la_riva_01: { id:'quest_la_riva_01'@13812` · `S_story.frCatKillCount = (S_story.frCatKillCount || 0) + 1;@25422` | node code is `AMS`, never `FR` |
 | NPC speak endpoint | `src/js/wbapi-server.js:SPEAK_LOG_FILE@815` | moved from repo root since |
 
-State fields cluster in `_S_DEFAULTS`: `brynThirdStepFixed: false,@23096` · `s29LineDelivered:@23100` ·
-`brynnKeeperStoryTold: false,@23118` · `connieMet:@23123` · `fav_corelli: 0,@23144`.
+State fields cluster in `_S_DEFAULTS`: `brynThirdStepFixed: false,@23128` · `s29LineDelivered:@23132` ·
+`brynnKeeperStoryTold: false,@23150` · `connieMet:@23155` · `fav_corelli: 0,@23176`.
 
 ---
 
@@ -90,7 +90,7 @@ State fields cluster in `_S_DEFAULTS`: `brynThirdStepFixed: false,@23096` · `s2
 | 10 | Yael scene gate `fav >= 2` ∧ Act VI ∧ `yaelEscortUsed` | **CORRECT** | engine comment and `world.md` are wrong — §IV-F |
 | 11 | `WORLD_JOURNAL_STYLE` not a live style block | **CORRECT** | 0 hits at reference and HEAD |
 | 12 | `connie_tuna`/`aldo_sardino` not in `BIRKA_NPC_PROFILES` | **TRUE THEN, STALE NOW** | both added, `@22993`/`@22994` |
-| 13 | Fishmonger's Row is `AMS`, not `FR` | **CORRECT** | `AMS:{ num:79@8801` |
+| 13 | Fishmonger's Row is `AMS`, not `FR` | **CORRECT** | `AMS:{ num:79@8814` |
 | 14 | `cookApologized` does not exist | **CORRECT** | 0 hits, reference and HEAD |
 | 15 | `_bfsPath` renamed `_bfsGridPath` | **CORRECT** | 0 / 6 hits respectively |
 | 16 | Growth 12,637 → 33,721 = 2.67× | **CORRECT** | 2.668 |
@@ -105,14 +105,14 @@ State fields cluster in `_S_DEFAULTS`: `brynThirdStepFixed: false,@23096` · `s2
 The report marks three living-world features unbuilt. Its own hedge is the tell: *"no confirming
 grep."* That is accurate. None was run.
 
-**Map warmth gradient.** `function _getNodeMapColor(nodeSlug) {@27564` — reference build line
+**Map warmth gradient.** `function _getNodeMapColor(nodeSlug) {@27698` — reference build line
 25,232, which is **four lines** after `_getGigaultState()`, cited correctly on the previous page.
 It reads `NODE_NPC_KEYS`, then returns progressively warmer browns at fav ≥ 1 / 2 / 3. Two live
-call sites: the minimap render loop (`const warmColor = _getNodeMapColor(code);@37325`, applied to
-every visited or trail cell) and `cell.style.background = _getNodeMapColor(slug);@27622`.
+call sites: the minimap render loop (`const warmColor = _getNodeMapColor(code);@37545`, applied to
+every visited or trail cell) and `cell.style.background = _getNodeMapColor(slug);@27761`.
 
-**Final map render.** `function _renderFinalMap() {@27607` — reference line 25,275, forty-three
-lines from the same neighbourhood — invoked at `_renderFinalMap();@28338`, inside the victory
+**Final map render.** `function _renderFinalMap() {@27746` — reference line 25,275, forty-three
+lines from the same neighbourhood — invoked at `_renderFinalMap();@28486`, inside the victory
 ceremony, under the comment `// L44-S: final map render before victory modal`.
 
 **Void's First Sign.** At the reference build, lines 32,789–32,800: a real `r === 4 && c === 3`
@@ -156,18 +156,18 @@ earlier. One page, two adjacent bullets, mutually exclusive.
 
 ### C. A byte-exact ledger with a row that governs nothing
 
-The 12-bit table was checked row for row against `function _missionComplete() {@23649` and is
+The 12-bit table was checked row for row against `function _missionComplete() {@23696` and is
 **correct in every cell**: all twelve conditions, journal entry 7, `pitTrainingWins >= 3`,
 `defeatedBattles['TLS']`, `_lubeckFriends() >= 3`, `_curseScore() < 10`,
 `visited['LHR'] && level >= 5`, and the `>= 8` return.
 
-`allEbReturns:@23657` is the exception, and the error is not in the number:
+`allEbReturns:@23688` is the exception, and the error is not in the number:
 
 - The bit needs five `ebReturnDone` flags.
-- `ebReturnDone` has exactly one writer, `function _storyEbReturnBeat(ebCode) {@30360`.
+- `ebReturnDone` has exactly one writer, `function _storyEbReturnBeat(ebCode) {@30516`.
 - Its only caller is the RETURN chip, built from
-  `const returnId   = 'quest_' + ebCode.toLowerCase() + '_return';@35848`.
-- `ebCode` iterates `const EB_NPC_DIALOGUE = {@26301`, whose keys are three-letter node codes
+  `const returnId   = 'quest_' + ebCode.toLowerCase() + '_return';@36073`.
+- `ebCode` iterates `const EB_NPC_DIALOGUE = {@26432`, whose keys are three-letter node codes
   (`PRN`, `INV`, `SDR`, …), producing `quest_prn_return`.
 - `QUEST_DB` holds twenty return quests keyed by the **legacy two-letter** codes —
   `quest_ef_return`, `quest_eh_return`, … `quest_prn_return` has **0 occurrences at the
@@ -210,12 +210,12 @@ appears to be — the two registries do not share a state vocabulary (§DX-02al)
 ### F. Where the report is right and the engine is wrong
 
 The Yael Named Report gate, from the report's "what still applies": `fav >= 2` **and Act VI+** and
-`yaelEscortUsed`. The live gate agrees exactly — `yaelNamedReportDelivered) {@32474`, guarded by
+`yaelEscortUsed`. The live gate agrees exactly — `yaelNamedReportDelivered) {@32706`, guarded by
 `_npcFavor('yael') >= 2 && (S_story.actNumber || 1) >= 6`, at node `LHR`.
 
 Both other sources disagree with the code:
 
-- `const YAEL_NAMED_REPORT_SCENE = {@28050` — its own header comment says *"fav >= 2 Act IV+"*.
+- `const YAEL_NAMED_REPORT_SCENE = {@28189` — its own header comment says *"fav >= 2 Act IV+"*.
 - `world.md:617` says the scene fires *"at a `LLA` or `HKG` visit (fav_yael ≥ 2, Act IV+,
   `yaelNamedReportFired` not set)"* — wrong node, wrong act, and `yaelNamedReportFired` is a
   **phantom flag with 0 occurrences in the engine**.
@@ -247,7 +247,7 @@ document is the only one that kept the number.
 - **Neither Bruhns's confession nor Yael's report branches on player response.** Both are faits
   accomplis; the player witnesses. Adding outcome branches breaks the arcs' shared premise.
 - **Bruhns's `dearFriendWithTheory` is the only cross-arc disclosure gate in the game.** It appends
-  a confirmatory — not explanatory — line when `s29LineDelivered:@23100` is set. The player must
+  a confirmatory — not explanatory — line when `s29LineDelivered:@23132` is set. The player must
   have met the theory elsewhere before Bruhns will confirm it. Worth copying; worth not breaking.
 - **The vignette principle governs all NPC writing.** *"Never declare the emotion. Name the object.
   Name what the person does with it. The gap is the emotion."* Connie's dear-friend line is the

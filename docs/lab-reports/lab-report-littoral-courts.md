@@ -94,26 +94,26 @@ totals reconciled against `check:dupkeys`' node count before any delta was deriv
 
 ## III. As-Built Inventory (HEAD)
 
-**Nodes — 6 of 10 survive.** `LC1:{ num:112, code:'LC1'@8531` · `LC2:{ num:114, code:'LC2'@8535` ·
-`LC3:{ num:116, code:'LC3'@8539` · `LC4:{ num:118, code:'LC4'@8543` ·
-`LSO:{ num:120, code:'LSO'@8547` · `LCA:{ num:119, code:'LCA'@8551`.
+**Nodes — 6 of 10 survive.** `LC1:{ num:112, code:'LC1'@8544` · `LC2:{ num:114, code:'LC2'@8548` ·
+`LC3:{ num:116, code:'LC3'@8552` · `LC4:{ num:118, code:'LC4'@8556` ·
+`LSO:{ num:120, code:'LSO'@8560` · `LCA:{ num:119, code:'LCA'@8564`.
 **Deleted:** `LJ0` · `LJ1` · `LJ2` · `LJ3`.
 
-**Quests — 5 of 5, UQF-1.0.** `quest_aurel_tide: { id:'quest_aurel_tide'@11560` ·
-`quest_calice_bridge: { id:'quest_calice_bridge'@11576` ·
-`quest_mireille_ami: { id:'quest_mireille_ami'@11592` ·
-`quest_solen_horizon: { id:'quest_solen_horizon'@11608` ·
-`quest_sea_overseer: { id:'quest_sea_overseer'@11624`.
+**Quests — 5 of 5, UQF-1.0.** `quest_aurel_tide: { id:'quest_aurel_tide'@11575` ·
+`quest_calice_bridge: { id:'quest_calice_bridge'@11591` ·
+`quest_mireille_ami: { id:'quest_mireille_ami'@11607` ·
+`quest_solen_horizon: { id:'quest_solen_horizon'@11623` ·
+`quest_sea_overseer: { id:'quest_sea_overseer'@11639`.
 
-**State — 10 of 10, contiguous.** `// §SIREN-01: Littoral Courts@23182` …
-`solenSoonRead: false, littorialComplete: false,@23186`.
+**State — 10 of 10, contiguous.** `// §SIREN-01: Littoral Courts@23214` …
+`solenSoonRead: false, littorialComplete: false,@23218`.
 
-**Voice — 6 of 6 `quoteFn` state machines.** `LC1: { name:'Lady Aurel', quoteFn:() => S_story.aurelTideRead@22542` ·
-`LCA: { name:'Harbor Keeper', quoteFn:() => S_story.littorialComplete@22560` ·
-`LSO: { name:'The Overseer', quoteFn:() => S_story.charmResisted@22563`.
+**Voice — 6 of 6 `quoteFn` state machines.** `LC1: { name:'Lady Aurel', quoteFn:() => S_story.aurelTideRead@22570` ·
+`LCA: { name:'Harbor Keeper', quoteFn:() => S_story.littorialComplete@22588` ·
+`LSO: { name:'The Overseer', quoteFn:() => S_story.charmResisted@22591`.
 
-**Panels — 2 of 2.** `{ id:'story-lso-trigger', nodes:['LSO'],@31348` (repointed — Finding 3) ·
-`{ id:'story-lca-close', nodes:['LCA'],@31353` with `const _bc = (st.betrayalThought ? 1 : 0)@31356`.
+**Panels — 2 of 2.** `{ id:'story-lso-trigger', nodes:['LSO'],@31580` (repointed — Finding 3) ·
+`{ id:'story-lca-close', nodes:['LCA'],@31585` with `const _bc = (st.betrayalThought ? 1 : 0)@31588`.
 
 ---
 
@@ -142,9 +142,9 @@ totals reconciled against `check:dupkeys`' node count before any delta was deriv
 
 ### Finding 1 → §AUDIT-03x extended — the first 100 % casualty in the program
 
-`const CELL_GRID = (() => {@9852` groups nodes by cell in `NODE_MAP` **declaration order**, and only
+`const CELL_GRID = (() => {@9865` groups nodes by cell in `NODE_MAP` **declaration order**, and only
 `list[0]` can ever be reached: `S_story.currentCode` is assigned at exactly two sites, and the one
-that matters is `S_story.currentCode = destCode;@28375`, which always yields the primary. Measured
+that matters is `S_story.currentCode = destCode;@28525`, which always yields the primary. Measured
 closure over all 416 nodes (**244 cells, 172 non-primary** — exact against §AUDIT-03x's recorded
 figures):
 
@@ -157,8 +157,8 @@ figures):
 | LSO The Fog Bank | `32,203` | 7th of 17 | ❌ |
 | LCA Southern Anchorage | `35,213` | 2nd of 2 | ❌ `list[0]` = `CI2` |
 
-`LC4:{r:32,c:203},@9773` and `LCA:{r:35,c:213},@9812` are the coordinates that did it. Since
-`function _uqfActivateAtNode(node, indexFresh) {@30139` keys on `node.code`, **all five quests are stranded**;
+`LC4:{r:32,c:203},@9786` and `LCA:{r:35,c:213},@9825` are the coordinates that did it. Since
+`function _uqfActivateAtNode(node, indexFresh) {@30293` keys on `node.code`, **all five quests are stranded**;
 since the arc-close is a node panel, **the ending cannot render either**.
 
 **This is the largest proportional casualty §AUDIT-03x has produced.** §CROWN-01 lost 24 of 34 quests
@@ -195,7 +195,7 @@ commit message. Read the diff, not the subject line.***
 
 ### Finding 3 → §AUDIT-03af — the engine's own comment is wrong about the past, and the wrong diagnosis produced the wrong fix
 
-Live at `§VM-01-G1-FIX: originally keyed to 'LJ3', a dead@31344`, the comment reads:
+Live at `§VM-01-G1-FIX: originally keyed to 'LJ3', a dead@31576`, the comment reads:
 
 > *"originally keyed to `'LJ3'`, a dead node code **no NODE_MAP entry ever carried**, so this panel
 > had **NEVER rendered**; remapped to LSO … the quest's own `activateNode`."*
@@ -250,8 +250,8 @@ both found status blocks stale in the "already shipped" direction, and this is t
 §V.3 argues the betrayal flags should ride `checkFailFlag` because *"the field is already supported by
 the skill-check handler."* §ARCH-01 retired it. Three hits remain, **all inside comments** — dead by
 the standing rule. But the comment that replaced it is a model of how to retire a field:
-`retryable:false so the fail flag grants once). xpAward→reward. solen_horizon had no@11557` and
-`and the LJ3/betrayalCount blocks — mission_bit sets the flag + grants the token identically.@11559`
+`retryable:false so the fail flag grants once). xpAward→reward. solen_horizon had no@11572` and
+`and the LJ3/betrayalCount blocks — mission_bit sets the flag + grants the token identically.@11574`
 record the whole translation, including the `onFail:[]` special case — **independently confirming
 §II-B's note about Port Solen 71 days later.** ***A migration that writes down what it mapped to what
 is the reason this report's quest table could be scored 25/25 instead of guessed at.***

@@ -60,26 +60,26 @@ author **composed**; every passage the author could **copy** is exact.
 ## III. As-Built Inventory
 
 **Kill reward** — `_storyBattleVictory`, one block:
-`const reward` is `Math.floor(...)` over `S.opp.maxHp || 10) * 0.1@25311`;
-`// heal stays at base@25312`; `const goldDrop = Math.floor(reward * partyMult)@25313`.
+`const reward` is `Math.floor(...)` over `S.opp.maxHp || 10) * 0.1@25368`;
+`// heal stays at base@25369`; `const goldDrop = Math.floor(reward * partyMult)@25370`.
 XP is `S.enemy.ac` × `S.opp.maxHp` × `partyMult`, rounded, one line above.
 
-**Loot** — `const _D100_TABLE =@24518` (7 weighted rows, total 100),
-`function _rollD100Loot@24535`, `const POTION_TIERS = {@24308`.
+**Loot** — `const _D100_TABLE =@24576` (7 weighted rows, total 100),
+`function _rollD100Loot@24593`, `const POTION_TIERS = {@24370`.
 `const LOOT_TABLE =` *(deleted 2026-08-26, §DROP-01-FU)* — the 20-entry d20 array this report documents — is still
 declared and has **no reader**.
 
-**Rest (Layer 13)** — `function storyShortRest@25819`, `const base  = Math.floor(S_story.hpMax * 0.25)@25840`,
-`const heal  = isInn ? base : base * 2@25841`, `if (_lv >= 2) S_story.surgeCharges@25846`,
-`Boy Scouts Award — doubled!@25860`.
-**Necklace** — `function _knowledgeIcon@25790`, `function _maybeAddKnowledgeBead@25810`,
-`S_story.knowledge.push({ name, icon@25816`, defaults `shortRests: 3, knowledge: []@23076`,
-render `makeSection('🔮 Necklace of Knowledge')@31233`.
-**Long rest** — `const _rollCount = _isFirstSleep ? 2 : 1@36238`,
-`_healTotal = Math.max(_healTotal@36246`, `S_story.day = Math.min(49, S_story.day + 1)@36253`,
-`S_story.shortRests = 3@36289`, `Boyscout Night! Double rolls@36300`.
-**Gate leaf** — `if (g.restedAtMin)@22075`, consumed by exactly one quest:
-`quest_d0206_a3: { id:@21791`, `restedAtMin:{ SZG:1 }@21794`.
+**Rest (Layer 13)** — `function storyShortRest@25950`, `const base  = Math.floor(S_story.hpMax * 0.25)@25971`,
+`const heal  = isInn ? base : base * 2@25972`, `if (_lv >= 2) S_story.surgeCharges@25977`,
+`Boy Scouts Award — doubled!@25991`.
+**Necklace** — `function _knowledgeIcon@25921`, `function _maybeAddKnowledgeBead@25941`,
+`S_story.knowledge.push({ name, icon@25947`, defaults `shortRests: 3, knowledge: []@23106`,
+render `makeSection('🔮 Necklace of Knowledge')@31435`.
+**Long rest** — `const _rollCount = _isFirstSleep ? 2 : 1@36436`,
+`_healTotal = Math.max(_healTotal@36444`, `S_story.day = Math.min(49, S_story.day + 1)@36451`,
+`S_story.shortRests = 3@36486`, `Boyscout Night! Double rolls@36498`.
+**Gate leaf** — `if (g.restedAtMin)@22097`, consumed by exactly one quest:
+`quest_d0206_a3: { id:@21813`, `restedAtMin:{ SZG:1 }@21816`.
 
 ---
 
@@ -133,7 +133,7 @@ render `makeSection('🔮 Necklace of Knowledge')@31233`.
 
 Appendix A lists seven Layer-13 mechanics as *"described in this report but not yet
 implemented."* **Six shipped and the seventh shipped in altered form.** The whole layer
-exists under `LAYER 13: Short Rests & Necklace of Knowledge@25787`, and the specified
+exists under `LAYER 13: Short Rests & Necklace of Knowledge@25918`, and the specified
 bead record shipped **byte-exact** to the field list in §III-D-1.
 
 This is the first report in the program whose **own status block** is its stalest
@@ -166,7 +166,7 @@ long rest instead**: `2 × d10 + CON` on a first visit, `1 × d10 + CON` on a re
 floored at 50% `hpMax`. The specified `S_story.hp = S_story.hpMax` never shipped.
 
 The consequence is player-facing. The sleep overlay states
-`full HP recovery@35742` and `heal to full & advance a day@35741` — **a promise the code
+`full HP recovery@35967` and `heal to full & advance a day@35966` — **a promise the code
 does not keep.** This is the §AUDIT-03v/w/y(b) class (a player-facing string naming a
 mechanical effect with nothing behind it), and the **sixth instance in six increments**,
 confirming §DOC-02h's finding that the class is not confined to gold. → **§AUDIT-03v/w
@@ -176,9 +176,9 @@ cluster**
 
 The award shipped **twice**:
 
-- **Short rest** — `Boy Scouts Award — doubled!@25860`, fired when `!isInn`. This is the
+- **Short rest** — `Boy Scouts Award — doubled!@25991`, fired when `!isInn`. This is the
   spec's rationale exactly: sleeping rough is harder, so the game doubles the heal.
-- **Long rest** — `Boyscout Night! Double rolls@36300`, fired when `_isFirstSleep`. This
+- **Long rest** — `Boyscout Night! Double rolls@36498`, fired when `_isFirstSleep`. This
   is a **first-visit** bonus that fires **at an inn** — inverting the spec's own framing
   (*"a ranger sleeps better under stars than in a tavern"*).
 
@@ -188,18 +188,18 @@ Award"* — has **0 commits ever**. → **§AUDIT-03aa**
 
 ### F5 — The short rest is implemented twice, and the copies have already diverged
 
-`storyShortRest@25819` is the canonical Layer-13 path. A second, independent copy lives
-in the post-battle return row at `const _rests = () => S_story.shortRests@7133`, with
-`const base = Math.floor(S_story.hpMax * 0.25)@7145` and
-`const heal = isInn ? base : base * 2@7146` — the heal math byte-identical.
+`storyShortRest@25950` is the canonical Layer-13 path. A second, independent copy lives
+in the post-battle return row at `const _rests = () => S_story.shortRests@7145`, with
+`const base = Math.floor(S_story.hpMax * 0.25)@7157` and
+`const heal = isInn ? base : base * 2@7158` — the heal math byte-identical.
 
 Everything else diverges. The battle-return copy spends the same allowance but does
 **not**:
 
 - grant the Necklace bead (`_maybeAddKnowledgeBead` uncalled) — **so resting here builds no necklace**;
 - set `shortRestedAtNodes`, so no Necklace Token is earned **and no `restedAtMin` gate credit accrues** —
-  `quest_d0206_a3` (`restedAtMin:{ SZG:1 }@21794`) cannot be opened by this path;
-- restore Action Surge charges (`if (_lv >= 2) S_story.surgeCharges@25846` has no twin);
+  `quest_d0206_a3` (`restedAtMin:{ SZG:1 }@21816`) cannot be opened by this path;
+- restore Action Surge charges (`if (_lv >= 2) S_story.surgeCharges@25977` has no twin);
 - print the Boy Scouts message, **though it applies the 2× multiplier anyway**.
 
 Two copies of one formula, silently disagreeing on four consequences. → **§DX-02t**

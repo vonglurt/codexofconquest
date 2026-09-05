@@ -75,7 +75,7 @@ the entire §LIX–§LXIV corridor shut.**
 
 That is what this pass bought the player: not an architecture, but a cast that talks and
 a story that advances. The architecture was gone by dinner. The one-line fix at
-`d.quoteFn ? d.quoteFn() : d.quote@30236` is still there, two months later, and is the
+`d.quoteFn ? d.quoteFn() : d.quote@30392` is still there, two months later, and is the
 single most durable thing this report produced.
 
 ---
@@ -164,9 +164,9 @@ ternary. Three consumers read it: a quest `completeFn`, an `activateNode` condit
 the movement block that holds the player at Damascus. Read-only-never-written; permanently
 `false`; the arc shut.
 
-At HEAD the same pattern stands, load-bearing, at `DAM: { name:'Anath'@22511` — still the
+At HEAD the same pattern stands, load-bearing, at `DAM: { name:'Anath'@22539` — still the
 sole writer, now feeding `quest_anath`'s completion, one UQF gate, and the block at line
-36289. The fix survives at `d.quoteFn ? d.quoteFn() : d.quote@30236`, simplified from the
+36289. The fix survives at `d.quoteFn ? d.quoteFn() : d.quote@30392`, simplified from the
 report's `typeof … === 'function'` form.
 
 **What does not verify is the evidence.** The report states:
@@ -219,7 +219,7 @@ Two small corrections. The "11 quests" figure is **right in total and wrong in f
 `node.code` UI panels" is **3 sites, not 4** — one `destCode === 'DFL'` gate and two
 `node.code === 'DFL'` panels.
 
-**At HEAD the node is `DNF:{r:17,c:171}@9529`, not `DFL`.** The rename was re-done from
+**At HEAD the node is `DNF:{r:17,c:171}@9542`, not `DFL`.** The rename was re-done from
 scratch on 2026-06-27 by §CELL-14-FU, under a different code, in the 90×360 projection —
 because `120d617` had taken `DFL` with it. *The bug was found twice and fixed twice, and
 the second fix is the one in the game.*
@@ -300,7 +300,7 @@ report's central compromise:
 Two honest observations about that right-hand column.
 
 **First, the escape hatch still holds inline anonymous functions, and it is still inside
-`QUEST_DB`.** All 124 `_legacy_fn` descriptors live between `const QUEST_DB = {@10615` and
+`QUEST_DB`.** All 124 `_legacy_fn` descriptors live between `const QUEST_DB = {@10630` and
 its closing brace; **all 124 are anonymous arrows** (118 zero-argument, 6 taking `S`), and
 **41 of the zero-argument ones name `S_story` directly** — closures over live game state,
 which is the precise construct §1 of this report condemned. **The headline number did not
@@ -367,7 +367,7 @@ at parent line 26700 became DOM construction with `_titleSpan.textContent = q.ti
 the badge — code-generated, not data — kept `insertAdjacentHTML`. That reasoning is sound
 and the distinction is the right one.
 
-It survives at HEAD as `titleRow.className = 'quest-title'@30771`, but by a **second**
+It survives at HEAD as `titleRow.className = 'quest-title'@30925`, but by a **second**
 implementation: `120d617` took this with everything else, and the textContent renderer was
 rebuilt on 2026-07-06 as the last live residual of §DATA-01. The report's §2 audit result
 also still holds — **0 `label:` and 0 `title:` values in the file contain `<`**.
@@ -376,9 +376,9 @@ also still holds — **0 `label:` and 0 `title:` values in the file contain `<`*
 the same function that were left on string-concatenated `innerHTML`, and both interpolate
 **data-originated** strings, not code-generated ones:
 
-- `<span>Hunt: '` (as written until 2026-09-03; now `titleSpan.textContent = 'Hunt: ' + customWp.label;@30920`) — interpolated `customWp.label` twice and `dest.label` from
+- `<span>Hunt: '` (as written until 2026-09-03; now `titleSpan.textContent = 'Hunt: ' + customWp.label;@30964`) — interpolated `customWp.label` twice and `dest.label` from
   `NODE_MAP`. Node labels are authorable through the WBAPI worldbuilder.
-- `<span>🦴 Your body at '` (now `titleSpan.textContent = '🦴 Your body at ' + q.nodeName;@30959`) — interpolated `q.nodeName` from
+- `<span>🦴 Your body at '` (now `titleSpan.textContent = '🦴 Your body at ' + q.nodeName;@31003`) — interpolated `q.nodeName` from
   `S_story.corpsesQuests`, which is **persisted in the player's save file** and read back
   on load.
 
@@ -389,8 +389,8 @@ content of the data.* Filed as **§DX-02bt**.
 
 **Closed by §DX-02bt, 2026-09-03.** Both cards are built the way the main renderer is: every data-originated string goes in through `textContent`, the code-generated badges through `insertAdjacentHTML`, and the two waypoint buttons through `addEventListener` instead of an inline `onclick` that interpolated the node code. Each map now carries a one-line comment naming the other (`const NPC_DIALOGUES = {@10410`, `const NPC_DIALOGUE = {@22473`).
 
-A related nuisance worth naming while in the file: `const NPC_DIALOGUES = {@10396` and
-`const NPC_DIALOGUE = {@22445` are two distinct live objects one character apart, with 5
+A related nuisance worth naming while in the file: `const NPC_DIALOGUES = {@10410` and
+`const NPC_DIALOGUE = {@22473` are two distinct live objects one character apart, with 5
 and 9 readers respectively. `storyShowNpc` reads the singular.
 
 ---
@@ -398,7 +398,7 @@ and 9 readers respectively. `storyShowNpc` reads the singular.
 ## 11. Findings Filed
 
 - **§DX-02bs** 🟢 — `check:questgraph`'s host-flag-writer scan does not know the `once:`
-  idiom. `if (p.once) st[p.once] = true;@31602` is a real writer for 5 flags; one of them,
+  idiom. `if (p.once) st[p.once] = true;@31834` is a real writer for 5 flags; one of them,
   `saulConverted`, is gate-read and is therefore reported in the gate's `written-by-nothing`
   list as a soft-lock that does not exist. A gate reporting 50 candidates with a known
   blind spot understates its own confidence.

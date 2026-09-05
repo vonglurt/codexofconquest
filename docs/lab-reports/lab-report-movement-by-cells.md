@@ -44,10 +44,10 @@ what justify the work:
 
 - **The space between cities became real.** Under an edge list, everything that is not a
   city does not exist; you jump from node to node. Under a grid, the ~27,600 walkable land
-  cells are places you can stand — `function _enterEmptyCell(r, c)@28422` gives each one
+  cells are places you can stand — `function _enterEmptyCell(r, c)@28575` gives each one
   prose, terrain, signposts and an encounter roll. *Distance became travel instead of a
   menu.*
-- **Terrain became a real trade-off.** `const TERRAIN_ENCOUNTER_RATE@9892` prices the
+- **Terrain became a real trade-off.** `const TERRAIN_ENCOUNTER_RATE@9905` prices the
   route: `road:0` against `forest:0.25` and `hag_swamp:0.35`. The road is genuinely safer
   and genuinely longer, and neither is a permission — the open field stays walkable.
 - **Fog of war is per-cell, not per-node.** `visitedCells` is a record of *where you
@@ -74,20 +74,20 @@ running them on the real data. Line numbers in the original are superseded by
 | § | Claim | Verdict at HEAD |
 |---|---|---|
 | Abstract | Exits derived from coordinate adjacency; no stored exits | ✅ **0** N/S/E/W fields and **0** diagonals across 416 nodes |
-| Abstract | 500 × 500 integer grid | ❌ **90 × 360** (`const GEO_PROJ = { ROWS: 90, COLS: 360 }@9902`) |
+| Abstract | 500 × 500 integer grid | ❌ **90 × 360** (`const GEO_PROJ = { ROWS: 90, COLS: 360 }@9915`) |
 | Abstract | `LHR` anchors the grid; every node a unique `(r,c)` | ⚠️ `LHR` is still the root; **uniqueness repealed** (§5) |
 | 3.2 | Server `buildCellGrid` is a verbatim mirror of the client's | ⚠️ Deliberately *not* verbatim — scalar first-wins vs. array (§8) |
-| 3.3 | `derived_exits` computed live, nothing stored | ✅ `src/js/wbapi-server.js:derived_exits@1190` |
+| 3.3 | `derived_exits` computed live, nothing stored | ✅ `src/js/wbapi-server.js:derived_exits@1193` |
 | 3.4 | `/api/audit/map` performs **four** structural checks | ❌ **12** check names; **5 of them permanently silent** (§9) |
 | 3.5 | `SESSIONS` map + `broadcastCell` SSE fan-out | ✅ `src/js/wbapi-server.js:const SESSIONS@71`, `src/js/wbapi-server.js:function broadcastCell@129` |
 | 4 | `worldmap.js` seeds coords by lat/lon projection | ⚠️ Now `src/tools/worldmap.js` (155 GEO rows) — **and it still projects into the retired space** (§10) |
 | 5.1 | **Seven** anchor-bounded data sections | ❌ **Eleven** |
 | 5.2 | `NODE_MAP` descriptors carry no exit fields | ✅ |
-| 5.4 | `CELL_GRID["r,c"]` → a node code | ❌ → an **array** of codes; read via `const cellCode   = (key)@9861` |
+| 5.4 | `CELL_GRID["r,c"]` → a node code | ❌ → an **array** of codes; read via `const cellCode   = (key)@9874` |
 | 5.4 | `IMPASSABLE_CELLS` populated at §CELL-10 | ⚠️ Derived from `SEA_RUNS` — **4,790** sea cells, 286 runs |
 | 5.5 | Encounter-rate table, roads/junctions at 0 | ✅ verbatim (`junction:0` is unreachable — §DX-02bm) |
 | 6.1 | `hoursElapsed` incremented on every `cellMove()` | ❌ Removed by §TIMELESS-01 — movement is free of the clock |
-| 6.3 | `storyRender` syncs `playerR/C` from `NODE_COORDS` | ✅ `function storyRender(node, prefix)@34550` |
+| 6.3 | `storyRender` syncs `playerR/C` from `NODE_COORDS` | ✅ `function storyRender(node, prefix)@34816` |
 | 6.4 | The `type === 'shard'` branch is the **only** write to `S_story.shards` | ✅ **Still true** — one write site in 38,712 lines |
 | 7.1 | D-pad element ids `#dpad-N/S/E/W` | ❌ `#btn-N/S/E/W` |
 | 7.2 | `cellMove` bounds-checks, then applies eight narrative gate-locks | ⚠️ Thin caller over `Mover.move`; **all eight gate-locks deleted** (§7) |
@@ -179,15 +179,15 @@ cell* rather than *matching its code*, or arriving at a shore would never count 
 Five load-bearing claims re-measured true, and they are the ones that matter:
 
 1. **No stored exits, anywhere.** 0 cardinal and 0 diagonal fields across 416 nodes — and
-   the deletion is now *defended*: `src/js/wbapi-server.js:const _badNodeFields@10145` rejects
-   them on create and `src/js/wbapi-server.js:const _badPutFields@11043` on update, both HTTP
+   the deletion is now *defended*: `src/js/wbapi-server.js:const _badNodeFields@10157` rejects
+   them on create and `src/js/wbapi-server.js:const _badPutFields@11066` on update, both HTTP
    400. §CELL-01 emptied the fields; §CELL-08 shipped the guard that stops anything
    writing them back. Only one of those two was ever listed as a feature.
-2. **`storyRender` is the reconciliation point** (I3). `function storyRender(node, prefix)@34550`
+2. **`storyRender` is the reconciliation point** (I3). `function storyRender(node, prefix)@34816`
    still snaps `playerR/C` to `NODE_COORDS[node.code]` on every named-node arrival, so
    logical state and grid state cannot drift.
 3. **`storyCollectLoot` remains the sole shard writer** (I6). One write to `S_story.shards`
-   exists in the entire file — `function storyCollectLoot(node)@30094` — behind the
+   exists in the entire file — `function storyCollectLoot(node)@30247` — behind the
    `S_story.visited[node.code]` guard. A claim of *uniqueness* is the easiest kind to
    falsify and this one held at 5.5 MB.
 4. **`TERRAIN_ENCOUNTER_RATE` is byte-identical** to the excerpt, three months on.
@@ -206,7 +206,7 @@ it was **deleted the following day** by `1872896` (2026-06-16). Zero occurrences
 This report is therefore the last surviving description of a mechanic that contradicted
 the project's first invariant. *No quest, flag, item, or mission bit may ever refuse a
 step.* If a place must feel impassable, the terrain becomes sea; the mover never reads
-quest state. Today `function cellMove(dir)@28347` is a thin caller over the shared
+quest state. Today `function cellMove(dir)@28495` is a thin caller over the shared
 `Mover.move` kernel, and the only refusals it can produce are off-grid and impassable.
 
 Also gone, with the reason:
@@ -224,7 +224,7 @@ Also gone, with the reason:
 ## 8. Server Side: One Prelude, Three Different Answers
 
 §11.2 attributed the `undirAdj` / `bfsReach` construction to `GET /api/graph/reachability`.
-The **code still exists, verbatim** — `src/js/wbapi-server.js:const undirAdj = new Map()@5374` —
+The **code still exists, verbatim** — `src/js/wbapi-server.js:const undirAdj = new Map()@5386` —
 but it is now a *prelude shared by every `/api/graph/*` sub-route*, and the reachability
 endpoint no longer uses it. Three live endpoints answer "is the world connected?" and they
 disagree:
@@ -246,7 +246,7 @@ Invariant **I5** therefore holds — under an algorithm this report does not des
 Under the algorithm it *does* describe, the world is 2/416 disconnected.
 
 **§3.2's mirror claim needs one correction.** The module-level
-`src/js/wbapi-server.js:function buildCellGrid(nm, coords)@948` is no longer a verbatim copy of
+`src/js/wbapi-server.js:function buildCellGrid(nm, coords)@951` is no longer a verbatim copy of
 the client's; it deliberately returns a **scalar first-wins** grid so the primary at a
 collided cell matches `CELL_GRID[key][0]`. Same primary, different shape — the parity is
 stated, not accidental.
@@ -267,9 +267,9 @@ Three corrections to §3.4, all new:
    permanently and structurally, so neither measures anything.
 3. **The handler shadows the promoted grid.** §3.2 recorded that `buildCellGrid` was
    "promoted to module scope for reuse". The promotion happened; the local copy was not
-   removed. `src/js/wbapi-server.js:const DENSITY_THRESH = { road:3, market:8, _default:6 }@3802`
+   removed. `src/js/wbapi-server.js:const DENSITY_THRESH = { road:3, market:8, _default:6 }@3814`
    opens a handler that redeclares `buildCellGrid` **last-wins**, while
-   `src/js/wbapi-server.js:// §WALK-2: first-wins (not last-wins)@952` is first-wins. They
+   `src/js/wbapi-server.js:// §WALK-2: first-wins (not last-wins)@955` is first-wins. They
    disagree at **all 66 shared cells** — including `10,197`, where the audit believes
    Birka's cell holds `BK` (the shore) and the client, the mover and the server's own
    module-level grid all say `LHR` (City Streets, the canonical Act I root). Filed as
@@ -343,7 +343,7 @@ The §10 walkthrough is structurally intact and numerically obsolete. Corrected:
   | #7 | `NUE` | 6 | Weimar Fragment (Shard #7) |
 
   The mechanism the report describes is right; the string it searched for belongs to shard
-  **#6**. `const SHARD_NOTES@27161` covers all seven (its own comment says five — stale).
+  **#6**. `const SHARD_NOTES@27293` covers all seven (its own comment says five — stale).
 
 ---
 

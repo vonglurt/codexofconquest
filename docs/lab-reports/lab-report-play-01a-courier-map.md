@@ -29,7 +29,7 @@ added went into the wrong object, so the opening frame is a **once-per-page-load
 defeated player restarting in place never sees again.
 
 > *"Sweelinck."*
-> — the courier, `<div id="story-courier-modal">@4938`, one word and then nothing.
+> — the courier, `<div id="story-courier-modal">@4935`, one word and then nothing.
 
 ---
 
@@ -91,10 +91,10 @@ signature, and the correction makes the argument stronger rather than weaker.
 |---|---|---|
 | Win condition never stated to the player | no goal-statement surface of any kind | ✅ holds |
 | The literal string *"49 days"* appears once in the whole file | `grep -c "49 days"` = **0** | ⚠ the string is spelled out, not numeric |
-| Day-49 defeat flavour at line 23096 | byte-exact; `The court had granted forty-nine days@23890` at HEAD | ✅ exact |
-| `#s-day` shows `N/49` | `dayEl.textContent = S_story.day + @36087` renders `N/49` | ✅ exact |
-| `#s-shards` shows `N/7` | `.textContent = S_story.shards + @36089` | ✅ exact |
-| `#s-level` shows level and XP but never the Lv 20 target | `const lvEl = document.getElementById@36119` — no target | ✅ exact |
+| Day-49 defeat flavour at line 23096 | byte-exact; `The court had granted forty-nine days@23948` at HEAD | ✅ exact |
+| `#s-day` shows `N/49` | `dayEl.textContent = S_story.day + @36280` renders `N/49` | ✅ exact |
+| `#s-shards` shows `N/7` | `.textContent = S_story.shards + @36282` | ✅ exact |
+| `#s-level` shows level and XP but never the Lv 20 target | `const lvEl = document.getElementById@36312` — no target | ✅ exact |
 
 **The correction sharpens the thesis.** The number **49 was on the player's screen every second of
 play** — the sidebar has always rendered `12/49` — and was never once labelled. The deadline was not
@@ -103,7 +103,7 @@ the one the report described. A bare denominator is data the player cannot conve
 
 **The Level-20 goalpost survives its own census (86).** `Level 20` appears three times at the parent
 and none of the three is reachable as a goal-statement: two are code comments, and the third is
-`You are Level 20.@31388` — the §XIV *Open Door* easter egg, which fires only **after** you already
+`You are Level 20.@31620` — the §XIV *Open Door* easter egg, which fires only **after** you already
 are. The engine congratulated you for arriving at a destination it had never named.
 
 ---
@@ -114,20 +114,20 @@ Every symbol resolves at HEAD. The symbol is the pointer; the number is a refres
 
 | Component | Anchor | Verdict |
 |---|---|---|
-| Chip host (always-shown Location card) | `id="story-location-hd-card"@4252` | ✅ live |
-| Chip element and covenant tooltip | `<div id="objective-chip" title=@4260` | ✅ live, tooltip reworded by §PLAY-01-C |
-| Chip CSS block (11 rules) | `#objective-chip .obj-shard.empty@1750` | ✅ live |
-| Goal constants | `const SHARD_GOAL = 7, LEVEL_GOAL = 20, DAY_DEADLINE = 49;@36158` | ✅ live, values as specified |
-| Chip renderer | `function _renderObjectiveChip() {@36159` | ✅ live |
-| Seven-symbol loop | `const got = Math.max(0, Math.min(SHARD_GOAL@36162` | ✅ live, clamped 0–7 |
-| Level leg and gold-at-20 state | `lvEl.innerHTML = @36169` · `#objective-chip .obj-leg.hit b@1753` | ✅ live |
-| Day leg | `(day >= DAY_DEADLINE - 3 ? @36176` | ⚠ superseded — see §7.1 |
-| Render call site | `_renderObjectiveChip();   // §PLAY-01-A@36133` | ✅ live, at the tail of `storyUpdateStatus` |
-| Opening frame markup | `<div id="story-courier-modal">@4938` | ✅ live, four goal-clauses |
-| Dismiss button | `id="btn-courier-begin">Take the map@4955` | ✅ live |
-| Frame trigger, fresh-game only | `_showCourierMap();   // §PLAY-01-A@23990` in `function storyNewGame(startScores) {@23953` | ✅ live, absent from `storyNewGamePlus` |
-| Frame guard | `function _showCourierMap() {@23995` · `if (S_story.courierMapSeen) return;@23996` | ✅ live |
-| The one state field | `courierMapSeen: false,@23045` | ❌ wrong object — see §7.2 |
+| Chip host (always-shown Location card) | `id="story-location-hd-card"@4248` | ✅ live |
+| Chip element and covenant tooltip | `<div id="objective-chip" title=@4256` | ✅ live, tooltip reworded by §PLAY-01-C |
+| Chip CSS block (11 rules) | `#objective-chip .obj-shard.empty@1748` | ✅ live |
+| Goal constants | `const SHARD_GOAL = 7, LEVEL_GOAL = 20, DAY_DEADLINE = 49;@36356` | ✅ live, values as specified |
+| Chip renderer | `function _renderObjectiveChip() {@36357` | ✅ live |
+| Seven-symbol loop | `const got = Math.max(0, Math.min(SHARD_GOAL@36360` | ✅ live, clamped 0–7 |
+| Level leg and gold-at-20 state | `lvEl.innerHTML = @36367` · `#objective-chip .obj-leg.hit b@1751` | ✅ live |
+| Day leg | `(day >= DAY_DEADLINE - 3 ? @36374` | ⚠ superseded — see §7.1 |
+| Render call site | `_renderObjectiveChip();   // §PLAY-01-A@36326` | ✅ live, at the tail of `storyUpdateStatus` |
+| Opening frame markup | `<div id="story-courier-modal">@4935` | ✅ live, four goal-clauses |
+| Dismiss button | `id="btn-courier-begin">Take the map@4952` | ✅ live |
+| Frame trigger, fresh-game only | `_showCourierMap();   // §PLAY-01-A@24046` in `function storyNewGame(startScores) {@24011` | ✅ live, absent from `storyNewGamePlus` |
+| Frame guard | `function _showCourierMap() {@24051` · `if (S_story.courierMapSeen) return;@24052` | ✅ live |
+| The one state field | `courierMapSeen: false,@23073` | ❌ wrong object — see §7.2 |
 
 **Painted, not merely present** (the §DOC-02f rule: grep for what *reveals* a surface). Live probe
 after `storyNewGame`: the chip has a non-null `offsetParent`, measures **958 × 24 px**, and
@@ -182,8 +182,8 @@ The report locked one invariant on the day leg: *amber ≥ 35, red ≥ 42 —* *
 
 **§PLAY-01-C (`caa489e`, +19 min 42 s) reframed the deadline as generous and rewrote only one of the
 two surfaces.** The chip lost its red alarm entirely and kept a soft amber inside three days of the
-cap (`(day >= DAY_DEADLINE - 3 ? @36176`). The sidebar still carries the original doom ladder
-(`(S_story.day >= 42 ? @36088`). Proved in the browser, one page, one tick apart:
+cap (`(day >= DAY_DEADLINE - 3 ? @36374`). The sidebar still carries the original doom ladder
+(`(S_story.day >= 42 ? @36281`). Proved in the browser, one page, one tick apart:
 
 | Day | `#s-day` sidebar | `#obj-day` chip |
 |---|---|---|
@@ -203,7 +203,7 @@ sibling of §DX-02de's *a hazard fixed in one branch of a function is not fixed 
 Two smaller items on the same chip, filed as (b) and (c) of the same row because all three are
 one-liners in the same twenty lines of CSS and render code:
 
-- **(b) The level pill warns you for being level 8 of 20.** `(lv >= 8 ? @36124` turns `#s-level`
+- **(b) The level pill warns you for being level 8 of 20.** `(lv >= 8 ? @36317` turns `#s-level`
   amber at Lv 8 — a threshold inherited from the initial commit `b7280b3`, when 8 was near the top
   of the curve. `XP_LEVELS` now runs to 20 and the chip beside it says so. The sidebar flags 60 % of
   the levelling curve as a warning state, immediately below a chip stating that 20 is the target.
@@ -220,15 +220,15 @@ one-liners in the same twenty lines of CSS and render code:
 §3 states: *"The one added state field `courierMapSeen` is defaulted in `_S_DEFAULTS()` (§STATE-INIT
 single-source rule) so a fresh load and a reset agree."* **It is not, and they do not.**
 
-The field was added to the seed literal `courierMapSeen: false,@23045`, inside the block whose own
-comment two lines above reads `seed only — replaced with the canonical@23000` … *"Do not rely on
+The field was added to the seed literal `courierMapSeen: false,@23073`, inside the block whose own
+comment two lines above reads `seed only — replaced with the canonical@23028` … *"Do not rely on
 these values; keep `_S_DEFAULTS()` authoritative."* The seed object is then discarded wholesale at
-`S_story = _S_DEFAULTS();@23404`, and `const _S_DEFAULTS = () => ({@23063` has never carried the
+`S_story = _S_DEFAULTS();@23435`, and `const _S_DEFAULTS = () => ({@23092` has never carried the
 key — in any build, under any name.
 
 The consequence is behavioural, and it is exactly the failure the guard was written to prevent,
 running in the opposite direction. `storyNewGame` resets state with
-`Object.assign(S_story, _S_DEFAULTS());@23956`, which cannot clear a key its source object does not
+`Object.assign(S_story, _S_DEFAULTS());@23987`, which cannot clear a key its source object does not
 declare. So `courierMapSeen` is set to `true` on the first fresh game and **never returns to
 `false` without a page reload.** Browser-proved, one page, three calls:
 
@@ -239,7 +239,7 @@ declare. So `courierMapSeen` is set to `true` on the first fresh game and **neve
 | `storyNewGame()` #1 → frame visible | **true** ✅ |
 | `storyNewGame()` #2, same page session → frame visible | **false** ❌ |
 
-**The reachable path is the defeat screen.** `, storyNewGame);@38312` wires the *"↩ New Game"*
+**The reachable path is the defeat screen.** `, storyNewGame);@38525` wires the *"↩ New Game"*
 button straight to `storyNewGame` with no reload in between. A player who loses, clicks it, and
 starts over is handed the world without the map — the single surface that states the win condition
 in words is gone, and only the chip's four glyphs remain to carry it. The player most in need of
@@ -273,7 +273,7 @@ gap in §VI that let this live 37 days.
    call site simply is not there), not flag-dependent. NG+ veterans are genuinely never re-lectured.
 3. **The double-fire guard works.** Calling `_showCourierMap()` a second time after dismissal is a
    clean no-op. The mechanism is sound; only its reset is missing.
-4. **The chip degrades safely outside the game.** `function _renderObjectiveChip() {@36159` returns
+4. **The chip degrades safely outside the game.** `function _renderObjectiveChip() {@36357` returns
    early when `#obj-shards` is absent, so `edit.html` and any harness that loads the render
    path get a no-op rather than a throw. Zero page errors across all four browser runs.
 5. **The renderer is genuinely derivation-only.** Shards, level and day are read from `S_story` and
@@ -305,7 +305,7 @@ Measured rather than asserted, 37 days on:
 
 > *"You came. You kept it open forty-nine days. That is not nothing. It is not enough, but it is not
 > nothing."*
-> — `The court had granted forty-nine days@23890`, the only place the game ever explained the
+> — `The court had granted forty-nine days@23948`, the only place the game ever explained the
 > deadline before this slice, and it only says it once you have lost.
 
 ---

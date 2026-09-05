@@ -32,7 +32,7 @@ At **Dear Friend** (`npcFavorability` = **2**, not 3 — the ledger stores three
 
 ### NPC_DIALOGUES — Full Transcript
 
-> Source: `const NPC_DIALOGUES = {@10396`. **This transcript covers the six Birka NPCs — 114 lines of the table's 1,614, across 6 of its 213 entries (2.8 %).** The rest are authored per-arc and live only in the HTML (§DX-02ad's class: a register that is accurate about everything it names and names a fraction of the set). Each NPC entry also has a `meta` block with `worldTruth`, `enemy`, and `missionBit`. Dialogue state selection order: `dearFriend` (fav ≥ 2) → `questActive` (active quest) → `friendly` (fav ≥ 1) → `impartial`.
+> Source: `const NPC_DIALOGUES = {@10410`. **This transcript covers the six Birka NPCs — 114 lines of the table's 1,614, across 6 of its 213 entries (2.8 %).** The rest are authored per-arc and live only in the HTML (§DX-02ad's class: a register that is accurate about everything it names and names a fraction of the set). Each NPC entry also has a `meta` block with `worldTruth`, `enemy`, and `missionBit`. Dialogue state selection order: `dearFriend` (fav ≥ 2) → `questActive` (active quest) → `friendly` (fav ≥ 1) → `impartial`.
 >
 > **Card footers (`_renderNpcCard`).** The `meta` block surfaces as two stacked card footers, each unlocking a tier apart so the relationship deepens from *what they're up against* to *what they know*: **`enemy` (⚔) at Friendly** (fav ≥ 1, §NPC-01-C) sits above **`worldTruth` (✦) at Dear Friend** (fav ≥ 2). Same italic 10px treatment, differentiated only by the icon; both use `textContent` (authored strings never inject HTML).
 >

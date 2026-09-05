@@ -37,7 +37,7 @@ retained rather than deleted, because a silently removed claim reads as a claim 
 
 ## 3. As-built inventory
 
-### 3.1 Node — `` `CDG:{ num:77@8798` ``
+### 3.1 Node — `` `CDG:{ num:77@8811` ``
 
 | Field | Live value | vs. spec |
 |---|---|---|
@@ -45,11 +45,11 @@ retained rather than deleted, because a silently removed claim reads as a claim 
 | `label` / `act` | `The Cat Quarter` / `1` | ✅ |
 | `npc` / `loot` / `sleep` | `Jimmy Two-Tails` / `Tiny Fedora` / `false` | ✅ |
 | `battle` | `{label:'Beefy Tom × 3', key:'beefy_tom', count:3}` | ✅ |
-| Position | `` `CDG:{r:21,c:182}@9619` `` (90×360 geo grid) | spec's `r:4,c:17` is the retired 26×16 grid |
+| Position | `` `CDG:{r:21,c:182}@9632` `` (90×360 geo grid) | spec's `r:4,c:17` is the retired 26×16 grid |
 | Connections | **none** — `NODE_MAP` carries no `N`/`S`/`E`/`W` fields at all | spec's `W:'SL'` / `SL.E='CQ'` wiring was retired wholesale by §WALK; travel is the `ROAD_RUNS` net + `mover.js` kernel |
 | `text` | rewritten post-ship (longer; the fedora/guest-register passage) | spec text is superseded |
 
-### 3.2 MONSTER_POOL — 10 entries, `` `stray_alley_cat:  { key:'stray_alley_cat'@5395` ``
+### 3.2 MONSTER_POOL — 10 entries, `` `stray_alley_cat:  { key:'stray_alley_cat'@5392` ``
 
 **All ten shipped with the specified statline, unchanged.**
 
@@ -75,15 +75,15 @@ Fragment 👑 50.
 
 ### 3.4 WORLD_DB terrain
 
-- `` `cat_quarter:      { label:'The Cat Quarter'@6286` `` — 10 pool slots, `fluffy_cat` listed
+- `` `cat_quarter:      { label:'The Cat Quarter'@6287` `` — 10 pool slots, `fluffy_cat` listed
   twice (intentional spawn weighting), `cat_king` **absent** (reserved for the `CQ_KING`
   encounter). Shipped exactly as specified.
-- `` `alley:            { label:'Dark Alley'@6287` `` — the 7 specified keys appended
+- `` `alley:            { label:'Dark Alley'@6288` `` — the 7 specified keys appended
   (`stray_alley_cat`, `fluffy_cat`, `beefy_tom`, `honcho_cat_m`, `honcho_cat_f`,
   `corrupted_cat`, `taz_devil`); `fat_merchant_cat` / `fat_cat_boss` / `cat_king` correctly
   remain CDG-exclusive. The predicted pool widening for *all* alley nodes is real and stands.
 
-### 3.5 QUEST_DB — 7 entries, `` `quest_cat_01: { id:'quest_cat_01'@13689` ``
+### 3.5 QUEST_DB — 7 entries, `` `quest_cat_01: { id:'quest_cat_01'@13716` ``
 
 All seven are **UQF-1.0** (migrated by §ARCH-01; authored in 2026-05 as hand-written blocks).
 Gating is `gate.questsDone`, not a hand-compared `=== 'complete'` string.
@@ -98,26 +98,26 @@ Gating is `gate.questsDone`, not a hand-compared `=== 'complete'` string.
 | `quest_cat_06` | `quest_cat_04` ∧ `quest_cat_05` | `flags:['catKingDefeated']` | 1500gp + Cat-King's Claw Fragment |
 | `quest_cat_void` | `quest_cat_02` | `catKills.corrupted_cat ≥ 5` | 400gp |
 
-Kill tracking is a dedicated counter object, `` `catKills: {}, monsterKills: {}@23121` ``, keyed
+Kill tracking is a dedicated counter object, `` `catKills: {}, monsterKills: {}@23153` ``, keyed
 by **monster key** (not node code — see §6.3).
 
 ### 3.6 Boss encounters
 
 Three exclusive-by-quest-state buttons, migrated from inline `storyRender` handlers to
 `NODE_PANELS` by §VM-01-G4d as a **deliberately concurrent** group (`group:'cdg-boss-menu'`) —
-`` `cdg-boss-taz@34366` ``, `cdg-boss-don`, `cdg-boss-king`. Each emits a `narrative` bit then a
+`` `cdg-boss-taz@34632` ``, `cdg-boss-don`, `cdg-boss-king`. Each emits a `narrative` bit then a
 `combat` bit carrying the synthetic code. Victory is handled at
-`` `if (pb && pb.nodeCode === 'CQ_KING')@25374` `` and siblings, which write `catKingDefeated`
+`` `if (pb && pb.nodeCode === 'CQ_KING')@25439` `` and siblings, which write `catKingDefeated`
 and open the §Layer-78 La Riva chain.
 
 ### 3.7 NPCs
 
-- **Node auto-text:** `` `CDG: { name:'Jimmy Two-Tails'@22697` `` — Jimmy's "It ain't a monster.
+- **Node auto-text:** `` `CDG: { name:'Jimmy Two-Tails'@22725` `` — Jimmy's "It ain't a monster.
   It's a SITUATION" opener, verbatim as specified.
-- **`NPC_DIALOGUES` profiles:** `` `occupation:"Cat Quarter fixer"@10403` `` (`jimmy`),
+- **`NPC_DIALOGUES` profiles:** `` `occupation:"Cat Quarter fixer"@10417` `` (`jimmy`),
   `sandy_cat`, `don_fluffissimo` — plus **`kenickie`**, promoted to a full profile later
   (Layer 75 §XL). Four, not three.
-- **Card roster:** `` `const _cqNpcs = ['jimmy']@35111` `` — `sandy_cat` on `quest_cat_02`
+- **Card roster:** `` `const _cqNpcs = ['jimmy']@35331` `` — `sandy_cat` on `quest_cat_02`
   complete, `kenickie` on `quest_cat_05` complete. `CDG` was one of the codes repaired by
   §PLAY-01-G, when `birkaNpcs` was found keyed to pre-§WALK sublocation codes that rendered
   nowhere.
@@ -134,7 +134,7 @@ and open the §Layer-78 La Riva chain.
 
 ### 3.9 Vendor — Kenickie's Black Market
 
-Shipped Layer 75 §XL; migrated to `` `cdg-kenickie-market@34179` `` (`NODE_HOOKS`) by
+Shipped Layer 75 §XL; migrated to `` `cdg-kenickie-market@34422` `` (`NODE_HOOKS`) by
 §VM-01-G4d. Gated on `quest_cat_05` **complete**. Four SKUs: Sardine Pack ×3 (18gp, catch +2),
 Live Shallows Minnow (28gp, catch +3, size↑), Minor Healing Potion (45gp), Healing Potion
 (135gp). The "10% discount" is real but applies only to the two potions — 45 vs. `POTION_TIERS`
@@ -152,7 +152,7 @@ to discount.
 | 3 | Q-CAT-03 "merge mechanic — if both Honchos appear in one battle, second wave loads `taz_devil`" | absent | **NOT SHIPPED.** No merge/second-wave code exists. The Taz is a separate scripted encounter (`quest_cat_04` / `CQ_TAZ`); the merge survives only as narration. |
 | 4 | Quest levels 3/3/4/4/4/5 | no `level` or `minLevel` field on any of the 7 | Design intent, **unenforced by the engine**. `world.md`'s "Levels 3–5" is likewise descriptive. |
 | 5 | Vendor chip "added to CQ node's vendor array" | a `NODE_HOOKS` launcher, not a node field | The node has no vendor array; the shape landed as a hook. |
-| 6 | 1 new `HUNTING_GROUNDS` entry | registry **deleted** | §TIMELESS-01 removed Hunt/Stalk; `` `// §TIMELESS-01: HUNTING_GROUNDS removed@10392` ``. |
+| 6 | 1 new `HUNTING_GROUNDS` entry | registry **deleted** | §TIMELESS-01 removed Hunt/Stalk; `` `// §TIMELESS-01: HUNTING_GROUNDS removed@10405` ``. |
 
 **Post-ship migrations** (none of which the arc requested; each rewrote how it executes):
 §WALK/§NAV-01 code + grid recode → §ARCH-01 UQF-1.0 quest migration → §TIMELESS-01 hunt removal
@@ -205,18 +205,18 @@ Each is filed as a BACKLOG row; none is fixed here (this pass is documentation-o
 
 ## 7. Anchors
 
-`` `CDG:{ num:77@8798` `` · `` `CDG:{r:21,c:182}@9619` `` ·
-`` `stray_alley_cat:  { key:'stray_alley_cat'@5395` `` ·
+`` `CDG:{ num:77@8811` `` · `` `CDG:{r:21,c:182}@9632` `` ·
+`` `stray_alley_cat:  { key:'stray_alley_cat'@5392` `` ·
 `` `stray_alley_cat:      { name:'Flea-Dusted Pelt'@5837` `` ·
-`` `cat_quarter:      { label:'The Cat Quarter'@6286` `` ·
-`` `alley:            { label:'Dark Alley'@6287` `` ·
-`` `quest_cat_01: { id:'quest_cat_01'@13689` `` ·
-`` `catKills: {}, monsterKills: {}@23121` `` ·
-`` `CDG: { name:'Jimmy Two-Tails'@22697` `` ·
-`` `occupation:"Cat Quarter fixer"@10403` `` · `` `const _cqNpcs = ['jimmy']@35111` `` ·
-`` `cdg-boss-taz@34366` `` · `` `cdg-kenickie-market@34179` `` ·
-`` `if (pb && pb.nodeCode === 'CQ_KING')@25374` `` ·
-`` `// §TIMELESS-01: HUNTING_GROUNDS removed@10392` ``
+`` `cat_quarter:      { label:'The Cat Quarter'@6287` `` ·
+`` `alley:            { label:'Dark Alley'@6288` `` ·
+`` `quest_cat_01: { id:'quest_cat_01'@13716` `` ·
+`` `catKills: {}, monsterKills: {}@23153` `` ·
+`` `CDG: { name:'Jimmy Two-Tails'@22725` `` ·
+`` `occupation:"Cat Quarter fixer"@10417` `` · `` `const _cqNpcs = ['jimmy']@35331` `` ·
+`` `cdg-boss-taz@34632` `` · `` `cdg-kenickie-market@34422` `` ·
+`` `if (pb && pb.nodeCode === 'CQ_KING')@25439` `` ·
+`` `// §TIMELESS-01: HUNTING_GROUNDS removed@10405` ``
 
 **See also:** `story.md` §NODE 77 · `world.md` §Layer 46 · `monsters.md` (Ally Cat Arc) ·
 `docs/lab-reports/lab-report-kenickie-chronicle.md` (the market's own arc) ·

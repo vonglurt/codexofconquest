@@ -106,7 +106,7 @@ markers (`MOVER`, `ROOMS`, `DUEL`, `QUEST`) that arrived later and reused the co
 collisions with game content in 85 days. The Unicode-diamond bet paid.
 
 **Undocumented in the original:** `MONSTER_DROPS` is nested *inside* `MONSTER_POOL`'s anchors,
-so the loader splits it out by hand — `` `src/js/wbapi-core.js:parseSimple(extrSection(src,'MONSTER_POOL').split@731` ``.
+so the loader splits it out by hand — `` `src/js/wbapi-core.js:parseSimple(extrSection(src,'MONSTER_POOL').split@747` ``.
 This is the shape behind CONTRIBUTING.md's hazard #2, and the report never mentioned it.
 
 ### 4.2 The parsing pipeline — unchanged
@@ -131,12 +131,12 @@ is the right call for evaluating a 5.5 MB literal.
 ### 4.3 Buffer model — unchanged
 
 `_rawSrc` is still the whole file in RAM and still the authority for write-back
-(`` `src/js/wbapi-core.js:load(filePathOrText)@715` ``). The stated invariant — *every mutation must
+(`` `src/js/wbapi-core.js:load(filePathOrText)@731` ``). The stated invariant — *every mutation must
 update both `_rawSrc` and the parsed object* — is still the invariant the system is built on.
 
 ### 4.4 Indexes — 5 documented, 8 live
 
-`` `src/js/wbapi-core.js:_buildIndexes()@759` `` builds eight, not five. The report's five all
+`` `src/js/wbapi-core.js:_buildIndexes()@770` `` builds eight, not five. The report's five all
 survive; three were added by §AUDIT-03k and the waypoint work:
 
 `_terrainToMonsters` · `_monsterToTerrains` · `_questsByNode` · `_questFlags` · `_flagToQuests`
@@ -162,11 +162,11 @@ This is the one section a reader must not trust. The original stated the model p
 | | May 2026 (as reported) | Live at `7ee4d6d` |
 |---|---|---|
 | When disk is touched | only on `POST /api/save` | **on every successful write** |
-| Write mechanism | `writeFileSync` stamped → `copyFileSync` over primary | temp + `renameSync` — `` `src/js/wbapi-server.js:function saveGameFile()@1463` `` |
-| Reload mechanism | `process.exit(67)` → toggle-script relaunch | **in-process** `WBAPI.load()` — `` `src/js/wbapi-server.js:function saveAndRestart(res, status, payload)@1517` `` |
-| Dated backups | one per save, automatic, accumulating | **opt-in only**, via `` `src/js/wbapi-core.js:saveStamped(dir)@1687` `` |
+| Write mechanism | `writeFileSync` stamped → `copyFileSync` over primary | temp + `renameSync` — `` `src/js/wbapi-server.js:function saveGameFile()@1466` `` |
+| Reload mechanism | `process.exit(67)` → toggle-script relaunch | **in-process** `WBAPI.load()` — `` `src/js/wbapi-server.js:function saveAndRestart(res, status, payload)@1520` `` |
+| Dated backups | one per save, automatic, accumulating | **opt-in only**, via `` `src/js/wbapi-core.js:saveStamped(dir)@1741` `` |
 | Discard-by-kill | supported, documented as a feature | ❌ **gone — there is no undo** |
-| `WBAPI.save()` signature | `save()` — no argument | `` `src/js/wbapi-core.js:save(outputPath)@1659` `` — **destination required** |
+| `WBAPI.save()` signature | `save()` — no argument | `` `src/js/wbapi-core.js:save(outputPath)@1713` `` — **destination required** |
 
 The exit-67 rationale (*"a clean slate — module cache cleared, all globals reset"*) was sound
 reasoning that lost to a stronger constraint: a full process restart per write costs a
@@ -187,9 +187,9 @@ really is linear with a small constant, exactly as claimed.
 
 That is a good prediction and a rising cost. In May, 180 ms was paid once per save session.
 Under write-through it is paid **per write**, alongside a 5.5 MB disk rewrite. The mitigation
-exists — `` `src/js/wbapi-core.js:beginPatchQueue()@1397` `` / `` `src/js/wbapi-core.js:flushPatches()@1403` ``
+exists — `` `src/js/wbapi-core.js:beginPatchQueue()@1413` `` / `` `src/js/wbapi-core.js:flushPatches()@1412` ``
 batch many edits into one `respliceSection` — but it is wired for **node edits only**
-(`` `src/js/wbapi-core.js:batchEditNode(edits)@1428` ``). `QUEST_DB`, at 2,853 entries the largest
+(`` `src/js/wbapi-core.js:batchEditNode(edits)@1429` ``). `QUEST_DB`, at 2,853 entries the largest
 section by far, has no batch path (§7.6).
 
 ### 5.2 Concurrency — right answer, wrong reason
@@ -198,7 +198,7 @@ section by far, has no batch path (§7.6).
 > in the same process."*
 
 The conclusion (**no mutex needed**) is correct. The reason is not. The handler is
-`` `src/js/wbapi-server.js:const server = http.createServer@11457` `` — an **`async`** function that
+`` `src/js/wbapi-server.js:const server = http.createServer@11480` `` — an **`async`** function that
 `await`s `readBody(req)` before mutating. Handler A suspended at that `await` interleaves freely
 with handler B. What actually protects `_rawSrc` is narrower and worth stating precisely: **no
 *synchronous* mutation block is ever interleaved**, and every mutation path — patch, resplice,
@@ -227,10 +227,10 @@ Both survive. Three more were added, and Path A's stated limits are obsolete.
 | Path | Purpose | Anchor |
 |---|---|---|
 | **A** — string patch | edit a string field | `` `src/js/wbapi-core.js:function patchStringField(sectionSrc, entryKey, field, newValue)@345` `` |
-| **B** — re-serialize | add / delete an entry | `` `src/js/wbapi-core.js:function respliceSection(rawSrc, sectionName, newContent)@633` `` |
-| **C** 🆕 — literal patch | number / boolean / array / object fields, in place | `` `src/js/wbapi-core.js:function patchLiteralField(sectionSrc, entryKey, field, literal)@506` `` |
-| **D** 🆕 — insert / remove | add or strip one field on an existing entry | `` `src/js/wbapi-core.js:editField(type, idOrTitle, field, value)@1263` `` |
-| **E** 🆕 — deferred batch | many node edits, one resplice | `` `src/js/wbapi-core.js:flushPatches()@1403` `` |
+| **B** — re-serialize | add / delete an entry | `` `src/js/wbapi-core.js:function respliceSection(rawSrc, sectionName, newContent)@649` `` |
+| **C** 🆕 — literal patch | number / boolean / array / object fields, in place | `` `src/js/wbapi-core.js:function patchLiteralField(sectionSrc, entryKey, field, literal)@522` `` |
+| **D** 🆕 — insert / remove | add or strip one field on an existing entry | `` `src/js/wbapi-core.js:editField(type, idOrTitle, field, value)@1279` `` |
+| **E** 🆕 — deferred batch | many node edits, one resplice | `` `src/js/wbapi-core.js:flushPatches()@1412` `` |
 
 > **§6.1 of the original is superseded.** *"It does not work for number, boolean, or
 > object-valued fields — those require Path B."* Path C does exactly that, in place, preserving
@@ -272,7 +272,7 @@ The report's stated safety net does not exist:
 
 All four parse strategies `catch(e) { return {}; }`. Verified by harness: a deliberately
 syntax-broken `QUEST_DB` produced `load() threw? false` · `questDb entries: 0` · `loaded: true`.
-**2,853 quests become zero, and nothing raises.** `` `src/js/wbapi-server.js:function reload()@928` ``
+**2,853 quests become zero, and nothing raises.** `` `src/js/wbapi-server.js:function reload()@931` ``
 prints the counts but asserts nothing, so the only signal is a human reading `quests: 0` in a
 terminal. This was survivable in May, when a save left a dated backup and restarted the process.
 Under write-through (§5) it is not: the write lands on the primary file, no dated backup is
@@ -280,7 +280,7 @@ taken, and the in-process reload cannot fail. **Fix:** assert non-empty (or with
 band) per collection after reload, and fail the write rather than the file.
 
 **7.2 — §DX-02fj 🟡 `saveAndRestart` does not verify what it wrote.** The `saveAndVerify` path
-(`` `src/js/wbapi-server.js:function saveAndVerify(res, status, payload, expectedFields@1545` ``) does a
+(`` `src/js/wbapi-server.js:function saveAndVerify(res, status, payload, expectedFields@1548` ``) does a
 genuine post-write round trip — save, reload from disk, read the fields back, 422 on mismatch.
 This is a real improvement on the original's *"verification is implicit."* But it is the minority
 path: **20+ write endpoints call `saveAndRestart`**, which reloads and returns 200 without
@@ -288,14 +288,14 @@ comparing anything. Route the structural writers through `saveAndVerify`, or giv
 `saveAndRestart` a minimal count assertion (which also closes §7.1).
 
 **7.3 — §DX-02fk 🟢 `export/condition_items` is a phantom collection.**
-`` `src/js/wbapi-server.js:condition_items: () => WBAPI.conditionItems@9834` `` is the **only**
+`` `src/js/wbapi-server.js:condition_items: () => WBAPI.conditionItems@9846` `` is the **only**
 occurrence of `WBAPI.conditionItems` in the repo — `load()` never sets it. The endpoint returns
 `200 {"data":{}}` and logs "0 records", which is indistinguishable from an empty-but-real
 collection. Delete the getter or wire the field.
 
 **7.4 — §DX-02fl 🟢 `ITEM_DB` is an anchored, parsed, exported section with zero entries.**
 `const ITEM_DB = { // General item definitions — weapons, amulets, consumables, readables. };`
-— `` `const ITEM_DB = { // General item definitions@26551` ``. Not a parse failure — the section is genuinely empty. Decide: seed
+— `` `const ITEM_DB = { // General item definitions@26682` ``. Not a parse failure — the section is genuinely empty. Decide: seed
 it, or retire the anchor. As it stands it is 0-entry infrastructure that reads as a live surface,
 and §7.1 means an emptied `ITEM_DB` and a *corrupted* `ITEM_DB` look identical.
 
@@ -313,12 +313,12 @@ Extend `batchEditNode`'s grouping to quests.
 `ITEM_DB`, `NPC_DIALOGUES`, and `MONSTER_DROPS`. `all` is 7 of 14 collections. Either complete it
 or rename it.
 
-**7.8 — §DX-02fp 🟢 `GET /api/help` prints `"expires": "60s"`** (`` `src/js/wbapi-server.js:"expires": "60s"@2032` ``), two
+**7.8 — §DX-02fp 🟢 `GET /api/help` prints `"expires": "60s"`** (`` `src/js/wbapi-server.js:"expires": "60s"@2044` ``), two
 lines below its own correct *"expires in 5 minutes."* `NONCE_TTL` is 300 s.
 
 **7.9 — §DX-02fq 🟢 Both help blocks name a response field that does not exist.** They print
 `"expires": "60s"` and `"expires": 300`; the endpoint returns **`expiresAt`**, an ISO-8601 string
-(`` `src/js/wbapi-server.js:const expiresAt = new Date(Date.now() + NONCE_TTL)@3129` ``). Anyone following the help and reading `.expires` gets `undefined`.
+(`` `src/js/wbapi-server.js:const expiresAt = new Date(Date.now() + NONCE_TTL)@3141` ``). Anyone following the help and reading `.expires` gets `undefined`.
 
 **7.10 — §DX-02fr 🟢 `GET /api/help/nonce` documents a type that 400s and omits one that works.**
 It lists `node | quest | monster | npc | terrain`; `validTypes` is
@@ -326,7 +326,7 @@ It lists `node | quest | monster | npc | terrain`; `validTypes` is
 the §DX-02l sweep requires — is undocumented.
 
 **7.11 — §DX-02fs 🟢 The help still teaches the retired save step.** *"Step C — save (always
-required after any write)"* (`` `src/js/wbapi-server.js:Step C — save (always required after any write)@2040` ``) predates §DX-02k. Writes auto-save.
+required after any write)"* (`` `src/js/wbapi-server.js:Step C — save (always required after any write)@2052` ``) predates §DX-02k. Writes auto-save.
 `POST /api/save` now means *"take a dated snapshot,"* which is a different thing and should say so.
 
 ---

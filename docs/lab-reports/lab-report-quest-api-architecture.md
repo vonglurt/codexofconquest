@@ -81,24 +81,24 @@ walking into it.*
 
 ## 2. As-built inventory
 
-The runtime is one fenced region, `// ◆◆◆ QUEST:CORE:START ◆◆◆@21966` → `QUEST:CORE:END`,
+The runtime is one fenced region, `// ◆◆◆ QUEST:CORE:START ◆◆◆@21988` → `QUEST:CORE:END`,
 byte-identical to `src/js/quest.js` and asserted by `check:questparity` (gate #8 of 16).
 
 | Spec element | As built | Anchor |
 |---|---|---|
-| Schema constant | `SCHEMA_VERSION` | `const SCHEMA_VERSION = 'UQF-1.0';@21967` |
-| Bit contract registry | 13 kinds (spec: 6) | `const BIT_CONTRACTS = {@21971` |
-| Contract checker | pure, no side effects | `function validateQuest(q) {@22005` |
-| Legacy adapter | retired to identity (W7d) | `function adaptLegacyQuest(id, q) {@22027` |
-| Runtime factory | host-injected (§VM-01-D) | `function createQuestRuntime(host) {@22181` |
-| Activation gate | compiled boolean tree | `canActivate(questId) {@22194` |
-| Completion gate | **not in the spec** | `canComplete(questId) {@22206` |
-| Bit-chain executor | **a generator** (§VM-01-A) | `*execBits(bits, ctx) {@22224` |
-| Roll | seeded stream, not `Math.random` | `_rollSkill(stat) {@22243` |
-| Skill-check resolver | name exact | `resolveSkillCheck(bit, ctx) {@22257` |
-| Opcode table | 13 handlers (spec: 8) | `HANDLERS: {@22265` |
-| Live binding | 12 injected effects | `const QuestRuntime = createQuestRuntime({@22342` |
-| Activation leaf | ~15 declarative terms | `function _matchActivationLeaf(g, st) {@22049` |
+| Schema constant | `SCHEMA_VERSION` | `const SCHEMA_VERSION = 'UQF-1.0';@21989` |
+| Bit contract registry | 13 kinds (spec: 6) | `const BIT_CONTRACTS = {@21993` |
+| Contract checker | pure, no side effects | `function validateQuest(q) {@22027` |
+| Legacy adapter | retired to identity (W7d) | `function adaptLegacyQuest(id, q) {@22049` |
+| Runtime factory | host-injected (§VM-01-D) | `function createQuestRuntime(host) {@22203` |
+| Activation gate | compiled boolean tree | `canActivate(questId) {@22221` |
+| Completion gate | **not in the spec** | `canComplete(questId) {@22233` |
+| Bit-chain executor | **a generator** (§VM-01-A) | `*execBits(bits, ctx) {@22251` |
+| Roll | seeded stream, not `Math.random` | `_rollSkill(stat) {@22270` |
+| Skill-check resolver | name exact | `resolveSkillCheck(bit, ctx) {@22284` |
+| Opcode table | 13 handlers (spec: 8) | `HANDLERS: {@22292` |
+| Live binding | 12 injected effects | `const QuestRuntime = createQuestRuntime({@22369` |
+| Activation leaf | ~15 declarative terms | `function _matchActivationLeaf(g, st) {@22071` |
 
 **Opcode usage across all 2,853 quests** (authored bit kinds, not contract rows):
 
@@ -133,7 +133,7 @@ declined or outgrew the spec), **✅** = shipped as specified.
 | 6 | `gate.expr` string language (Open-Q #5) | **0 commits ever** — shipped as `{all}/{any}/{not}` object composition | ES — better answer, same problem |
 | 7 | `QuestRuntime.canActivate/execBits/resolveSkillCheck/HANDLERS` | all four ✅ under their exact names | ✅ |
 | 8 | `SCHEMA_VERSION`, `BIT_CONTRACTS`, `validateQuest`, `adaptLegacyQuest` | all four ✅ | ✅ |
-| 9 | `rollD20Stat(bit.stat)` (§6) | **0 commits ever** → `_rollSkill(stat) {@22243` | RS — invented name |
+| 9 | `rollD20Stat(bit.stat)` (§6) | **0 commits ever** → `_rollSkill(stat) {@22270` | RS — invented name |
 | 10 | `pushKnowledge(bit.knowledge)` (§6) | **0 commits ever** → inline `st.knowledge.push` | RS — invented name |
 | 11 | `renderNamedTemplate(bit.template)` (§6) | **never a function** — survives only in a comment; `template:` has **0** authored uses | ES — NOT SHIPPED |
 | 12 | `renderChoiceBlock(prompt, options, ctx)` (§6) | never existed; the host end shipped 2026-08-04 as `_uqfRunVerb` (§VM-01-G4a) | ES — 71 days inert |
@@ -195,7 +195,7 @@ it is **4 of 9 fields wrong, plus one omission and one invention**:
 
 The §5 **UQF conversion** then carries the error forward — it specifies `reward{xp:150}` where the
 legacy `onPass` awarded **250**. The engine, migrating for real 31 days later, took the *archive's*
-number: `{ kind:'reward', gold:150, xp:250,@13360`.
+number: `{ kind:'reward', gold:150, xp:250,@13375`.
 
 And every string the author could **copy** survived intact. `quest_wis_01: { id:'quest_wis_01',
 schema:'UQF-1.0'@13351` still holds the `desc`, the `hint`, the 👁️ pass narration and the fail
@@ -215,9 +215,9 @@ as a workaround. This is fragile."* §10 promised the fix: the chain graph *"use
 `gate.flags` instead of regex."*
 
 At HEAD the regex is **unchanged and unaccompanied**:
-`src/js/wbapi-core.js:this._questFlags[id] = { reads, writes };@797` still derives every dependency
+`src/js/wbapi-core.js:this._questFlags[id] = { reads, writes };@813` still derives every dependency
 edge from `src.matchAll(/S_story\.(\w+)/)` over raw quest source, and
-`src/js/wbapi-core.js:chain(id) {@1089` reads nothing else. There is no `gate.flags` branch anywhere
+`src/js/wbapi-core.js:chain(id) {@1105` reads nothing else. There is no `gate.flags` branch anywhere
 in the file.
 
 Migrating to a declarative format therefore made the analyser **blind**, because a declarative gate
@@ -272,10 +272,10 @@ accept a field or a kind that no code path consumes:
 
 | Surface | Contract says | Reality |
 |---|---|---|
-| `skill_check.adv` | optional | `_rollSkill(stat)@22243` never reads `bit.adv`; **0** authored uses. Advantage is unreachable through UQF. |
-| `narrative.template` | optional | `narrative(bit, ctx) { if (!bit.msg) return;@22302` — a `template`-only bit is a **silent no-op**; `renderNamedTemplate` never shipped; **0** authored uses |
-| `unlock.npcs` | optional, and it *satisfies* the validator on its own | `unlock(bit, ctx) { (bit.quests@22313` ignores it entirely — `{kind:'unlock', npcs:['x']}` validates ✅ and does nothing |
-| `item_check` (whole kind) | required `name` | `item_check(bit, ctx) {@22312` writes `ctx._itemCheck`, which **nothing reads**; **0** authored uses — the job went to the completion gate's `items` term |
+| `skill_check.adv` | optional | `_rollSkill(stat)@22270` never reads `bit.adv`; **0** authored uses. Advantage is unreachable through UQF. |
+| `narrative.template` | optional | `narrative(bit, ctx) { if (!bit.msg) return;@22329` — a `template`-only bit is a **silent no-op**; `renderNamedTemplate` never shipped; **0** authored uses |
+| `unlock.npcs` | optional, and it *satisfies* the validator on its own | `unlock(bit, ctx) { (bit.quests@22340` ignores it entirely — `{kind:'unlock', npcs:['x']}` validates ✅ and does nothing |
+| `item_check` (whole kind) | required `name` | `item_check(bit, ctx) {@22339` writes `ctx._itemCheck`, which **nothing reads**; **0** authored uses — the job went to the completion gate's `items` term |
 
 None is live-broken today, because nothing authors them. All four are **traps for the next author**,
 and `unlock.npcs` is the sharpest: it is the one case where the invalid thing passes validation
@@ -283,7 +283,7 @@ and `unlock.npcs` is the sharpest: it is the one case where the invalid thing pa
 
 ### Finding 6 — an engine comment miscounts the population it describes (→ §DX-02as (e))
 
-`function adaptLegacyQuest(id, q) {@22027` carries a comment stating the surviving non-UQF entries
+`function adaptLegacyQuest(id, q) {@22049` carries a comment stating the surviving non-UQF entries
 are *"quest_math_01–05 §MATH-01 gap + the 30 dead blq_05–10 book-stubs"* — **35**. Measured: **50**.
 The fifteen it omits are `quest_1367_a`–`f` (6), `quest_lxvii67`, `quest_guide_04`,
 `quest_scar_01`–`04`, and `quest_void_tide_21/35/42`. Nine of the fifteen are named in Wave 1r/1v
@@ -299,7 +299,7 @@ claim least likely to be re-measured.***
 ### Finding 7 → §DX-02at — one vocabulary, two hand-maintained copies, already drifted
 
 The report's whole §1 is an argument against a definition living in more than one place. HEAD keeps
-the bit vocabulary twice: `const BIT_CONTRACTS = {@21971` in the game (13 kinds) and
+the bit vocabulary twice: `const BIT_CONTRACTS = {@21993` in the game (13 kinds) and
 `edit.html:const OPERAND_CONTRACTS = {@1413` in the editor (11 kinds), whose own comment
 says it *"mirrors the game's BIT_CONTRACTS."*
 
@@ -345,7 +345,7 @@ The report's most valuable section, because it names five things its author knew
 
 | # | Question | Outcome |
 |---|---|---|
-| 1 | Named templates vs `choice` bits for multi-state nodes | **Neither.** `template` never shipped; multi-state node surfaces became `NODE_PANELS`/`NODE_HOOKS`/`NODE_VERBS` (§VM-01-G4b–d). `story-wis-vs`'s 5-branch block still renders from `const _wisVsOld = document.getElementById('story-wis-vs')@33433` — the one §1.2 fragmentation the migration never reached |
+| 1 | Named templates vs `choice` bits for multi-state nodes | **Neither.** `template` never shipped; multi-state node surfaces became `NODE_PANELS`/`NODE_HOOKS`/`NODE_VERBS` (§VM-01-G4b–d). `story-wis-vs`'s 5-branch block still renders from `const _wisVsOld = document.getElementById('story-wis-vs')@33665` — the one §1.2 fragmentation the migration never reached |
 | 2 | `checkPassFlag` → `flag_write.set` mapping | **Refined:** it became `mission_bit{flag,label}` (a *kept receipt*), not `flag_write`. Usage proves the call: 2,449 `mission_bit` vs 58 `flag_write` |
 | 3 | `completeItems` → `gate.items` or a new `item_check` bit? | **Both were built; only the gate term is used.** `completeItems` retired W7d. See Finding 5 |
 | 4 | `retryable` at the quest root, not in the bit | **Shipped exactly as proposed.** 0 bits carry it |
@@ -364,7 +364,7 @@ The report's most valuable section, because it names five things its author knew
 | 4 — Deprecate legacy path | *"`0.legacy`: zero"* | ✅ on the letter (W7d retired `completeFn`, `completeItems`, `_rollCeremonia`'s roll body, the adapter); ⚠️ 46 `activateCond` + 115 `_legacy_fn` closures survive |
 | 5 — Canonicalize | `QUEST_DB` sole source of truth | ✅ for behaviour; the `storyRender` display split is real but not total (Open-Q #1) |
 
-**Beyond the spec:** the runtime became a *host-injected kernel*. `createQuestRuntime(host)@22181`
+**Beyond the spec:** the runtime became a *host-injected kernel*. `createQuestRuntime(host)@22203`
 names no global, so `src/js/quest.js` runs under `require()` on the server and in tests, and
 `check:questparity` asserts the inlined copy is byte-identical. §6 asked for a layer *"callable
 from both the game and edit.html"*; it got one callable from the game, the server, the MUD

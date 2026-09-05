@@ -54,8 +54,8 @@ read-by-nothing* flags (the typo detector §VM-01-C deferred here).
 
 ## 2. Method
 
-- Extracted every `{ kind:'_legacy_fn', fn:… }` bit from the `QUEST_DB` region (`const QUEST_DB = {@10615` to
-  `WORLDBUILDER:QUEST_DB:END@21952`; lines 10492–21692 on the ship-day build) with a string- and
+- Extracted every `{ kind:'_legacy_fn', fn:… }` bit from the `QUEST_DB` region (`const QUEST_DB = {@10630` to
+  `WORLDBUILDER:QUEST_DB:END@21974`; lines 10492–21692 on the ship-day build) with a string- and
   comment-aware brace matcher, associating each with its enclosing quest `id:` and pulling the verbatim body.
 - Classified each bit by a **single disposition**: what host surface it touches, and whether an existing
   declarative opcode already expresses it.
@@ -66,7 +66,7 @@ read-by-nothing* flags (the typo detector §VM-01-C deferred here).
 **Ground truth — 125 bits.** `grep -cE "kind:\s*['\"]_legacy_fn['\"]"` reports 122; the brace-matched
 extractor finds **125**. The gap is *not* a signature variant (see §10 D1): `grep -c` counts **matching
 lines**, and quest entries are one-per-line, so the three entries carrying two `_legacy_fn` bits each —
-`quest_1367_d_hansa: {@13961`, `quest_1367_f_plague: {@13965`, `quest_scar_03: {@14015` — are counted once.
+`quest_1367_d_hansa: {@13988`, `quest_1367_f_plague: {@13992`, `quest_scar_03: {@14042` — are counted once.
 The same regex with `-o` returns 125. Signature split: `fn:() => {…}` 116, `fn:(S, ctx) => {…}` 3,
 `fn:S => {…}` 6 — sums to 125.
 
@@ -83,7 +83,7 @@ The same regex with `-o` returns 125. Signature split: `fn:() => {…}` 116, `fn
 | **NEW-HP** | 3 | Finding 4 | Live-sheet HP writes: `quest_stoning_lystra`, `quest_inquisitor_questions`, `quest_spark_01`. |
 | **NEW-ABILITY** | 3 | Finding 3 | Guarded one-shot ability +1: `quest_sunken_02` (INT), `quest_guide_06` / `quest_scar_04` (WIS, capped 20). |
 | **NEW-DERIVED** | 2 | Finding 6 | `whisperCrownComplete` / `waneCrownComplete` — a flag computed from quest counts; a gate wearing a write's clothing. |
-| **FAVOR** | 2 | No | `_setNpcFavor(key, level)@23463` / `_checkDearFriendUpgrade(key)@23490` — the `favor` opcode already wraps `E.setFavor`. |
+| **FAVOR** | 2 | No | `_setNpcFavor(key, level)@23505` / `_checkDearFriendUpgrade(key)@23514` — the `favor` opcode already wraps `E.setFavor`. |
 | **NEW-ITEMEDIT** | 1 | Finding 7 | `quest_va_04` appends a sentence to an item description. Cosmetic, gate-irrelevant. |
 | **NONDET** | 1 | Finding 0 (P0) | `quest_1367_f_plague` onFail: `if (Math.random() > 0.5)`. The only non-deterministic bit in all of quest data. |
 
@@ -94,7 +94,7 @@ The same regex with `-o` returns 125. Signature split: `fn:() => {…}` 116, `fn
 
 ## 4. Findings
 
-**Finding 0 — the blocker is one bit, and it is also a bug (P0).** `quest_1367_f_plague: {@13965`, `onFail`:
+**Finding 0 — the blocker is one bit, and it is also a bug (P0).** `quest_1367_f_plague: {@13992`, `onFail`:
 
 ```js
 { kind:'_legacy_fn', fn:() => { if (Math.random() > 0.5) S_story.plague_exposed = true; } }
@@ -102,10 +102,10 @@ The same regex with `-o` returns 125. Signature split: `fn:() => {…}` 116, `fn
 
 This is the entire literal blocker cited by the BACKLOG and CONTRIBUTING §VM-01 — the only `Math.random()` in
 `QUEST_DB`. Two independent sources document the intended mechanic as a real save: the quest's own `failText`
-(*"Roll CON DC 13 or gain plague_exposed"*) and the `_S_DEFAULTS` declaration at `plague_exposed: false,@23291`
+(*"Roll CON DC 13 or gain plague_exposed"*) and the `_S_DEFAULTS` declaration at `plague_exposed: false,@23322`
 (*"Set on failed CON DC 13 save"*). The code rolls a modifier-free coin instead. `skill_check` already nests
-through `src/js/quest.js:resolveSkillCheck(bit, ctx)@322` into `execBits`, synchronously, drawing the injected
-seeded stream at `src/js/quest.js:const d20  = Math.ceil(E.rng() * 20)@314`. A one-line change with an outsized
+through `src/js/quest.js:resolveSkillCheck(bit, ctx)@327` into `execBits`, synchronously, drawing the injected
+seeded stream at `src/js/quest.js:const d20  = Math.ceil(E.rng() * 20)@319`. A one-line change with an outsized
 payoff: it is the whole reachability blocker.
 
 **Finding 1 — a `counter` opcode (the biggest lever).** `{ kind:'counter', field, add, min, max }` absorbs the
@@ -119,7 +119,7 @@ one.*
 
 | # | Bits | Shape | Proposed grammar |
 |---|---:|---|---|
-| 2 | 31 | Counter that mints a one-shot reward at a cap | `counter` gains `onReach:[bits]`, or `function _innKindness(n)@23530` and `function _addCroneMark()@23540` stay whitelisted host effects — their write-set is small and fixed |
+| 2 | 31 | Counter that mints a one-shot reward at a cap | `counter` gains `onReach:[bits]`, or `function _innKindness(n)@23551` and `function _addCroneMark()@23561` stay whitelisted host effects — their write-set is small and fixed |
 | 3 | 3 | `abilityScores.X = Math.min(20, +1)`, gated once by a `…Granted` flag | `reward` gains `{ ability:{wis:1}, cap:20 }`; the guard becomes a gate on the sub-chain |
 | 4 | 3 | Live HP-sheet writes, the host-fence class of `_rollSkill` | A `damage`/`heal` kind, or leave as host. HP is not a gate predicate, so the walker never executes them — analytically inert |
 | 5 | 5 | Branch on existing state, no roll and no input | The grammar cannot say this: `choice` branches on input, `skill_check` on a roll, and there is no branch-on-state. → a `when:{…gate…}` clause or `flagEquals`-gated sub-chains |
@@ -153,7 +153,7 @@ surface. **C** — A now, Finding 1 (`counter`) as a fast-follow.
 this a planning problem, not pure graph reachability.
 
 > **RESOLVED 2026-07-22 — the user locked Option A**, with the **monotone bound** for the second question:
-> `src/scripts/check-questgraph.js:function gateSat@273` treats `favorMin`/`shardsMin`/`battles`/`nodes`/
+> `src/scripts/check-questgraph.js:function gateSat@271` treats `favorMin`/`shardsMin`/`battles`/`nodes`/
 > `restedAtMin`/`countMin`/`dayMin`·`dayMax` as satisfiable-if-reachable and negations as satisfiable-by-absence,
 > so a quest is reachable when its gate's *flag* and *quest-dependency* reads are supplied by the accumulated
 > write-pool. This **over-approximates** reachability, which is the sound direction for the primary output: a
@@ -197,7 +197,7 @@ invariant enforced is **zero residual non-determinism**, the one thing that is s
 ## 8. §VM-01-E-FU — the Write-Set Completion Pass (same day)
 
 The write-set tree-walk only sees flags a **quest bit** sets, so every gate flag provided by **non-quest code**
-looked like a soft-lock. `src/scripts/check-questgraph.js:function scanFlagWrites@302` scans the whole HTML for
+looked like a soft-lock. `src/scripts/check-questgraph.js:function scanFlagWrites@300` scans the whole HTML for
 every flag-write form and folds the result into **both** the written-flag pool and the reachability start pool.
 **Ten forms** across seven regexes (see §10 D3): `S_story.flag =`, `S_story.container[x] =`,
 `S_story['flag'] =`, `missionBit:`, `_grantMissionBit(…)`, the `flag:` / `key:` / `flagBought:` record fields
@@ -267,9 +267,9 @@ byte-exact · `parseSanitized` drops exactly `quest_sea_01` and `quest_sb_01` at
 | D1 | §2 | The 122-vs-125 gap is "three use a spacing/signature variant the naive grep missed" | `grep -c` counts *lines*; three quest lines carry two bits each. The same regex with `-o` returns 125 | Count right, **reason wrong** |
 | D2 | §7/§9 | The 17 failures are "the pre-existing render/retryable **env baseline**" | `bd951d7`, 3 h 58 min later the same day, retired it: *"17 stale tests, not server clobber"* — 16 were fixed outright | Arithmetic and verdict **stand**; the label was **falsified same-day** |
 | D3 | §8 | `scanFlagWrites` "captures each of its **eleven** write forms" | **Ten** forms across seven regexes; the selftest makes **eleven** assertions because `set:[…]` is exercised with two flags | **Off by one** — flags counted as forms |
-| D4 | §4 F1 | The counter tracks "are read by real gates (11–26 refs each)" | **Zero** quest gates read any of the five, at ship-day and at HEAD. `tribbleCount` occurs 6× in the whole file. The one intended gate read was demoted — `is not expressible in canActivate@13974` says so in the file | **Wrong**; conclusion survives, see §11 |
+| D4 | §4 F1 | The counter tracks "are read by real gates (11–26 refs each)" | **Zero** quest gates read any of the five, at ship-day and at HEAD. `tribbleCount` occurs 6× in the whole file. The one intended gate read was demoted — `is not expressible in canActivate@14001` says so in the file | **Wrong**; conclusion survives, see §11 |
 | D5 | §7 | `check:questparity` "21,909 **bytes**" | The number is exact, but the gate prints `a.length` — UTF-16 code units. 21,909 chars = **22,135 UTF-8 bytes** | Figure right, **unit mislabelled by the tool itself** |
-| D6 | §5/§7 | E consumes §VM-01-D's kernel — "the kernel via `require('../js/quest.js')`" | `const Q = require(path.join(__dirname, '..', 'js', 'quest.js'))` bound `Q`, and `Q` occurred **exactly once in the file: on that line** — at ship-era and until §DX-02dx. The prover rolls its own `gateSat` and `src/scripts/check-questgraph.js:function matchBrace@66`, and never calls the kernel | **The import was decorative.** C's scratch-state *concept* is used; D's code is not. §DX-02dx ✅ 2026-09-03 removed the import and the header clause; the file no longer names `quest.js` |
+| D6 | §5/§7 | E consumes §VM-01-D's kernel — "the kernel via `require('../js/quest.js')`" | `const Q = require(path.join(__dirname, '..', 'js', 'quest.js'))` bound `Q`, and `Q` occurred **exactly once in the file: on that line** — at ship-era and until §DX-02dx. The prover rolls its own `gateSat` and `src/scripts/check-questgraph.js:function matchBrace@64`, and never calls the kernel | **The import was decorative.** C's scratch-state *concept* is used; D's code is not. §DX-02dx ✅ 2026-09-03 removed the import and the header clause; the file no longer names `quest.js` |
 | D7 | §8 | `waw001a1` "only survives play because an NPC `missionBit` coincidentally grants it — the chain stalls at **act 3**" | §AUDIT-03bj measured both halves false: `meta.missionBit` has **zero readers** (§DX-02cx), so the scan over-credits it, and the first dead rung is **act 2** in all eight chains | **Both halves wrong** |
 
 **Drift since ship (not errors).** `check:gateast` 72 → **76** (`37f8ccb` added the `dayMin`/`dayMax` leaf the
@@ -297,24 +297,24 @@ performed. §AUDIT-03bj puts the true blast radius at **138 quests** — the hea
 
 **Cited, deliberately not re-filed** (instrument 7): §AUDIT-03bj (the content triage and the 138-quest
 closure) · §DX-02u (`voidFluxCleared`) · §DX-02bs (the `once:` blind spot) · §DX-02cz (the detector covers
-flags only) · §DX-02dx (D6, the dead require) · §DX-02dw (`const d20  = Math.ceil(E.rng() * 20)@22249` is the
+flags only) · §DX-02dx (D6, the dead require) · §DX-02dw (`const d20  = Math.ceil(E.rng() * 20)@22276` is the
 one unguarded effect call in the kernel this report's port routes through).
 
 ---
 
 ## 12. Anchors (HEAD, 2026-08-22)
 
-`const QUEST_DB = {@10615` · `WORLDBUILDER:QUEST_DB:END@21952` · `quest_1367_f_plague: {@13965` ·
-`quest_1367_d_hansa: {@13961` · `quest_scar_03: {@14015` · `plague_exposed: false,@23291` ·
-`_legacy_fn(bit, ctx)@22328` · `_legacy_fn:  { required:@22000` ·
-`const d20  = Math.ceil(E.rng() * 20)@22249` · `function _innKindness(n)@23530` ·
-`function _addCroneMark()@23540` · `function _setNpcFavor(key, level)@23463` ·
-`function _checkDearFriendUpgrade(key)@23490` · `const WM_ARCHIVE_DOCS = [@27789` ·
-`seaStrangenessNoticed@12491` · `is not expressible in canActivate@13974` · `S_story[ngEbKey] = true;@35291`
+`const QUEST_DB = {@10630` · `WORLDBUILDER:QUEST_DB:END@21974` · `quest_1367_f_plague: {@13992` ·
+`quest_1367_d_hansa: {@13988` · `quest_scar_03: {@14042` · `plague_exposed: false,@23322` ·
+`_legacy_fn(bit, ctx)@22355` · `_legacy_fn:  { required:@22022` ·
+`const d20  = Math.ceil(E.rng() * 20)@22276` · `function _innKindness(n)@23551` ·
+`function _addCroneMark()@23561` · `function _setNpcFavor(key, level)@23505` ·
+`function _checkDearFriendUpgrade(key)@23516` · `const WM_ARCHIVE_DOCS = [@27928` ·
+`seaStrangenessNoticed@12498` · `is not expressible in canActivate@14001` · `S_story[ngEbKey] = true;@35516`
 (the eleventh computed-key writer, omitted from the original §9-FU list of ten) ·
-`src/js/quest.js:resolveSkillCheck(bit, ctx)@322` · `src/js/quest.js:const d20  = Math.ceil(E.rng() * 20)@314` ·
-`src/scripts/check-questgraph.js:function matchBrace@66` ·
-`src/scripts/check-questgraph.js:function gateSat@273` · `src/scripts/check-questgraph.js:function scanFlagWrites@302` ·
+`src/js/quest.js:resolveSkillCheck(bit, ctx)@327` · `src/js/quest.js:const d20  = Math.ceil(E.rng() * 20)@319` ·
+`src/scripts/check-questgraph.js:function matchBrace@64` ·
+`src/scripts/check-questgraph.js:function gateSat@271` · `src/scripts/check-questgraph.js:function scanFlagWrites@300` ·
 `src/scripts/check-quest-parity.js:quest parity: QUEST:CORE identical@25` ·
 `src/scripts/check-gate-parity.js:const rt = Q.createQuestRuntime@32` (§VM-01-F — the kernel's genuine first
 consumer, per D6).

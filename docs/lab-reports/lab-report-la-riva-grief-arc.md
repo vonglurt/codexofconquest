@@ -52,7 +52,7 @@ are the same layer viewed from different ends.
 
 | Source | What it supplied | Where it lands in the engine |
 |---|---|---|
-| **Chrétien de Troyes** — *Erec et Enide*, *Yvain*, *Cligès*, *Lancelot* | Emotion encoded as a **prior observable act**, never declared. Erec watches the gate after she has passed through it; Lancelot hesitates two steps before the cart and does not know he did | The six `const NPC_ROMANCE_PREAMBLES = {@27481` — *"She looks up before you reach the corner."* · *"The cup is already on the table."* All six verbatim at HEAD |
+| **Chrétien de Troyes** — *Erec et Enide*, *Yvain*, *Cligès*, *Lancelot* | Emotion encoded as a **prior observable act**, never declared. Erec watches the gate after she has passed through it; Lancelot hesitates two steps before the cart and does not know he did | The six `const NPC_ROMANCE_PREAMBLES = {@27613` — *"She looks up before you reach the corner."* · *"The cup is already on the table."* All six verbatim at HEAD |
 | **Grief-transcript analysis** | Bereaved speech exhibits (a) extreme precision about peripheral facts as a containing structure, (b) surviving objects carrying the relationship | Froberger Entry 12's avalanche guide, who *"sealed the cracks with accuracy"*; Connie's counting ritual — *"Everything I could still name by shape"* |
 | **The five-act object form** | Five acts, each named for one surviving object; two perspectives per act; the gap between them carries the charge | `story.md §GRIEF AND CORRUPTION` — net → crate → account book → key → market |
 
@@ -64,11 +64,11 @@ are the same layer viewed from different ends.
 ### I-C. What it adds to playability
 
 1. **It converts a boss kill into a consequence.** Defeating the Cat-King already paid XP and gold.
-   `S_story.catKingDefeated = true;@25375` now also opens a chain, so the fight acquires an aftermath
+   `S_story.catKingDefeated = true;@25440` now also opens a chain, so the fight acquires an aftermath
    the player chooses whether to walk into. **The combat reward is unchanged; what changed is that
    the fight now has a place to point at.**
 2. **It gives a repeatable encounter a non-combat reason to be repeated.** The five Corrupted Cats at
-   AMS use `corridor:true@31911` with `count:1` — deliberately trivial. The player is not being
+   AMS use `corridor:true@32143` with `count:1` — deliberately trivial. The player is not being
    challenged; they are being **paced**. Difficulty would have been the wrong axis.
 3. **It makes an item's uselessness the point.** Both arc items ship `sell:0` and are consumed by the
    chain. Vincenzo's Net and the Account Book are the only things in the arc the player can hold, and
@@ -145,20 +145,20 @@ the only copy.)*
 
 | Structure | Shipped as | Status |
 |---|---|---|
-| Node FR — Fishmonger's Row | `AMS:{ num:79, code:'AMS'@8801` — `name:'ruins'`, `label:"Fishmonger's Row"`, `act:1`, node text byte-identical to birth | ✅ renamed, all fields preserved |
-| Quest 1 — "What Remains" | `quest_la_riva_01: { id:'quest_la_riva_01'@13785`, `completion:{ flags:['connieMet'] }`, `waypointNode:'AMS'` | ✅ live (title now NPC-prefixed) |
-| Quest 2 — "The Weight of a Net" | `quest_la_riva_02: { id:'quest_la_riva_02'@13795`, `countMin:[{path:'frCatKillCount',min:5}]@13795` + `itemsAll:["Vincenzo's Net"]`, `reward:500` | ✅ live, condition and reward exact — **§DX-02cm 2026-08-24 added `atNode:'AMS'` and moved the arc's six AMS effects into an `onComplete` chain; `reward:500` is still the dead display field (`q.reward` is intentionally NOT read@37032), the paying bit is `kind:'reward',gold:500`** |
-| Quest 3 — "The Account Book" | `quest_la_riva_03: { id:'quest_la_riva_03'@13807`, `completion:{ flags:['laRivaComplete'] }`, `reward:0` | ✅ live |
-| Activation | `S_story.catKingDefeated = true;@25375` → 2500 ms `setTimeout` → `S_story.quests['quest_la_riva_01'] = 'active';@25379` | ✅ delay exact as specified |
-| Repeatable encounter | `corridor:true@31911`, `count:1`, `key:'corrupted_cat'` | ✅ exact |
-| Item 1 | `name:"Vincenzo's Net", icon:'🎣', type:'key_item', sell:0@25360` — `description` **byte-identical** to the report's quotation | ✅ exact |
-| Item 2 | `name:'Old Tuna Account Book',icon:'📒',type:'key_item',sell:0@13805` | ✅ exact — **§DX-02cm 2026-08-24 moved it out of the AMS render hook into the quest's own `onComplete` `reward` bit; the object is byte-identical, including the `description:` key the inventory renderer does not read (it reads `item.desc@31213` → §DX-02gd)** |
-| State fields | `connieMet: false, fishmongerRowRestored: false, laRivaComplete: false, frCatKillCount: 0,@23123` — all four, **on one line, in the specified order** | ✅ exact |
+| Node FR — Fishmonger's Row | `AMS:{ num:79, code:'AMS'@8814` — `name:'ruins'`, `label:"Fishmonger's Row"`, `act:1`, node text byte-identical to birth | ✅ renamed, all fields preserved |
+| Quest 1 — "What Remains" | `quest_la_riva_01: { id:'quest_la_riva_01'@13812`, `completion:{ flags:['connieMet'] }`, `waypointNode:'AMS'` | ✅ live (title now NPC-prefixed) |
+| Quest 2 — "The Weight of a Net" | `quest_la_riva_02: { id:'quest_la_riva_02'@13822`, `countMin:[{path:'frCatKillCount',min:5}]@13822` + `itemsAll:["Vincenzo's Net"]`, `reward:500` | ✅ live, condition and reward exact — **§DX-02cm 2026-08-24 added `atNode:'AMS'` and moved the arc's six AMS effects into an `onComplete` chain; `reward:500` is still the dead display field (`q.reward` is intentionally NOT read@37032), the paying bit is `kind:'reward',gold:500`** |
+| Quest 3 — "The Account Book" | `quest_la_riva_03: { id:'quest_la_riva_03'@13834`, `completion:{ flags:['laRivaComplete'] }`, `reward:0` | ✅ live |
+| Activation | `S_story.catKingDefeated = true;@25440` → 2500 ms `setTimeout` → `S_story.quests['quest_la_riva_01'] = 'active';@25444` | ✅ delay exact as specified |
+| Repeatable encounter | `corridor:true@32143`, `count:1`, `key:'corrupted_cat'` | ✅ exact |
+| Item 1 | `name:"Vincenzo's Net", icon:'🎣', type:'key_item', sell:0@25425` — `description` **byte-identical** to the report's quotation | ✅ exact |
+| Item 2 | `name:'Old Tuna Account Book',icon:'📒',type:'key_item',sell:0@13832` | ✅ exact — **§DX-02cm 2026-08-24 moved it out of the AMS render hook into the quest's own `onComplete` `reward` bit; the object is byte-identical, including the `description:` key the inventory renderer does not read (it reads `item.desc@31054` → §DX-02gd)** |
+| State fields | `connieMet: false, fishmongerRowRestored: false, laRivaComplete: false, frCatKillCount: 0,@23155` — all four, **on one line, in the specified order** | ✅ exact |
 | NPCs | `connie_tuna` + `aldo_sardino`, both with `node:"AMS"` in profile and dialogue | ✅ live |
-| Delivery + Kenickie favor | `id:'cdg-la-riva-delivery'@34388` — a `NODE_VERBS` verb; `{ kind:'favor', npc:'kenickie', set:3 }@34397` | ✅ live, migrated to the VM (§VM-01-G4) |
-| Romance layer | `const ROMANCE_QUOTES@22380` (**21**) · `const NPC_ROMANCE_PREAMBLES@27481` (**6**) · `const NPC_ROMANCE_VIGNETTES@27491` (**6**) · `const INN_DREAMS@27133` | ✅ all four, counts exact |
-| Journal | `const FROBERGER_JOURNAL = [@27186` — **41 entries**, unchanged since the earliest surviving build | ✅ exact |
-| Hour counter | `function _storyRollInit() {@24626` · `const _updateHeal = () => {@7134` · `function storyShortRest@25819` · `hoursElapsed  = (S_story.hoursElapsed  || 0) + 8@36283` / `S_story.hoursSinceSlept = 0;@36284` | ⚠️ 4 of 5 rows — see delta 9 |
+| Delivery + Kenickie favor | `id:'cdg-la-riva-delivery'@34654` — a `NODE_VERBS` verb; `{ kind:'favor', npc:'kenickie', set:3 }@34663` | ✅ live, migrated to the VM (§VM-01-G4) |
+| Romance layer | `const ROMANCE_QUOTES@22407` (**21**) · `const NPC_ROMANCE_PREAMBLES@27613` (**6**) · `const NPC_ROMANCE_VIGNETTES@27623` (**6**) · `const INN_DREAMS@27265` | ✅ all four, counts exact |
+| Journal | `const FROBERGER_JOURNAL = [@27318` — **41 entries**, unchanged since the earliest surviving build | ✅ exact |
+| Hour counter | `function _storyRollInit() {@24689` · `const _updateHeal = () => {@7146` · `function storyShortRest@25950` · `hoursElapsed  = (S_story.hoursElapsed  || 0) + 8@36480` / `S_story.hoursSinceSlept = 0;@36481` | ⚠️ 4 of 5 rows — see delta 9 |
 
 **Census: 43 of 46 identifiers resolve (93 %).** The three that do not are `storyQuestHunt` and
 `storyMove` (both **RETIRED**, delta 9) and `partial_market` (**never built**, and correctly filed as
@@ -177,11 +177,11 @@ deferred — delta 8).
 | 5 | Rewards — 0gp / 500gp + Aldo Friendly / 0gp + Kenickie fav 3 | 500 and 0 exact; Kenickie `set:3` exact; Aldo `+1`, and the live tier scale is `>= 1` friendly, `>= 2` dearFriend, so **Friendly is correct** | ✅ EXACT |
 | 6 | Vincenzo's Net `description` (quoted in full) | Byte-identical at HEAD | ✅ EXACT |
 | 7 | Kenickie's closing line *"Yeah. Okay. I'll hold onto this."* | Byte-identical, as both `disposition` and delivery narrative | ✅ EXACT |
-| 8 | §XI: `fishmongerRowRestored` "does not currently trigger any visual change at FR… deferred. Potential extension: terrain `ruins` → `partial_market`" | **The deferral shipped — under a different mechanism.** `textVariants:[{flag:'fishmongerRowRestored'@8802` swaps the node text to *"Two of the three blocks are still rubble. The third has a market in it — one stall…"*. `partial_market` has **0 occurrences**: the terrain swap was never built and did not need to be | ✅ **SHIPPED, better** — the flag went from write-only to read |
+| 8 | §XI: `fishmongerRowRestored` "does not currently trigger any visual change at FR… deferred. Potential extension: terrain `ruins` → `partial_market`" | **The deferral shipped — under a different mechanism.** `textVariants:[{flag:'fishmongerRowRestored'@8815` swaps the node text to *"Two of the three blocks are still rubble. The third has a market in it — one stall…"*. `partial_market` has **0 occurrences**: the terrain swap was never built and did not need to be | ✅ **SHIPPED, better** — the flag went from write-only to read |
 | 9 | §VIII hour table, five action types | `storyConfirmSleep` +8 / reset ✅ exact · `storyShortRest` +1/+1 ✅ · **battle** +1/+1 shipped at battle **start** (`_storyRollInit`), not victory · **`storyQuestHunt` +2/+2 RETIRED** by §TIMELESS-01 (`7952752`; 3 commits, born `e594848`) · **`storyMove` RETIRED** by §WALK/§NAV-01 (0 occurrences, 2 commits) | ⚠️ **3 of 5 rows stale — all RETIRED, none never-shipped** |
-| 10 | §VIII: "Display thresholds (existing CSS, now active): 16h → `warn`, 24h → `danger`" | Exact (`aw >= 24 ? ' danger' : aw >= 16 ? ' warn'@36103`) — **and no longer display-only.** `0) >= 24) {@25048` imposes combat **disadvantage** at 24h without sleep, surfaced in the pre-battle warning | ✅ **UNDERSTATED** — the counter became a mechanic |
-| 11 | §XI: Kenickie naming line for the Covenant Keeper ending "deferred" | `const SWEELINCK_NAMING_LINES = {@27239` holds exactly six keys — `yael · brynn · quill · pachelbel · crov · auros`. **Kenickie is not among them**, and the report's own suggested line has 0 occurrences | ❌ **NOT SHIPPED** — 78 days; see §VII |
-| 12 | §V-E: fifth ending gated on `vaArchitectureKnown` + `entry42Written` + `ngPlusRun ≥ 1` | `if (S_story.vaArchitectureKnown && S_story.entry42Written && (S_story.ngPlusRun \|\| 0) >= 1) {` at two sites; text `Froberger wrote 41 entries. You wrote one.@28297` verbatim (report clipped the tail) | ✅ EXACT |
+| 10 | §VIII: "Display thresholds (existing CSS, now active): 16h → `warn`, 24h → `danger`" | Exact (`aw >= 24 ? ' danger' : aw >= 16 ? ' warn'@36296`) — **and no longer display-only.** `function _isExhausted()@28323` imposes combat **disadvantage** at 24h without sleep, surfaced in the pre-battle warning | ✅ **UNDERSTATED** — the counter became a mechanic |
+| 11 | §XI: Kenickie naming line for the Covenant Keeper ending "deferred" | `const SWEELINCK_NAMING_LINES = {@27371` holds exactly six keys — `yael · brynn · quill · pachelbel · crov · auros`. **Kenickie is not among them**, and the report's own suggested line has 0 occurrences | ❌ **NOT SHIPPED** — 78 days; see §VII |
+| 12 | §V-E: fifth ending gated on `vaArchitectureKnown` + `entry42Written` + `ngPlusRun ≥ 1` | `if (S_story.vaArchitectureKnown && S_story.entry42Written && (S_story.ngPlusRun \|\| 0) >= 1) {` at two sites; text `Froberger wrote 41 entries. You wrote one.@28445` verbatim (report clipped the tail) | ✅ EXACT |
 | 13 | §XI: Froberger Entries 17 and 29 need no further hooks | Both live, both quoted verbatim (*"The taxonomy stands corrected in any case"*, *"only gets worse with additional documentation"*) | ✅ EXACT |
 | 14 | §VI romance counts — 21 quotes / 6 preambles / 6 vignettes | 21 / 6 / 6 | ✅ EXACT |
 | 15 | §VII quest dispositions rewritten in character voice (3 quoted) | All three verbatim: `quest_brynn_ledger`, `quest_pit_training`, `quest_couperin_lute` | ✅ EXACT |
@@ -212,8 +212,8 @@ one-node locale.
 **Kenickie is raised to Dear Friend by this arc's own final quest and cannot be named by the ending
 the arc exists to feed.**
 
-`{ kind:'favor', npc:'kenickie', set:3 }@34397` promotes him past the `>= 2` dearFriend threshold at
-the moment he receives the account book. `const SWEELINCK_NAMING_LINES = {@27239` — the Covenant
+`{ kind:'favor', npc:'kenickie', set:3 }@34663` promotes him past the `>= 2` dearFriend threshold at
+the moment he receives the account book. `const SWEELINCK_NAMING_LINES = {@27371` — the Covenant
 Ceremony's per-NPC fav-gated witness lines — carries six keys and not his.
 
 Act V states the design purpose in one sentence: *"The Covenant Keeper ending names each person
@@ -230,11 +230,11 @@ report **filed this correctly as deferred**, with a suggested text. It is a clea
 oversight discovered late. → **§GR-FU**.
 
 Second, smaller defect: Aldo's promotion was a **raw increment** into `S_story.npcFavorability`,
-bypassing `function _setNpcFavor(key, level) {@23463` — the absolute, only-ever-raises setter that
+bypassing `function _setNpcFavor(key, level) {@23505` — the absolute, only-ever-raises setter that
 the CDG verb's own comment cites as canonical and that emits the tier-change line. **Within one arc,
 one NPC was promoted through the host and the other by a direct write into the ledger.** → **§DX-02x**.
 
-> **⚠ Corrected 2026-08-24 (§DX-02cm).** The site is now `{kind:'favor',npc:'aldo_sardino',add:1}@13805`
+> **⚠ Corrected 2026-08-24 (§DX-02cm).** The site is now `{kind:'favor',npc:'aldo_sardino',add:1}@13832`
 > — the second of the four bits in `quest_la_riva_02.onComplete` — so both promotions in the arc go
 > through `_setNpcFavor`. §DX-02x's remaining scope is the corpus-wide sweep and the writers-only gate,
 > not this site. The tier line it now emits reads **`aldo_sardino`**, not *Aldo Sardino*: `_setNpcFavor`

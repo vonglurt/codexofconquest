@@ -75,7 +75,7 @@ generous and stop pretending otherwise.
 
 **And what the choice cost, which the report does not say.** The review's §PLAY-01-C section is not
 titled *"the deadline is scary"* — it is titled ***"Heal-on-kill quietly defeats the time economy."***
-The diagnosed defect is `const reward   = Math.floor((S.enemy.ac@25311`, which refills the player for
+The diagnosed defect is `const reward   = Math.floor((S.enemy.ac@25368`, which refills the player for
 free after every kill. Option (c) closes the *say/do gap* by amending the say. **The do is untouched
 and still live at HEAD.** That is a legitimate design call — the user made it knowingly, and cheap
 honesty beats expensive tuning — but it is worth recording that face C resolved a symptom its parent
@@ -129,32 +129,32 @@ both date this commit at *"+2 h 40 m"* after face A. The real interval is **19 m
 
 | Surface | Anchor | State |
 |---|---|---|
-| the generous goal line | `Take the <b>time you need</b> — the seals will hold a long while yet@4953` | ✅ live |
-| the reworded covenant tooltip | `Return all 7 Codex Shards, reach Level 20, and defeat Commander Auros@4260` | ✅ live |
-| the calmed chip day-leg | `dayEl.className = 'obj-leg' + (day >= DAY_DEADLINE - 3 ? ' warn' : '');@36176` | ✅ live |
-| the goal constants, untouched | `const SHARD_GOAL = 7, LEVEL_GOAL = 20, DAY_DEADLINE = 49;@36158` | ✅ unchanged |
+| the generous goal line | `Take the <b>time you need</b> — the seals will hold a long while yet@4950` | ✅ live |
+| the reworded covenant tooltip | `Return all 7 Codex Shards, reach Level 20, and defeat Commander Auros@4256` | ✅ live |
+| the calmed chip day-leg | `dayEl.className = 'obj-leg' + (day >= DAY_DEADLINE - 3 ? ' warn' : '');@36374` | ✅ live |
+| the goal constants, untouched | `const SHARD_GOAL = 7, LEVEL_GOAL = 20, DAY_DEADLINE = 49;@36356` | ✅ unchanged |
 
 **The time machinery it measured and declined to touch:**
 
 | Symbol | Anchor | Role |
 |---|---|---|
-| the only day writer in the file | `S_story.day = Math.min(49, S_story.day + 1);@36253` | inside `storyConfirmSleep@36227`; **1 writer, at parent and at HEAD** |
-| the sleep-flow time defeat | `} else if (S_story.day >= 49) {@36214` | fires inside `storySleep@36180`, before the overlay opens |
-| the tide schedule | `const VOID_TIDE_EVENTS@22369` | 7 entries: days 3 · 7 · 14 · 21 · 28 · 35 · 42 |
-| the tide pressure tick | `_addVoidPressure(1);@36369` | in `storyCheckVoidTide@36341`, after the mercy window |
-| the pressure helper | `function _addVoidPressure(n) {@26977` | clamps, fires three milestones, refreshes the HUD |
-| the clamp | `S_story.voidPressure = Math.min(10, prev + n);@26980` | the only guard against overshoot |
-| the last-warning milestone | `if (cur === 9 && !S_story.voidImminentWarned) {@26984` | exact equality, in a system with a `+3` writer |
-| the defeat flavour, deliberately kept | `flavor: 'Day 49. You lay down. The court had granted forty-nine days@23890` | source of this report's title |
+| the only day writer in the file | `S_story.day = Math.min(49, S_story.day + 1);@36451` | inside `storyConfirmSleep@36425`; **1 writer, at parent and at HEAD** |
+| the sleep-flow time defeat | `} else if (S_story.day >= 49) {@36412` | fires inside `storySleep@36378`, before the overlay opens |
+| the tide schedule | `const VOID_TIDE_EVENTS@22396` | 7 entries: days 3 · 7 · 14 · 21 · 28 · 35 · 42 |
+| the tide pressure tick | `_addVoidPressure(1);@36550` | in `storyCheckVoidTide@36536`, after the mercy window |
+| the pressure helper | `function _addVoidPressure(n) {@27109` | clamps, fires three milestones, refreshes the HUD |
+| the clamp | `S_story.voidPressure = Math.min(10, prev + n);@27112` | the only guard against overshoot |
+| the last-warning milestone | `if (cur === 9 && !S_story.voidImminentWarned) {@27116` | exact equality, in a system with a `+3` writer |
+| the defeat flavour, deliberately kept | `flavor: 'Day 49. You lay down. The court had granted forty-nine days@23948` | source of this report's title |
 
 **The pressure sources §1 did not survey** — four writers outside the tide:
 
 | Anchor | Raises pressure when | Costs days |
 |---|---|---|
-| `_addVoidPressure(1);@36369` | you pass a second sleep-capable node **without sleeping** | **none** |
-| `onFail:[{ kind:'_legacy_fn', fn:() => { S_story.voidPressure@21514` | a quest skill check fails | none |
+| `_addVoidPressure(1);@36550` | you pass a second sleep-capable node **without sleeping** | **none** |
+| `onFail:[{ kind:'_legacy_fn', fn:() => { S_story.voidPressure@21536` | a quest skill check fails | none |
 | `onFail:[{ kind:'_legacy_fn', fn:() => { S_story.voidPressure@21536` | a second quest skill check fails | none |
-| `S_story.voidPressure  = (S_story.voidPressure@31868` | you claim the Ceremonia column as power | none |
+| `S_story.voidPressure  = (S_story.voidPressure@32100` | you claim the Ceremonia column as power | none |
 
 ---
 
@@ -208,7 +208,7 @@ scheduled Void-Tide day."* There are **five** writers. Sleep is the one that can
 tide days × 1 point = **7 maximum, against a threshold of 10**, before the mercy window subtracts
 from it. ***Sleeping through the entire game, all forty-nine days, cannot reach the breach.***
 
-The path that can is `storyCheckMissedSleep@36358`, which adds a pressure point every second time
+The path that can is `storyCheckMissedSleep@36556`, which adds a pressure point every second time
 you stand on a sleep-capable node and decline to rest. There are **38 such nodes** (real-parser
 census), so the exhaustion path alone offers **19 points** — nearly double what it takes to lose.
 
@@ -222,7 +222,7 @@ So the sentence this increment wrote onto the opening screen —
 > *"The Void gains only slowly, and only while you sleep; it will not rush you."*
 
 — names the harmless source, denies the lethal one, and inverts the actual advice. The engine's own
-string at `storyMsg('😴 Exhausted — DIS on next 2 battles. Void pressure rising. Sleep soon.@36371`
+string at `storyMsg('😴 Exhausted — DIS on next 2 battles. Void pressure rising. Sleep soon.@36569`
 tells the player *sleep soon*. The courier frame tells them time is theirs and the Void only stirs
 when they rest. **Two player-facing strings, in one game, giving opposite instructions about the same
 mechanic** — which is precisely the say/do gap this face was convened to close, re-created one screen
@@ -276,7 +276,7 @@ somewhere else in the file.
 
 ### D1 — the game's most reachable loss condition is undocumented, and the opening screen denies it (§DX-02dk 🔴)
 
-`storyCheckMissedSleep@36358` raises `voidPressure` for **not** sleeping; 38 sleep-capable nodes
+`storyCheckMissedSleep@36556` raises `voidPressure` for **not** sleeping; 38 sleep-capable nodes
 offer 19 points against a threshold of 10; browser-proved to a full defeat screen **on Day 1**. The
 shipped copy at `@4953` and `@4260` states the opposite. Either the copy is corrected, the exhaustion
 path is capped, or the Void meter gets the framing the day counter received. This is the only §PLAY-01
@@ -286,7 +286,7 @@ finding that can end a run.
 
 `@21513`, `@21535` and `@31865` write `S_story.voidPressure` directly, skipping the clamp, all three
 milestones, the HUD refresh and the caller-side defeat check. Browser-proved: 9 + 3 direct = **12**
-where the helper clamps to 10. Separately, `if (cur === 9 && !S_story.voidImminentWarned)@26984` is
+where the helper clamps to 10. Separately, `if (cur === 9 && !S_story.voidImminentWarned)@27116` is
 `===`, so any step of 2 or more walks over it — proved live, `_addVoidPressure(8)` then
 `_addVoidPressure(3)` lands on 10 with the *"THE VOID IS IMMINENT"* warning never fired. The engine's
 last mercy is skippable by arithmetic.
