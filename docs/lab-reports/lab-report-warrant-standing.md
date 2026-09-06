@@ -180,7 +180,7 @@ means every pre-FU7 save starts the ladder at zero with its in-progress Warrant 
 | (b) `_boardRewardXp` | 8-line body | `function _boardRewardXp(q)@37292` | identical modulo spacing |
 | (b) `_creditWarrant` | 9-line body | `function _creditWarrant(id)@37320` | identical; one inline comment promoted to a block |
 | (c) ceiling | `if (_boardRewardXp(q) > tier.rewardCap) continue;` | `if (_boardRewardXp(q) > tier.rewardCap) continue@37395` | **byte-identical** |
-| (c) slate | `out.slice(0, limit \|\| tier.slate)` | `const shown = out.slice(0, limit@37406` | **byte-identical** |
+| (c) slate | `out.slice(0, limit \|\| tier.slate)` | `const size = limit || tier.slate` | shipped byte-identical; §DX-02ei 2026-09-06 replaced the slice with a reserve-then-fill over the same bound |
 | (d) accept tag | one line after the `unlock` execBits | `(S_story.warrantAccepted = S_story.warrantAccepted@37435` | **byte-identical** |
 | (e) hook A | `{ const _wp = _creditWarrant(id); … }` | `const _wp = _creditWarrant(id)@30360` | **byte-identical** |
 | (e) hook B | `{ const _wp = _creditWarrant(questId); … }` | `const _wp = _creditWarrant(questId)@7004` | **byte-identical** |

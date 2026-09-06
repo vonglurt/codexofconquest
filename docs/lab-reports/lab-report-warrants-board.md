@@ -334,6 +334,31 @@ of §7 — every guard is correct — it is a **population** error of the same f
 FU7: *the predicate reasons about legality, the player experiences geography, and nothing in the lock
 joins the two.* → **§DX-02ei**.
 
+> **✅ CLOSED 2026-09-06 by §DX-02ei — one seat on every slate is reserved for the work around here.**
+> `const BOARD_LOCAL_PLACES = 5` names the nearest destinations that carry any eligible work;
+> `function _roadGridNearest` finds them with a single bounded search and `function _boardBounties`
+> takes the first candidate among them **in the day's own hash order**, so the near seat rotates and
+> the slate stays deterministic. The remaining seats are the whole legal world, sorted exactly as
+> before. The same 30-day sweep at `TLL`, re-derived at `36493ef` and after:
+>
+> | | min | median | mean | max | ≤ 10 legs | worst day's nearest card |
+> |---|---|---|---|---|---|---|
+> | before | 13 | 23 | 30.2 | 79 | **0 of 120** | **25 legs** |
+> | after | 10 | 23 | 26.3 | 73 | **15 of 120** | **12 legs** |
+>
+> Swept over **all 39 board hosts × 30 days (1,170 host-days)** the change is larger than at `TLL`
+> alone, because `TLL` was not the worst-served host: the furthest a host's *best* card could be ran
+> **min 17 · median 34 · max 65** legs before, and **min 2 · median 5 · max 15** after; host-days
+> carrying a card within 10 legs went **360 → 1,090 of 1,170**.
+>
+> **The row asked for an absolute floor and the ground would not give one.** §DX-02ei's verify line
+> proposed *"≥1 card ≤10 legs per day"*. Measured at `36493ef`, only **12 of the 1,063** eligible
+> quests at `TLL` lie within 10 legs, across **5** destinations, and the pool's own median is 30 —
+> the board cannot post near work the world does not carry, and at some hosts the five nearest places
+> with any work sit 11–15 legs out. What ships is the **relative** guarantee, which holds at every
+> host: *one seat always goes to the nearest work there is*. ***A listing gate can only be as local
+> as its population; the honest floor is the pool's minimum, not a number chosen in advance.***
+
 **Every visible change between those two columns is a follow-up closing a promise §8 made and §7
 could not keep** — FU1 the reward preview, FU3 the `~N legs` label, FU4/FU5 the characterful
 synthesized hook, FU7 the rank. The selection is byte-for-byte untouched; only the telling improved.

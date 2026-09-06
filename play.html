@@ -37281,6 +37281,12 @@ const WARRANT_TIERS = [
   { min: 12, name: 'Sworn',         slate: 7, rewardCap: Infinity },
   { min: 20, name: "Warrant's Own", slate: 8, rewardCap: Infinity },
 ];
+// §DX-02ei — how many of the nearest work-bearing places the board treats as "here".
+// The reserved seat deliberately does NOT scale with the slate (4 → 8), so standing
+// widens the horizon by dilution and there is no second table to keep in step with
+// WARRANT_TIERS. Lowering this thins the rotation before it shortens the walk: at 5,
+// the worst-served of the 39 hosts still offers 6 candidates for the seat.
+const BOARD_LOCAL_PLACES = 5;
 function _warrantTier(standing) {
   let t = WARRANT_TIERS[0]; const s = standing || 0;
   for (const w of WARRANT_TIERS) if (s >= w.min) t = w;   // highest tier whose min is met
@@ -37389,26 +37395,42 @@ function _boardBounties(node, limit) {
   const tier = _warrantTier(S_story.warrantStanding);         // §BOARD-01-FU7 — standing gates slate size + reward ceiling
   const daySeed = _boardSeed(node.code + '|' + day);
   const out = [];
+  const destCells = new Set();
   for (const q of Object.values(QUEST_DB)) {
     if (!_bountyPostable(q, node)) continue;                    // §BOARD-01-FU8 — shared legality gate (was the inline checks)
     if (VOID_FEATURED_IDS.has(q.id)) continue;                  // §BOARD-01-FU8 — clock-gated: Void-tide quests surface only via the pin, only in-window
     if (_boardRewardXp(q) > tier.rewardCap) continue;           // §BOARD-01-FU7 — premium bounties reserved for higher Warrant standing
     const dest = NODE_MAP[q.activateNode];
+    const co = NODE_COORDS[q.activateNode];
+    const cell = co ? co.r + ',' + co.c : null;
+    if (cell) destCells.add(cell);
     out.push({
       id: q.id, title: q.title, destCode: q.activateNode,
       destShort: String(dest.label || q.activateNode).split(' — ')[0],
       destTerrain: (WORLD_DB[dest.name] && WORLD_DB[dest.name].label) || null,   // FU5: terrain type for the synthesized hook
       rumor: q.rumor || null, rewardStr: _boardReward(q),
+      _cell: cell,
       _k: (daySeed ^ _boardSeed(q.id + '|' + day)) >>> 0,
     });
   }
   out.sort((a, b) => (a._k - b._k) || (a.id < b.id ? -1 : 1));   // deterministic rotation
-  const shown = out.slice(0, limit || tier.slate);            // §BOARD-01-FU7 — slate size scales with standing (explicit limit still overrides, e.g. tests)
+  const size = limit || tier.slate;                           // §BOARD-01-FU7 — slate size scales with standing (explicit limit still overrides, e.g. tests)
+  // §DX-02ei — the sort key carries no distance term, so it samples the whole legal
+  // world uniformly and the eligible pool near any host is thin. One seat is therefore
+  // reserved for the BOARD_LOCAL_PLACES nearest destinations that hold work, taken in
+  // the day's own hash order so that seat rotates like the rest of the slate.
+  const nearCells = _roadGridNearest(_playerPos(), destCells, BOARD_LOCAL_PLACES);
+  const local = nearCells.size ? out.find(b => b._cell && nearCells.has(b._cell)) : null;
+  const shown = local ? [local] : [];
+  for (const b of out) { if (shown.length >= size) break; if (b !== local) shown.push(b); }
   // §BOARD-01-FU3 — distance-labeled slate (label-only variant). Answer "is this
   // trip worth it?" by pairing reward with a leg count. _roadGridPath is a grid
   // BFS, so we run it ONLY over the shown cards — the tier's slate plus the FU8 pin — never the eligible pool —
   // computed AFTER the slice on purpose. Road-weighted (same net auto-travel uses),
   // from the live player position; 0 ⇒ no coords/here, so the label is omitted.
+  // The pool-wide question the §DX-02ei seat asks is a different one, and cheaper:
+  // _roadGridNearest stops at the first BOARD_LOCAL_PLACES destinations rather than
+  // routing to each, so it costs a fraction of one of the walks below.
   for (const b of shown) {
     const legs = _roadGridPath(null, b.destCode).length;
     b.legs = legs;
@@ -38031,28 +38053,27 @@ function _wpDistTag(destCode) {
 // _bfsGridPath: rows clamp at the band edges, columns wrap E↔W.
 // §MP-MAPTABS: BFS core generalized to an arbitrary END COORD (was code-only), so
 // click-to-travel can target an empty cell as well as a settlement node.
-function _roadGridPathCore(startCoord, endCoord) {
-  if (!startCoord || startCoord.r == null || !endCoord || endCoord.r == null) return [];
+// The search itself. `visit(key, hops)` runs once per cell at the moment that cell
+// SETTLES — in nondecreasing road-weighted cost order, with its predecessor final —
+// and returns true to stop. `hops` is the step count along the recorded chain, which
+// is what a caller means by "legs": the weighted cost is the road preference, not a
+// distance the player walks. Returns the predecessor map, complete for every cell
+// settled before the stop.
+function _roadGridWalk(startCoord, visit) {
+  const prev = new Map();
+  if (!startCoord || startCoord.r == null) return prev;
   const startKey = `${startCoord.r},${startCoord.c}`;
-  const endKey = `${endCoord.r},${endCoord.c}`;
-  if (startKey === endKey) return [];
   const ROWS = GEO_PROJ.ROWS, COLS = GEO_PROJ.COLS;
   const dist = new Map([[startKey, 0]]);
-  const prev = new Map([[startKey, null]]);
+  const hops = new Map([[startKey, 0]]);
+  prev.set(startKey, null);
   const buckets = [[startKey]];
   for (let d = 0; d < buckets.length; d++) {
     const bucket = buckets[d];
     if (!bucket) continue;
     for (const key of bucket) {
       if (dist.get(key) !== d) continue;                // stale queue entry
-      if (key === endKey) {
-        const path = [];
-        for (let cur = key; cur !== startKey; cur = prev.get(cur)) {
-          const i = cur.indexOf(',');
-          path.push({ r: +cur.slice(0, i), c: +cur.slice(i + 1), code: cellCode(cur) });
-        }
-        return path.reverse();
-      }
+      if (visit(key, hops.get(key))) return prev;
       const ci = key.indexOf(',');
       const r = +key.slice(0, ci), c = +key.slice(ci + 1);
       for (const [dr, dc] of [[-1,0],[1,0],[0,1],[0,-1]]) {
@@ -38064,12 +38085,39 @@ function _roadGridPathCore(startCoord, endCoord) {
         const nd = d + ((ROAD_CELLS.has(k) || SEA_LANES.has(k)) ? 1 : 2);
         if (dist.has(k) && dist.get(k) <= nd) continue;
         dist.set(k, nd);
+        hops.set(k, hops.get(key) + 1);
         prev.set(k, key);
         (buckets[nd] || (buckets[nd] = [])).push(k);
       }
     }
   }
-  return [];
+  return prev;
+}
+function _roadGridPathCore(startCoord, endCoord) {
+  if (!startCoord || startCoord.r == null || !endCoord || endCoord.r == null) return [];
+  const startKey = `${startCoord.r},${startCoord.c}`;
+  const endKey = `${endCoord.r},${endCoord.c}`;
+  if (startKey === endKey) return [];
+  const prev = _roadGridWalk(startCoord, key => key === endKey);
+  if (!prev.has(endKey)) return [];
+  const path = [];
+  for (let cur = endKey; cur !== startKey; cur = prev.get(cur)) {
+    const i = cur.indexOf(',');
+    path.push({ r: +cur.slice(0, i), c: +cur.slice(i + 1), code: cellCode(cur) });
+  }
+  return path.reverse();
+}
+// §DX-02ei — the `want` nearest cells of `targets`, as cellKey → legs. One search
+// answers for every target at once and stops as soon as `want` of them have settled,
+// so asking "what is close to here?" costs a fraction of one route lookup.
+function _roadGridNearest(startCoord, targets, want) {
+  const found = new Map();
+  if (!targets || !targets.size || !(want > 0)) return found;
+  _roadGridWalk(startCoord, (key, hops) => {
+    if (hops > 0 && targets.has(key)) found.set(key, hops);
+    return found.size >= want;
+  });
+  return found;
 }
 
 // Node-code route (unchanged public contract): resolve code → coord, then core.
