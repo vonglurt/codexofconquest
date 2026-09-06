@@ -131,7 +131,7 @@ both date this commit at *"+2 h 40 m"* after face A. The real interval is **19 m
 |---|---|---|
 | the generous goal line | `Take the <b>time you need</b> — the seals will hold a long while yet@4950` | ✅ live |
 | the reworded covenant tooltip | `Return all 7 Codex Shards, reach Level 20, and defeat Commander Auros@4256` | ✅ live |
-| the calmed chip day-leg | `dayEl.className = 'obj-leg' + (day >= DAY_DEADLINE - 3 ? ' warn' : '');@36374` | ✅ live |
+| the calmed chip day-leg | `dayEl.className = 'obj-leg' + (day >= DAY_DEADLINE - 3 ? ' warn' : '');` | ⚠ **superseded 2026-09-06 by §DX-02dg** — the reframe reached only this surface while the sidebar kept the doom ladder, so the two disagreed on all 15 days above 34. Both now read `function _dayAlarm(day)`; the chip regains the `danger` step its CSS already styled |
 | the goal constants, untouched | `const SHARD_GOAL = 7, LEVEL_GOAL = 20, DAY_DEADLINE = 49;@36356` | ✅ unchanged |
 
 **The time machinery it measured and declined to touch:**

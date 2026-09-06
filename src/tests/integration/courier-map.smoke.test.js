@@ -46,13 +46,21 @@ test.describe('§PLAY-01-A — The Courier\'s Map (goal legibility)', () => {
       S_story.shards = 7; storyUpdateStatus();
       out.fullAt7 = full();
 
-      // §PLAY-01-C: the day is a generous horizon — never a red doom alarm.
-      S_story.day = 45; storyUpdateStatus();
-      out.dayNeverDanger = !document.getElementById('obj-day').className.includes('danger');
-      out.day45Calm = !document.getElementById('obj-day').className.includes('warn');  // still calm
-      S_story.day = 47; storyUpdateStatus();                                            // within 3 of cap
-      out.day47SoftWarn = document.getElementById('obj-day').className.includes('warn') &&
-        !document.getElementById('obj-day').className.includes('danger');
+      // §DX-02dg — the chip and the sidebar show the same counter, so they must show
+      // the same alarm. §PLAY-01-A locked that agreement; §PLAY-01-C reframed one
+      // surface and the assertion guarding the invariant went out in the same hunk.
+      const alarm = (id) => {
+        const c = document.getElementById(id).className;
+        return c.includes('danger') ? 'danger' : c.includes('warn') ? 'warn' : 'plain';
+      };
+      out.ladder = [];
+      out.disagree = [];
+      for (let d = 1; d <= 49; d++) {
+        S_story.day = d; storyUpdateStatus();
+        const chip = alarm('obj-day'), side = alarm('s-day');
+        if (chip !== side) out.disagree.push({ d, chip, side });
+        if ([34, 35, 41, 42, 49].includes(d)) out.ladder.push({ d, chip, side });
+      }
       // level goal hit turns gold
       S_story.level = 20; storyUpdateStatus();
       out.lvlHit = document.getElementById('obj-lvl').className.includes('hit');
@@ -71,9 +79,17 @@ test.describe('§PLAY-01-A — The Courier\'s Map (goal legibility)', () => {
     expect(r.dayText).toBe('☀ Day 1/49');
     expect(r.fullAt3).toBe(3);
     expect(r.fullAt7).toBe(7);
-    expect(r.dayNeverDanger).toBe(true);
-    expect(r.day45Calm).toBe(true);
-    expect(r.day47SoftWarn).toBe(true);
+    // §DX-02dg — the invariant §PLAY-01-A locked, restored as an assertion: the two
+    // surfaces that show the day must never disagree about it. The thresholds are
+    // offsets from DAY_DEADLINE (`_dayAlarm`), so moving the cap moves both.
+    expect(r.disagree, 'the chip and the sidebar must show the same alarm on every day').toEqual([]);
+    expect(r.ladder).toEqual([
+      { d: 34, chip: 'plain',  side: 'plain'  },
+      { d: 35, chip: 'warn',   side: 'warn'   },
+      { d: 41, chip: 'warn',   side: 'warn'   },
+      { d: 42, chip: 'danger', side: 'danger' },
+      { d: 49, chip: 'danger', side: 'danger' },
+    ]);
     expect(r.lvlHit).toBe(true);
     expect(pageErrors).toEqual([]);
   });

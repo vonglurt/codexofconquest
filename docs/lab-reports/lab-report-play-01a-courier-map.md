@@ -121,7 +121,7 @@ Every symbol resolves at HEAD. The symbol is the pointer; the number is a refres
 | Chip renderer | `function _renderObjectiveChip() {@36357` | ✅ live |
 | Seven-symbol loop | `const got = Math.max(0, Math.min(SHARD_GOAL@36360` | ✅ live, clamped 0–7 |
 | Level leg and gold-at-20 state | `lvEl.innerHTML = @36367` · `#objective-chip .obj-leg.hit b@1751` | ✅ live |
-| Day leg | `(day >= DAY_DEADLINE - 3 ? @36374` | ⚠ superseded — see §7.1 |
+| Day leg | `(day >= DAY_DEADLINE - 3 ? ` | ⚠ superseded — see §7.1; **retired 2026-09-06 by §DX-02dg**, which put both surfaces on the shared `function _dayAlarm(day)` |
 | Render call site | `_renderObjectiveChip();   // §PLAY-01-A@36326` | ✅ live, at the tail of `storyUpdateStatus` |
 | Opening frame markup | `<div id="story-courier-modal">@4935` | ✅ live, four goal-clauses |
 | Dismiss button | `id="btn-courier-begin">Take the map@4952` | ✅ live |
@@ -166,7 +166,7 @@ after `storyNewGame`: the chip has a non-null `offsetParent`, measures **958 × 
 **The acceptance test is honest about what it covers and silent about what it does not.** It
 asserts seven symbols, 0 → 3 → 7 darkening, the exact leg strings `⭐ Lv 1/20` and `☀ Day 1/49`,
 the gold-at-20 state, and — since §PLAY-01-C amended it — that the chip is calm at day 45 and
-softly amber at day 47 (`src/tests/integration/courier-map.smoke.test.js:out.day47SoftWarn@54`). It
+softly amber at day 47 (`out.day47SoftWarn`, retired 2026-09-06 by §DX-02dg — that assertion pinned the chip-only half of a disagreement, and `src/tests/integration/courier-map.smoke.test.js:out.disagree` now sweeps all 49 days asserting the two surfaces never differ). It
 contains **no assertion about `#s-day`** and it calls `storyNewGame` **once per page load**. Those
 are precisely the two blind spots the findings below occupy. Neither defect is a test failure;
 both are outside the test's universe.
@@ -182,8 +182,8 @@ The report locked one invariant on the day leg: *amber ≥ 35, red ≥ 42 —* *
 
 **§PLAY-01-C (`caa489e`, +19 min 42 s) reframed the deadline as generous and rewrote only one of the
 two surfaces.** The chip lost its red alarm entirely and kept a soft amber inside three days of the
-cap (`(day >= DAY_DEADLINE - 3 ? @36374`). The sidebar still carries the original doom ladder
-(`(S_story.day >= 42 ? @36281`). Proved in the browser, one page, one tick apart:
+cap (`(day >= DAY_DEADLINE - 3 ? `). The sidebar still carries the original doom ladder
+(`(S_story.day >= 42 ? `). Proved in the browser, one page, one tick apart: **✅ closed 2026-09-06 by §DX-02dg** — both surfaces now read `function _dayAlarm(day)`, whose thresholds are offsets from `DAY_DEADLINE`, and the sidebar's colours are unchanged on all 49 days.
 
 | Day | `#s-day` sidebar | `#obj-day` chip |
 |---|---|---|

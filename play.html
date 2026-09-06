@@ -23078,7 +23078,6 @@ let S_story = {
   shortRests: 3,
   knowledge: [],
   corpsesQuests: [],
-  courierMapSeen: false,   // §PLAY-01-A: one-time opening frame shown at fresh-game start
   storyDeathSaves: { successes: 0, failures: 0, active: false },
   abilityScores: { str:10, dex:8, con:8, int:8, wis:8, cha:8 },
   shieldTier: null,
@@ -23209,6 +23208,9 @@ const _S_DEFAULTS = () => ({
   aurosBlueprintKnown: false, scholarWorkshopComplete: false, spiritDefeated: false,
   scriptorium_approach_complete: false, mimicColonyEntered: false,
   noFishingSignRead: false, fishingRodCouponRedeemed: false,
+  courierMapSeen: false,   // §PLAY-01-A: one-time opening frame. §STATE-INIT — declared here so
+                           // storyNewGame's Object.assign can clear it; a key only in the seed
+                           // literal survives a reset, and the defeat screen resets.
   yaelOnboardingSeen: false,   // §PLAY-01-D: guarantee Yael's onboarding monologue (signposts the Fisherman/lake magic path) is delivered once on first meeting
   yugurtTourBeat: {}, yugurtTourTitle: null,
   // §LIX–§LXIII: The Road to Damascus
@@ -36286,7 +36288,7 @@ function storyUpdateStatus() {
   document.getElementById('s-gold').textContent = S_story.gold + 'gp';
   const dayEl = document.getElementById('s-day');
   dayEl.textContent = S_story.day + '/49';
-  dayEl.className = 'stat-val' + (S_story.day >= 42 ? ' danger' : S_story.day >= 35 ? ' warn' : '');
+  dayEl.className = 'stat-val' + _dayAlarm(S_story.day);
   document.getElementById('s-shards').textContent = S_story.shards + '/7';
   const voidEl = document.getElementById('s-void');
   voidEl.textContent = S_story.voidPressure + '/10';
@@ -36362,6 +36364,13 @@ function _renderCorpseChip() {
 // §PLAY-01-A The Courier's Map — render the persistent objective chip. Display-only;
 // the seven symbols darken as Shards return (🔮 collected / ◇ still out there).
 const SHARD_GOAL = 7, LEVEL_GOAL = 20, DAY_DEADLINE = 49;
+// §DX-02dg — one day-ladder, read by both surfaces that show the counter: the
+// sidebar `#s-day` and the objective chip `#obj-day`. The thresholds are offsets
+// from DAY_DEADLINE, so moving the cap moves both together rather than only the
+// one that happened to be derived. The counter alarms at all because the cap is a
+// real loss condition — storyConfirmSleep calls storyVoidDefeat('time') at it.
+const DAY_WARN_AT = DAY_DEADLINE - 14, DAY_DANGER_AT = DAY_DEADLINE - 7;
+function _dayAlarm(day) { return day >= DAY_DANGER_AT ? ' danger' : day >= DAY_WARN_AT ? ' warn' : ''; }
 function _renderObjectiveChip() {
   const shEl = document.getElementById('obj-shards');
   if (!shEl) return;                                   // chip absent (e.g. worldbuilder) — no-op
@@ -36379,7 +36388,7 @@ function _renderObjectiveChip() {
   const day = S_story.day || 1;
   const dayEl = document.getElementById('obj-day');
   dayEl.innerHTML = '☀ Day <b>' + day + '</b>/' + DAY_DEADLINE;
-  dayEl.className = 'obj-leg' + (day >= DAY_DEADLINE - 3 ? ' warn' : '');
+  dayEl.className = 'obj-leg' + _dayAlarm(day);
 }
 
 /* ── Layer 5: Sleep + Void Tide ── */
