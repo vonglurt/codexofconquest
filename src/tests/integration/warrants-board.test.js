@@ -908,11 +908,18 @@ test.describe('§BOARD-01 — The Warrant\'s Board', () => {
         S_story.warrantStanding = standing;
         return _boardBounties(inn, 500).reduce((m, b) => Math.max(m, _boardRewardXp(QUEST_DB[b.id])), 0);
       };
+      // §DX-02eg — and again from the population the PLAYER reads. The parenthetical above
+      // is the tell the pool and the slate are two different sets; both must now hold.
+      const shownXpAt = (standing) => {
+        S_story.warrantStanding = standing;
+        return _boardBounties(inn).reduce((m, b) => Math.max(m, _boardRewardXp(QUEST_DB[b.id])), 0);
+      };
       return {
         n0, n7, n12, n20, slate0: tier0.slate, slate12: _warrantTier(12).slate, slateMax: tierMax.slate, cap0: tier0.rewardCap,
         slates: WARRANT_TIERS.map(w => w.slate),
         tier0Name: tier0.name, tierMaxName: tierMax.name,
         maxXp0: maxXpAt(0), maxXpMax: maxXpAt(20),
+        shownXp0: shownXpAt(0), shownXpMax: shownXpAt(20),
       };
     });
     expect(r.tier0Name).toBe('Unknown');
@@ -928,6 +935,8 @@ test.describe('§BOARD-01 — The Warrant\'s Board', () => {
     expect(r.n20).toBeGreaterThan(r.n0);          // ...strictly wider than a newcomer's board
     expect(r.maxXp0).toBeLessThanOrEqual(r.cap0); // tier-0 pool carries NO premium bounty (ceiling holds)
     expect(r.maxXpMax).toBeGreaterThan(r.cap0);   // ...but the top rank surfaces the Warrant's premium work
+    expect(r.shownXp0).toBeLessThanOrEqual(r.cap0);  // §DX-02eg — and the ceiling holds on the SHOWN slate too
+    expect(r.shownXpMax).toBeGreaterThan(r.cap0);    // ...where the top rank's premium work is now actually read
   });
 
   test('§BOARD-01-FU7 — crediting standing never moves the player (gates quality, not a step)', async ({ page }) => {

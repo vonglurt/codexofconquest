@@ -37399,7 +37399,8 @@ function _boardBounties(node, limit) {
   for (const q of Object.values(QUEST_DB)) {
     if (!_bountyPostable(q, node)) continue;                    // §BOARD-01-FU8 — shared legality gate (was the inline checks)
     if (VOID_FEATURED_IDS.has(q.id)) continue;                  // §BOARD-01-FU8 — clock-gated: Void-tide quests surface only via the pin, only in-window
-    if (_boardRewardXp(q) > tier.rewardCap) continue;           // §BOARD-01-FU7 — premium bounties reserved for higher Warrant standing
+    const rewardXp = _boardRewardXp(q);
+    if (rewardXp > tier.rewardCap) continue;                    // §BOARD-01-FU7 — premium bounties reserved for higher Warrant standing
     const dest = NODE_MAP[q.activateNode];
     const co = NODE_COORDS[q.activateNode];
     const cell = co ? co.r + ',' + co.c : null;
@@ -37410,19 +37411,27 @@ function _boardBounties(node, limit) {
       destTerrain: (WORLD_DB[dest.name] && WORLD_DB[dest.name].label) || null,   // FU5: terrain type for the synthesized hook
       rumor: q.rumor || null, rewardStr: _boardReward(q),
       _cell: cell,
+      _premium: rewardXp > WARRANT_TIERS[0].rewardCap,
       _k: (daySeed ^ _boardSeed(q.id + '|' + day)) >>> 0,
     });
   }
   out.sort((a, b) => (a._k - b._k) || (a.id < b.id ? -1 : 1));   // deterministic rotation
   const size = limit || tier.slate;                           // §BOARD-01-FU7 — slate size scales with standing (explicit limit still overrides, e.g. tests)
-  // §DX-02ei — the sort key carries no distance term, so it samples the whole legal
-  // world uniformly and the eligible pool near any host is thin. One seat is therefore
-  // reserved for the BOARD_LOCAL_PLACES nearest destinations that hold work, taken in
-  // the day's own hash order so that seat rotates like the rest of the slate.
+  // The sort key carries no distance term and no reward term, so it samples the whole
+  // legal world uniformly on both. Two seats are therefore reserved, each filled with
+  // the FIRST qualifying candidate in the day's own hash order so that it rotates like
+  // the rest of the slate rather than pinning one card forever:
+  //   §DX-02ei  near   — a destination among the BOARD_LOCAL_PLACES nearest that hold work.
+  //   §DX-02eg  premium — work the BASE ceiling would hide. A tier whose ceiling is not
+  //             lifted has no premium seat: nothing is being withheld from it to reveal,
+  //             and seating one there would break the FU7 promise it enforces.
   const nearCells = _roadGridNearest(_playerPos(), destCells, BOARD_LOCAL_PLACES);
-  const local = nearCells.size ? out.find(b => b._cell && nearCells.has(b._cell)) : null;
-  const shown = local ? [local] : [];
-  for (const b of out) { if (shown.length >= size) break; if (b !== local) shown.push(b); }
+  const shown = [];
+  const seat = pred => { const b = out.find(x => !shown.includes(x) && pred(x)); if (b) shown.push(b); };
+  if (nearCells.size) seat(b => b._cell && nearCells.has(b._cell));
+  if (tier.rewardCap > WARRANT_TIERS[0].rewardCap) seat(b => b._premium);
+  shown.length = Math.min(shown.length, size);
+  for (const b of out) { if (shown.length >= size) break; if (!shown.includes(b)) shown.push(b); }
   // §BOARD-01-FU3 — distance-labeled slate (label-only variant). Answer "is this
   // trip worth it?" by pairing reward with a leg count. _roadGridPath is a grid
   // BFS, so we run it ONLY over the shown cards — the tier's slate plus the FU8 pin — never the eligible pool —

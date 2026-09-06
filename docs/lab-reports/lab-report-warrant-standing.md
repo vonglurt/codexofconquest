@@ -179,7 +179,7 @@ means every pre-FU7 save starts the ladder at zero with its in-progress Warrant 
 | (b) `_warrantTier` | 2-line form | `function _warrantTier(standing)@37284` | reflowed to 4 lines, semantics identical |
 | (b) `_boardRewardXp` | 8-line body | `function _boardRewardXp(q)@37292` | identical modulo spacing |
 | (b) `_creditWarrant` | 9-line body | `function _creditWarrant(id)@37320` | identical; one inline comment promoted to a block |
-| (c) ceiling | `if (_boardRewardXp(q) > tier.rewardCap) continue;` | `if (_boardRewardXp(q) > tier.rewardCap) continue@37395` | **byte-identical** |
+| (c) ceiling | `if (_boardRewardXp(q) > tier.rewardCap) continue;` | `if (rewardXp > tier.rewardCap) continue` | shipped byte-identical; §DX-02eg 2026-09-06 hoisted the call to `const rewardXp`, which the reserved premium seat also reads |
 | (c) slate | `out.slice(0, limit \|\| tier.slate)` | `const size = limit || tier.slate` | shipped byte-identical; §DX-02ei 2026-09-06 replaced the slice with a reserve-then-fill over the same bound |
 | (d) accept tag | one line after the `unlock` execBits | `(S_story.warrantAccepted = S_story.warrantAccepted@37435` | **byte-identical** |
 | (e) hook A | `{ const _wp = _creditWarrant(id); … }` | `const _wp = _creditWarrant(id)@30360` | **byte-identical** |
@@ -259,6 +259,29 @@ first while promising the second.
 > **The tell was written down in the report itself.** §9's ceiling test says: *"inspect the CANDIDATE
 > POOL (huge limit so the slice can't hide it)."* The test author knew the slice hides it, and tested
 > around it. That parenthetical is the most valuable sentence in the document.
+
+> **✅ CLOSED 2026-09-06 by §DX-02eg — a slate seat is reserved for work the BASE ceiling would hide.**
+> `_boardBounties` marks each candidate `_premium` against `WARRANT_TIERS[0].rewardCap` and, at any
+> tier whose own cap is lifted above it, seats the first premium candidate **in the day's own hash
+> order** — so the seat rotates rather than pinning the single richest card, and a tier whose ceiling
+> is *not* lifted gets no premium seat, because nothing is being withheld from it to reveal. Sixty
+> game days at `TLL`, re-derived at `68bd466` and after:
+>
+> | standing | rung | cap | premium-bearing days, before | after | best reward-xp shown, after | distinct premium cards seen |
+> |---:|---|---:|---:|---:|---:|---:|
+> | 0 | Unknown | 250 | 0 | **0** | 200 | 0 |
+> | 3 | Marked | 350 | 0 | **60** | 350 | 1 |
+> | 7 | Trusted | 500 | 0 | **60** | 500 | 4 |
+> | 12 | Sworn | ∞ | 0 | **60** | 600 | 5 |
+> | 20 | Warrant's Own | ∞ | 0 | **60** | 600 | 5 |
+>
+> Each rung now reveals **strictly more than the one below it**, which is the promise §5 made and §8
+> measured as unkept, and the count of distinct premium cards a rung can reach is re-derived from
+> `QUEST_DB` by the test rather than restated. **The census re-derived at HEAD with one drift:** the
+> pool is **1,063** (not 1,076) and **34** carry any reward-xp (not 35); the five premium quests are
+> unchanged — `quest_math_01`…`_05` at 350 · 400 · 400 · 500 · 600 — and still sort to positions
+> **261, 456, 819, 850, 878**, far past any slice. **The seat is self-limiting:** an accepted bounty
+> leaves the pool, so the five best jobs surface over five visits and the seat then goes quiet.
 
 **What the day counter was already doing, and still does.** At standing 0 the top four turn over
 completely between day 0 and day 1. Board variety is `gameDay`, and always was — shipped in the
