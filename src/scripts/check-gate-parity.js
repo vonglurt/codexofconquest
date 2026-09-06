@@ -59,6 +59,10 @@ function refActivationLeaf(g, st) {
   if (g.flagsPath) need.push(g.flagsPath.every(p => !!pathVal(st, p)));
   if (g.countMin) need.push(g.countMin.every(c => asCount(pathVal(st, c.path)) >= c.min));
   if (g.dayMin != null || g.dayMax != null) { const d = st.day || 1; need.push((g.dayMin == null || d >= g.dayMin) && (g.dayMax == null || d < g.dayMax)); }
+  if (g.itemsAll) need.push(g.itemsAll.every(e => {
+    const name = (typeof e === 'string') ? e : e.name, min = (typeof e === 'string') ? 1 : (e.min || 1);
+    return (st.inventory || []).filter(i => i.name === name).length >= min;
+  }));
   return need.every(Boolean);
 }
 function refCompletionLeaf(g, st, opts = {}) {
@@ -128,6 +132,13 @@ const termCases = [
   ['activate', { countMin: [{ path: 'log', min: 2 }] }, { log: [1, 2] }, { log: [1] }],
   ['activate', { dayMin: 21, dayMax: 35 }, { day: 21 }, { day: 35 }],   // §BOARD-01-VOID-GATE — inclusive lo / exclusive hi
   ['activate', { dayMin: 42 }, { day: 42 }, { day: 41 }],               // open-ended upper bound
+  // §DX-02iu — itemsAll on the ACTIVATION side: same term, same exact matcher as
+  // completion. The bare-string and {name,min} forms, and the exactness that is the
+  // whole reason `items`' fuzzy matcher was not ported alongside it.
+  ['activate', { itemsAll: ['Fishing Rod'] }, { inventory: [{ name: 'Fishing Rod' }] }, { inventory: [{ name: 'River Rod +1' }] }],
+  ['activate', { itemsAll: ['Trade Seal (Shard #1)'] }, { inventory: [{ name: 'Trade Seal (Shard #1)' }] }, { inventory: [{ name: 'Trade Seal' }] }],
+  ['activate', { itemsAll: [{ name: 'Warrant', min: 2 }] }, { inventory: [{ name: 'Warrant' }, { name: 'Warrant' }] }, { inventory: [{ name: 'Warrant' }] }],
+  ['activate', { itemsAll: ['Rod'], flags: ['f'] }, { inventory: [{ name: 'Rod' }], f: true }, { inventory: [{ name: 'Rod' }] }],
   ['complete', { flags: ['x'] }, { x: true }, {} ],
   ['complete', { flagsAny: ['x'] }, { x: true }, {}],
   ['complete', { battles: ['b1'] }, { defeatedBattles: { b1: true } }, {}],

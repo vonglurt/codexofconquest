@@ -9,8 +9,9 @@
 //
 // Fourteen quests carried it. Six were `() => true` — the hatch holding a tautology —
 // and two were counter comparisons the grammar already expresses with `countMin`.
-// All eight are migrated here. The remaining six are item-possession conditions the
-// ACTIVATION leaf has no term for, filed as §DX-02iu.
+// All eight are migrated here. The remaining six were item-possession conditions the
+// activation leaf had no term for; §DX-02iu ported `itemsAll` and closed them, so the
+// last case below asserts the hatch is empty rather than naming survivors.
 
 const { test, expect } = require('@playwright/test');
 const { seedAndLoad } = require('./helpers.js');
@@ -88,17 +89,10 @@ test.describe('§DX-02dy — the escape hatch shrinks, and nothing moves behind 
     }
   });
 
-  test('what is left on the hatch is exactly the item-possession class (§DX-02iu)', async ({ page }) => {
+  test('nothing is left on the hatch (§DX-02iu closed the last six)', async ({ page }) => {
     await seedAndLoad(page);
     const left = await page.evaluate(() => Object.values(QUEST_DB)
       .filter(q => q.gate && q.gate._legacyFn).map(q => q.id).sort());
-    expect(left).toEqual([
-      'quest_fish_01', 'quest_guide_01', 'quest_muffat_01',
-      'quest_road_damascus', 'quest_tour_01', 'quest_wm_05',
-    ]);
-    // The activation leaf has no item term; the completion leaf has two. That is the
-    // whole of what §DX-02iu is about, and it is why these six could not migrate here.
-    const src = await page.evaluate(() => document.documentElement.outerHTML);
-    expect(src.includes('itemsAll')).toBe(true);
+    expect(left).toEqual([]);
   });
 });

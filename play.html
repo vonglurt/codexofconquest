@@ -11128,12 +11128,12 @@ const QUEST_DB = { // → doc: quest.md §Quest Format
     disposition:'"The Scholar Kings didn\'t erase her. They just stopped saying the name. Froberger said it in his margin notes every time. That\'s how I found her. And now you know how I found him." — Benedikt Rasp',
     npc:"benedikt_rasp",
   },
-  quest_wm_05: { id:'quest_wm_05', type:'side', schema:'UQF-1.0', gate:{ _legacyFn:true }, bits:[], completion:{ flags:['wmGurtFileRead'] }, title:'The Open File', // §L
+  quest_wm_05: { id:'quest_wm_05', type:'side', schema:'UQF-1.0', gate:{flags:['wmLowerArchiveUnlocked'],itemsAll:['Y. Gurt Field Survey']}, bits:[], completion:{ flags:['wmGurtFileRead'] }, title:'The Open File', // §L
     onComplete:[ { kind:'reward', gold:200 }, { kind:'narrative', msg:'💰 +200gp. 📋 The Gurt file is still open. It has been filed, and refiled, and it will not close.' } ], // §ARCH-01 W7c
     desc:"The lower archive has a fifth document you were not looking for. A personnel file that has never been closed — because the Scholar Kings' filing system does not have a category for someone who chose the field over the archive and kept sending data anyway. The Y. Gurt file is still active. It has been active for a very long time.",
     hint:'Return to the Weimar lower archive with the Y. Gurt Field Survey.',
     activateNode:'NUE', 
-    activateCond:() => !!(S_story.wmLowerArchiveUnlocked && (S_story.inventory||[]).some(i => i.name === 'Y. Gurt Field Survey')),
+
     xpAward:200, waypointNode:'NUE', reward:200,
     disposition:'"We continue to file them." — Scholar Kings Personnel Record, Y. Gurt (Field Absence: Ongoing)',
     npc:"archivus_sweelinck",
@@ -11236,9 +11236,9 @@ const QUEST_DB = { // → doc: quest.md §Quest Format
     rumor:"A survivor of the Harrow reached Tilbury on foot, three weeks walking. Her name is Ori and she knows what happened. The Warrant wants her account brought to Rennau.",
   },
   // ── §LI: Muffat — The Third Berth ──
-  quest_muffat_01: { id:'quest_muffat_01', type:'skill_check', schema:'UQF-1.0', gate:{ _legacyFn:true }, bits:[{ kind:'skill_check', stat:'DEX', skill:'Stealth', dc:13, onPass:[{ kind:'mission_bit', flag:'muffatBerthReached', label:'Muffat Berth' }, { kind:'reward', xp:150, gold:150 }], onFail:[] }], title:'The Third Berth', // §LI
+  quest_muffat_01: { id:'quest_muffat_01', type:'skill_check', schema:'UQF-1.0', gate:{itemsAll:['Trade Seal (Shard #1)']}, bits:[{ kind:'skill_check', stat:'DEX', skill:'Stealth', dc:13, onPass:[{ kind:'mission_bit', flag:'muffatBerthReached', label:'Muffat Berth' }, { kind:'reward', xp:150, gold:150 }], onFail:[] }], title:'The Third Berth', // §LI
     hint:'Reach the third berth without the harbor watch stopping you (DEX · Stealth DC 13).',
-    activateNode:'LCY', activateCond:() => _hasItem('Trade Seal'), retryable:true, retryGateDays:1,
+    activateNode:'LCY', retryable:true, retryGateDays:1,
     vignetteText:"The third berth has been wrong since Tuesday. The manifest says ballast. The crane operators won\'t take that side. Muffat has been watching the Scholar Kings clearance stamp on the hold for three days — it prevents harbor search and she knows it. You have the Trade Seal, which gets you onto the dock. The harbor watch works the main berths. The third is close enough to the crane rigging that the shadow covers the approach. Close enough.",
     passText:"The crate is there. Scholar Kings Distribution stamp, no matching manifest number. You bring it to Muffat. She sets it on the counter and looks at it the way she looks at manifests: correctly, and with no illusions about what that means.",
     failText:'The watch catches the movement before you clear the shadow line. You pull back. The crate stays where it is. The watch makes a note in the margin of the wrong ledger.',
@@ -11322,12 +11322,12 @@ const QUEST_DB = { // → doc: quest.md §Quest Format
     npc:"magistra_elara_muffat",
   },
   // ── §LIX: The Road to Damascus ──
-  quest_road_damascus: { id:'quest_road_damascus', type:'side', schema:'UQF-1.0', gate:{ _legacyFn:true }, bits:[], completion:{ flags:['saulConverted'] }, title:'The Light at Noon',
+  quest_road_damascus: { id:'quest_road_damascus', type:'side', schema:'UQF-1.0', gate:{itemsAll:['Three Jerusalem Warrants']}, bits:[], completion:{ flags:['saulConverted'] }, title:'The Light at Noon',
     onComplete:[{kind:'narrative',msg:'⚡ The road to Damascus is behind you. The warrants are still in his coat. He will not use them again.'}], // §ARCH-01 W7c
     desc:"The road to Damascus is well-maintained for the first half day. After the stones give way to packed earth, the escort falls back and the dust is the same colour as the sky at noon. The warrants are in his coat. He leaves at first light.",
     hint:'Take the road east from Jerusalem to Damascus.',
     activateNode:'JRS',
-    activateCond:() => (S_story.inventory||[]).some(i => i.name === 'Three Jerusalem Warrants'),
+
     xpAward:200, waypointNode:'DAM', reward:0,
     disposition:'"He says: Lead me to the city. He means Damascus. He means: I cannot complete this journey on my own and I require assistance. Both things are true for the first time simultaneously." — The road to Damascus',
     passText:"At noon a light struck the road. He fell. A voice said his name. When he rose, he could not see.",
@@ -13856,12 +13856,12 @@ const QUEST_DB = { // → doc: quest.md §Quest Format
     failText:"The Fisherman does not give the guide to people who ask. Cast at Yugurt Lake first, then return.",
     npc:"emmer",
   },
-  quest_fish_01: { id:'quest_fish_01', type:'side', schema:'UQF-1.0', gate:{ _legacyFn:true }, bits:[], completion:{ flagsPath:['fishingQuestFlags.landed15Plus'] }, title:'The Leviathan Class',
+  quest_fish_01: { id:'quest_fish_01', type:'side', schema:'UQF-1.0', gate:{itemsAll:['Fishing Rod'],countMin:[{path:'fishingCatchLog',min:1}]}, bits:[], completion:{ flagsPath:['fishingQuestFlags.landed15Plus'] }, title:'The Leviathan Class',
     onComplete:[ { kind:'reward', gold:200 }, { kind:'flag_write', set:['fishingYugurtFavour'] }, { kind:'narrative', msg:"💰 +200gp. 🎣 Yugurt's Favour granted — +1 on all future catch rolls." } ], // §ARCH-01 W7c
     desc:"There is a point at which fishing becomes something else. Rank 15 is the threshold — the water changes quality, the fight changes weight, and what comes up on the line is not a catch but a confrontation. The Fisherman has not spoken about this directly. He has not needed to.",
     hint:'Land and defeat a Rank 15+ fish using real bait at Yugurt Lake.',
     activateNode:'SSJ', 
-    activateCond:() => (S_story.inventory||[]).some(i => (i.name||'').toLowerCase().includes('fishing rod')) && (S_story.fishingCatchLog||[]).length > 0,
+
     xpAward:750, waypointNode:'BOO', reward:200,
     disposition:'"You went deep." — The Fisherman',
     passText:"You went deep. The Fisherman says nothing more. A Rank 15 fish is a confrontation, not a catch.",
@@ -13914,10 +13914,10 @@ const QUEST_DB = { // → doc: quest.md §Quest Format
     npc:"the_fisherman",
   },
   // §XLV — Yugurt Tournament chain (activate at YC when Fishing Rod present; cascade on each win)
-  quest_tour_01: { id:'quest_tour_01', type:'side', schema:'UQF-1.0', gate:{ _legacyFn:true }, bits:[], completion:{ flagsPath:['yugurtTourBeat.pip'] }, title:"Pip's Challenge",
+  quest_tour_01: { id:'quest_tour_01', type:'side', schema:'UQF-1.0', gate:{itemsAll:['Fishing Rod']}, bits:[], completion:{ flagsPath:['yugurtTourBeat.pip'] }, title:"Pip's Challenge",
     desc:"A kid at Yugurt Cabin has issued a fishing challenge. Stake: 50gp. He uses a stick and string. He's been practicing.",
     hint:'Beat Pip in a 1v1 cast at Yugurt Cabin.', activateNode:'SSJ', 
-    activateCond:() => (S_story.inventory||[]).some(i => (i.name||'').toLowerCase().includes('fishing rod')),
+
     xpAward:100, waypointNode:'SSJ', reward:50,
     disposition:'"I have been practicing. Every day."  — Pip',
     passText:"I have been practicing. Every day. The challenge is met. The 50gp stake is won.",
@@ -14004,8 +14004,7 @@ const QUEST_DB = { // → doc: quest.md §Quest Format
   quest_lxvii67: { id:"quest_lxvii67", type:"skill_check", schema:"UQF-1.0", title:"The Unseen Pen", desc:"At a forest fork stands a painted post and a jester who asks nothing aloud. Two must arrive alone and answer the unasked question. DC 10 Insight. Self-serve. No Help action. faith_folk track.", hint:"The answer is written nowhere — not in a book, not on the post. You already carry it. The jester is asking whether you can be useful to whoever arrives after you.", passText:"You take a blank page from the satchel — you carry ink, not a sword — and write a number on it: 67. You set it on the stone and nod once. The jester catches the coin without looking and nods back. One. Someone else will be the second. When the second person writes the same number, alone, he stands and dabs — completely sincere — taps his chest twice, and the post opens. Inside the hollow is a carved wooden coin: LXVII on one face, 67 on the other. Faith folk +2 — not for believing, not for doubting, but for knowing that some questions need not be asked aloud to be answered honestly, and that two people answering separately is worth more than two conferring.", failText:"You write a different number. His expression does not change. He folds the page carefully and tucks it into his own coat — he collects wrong answers too, not to shame them, but because wrong answers need somewhere to go. The post stays shut. You may come back. It is always here, and so is he. He does not remember your face, or pretends not to. It does not matter.", disposition:"al-qalam al-ghaib — the unseen pen. It has no body; the copies are real. Two people answering honestly and separately is worth more than two conferring. taps chest twice. ⁶⁷", activateNode:"FRO", vignetteText:"The road forks at a painted post with no sign. A jester sits on a stone, tossing a very old coin — one face has a number, the other face has the same number. He does not look up. He holds up two fingers. He is asking something and you do not know what, and there is no skill check to roll for it. You have only what you brought and the knowledge that the question is not about you — it is about whether you can be useful to someone who arrives at this same post after you do. The answer is 67. You must arrive at it alone. The puzzle requires two.", retryable:true, gate:{countMin:[{path:'faith_folk',min:1}]}, bits:[{ kind:"skill_check", stat:"WIS", skill:"Insight", dc:10, onPass:[{ kind:"reward", xp:67 }, { kind:"_legacy_fn", fn:() => { S_story.faith_folk = Math.min(5, (S_story.faith_folk || 0) + 2); } }], onFail:[] }],
     npc:"auros",
   },
-  quest_guide_01: { id:"quest_guide_01", type:"side", schema:'UQF-1.0', gate:{ _legacyFn:true }, bits:[], completion:{ countMin:[{ path:'fishingCatchLog', min:1 }] }, title:"The Fool's First Cast", desc:"A young man arrived at Yugurt Cabin this morning with a market rod, a broken guide ring, and total confidence. He cast immediately without asking anything. The line went sideways. He said: Is that normal? He was smiling. He has never fished a lake. He does not know he has never fished a lake. The Fisherman watched from the cabin steps and said nothing. You are holding it like a question.", hint:"Go to Yugurt Lake and make your first catch.", disposition:"\"Is that normal?\" — Emmer Finch", npc:"emmer", activateNode:"SSJ", waypointNode:"BOO", xpAward:50, reward:0, activateCond:() => (S_story.inventory||[]).some(i => (i.name||'')
-.toLowerCase().includes("fishing rod")) && !S_story.quests["quest_guide_01"], passText:"Emmer Finch made his first cast and it went sideways. He was smiling. He asked: is that normal?", failText:"The first catch at Yugurt Lake has not been made. Go and try the rod." },
+  quest_guide_01: { id:"quest_guide_01", type:"side", schema:'UQF-1.0', gate:{itemsAll:['Fishing Rod']}, bits:[], completion:{ countMin:[{ path:'fishingCatchLog', min:1 }] }, title:"The Fool's First Cast", desc:"A young man arrived at Yugurt Cabin this morning with a market rod, a broken guide ring, and total confidence. He cast immediately without asking anything. The line went sideways. He said: Is that normal? He was smiling. He has never fished a lake. He does not know he has never fished a lake. The Fisherman watched from the cabin steps and said nothing. You are holding it like a question.", hint:"Go to Yugurt Lake and make your first catch.", disposition:"\"Is that normal?\" — Emmer Finch", npc:"emmer", activateNode:"SSJ", waypointNode:"BOO", xpAward:50, reward:0, passText:"Emmer Finch made his first cast and it went sideways. He was smiling. He asked: is that normal?", failText:"The first catch at Yugurt Lake has not been made. Go and try the rod." },
   quest_guide_02: { id:"quest_guide_02", type:"side", schema:'UQF-1.0', gate:{ questsDone:['quest_guide_01'], countMin:[{ path:'fishingCatchLog', min:1 }] }, bits:[], completion:{ countMin:[{ path:'fishingCatchLog', min:2 }] }, title:"The Weight of the Hook", desc:"The hook caught something large. The rod bent correctly for the first time. Emmer did everything wrong in sequence — pulled when he should wait, stood when he should kneel — and the fish was gone. He stood at the water for a long moment. Then: I think I have been doing it wrong the whole time. He turned around and found this interesting. The Fisherman was watching from the cabin steps. He said one sentence. This is not a terminal diagnosis. This is how it starts.", hint:"Fish again at Yugurt Lake. The second catch closes the recognition beat.", disposition:"\"Now you can start.\" — The Fisherman", npc:"emmer", activateNode:"SSJ", waypointNode:"BOO", xpAward:150, reward:0, 
     passText:"Now you can start. The Fisherman said one sentence. This is not a terminal diagnosis.",
     failText:"The recognition beat has not been completed. Fish again at Yugurt Lake for the second catch.",
@@ -22119,6 +22118,15 @@ function _matchActivationLeaf(g, st) {
     if (g.dayMin != null && d < g.dayMin) return false;
     if (g.dayMax != null && d >= g.dayMax) return false;
   }
+  // itemsAll → AND-position exact-name inventory requirement, the SAME term and the
+  // same matcher as the completion leaf's: a name string (≥1 copy) or {name, min}
+  // (≥min copies). §DX-02iu. Deliberately NOT the completion leaf's fuzzy `items`:
+  // that term sits in an OR-group there and would mean AND here, so one name would
+  // carry two meanings across the two leaves.
+  if (g.itemsAll && !g.itemsAll.every(e => {
+    const name = (typeof e === 'string') ? e : e.name, min = (typeof e === 'string') ? 1 : (e.min || 1);
+    return (st.inventory || []).filter(i => i.name === name).length >= min;
+  })) return false;
   return true;
 }
 

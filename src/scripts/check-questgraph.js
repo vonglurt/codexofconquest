@@ -501,10 +501,11 @@ function startFlagsFromDefaults(html) {
   return flags;
 }
 
-// §DX-02dy — 14 at the row's filing, 6 after it: six item-possession conditions the
-// activation leaf has no term for (the completion leaf has `items`/`itemsAll`; porting
-// them is §DX-02iu). Lower this with the row that lowers the count.
-const LEGACY_GATE_CEILING = 6;
+// §DX-02dy filing 14 → 6 → §DX-02iu 0. Every activation condition in QUEST_DB is now
+// expressible in the gate grammar, so the prover can see all of them. A gate the prover
+// cannot read has to be an explicit decision, not a default: raise this only with the
+// row that needs it, and say there why the grammar could not carry the condition.
+const LEGACY_GATE_CEILING = 0;
 
 function main() {
   const args = process.argv.slice(2);

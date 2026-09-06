@@ -45,19 +45,6 @@
 ---
 ## §BACKLOG — Open Items (Phase 2)
 
-### §DX-02iu — the activation gate has no item term, and the completion gate has two (NEW 2026-09-06 during §DX-02dy, 🟡 port two leaves, ONE DESIGN CALL: a third matching rule)
-
-- [ ] **§DX-02iu — the six quests still on `gate:{_legacyFn:true}` are all one class: they ask what is in the player's inventory, and `_matchActivationLeaf` cannot ask that.** 🟡 §DX-02dy took the escape hatch from **14 to 6** by retiring six tautologies and converting two counter comparisons to the `countMin` leaf that already existed. What is left cannot follow, because the **activation** leaf has no item term at all while the **completion** leaf (`function _matchCompletionLeaf`) has *two* — `items` (fuzzy, OR-position: `inv.name.includes(ci) || ci.includes(inv.name)`) and `itemsAll` (exact, AND-position, with an optional `{name,min}` count). `check:questgraph`'s `LEGACY_GATE_CEILING` is pinned at **6** and ratchets down only, so this row is the only thing that can lower it.
-> **The six, and exactly what each asks** (measured at HEAD through a `vm` lift of `QUEST_DB`):
-> - `quest_muffat_01` — `_hasItem('Trade Seal')`
-> - `quest_road_damascus` — `.some(i => i.name === 'Three Jerusalem Warrants')` — **exact**, so `itemsAll` ports it unchanged
-> - `quest_wm_05` — `wmLowerArchiveUnlocked` **and** `.some(i => i.name === 'Y. Gurt Field Survey')` — a `flags` term plus `itemsAll`
-> - `quest_tour_01` — `.some(i => (i.name||'').toLowerCase().includes('fishing rod'))`
-> - `quest_fish_01` — the same rod test **and** `(fishingCatchLog||[]).length > 0`, which `countMin` already expresses
-> - `quest_guide_01` — the same rod test **and** `!S_story.quests['quest_guide_01']`, a self-guard that duplicates the `if (!S_story.quests[q.id])` its only caller already applies
-> **THE DESIGN CALL — the fishing-rod trio is a third matching rule.** `itemsAll` is exact and `items` is a two-way, **case-sensitive** substring; the three rod gates are a **one-way, case-insensitive** substring (*"any item whose name contains 'fishing rod'"*). Porting the two existing leaves therefore covers **three** of the six outright and leaves the rod test needing a decision: (a) **normalise the data** — name the three rod items exactly and use `itemsAll`, which retires the third rule instead of shipping it, and is the option the Host/Script Separation Policy's *"no new single-use term"* points at; (b) **widen `items`' matcher to case-insensitive**, which changes an already-shipped completion term's semantics for every existing consumer and needs its own census first; (c) **add `itemsAny` with an explicit `ci:true`**, honest but a third rule in the grammar. **Recommendation: (a)**, after counting how many inventory items actually contain the string — if it is the three rods and nothing else, (a) is a rename and the grammar stays at two item terms.
-> **Verify:** `check:gateast` gains activation-side `items`/`itemsAll` cases beside its existing `countMin` ones (76 assertions / 27 terms today); `check:questgraph`'s ceiling drops from 6 with the row; `src/tests/integration/dx02dy-legacy-gates.test.js`'s last case names the survivors and must be updated as they go.
-> **Provenance:** §DX-02dy, on reading all fourteen closures to answer its own design call.
 
 ### §DX-02is — three pit perks are combat systems the game does not have (NEW 2026-09-05 during §DX-02eq, 🟠 a real combat increment)
 

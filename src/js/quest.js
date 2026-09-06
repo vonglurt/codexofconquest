@@ -162,6 +162,15 @@ function _matchActivationLeaf(g, st) {
     if (g.dayMin != null && d < g.dayMin) return false;
     if (g.dayMax != null && d >= g.dayMax) return false;
   }
+  // itemsAll → AND-position exact-name inventory requirement, the SAME term and the
+  // same matcher as the completion leaf's: a name string (≥1 copy) or {name, min}
+  // (≥min copies). §DX-02iu. Deliberately NOT the completion leaf's fuzzy `items`:
+  // that term sits in an OR-group there and would mean AND here, so one name would
+  // carry two meanings across the two leaves.
+  if (g.itemsAll && !g.itemsAll.every(e => {
+    const name = (typeof e === 'string') ? e : e.name, min = (typeof e === 'string') ? 1 : (e.min || 1);
+    return (st.inventory || []).filter(i => i.name === name).length >= min;
+  })) return false;
   return true;
 }
 
