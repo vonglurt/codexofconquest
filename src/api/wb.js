@@ -2439,8 +2439,11 @@ ${C.bold}═══════════════════════�
 
   Values are auto-coerced: numbers for ac/hp/atk/act/sleepCost etc.,
   null clears a field, true/false for booleans.
-  null clears strings, numbers and booleans alike; an array- or object-valued
-  field is refused — brace matching is editStructuredField's job (§DX-02ee).
+  null clears strings, numbers and booleans alike, and since §DX-02dy also a field
+  whose value is an EXPRESSION — an arrow function, a call, a parenthesised chain
+  (activateCond, completeFn); the scanner is balanced over () [] {} and quote-aware.
+  An array- or object-valued field is refused — brace matching is
+  editStructuredField's job (§DX-02ee).
   Pipe JSON body for multi-field or long-text updates.
 
   Editable node fields:

@@ -501,6 +501,11 @@ function startFlagsFromDefaults(html) {
   return flags;
 }
 
+// §DX-02dy — 14 at the row's filing, 6 after it: six item-possession conditions the
+// activation leaf has no term for (the completion leaf has `items`/`itemsAll`; porting
+// them is §DX-02iu). Lower this with the row that lowers the count.
+const LEGACY_GATE_CEILING = 6;
+
 function main() {
   const args = process.argv.slice(2);
   if (args.includes('--selftest')) return void selftest();
@@ -515,6 +520,13 @@ function main() {
   const r = analyse(db, startFlags, legacy, hostWrites);
   const dl = selfDeadlocks(db, html, CORE.extrSection);
   const dlUnexpected = dl.fatal.filter(x => !KNOWN_SELF_DEADLOCK[x.quest]);
+  // §DX-02dy — the escape hatch's own census. `gateSat` recognises the declarative
+  // terms and then returns true, so a `_legacyFn` gate is UNCONDITIONALLY satisfiable
+  // and this prover cannot see the condition at all. That over-approximates in the
+  // same direction as the monotone bound, so no verdict above is wrong — but a
+  // soft-lock hiding behind one would be reported reachable forever, and until this
+  // line the blind spot had no number anywhere in the output.
+  const legacyGates = Object.keys(db).filter(id => db[id] && db[id].gate && db[id].gate._legacyFn).sort();
 
   const report = {
     quests: r.ids.length,
@@ -527,8 +539,9 @@ function main() {
     readByNothing: r.readByNothing.length,
     selfDeadlockFatal: dl.fatal.length,
     selfDeadlockInert: dl.inert.length,
+    legacyGates: legacyGates.length,
   };
-  if (args.includes('--json')) { console.log(JSON.stringify({ ...report, ND: r.ND, ERR: r.ERR, unreachable: r.unreachable, writtenByNothing: r.writtenByNothing, readByNothing: r.readByNothing, selfDeadlockFatal: dl.fatal, selfDeadlockInert: dl.inert }, null, 2)); return; }
+  if (args.includes('--json')) { console.log(JSON.stringify({ ...report, legacyGateIds: legacyGates, ND: r.ND, ERR: r.ERR, unreachable: r.unreachable, writtenByNothing: r.writtenByNothing, readByNothing: r.readByNothing, selfDeadlockFatal: dl.fatal, selfDeadlockInert: dl.inert }, null, 2)); return; }
 
   console.log('§VM-01-E — quest-graph soft-lock report');
   console.log('  quests analysed        :', report.quests);
@@ -538,6 +551,9 @@ function main() {
   console.log('  written-by-nothing     :', report.writtenByNothing, '(gate reads it, NOTHING — quest bit or host code — writes it: real soft-lock / typo)');
   console.log('  read-by-nothing        :', report.readByNothing, '(quest bit writes it, no gate reads it — dead-write / typo candidates; still quest-scoped, host reads not subtracted)');
   console.log('  prober-gaps (threw)    :', report.unprobeable, r.ERR.length ? '(closure referenced host state the sandbox does not model — prober limitation, NOT a game defect)' : '✓');
+  console.log('  gates the prover cannot see:', report.legacyGates, '/', LEGACY_GATE_CEILING,
+    '(gate:{_legacyFn:true} — read as unconditionally satisfiable; the ceiling ratchets DOWN only, §DX-02dy)');
+  if (legacyGates.length) console.log('     ·', legacyGates.join(', '));
   console.log('  residual nondeterminism:', report.nondeterministic, r.ND.length ? '' : '✓ (the plague coin-flip was the last one; QUEST_DB is now static-analysable)');
   if (r.ND.length) { console.log('\n  ✗ NONDETERMINISTIC quest-data closures (same seed → divergent write-set):');
     r.ND.forEach(x => console.log('     -', x.quest, 'nondet writes', (x.keys || []).join(','), '·', x.body)); }
@@ -575,6 +591,16 @@ function main() {
   // gate). Prober-gaps (ERR) are a limitation of the sandbox, not a game defect —
   // reported, never fatal.
   if (r.ND.length) { console.error('\ncheck:questgraph FAILED — quest data still contains a nondeterministic effect (see above).'); process.exit(1); }
+
+  // A ratchet, not a threshold: the escape hatch may shrink, never grow. A new
+  // `_legacyFn` gate is a condition this prover is blind to, so it has to be an
+  // explicit decision — lower the ceiling with the row that lowers the count.
+  if (legacyGates.length > LEGACY_GATE_CEILING) {
+    console.error('\ncheck:questgraph FAILED — ' + legacyGates.length + ' quest(s) carry gate:{_legacyFn:true}, above the ceiling of '
+      + LEGACY_GATE_CEILING + '. Express the condition in the gate grammar, or raise the ceiling deliberately (§DX-02dy). '
+      + legacyGates.join(', '));
+    process.exit(1);
+  }
   console.log('\ncheck:questgraph OK — no residual nondeterminism in quest data (the §VM-01-E blocker is cleared).');
 }
 

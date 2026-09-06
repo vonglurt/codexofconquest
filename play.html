@@ -11396,7 +11396,7 @@ const QUEST_DB = { // → doc: quest.md §Quest Format
     npc:"the_governor",
   },
   // ── §LXIV: The Gate ──
-  quest_lame_lystra: { id:'quest_lame_lystra', type:'skill_check', schema:'UQF-1.0', gate:{ _legacyFn:true }, bits:[{ kind:'skill_check', stat:'WIS', skill:'Faith', dc:10, onPass:[{ kind:'mission_bit', flag:'lameManHealed', label:'Gate Healing' }, { kind:'reward', xp:200 }], onFail:[] }], title:'The Gate',
+  quest_lame_lystra: { id:'quest_lame_lystra', type:'skill_check', schema:'UQF-1.0', gate:{}, bits:[{ kind:'skill_check', stat:'WIS', skill:'Faith', dc:10, onPass:[{ kind:'mission_bit', flag:'lameManHealed', label:'Gate Healing' }, { kind:'reward', xp:200 }], onFail:[] }], title:'The Gate',
     onComplete:[ // §ARCH-01 W7c — healed/unhealed branch stays _legacy_fn
       { kind:'_legacy_fn', fn:(S, ctx) => { const say = m => (ctx && ctx.pushMsg ? ctx.pushMsg(m) : storyMsg(m));
         if (S.lameManHealed) say('✨ +200 XP. The man stood. The crowd had expected a god. What they got was a correction.');
@@ -11405,7 +11405,7 @@ const QUEST_DB = { // → doc: quest.md §Quest Format
       // ⚠ dead in legacy too: skill_check quests never reach 'complete' in storyCheckQuests (§DUNGEON-01 gap)
     desc:"The man at the gate has been there his entire life. He has a condition of the feet. He has made his peace with it. He is watching Paul specifically, the way someone watches a person they have been waiting for without knowing they were waiting.",
     hint:'The man at the gate is watching you.',
-    activateNode:'KYA', activateCond:() => true,
+    activateNode:'KYA',
     retryable:false,
     vignetteText:'He has been here his whole life. He is not asking for anything. He is watching the road with the patience of someone who has already accepted his situation.\n\nHe is watching Paul specifically.',
     passText:'Paul looks at him. Not at the crowd. He says: stand.\n\nThe man stands.\n\nThe crowd witnesses this. The crowd\'s response is immediate and wrong — they call Paul a god. Paul corrects them. At length. The crowd had come expecting a god and is now being asked to reconsider their entire cosmological framework in an afternoon. They are disappointed. Some of them are angry.',
@@ -11473,10 +11473,10 @@ const QUEST_DB = { // → doc: quest.md §Quest Format
     npc:"lyra",
   },
   // ── §LXVI: Athens — The Unknown Altar ──
-  quest_areopagus: { id:'quest_areopagus', type:'skill_check', schema:'UQF-1.0', gate:{ _legacyFn:true }, bits:[{ kind:'skill_check', stat:'CHA', skill:'Persuasion', dc:13, onPass:[{ kind:'mission_bit', flag:'areopagusSpeech', label:'Areopagus Speech' }, { kind:'reward', xp:200 }], onFail:[] }], title:'To An Unknown One',
+  quest_areopagus: { id:'quest_areopagus', type:'skill_check', schema:'UQF-1.0', gate:{}, bits:[{ kind:'skill_check', stat:'CHA', skill:'Persuasion', dc:13, onPass:[{ kind:'mission_bit', flag:'areopagusSpeech', label:'Areopagus Speech' }, { kind:'reward', xp:200 }], onFail:[] }], title:'To An Unknown One',
     desc:"There is an altar at the east end of the market that reads: TO AN UNKNOWN ONE. It has been there for two hundred years. Nobody knows who built it or what it was for. Paul has been standing in front of it for a long time. The Market Steward wants to know why.\n\nBefore he takes the steps, you walk the hall. Two exits: the colonnade south and the market gate east. Both open. You note the distance to each.",
     hint:'Speak at the Areopagus. Start with what they already built.',
-    activateNode:'ATH', activateCond:() => true,
+    activateNode:'ATH',
     retryable:false,
     vignetteText:'The altar is at the east end of the market. The inscription: TO AN UNKNOWN ONE. Two hundred years of upkeep. The priests who maintain it don\'t know who built it. The city maintains it anyway — on the principle that a city that maintains all the altars has covered all its bases.\n\nPaul has been standing in front of it for a long time. You have been watching the square.\n\nThe Market Steward approaches. He has the manner of a man who administers forty shrines and has heard every interpretation of every one of them. He has not heard this interpretation.\n\nYou position yourself at the base of the steps. South exit is twelve paces left.',
     passText:'The Areopagus is the speaking hill above the market. The council meets there. They invite Paul because they are curious, not because they agree — Athens runs on the formal exchange of new ideas as a civic institution.\n\nHe begins with the altar. He does not begin with a correction. He begins: I see that you maintain what you do not fully know. I want to tell you what I know about what you have been maintaining.\n\nSome laugh. Some leave. Some say: we want to hear this again. Dionysius stays. Damaris stays. They stay for the rest of the conversation and then for longer than that.\n\nYou watch the exits. No one closes them.',
@@ -11485,10 +11485,10 @@ const QUEST_DB = { // → doc: quest.md §Quest Format
     npc:"deacon_nikolaos_ath",
   },
   // ── §LXVII: Ephesus — The Riot ──
-  quest_ephesus_riot: { id:'quest_ephesus_riot', type:'skill_check', schema:'UQF-1.0', gate:{ _legacyFn:true }, bits:[{ kind:'skill_check', stat:'CHA', skill:'Persuasion', dc:12, onPass:[{ kind:'mission_bit', flag:'demetriusRiotEscaped', label:'Ephesus Riot' }, { kind:'reward', xp:175 }], onFail:[] }], title:'The Silversmith\'s Meeting',
+  quest_ephesus_riot: { id:'quest_ephesus_riot', type:'skill_check', schema:'UQF-1.0', gate:{}, bits:[{ kind:'skill_check', stat:'CHA', skill:'Persuasion', dc:12, onPass:[{ kind:'mission_bit', flag:'demetriusRiotEscaped', label:'Ephesus Riot' }, { kind:'reward', xp:175 }], onFail:[] }], title:'The Silversmith\'s Meeting',
     desc:"Demetrius runs the craftsmen's guild. The guild makes temple models. Paul has been here three years and the guild has noticed. The meeting Demetrius called has spilled out of the market hall. The market hall was not large enough.",
     hint:'Navigate the Demetrius riot in Ephesus.',
-    activateNode:'EF2', activateCond:() => true,
+    activateNode:'EF2',
     retryable:false,
     vignetteText:'Demetrius\'s voice is the loudest in the square. He is not wrong about the economics: three years of Paul in Ephesus, and silver temple sales are down. He is also not just about economics — there is a theological argument underneath the economic one. He is making both simultaneously. The crowd is responding to both.\n\nThe theater holds twenty-five thousand people. The crowd is moving toward the theater. The city clerk is trying to reach the front.',
     passText:'The city clerk gets to the front. He is a bureaucrat with perfect institutional memory and the specific kind of calm that comes from administering a city that has had riots before.\n\nHe says: these men have not robbed the temple. They have not blasphemed the goddess. If Demetrius has a charge, the courts are open. If Demetrius does not have a charge, this assembly is illegal and Rome will want to know about it.\n\nThe crowd considers this. The crowd is not wrong about the economics. But the clerk is right about the courts. The theater empties before dark. The charges are never filed.',
@@ -11543,10 +11543,10 @@ const QUEST_DB = { // → doc: quest.md §Quest Format
     npc:"ibrahim_al_tawil_cai",
   },
   // ── §PAUL-01: Malta — The Shipwreck ──
-  quest_shipwreck_melta: { id:'quest_shipwreck_melta', type:'skill_check', schema:'UQF-1.0', gate:{ _legacyFn:true }, bits:[{ kind:'skill_check', stat:'STR', skill:'Athletics', dc:12, onPass:[{ kind:'mission_bit', flag:'shipwreckSurvived', label:'Malta Wreck' }, { kind:'reward', xp:250 }], onFail:[] }], title:'Two Hundred and Seventy-Six',
+  quest_shipwreck_melta: { id:'quest_shipwreck_melta', type:'skill_check', schema:'UQF-1.0', gate:{}, bits:[{ kind:'skill_check', stat:'STR', skill:'Athletics', dc:12, onPass:[{ kind:'mission_bit', flag:'shipwreckSurvived', label:'Malta Wreck' }, { kind:'reward', xp:250 }], onFail:[] }], title:'Two Hundred and Seventy-Six',
     desc:"Paul has directed everyone on the ship to eat before the hull goes. Fourteen days without food, the storm unrelenting, the constant pumping. He breaks bread. You distribute the rest — 276 people, moving deck, high weather, each one receiving something before the ship goes into the shallows.\n\nThe soldiers want to kill the prisoners — standard protocol, no escaped prisoner on their watch. You stand in the way. The centurion stops his soldiers because he wants to save Paul, and Paul gets out, but you are the reason the moment pauses long enough for the centurion to make the order.\n\nEveryone goes in the water. The count at the start and the count at the end should be the same number.",
     hint:'Help everyone reach shore. Keep the count.',
-    activateNode:'MLA', activateCond:() => true,
+    activateNode:'MLA',
     retryable:false,
     vignetteText:"The hull goes on the sandbar at speed. The wood shudders but holds — it will not hold until morning.\n\nEveryone in the water. Some have planks. Some don't. The sea is cold enough that the swim to shore is a problem for the exhausted and the old. You are neither.\n\nPaul is counting. He has been counting since the last leg of the journey. He wants the number at the start to match the number at the end. He has asked you, without asking, to help with the math.",
     passText:'You get to shore after most of the others. You have been in the water longer than anyone else.\n\nThe count is correct. Two hundred and seventy-six people reach the shore before dawn. You know the count because you asked the ship\'s log keeper on the second day, and you have been watching since.\n\n"Therefore I urge you to take some food. You need it to survive. Not one of you will lose a single hair from his head."',
@@ -11966,10 +11966,10 @@ const QUEST_DB = { // → doc: quest.md §Quest Format
     failText:"You have not yet left the hall and returned. She is waiting to note it.",
     npc:"the_innmother",
   },
-  quest_inn_06: { id:'quest_inn_06', type:'side', schema:'UQF-1.0', gate:{ _legacyFn:true }, bits:[], completion:{ flags:['freeBookingUnlocked'] }, title:'The Free Booking',
+  quest_inn_06: { id:'quest_inn_06', type:'side', schema:'UQF-1.0', gate:{countMin:[{path:'innmotherKindness',min:5}]}, bits:[], completion:{ flags:['freeBookingUnlocked'] }, title:'The Free Booking',
     desc:'The Kindness Meter has reached its threshold. She gives you the key. Sleep is free here for the remainder of the run.',
     hint:'Reach Kindness ≥ 5 through genuine acts at the Inn and the Crown domains.',
-    activateNode:'INN', activateCond:() => (S_story.innmotherKindness||0) >= 5,
+    activateNode:'INN',
     disposition:'"Sleep is free. The meals are still what they are." — The Innmother\'s Hall',
     passText:"She gives you the key. Sleep is free here for the remainder of the run.",
     failText:"The Kindness Meter has not yet reached its threshold. The key is still behind the desk.",
@@ -14001,7 +14001,7 @@ const QUEST_DB = { // → doc: quest.md §Quest Format
   // lxvii67's faith_folk>=1 gate is not expressible in canActivate's term set ⇒ gate:{_legacyFn:true}
   // keeps activateCond load-bearing (canActivate returns true for _legacyFn gates; activateCond still
   // runs at the activation site). guide_04's quest-done gate (below) maps cleanly to questsDone.
-  quest_lxvii67: { id:"quest_lxvii67", type:"skill_check", schema:"UQF-1.0", title:"The Unseen Pen", desc:"At a forest fork stands a painted post and a jester who asks nothing aloud. Two must arrive alone and answer the unasked question. DC 10 Insight. Self-serve. No Help action. faith_folk track.", hint:"The answer is written nowhere — not in a book, not on the post. You already carry it. The jester is asking whether you can be useful to whoever arrives after you.", passText:"You take a blank page from the satchel — you carry ink, not a sword — and write a number on it: 67. You set it on the stone and nod once. The jester catches the coin without looking and nods back. One. Someone else will be the second. When the second person writes the same number, alone, he stands and dabs — completely sincere — taps his chest twice, and the post opens. Inside the hollow is a carved wooden coin: LXVII on one face, 67 on the other. Faith folk +2 — not for believing, not for doubting, but for knowing that some questions need not be asked aloud to be answered honestly, and that two people answering separately is worth more than two conferring.", failText:"You write a different number. His expression does not change. He folds the page carefully and tucks it into his own coat — he collects wrong answers too, not to shame them, but because wrong answers need somewhere to go. The post stays shut. You may come back. It is always here, and so is he. He does not remember your face, or pretends not to. It does not matter.", disposition:"al-qalam al-ghaib — the unseen pen. It has no body; the copies are real. Two people answering honestly and separately is worth more than two conferring. taps chest twice. ⁶⁷", activateNode:"FRO", vignetteText:"The road forks at a painted post with no sign. A jester sits on a stone, tossing a very old coin — one face has a number, the other face has the same number. He does not look up. He holds up two fingers. He is asking something and you do not know what, and there is no skill check to roll for it. You have only what you brought and the knowledge that the question is not about you — it is about whether you can be useful to someone who arrives at this same post after you do. The answer is 67. You must arrive at it alone. The puzzle requires two.", retryable:true, activateCond:() => (S_story.faith_folk || 0) >= 1, gate:{ _legacyFn:true }, bits:[{ kind:"skill_check", stat:"WIS", skill:"Insight", dc:10, onPass:[{ kind:"reward", xp:67 }, { kind:"_legacy_fn", fn:() => { S_story.faith_folk = Math.min(5, (S_story.faith_folk || 0) + 2); } }], onFail:[] }],
+  quest_lxvii67: { id:"quest_lxvii67", type:"skill_check", schema:"UQF-1.0", title:"The Unseen Pen", desc:"At a forest fork stands a painted post and a jester who asks nothing aloud. Two must arrive alone and answer the unasked question. DC 10 Insight. Self-serve. No Help action. faith_folk track.", hint:"The answer is written nowhere — not in a book, not on the post. You already carry it. The jester is asking whether you can be useful to whoever arrives after you.", passText:"You take a blank page from the satchel — you carry ink, not a sword — and write a number on it: 67. You set it on the stone and nod once. The jester catches the coin without looking and nods back. One. Someone else will be the second. When the second person writes the same number, alone, he stands and dabs — completely sincere — taps his chest twice, and the post opens. Inside the hollow is a carved wooden coin: LXVII on one face, 67 on the other. Faith folk +2 — not for believing, not for doubting, but for knowing that some questions need not be asked aloud to be answered honestly, and that two people answering separately is worth more than two conferring.", failText:"You write a different number. His expression does not change. He folds the page carefully and tucks it into his own coat — he collects wrong answers too, not to shame them, but because wrong answers need somewhere to go. The post stays shut. You may come back. It is always here, and so is he. He does not remember your face, or pretends not to. It does not matter.", disposition:"al-qalam al-ghaib — the unseen pen. It has no body; the copies are real. Two people answering honestly and separately is worth more than two conferring. taps chest twice. ⁶⁷", activateNode:"FRO", vignetteText:"The road forks at a painted post with no sign. A jester sits on a stone, tossing a very old coin — one face has a number, the other face has the same number. He does not look up. He holds up two fingers. He is asking something and you do not know what, and there is no skill check to roll for it. You have only what you brought and the knowledge that the question is not about you — it is about whether you can be useful to someone who arrives at this same post after you do. The answer is 67. You must arrive at it alone. The puzzle requires two.", retryable:true, gate:{countMin:[{path:'faith_folk',min:1}]}, bits:[{ kind:"skill_check", stat:"WIS", skill:"Insight", dc:10, onPass:[{ kind:"reward", xp:67 }, { kind:"_legacy_fn", fn:() => { S_story.faith_folk = Math.min(5, (S_story.faith_folk || 0) + 2); } }], onFail:[] }],
     npc:"auros",
   },
   quest_guide_01: { id:"quest_guide_01", type:"side", schema:'UQF-1.0', gate:{ _legacyFn:true }, bits:[], completion:{ countMin:[{ path:'fishingCatchLog', min:1 }] }, title:"The Fool's First Cast", desc:"A young man arrived at Yugurt Cabin this morning with a market rod, a broken guide ring, and total confidence. He cast immediately without asking anything. The line went sideways. He said: Is that normal? He was smiling. He has never fished a lake. He does not know he has never fished a lake. The Fisherman watched from the cabin steps and said nothing. You are holding it like a question.", hint:"Go to Yugurt Lake and make your first catch.", disposition:"\"Is that normal?\" — Emmer Finch", npc:"emmer", activateNode:"SSJ", waypointNode:"BOO", xpAward:50, reward:0, activateCond:() => (S_story.inventory||[]).some(i => (i.name||'')
@@ -21353,17 +21353,17 @@ const QUEST_DB = { // → doc: quest.md §Quest Format
     npc:"auros",
   },
   // ── §DESIGN-03: Ceremonia Roll + Birka Skill Check Quests ──
-  quest_courier_release: { id:'quest_courier_release', type:'skill_check', schema:'UQF-1.0', gate:{ _legacyFn:true }, bits:[{ kind:'skill_check', stat:'CHA', skill:'Persuasion', dc:10, onPass:[{ kind:'mission_bit', flag:'courierReleased' }, { kind:'reward', xp:100, gold:50 }], onFail:[] }], title:'The Released',
+  quest_courier_release: { id:'quest_courier_release', type:'skill_check', schema:'UQF-1.0', gate:{}, bits:[{ kind:'skill_check', stat:'CHA', skill:'Persuasion', dc:10, onPass:[{ kind:'mission_bit', flag:'courierReleased' }, { kind:'reward', xp:100, gold:50 }], onFail:[] }], title:'The Released',
     hint:"Persuade the city guard to release the courier's belongings.",
-    activateNode:'LHR', activateCond:() => true, retryable:true, retryGateDays:1,
+    activateNode:'LHR', retryable:true, retryGateDays:1,
     vignetteText:"The guard has noted the courier's name in the morning log. The body was city property until released — a formality, but one he is entitled to enforce. You are the one with the map. He is the one who can make this official.",
     passText:'He closes the log. The entry reads: Released to local agent. No further inquiry.',
     failText:'"Twenty gold or a writ from the Watch Commander." He turns the log face-down.',
     npc:"yael",
   },
-  quest_crypt_survey: { id:'quest_crypt_survey', type:'skill_check', schema:'UQF-1.0', gate:{ _legacyFn:true }, bits:[{ kind:'skill_check', stat:'WIS', skill:'Perception', dc:12, onPass:[{ kind:'mission_bit', flag:'cryptSurveyed' }, { kind:'reward', xp:200, gold:75 }], onFail:[] }], title:'The Survey',
+  quest_crypt_survey: { id:'quest_crypt_survey', type:'skill_check', schema:'UQF-1.0', gate:{}, bits:[{ kind:'skill_check', stat:'WIS', skill:'Perception', dc:12, onPass:[{ kind:'mission_bit', flag:'cryptSurveyed' }, { kind:'reward', xp:200, gold:75 }], onFail:[] }], title:'The Survey',
     hint:"Map the second chamber for the surveyor's guild.",
-    activateNode:'KRN', activateCond:() => true, retryable:true, retryGateDays:1,
+    activateNode:'KRN', retryable:true, retryGateDays:1,
     vignetteText:"The chalk marks are still here — the surveyor who made them fifteen years ago is not. The second chamber runs deeper than the first, and something has been digging from below since the last report. The guild wants the measurements updated.",
     passText:"The chamber is mapped. The marks you make are a cleaner hand than Froberger's.",
     failText:'The light fails before you finish. The chalk is still here tomorrow.',

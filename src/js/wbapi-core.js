@@ -455,6 +455,37 @@ function removeStringField(sectionSrc, entryKey, field) {
   return sectionSrc.slice(0, openEnd) + patchedBody + sectionSrc.slice(bodyEnd);
 }
 
+// §DX-02dy — strip a field whose value is an EXPRESSION rather than a literal: an
+// arrow function, a call, a parenthesised chain. This is the half of field removal
+// removeStringField does not cover — it matches quoted values and bare scalars only.
+// Balanced over () [] {} and quote-aware, so a comma or a brace inside a string or an
+// argument list cannot end the value early; comment-skipping mirrors findEntryBounds.
+function removeExprField(sectionSrc, entryKey, field) {
+  const b = findEntryBounds(sectionSrc, entryKey);
+  if (!b) return null;
+  const { openEnd, bodyEnd } = b;
+  const body = sectionSrc.slice(openEnd, bodyEnd);
+  // The leading (^|[{,\s]) guard is why `activateCond` cannot match inside `_activateCond`.
+  const m = new RegExp(`(^|[{,\\s])${field}\\s*:`).exec(body);
+  if (!m) return null;
+  const start = m.index + m[1].length;
+  let i = start + m[0].length - m[1].length, depth = 0, quote = null, tookComma = false;
+  for (; i < body.length; i++) {
+    const c = body[i];
+    if (quote) { if (c === '\\' && quote !== '`') { i++; continue; } if (c === quote) quote = null; continue; }
+    if (c === '/' && body[i + 1] === '/') { while (i < body.length && body[i] !== '\n') i++; continue; }
+    if (c === '"' || c === "'" || c === '`') { quote = c; continue; }
+    if (c === '(' || c === '[' || c === '{') depth++;
+    else if (c === ')' || c === ']' || c === '}') { if (depth === 0) break; depth--; }
+    else if (c === ',' && depth === 0) { tookComma = true; i++; break; }
+  }
+  // A field that carried its own trailing comma leaves the separator before it intact;
+  // one that did not was the entry's last field, so that separator has to go with it.
+  const head = body.slice(0, start).replace(tookComma ? /[ \t]+$/ : /\s*,[ \t]*$/, '');
+  const patched = head + body.slice(i);
+  return patched === body ? null : sectionSrc.slice(0, openEnd) + patched + sectionSrc.slice(bodyEnd);
+}
+
 // §WBAPI-01 ph3: serialize a JSON-safe value to codebase-style JS-literal text.
 // Strings → single-quoted + escaped; numbers/booleans → as-is; null → 'null';
 // arrays → [a,b,…]; flat objects → {key:val,…} (identifier keys unquoted, else quoted).
@@ -1314,7 +1345,9 @@ const WBAPI = {
 
     // null value → remove the field entirely
     if (value === null || value === undefined) {
-      const patched = removeStringField(sectionSrc, key, field);
+      // §DX-02dy — literals first, then the expression scanner, so an arrow-function
+      // field (activateCond, completeFn) is removable by the same call as a string.
+      const patched = removeStringField(sectionSrc, key, field) || removeExprField(sectionSrc, key, field);
       if (!patched) return { ok:false, error:`field "${field}" not found on "${key}" or strip failed` };
       this._rawSrc = respliceSection(this._rawSrc, section, patched);
       delete col[key][field];

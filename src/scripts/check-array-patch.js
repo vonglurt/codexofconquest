@@ -64,5 +64,25 @@ ok(r.ok, 'number edit');
 WBAPI.load(WBAPI._rawSrc);
 ok(WBAPI.questDb[anyQ].reward === 999, 'number round-trips');
 
+// [7] §DX-02dy — REMOVAL of an expression-valued field, the half of the null-clear
+// path removeStringField does not cover: it matches quoted values and bare scalars,
+// removeExprField scans a balanced, quote-aware expression.
+WBAPI.load(GAME);
+const qCond = Object.keys(q).find(id => q[id].gate && q[id].gate._legacyFn);
+ok(!!qCond, 'a closure-gated quest exists to exercise removal');
+const srcHadCond = new RegExp(`${qCond}:[\\s\\S]{0,4000}?activateCond:`).test(WBAPI._rawSrc);
+ok(srcHadCond, 'the fixture quest carries activateCond in source');
+r = WBAPI.editField('quest', qCond, 'activateCond', null);
+ok(r.ok && r.removed, 'arrow-function field removed: ' + (r.error || ''));
+const before = Object.keys(WBAPI.questDb).length;
+WBAPI.load(WBAPI._rawSrc);
+ok(Object.keys(WBAPI.questDb).length === before, 'section still parses to the same quest count after removal');
+ok(!WBAPI.questDb[qCond].activateCond, 'removal round-trips from source');
+ok(WBAPI.questDb[qCond].id === qCond && !!WBAPI.questDb[qCond].gate, 'the entry survives intact around the hole');
+// removing an absent field is a reported failure, never a silent no-op (§DX-02gy's class)
+WBAPI.load(GAME);
+r = WBAPI.editField('quest', qCond, 'noSuchFieldAtAll', null);
+ok(!r.ok, 'removing an absent field reports failure');
+
 if (fail) { console.log(`\n✗ check-array-patch: ${fail} FAILED, ${pass} passed`); process.exit(1); }
-console.log(`✓ §WBAPI-01 ph3 structured-field PATCH: all ${pass} checks pass (array/object/number round-trip + insert + fn-reject)`);
+console.log(`✓ §WBAPI-01 ph3 structured-field PATCH: all ${pass} checks pass (array/object/number round-trip + insert + fn-reject + expression-field removal)`);
