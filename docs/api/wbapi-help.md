@@ -13,11 +13,11 @@
 ## Start the server
 
 ```bash
-./wbapi-toggle.sh start      # background (one-shot — the server never self-restarts)
-./wbapi-toggle.sh status     # PID + port
-./wbapi-toggle.sh restart    # after server-code changes
-./wbapi-toggle.sh tracker    # §MESH tracker role on :1368 (rendezvous only)
-./api.sh ping                # verify it's up
+./bin/wbapi start                  # start it (one-shot — the server never self-restarts)
+./bin/wbapi status                 # is it answering, and on which port
+./bin/wbapi restart                # after server-code changes
+src/bin/wbapi-toggle.sh tracker    # §MESH tracker role on :1368 (rendezvous only)
+./api.sh ping                      # verify it's up
 ```
 
 ---
@@ -285,8 +285,8 @@ connection-center UI + ACL/blocklist design: `docs/lab-reports/lab-report-mesh02
 ./api.sh mesh connect http://trk:1368    # add a tracker announce target NOW
 
 # Start / wire up (see also "Start the server" above)
-./wbapi-toggle.sh start                  # game server :1367 (loads .env — TRACKER_URL etc.)
-./wbapi-toggle.sh tracker [port]         # tracker role :1368 — rendezvous ONLY, never a relay
+./bin/wbapi start                  # game server :1367 (loads .env — TRACKER_URL etc.)
+src/bin/wbapi-toggle.sh tracker [port]         # tracker role :1368 — rendezvous ONLY, never a relay
 node wbapi-server.js --peer host:1367 --bind 0.0.0.0 --advertise <lan-ip>:1367 --name "Hub"
 # Bootstrap ladder: --peer → MESH_PEERS → peers-cache.json → peers.txt → TRACKER_URL/BOOTSTRAP_URLS
 cp mesh-acl.json.example mesh-acl.json   # private/blocklisted mesh — commented template, hot-reloaded

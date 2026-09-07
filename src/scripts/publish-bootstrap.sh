@@ -62,7 +62,7 @@ if [ "$HOWTO" = 1 ]; then
 #          → scp bootstrap.txt you@host:/var/www/coc-bootstrap.txt
 #
 # Consumers (either works — same format):
-#   BOOTSTRAP_URLS=https://…/raw/…/bootstrap.txt ./wbapi-toggle.sh restart
+#   BOOTSTRAP_URLS=https://…/raw/…/bootstrap.txt ./bin/wbapi restart
 #   …or paste the peer lines into peers.txt next to wbapi-server.js
 #
 # A 'tracker <url>' line may be added by hand to also hand out the tracker.

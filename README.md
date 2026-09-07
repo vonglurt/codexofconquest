@@ -188,7 +188,7 @@ brew install node
 npm install
 
 # Start the WBAPI server on http://localhost:1367
-./wbapi-toggle.sh start        # start | stop | restart | status | fg
+./bin/wbapi start        # start | stop | restart | status
 #   (equivalently: npm start  →  node wbapi-server.js)
 
 # Talk to it from the CLI
@@ -213,7 +213,7 @@ npm run test:mud        # MUD server-protocol harness
 ```
 
 > ⚠️ Stop the WBAPI server before running Playwright suites
-> (`./wbapi-toggle.sh stop`) — see the Test-Run Rules in
+> (`./bin/wbapi stop`) — see the Test-Run Rules in
 > [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ---

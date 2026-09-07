@@ -3,7 +3,7 @@
 # MIT License — Copyright (c) 2026 Paul Richeson
 # wbapi-toggle.sh — manage wbapi-server.js
 #
-# Usage: ./wbapi-toggle.sh [start|stop|restart|status|fg]
+# Usage: src/bin/wbapi-toggle.sh [start|stop|restart|status|fg]
 #        (no arg = toggle between background start/stop)
 #
 #   start    — run in background (one-shot; server does not self-restart)

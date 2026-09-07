@@ -9,7 +9,7 @@
 'use strict';
 // Local REST API for play.html — reads and writes the HTML file
 // directly.  The game is fully self-contained in that one file.
-// Toggle: ./wbapi-toggle.sh [start|stop|restart|status]
+// Lifecycle: ./bin/wbapi [start|stop|restart|status]
 // curl:   curl http://localhost:1367/api/ping
 //
 // ── CLI DIRECTIVE ────────────────────────────────────────────
@@ -2002,7 +2002,7 @@ async function route(req, res) {
           '  API server ─ wbapi-server.js  (parses + writes play.html in-place)',
           '',
           'TYPICAL WORKFLOW',
-          '  1. ./wbapi-toggle.sh start',
+          '  1. ./bin/wbapi start',
           `  2. curl ${b}/api/ping             # confirm server is up`,
           `  3. curl ${b}/api/node/BK           # read anything safely`,
           '  4. Plan the write; get a nonce',

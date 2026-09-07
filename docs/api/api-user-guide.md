@@ -9,7 +9,7 @@
 
 ```bash
 # 1. Start the server
-./wbapi-toggle.sh start
+./bin/wbapi start
 
 # 2. Confirm it's alive
 ./api.sh ping
@@ -49,13 +49,13 @@ The server reads `play.html` into memory. Every write mutates in-memory objects 
 
 ```bash
 # Start
-./wbapi-toggle.sh start
+./bin/wbapi start
 
 # Stop
-./wbapi-toggle.sh stop
+./bin/wbapi stop
 
 # Restart (reload file from disk)
-./wbapi-toggle.sh restart
+./bin/wbapi restart
 
 # Direct reload without restart
 curl -s -XPOST http://localhost:1367/api/reload | jq

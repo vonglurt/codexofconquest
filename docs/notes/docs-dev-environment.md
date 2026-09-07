@@ -205,7 +205,7 @@ The second line of the TUI shows live server state:
 
 - `● server pid 41203` — green, server running
 - `○ server DOWN  respawning…` — red, keepalive is attempting a restart
-- `○ server DOWN  run: ./wbapi-toggle.sh fg` — red, auto-spawn exhausted; start manually
+- `○ server DOWN  run: src/bin/wbapi-toggle.sh fg` — red, auto-spawn exhausted; start manually
 
 ### Keepalive behaviour
 
@@ -224,10 +224,10 @@ The server manager. Understands `start`, `stop`, `restart`, `status`, `fg`,
 and `toggle` (default).
 
 ```bash
-./wbapi-toggle.sh fg        # foreground, verbose, restart on exit 67
-./wbapi-toggle.sh start     # background daemon
-./wbapi-toggle.sh restart   # stop + start
-./wbapi-toggle.sh status    # show PID and port
+src/bin/wbapi-toggle.sh fg        # foreground, verbose, restart on exit 67
+./bin/wbapi start     # background daemon
+./bin/wbapi restart   # stop + start
+./bin/wbapi status    # show PID and port
 ```
 
 The **restart loop** inside `_run_loop` relaunches the server whenever it exits
@@ -328,7 +328,7 @@ may require Automation permission:
 If permission has not been granted the monitor prints instructions before
 launching the TUI, then starts anyway with the server shown as DOWN. The
 developer can start the server manually in a separate tab
-(`./wbapi-toggle.sh fg`) and the keepalive will detect it within 3 seconds.
+(`src/bin/wbapi-toggle.sh fg`) and the keepalive will detect it within 3 seconds.
 
 ### Ports and processes
 

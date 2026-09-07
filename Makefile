@@ -2,7 +2,7 @@
 #
 # The root is about starting and running. Every target delegates to ./run.sh.
 .DEFAULT_GOAL := help
-.PHONY: help run play landing edit wbapi server monitor stop status install test check gates clean purge
+.PHONY: help run play landing edit wbapi server monitor restart stop status install test check gates clean purge
 
 help:  ## show this help
 	@echo "Codex of Conquest — make targets"
@@ -20,6 +20,8 @@ edit: server monitor  ## start API + monitor, open the world editor
 wbapi:    ## start the WBAPI node server in a terminal, announcing where node runs
 	@./run.sh server
 server: wbapi  ## alias for wbapi
+restart:  ## restart the WBAPI server alone, leaving the monitor as it is
+	@./run.sh restart
 monitor:  ## start the snapshot monitor in its own terminal window
 	@./run.sh monitor
 landing:  ## open the project landing page

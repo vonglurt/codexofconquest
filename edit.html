@@ -520,7 +520,7 @@ select.fi{appearance:none;}
     <!-- Terminal hint for server card -->
     <div class="welcome-terminal" id="welcome-terminal" style="display:none;flex-direction:column;gap:4px">
       <span style="color:var(--muted);font-size:10px">Start the API server:</span>
-      <span>./wbapi-toggle.sh start</span>
+      <span>./bin/wbapi start</span>
       <span style="color:var(--muted)">— or —</span>
       <span>node wbapi-server.js</span>
     </div>
@@ -5279,7 +5279,7 @@ document.querySelectorAll('.nav-tab').forEach(t=>t.addEventListener('click',()=>
       try { apiOut(q.local(), 'ok'); } catch(e) { apiOut('Error: '+e.message, 'err'); }
       return;
     }
-    if (!SERVER.active) return apiOut('Server not connected — start wbapi-server.js first.\n\nStart with: ./wbapi-toggle.sh start', 'err');
+    if (!SERVER.active) return apiOut('Server not connected — start wbapi-server.js first.\n\nStart with: ./bin/wbapi start', 'err');
     let path = q.url;
     // support {v} for single param and {v} as "from/to" path
     if (path.includes('{v}')) {
@@ -10613,7 +10613,7 @@ window.__walkG = {
       const d = await (await fetch('/api/mesh/status')).json();
       if (d.ok) renderMeshStatus(d);
     } catch {
-      document.getElementById('mesh-identity').textContent = '🔌 WBAPI server unreachable — start it with ./wbapi-toggle.sh start.';
+      document.getElementById('mesh-identity').textContent = '🔌 WBAPI server unreachable — start it with ./bin/wbapi start.';
     }
   }
   window.meshTabActivated = () => {

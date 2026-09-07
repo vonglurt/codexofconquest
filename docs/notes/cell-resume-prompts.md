@@ -370,7 +370,7 @@ this session — they are §CELL-06 scope):
    the CWD on every write. It now goes through saveGameFile(): temp + atomic rename.)
 
 2. Restart the WBAPI server to pick up the new endpoint:
-   ./wbapi-toggle.sh restart
+   ./bin/wbapi restart
    (or kill the existing node process and re-run: node wbapi-server.js &)
 
 3. Call the endpoint:
@@ -702,7 +702,7 @@ TASK:
      return saveAndRestart(res, 200, { deleted: toDelete.length });
    }
 
-2. Restart server: ./wbapi-toggle.sh restart
+2. Restart server: ./bin/wbapi restart
 
 3. Dry run first:
    curl -X POST http://localhost:1367/api/admin/delete-junction-terrain \

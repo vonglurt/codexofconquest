@@ -18,8 +18,8 @@ case "$cmd" in
   checks)   exec npm run check:walk ;;
   mud)      exec npm run test:mud ;;
   api)      exec ./bin/api "$@" ;;                          # passthrough to the WBAPI CLI
-  tracker)  exec ./wbapi-toggle.sh tracker "$@" ;;
-  toggle)   exec ./wbapi-toggle.sh "$@" ;;                 # start|stop|restart|status
+  tracker)  exec ./bin/wbapi-toggle.sh tracker "$@" ;;
+  toggle)   exec ./bin/wbapi-toggle.sh "$@" ;;                 # start|stop|restart|status
   help|-h|--help|*)
     cat <<EOF
 coc — CodexOfConquest launcher

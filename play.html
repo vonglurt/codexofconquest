@@ -29135,7 +29135,7 @@ async function mpDeploySentry() {
     if (!rec) { _mpFetch('/api/sentry/recall', { sentryId: r.sentryId }).catch(() => {}); storyMsg('🛡 You cannot afford the posting.'); return; }
     storyMsg('🛡 Sentry posted at ' + (NODE_MAP[node] ? NODE_MAP[node].label : node) + ' — ' + SENTRY_ECON.deployCost + 'g, then ' + rec.dailyFee + 'g/day.');
     storyUpdateStatus(); storyRenderQuests();
-  } catch { storyMsg('🛡 No world server — start one with ./wbapi-toggle.sh start.'); }
+  } catch { storyMsg('🛡 No world server — start one with ./bin/wbapi start.'); }
 }
 async function mpRecallSentry(id) {
   if (id) _mpFetch('/api/sentry/recall', { sentryId: id }).catch(() => {});
@@ -29228,7 +29228,7 @@ async function mpToggle(ev) {
   } catch (e) {
     MP.on = false; MP.session = null;
     _mpSetStatus('🔴 no server');
-    storyMsg('🌐 No world server at ' + MP.base + ' — start one with ./wbapi-toggle.sh start.');
+    storyMsg('🌐 No world server at ' + MP.base + ' — start one with ./bin/wbapi start.');
     mpBrowserOpen('No server at ' + MP.base + ' — paste a magnet or a server URL to find one.');
   }
 }
@@ -29652,7 +29652,7 @@ function _mcRenderStatus() {
       : '⚠ ' + man.engineVer + ' — yours is ' + ENGINE_VER, evOk ? '' : '#d4a017');
   }).catch(() => {
     set('mc-world', '—');
-    set('mc-build', '🔴 no server at ' + base + ' — start one with ./wbapi-toggle.sh start', '#c05555');
+    set('mc-build', '🔴 no server at ' + base + ' — start one with ./bin/wbapi start', '#c05555');
   });
 }
 function mcConnect() {
@@ -29897,7 +29897,7 @@ async function _mlAclLoad() {
   try { data = await (await fetch(base + '/api/mesh/acl')).json(); } catch {}
   if (!data || !data.ok) {   // offline → hint, not an error — the quick-lists above still work
     ed.style.display = 'none';
-    note.textContent = '🔌 No server at ' + base + ' — start yours (./wbapi-toggle.sh start) to edit its ACL.';
+    note.textContent = '🔌 No server at ' + base + ' — start yours (./bin/wbapi start) to edit its ACL.';
     return;
   }
   ed.style.display = 'flex';

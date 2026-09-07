@@ -290,7 +290,7 @@ async function requireServer() {
     const r = await doHTTP('GET', `${BASE}/api/ping`, null);
     if (r.status === 200) return;
   } catch {}
-  die(`WBAPI server not running at ${BASE}\n  Start: ./wbapi-toggle.sh start`);
+  die(`WBAPI server not running at ${BASE}\n  Start: ./bin/wbapi start`);
 }
 
 // ══════════════════════════════════════════════════════════════════════════════
@@ -1859,7 +1859,7 @@ ${C.bold}./bin/api${C.reset}  —  Codex of Conquest World Builder CLI  ${C.dim}
   ./bin/api <command> [args] [options]
 
   Every command talks to the WBAPI server running at localhost:1367.
-  Start the server first:  ${C.dim}./wbapi-toggle.sh start${C.reset}
+  Start the server first:  ${C.dim}./bin/wbapi start${C.reset}
 
 ${C.bold}═══════════════════════════════════════════════════════════════════
   PREFERRED TOOL — USE api.sh, NOT curl
@@ -3179,11 +3179,11 @@ ${C.bold}═══════════════════════�
   SERVER LIFECYCLE
 ═══════════════════════════════════════════════════════════════════${C.reset}
 
-  ./wbapi-toggle.sh start     Start server in background (auto-restart loop)
-  ./wbapi-toggle.sh stop      Kill background instance
-  ./wbapi-toggle.sh restart   Stop + start (required after wbapi-server.js changes)
-  ./wbapi-toggle.sh status    Show PID and port
-  ./wbapi-toggle.sh fg        Run in foreground with full log scroll
+  ./bin/wbapi start           Start the server (its own window on macOS)
+  ./bin/wbapi stop            Stop it, leaving the snapshot monitor alone
+  ./bin/wbapi restart         Stop + start (required after wbapi-server.js changes)
+  ./bin/wbapi status          Show whether it answers, and on which port
+  src/bin/wbapi-toggle.sh fg  Run in foreground with full log scroll
 
   ── Persistence: dated backups (§DX-02k / §DX-02l) ───────────────
 
@@ -3206,17 +3206,17 @@ ${C.bold}═══════════════════════�
   ── Logging modes ────────────────────────────────────────────────
 
   Normal (default):
-    ./wbapi-toggle.sh start
+    ./bin/wbapi start
     → Request method/URL, response status, timing. No bodies.
 
   Verbose — full request + response bodies:
     WBAPI_VERBOSE=1 node src/js/wbapi-server.js
-    WBAPI_VERBOSE=1 ./wbapi-toggle.sh fg
+    WBAPI_VERBOSE=1 src/bin/wbapi-toggle.sh fg
     → Every body printed to terminal AND log file.
 
   Trace — ultra-verbose algorithm decisions:
     WBAPI_TRACE=1 node src/js/wbapi-server.js
-    WBAPI_TRACE=1 ./wbapi-toggle.sh fg
+    WBAPI_TRACE=1 src/bin/wbapi-toggle.sh fg
     → Logs every decision: auto-junction trigger, smart-connect candidate
       selection, PUT field processing, node creation details.
     → Completely independent of VERBOSE. Off by default.
@@ -3236,11 +3236,11 @@ ${C.bold}═══════════════════════�
   SERVER LIFECYCLE
 ═══════════════════════════════════════════════════════════════════${C.reset}
 
-  ./wbapi-toggle.sh start     Start server in background (auto-restart loop)
-  ./wbapi-toggle.sh stop      Kill background instance
-  ./wbapi-toggle.sh restart   Stop + start
-  ./wbapi-toggle.sh status    Show PID and port
-  ./wbapi-toggle.sh fg        Run in foreground with full log scroll
+  ./bin/wbapi start           Start the server (its own window on macOS)
+  ./bin/wbapi stop            Stop it, leaving the snapshot monitor alone
+  ./bin/wbapi restart         Stop + start
+  ./bin/wbapi status          Show whether it answers, and on which port
+  src/bin/wbapi-toggle.sh fg  Run in foreground with full log scroll
 
   Log file: build/milepoints/wbapi-server.log
   Port:     1367  (the canonical game year, 1367 AD)
@@ -3346,7 +3346,7 @@ function printSynopsis() {
   try {
     await fn.call(CMD, pos, flags);
   } catch (e) {
-    if (e.code === 'ECONNREFUSED') die(`Server not running at ${BASE}\n  Start: ./wbapi-toggle.sh start`);
+    if (e.code === 'ECONNREFUSED') die(`Server not running at ${BASE}\n  Start: ./bin/wbapi start`);
     die(e.message || String(e));
   }
 })();

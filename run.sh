@@ -2,7 +2,8 @@
 # SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson
 #
 # run.sh — the one entry point. Every `make` target calls into here.
-#   ./run.sh server | monitor | play | landing | edit | stop | status
+#   ./run.sh server | monitor | play | landing | edit | status
+#   ./run.sh stop [api|monitor] | restart      — restart is the API server alone
 set -euo pipefail
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 cd "$ROOT"
@@ -19,6 +20,9 @@ in_term()   { # run a command in its own Terminal window (macOS), else backgroun
 }
 server_up() { curl -sf "http://localhost:$PORT/api/ping" >/dev/null 2>&1; }
 
+stop_api()     { pkill -f "src/js/wbapi-server.js"       2>/dev/null && echo "API stopped"     || echo "API not running"; }
+stop_monitor() { pkill -f "src/bin/monitor-snapshots.py" 2>/dev/null && echo "monitor stopped" || true; }
+
 wait_for_server() {
   for _ in $(seq 1 40); do server_up && return 0; sleep 0.25; done
   echo "warning: API server did not answer on :$PORT" >&2; return 0
@@ -34,8 +38,16 @@ case "${1:-help}" in
   landing)   open_url "$ROOT/index.html" ;;
   edit)      open_url "$ROOT/edit.html" ;;
   stop)
-    pkill -f "src/js/wbapi-server.js" 2>/dev/null && echo "API stopped" || echo "API not running"
-    pkill -f "src/bin/monitor-snapshots.py" 2>/dev/null && echo "monitor stopped" || true ;;
+    case "${2:-all}" in
+      api)     stop_api ;;
+      monitor) stop_monitor ;;
+      *)       stop_api ; stop_monitor ;;
+    esac ;;
+  restart)
+    stop_api
+    for _ in $(seq 1 40); do server_up || break; sleep 0.25; done
+    in_term "./src/server/start-wbapi.sh" ; wait_for_server
+    server_up && echo "API server → :$PORT (restarted)" || echo "API server did not come back on :$PORT" ;;
   status)
     server_up && echo "API   : UP   (:$PORT)" || echo "API   : down"
     pgrep -f "src/bin/monitor-snapshots.py" >/dev/null 2>&1 && echo "monitor: UP" || echo "monitor: down" ;;

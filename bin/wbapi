@@ -1,4 +1,17 @@
 #!/usr/bin/env bash
 # SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson
-# Shortcut for `make wbapi` — runs from the repo root wherever you call it.
-cd "$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)" && exec make wbapi "$@"
+# The WBAPI server, from anywhere in the repo: start | stop | restart | status.
+# A bare invocation starts it.
+cd "$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)" || exit 1
+case "${1:-start}" in
+  start)   exec ./run.sh server ;;
+  stop)    exec ./run.sh stop api ;;
+  restart) exec ./run.sh restart ;;
+  status)  exec ./run.sh status ;;
+  -h|--help|help)
+    printf 'usage: %s [start|stop|restart|status]\n' "${0##*/}" ;;
+  *)
+    printf '%s: unknown command %s\n' "${0##*/}" "$1" >&2
+    printf 'usage: %s [start|stop|restart|status]\n' "${0##*/}" >&2
+    exit 2 ;;
+esac

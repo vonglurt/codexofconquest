@@ -82,8 +82,8 @@ A session ends when its context runs out, not when the work does, so **every inc
 
 ```bash
 # Server lifecycle
-./wbapi-toggle.sh start | status | restart | stop     # :1367, auto-restart loop
-./api.sh ping                                          # health + confirm it's up
+./bin/wbapi start | status | restart | stop   # :1367 (one-shot — the server never self-restarts)
+./api.sh ping                                 # health + confirm it's up
 
 # The common cycle — SEARCH → INSPECT → EDIT (never guess an ID)
 ./api.sh list quest --q "keyword"        # search
@@ -107,7 +107,7 @@ A session ends when its context runs out, not when the work does, so **every inc
 
 ### API hazards you must internalize (CONTRIBUTING.md, learned the hard way)
 
-1. **Restart the server before any WRITE session.** The server holds the *whole* file text from when it started and re-writes it on every data WRITE. If you hand-edited CSS/JS while the server was up since *before* your edit, the next `./api.sh put/post` **silently reverts your CSS/JS**. Rule: `./wbapi-toggle.sh restart`, verify a fresh PID, and confirm a CSS/JS signature survives the first write (`grep -c _monsterLevel play.html`). When hand-editing CSS/JS, stop the server first, and commit early.
+1. **Restart the server before any WRITE session.** The server holds the *whole* file text from when it started and re-writes it on every data WRITE. If you hand-edited CSS/JS while the server was up since *before* your edit, the next `./api.sh put/post` **silently reverts your CSS/JS**. Rule: `./bin/wbapi restart`, verify a fresh PID, and confirm a CSS/JS signature survives the first write (`grep -c _monsterLevel play.html`). When hand-editing CSS/JS, stop the server first, and commit early.
 2. **`./api.sh post monster` works (§DX-01c, 2026-07-30) — the old "hand-edit MONSTER_POOL" exception is gone.** `./api.sh post monster key=dock_rat name="Dock Rat" ac=11 hp=6 atk=2 dmgDie=4 dmgCount=1 dmgFlat=0 tier=trivial`. All nine fields required; `tier` is a **string**, not a number; a bad body is rejected 422 with the field list and **nothing is written**. It used to splice a malformed line into the *trophy-drops* map (`MONSTER_DROPS` is nested inside `MONSTER_POOL`'s anchors) — the standing lesson is that **a write landing in a real-but-wrong object never throws**. (`./api.sh del monster` was the mirror defect and is fixed too — hazard #5.)
 3. **Nested UQF quest bodies can't go through flat `post quest`.** `post quest` writes flat fields; a quest with nested `bits`/`completion`/`onComplete`/`gate` is hand-authored as a clean `QUEST_DB` block (a re-parsed data section, so Hazard-#1-safe if the server is restarted first). Use `./api.sh advise <id>` to validate the result.
 4. **`./api.sh highway A B --execute` is DEPRECATED and refused (§DX-01d, 2026-07-30).** It never laid road — it dropped sparse `junction:true` waypoint nodes (which violate `check:invariants` I1/I2, and *are* where J14/J15 came from) and zero `ROAD_CELLS`. A contiguous-land node is already walk-reachable without it. Route *planning* still runs free (omit `--execute`); to make a corridor encounter-free road, edit `ROAD_RUNS` + `node src/scripts/build-roads.js --apply`.
@@ -237,7 +237,7 @@ node --check src/js/wbapi-server.js   # server-file parse only — the HTML inli
 
 **Test-run rules (learned §NAV-01h):**
 1. **Never trust a piped test run's exit code** — `… | tail` returns the pipe's last stage. Run bare and check `$?`, or redirect to a file and read the `N failed / N passed` summary line.
-2. **Stop the WBAPI server before Playwright** (`./wbapi-toggle.sh stop`) — a live `:1367` makes `probeServer()` replace the injected mock world (~46 false failures). Restart after.
+2. **Stop the WBAPI server before Playwright** (`./bin/wbapi stop`) — a live `:1367` makes `probeServer()` replace the injected mock world (~46 false failures). Restart after.
 
 ---
 
@@ -255,7 +255,7 @@ node --check src/js/wbapi-server.js   # server-file parse only — the HTML inli
 
 ```bash
 # Am I set up?
-./api.sh ping && ./wbapi-toggle.sh status
+./api.sh ping && ./bin/wbapi status
 
 # What exists already? (grep before building)
 ./api.sh list quest --q "TERM";  ./api.sh get node LHR;  grep -n "SYMBOL" play.html

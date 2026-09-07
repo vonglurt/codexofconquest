@@ -25,10 +25,10 @@ Treat endpoint URLs as implementation details, not as a user interface.
 ## Starting the Server
 
 ```bash
-./wbapi-toggle.sh start     # background (auto-restart loop)
-./wbapi-toggle.sh status    # check PID and port
-./wbapi-toggle.sh restart   # restart after server-code changes
-./wbapi-toggle.sh stop      # shut down
+./bin/wbapi start     # start it (its own window on macOS; one-shot — no self-restart)
+./bin/wbapi status    # is it answering, and on which port
+./bin/wbapi restart   # restart after server-code changes
+./bin/wbapi stop      # shut down, leaving the snapshot monitor alone
 ```
 
 Verify it's up:
@@ -476,5 +476,5 @@ If you find yourself reaching for curl to hit one of these, request an api.sh wr
 ```bash
 tail -f milepoints/wbapi-server.log    # live server log
 ./api.sh ping                          # quick health check
-./wbapi-toggle.sh status               # PID and port
+./bin/wbapi status                     # is it answering, and on which port
 ```
