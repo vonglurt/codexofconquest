@@ -312,8 +312,8 @@ const CMD = {
   async get(pos, flags) {
     await requireServer();
     const [, type, id] = pos;
-    if (!type || !id) die('Usage: ./bin/api get <type> <id>');
-    const r = await request('GET', `/api/${type}/${encodeURIComponent(id)}`);
+    if (!type || !id) die('Usage: ./bin/api get <type> <id> [--fns]');
+    const r = await request('GET', `/api/${type}/${encodeURIComponent(id)}${flags.fns ? '?fns=1' : ''}`);
     if (r.status !== 200) { printError(r); process.exit(1); }
     printResult(r.body, flags);
   },
@@ -2119,10 +2119,14 @@ ${C.bold}═══════════════════════�
   get — fetch one entity
 ═══════════════════════════════════════════════════════════════════${C.reset}
 
-  ./bin/api get <type> <id>
+  ./bin/api get <type> <id> [--fns]
 
   Returns: entity (all fields), connections (related data), _meta (canDelete, blockedBy).
   Unknown id returns verbose 404 with full list of valid IDs for that type.
+
+  --fns  carry function values as {__fn:'<source>'} instead of null (§DX-02iv).
+         That is the shape put accepts back, so it is the only read that lets a
+         field holding a closure (a quest's bits / onComplete) be written at all.
 
   Node response includes:
     coords {r,c}, links{N,E,S,W} with full target objects,

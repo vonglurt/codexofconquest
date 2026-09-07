@@ -447,7 +447,7 @@ If you find yourself reaching for curl to hit one of these, request an api.sh wr
 | Endpoint | Supporting api.sh command |
 |---|---|
 | `GET /api/ping` | `./api.sh ping` |
-| `GET /api/{type}/{id}` | `./api.sh get <type> <id>` |
+| `GET /api/{type}/{id}[?fns=1]` | `./api.sh get <type> <id> [--fns]` — `fns` carries function values as `{__fn:'<source>'}` instead of `null`, which is the shape `PUT` accepts back (§DX-02iv) |
 | `GET /api/list/{type}` | `./api.sh list <type> [filters]` |
 | `POST /api/{type}` | `./api.sh post <type> [fields]` |
 | `PUT /api/{type}/{id}` | `./api.sh put <type> <id> [fields]` |

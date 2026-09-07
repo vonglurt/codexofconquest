@@ -172,7 +172,9 @@ function extractObj(block, name) {
   return null;
 }
 
-function removeFns(src) {
+function removeFns(src, opts) {
+  const markFns = !!(opts && opts.markFns);
+  const tally   = opts && opts.tally;
   let out = '', i = 0;
   while (i < src.length) {
     const c = src[i];
@@ -237,7 +239,10 @@ function removeFns(src) {
             else k++;
           }
         }
-        out += ': null'; i = k; continue;
+        const fnSrc = src.slice(j, k);
+        if (tally) tally.push(fnSrc);
+        out += markFns ? ':{__fn:' + JSON.stringify(fnSrc) + '}' : ': null';
+        i = k; continue;
       }
     }
     out += c; i++;
@@ -290,9 +295,9 @@ function parseWithP(block, name, P) {
   const Pp = new Proxy(P, { get: (t, k) => t[k] || { key: String(k) } });
   try { return new Function('P', 'return (' + obj + ')')(Pp); } catch(e) { return {}; }
 }
-function parseSanitized(block, name) {
+function parseSanitized(block, name, opts) {
   const obj = extractObj(block, name); if (!obj) return {};
-  try { return new Function('return (' + removeFns(obj) + ')')(); } catch(e) { return {}; }
+  try { return new Function('return (' + removeFns(obj, opts) + ')')(); } catch(e) { return {}; }
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -486,11 +491,28 @@ function removeExprField(sectionSrc, entryKey, field) {
   return patched === body ? null : sectionSrc.slice(0, openEnd) + patched + sectionSrc.slice(bodyEnd);
 }
 
+// §DX-02iv: prove a string is a function EXPRESSION by shape, then compile it for
+// syntax. The text is never evaluated — `new Function` returns an outer function whose
+// body holds the candidate, and that outer function is discarded uncalled, so an IIFE
+// or a template break is inert here.
+function isFunctionSource(src) {
+  if (typeof src !== 'string') return false;
+  let t = src.trim();
+  if (!t) return false;
+  t = t.replace(/^async\s+/, '');
+  let shaped = /^function\b/.test(t) || /^[A-Za-z_$][A-Za-z0-9_$]*\s*=>/.test(t);
+  if (!shaped && t[0] === '(') shaped = /^\s*=>/.test(t.slice(_valueEnd(t, 0)));
+  if (!shaped) return false;
+  try { new Function('return function _probe(){ return (' + src + '); };'); } catch (e) { return false; }
+  return true;
+}
+
 // §WBAPI-01 ph3: serialize a JSON-safe value to codebase-style JS-literal text.
 // Strings → single-quoted + escaped; numbers/booleans → as-is; null → 'null';
 // arrays → [a,b,…]; flat objects → {key:val,…} (identifier keys unquoted, else quoted).
-// Rejects functions/undefined/non-finite numbers (returns null) — those are out of scope
-// (function-valued fields are §DATA-01 territory).
+// Rejects live functions/undefined/non-finite numbers (returns null). A function VALUE
+// travels as the §DX-02iv escape `{__fn:'<source>'}`, the same shape `removeFns(src,
+// {markFns:true})` emits on the way out, so a parsed entry round-trips its closures.
 function serializeJsLiteral(v) {
   if (v === null) return 'null';
   const t = typeof v;
@@ -503,8 +525,11 @@ function serializeJsLiteral(v) {
     return '[' + parts.join(',') + ']';
   }
   if (t === 'object') {
+    const keys = Object.keys(v);
+    if (keys.length === 1 && keys[0] === '__fn')
+      return isFunctionSource(v.__fn) ? v.__fn.trim() : null;
     const parts = [];
-    for (const k of Object.keys(v)) {
+    for (const k of keys) {
       const s = serializeJsLiteral(v[k]); if (s === null) return null;
       const key = /^[A-Za-z_$][A-Za-z0-9_$]*$/.test(k) ? k : "'" + k.replace(/'/g, "\\'") + "'";
       parts.push(key + ':' + s);
@@ -512,6 +537,30 @@ function serializeJsLiteral(v) {
     return '{' + parts.join(',') + '}';
   }
   return null; // function, undefined, symbol, bigint
+}
+
+// §DX-02iv: how many function bodies one entry's source holds.
+function _fnTally(sectionSrc, entryKey) {
+  const b = findEntryBounds(sectionSrc, entryKey);
+  if (!b) return 0;
+  const tally = [];
+  removeFns(sectionSrc.slice(b.openEnd, b.bodyEnd), { tally });
+  return tally.length;
+}
+
+// §DX-02iv: the first {__fn:…} in a value tree whose text is not a function expression,
+// so a rejected write names the escape that failed instead of the whole value.
+function _findBadFnEscape(v) {
+  if (Array.isArray(v)) {
+    for (const el of v) { const b = _findBadFnEscape(el); if (b !== null) return b; }
+    return null;
+  }
+  if (v && typeof v === 'object') {
+    const keys = Object.keys(v);
+    if (keys.length === 1 && keys[0] === '__fn') return isFunctionSource(v.__fn) ? null : v.__fn;
+    for (const k of keys) { const b = _findBadFnEscape(v[k]); if (b !== null) return b; }
+  }
+  return null;
 }
 
 // §WBAPI-01 ph3: find the end index (exclusive) of a value starting at body[i],
@@ -1365,6 +1414,26 @@ const WBAPI = {
     return { ok:true, key, field, value, inserted: isNew, ...(aliased ? { aliased } : {}) };
   },
 
+  // §DX-02iv: one entry, re-parsed with its function bodies carried as `{__fn:'<source>'}`
+  // instead of erased to null. This is the read half of the closure round trip — the value
+  // it returns is what editStructuredField will accept back without losing anything.
+  entryWithFns(type, idOrTitle) {
+    if (!this._rawSrc) return { ok:false, error:'no source loaded' };
+    const sectionMap = { quest:'QUEST_DB', node:'NODE_MAP', npc:'BIRKA_NPC', monster:'MONSTER_POOL' };
+    const section = sectionMap[type]; if (!section) return { ok:false, error:'unknown type' };
+    const col = { quest:this.questDb, node:this.nodeMap, npc:this.birkaNpcs, monster:this.monsterPool }[type];
+    const key = this._findKey(col, idOrTitle); if (!key) return { ok:false, error:'not found' };
+    const sectionSrc = extrSection(this._rawSrc, section);
+    const bnd = findEntryBounds(sectionSrc, key);
+    if (!bnd) return { ok:false, error:`entry "${key}" not found in ${section}` };
+    const tally = [];
+    const marked = removeFns('{' + sectionSrc.slice(bnd.openEnd, bnd.bodyEnd) + '}', { markFns:true, tally });
+    let entry;
+    try { entry = new Function('return (' + marked + ')')(); }
+    catch (e) { return { ok:false, error:`entry "${key}" did not re-parse with function markers: ${e.message}` }; }
+    return { ok:true, key, entry, fnCount: tally.length };
+  },
+
   // §WBAPI-01 ph3: edit a structured (array/object/number/boolean) field at SOURCE level,
   // so it persists through save() (which writes the patched _rawSrc, not a re-serialization).
   // Mirrors editField but serializes the value to a JS literal and replaces the whole value.
@@ -1377,7 +1446,12 @@ const WBAPI = {
     const key = this._findKey(col, idOrTitle); if (!key) return { ok:false, error:'not found' };
 
     const literal = serializeJsLiteral(value);
-    if (literal === null) return { ok:false, error:`value for "${field}" is not JSON-serializable (functions/undefined not supported)` };
+    if (literal === null) {
+      const bad = _findBadFnEscape(value);
+      return { ok:false, error: bad !== null
+        ? `value for "${field}" carries a {__fn:…} escape whose text is not a function expression: ${JSON.stringify(String(bad).slice(0, 80))}`
+        : `value for "${field}" is not JSON-serializable (live functions/undefined not supported — pass a function as {__fn:'<source>'})` };
+    }
 
     const sectionSrc = extrSection(this._rawSrc, section);
     let patched = patchLiteralField(sectionSrc, key, field, literal);
@@ -1393,6 +1467,15 @@ const WBAPI = {
       newBody += `\n${baseIndent}  ${field}:${literal},\n${baseIndent}`;
       patched = sectionSrc.slice(0, openEnd) + newBody + sectionSrc.slice(bodyEnd);
     }
+
+    // §DX-02iv — `removeFns` erases closures at PARSE time, so a value read back from a
+    // parsed entry has already lost them and serializes to a well-formed literal that no
+    // downstream guard can question. Count the function bodies the ENTRY holds either
+    // side of the patch — the patch itself, not a model of it — and refuse a shortfall.
+    const lost = _fnTally(sectionSrc, key) - _fnTally(patched, key);
+    if (lost > 0)
+      return { ok:false, error:`refusing to write "${field}" on "${key}": the patch would drop ${lost} function value(s) from the entry — read it with entryWithFns() and pass each closure back as {__fn:'<source>'}. Source NOT modified.` };
+
     this._rawSrc = respliceSection(this._rawSrc, section, patched);
     col[key][field] = value;
     return { ok:true, key, field, value, inserted: isNew, strategy:'editStructuredField' };
@@ -1897,5 +1980,5 @@ WBAPI._classifyQuest = _classifyQuest; // expose for server routes and direct us
 // §MESH-01-FU 9: low-level parse pipeline, exposed for scripts/world-diff.js —
 // the deep diff must parse ARBITRARY world files (not this singleton's loaded
 // one), so it needs the helpers, not the loaded state.
-WBAPI._parse = { extrSection, extractObj, extractArr, removeFns, parseSimple, parseArr, parseWithP, parseSanitized };
+WBAPI._parse = { extrSection, extractObj, extractArr, removeFns, parseSimple, parseArr, parseWithP, parseSanitized, isFunctionSource };
 module.exports = WBAPI;

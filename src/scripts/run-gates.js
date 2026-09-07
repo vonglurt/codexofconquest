@@ -34,7 +34,7 @@ const GATES = [
   'check:terrain', 'check:roads', 'check:roomsparity', 'check:questparity',
   'check:gateast', 'check:rng', 'check:questgraph', 'check:nodeindex',
   'check:noderegs', 'check:npcregs', 'check:anchors', 'check:legacycodes',
-  'check:battlepools',
+  'check:battlepools', 'check:arraypatch',
   'check:spdx', 'check:backlogcounts', 'check:condprices',
   'check:docpointers',
 ];

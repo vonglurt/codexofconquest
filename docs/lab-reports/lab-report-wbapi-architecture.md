@@ -118,7 +118,7 @@ All four strategies survive with **identical signatures and identical bodies**:
 | `parseSimple` | `` `src/js/wbapi-core.js:function parseSimple(block, name)@280` `` | + `ITEM_DB` |
 | `parseArr` | `` `src/js/wbapi-core.js:function parseArr(block, name)@284` `` | + `D100_TABLE` |
 | `parseWithP` | `` `src/js/wbapi-core.js:function parseWithP(block, name, P)@288` `` | still `WORLD_DB` only |
-| `parseSanitized` | `` `src/js/wbapi-core.js:function parseSanitized(block, name)@293` `` | + `NPC_DIALOGUES`, `EB_NPC_DIALOGUE` |
+| `parseSanitized` | `` `src/js/wbapi-core.js:function parseSanitized(block, name, opts)@298` `` | + `NPC_DIALOGUES`, `EB_NPC_DIALOGUE` |
 
 The `P`-proxy trick — binding a `Proxy` over `monsterPool` so `monsters: [P.goblin]` resolves
 live during parse instead of in a second pass — is intact and still the only external binding

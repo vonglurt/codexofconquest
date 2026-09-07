@@ -2120,9 +2120,11 @@ async function route(req, res) {
           '  type: node | quest | monster | npc | terrain | fish | lake-magic',
           '  Optional filters narrow results.',
           '',
-          `GET ${b}/api/{node|quest|monster|npc|terrain}/{id}`,
+          `GET ${b}/api/{node|quest|monster|npc|terrain}/{id}[?fns=1]`,
           '  Full entity detail including cross-references and connections.',
           `  e.g.  curl ${b}/api/quest/quest_wis_01`,
+          "  fns=1 carries function values as {__fn:'<source>'} instead of null (§DX-02iv),",
+          '  which is the shape PUT accepts back without dropping the closure.',
           '',
           `GET ${b}/api/quest/{id}/chain`,
           '  Upstream and downstream quest chain for a quest.',
@@ -10801,6 +10803,19 @@ async function route(req, res) {
     if (r) {
       // ── ENRICH: add full details to every entity GET ──────────────────────
       const ent = r.entity || {};
+
+      // §DX-02iv — ?fns=1 re-reads the entry from source with its function bodies
+      // carried as {__fn:'<source>'}. That value is what PUT accepts back without
+      // dropping the closure; the default read still erases them to null.
+      if (r.entity && /^(1|true)$/.test(url.searchParams.get('fns') || '')) {
+        const wf = WBAPI.entryWithFns(type, key);
+        if (wf.ok) {
+          Object.assign(r.entity, wf.entry);
+          r._fns = { markers: wf.fnCount, shape: "{__fn:'<source>'}", note: 'pass these back unchanged in PUT to keep the closures' };
+        } else {
+          r._fns = { error: wf.error };
+        }
+      }
 
       if (type === 'node') {
         // Full coordinates

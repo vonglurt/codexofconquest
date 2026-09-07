@@ -92,10 +92,24 @@ If the server is down, `ping` exits with a clear error and start instructions.
 ## 3. Reading One Entity: get
 
 ```
-./api.sh get <type> <id>
+./api.sh get <type> <id> [--fns]
 ```
 
 **Types:** `node`  `quest`  `monster`  `npc`  `terrain`
+
+**`--fns` (§DX-02iv).** The ordinary read erases function values to `null`, because the
+parser strips them before the JSON is built. `--fns` carries each one as
+`{"__fn":"<source>"}` instead, and that is the shape `put` accepts back. It is the only
+read that lets you edit a field holding a closure — a quest's `bits`, `onComplete`,
+`onPass`, `onFail`, or a top-level `activateCond`. Writing such a field **without** it is
+refused: *"the patch would drop 1 function value(s) from the entry"*, and the source is
+left alone.
+
+```bash
+./api.sh get quest quest_wm_01 --fns          # closures arrive as {"__fn": "S => { … }"}
+./api.sh get quest quest_wm_01 --fns --raw | jq '{onComplete: .entity.onComplete}' \
+  | ./api.sh put quest quest_wm_01            # and go back unchanged
+```
 
 ### 3.1 Get a node
 
