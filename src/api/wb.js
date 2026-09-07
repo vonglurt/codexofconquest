@@ -2048,7 +2048,8 @@ ${C.bold}═══════════════════════�
   ${C.green}ai${C.reset} "<question>"        Ask Claude about the API
 
   Entity types:  ${C.dim}node  quest  monster  npc  terrain${C.reset}
-  Export collections:  ${C.dim}node_map  quest_db  monster_pool  world_db  all${C.reset}
+  Export collections:  ${C.dim}node_map  quest_db  monster_pool  world_db  fish_pool  lake_magic
+                       monster_drops  condition_items  all${C.reset}
 
 ${C.bold}═══════════════════════════════════════════════════════════════════
   GLOBAL OPTIONS  (work on every command)

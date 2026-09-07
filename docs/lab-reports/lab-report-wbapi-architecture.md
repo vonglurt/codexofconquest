@@ -313,21 +313,29 @@ Extend `batchEditNode`'s grouping to quests.
 `ITEM_DB`, `NPC_DIALOGUES`, and `MONSTER_DROPS`. `all` is 7 of 14 collections. Either complete it
 or rename it.
 
-**7.8 — §DX-02fp 🟢 `GET /api/help` prints `"expires": "60s"`** (`` `src/js/wbapi-server.js:"expires": "60s"@2044` ``), two
-lines below its own correct *"expires in 5 minutes."* `NONCE_TTL` is 300 s.
+**7.8–7.11 — §DX-02fp/fq/fr/fs ✅ SHIPPED 2026-09-07** (with §DX-02bb, which had rediscovered
+7.8 independently in another phase file). All four were the same help text, so they were one
+commit, and each was verified against the running server rather than against the source:
 
-**7.9 — §DX-02fq 🟢 Both help blocks name a response field that does not exist.** They print
-`"expires": "60s"` and `"expires": 300`; the endpoint returns **`expiresAt`**, an ISO-8601 string
-(`` `src/js/wbapi-server.js:const expiresAt = new Date(Date.now() + NONCE_TTL)@3141` ``). Anyone following the help and reading `.expires` gets `undefined`.
+- **7.8 §DX-02fp** — the `modes` topic printed `"expires": "60s"` two lines below its own correct
+  *"expires in 5 minutes"*, while `NONCE_TTL` is 300 s.
+- **7.9 §DX-02fq** — and the field it named does not exist. The endpoint returns
+  `` `src/js/wbapi-server.js:{ nonce: token, type, id: resolvedKey, expiresAt }@3160` `` — `expiresAt`, an ISO-8601
+  string. Both blocks now print the response the endpoint actually sends, and the `nonce` topic
+  says in as many words that `.expires` reads `undefined` into an empty `X-Nonce` header.
+  `curl -s -XPOST localhost:1367/api/nonce -d '{"type":"quest","id":"quest_wm_01"}'` returns
+  exactly the documented four keys.
+- **7.10 §DX-02fr** — `` `src/js/wbapi-server.js:'  type: node | quest | monster | npc | snapshot',@2076` ``. The old
+  list offered `terrain`, which answers `400 type must be one of: node, quest, monster, npc,
+  snapshot`, and omitted `snapshot`, which the §DX-02l sweep requires.
+- **7.11 §DX-02fs** — `` `src/js/wbapi-server.js:'   Writes auto-save. There is no save step.',@2053` ``. The block still
+  shows `POST /api/save`, now labelled as what it is since §DX-02k: a dated snapshot beside the
+  game file, not a flush of pending work.
 
-**7.10 — §DX-02fr 🟢 `GET /api/help/nonce` documents a type that 400s and omits one that works.**
-It lists `node | quest | monster | npc | terrain`; `validTypes` is
-`['node','quest','monster','npc','snapshot']`. **`terrain` is rejected**, and `snapshot` — which
-the §DX-02l sweep requires — is undocumented.
-
-**7.11 — §DX-02fs 🟢 The help still teaches the retired save step.** *"Step C — save (always
-required after any write)"* (`` `src/js/wbapi-server.js:Step C — save (always required after any write)@2052` ``) predates §DX-02k. Writes auto-save.
-`POST /api/save` now means *"take a dated snapshot,"* which is a different thing and should say so.
+**7.7's neighbour, from §DX-02bb:** two collection lists also disagreed with `exportMap`. Both now
+carry all eight plus `all`, and each of the nine was exercised — `curl /api/export/<c>` returns an
+object for every one. `all` itself is unchanged and 7.7 still stands: its description now
+enumerates the seven keys it really emits and says which two you must name to get.
 
 ---
 
