@@ -152,9 +152,11 @@ both date this commit at *"+2 h 40 m"* after face A. The real interval is **19 m
 | Anchor | Raises pressure when | Costs days |
 |---|---|---|
 | `_addVoidPressure(1);@36550` | you pass a second sleep-capable node **without sleeping** | **none** |
-| `onFail:[{ kind:'_legacy_fn', fn:() => { S_story.voidPressure@21536` | a quest skill check fails | none |
-| `onFail:[{ kind:'_legacy_fn', fn:() => { S_story.voidPressure@21536` | a second quest skill check fails | none |
+| `onFail:[{kind:'_legacy_fn',fn:() => { _addVoidPressure(1); }}]` (`quest_d0201_a2`) | a quest skill check fails | none |
+| `onFail:[{kind:'_legacy_fn',fn:() => { _addVoidPressure(1); }}]` (`quest_d0201_a4`) | a second quest skill check fails | none |
 | `S_story.voidPressure  = (S_story.voidPressure` | you claim the Ceremonia column as power | **routed through `_addVoidPressure(3)` 2026-09-06 by §DX-02dl** — it now clamps, latches and refreshes the HUD |
+
+All four now enter through `` `function _addVoidPressure(n)@27119` ``, so the clamp at 10, the three milestone latches and the HUD refresh are unconditional. The two quest bits were the last direct writers; before §DX-02dl closed they carried a failed retryable check from 8 to 9 with the imminent warning never fired, and from 10 to 11.
 
 ---
 

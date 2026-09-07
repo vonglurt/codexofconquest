@@ -19,6 +19,21 @@
 
 ---
 
+## Archived 2026-09-06 — §DX-02dl (every writer of the Void meter now goes through its helper)
+
+### §DX-02dl — three writers bypass the pressure helper, and the engine's last-chance warning is an exact-equality test in a system with a `+3` writer (NEW 2026-08-18 during §DOC-02cg, 🟡 one design call · shipped in two increments)
+
+- [x] ✅ SHIPPED 2026-09-06 `d90bc9e` + `SHA2` **§DX-02dl — `_addVoidPressure` is the only writer of `S_story.voidPressure`, and the milestone it latches cannot be stepped over.** 🟡 **Closed in two increments because the second half had no write path until §DX-02iv (`7999bee`) built one.**
+> **Increment 1 (`d90bc9e`) — the milestone and the Ceremonia claim.** `if (cur === 9 …)` became `cur >= 9`, matching the two milestones directly above it (`>= 3`, `>= 6`) and the cascade readers — ***the `===` was the odd one out in its own function, which is what made it a slip rather than a rule*** — and the warning's text now interpolates the live value with a margin clause true at 9 and at 10, because firing at 10 would otherwise have printed *"Pressure: 9/10. One more pressure point…"*, both halves false. ***Fixing a guard so it fires more often is not done until the thing it fires is still true.*** The Ceremonia `+3` was routed through the helper; direct writes **4 → 3**.
+> **Increment 2 (`SHA2`) — the two quest writers, through the mandated path.** They are `_legacy_fn` bit bodies at `quest_d0201_a2` and `quest_d0201_a4`, the `onFail` of a retryable skill check in each; both read `S_story.voidPressure = (S_story.voidPressure || 0) + 1` and now read `_addVoidPressure(1)`. **Written through `./bin/api put quest <id> bits=…` carrying the closure as `{__fn:'<source>'}`** — the escape §DX-02iv shipped, whose first real use this is. **Direct writes 3 → 1**, and the survivor is the clamp inside the helper itself.
+> **What the two writers actually did, measured through a Node `vm` lift of the live closures (§DX-02ir) — and it is worse than the row claimed.** The row filed them as *bypassing the helper*. Driven from the file: **from pressure 8 the bit reached 9 with the imminent-warning milestone NOT latched and no message shown**, and **from 10 it reached 11**, past a cap every other reader treats as the ceiling. So the failure branch of a *retryable* check — the one a player will hit repeatedly by design — was the path most able to seat someone one point from defeat without telling them. After: **8 → 9 warned, with the message naming the value; 10 → 10.** The HUD refreshes where it refreshed zero times before.
+> **Verified.** `check:walk` **22/22** · `./bin/api audit` **0 errors** · round-tripped from disk after the write (the closure re-reads as `() => { _addVoidPressure(1); }` and still parses). `src/tests/integration/dx02dl-void-pressure-writers.test.js` gains the two-writer behavioural case and inverts its census assertion (*two survivors* → *none*); Chromium cannot launch here (§DX-02ir), so its assertions ran through the lift: **21 assertions, 8 of them red at `b28dd3d` and all 21 green after.**
+> **The anchor gate fired on the two rewritten bit bodies**, as it does on every extraction: `lab-report-play-01c-no-postponements.md`'s pressure-source table named both closures by their old text. Both rows now name the quest they live in and the call they make, and the table gained the line that was its point — all four writers enter through `` `function _addVoidPressure(n)@27119` ``.
+> **The bit kind considered and declined, restated because the second increment did not change it:** exactly **2 of the 123** `_legacy_fn` bits in `QUEST_DB` are pure counter increments and both are these two, so a counter-increment kind would have been the single-use term the Host/Script Separation Policy forbids. The right move was the write path, and §DX-02iv built it.
+> **Not this row:** whether reaching 10 should end the run *there* is §DX-02dk's 🔴 question, which stays open.
+
+---
+
 ## Archived 2026-09-06 — §DX-02iv (the API can author a function value, and can no longer erase one by accident)
 
 ### §DX-02iv — the API can delete a function-valued field and cannot write one, so 123 `_legacy_fn` bit bodies have no maintenance path (NEW 2026-09-06 during §DX-02dl, 🟡 ONE DESIGN CALL: which of three shapes the write takes)
