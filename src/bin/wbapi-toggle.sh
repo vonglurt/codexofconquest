@@ -34,7 +34,8 @@ if [ -f "$ENV_FILE" ]; then
   done < "$ENV_FILE"
 fi
 
-PID=$(pgrep -f "$SCRIPT" | head -1)
+. "$DIR/src/bin/procmatch.sh"
+PID=$(match_pids "$SCRIPT" | head -1)
 
 # ── Run server once (no restart loop) ────────────────────────────────────────
 # The server never self-restarts. Relaunch is handled by monitor-snapshots.py
@@ -45,7 +46,7 @@ PID=$(pgrep -f "$SCRIPT" | head -1)
 # monitor-snapshots.py sets WBAPI_MANAGED_BY_MONITOR=1 in the Terminal window
 # it opens, so its own spawned toggles are always allowed through.
 _monitor_running() {
-  pgrep -f "monitor-snapshots.py" > /dev/null 2>&1
+  [ -n "$(match_pids "monitor-snapshots.py")" ]
 }
 
 _run_once() {
@@ -74,7 +75,7 @@ do_start() {
   echo "Starting wbapi-server (background)…"
   _run_once &
   sleep 0.5
-  NEW_PID=$(pgrep -f "$SCRIPT" | head -1)
+  NEW_PID=$(match_pids "$SCRIPT" | head -1)
   if [ -n "$NEW_PID" ]; then
     echo "Started (PID $NEW_PID) — http://localhost:1367"
   else

@@ -9,6 +9,9 @@ ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 cd "$ROOT"
 
 PORT="${WBAPI_PORT:-1367}"
+SERVER_PAT="src/js/wbapi-server.js"
+MONITOR_PAT="src/bin/monitor-snapshots.py"
+. "$ROOT/src/bin/procmatch.sh"
 
 open_url()  { command -v open >/dev/null && open "$1" || echo "open $1"; }
 in_term()   { # run a command in its own Terminal window (macOS), else background it
@@ -20,8 +23,8 @@ in_term()   { # run a command in its own Terminal window (macOS), else backgroun
 }
 server_up() { curl -sf "http://localhost:$PORT/api/ping" >/dev/null 2>&1; }
 
-stop_api()     { pkill -f "src/js/wbapi-server.js"       2>/dev/null && echo "API stopped"     || echo "API not running"; }
-stop_monitor() { pkill -f "src/bin/monitor-snapshots.py" 2>/dev/null && echo "monitor stopped" || true; }
+stop_api()     { local p; p="$(match_pids "$SERVER_PAT")";  [ -n "$p" ] && { kill $p 2>/dev/null; echo "API stopped"; }     || echo "API not running"; }
+stop_monitor() { local p; p="$(match_pids "$MONITOR_PAT")"; [ -n "$p" ] && { kill $p 2>/dev/null; echo "monitor stopped"; } || true; }
 
 wait_for_server() {
   for _ in $(seq 1 40); do server_up && return 0; sleep 0.25; done
@@ -50,6 +53,6 @@ case "${1:-help}" in
     server_up && echo "API server → :$PORT (restarted)" || echo "API server did not come back on :$PORT" ;;
   status)
     server_up && echo "API   : UP   (:$PORT)" || echo "API   : down"
-    pgrep -f "src/bin/monitor-snapshots.py" >/dev/null 2>&1 && echo "monitor: UP" || echo "monitor: down" ;;
+    [ -n "$(match_pids "$MONITOR_PAT")" ] && echo "monitor: UP" || echo "monitor: down" ;;
   *) sed -n '4,6p' "$0" ;;
 esac
