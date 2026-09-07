@@ -32,8 +32,21 @@ node codes are clean renames of surviving nodes, and every quoted line of dialog
 byte-verbatim at 80 days.** The arc is nonetheless unreachable, and has been since the hour it
 shipped — its entry flag `vsShamanKnown` has never had a settable writer. Of eleven authored
 surfaces, **three render, and all three arrived later by accident**, in a data-audit commit
-that had nothing to do with this arc. The one place a player can meet The Warden today is as
-an unnamed wandering encounter in a different shaman's sanctum.
+that had nothing to do with this arc.
+
+> **Why the entry flag cannot be set — re-derived 2026-09-07 during §AUDIT-03as.** `vsShamanKnown`
+> *has* a writer: `quest_vs_03`'s `onComplete`. The chain above it dead-ends one step earlier and
+> not in the quest data at all. `quest_vs_03` completes on `vsDebtSettled`, whose real writer is
+> the Solvak payment button inside `` `if (node.code === 'VS') {@35120` `` — and **`VS` cannot be
+> stood on**: `` `VS:{r:12,c:198},@9500` `` is followed by `` `VBY:{r:12,c:198},@9501` ``, so the
+> cell resolves to VBY and the whole `node.code === 'VS'` block never runs. Every button in the
+> Visby chain lives in that block. This is §AUDIT-03x's cell-collision census, which already lists
+> `VS`←`VBY` (12,198) by name — not a separate defect, and **the arc needs no quest-data change at
+> all: it needs its node back.**
+>
+> **The Warden is therefore unmeetable as himself, and was before this row and after it.** What
+> §AUDIT-03as removed was not an encounter with him — it was a statline wearing his name in another
+> character's room, with no dialogue, no Token, no mandate and no choice.
 
 ---
 
@@ -228,7 +241,7 @@ existed and was removed; **RENAMED** = the thing survived under a different key.
 | D-5 | *"News item `warden_resolved` fires on resolution"* | The line exists; `S_story.warden_resolved` has **no writer in the file's entire history** | **NOT SHIPPED, and wrong the day it was written.** → §AUDIT-03aq |
 | D-6 | *"callback requires fav ≥ 2 (Dear Friend), i.e. `quest_wm_03`"* | `quest_wm_03` sets `` `npc:'benedikt_rasp',set:2@11112` `` — the **only** favor writer for Benedikt, and it wrote 1 until §AUDIT-03ar (2026-09-07) | **Was unreachable; the bit now writes 2.** `fav >= 2 ? '💛 Dear Friend'@23748` is the threshold. → §AUDIT-03ar ✅, and the callback stays inert until §AUDIT-03at gives `quest_wm_03` a completion path |
 | D-7 | *"Inn dream requires `wardensLegacyKnown` to precede it"* | `vaArchitectureKnown` is set at `node.code === 'NUE' && S_story.vaLastWardVisited@31920` — Warden not consulted | **Never true.** Good news: the fifth ending does not depend on this arc. |
-| D-8 | *"`void_shaman` … not in the random drop table"*; §I.C *"connected only thematically"* | `monsters:[ P.goblin, P.hobgoblin, P.void_shaman ]@6363` + a 4-row `MONSTER_DROPS` table | **True when written** (`monsters:[]` at birth), **inverted by `9df7a2b`.** → §AUDIT-03as |
+| D-8 | *"`void_shaman` … not in the random drop table"*; §I.C *"connected only thematically"* | `` `monsters:[ P.goblin, P.hobgoblin, P.void_walker ]@6363` `` + the 4-row `MONSTER_DROPS` table, which still rolls — `battKillEvent` reads `` `MONSTER_DROPS[S.enemy.key]@7061` `` and the scripted fight passes `key:'void_shaman'` | **True when written** (`monsters:[]` at birth), **inverted by `9df7a2b`, restored 2026-09-07.** → §AUDIT-03as ✅ **SHIPPED** — the roster's third slot is `void_walker`, a generic hard-tier Void creature the corpus already pools twice; The Warden is a battle key only |
 | D-9 | Shard Note **#5** | The `wardensLegacyKnown` conditional is on note **6**, *The Chaconne Piece* | **Wrong when written** — note 6 at the report's own tree. The cited *line* is exact. |
 | D-10 | `completeFn:() => !!(S_story.wardensLegacyKnown)` | `completion:{ flags:['wardensLegacyKnown'] }` | Migrated by §ARCH-01 W7c. Contract identical. |
 | D-11 | Quest `desc` as quoted | Rewritten; `hint` and `disposition` byte-verbatim | Prose revision, not rot. |
