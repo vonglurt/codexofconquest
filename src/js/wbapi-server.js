@@ -2182,6 +2182,10 @@ async function route(req, res) {
           `  PUT  ${b}/api/npc/{key}     body: {name?, role?, desc?}`,
           `  PUT  ${b}/api/loot          body: {entries:[{weight,_type,_magic?},...]}  (full replace)`,
           `  PUT  ${b}/api/loot/{index}  body: {weight?,_type?,_magic?}  (single entry)`,
+          '  A structured-field write replaces the whole literal, so a comment inside that',
+          "  value is deleted with it and JSON has no term to carry one back (§DX-02ix).",
+          '  Such a write is REFUSED, naming what it would delete; add ?dropComments=1 to',
+          '  accept the loss, and the response reports droppedComments.',
           '',
           'RENAME / FORK',
           `  POST ${b}/api/monster/{key}/rename   body: {name}`,
@@ -11168,8 +11172,10 @@ async function route(req, res) {
         // §WBAPI-01 ph3 (+§MATH-01: plain objects too — serializeJsLiteral already handles
         // them; the old ns.put path was memory-only and silently lost on file-watch reload):
         // arrays/objects/numbers/booleans patch _rawSrc at source level (persist through save()).
-        const r = WBAPI.editStructuredField(type, resolvedKey, field, value);
-        results.push({ field, ok: r.ok, error: r.error, inserted: r.inserted || false, strategy: 'editStructuredField' });
+        const r = WBAPI.editStructuredField(type, resolvedKey, field, value,
+          { dropComments: /^(1|true)$/.test(url.searchParams.get('dropComments') || '') });
+        results.push({ field, ok: r.ok, error: r.error, inserted: r.inserted || false, strategy: 'editStructuredField',
+                       ...(r.droppedComments ? { droppedComments: r.droppedComments } : {}) });
       } else {
         results.push({ field, ok: false, error: `unsupported value type: ${typeof value}` });
       }

@@ -429,7 +429,8 @@ const CMD = {
       parseKV(rest),
     );
     if (!Object.keys(body).length) die('No fields. Provide k=v pairs or pipe JSON.');
-    const r = await request('PUT', `/api/${type}/${encodeURIComponent(id)}`, body);
+    const qs = flags['drop-comments'] ? '?dropComments=1' : '';
+    const r = await request('PUT', `/api/${type}/${encodeURIComponent(id)}${qs}`, body);
     if (r.status >= 400) { printError(r); process.exit(1); }
     printResult(r.body, flags);
   },
@@ -2449,6 +2450,12 @@ ${C.bold}═══════════════════════�
   An array- or object-valued field is refused — brace matching is
   editStructuredField's job (§DX-02ee).
   Pipe JSON body for multi-field or long-text updates.
+
+  --drop-comments
+  A structured-field write replaces the field's whole literal, so a comment
+  inside that value is deleted with it, and JSON has no term to carry one back
+  (§DX-02ix). Such a write is REFUSED, naming what it would delete; this flag
+  accepts the loss, and the result reports droppedComments.
 
   Editable node fields:
     label  name (terrain key)  act  text  npc  loot  sleep  sleepCost

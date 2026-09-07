@@ -134,7 +134,7 @@ evidence.*
 | `serializeJsLiteral` | `src/js/wbapi-core.js:function serializeJsLiteral(v) {@463` | identical |
 | value-extent scanner | `src/js/wbapi-core.js:function _valueEnd(body, i) {@489` | (unnamed in spec) |
 | `patchLiteralField` | `src/js/wbapi-core.js:function patchLiteralField(sectionSrc, entryKey@522` | identical |
-| `editStructuredField` | `src/js/wbapi-core.js:editStructuredField(type, idOrTitle, field, value) {@1339` | identical |
+| `editStructuredField` | `src/js/wbapi-core.js:editStructuredField(type, idOrTitle, field, value, opts) {@1500` | identical |
 | server dispatch | `src/js/wbapi-server.js:const r = WBAPI.editStructuredField(type, resolvedKey@11156` | as specified |
 
 The `~8905` wiring pointer is exact to the line: at `a105e0e`, line 8905 is the new

@@ -4,9 +4,10 @@
 // §WBAPI-01 ph3 — full structured-field PATCH guard.
 // Verifies WBAPI.editStructuredField serializes array/object/number values to
 // codebase-style JS literals, patches _rawSrc at SOURCE level (so they survive
-// save()), round-trips through a reload, inserts absent fields, and rejects
-// function values. Pure: loads play.html read-only into a detached WBAPI
-// instance and round-trips via load(text) — never writes the file.
+// save()), round-trips through a reload, inserts absent fields, rejects live
+// function values, and refuses a write that would delete a comment from the
+// entry unless the caller accepts the loss. Pure: loads play.html read-only into a
+// detached WBAPI instance and round-trips via load(text) — never writes the file.
 // Lab report: lab-reports/lab-report-wbapi01-ph3-array-patch.md
 
 const path = require('path');
@@ -53,9 +54,13 @@ ok(/__fn/.test(r.error || ''), 'the rejection names the escape that would work')
 // with markers, written back, and RE-READ FROM DISK: the closure must survive
 // byte-identically and still parse as a function.
 WBAPI.load(GAME);
+const QSEC = () => WBAPI._parse.extrSection(WBAPI._rawSrc, 'QUEST_DB');
+const commentsOn = (sec, id) => Object.values(WBAPI._parse.fieldsWithComments(sec, id)).reduce((a, b) => a + b, 0);
 const fnPath = (() => {
+  const sec = QSEC();
   for (const id of Object.keys(q)) for (const f of ['bits','onComplete','onPass','onFail'])
-    if (Array.isArray(q[id][f]) && q[id][f].some(b => b && b.kind === '_legacy_fn')) return { id, f };
+    if (Array.isArray(q[id][f]) && q[id][f].some(b => b && b.kind === '_legacy_fn')
+        && !commentsOn(sec, id)) return { id, f };
   return null;
 })();
 ok(!!fnPath, 'a quest carrying a _legacy_fn bit exists to exercise the round trip');
@@ -91,6 +96,42 @@ r = WBAPI.editStructuredField('quest', fnPath.id, fnPath.f, [{ kind:'_legacy_fn'
 ok(!r.ok && /not a function expression/.test(r.error || ''), 'a non-function {__fn:…} is rejected');
 r = WBAPI.editStructuredField('quest', fnPath.id, fnPath.f, [{ kind:'_legacy_fn', fn:{ __fn:'S => { syntax(' } }]);
 ok(!r.ok, 'an unparseable {__fn:…} is rejected');
+
+// [4e] §DX-02ix — a comment inside a field's value is deleted by the same whole-literal
+// replacement that carries the closures, and JSON has no term to carry one back, so there
+// is no escape to offer: the write is refused unless the caller accepts the loss. The
+// corpus half is a PROPERTY, not a pinned count — every comment-bearing field in QUEST_DB
+// must refuse a verbatim rewrite, so the assertion cannot rot as the corpus is edited.
+WBAPI.load(GAME);
+const beforeSweep = WBAPI._rawSrc;
+const census = (() => {
+  const sec = QSEC(); const out = [];
+  for (const id of Object.keys(q)) {
+    const m = WBAPI._parse.fieldsWithComments(sec, id);
+    for (const f of Object.keys(m)) if (q[id][f] && typeof q[id][f] === 'object') out.push({ id, f, n: m[f] });
+  }
+  return out;
+})();
+ok(census.length > 0, 'QUEST_DB carries at least one comment inside a structured field value');
+let unrefused = null, unnamed = null;
+for (const c of census) {
+  const e = WBAPI.entryWithFns('quest', c.id);
+  if (!e.ok) { unrefused = `${c.id}.${c.f} (entryWithFns: ${e.error})`; break; }
+  const rr = WBAPI.editStructuredField('quest', c.id, c.f, e.entry[c.f]);
+  if (rr.ok) { unrefused = `${c.id}.${c.f}`; break; }
+  if (!/comment\(s\)/.test(rr.error || '')) { unnamed = `${c.id}.${c.f} — ${rr.error}`; break; }
+}
+ok(unrefused === null, `every comment-bearing field refuses a verbatim rewrite (${census.length} fields, ${census.reduce((a, c) => a + c.n, 0)} comments): ` + (unrefused || ''));
+ok(unnamed === null, 'and the refusal says it is comments it would delete: ' + (unnamed || ''));
+ok(WBAPI._rawSrc === beforeSweep, 'no refused write touched the source');
+
+const cm = census[0];
+const cmEntry = WBAPI.entryWithFns('quest', cm.id);
+const cmBefore = commentsOn(QSEC(), cm.id);
+r = WBAPI.editStructuredField('quest', cm.id, cm.f, cmEntry.entry[cm.f], { dropComments:true });
+ok(r.ok && r.droppedComments === cm.n, `the acknowledged write reports the comments it deleted (${cm.id}.${cm.f}): ` + (r.error || `reported ${r.droppedComments}, expected ${cm.n}`));
+ok(commentsOn(QSEC(), cm.id) === cmBefore - cm.n, 'and deletes exactly those, no more');
+ok(legacyBits(WBAPI._rawSrc) === legacyBits(beforeSweep), 'the acknowledged write still keeps every closure');
 
 // [5] insert absent array field
 WBAPI.load(GAME);
@@ -137,4 +178,4 @@ r = WBAPI.editField('quest', qCond, 'noSuchFieldAtAll', null);
 ok(!r.ok, 'removing an absent field reports failure');
 
 if (fail) { console.log(`\n✗ check-array-patch: ${fail} FAILED, ${pass} passed`); process.exit(1); }
-console.log(`✓ §WBAPI-01 ph3 structured-field PATCH: all ${pass} checks pass (array/object/number round-trip + insert + fn-reject + {__fn:…} closure round-trip + drop refusal + expression-field removal)`);
+console.log(`✓ §WBAPI-01 ph3 structured-field PATCH: all ${pass} checks pass (array/object/number round-trip + insert + fn-reject + {__fn:…} closure round-trip + drop refusal + comment-loss refusal across the corpus + expression-field removal)`);

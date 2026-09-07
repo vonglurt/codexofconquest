@@ -241,7 +241,7 @@ function removeFns(src, opts) {
         }
         const fnSrc = src.slice(j, k);
         if (tally) tally.push(fnSrc);
-        out += markFns ? ':{__fn:' + JSON.stringify(fnSrc) + '}' : ': null';
+        out += markFns ? ':{__fn:' + JSON.stringify(fnSrc.trim()) + '}' : ': null';
         i = k; continue;
       }
     }
@@ -548,6 +548,33 @@ function _fnTally(sectionSrc, entryKey) {
   return tally.length;
 }
 
+// §DX-02ix: every comment inside a stretch of section source, in order. String-aware,
+// and deliberately as naive about regex literals as removeFns is — the count is only ever
+// compared against itself either side of one patch, so a consistent misread cancels.
+function _commentScan(src) {
+  const out = [];
+  let i = 0;
+  while (i < src.length) {
+    const c = src[i];
+    if (c === '"' || c === "'" || c === '`') {
+      const q = c; i++;
+      while (i < src.length) { if (src[i] === '\\' && q !== '`') { i += 2; continue; } if (src[i++] === q) break; }
+      continue;
+    }
+    if (c === '/' && src[i + 1] === '/') { const s = i; while (i < src.length && src[i] !== '\n') i++; out.push(src.slice(s, i)); continue; }
+    if (c === '/' && src[i + 1] === '*') { const s = i; i += 2; while (i < src.length && !(src[i] === '*' && src[i + 1] === '/')) i++; i += 2; out.push(src.slice(s, Math.min(i, src.length))); continue; }
+    i++;
+  }
+  return out;
+}
+
+// §DX-02ix: the comments one entry's source holds.
+function _commentTally(sectionSrc, entryKey) {
+  const b = findEntryBounds(sectionSrc, entryKey);
+  if (!b) return [];
+  return _commentScan(sectionSrc.slice(b.openEnd, b.bodyEnd));
+}
+
 // §DX-02iv: the first {__fn:…} in a value tree whose text is not a function expression,
 // so a rejected write names the escape that failed instead of the whole value.
 function _findBadFnEscape(v) {
@@ -626,6 +653,38 @@ function patchLiteralField(sectionSrc, entryKey, field, literal) {
     i++;
   }
   return null; // field not present at top level
+}
+
+// §DX-02ix: which of an entry's top-level fields hold a comment inside their VALUE, and how
+// many. The same token walk `patchLiteralField` uses to find the value it replaces, so the
+// census and the write path can never disagree about what a write would delete.
+function fieldsWithComments(sectionSrc, entryKey) {
+  const b = findEntryBounds(sectionSrc, entryKey);
+  if (!b) return {};
+  const body = sectionSrc.slice(b.openEnd, b.bodyEnd);
+  const out = {};
+  let i = 0;
+  while (i < body.length) {
+    const c = body[i];
+    if (c === '"' || c === "'" || c === '`') { i = _valueEnd(body, i); continue; }
+    if (c === '/' && body[i+1] === '/') { while (i < body.length && body[i] !== '\n') i++; continue; }
+    if (c === '{' || c === '[' || c === '(') { i = _valueEnd(body, i); continue; }
+    if (/[A-Za-z_$]/.test(c)) {
+      let j = i; while (j < body.length && /[A-Za-z0-9_$]/.test(body[j])) j++;
+      const name = body.slice(i, j);
+      let k = j; while (k < body.length && /[ \t]/.test(body[k])) k++;
+      if (body[k] === ':') {
+        let v = k + 1; while (v < body.length && /[ \t\n\r]/.test(body[v])) v++;
+        const ve = _valueEnd(body, v);
+        const n = _commentScan(body.slice(v, ve)).length;
+        if (n) out[name] = n;
+        i = ve; continue;
+      }
+      i = j; continue;
+    }
+    i++;
+  }
+  return out;
 }
 
 // §CELL-14: strip a set of top-level fields from a single NODE_MAP entry body.
@@ -1438,7 +1497,7 @@ const WBAPI = {
   // so it persists through save() (which writes the patched _rawSrc, not a re-serialization).
   // Mirrors editField but serializes the value to a JS literal and replaces the whole value.
   // Falls back to inserting the field if absent. Strings/null still belong to editField.
-  editStructuredField(type, idOrTitle, field, value) {
+  editStructuredField(type, idOrTitle, field, value, opts) {
     if (!this._rawSrc) return { ok:false, error:'no source loaded' };
     const sectionMap = { quest:'QUEST_DB', node:'NODE_MAP', npc:'BIRKA_NPC', monster:'MONSTER_POOL' };
     const section = sectionMap[type]; if (!section) return { ok:false, error:'unknown type' };
@@ -1476,9 +1535,23 @@ const WBAPI = {
     if (lost > 0)
       return { ok:false, error:`refusing to write "${field}" on "${key}": the patch would drop ${lost} function value(s) from the entry — read it with entryWithFns() and pass each closure back as {__fn:'<source>'}. Source NOT modified.` };
 
+    // §DX-02ix — a comment inside the value is deleted by the same whole-literal replacement,
+    // and JSON has no term to carry one back, so there is no escape to offer. Counted the same
+    // way — over the patch, not a model of it — and refused unless the caller accepts the loss.
+    const cBefore = _commentTally(sectionSrc, key);
+    const cAfter = _commentTally(patched, key);
+    const dropped = cBefore.length - cAfter.length;
+    if (dropped > 0 && !(opts && opts.dropComments)) {
+      const kept = cAfter.slice();
+      const gone = cBefore.filter((c) => { const i = kept.indexOf(c); if (i >= 0) { kept.splice(i, 1); return false; } return true; });
+      const named = gone.slice(0, 3).map((c) => JSON.stringify(c.trim().slice(0, 70))).join(', ');
+      return { ok:false, error:`refusing to write "${field}" on "${key}": the patch would delete ${dropped} comment(s) from the entry — ${named}${gone.length > 3 ? ` (+${gone.length - 3} more)` : ''}. A comment has no escape through JSON; re-send with dropComments to accept the loss. Source NOT modified.` };
+    }
+
     this._rawSrc = respliceSection(this._rawSrc, section, patched);
     col[key][field] = value;
-    return { ok:true, key, field, value, inserted: isNew, strategy:'editStructuredField' };
+    return { ok:true, key, field, value, inserted: isNew, strategy:'editStructuredField',
+             ...(dropped > 0 ? { droppedComments: dropped } : {}) };
   },
 
   // §DX-02h — the WORLD_DB roster writer. WORLD_DB is the one collection whose array
@@ -1980,5 +2053,5 @@ WBAPI._classifyQuest = _classifyQuest; // expose for server routes and direct us
 // §MESH-01-FU 9: low-level parse pipeline, exposed for scripts/world-diff.js —
 // the deep diff must parse ARBITRARY world files (not this singleton's loaded
 // one), so it needs the helpers, not the loaded state.
-WBAPI._parse = { extrSection, extractObj, extractArr, removeFns, parseSimple, parseArr, parseWithP, parseSanitized, isFunctionSource };
+WBAPI._parse = { extrSection, extractObj, extractArr, removeFns, parseSimple, parseArr, parseWithP, parseSanitized, isFunctionSource, commentTally: _commentTally, fieldsWithComments };
 module.exports = WBAPI;
