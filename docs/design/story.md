@@ -1202,7 +1202,7 @@ Two new NPCs at the NUE node:
 Quest chain (all activated at NUE node, sequential):
 - **Q-WM-01** "The Revocation Record" — collect 3 Scholar Kings' Seals OR use `archiveLetterObtained`. Reward: `wmLowerArchiveUnlocked`.
 - **Q-WM-02** "Lower Archive" — read all 3 archive docs in `_storyWmArchiveModal()`. Reward: Froberger's Field Notes (Tome, +1 death save) + Isolde Friendly.
-- **Q-WM-03** "Benedikt's Circle" — attend 3 reading circle sessions (one per `dayCounter` value). Reward: Scholar Kings' History (Tome, +2 initiative) + Benedikt Dear Friend + `wmDoc3Unredacted`.
+- **Q-WM-03** "Benedikt's Circle" — attend 3 reading circle sessions (one per `gameDay` value). Reward: Scholar Kings' History (Tome, +2 initiative) + Benedikt Dear Friend + `wmDoc3Unredacted`.
 - **Q-WM-04** "The First Researcher" — re-read unredacted Document 3 in archive (name: Marta Eilene Vass). Reward: Benedikt's Annotated Copy (Tome, +1 ATK while quest active) + 300gp + `wmFirstResearcherKnown`.
 
 Tome bonus system: `_tomeBonuses()` helper computes aggregate bonuses from all `type:'tome'` inventory items. Applied at: `rollInitiative()` (initiative), `rollDeathSave()` (threshold), main attack roll in `doAllPlayerAttacks()` (ATK).

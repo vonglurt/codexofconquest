@@ -198,7 +198,7 @@ engine defect, not report rot.
 
 | # | Report claim | Measured at HEAD | Verdict |
 |---|---|---|---|
-| 1 | `wmSessionsDays` "tracks **`gameDay`** values" | code reads `S_story.dayCounter`, a field that does not exist | **ENGINE DEFECT — the report is right** (§AUDIT-03at) |
+| 1 | `wmSessionsDays` "tracks **`gameDay`** values" | the code read `S_story.dayCounter`, a field that never existed; it reads `` `const today = S_story.gameDay || 0;@35014` `` now | **ENGINE DEFECT, the report was right — SHIPPED 2026-09-07** (§AUDIT-03at) |
 | 2 | `quest_wm_04` completes on `wmFirstResearcherKnown` | true — and that flag's only writer is `quest_wm_04`'s own `onComplete` | **ENGINE DEFECT — circular** (§AUDIT-03au) |
 | 3 | "Benedikt → **Dear Friend** on quest_wm_03" (stated 3×) | `` `npc:'benedikt_rasp',set:2@11112` `` — the report was right and the bit was wrong; Dear Friend begins at 2 (`` `fav >= 2 ? p.dearFriend@23749` ``) | **SHIPPED 2026-09-07** (§AUDIT-03ar); inert until §AUDIT-03at |
 | 4 | Isolde "Key line **at Dear Friend**" | she has no `dearFriend` pool at all; that line is her `friendly` tier, and `` `npc:"isolde_voss", set:1@11102` `` is her ceiling | **MISATTRIBUTED — internally consistent, so harmless** |
@@ -222,9 +222,10 @@ the four-document architecture, and every quoted line of Isolde's and Benedikt's
 ### Finding 1 — the reading circle can never reach three sessions (§AUDIT-03at)
 
 ```js
-const today = S_story.dayCounter || 0;              // @34741
-const alreadyToday = sessions.includes(today);      // @34742
+const today = S_story.dayCounter || 0;              // as shipped 194a810 — the defect
+const alreadyToday = sessions.includes(today);
 ```
+**Repaired 2026-09-07 (§AUDIT-03at):** the read is `` `const today = S_story.gameDay || 0;@35014` ``.
 
 **`S_story.dayCounter` occurs exactly once in 38,712 lines — that read — and has exactly one
 commit in the file's entire history: `194a810`, the commit that shipped this layer.** It was never
@@ -242,6 +243,13 @@ never fires.
 `wmDoc3Unredacted`); `quest_wm_04` never even *activates*, since its gate is that same flag. **The
 arc stops at 2 of 4.** It is a nine-character fix — `dayCounter` → `gameDay` — and it is the
 highest-value single-token repair the verification program has found.
+
+**✅ SHIPPED 2026-09-07 (§AUDIT-03at).** Proved by lifting this block out of `play.html` and running
+it against a stub DOM once per in-game day: under the repaired read the button walks **0/3 → 1/3 →
+2/3**, `wmSessionsDays` holds `[1,2,3]` and `wmBenediktCircleComplete` is set on the third
+attendance; with the clock the block reads left un-advanced — which is what `dayCounter` was — it
+pushes `0` once and locks on *"The circle meets again tomorrow."* forever. **The arc now stops at 3
+of 4:** `quest_wm_04` activates and still cannot complete, which is §AUDIT-03au.
 
 > ***The delta table earns its keep here: the spec named the right field and the implementation
 > mistyped it. Read against HEAD alone, the code looks self-consistent and the report looks stale.
@@ -355,7 +363,7 @@ content-per-edit ratio the verification program has measured.
 
 | Row | Severity | Summary |
 |---|---|---|
-| **§AUDIT-03at** | 🟢 no design call | `S_story.dayCounter` (1 occurrence, 1 commit, 0 writers, ever) → `gameDay`; unblocks `quest_wm_03` and `quest_wm_04` |
+| **§AUDIT-03at** ✅ | 🟢 no design call | `S_story.dayCounter` (1 occurrence, 1 commit, 0 writers, ever) → `gameDay`; unblocks `quest_wm_03`, and activates `quest_wm_04`. **SHIPPED 2026-09-07** |
 | **§AUDIT-03au** | 🟢 no design call | `quest_wm_04`'s completion is its own effect; plus NG+ wipes the flag `_vaReady` requires; plus a dead button label |
 | **§AUDIT-03av** | 🟡 small design call | `NUE` carries a Weimar label and four Nuremberg player-facing strings |
 | §AUDIT-03ar | *corroborated* | this report **specifies** Dear Friend in three places, so it is a spec→shipped delta, not an ambiguity — and the row's premise needs one correction: `quest_wm_03`'s `onComplete` never runs, so Benedikt's favor is **0**, not 1. The fix is inert until §AUDIT-03at lands |

@@ -35011,7 +35011,7 @@ function storyRender(node, prefix) {
       const circleBtn = document.createElement('button');
       circleBtn.className = 'inv-use-btn';
       const sessions = S_story.wmSessionsDays || [];
-      const today = S_story.dayCounter || 0;
+      const today = S_story.gameDay || 0;
       const alreadyToday = sessions.includes(today);
       circleBtn.textContent = alreadyToday
         ? '📖 The circle meets again tomorrow.'
