@@ -19,6 +19,16 @@
 
 ---
 
+## Archived 2026-09-07 — §DX-02jk (a mistyped help topic is corrected, not answered)
+
+### §DX-02jk — `GET /api/help/<a-name-that-does-not-exist>` answers 200 with the index, and echoes the name back as if it were real (NEW 2026-09-07 during §DX-02jg(b), 🟡 one design call — MADE)
+
+- [x] ✅ SHIPPED 2026-09-07 `7d6f2f5` **§DX-02jk — the design call was whether 404 breaks a caller, and the caller the row named does not exist.** The handler was `HELP[topic] || HELP['index']` and the response reported the topic that was **asked for**: `GET /api/help/exports?format=json` answered **200**, `"topic":"exports"`, title `WBAPI Help Index`, and the body of the index. **The call, measured before anything was written** (`grep -n "api/help"`, the row's own command): `src/api/wb.js` **0** references — the suspect the row named, disproved — `play.html` **0**, `bin/` **0**. **The only caller is `edit.html`, at three sites**: the Server Help loader's 15-option `<select>` (`edit.html:5628`), the *Load all* sweep over a hardcoded 13 topics (`:5649`), and the API explorer's free-text `Topic` row (`:5196`). All three request `format=text`, all three print `await resp.text()` straight into a `<pre>`, and **none reads `.status`** — so a 404 whose body names the real topics renders in the same box as a correction where the index used to render as an answer. **404 breaks nothing; it is strictly more informative to the one surface that calls it.**
+> **Shipped:** an unknown topic answers **404** with `{ok:false, error, topic, topics}` in JSON and the same list as text; `/api/help` and every servable topic still answer **200**. Round-tripped from disk after a server restart: `/api/help/exports` **200 → 404**, `/api/help/nope` **404**, `/api/help` and **19/19** topics 200 each with their own title.
+> **One number moved that the row did not ask for, because the 404 is where it becomes a lie.** `topics:` was `Object.keys(HELP)` = **18**, and `cli` is served by a branch **above** the lookup, so it is not a HELP key. A reader who mistypes and is handed a list of real topics must not be handed one that omits a topic that works. Both responses now report the same servable set, **18 → 19**.
+> **The harness gets the assertion it could not have.** `help-behaviour.mjs` asserted the **title** because the fallback left nothing else to read; that workaround and the comment explaining it are gone, and `[help/topics]` reads the status. Added with it is **the control** — a name that cannot be a topic must be refused, or every status assertion in that check is vacuous. Selftest **17 → 19**, one of the two new checks driving a stub server that answers 200 under any name and proving it hides the wrong-index-entry finding the other check exists to make. **Red on the pre-fix tree** on exactly the control line, green after.
+> **Verification:** `check:walk` **27/27** · `npm run test:help` green (19 topics, 79 GET calls over 43 distinct paths) · `./bin/api audit` 0 errors · `play.html` untouched, no world data written.
+
 ## Archived 2026-09-07 — §DX-02da (the fail branch can be heard)
 
 ### §DX-02da — the §KG corridor's two skill checks ship `onFail:[]`, so the arc's own lesson about losing cleanly has no failure text (NEW 2026-08-18 during §DOC-02cb, 🟢 authoring, no design call)
