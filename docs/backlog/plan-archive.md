@@ -19,6 +19,16 @@
 
 ---
 
+## Archived 2026-09-07 — §DX-02jn (the live topic is live again)
+
+### §DX-02jn — `GET /api/help/cli` reports `live: true` and returns zero bytes, because it runs a file that was deleted (NEW 2026-09-07 during §DX-02ie, 🟢 no design call)
+
+- [x] ✅ SHIPPED 2026-09-07 `f39f538` **§DX-02jn — the topic whose whole claim is that it ran something was running nothing, and answering 200 about it.** **Re-measured against the running server first: `text.length` 0**, `"live": true`, `"title": "api.sh CLI Reference"`. The handler executed `path.join(ROOT, 'api.sh')` — the name §DX-02gh records as deleted — `execFile` failed, and `(stdout||'') + (stderr||'')` is `''`, which is falsy in no branch the code had.
+> **Shipped:** `path.join(ROOT, 'bin', 'api')`, and **a child that fails or produces nothing answers 502** `{ok:false, error, topic, source}` rather than 200 with an empty page. Round-tripped from disk after a restart: **0 → 54,804 bytes**, title `WBAPI CLI Reference`. **The failure branch was exercised, not assumed:** with `bin/api` moved aside the topic answers **502** in both formats naming `ENOENT`, and **200** again when it is put back. The index line no longer advertises the topic under the dead binary's name.
+> **Why neither instrument could see it, which is the part worth keeping.** `check-help-conformance.js` never starts a server. `help-behaviour.mjs` fetched `cli`, ran `docGetPaths` over an empty body, found nothing, and counted that as **nothing to check** — the exact vacuity every other extractor in that file is explicitly guarded against, at the one place the guard was missing. `[help/topics]` now fails any topic served 200 with an empty body; selftest **19 → 20**, **red on the pre-fix tree** on precisely that line.
+> **The fix widens the instrument by itself, which is the measurement that says the topic is real again:** the manual's own worked examples are now read and called — **79 → 83 GET calls over 43 → 46 distinct paths**, every one answering.
+> **Verification:** `check:walk` **27/27** · `npm run test:help` green · `./bin/api audit` 0 errors · `play.html` untouched, no world data written.
+
 ## Archived 2026-09-07 — §DX-02ie (the restart the procedure names is a command)
 
 ### §DX-02ie — `./bin/wbapi restart` is not a command, it is a make target that does not exist (NEW 2026-08-26 during §AUDIT-03bo, 🟢 no design call)
