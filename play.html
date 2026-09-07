@@ -27123,11 +27123,18 @@ function _addVoidPressure(n) {
   const cur = S_story.voidPressure;
   if (cur >= 3 && !S_story.voidCrackFired) S_story.voidCrackFired = true;
   if (cur >= 6 && !S_story.voidFracturesFired) S_story.voidFracturesFired = true;
-  if (cur === 9 && !S_story.voidImminentWarned) {
+  // >= , not ===, and for the same reason as the two milestones above it: a writer
+  // that steps by 3 lands on 10 without passing through 9, and the latch below makes
+  // the comparison idempotent. The reported pressure is the live value because the
+  // band the player is warned in is 9 OR 10 — at 10 the margin is already gone.
+  if (cur >= 9 && !S_story.voidImminentWarned) {
     S_story.voidImminentWarned = true;
     S_story.void_mercy_count = (S_story.shards >= 5) ? 1 : 0;
     const mercyNote = (S_story.shards >= 5) ? '\n\nYou have ' + S_story.shards + '/7 shards. One mercy rest remains.' : '';
-    setTimeout(() => storyMsg('⚠️ THE VOID IS IMMINENT — Pressure: 9/10. One more pressure point and the Void breaks through.\n\nShards: ' + (S_story.shards || 0) + '/7.' + mercyNote), 400);
+    const margin = cur >= 10
+      ? 'The Void is already at the threshold — the next tide or missed rest takes you.'
+      : 'One more pressure point and the Void breaks through.';
+    setTimeout(() => storyMsg('⚠️ THE VOID IS IMMINENT — Pressure: ' + cur + '/10. ' + margin + '\n\nShards: ' + (S_story.shards || 0) + '/7.' + mercyNote), 400);
   }
   storyUpdateStatus();
 }
@@ -32107,7 +32114,7 @@ function _nodeHookCodexCoreChamber(node) {
       if (_total >= _dc) {
         S_story.codexCoreChosen = 'claim';
         S_story.surgeCharges = Math.min((S_story.surgeCharges || 0) + 2, 5);
-        S_story.voidPressure  = (S_story.voidPressure || 0) + 3;
+        _addVoidPressure(3);
         _ccDiv.remove();
         storyMsg('The column recognizes you. Not who you are now — who you were before the loop.\n\nThe Shard comes free. The housing remains, reshaped around the absence.\n\nAuros stops mid-step. "You shouldn\'t be able to do that."\n\nShe attacks anyway. The failsafe doesn\'t care what the Codex decided.\n\n[Action Surge charges +2 · voidPressure +3]');
         storyAutoSave();

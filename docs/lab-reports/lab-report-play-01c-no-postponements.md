@@ -144,7 +144,7 @@ both date this commit at *"+2 h 40 m"* after face A. The real interval is **19 m
 | the tide pressure tick | `_addVoidPressure(1);@36550` | in `storyCheckVoidTide@36536`, after the mercy window |
 | the pressure helper | `function _addVoidPressure(n) {@27109` | clamps, fires three milestones, refreshes the HUD |
 | the clamp | `S_story.voidPressure = Math.min(10, prev + n);@27112` | the only guard against overshoot |
-| the last-warning milestone | `if (cur === 9 && !S_story.voidImminentWarned) {@27116` | exact equality, in a system with a `+3` writer |
+| the last-warning milestone | `if (cur === 9 && !S_story.voidImminentWarned) {` | exact equality, in a system with a `+3` writer — **fixed 2026-09-06 by §DX-02dl**, now `if (cur >= 9 && !S_story.voidImminentWarned) {`, matching the two milestones above it |
 | the defeat flavour, deliberately kept | `flavor: 'Day 49. You lay down. The court had granted forty-nine days@23948` | source of this report's title |
 
 **The pressure sources §1 did not survey** — four writers outside the tide:
@@ -154,7 +154,7 @@ both date this commit at *"+2 h 40 m"* after face A. The real interval is **19 m
 | `_addVoidPressure(1);@36550` | you pass a second sleep-capable node **without sleeping** | **none** |
 | `onFail:[{ kind:'_legacy_fn', fn:() => { S_story.voidPressure@21536` | a quest skill check fails | none |
 | `onFail:[{ kind:'_legacy_fn', fn:() => { S_story.voidPressure@21536` | a second quest skill check fails | none |
-| `S_story.voidPressure  = (S_story.voidPressure@32100` | you claim the Ceremonia column as power | none |
+| `S_story.voidPressure  = (S_story.voidPressure` | you claim the Ceremonia column as power | **routed through `_addVoidPressure(3)` 2026-09-06 by §DX-02dl** — it now clamps, latches and refreshes the HUD |
 
 ---
 
@@ -286,7 +286,7 @@ finding that can end a run.
 
 `@21513`, `@21535` and `@31865` write `S_story.voidPressure` directly, skipping the clamp, all three
 milestones, the HUD refresh and the caller-side defeat check. Browser-proved: 9 + 3 direct = **12**
-where the helper clamps to 10. Separately, `if (cur === 9 && !S_story.voidImminentWarned)@27116` is
+where the helper clamps to 10. Separately, `if (cur === 9 && !S_story.voidImminentWarned)` was
 `===`, so any step of 2 or more walks over it — proved live, `_addVoidPressure(8)` then
 `_addVoidPressure(3)` lands on 10 with the *"THE VOID IS IMMINENT"* warning never fired. The engine's
 last mercy is skippable by arithmetic.
