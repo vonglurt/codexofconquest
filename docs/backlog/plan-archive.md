@@ -19,6 +19,18 @@
 
 ---
 
+## Archived 2026-09-07 — §AUDIT-03at (the reading circle gets a clock that ticks)
+
+### §AUDIT-03at — the reading circle counts sessions against a clock that does not exist, so the Weimar arc stops at 2 of 4 quests (NEW 2026-08-13 during §DOC-02ar)
+
+- [x] ✅ SHIPPED 2026-09-07 `70edc2d` **§AUDIT-03at — `const today = S_story.dayCounter || 0;` → `` `const today = S_story.gameDay || 0;@35014` ``.** Re-derived at `8824f88`: `S_story.dayCounter` had **one occurrence in the file, one commit in its history** (`194a810`, the commit that shipped Layer 51), no `_S_DEFAULTS()` declaration and **no writer, ever**. So `today` was `0` on every render — the first click pushed `0` into `wmSessionsDays` and every later render read `sessions.includes(0)` as true, locking the button at **1/3** on *"📖 The circle meets again tomorrow."* **A promise made by a clock that does not tick.** `S_story.gameDay` is declared in the defaults and incremented once per day tick beside `S_story.day`; `day` is capped at 49 and `gameDay` is not, which is the second reason to prefer it over the other candidate — and the report named `gameDay`, correctly, twice.
+> **Verified by lifting the live block, not by transcribing it.** The reading-circle `if` block is brace-matched out of `play.html` and run against a stub DOM once per in-game day, so the assertion is over the file's own source. **Repaired read: `0/3 → 1/3 → 2/3`, `wmSessionsDays` = `[1,2,3]`, `wmBenediktCircleComplete` set on the third attendance. With the clock the block reads left un-advanced — which is exactly what `dayCounter` was — it pushes `0` once and never opens again.** That is the row's prediction reproduced in both directions from one harness. (`npm test`'s browser leg is unavailable on this musl host — §DX-02ir.)
+> **The arc goes from 2 of 4 to 3 of 4, and it lights the increment before it.** `quest_wm_03` now completes: the *Scholar Kings' History* tome (+2 initiative), `wmDoc3Unredacted`, and the favor bit **§AUDIT-03ar corrected to `set:2` three commits earlier** — so Benedikt reaches Dear Friend, and §XXI's close at `NUE` (`_npcFavor('benedikt_rasp') >= 2`, the paragraph that reframes the Warden as an archival accident) becomes reachable for the first time since 2026-05. **Two rows, one arc: the first made the write right, the second gave it a door.** `quest_wm_04` activates on the same flag and still cannot complete — that is **§AUDIT-03au**, unchanged and now the only thing between this arc and 4 of 4.
+> **Three maintained docs re-synced:** `lab-report-weimar-scholar-gate.md`'s finding 1 and its verdict row are marked shipped with the lift's numbers, and `docs/design/story.md` and `docs/story/story-arc-investigation.md` both described Q-WM-03 as *"one per `dayCounter` value"* — the spec repeating the implementation's typo back at it — and now name `gameDay`.
+> **No gate.** The general detector for this class is *a read with no writer*, which is **§AUDIT-03ai**'s open row, not this one's: a sound version has to see `S_story[flag] = …` dynamic writes, the `flag_write` and `mission_bit` opcodes and the NG+ restore list, and a naive scan reports 86 candidates that are mostly false. Filing a second row for it would have repeated this session's §DX-02je mistake. **`check:walk` 26/26 · `./bin/api audit` 0 errors · `play.html` unchanged at 38,995.**
+
+
+
 ## Archived 2026-09-07 — §AUDIT-03ar (the reading circle's promotion, written as it was announced)
 
 ### §AUDIT-03ar — the reading circle announces "Benedikt is Dear Friend" and sets his favor to 1, which is Friendly (NEW 2026-08-13 during §DOC-02ao)
