@@ -32,7 +32,10 @@ codexofconquest/
 ├── edit.html               visual world / quest / mission-bit editor
 ├── Makefile                every way to start things (`make` lists them)
 ├── run.sh                  the single entry point each make target delegates to
+│                          server · monitor · play · landing · edit · status ·
+│                          stop [api|monitor] · restart (the API server alone)
 ├── bin/                    shortcuts: run play edit wbapi monitor api stop status check test
+│                          `bin/wbapi` takes start|stop|restart|status; the rest are bare
 ├── README.md  LICENSE  CONTRIBUTING.md  CHANGELOG.md  SECURITY.md
 │
 ├── src/                    ALL implementation, and the node project
@@ -220,7 +223,7 @@ CodexOfConquest is a single-file HTML application. It runs as a combat dice trac
 | `api.sh` / `src/api/wb.js` | **Primary CLI wrapper** — queued HTTP to WBAPI, auto-nonce, retry/backoff, `--ai` Claude assist, `--out` file output, pipe-friendly. `./bin/api sub <type> <id> --from "…" --to "…"` (`POST /api/:type/:id/sub`, §AUDIT-03av) substitutes a phrase inside one entry's strings where `put` would replace a structured field's whole literal and take its comments with it |
 | `wbapi-cli.js` | Low-level CLI — direct in-process reads/writes against `play.html` (use `api.sh` for day-to-day work) |
 | `wbapi-server.js` | Local HTTP server — REST endpoints for edit.html at port 1367 |
-| `src/bin/wbapi-toggle.sh` | Shell helper — start/stop/restart/status/fg for wbapi-server; `monitor-snapshots.py` respawns the server through its `fg` mode (`_TOGGLE` in `src/bin/monitor-snapshots.py` (line 47)) |
+| `src/bin/wbapi-toggle.sh` | Shell helper — start/stop/restart/status/fg/tracker for wbapi-server; `monitor-snapshots.py` respawns the server through its `fg` mode. **`fg` and `tracker` are the two verbs `./bin/wbapi` does not have**, so those are the only invocations docs should name this path for (§DX-02ie) (`_TOGGLE` in `src/bin/monitor-snapshots.py` (line 47)) |
 | `docs/api/wbapi-help.md` | WBAPI usage reference — endpoint list, anchor syntax, example calls; session/pos + Mesh API (manifest, gossip, tracker, world/download, ACL) |
 | `parse-nodes.js` | Standalone node parser — extracts NODE_MAP entries for external tooling |
 | `src/scripts/check-mover-parity.js` | **§WALK-2** structural walk-parity — asserts the `MOVER:CORE` block is byte-identical in `mover.js` and `play.html` |
