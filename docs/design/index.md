@@ -93,7 +93,7 @@ node server. To only play, open `play.html` — nothing else is required.
 
 | Metric | Value | Status |
 |--------|-------|--------|
-| HTML line count | 38,992 | ✅ 2026-09-07 (`wc -l play.html`) — **+12 from §GR-FU2** (Covenant Ceremony naming lines for `emmer`, `gret` and `rennau`, tier 2 only, plus the two lines saying why there is no tier 3). Prior: **+5 from §GR-FU** (Kenickie's naming line). Prior: **−1 from §DROP-02-FU** (the tournament tie-break's luck line, deleted outright; the UI's TIE branch was already there). Prior: **−1 from §DX-02bz** (the fishing card's `⏱ 1 hour` hint and its `1h` tag, a cost the game never charged). Prior: **−4 from §DX-02di**, **−4 from §DX-02dl increment 2**, **+7 from §DX-02dl increment 1** |
+| HTML line count | 38,995 | ✅ 2026-09-07 (`wc -l play.html`) — **+3 from §AUDIT-03ar** (Benedikt Rasp's Covenant Ceremony line, which `check:npcregs` phase 6 required the moment his favor bit was corrected to 2). Prior: **+12 from §GR-FU2** (Covenant Ceremony naming lines for `emmer`, `gret` and `rennau`, tier 2 only, plus the two lines saying why there is no tier 3). Prior: **+5 from §GR-FU** (Kenickie's naming line). Prior: **−1 from §DROP-02-FU** (the tournament tie-break's luck line, deleted outright; the UI's TIE branch was already there). Prior: **−1 from §DX-02bz** (the fishing card's `⏱ 1 hour` hint and its `1h` tag, a cost the game never charged). Prior: **−4 from §DX-02di**, **−4 from §DX-02dl increment 2**, **+7 from §DX-02dl increment 1** |
 | Lab reports on disk | 116 | ✅ 2026-08-24 (`ls docs/lab-reports/*.md \| wc -l`) |
 | Lab reports in index | 81 | ⚠️ 35 on disk are unlisted → §DX-01j |
 | Node text rewrites (noir register) | 121 / 121 | ✅ +33 nodes: Med arc (91–110) + Littoral Courts (111–120) Layer 104 |

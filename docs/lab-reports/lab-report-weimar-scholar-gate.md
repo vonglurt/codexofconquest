@@ -200,7 +200,7 @@ engine defect, not report rot.
 |---|---|---|---|
 | 1 | `wmSessionsDays` "tracks **`gameDay`** values" | code reads `S_story.dayCounter`, a field that does not exist | **ENGINE DEFECT — the report is right** (§AUDIT-03at) |
 | 2 | `quest_wm_04` completes on `wmFirstResearcherKnown` | true — and that flag's only writer is `quest_wm_04`'s own `onComplete` | **ENGINE DEFECT — circular** (§AUDIT-03au) |
-| 3 | "Benedikt → **Dear Friend** on quest_wm_03" (stated 3×) | `` `npc:"benedikt_rasp", set:1@11112` ``; Dear Friend begins at 2 (`` `fav >= 2 ? p.dearFriend@23749` ``) | **NOT SHIPPED** (§AUDIT-03ar) |
+| 3 | "Benedikt → **Dear Friend** on quest_wm_03" (stated 3×) | `` `npc:'benedikt_rasp',set:2@11112` `` — the report was right and the bit was wrong; Dear Friend begins at 2 (`` `fav >= 2 ? p.dearFriend@23749` ``) | **SHIPPED 2026-09-07** (§AUDIT-03ar); inert until §AUDIT-03at |
 | 4 | Isolde "Key line **at Dear Friend**" | she has no `dearFriend` pool at all; that line is her `friendly` tier, and `` `npc:"isolde_voss", set:1@11102` `` is her ceiling | **MISATTRIBUTED — internally consistent, so harmless** |
 | 5 | Isolde "Begins Neutral" | base tier is named `impartial` | cosmetic |
 | 6 | §IV: "no UI showing Sessions attended: 2/3" | `` `reading circle (' + sessions.length@34990` `` renders `(N/3)`, and `` `The circle meets again tomorrow.@34989` `` disables the button — **both in the ship commit** | **WRONG WHEN WRITTEN** |

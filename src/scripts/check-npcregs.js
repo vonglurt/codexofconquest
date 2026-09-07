@@ -41,6 +41,10 @@
 //                       between an inline display name and a profile is classified
 //   6. ceremony       — every NPC the corpus can raise to the Covenant Ceremony's own
 //                       threshold has a line there to be named with (§GR-FU2)
+//   7. gates          — no favor threshold is above the favor the corpus can write, so
+//                       no branch waits on a level nobody can reach (§AUDIT-03ar)
+//   8. announced      — a `favor` bit whose entry announces a tier in prose writes that
+//                       tier. Correct as data, wrong as intent (§AUDIT-03ar)
 //
 // NOT covered here on purpose: whether an npc-VALUED string field RESOLVES. Quest anchors
 // are pinned by tests/integration/audit03h-npc-normalize.test.js, and NODE_MAP's inline
@@ -253,6 +257,31 @@ function aliasCandidates(identities, inline) {
   return out;
 }
 
+// §AUDIT-03ar — the tier each favor level is called in player-facing prose. The corpus
+// announces a promotion by hand in a sibling `narrative` bit, because _setNpcFavor's own
+// message is overwritten in the same render (§DX-02gc), so the prose is a second, human
+// statement of what the bit was meant to write — and the two can disagree.
+const FAVOR_TIER_NAMES = { 1: 'Friendly', 2: 'Dear Friend', 3: 'Dear Friend' };
+
+// The QUEST_DB / hook entry a source index sits in: back to the nearest `  name: {` at the
+// entry indent, forward to the next one. Announcement and bit are paired at entry level
+// because that is the unit an author writes them in.
+function enclosingEntry(src, idx) {
+  const head = src.lastIndexOf('\n  ', idx);
+  let start = 0;
+  const decl = /^  [A-Za-z_$][\w$]*\s*:\s*\{/;
+  for (let i = head; i > 0; i = src.lastIndexOf('\n  ', i - 1)) {
+    const line = src.slice(i + 1, src.indexOf('\n', i + 1));
+    if (decl.test(line)) { start = i + 1; break; }
+  }
+  let end = src.length;
+  for (let i = src.indexOf('\n  ', idx); i > 0; i = src.indexOf('\n  ', i + 1)) {
+    const line = src.slice(i + 1, src.indexOf('\n', i + 1));
+    if (decl.test(line)) { end = i; break; }
+  }
+  return src.slice(start, end);
+}
+
 // ── the audit ─────────────────────────────────────────────────────────────────
 function audit(src, vocab, model) {
   const findings = [];
@@ -337,6 +366,7 @@ function audit(src, vocab, model) {
 
   // 6. ceremony — the ending names by favor (§GR-FU2). The table is a function of the
   //    ledger, so a person the ledger raises and the table omits is silence at the payoff.
+  const ceilings = favorCeiling(src, objs);
   const thr = ceremonyThreshold(src);
   const cer = objs.get(CEREMONY_TABLE);
   if (thr == null) findings.push('[ceremony] _buildSweelinckNamingSequence tests no `fav >= N` tier — '
@@ -344,10 +374,46 @@ function audit(src, vocab, model) {
   else if (!cer) findings.push(`[ceremony] ${CEREMONY_TABLE} — named as the ceremony table but not found in the file`);
   else {
     const named = new Set(WBAPI._sectionTopKeys(cer.body));
-    for (const [k, v] of favorCeiling(src, objs)) {
+    for (const [k, v] of ceilings) {
       if (v < thr || named.has(k) || CEREMONY_EXEMPT[k]) continue;
       findings.push(`[ceremony] the corpus raises '${k}' to favor ${v} and ${CEREMONY_TABLE} (line ${cer.line}) `
         + `has no entry for them — the ceremony names at fav >= ${thr}, so this one is helped and never named`);
+    }
+  }
+
+  // 7. gates — the other direction of the same arithmetic (§AUDIT-03ar). A threshold above
+  //    what any writer can reach is not a strict gate; it is content with no door.
+  const gate = (k, need, where) => {
+    const c = ceilings.get(k) || 0;
+    if (need > c) findings.push(`[gates] ${where} needs favor ${need} and nothing in the corpus can raise `
+      + `'${k}' past ${c} — the branch behind it can never run`);
+  };
+  const cmpRe = /_npcFavor\(\s*'([a-z][a-z0-9_]*)'\s*\)\s*(>=|>|===|==)\s*(\d+)/g;
+  let cm;
+  while ((cm = cmpRe.exec(src))) {
+    gate(cm[1], cm[2] === '>' ? Number(cm[3]) + 1 : Number(cm[3]), `${cm[0]} at line ${lineOf(src, cm.index)}`);
+  }
+  const favMinRe = /favorMin\s*:\s*\{([^}]*)\}/g;
+  let fm;
+  while ((fm = favMinRe.exec(src))) {
+    for (const pair of fm[1].matchAll(/([a-z][a-z0-9_]*)\s*:\s*(\d+)/g)) {
+      gate(pair[1], Number(pair[2]), `favorMin:{ ${pair[1]}:${pair[2]} } at line ${lineOf(src, fm.index)}`);
+    }
+  }
+
+  // 8. announced — the bit and the sentence beside it must name the same tier (§AUDIT-03ar).
+  const names = model.identities;
+  const bitRe = /kind:\s*["']favor["']\s*,\s*npc:\s*["']([a-z][a-z0-9_]*)["']\s*,\s*set\s*:\s*(\d+)/g;
+  let bm;
+  while ((bm = bitRe.exec(src))) {
+    const key = bm[1], level = Number(bm[2]);
+    const entry = enclosingEntry(src, bm.index);
+    const idName = String((names[key] || {}).name || '').toLowerCase();
+    for (const a of entry.matchAll(/([A-Z][A-Za-z'’-]*) is (Friendly|Dear Friend)\b/g)) {
+      if (!idName.split(/[^a-z']+/).includes(a[1].toLowerCase())) continue;   // said about someone else
+      if (a[2] !== FAVOR_TIER_NAMES[level]) findings.push(`[announced] line ${lineOf(src, bm.index)} writes `
+        + `${key} set:${level} (${FAVOR_TIER_NAMES[level] || 'no tier'}) and its own entry tells the player `
+        + `"${a[0]}" — the write is correct as data and wrong as intent`);
     }
   }
   return findings;
@@ -371,6 +437,9 @@ function selftest(src, vocab, model) {
     ['alias',    src.replace('npc:"yael"', 'npc:"city_guard_captain"'), model],
     ['alias',    src, collide],
     ['ceremony', src.replace(`{ kind:'favor', npc:"solvak", set:1 }`, `{ kind:'favor', npc:"solvak", set:2 }`), model],
+    ['gates',    src.replace(`_npcFavor('brynn') >= 3`, `_npcFavor('quill') >= 3`), model],
+    ['gates',    src.replace('favorMin:{ yael:3 }', 'favorMin:{ yva:3 }'), model],
+    ['announced', src.replace(`{kind:'favor',npc:'benedikt_rasp',set:2}`, `{kind:'favor',npc:'benedikt_rasp',set:1}`), model],
   ];
   // Findings are compared against the UNPLANTED baseline, so a plant is only "caught" if
   // it produced a finding that was not already there — otherwise a corpus that is already
@@ -411,4 +480,6 @@ if (findings.length) {
 console.log(`✓ check:npcregs — ${NPC_KEYED.length} npc-keyed registries, ${NPC_KEYED_PATHS.length} nested table(s), `
   + `plus every _npcFavor()/npcFavorability[] literal and npcOrder entry resolve against ${vocab.size} live NPC keys; `
   + `${Object.keys(WBAPI.NPC_ALIASES).length} display-name aliases collapse to their profile key and no npc: value is one; `
-  + `every NPC the corpus raises to fav >= ${ceremonyThreshold(src)} has a line in ${CEREMONY_TABLE}`);
+  + `every NPC the corpus raises to fav >= ${ceremonyThreshold(src)} has a line in ${CEREMONY_TABLE}, `
+  + 'and no favor threshold in the file is above the favor its NPC can be written to, '
+  + 'and every favor bit writes the tier its own entry announces to the player');
