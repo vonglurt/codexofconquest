@@ -19,6 +19,17 @@
 
 ---
 
+## Archived 2026-09-07 — §DX-02x (the favor ledger's three writers, each declared)
+
+### §DX-02x — one arc promotes one NPC through the host and the other by a raw ledger write (NEW 2026-08-12 during §DOC-02s, 🟢 no design call)
+
+- [x] ✅ SHIPPED 2026-09-07 `2d94547` **§DX-02x — the sweep found nothing left to decide, and that is the finding, not the absence of one.** The row had already been narrowed at §DX-02cm, which re-expressed the AMS promotion as `{kind:'favor',npc:'aldo_sardino',add:1}`; **`grep -c "npcFavorability['aldo_sardino']" play.html` = 0 at HEAD**, re-derived, so the site the row was filed against is gone. What remained was its last sentence — *"then sweep: census every direct `S_story.npcFavorability[…] =` assignment outside `_setNpcFavor` and decide per site"* — and the gate it proposed.
+> **The census, complete: four assignments, and every one is already inside the promotion path.** `if (!S_story.npcFavorability) S_story.npcFavorability = {};` and `S_story.npcFavorability[key] = level;` inside `` `function _setNpcFavor(key, level, say) {@23527` ``; `S_story.npcFavorability[key] = fav + 1;` inside `` `function _checkDearFriendUpgrade(key, say) {@23538` ``, which only the setter reaches; and `S_story.npcFavorability = savedFavorability;` inside `` `function storyNewGamePlus() {@24079` ``, which carries the whole ledger across the reset and promotes nobody. The two `npcFavorability: {}` in the state defaults are object-literal fields, not assignments. **No raw writer survives**, so there was no per-site decision to make — the sweep's product is the proof that the class is closed, plus the fence that keeps it closed.
+> **`check:npcregs` gains phase 10, `writers`.** Every assignment is classified by the function it sits in, against `FAVOR_WRITERS` — a table that carries the **reason** beside each name, because the reason is the whole argument. `_setNpcFavor` is **absolute**, so a raw `+ 1` is only correct while the field is known-zero; it **refuses to lower** a level (`if (level <= prev) return;`); and it is the **only thing that speaks the tier line**. A promotion written past it is relative, unguarded and silent — all three at once, which is exactly what the Aldo site was, and why *"Aldo was promoted with no player-visible acknowledgment"*.
+> **Both directions, and neither can pass by looking away.** A declared writer that no longer writes is a finding, on gate #17's stale-exemption rule; a phase that finds no assignment at all is a finding, so the regex cannot go green by matching nothing. **Selftest 14 → 16 plants:** the raw `+ 1` this row was filed against, replanted verbatim inside a new function, and `storyNewGamePlus`'s restore removed.
+> **The row's own tell is now an invariant rather than an observation.** It noted that *"the SAME ARC does it correctly one node away"* — the CDG delivery verb using `{ kind:'favor', npc:'kenickie', set:3 }` — and called it the §DX-02t class: a path right on every line it duplicates and wrong in what it omits. Phase 10 is the statement that there is one path.
+> **Verification:** `check:walk` **27/27** · `play.html` untouched · gate green at HEAD with **3** declared writers, red against both plants.
+
 ## Archived 2026-09-07 — §DX-02gc (a promotion says the name, into a channel that survives)
 
 ### §DX-02gc — six NPCs are promoted by their database key, and the line saying so is erased in the same tick (NEW 2026-08-24 during §DX-02cm, 🟢 no design call)
