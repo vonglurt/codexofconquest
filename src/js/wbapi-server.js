@@ -1967,7 +1967,7 @@ async function route(req, res) {
           '  GET /api/help/coords          — coordinate system, 4x expansion, and node placement',
           '  GET /api/help/import          — 1367 quest import workflow and node placement strategy',
           '  GET /api/help/curl            — curl cheat sheet for every operation',
-          '  GET /api/help/cli             — api.sh CLI reference (live: runs ./bin/api --help)',
+          '  GET /api/help/cli             — the WBAPI CLI reference (live: runs ./bin/api --help)',
           '  GET /api/help/workflow        — search→inspect→edit cycle for every entity type',
           '',
           'PREFERRED TOOL — USE ./bin/api, NOT curl',
@@ -2794,19 +2794,32 @@ async function route(req, res) {
     // cli topic — run ./bin/api --help live and return current output
     if (topic === 'cli') {
       const { execFile } = require('child_process');
-      const apiSh = path.join(ROOT, 'api.sh');
+      const CLI = './bin/api --help';
+      const apiCli = path.join(ROOT, 'bin', 'api');
       return new Promise(resolve => {
-        execFile(apiSh, ['--help'], { timeout: 8000 }, (err, stdout, stderr) => {
+        execFile(apiCli, ['--help'], { timeout: 8000, maxBuffer: 4 << 20 }, (err, stdout, stderr) => {
           const output = (stdout || '') + (stderr || '');
-          const title  = 'api.sh CLI Reference';
+          const title  = 'WBAPI CLI Reference';
+          const plain  = (url.searchParams.get('format') || 'text') === 'text';
+          // A live topic that carries nothing is a failure, not an empty page: the whole
+          // claim of this topic is that it ran something.
+          if (err || !output.trim()) {
+            const error = `${CLI} produced no output${err ? `: ${err.message}` : ''}`;
+            logResponse(method, url.pathname, 502, error);
+            if (plain) {
+              cors(res);
+              res.writeHead(502, { 'Content-Type': 'text/plain; charset=utf-8' });
+              return resolve(res.end(`\n${error}\n\n`));
+            }
+            return resolve(json(res, 502, { ok: false, error, topic, source: CLI }));
+          }
           logResponse(method, url.pathname, 200, title);
-          const plain = (url.searchParams.get('format') || 'text') === 'text';
           if (plain) {
             cors(res);
             res.writeHead(200, { 'Content-Type': 'text/plain; charset=utf-8' });
             return resolve(res.end(`\n${title}\n${'─'.repeat(title.length)}\n\n${output}\n`));
           }
-          resolve(json(res, 200, { topic, title, text: output, live: true, source: './bin/api --help' }));
+          resolve(json(res, 200, { topic, title, text: output, live: true, source: CLI }));
         });
       });
     }

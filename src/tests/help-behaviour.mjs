@@ -140,6 +140,12 @@ export async function runChecks({ topics, liveTopicKeys, probe }) {
       if (k !== 'index' && !listed.includes(k)) findings.push(`[help/topics] the server serves \`${k}\`, which the index does not list — a topic nothing points at`);
     }
   }
+  // A topic that answers 200 with nothing passes every extractor below by having no prose
+  // to be wrong about (§DX-02jn).
+  for (const [name, text] of Object.entries(topics)) {
+    if (!String(text).trim()) findings.push(`[help/topics] the server answers 200 for \`${name}\` with an empty body — every check below reads it as nothing to do`);
+  }
+
   // The control. Both checks above read a status, so both are vacuous unless a name that
   // cannot be a topic is refused (§DX-02jk).
   const bogus = 'not_a_help_topic';
@@ -243,6 +249,8 @@ async function selftest() {
     'an index entry naming a topic the server does not have is caught by its status');
   ok((await run({}, { helpFallback: true })).some((f) => f.includes('not_a_help_topic') && f.includes('assert nothing')),
     'a server that answers 200 for any name at all is caught by the control, whatever the index says');
+  ok((await run({ export: '' })).some((f) => f.includes('`export`') && f.includes('empty body')),
+    'a topic served 200 with an empty body is a finding, not a topic with nothing to check');
   ok((await run({ index: stubTopics().index.replace('/api/help/export', '/api/help/exports') }, { helpFallback: true }))
     .every((f) => !f.includes('`exports`')),
     'and that server hides the wrong index entry from the status check — which is why the control is the assertion, not a spare');
