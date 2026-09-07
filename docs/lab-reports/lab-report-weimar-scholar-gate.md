@@ -209,7 +209,7 @@ engine defect, not report rot.
 | 9 | Node `SQ`; letter obtained at `CI` | 0 of 2 codes resolve as written; **2 of 2 resolve by `num`** — `SQ`(35)→`NUE`, `CI`(1)→`LHR` | renamed, not lost |
 | 10 | `[Open Archive]` button | ships as `📚 Lower Archive` | cosmetic |
 | 11 | `quest_wm_01`'s NPC | carries `npc:"archivus_sweelinck"` while its own disposition quotes Isolde | authoring metadata only (§AUDIT-03b) — inert |
-| 12 | *(new, not in report)* | node label says **Weimar**; four player-facing strings on the same node say **Nuremberg** | **§AUDIT-03av** |
+| 12 | *(new, not in report)* | node label says **Weimar**; four player-facing strings on the same node said **Nuremberg** | **§AUDIT-03av** — ✅ **SHIPPED 2026-09-07**, all four repointed to Weimar |
 
 Everything not listed above measured **exact**: 8/8 monster fields, the drop, the terrain pool,
 9/9 flags, 3/3 tome bonuses, 3/3 integration points, both access paths, the reading-circle rule,
@@ -304,16 +304,20 @@ save) is reachable and works — and it is load-bearing elsewhere: the engine re
 substitute (*"Antecedent Seal or Froberger's Field Notes"*) and as a callback in another arc's
 narration. The +2 initiative and +1 atk tomes are behind Finding 1 and Finding 2 respectively.
 
-### Finding 4 — one node, two cities (§AUDIT-03av)
+### Finding 4 — one node, two cities (§AUDIT-03av — ✅ closed 2026-09-07, Weimar won)
 
-The node's label is *Scholar's Quarter — **Weimar***, and the file says Weimar 517 times. It says
-**Nuremberg** five times, and four of those attach to this node — including the Warrant's Board
-rumor that recruits the player into the arc:
-`` `Isolde in Nuremberg is short three of them@11099` ``, and an NPC whose occupation is
-`` `occupation:"secondary acquisitions, Nuremberg archive"@22982` ``. The player reads *Weimar* in
-the header and *Nuremberg* on the board that sent them there. `NUE` is Nuremberg's airport code;
-the content is Weimar's. Not a dead code — a live node with **two mutually exclusive place names in
-player-facing strings**, which no existing gate can see.
+The node's label is *Scholar's Quarter — **Weimar***, and the file said Weimar 516 times against
+**Nuremberg** five, four of them attached to this node — including the Warrant's Board rumor that
+recruits the player into the arc. `NUE` is Nuremberg's airport code; every other name the arc owns
+is Weimar's — the region key `` `NUE:'weimar'@27093` ``, the quest ids (`quest_wm_01`), the state
+fields (`` `S_story.wmDoc1Read` ``), and Isolde Voss herself, who is this report's own archivist.
+So the four strings were repointed and the code kept: `` `Isolde in Weimar is short three of
+them@11099` `` on the board rumor, `shk6_act2`'s `failText`, `quest_brynn_ledger`'s ledger-fork
+narrative, and `` `occupation:"secondary acquisitions, Weimar archive"@22986` ``. One Nuremberg
+survives, and it is not this node: the apothecary's *"Garlic, Haarlem, imported via Nuremberg"*,
+a trade route, not a place the player stands in. The class the finding named is still real and
+still ungated — **a live node with two mutually exclusive place names in player-facing strings**
+is invisible to `check:legacycodes` (`.md` only) and to `check:noderegs` (both codes resolve).
 
 ---
 
@@ -365,7 +369,7 @@ content-per-edit ratio the verification program has measured.
 |---|---|---|
 | **§AUDIT-03at** ✅ | 🟢 no design call | `S_story.dayCounter` (1 occurrence, 1 commit, 0 writers, ever) → `gameDay`; unblocks `quest_wm_03`, and activates `quest_wm_04`. **SHIPPED 2026-09-07** |
 | **§AUDIT-03au** ✅ | 🟢 no design call | `quest_wm_04`'s completion was its own effect; plus NG+ wiped the flag `_vaReady` requires; plus a dead button label. **All three SHIPPED 2026-09-07** |
-| **§AUDIT-03av** | 🟡 small design call | `NUE` carries a Weimar label and four Nuremberg player-facing strings |
+| **§AUDIT-03av** ✅ | 🟡 small design call, made here | `NUE` carried a Weimar label and four Nuremberg player-facing strings; Weimar won on 516-to-5 and on every name the arc owns. **SHIPPED 2026-09-07** |
 | §AUDIT-03ar | *corroborated* | this report **specifies** Dear Friend in three places, so it is a spec→shipped delta, not an ambiguity — and the row's premise needs one correction: `quest_wm_03`'s `onComplete` never runs, so Benedikt's favor is **0**, not 1. The fix is inert until §AUDIT-03at lands |
 | §AUDIT-03b | *corroborated* | `quest_wm_01`'s `npc:` stamp names Sweelinck while its own text quotes Isolde — authoring metadata, inert |
 

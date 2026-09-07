@@ -568,6 +568,27 @@ function _commentScan(src) {
   return out;
 }
 
+// §AUDIT-03av: the inner span of every string literal in a stretch of source, so a
+// substitution can prove a match lies in authored text and not in a comment, a key or code.
+// Comment-aware in the same naive-about-regex-literals way as _commentScan.
+function _stringSpans(src) {
+  const out = [];
+  let i = 0;
+  while (i < src.length) {
+    const c = src[i];
+    if (c === '/' && src[i + 1] === '/') { while (i < src.length && src[i] !== '\n') i++; continue; }
+    if (c === '/' && src[i + 1] === '*') { i += 2; while (i < src.length && !(src[i] === '*' && src[i + 1] === '/')) i++; i += 2; continue; }
+    if (c === '"' || c === "'" || c === '`') {
+      const q = c; const start = ++i;
+      while (i < src.length) { if (src[i] === '\\' && q !== '`') { i += 2; continue; } if (src[i] === q) break; i++; }
+      out.push({ start, end: i, quote: q });
+      i++; continue;
+    }
+    i++;
+  }
+  return out;
+}
+
 // §DX-02ix: the comments one entry's source holds.
 function _commentTally(sectionSrc, entryKey) {
   const b = findEntryBounds(sectionSrc, entryKey);
@@ -1554,6 +1575,61 @@ const WBAPI = {
              ...(dropped > 0 ? { droppedComments: dropped } : {}) };
   },
 
+  // §AUDIT-03av — replace an authored phrase inside one entry without reflowing the field
+  // that holds it. editStructuredField swaps a structured field's WHOLE literal, so a comment
+  // interleaved with its elements is deleted with it and JSON has no term to carry one back
+  // (§DX-02ix) — the only escape offered is accepting the loss. A substitution edits the
+  // source text in place and matches only inside string literals, so comments, keys and code
+  // are out of its reach by construction rather than by care.
+  substituteText(type, idOrTitle, from, to) {
+    if (!this._rawSrc) return { ok:false, error:'no source loaded' };
+    const sectionMap = { quest:'QUEST_DB', node:'NODE_MAP', npc:'BIRKA_NPC', monster:'MONSTER_POOL' };
+    const section = sectionMap[type]; if (!section) return { ok:false, error:'unknown type' };
+    const col = { quest:this.questDb, node:this.nodeMap, npc:this.birkaNpcs, monster:this.monsterPool }[type];
+    const key = this._findKey(col, idOrTitle); if (!key) return { ok:false, error:'not found' };
+    if (typeof from !== 'string' || from === '') return { ok:false, error:'"from" must be a non-empty string' };
+    if (typeof to !== 'string') return { ok:false, error:'"to" must be a string' };
+
+    const sectionSrc = extrSection(this._rawSrc, section);
+    const bnd = findEntryBounds(sectionSrc, key);
+    if (!bnd) return { ok:false, error:`entry "${key}" not found in ${section}` };
+    const body = sectionSrc.slice(bnd.openEnd, bnd.bodyEnd);
+
+    const hits = [];
+    for (let i = body.indexOf(from); i >= 0; i = body.indexOf(from, i + 1)) hits.push(i);
+    if (hits.length === 0)
+      return { ok:false, error:`"${from}" does not occur in "${key}". The match is against SOURCE text, so an apostrophe inside a single-quoted value reads as \\' there. Source NOT modified.` };
+
+    const spans = _stringSpans(body);
+    const spanOf = (i) => spans.find(s => i >= s.start && i + from.length <= s.end) || null;
+    const outside = hits.filter(i => !spanOf(i));
+    if (outside.length)
+      return { ok:false, error:`refusing to substitute in "${key}": ${outside.length} of ${hits.length} occurrence(s) of "${from}" lie outside a string value — in a comment, a key, or code. A substitution rewrites authored text only. Source NOT modified.` };
+
+    const clash = [...new Set(hits.map(i => spanOf(i).quote))].filter(q => to.includes(q));
+    if (clash.length || /[\\\n]/.test(to))
+      return { ok:false, error:`"to" carries a character that would need escaping in the target literal (${clash.length ? `the quote ${clash[0]}` : 'a backslash or newline'}). Write the whole field instead. Source NOT modified.` };
+
+    let newBody = body;
+    for (let k = hits.length - 1; k >= 0; k--)
+      newBody = newBody.slice(0, hits[k]) + to + newBody.slice(hits[k] + from.length);
+    const patched = sectionSrc.slice(0, bnd.openEnd) + newBody + sectionSrc.slice(bnd.bodyEnd);
+
+    // Every guard below reads the PATCH, not a model of it (§DX-02iv/§DX-02ix house style).
+    const expectedDelta = hits.length * (to.length - from.length);
+    if (newBody.length - body.length !== expectedDelta)
+      return { ok:false, error:`refused: the patched body moved ${newBody.length - body.length} characters, expected ${expectedDelta}. Source NOT modified.` };
+    if (_commentTally(patched, key).length !== _commentTally(sectionSrc, key).length)
+      return { ok:false, error:`refused: the substitution changed "${key}"'s comment count. Source NOT modified.` };
+    if (_fnTally(patched, key) !== _fnTally(sectionSrc, key))
+      return { ok:false, error:`refused: the substitution changed "${key}"'s function count. Source NOT modified.` };
+    try { new Function('return (' + removeFns('{' + newBody + '}') + ')')(); }
+    catch (e) { return { ok:false, error:`refused: "${key}" no longer re-parses after the substitution: ${e.message}. Source NOT modified.` }; }
+
+    this._rawSrc = respliceSection(this._rawSrc, section, patched);
+    return { ok:true, key, section, from, to, count: hits.length, strategy:'substituteText' };
+  },
+
   // §DX-02h — the WORLD_DB roster writer. WORLD_DB is the one collection whose array
   // field holds CODE IDENTIFIERS (`monsters:[ P.giant_rat, … ]`), not JSON, so
   // editStructuredField is WRONG here: serializeJsLiteral would emit ["giant_rat"],
@@ -2053,5 +2129,5 @@ WBAPI._classifyQuest = _classifyQuest; // expose for server routes and direct us
 // §MESH-01-FU 9: low-level parse pipeline, exposed for scripts/world-diff.js —
 // the deep diff must parse ARBITRARY world files (not this singleton's loaded
 // one), so it needs the helpers, not the loaded state.
-WBAPI._parse = { extrSection, extractObj, extractArr, removeFns, parseSimple, parseArr, parseWithP, parseSanitized, isFunctionSource, commentTally: _commentTally, fieldsWithComments };
+WBAPI._parse = { extrSection, extractObj, extractArr, removeFns, parseSimple, parseArr, parseWithP, parseSanitized, isFunctionSource, commentTally: _commentTally, fieldsWithComments, findEntryBounds, stringSpans: _stringSpans };
 module.exports = WBAPI;

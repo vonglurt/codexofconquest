@@ -11344,6 +11344,25 @@ async function route(req, res) {
       logResponse(method, url.pathname, 400, `Invalid JSON: ${e.message}`);
       return json(res, 400, { error:'Invalid JSON' });
     }
+    // POST /api/:type/:id/sub — substitute an authored phrase inside one entry's strings.
+    // The write path for a phrase that lives inside a structured field whose literal also
+    // carries comments: PUT replaces the whole literal and takes the comments with it
+    // (§DX-02ix), and dropComments is the only escape it can offer. See substituteText.
+    if (action === 'sub' && ['quest','node','npc','monster'].includes(type)) {
+      const from = body.from, to = body.to;
+      const r = WBAPI.substituteText(type, key, from, to);
+      if (!r.ok) {
+        logRow('target', `${type} \u203a ${key}`);
+        logRow('sub', `${C.red}\u2717 ${r.error}${C.reset}`);
+        logResponse(method, url.pathname, 422, `sub failed: ${r.error}`);
+        return json(res, 422, { ok:false, error:r.error });
+      }
+      logRow('target', `${type} \u203a ${key}`);
+      logRow('sub', `${C.green}\u2713${C.reset} ${r.count} occurrence(s)  ${JSON.stringify(from)} \u2192 ${JSON.stringify(to)}`);
+      logResponse(method, url.pathname, 200, `${r.count} occurrence(s) substituted in ${type}/${key}`);
+      return saveAndVerify(res, 200, { ok:true, key, from, to, count:r.count, strategy:r.strategy }, null, type, key);
+    }
+
     // POST /api/npc/:key/dialogue/:array — append one line
     if (type === 'npc' && action === 'dialogue' && parts[3]) {
       const ARRAY_FIELDS = ['impartial','questActive','friendly','dearFriend'];

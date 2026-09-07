@@ -435,6 +435,19 @@ const CMD = {
     printResult(r.body, flags);
   },
 
+  async sub(pos, flags) {
+    await requireServer();
+    const [, type, id] = pos;
+    if (!type || !id) die('Usage: ./bin/api sub <type> <id> --from "<text>" --to "<text>"');
+    const from = flags.from, to = flags.to;
+    if (typeof from !== 'string' || from === '') die('sub needs --from "<text>"');
+    if (typeof to !== 'string') die('sub needs --to "<text>"  (use --to "" to delete the phrase)');
+    const r = await request('POST', `/api/${type}/${encodeURIComponent(id)}/sub`, { from, to });
+    if (r.status >= 400) { printError(r); process.exit(1); }
+    if (flags.raw || flags.out) { printResult(r.body, flags); return; }
+    ok(`${type}:${id}  ${r.body.count} occurrence(s)  ${JSON.stringify(from)} \u2192 ${JSON.stringify(to)}`);
+  },
+
   async post(pos, flags) {
     await requireServer();
     const [, type, ...rest] = pos;
@@ -1881,6 +1894,7 @@ ${C.bold}═══════════════════════�
   §8  location — composite node view
   §9  chain — quest dependency chain
   §10 put — edit one or more fields
+  §10a sub — substitute an authored phrase inside one entry
   §11 post — create a new entity
   §12 del — delete an entity
   §13 audit — integrity scan
@@ -2019,6 +2033,7 @@ ${C.bold}═══════════════════════�
   ${C.green}location${C.reset} [code]        Composite node view (no code = list all)
   ${C.green}chain${C.reset} <quest-id>       Quest dependency chain
   ${C.green}put${C.reset} <type> <id> [k=v]  Edit one or more fields
+  ${C.green}sub${C.reset} <type> <id> --from…  Substitute a phrase inside one entry's strings
   ${C.green}post${C.reset} <type> [k=v]      Create a new entity
   ${C.green}del${C.reset} <type> <id>        Delete an entity
   ${C.green}drop${C.reset} <monster> name=…    Trophy drop (MONSTER_DROPS; --update to replace)
@@ -2518,6 +2533,30 @@ ${C.bold}═══════════════════════�
     echo '{"hp":20,"ac":16,"tier":"medium"}' \\
       | ./bin/api put monster skeleton
     cat overrides.json | ./bin/api put quest mq_1
+
+${C.bold}═══════════════════════════════════════════════════════════════════
+  sub — substitute an authored phrase inside one entry
+═══════════════════════════════════════════════════════════════════${C.reset}
+
+  ./bin/api sub <type> <id> --from "<text>" --to "<text>"
+
+  The write path for a phrase that sits inside a STRUCTURED field — a bits[]
+  msg, an onComplete narrative, a completion clause. PUT replaces such a
+  field's whole literal, so a comment interleaved with its elements is
+  deleted with it and JSON has no term to carry one back (§DX-02ix); the
+  only escape PUT can offer is --drop-comments. sub edits the source text
+  in place instead.
+
+  It matches only INSIDE string literals. An occurrence in a comment, a key
+  or code refuses the whole write, naming how many fell outside. The match
+  is against SOURCE text, so an apostrophe inside a single-quoted value is
+  \\' there. --to may not carry a backslash, a newline, or the quote
+  character of a literal it lands in — write the whole field for those.
+
+  Examples:
+    ./bin/api sub quest quest_brynn_ledger --from "archive at Nuremberg" --to "archive at Weimar"
+    ./bin/api sub npc  ulrich_von_gessert  --from "Nuremberg archive"   --to "Weimar archive"
+    ./bin/api sub node NUE --from " (draft)" --to ""
 
 ${C.bold}═══════════════════════════════════════════════════════════════════
   post — create a new entity

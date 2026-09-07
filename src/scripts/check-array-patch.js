@@ -133,6 +133,58 @@ ok(r.ok && r.droppedComments === cm.n, `the acknowledged write reports the comme
 ok(commentsOn(QSEC(), cm.id) === cmBefore - cm.n, 'and deletes exactly those, no more');
 ok(legacyBits(WBAPI._rawSrc) === legacyBits(beforeSweep), 'the acknowledged write still keeps every closure');
 
+// [4f] §AUDIT-03av — the substitution path, which exists because [4e] leaves only one
+// escape and it is destructive. A comment-bearing structured field is the fixture: the
+// phrase must move, every comment must stay, and the entry must round-trip from source.
+WBAPI.load(GAME);
+const subFix = (() => {
+  const sec = QSEC();
+  for (const c of census) {
+    const v = JSON.stringify(q[c.id][c.f] || '');
+    const m = /"([A-Za-z][A-Za-z ]{11,40})"/.exec(v.replace(/\\[nu]/g, ' '));
+    if (m && (QSEC().match(new RegExp(m[1].replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g')) || []).length >= 1) return { ...c, phrase: m[1] };
+  }
+  return null;
+})();
+ok(!!subFix, 'a comment-bearing structured field carries a substitutable phrase');
+if (subFix) {
+  const cBefore = commentsOn(QSEC(), subFix.id);
+  const fnBefore = legacyBits(WBAPI._rawSrc);
+  r = WBAPI.substituteText('quest', subFix.id, subFix.phrase, 'SUBSTITUTED PHRASE');
+  ok(r.ok && r.count >= 1, `substitution succeeds where the field write is refused (${subFix.id}.${subFix.f}): ` + (r.error || ''));
+  ok(commentsOn(QSEC(), subFix.id) === cBefore, 'and every comment in the entry survives it');
+  ok(legacyBits(WBAPI._rawSrc) === fnBefore, 'and every closure survives it');
+  const patched = WBAPI._rawSrc;
+  WBAPI.load(patched);
+  ok(JSON.stringify(WBAPI.questDb[subFix.id]).includes('SUBSTITUTED PHRASE'), 'the substitution round-trips from source');
+  ok(!JSON.stringify(WBAPI.questDb[subFix.id]).includes(subFix.phrase), 'and the old phrase is gone from the entry');
+}
+
+// A match that is not authored text refuses the whole write — comments, keys and code are
+// out of reach by construction, so a phrase that occurs in both cannot be half-applied.
+WBAPI.load(GAME);
+const srcBeforeSub = WBAPI._rawSrc;
+const cmtFix = (() => {
+  const sec = QSEC();
+  for (const c of census) {
+    const b = WBAPI._parse.findEntryBounds(sec, c.id);
+    if (!b) continue;
+    const m = /\/\/[ \t]*([A-Za-z][A-Za-z ]{9,30})/.exec(sec.slice(b.openEnd, b.bodyEnd));
+    if (m) return { id: c.id, phrase: m[1].trim() };
+  }
+  return null;
+})();
+ok(!!cmtFix, 'a comment-only phrase exists to prove the refusal');
+if (cmtFix) {
+  r = WBAPI.substituteText('quest', cmtFix.id, cmtFix.phrase, 'X');
+  ok(!r.ok && /outside a string value/.test(r.error || ''), 'a comment-only match refuses, naming why: ' + (r.error || 'it was ACCEPTED'));
+}
+r = WBAPI.substituteText('quest', Object.keys(q)[0], 'a phrase this corpus does not hold', 'X');
+ok(!r.ok, 'an absent phrase is a reported failure, never a silent no-op');
+r = WBAPI.substituteText('quest', subFix ? subFix.id : Object.keys(q)[0], subFix ? subFix.phrase : 'x', 'a back\\slash');
+ok(!r.ok && /escaping/.test(r.error || ''), 'a replacement needing an escape is refused rather than written half-quoted: ' + (r.error || 'it was ACCEPTED'));
+ok(WBAPI._rawSrc === srcBeforeSub, 'no refused substitution touched the source');
+
 // [5] insert absent array field
 WBAPI.load(GAME);
 const qNoTM = Object.keys(q).find(id => !q[id].targetMonsterKeys);
@@ -178,4 +230,4 @@ r = WBAPI.editField('quest', qCond, 'noSuchFieldAtAll', null);
 ok(!r.ok, 'removing an absent field reports failure');
 
 if (fail) { console.log(`\n✗ check-array-patch: ${fail} FAILED, ${pass} passed`); process.exit(1); }
-console.log(`✓ §WBAPI-01 ph3 structured-field PATCH: all ${pass} checks pass (array/object/number round-trip + insert + fn-reject + {__fn:…} closure round-trip + drop refusal + comment-loss refusal across the corpus + expression-field removal)`);
+console.log(`✓ §WBAPI-01 ph3 structured-field PATCH: all ${pass} checks pass (array/object/number round-trip + insert + fn-reject + {__fn:…} closure round-trip + drop refusal + comment-loss refusal across the corpus + substitution round-trip and its three refusals + expression-field removal)`);
