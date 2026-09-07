@@ -41,6 +41,16 @@
 ---
 ## §BACKLOG — Open Items (Phase 1)
 
+### §DX-02je — a Benedikt callback at NUE is gated on a favor the game cannot write (NEW 2026-09-07 during §GR-FU3, 🟡 one design call: which act promotes him, or drop the term)
+
+- [ ] **§DX-02je — `_npcFavor('benedikt_rasp') >= 2` guards a delivered line and `benedikt_rasp`'s ceiling is 1.** **Measured at `a1753de`** with §GR-FU2's `favorCeiling()`, over every `_npcFavor(k) >= N` site in the file: **26 of 27 are reachable**, and the 27th is `` `if (node.code === 'NUE' && S_story.vsShamanPersuaded && _npcFavor('benedikt_rasp') >= 2 && !S_story.vsShamanBenediktDelivered)` `` — a one-shot `storyMsg` of ~60 authored words in which Benedikt works out that the First Researcher planted the tunnel Warden herself (*"She planted a 200-year misunderstanding. The difference between those things might be very small."*). **The corpus writes `benedikt_rasp` exactly once, `{ kind:'favor', npc:"benedikt_rasp", set:1 }`**, he has no `DEAR_FRIEND_BITS` entry, and the Talk path never exceeds 1 — so the term is `1 >= 2` forever and the other two conditions never get read.
+> **The favor term is the only dead half.** `vsShamanPersuaded` is written by the Void Shaman persuade branch and `NUE` is a live node, so **the beat is complete apart from its gate** — which is what makes this a Phase 1 row rather than a cleanup: it is shipped, reachable content sitting behind a condition with no writer.
+> **Three ways out.** (a) **Lower the term to `>= 1`** — one character changed, and it makes the callback fire for anyone who did the Benedikt quest at all. (b) **Give him the second step** — a `DEAR_FRIEND_BITS` entry, or a `set:2` on a later Benedikt bit, if the arc has a second personal act worth crediting. (c) **Drop the favor term entirely** and let `vsShamanPersuaded` alone open it. **Recommend (a):** the sibling one-shots at `NUE` and `HKG` gate at the favor their NPC can actually reach, `benedikt_rasp` has one bit and it writes 1, and (b) needs an act that may not exist while (c) removes the relationship condition the line's whole tone depends on.
+> **Verify:** a `check:npcregs` phase asserting *every `_npcFavor(k) >= N` site is at or below `k`'s ceiling* — red at HEAD with exactly this site, green after — the same shape as the phase 6 §GR-FU2 added, over the gates rather than the tables.
+> **Provenance:** §GR-FU3, on sweeping the favor gate sites against the ceilings the ceremony gate had just learned to compute.
+
+
+
 
 
 ### §DX-02gw — the Warlord was one of four; one of the other three is fought now, and the other two turned out not to be the same kind of thing (NEW 2026-08-24 during §DX-02gv · 1 of 3 shipped 2026-08-25 `5d0bee8` · **remaining 2 retagged 🟡 → ASK 2026-08-25**)
