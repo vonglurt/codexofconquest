@@ -18,6 +18,11 @@
 //                       declared in LUCK_SITES with the reason it is there. §DROP-02
 //                       scoped Luck deliberately; a commit that said nothing about it
 //                       put six sites back the same afternoon, unobserved for 68 days.
+//   I6 (fail is heard):  both branches of the skill-check resolver run authored bits, so
+//                       both must carry a message sink. The FAIL branch had none, and a
+//                       `narrative` bit in `onFail` went to storyMsg and was overwritten
+//                       by the storyRender two lines later — six quests' authored failure
+//                       narration, written and never shown (§DX-02da).
 //   I3 (reachability):  every named node is reachable from hub LHR by a
 //                       4-connected LAND walk (E↔W wrap, N/S clamp) over the
 //                       passable terrain field — i.e. unreachable===0 and the
@@ -221,6 +226,27 @@ for (const key of Object.keys(LUCK_SITES)) {
   if (!luckSeen.has(key)) fails.push(`I5: LUCK_SITES declares '${key}' (${LUCK_SITES[key]}) and no line in play.html carries it any more — retire the entry`);
 }
 
+// ── I6: both skill-check branches carry a message sink (§DX-02da) ────────────
+// `_resolveQuestUQF` runs `onPass` and `onFail` through the same `execBits`, and the
+// messages either branch emits are surfaced by the SAME `storyRender` prefix. A branch
+// without `pushMsg` falls back to `storyMsg`, which that very `storyRender` overwrites in
+// the same synchronous render — so the bit fires, the state changes, and the sentence is
+// never seen. It is not a symmetry preference: the pass branch was given a sink by
+// §BOARD-01-FU6 and the fail branch was deliberately left alone, which is why six
+// `quest_wis_*` quests carried unseen narration for as long as they did.
+const SINK_BRANCHES = {
+  'sc.onPass': 'the PASS branch — given its sink by §BOARD-01-FU6',
+  'sc.onFail': 'the FAIL branch — given the same sink by §DX-02da',
+};
+for (const [needle, why] of Object.entries(SINK_BRANCHES)) {
+  const lines = SRC_LINES.filter(l => l.includes('execBits(' + needle));
+  if (!lines.length) fails.push(`I6: no \`execBits(${needle} …)\` line in play.html — the invariant cannot find ${why}, so it would pass by looking away`);
+  else for (const l of lines) {
+    if (!/pushMsg\s*:/.test(l)) fails.push(`I6: ${why} runs authored bits with no pushMsg, so any narrative bit it fires goes to storyMsg `
+      + `and is overwritten by the storyRender that follows: ${l.trim().slice(0, 110)}`);
+  }
+}
+
 // ── Report ───────────────────────────────────────────────────────────────────
 console.log('§WALK-4 terrain-field invariant proof');
 console.log(`  hub=${HUB}  nodes=${allCodes.length}  sea-cells=${IMPASSABLE.size}  terrains=${terrainKeys.size}`);
@@ -229,10 +255,11 @@ console.log(`  I2  junction:true=${junctionTrue}  WORLD_DB.junction=${terrainKey
 console.log(`  I1  node-terrains=${Object.keys(nodeTerrains).length}  missing-in-WORLD_DB=${missingTerrain.length}  midlands=${terrainKeys.has('midlands')}`);
 console.log(`  I4  advertised-hour-cards=${advertised.size}  declared=${Object.keys(TIME_COST_CARDS).length}`);
 console.log(`  I5  _luckMod-call-sites=${luckLines.length}  declared=${Object.keys(LUCK_SITES).length}`);
+console.log(`  I6  skill-check branches with a message sink=${Object.keys(SINK_BRANCHES).filter(n => SRC_LINES.some(l => l.includes('execBits(' + n) && /pushMsg\s*:/.test(l))).length}/${Object.keys(SINK_BRANCHES).length}`);
 
 if (fails.length) {
   console.error('\n✗ INVARIANT VIOLATIONS:');
   for (const f of fails) console.error('   ✗ ' + f);
   process.exit(1);
 }
-console.log('\n✓ I1 + I2 + I3 + I4 + I5 hold — terrain field is total, stub-free and fully reachable from ' + HUB, '\n  every advertised hour is an hour the code charges, and every _luckMod() call site is declared');
+console.log('\n✓ I1 + I2 + I3 + I4 + I5 + I6 hold — terrain field is total, stub-free and fully reachable from ' + HUB, '\n  every advertised hour is an hour the code charges, every _luckMod() call site is declared,\n  and both branches of the skill-check resolver can be heard');

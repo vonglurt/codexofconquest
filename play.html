@@ -6994,8 +6994,10 @@ function _resolveQuestUQF(questId) {
   });
   // §BOARD-01-FU6 — collect narrative bits fired on PASS so they survive storyRender's
   // own tail storyMsg (which overwrites #story-move-msg). Surfaced as the render prefix,
-  // exactly like storyRender's other 2-arg callers (29547, 35146). Fail path is left
-  // byte-identical: passing `undefined` prefix reproduces the prior 1-arg call exactly.
+  // exactly like storyRender's other 2-arg callers (29547, 35146). §DX-02da gave the FAIL
+  // branch the same sink: without it a narrative bit in `onFail` reached storyMsg and was
+  // overwritten by the storyRender below, in the same synchronous render. An empty
+  // `_failMsgs` still renders the 1-arg call, so a check that fires nothing is unchanged.
   let _passMsgs = null, _failMsgs = null;
   if (pass) {
     S_story.quests[questId] = 'done';
@@ -7003,7 +7005,8 @@ function _resolveQuestUQF(questId) {
     _uqfRunToCompletion(QuestRuntime.execBits(sc.onPass || [], { questId, pushMsg: m => _passMsgs.push(m) }));   // §VM-01-A
     { const _wp = _creditWarrant(questId); if (_wp) _passMsgs.push(_wp); }   // §BOARD-01-FU7 — a board-accepted skill_check/combat bounty raises Warrant standing
   } else {
-    _uqfRunToCompletion(QuestRuntime.execBits(sc.onFail || [], { questId }));   // §VM-01-A
+    _failMsgs = [];
+    _uqfRunToCompletion(QuestRuntime.execBits(sc.onFail || [], { questId, pushMsg: m => _failMsgs.push(m) }));   // §VM-01-A
     if (q.retryable) {
       S_story.skillCheckAttempts = S_story.skillCheckAttempts || {};
       const prev = S_story.skillCheckAttempts[questId] || {};
@@ -7022,7 +7025,7 @@ function _resolveQuestUQF(questId) {
         S_story.xp += effXp;
         _levelUpQueue = [];
         _checkLevelUp();
-        _failMsgs = ['The attempt was not wasted. +' + effXp + ' XP for the effort.'];
+        _failMsgs.push('The attempt was not wasted. +' + effXp + ' XP for the effort.');
         if (_levelUpQueue.length > 0) _showLevelUpModal(_levelUpQueue.shift());
       }
     }
