@@ -19,6 +19,25 @@
 
 ---
 
+## Archived 2026-09-07 — §AUDIT-03au (the arc's climax gets a writer that is not its own consequence)
+
+### §AUDIT-03au — `quest_wm_04`'s completion condition is its own completion effect, so the Weimar arc's climax has never rendered (NEW 2026-08-13 during §DOC-02ar)
+
+- [x] ✅ SHIPPED 2026-09-07 `ffcdbc2` **§AUDIT-03au — `wmFirstResearcherKnown` is written by the unredacted read of Document 3; the circular `flag_write` is gone from `quest_wm_04`'s `onComplete`; and `storyNewGamePlus` carries the flag.** Re-derived at `53e901e`: `completion:{ flags:['wmFirstResearcherKnown'] }` against an `onComplete` that was the flag's **only** writer in the file. **Born that way** at `194a810` as `completeFn:() => !!(S_story.wmFirstResearcherKnown)` with the set inside the same reward block, and §ARCH-01 W7c transcribed the loop faithfully into UQF — *a faithful migration of a broken contract produces a broken contract that now looks modern.*
+> **The row's fix and its consequence (c) turned out to be the same three lines.** The row said to write the flag where the quest's own hint puts it (*"Return to the lower archive and read the unredacted personnel file."*) and, separately, that the `🔓 Read (unredacted)` label was **unreachable by construction** — the Read button is built only where the body is null, and `wmDoc3Unredacted` forced the body non-null. **They are one defect:** the render loop had no state for *"the unsealed file is here and you have not read it yet"*, so there was nowhere for the second read to happen and nowhere for the flag to be written. The loop now distinguishes `unsealed` from read-as-unsealed; the button appears, the click writes `wmFirstResearcherKnown`, and the substitution renders.
+> **Verified by lifting the live `WM_ARCHIVE_DOCS` render loop out of `play.html`** — brace-matched, not transcribed — and walking the player's real state sequence against a stub DOM, at HEAD and after:
+> ```
+> HEAD   3. circle complete, doc 3 unsealed | button: —                    | body: [REDACTED] | flag false
+> after  3. circle complete, doc 3 unsealed | button: 🔓 Read (unredacted) | body: none       | flag false
+> after  4. after the unredacted read       | button: —                    | body: NAMED      | flag true
+> ```
+> **`Marta Eilene Vass` renders for the first time** — one occurrence in the file, never seen in any playthrough — `quest_wm_04` can complete, *Benedikt's Annotated Copy* is granted and with it the only carrier of `atkWhileQuestActive`, whose sum `_tomeBonuses().atk` was structurally always 0, and +300gp is paid.
+> **(b2), the second wall, is down too.** `_vaReady` needs `ngPlusRun >= 1 && wmFirstResearcherKnown && entry42Written` — and NG+ carried `entry42Written` and not the other one, so even a repaired quest would have had its result erased by the exact transition §XVII requires. `savedFirstResearcher` now sits beside `savedEntry42Written`, one line each, in the block that already carried its partner.
+> **This closes the Weimar arc at 4 of 4, and it took three rows in one session, in order:** §AUDIT-03ar made the favor write say what the quest announces, §AUDIT-03at gave the reading circle a clock that ticks, and this row gave the climax a writer. **None of the three would have shown its effect alone** — that is what "sequences before" meant in each row's last line, and it is why they were worked in that order.
+> **Docs re-synced:** `lab-report-weimar-scholar-gate.md` finding 2 and its verdict row and `lab-report-void-archaeology.md`'s (1) are marked shipped with their anchors repaired by name, and `story.md`'s NG+ *"Preserved across reset"* list named **3** of the **10** fields `storyNewGamePlus` actually carries — it now names all ten. **`check:walk` 26/26 · `./bin/api audit` 0 errors · `play.html` 38,995 → 39,006.**
+
+
+
 ## Archived 2026-09-07 — §AUDIT-03at (the reading circle gets a clock that ticks)
 
 ### §AUDIT-03at — the reading circle counts sessions against a clock that does not exist, so the Weimar arc stops at 2 of 4 quests (NEW 2026-08-13 during §DOC-02ar)
