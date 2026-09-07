@@ -185,6 +185,32 @@ r = WBAPI.substituteText('quest', subFix ? subFix.id : Object.keys(q)[0], subFix
 ok(!r.ok && /escaping/.test(r.error || ''), 'a replacement needing an escape is refused rather than written half-quoted: ' + (r.error || 'it was ACCEPTED'));
 ok(WBAPI._rawSrc === srcBeforeSub, 'no refused substitution touched the source');
 
+// [4g] §DX-02bd — the derived quest indexes carry no duplicate. `_questsByNode` folds TWO
+// fields (activateNode, waypointNode) into one map, so a quest naming one node in both used
+// to land under it twice, and every consumer inherited it: `list quest --node X`,
+// `location.get(X).quests`, and `_deps.node()` — the DELETE cascade guard, which named the
+// same blocking quest twice. A PROPERTY over the whole corpus, not a pinned count, so it
+// cannot rot as quests are authored.
+WBAPI.load(GAME);
+for (const name of ['_questsByNode', '_questsByWaypoint', '_questsByNpc']) {
+  const bad = Object.entries(WBAPI[name])
+    .filter(([, list]) => new Set(list).size !== list.length)
+    .map(([k, list]) => `${k} (${list.length} entries, ${new Set(list).size} distinct)`);
+  ok(bad.length === 0, `${name} lists each quest once per key: ` + bad.slice(0, 3).join(', ') + (bad.length > 3 ? ` (+${bad.length - 3} more)` : ''));
+}
+// Non-vacuous: the same assertion must fail against the pre-§DX-02bd push-per-field build.
+const dupIndex = {};
+for (const [id, q] of Object.entries(WBAPI.questDb))
+  for (const f of ['activateNode', 'waypointNode'])
+    if (q[f]) (dupIndex[q[f]] = dupIndex[q[f]] || []).push(id);
+const wouldFail = Object.values(dupIndex).filter(l => new Set(l).size !== l.length).length;
+ok(wouldFail > 0, `the duplicate check is non-vacuous — the push-per-field build it replaced still produces ${wouldFail} duplicated key(s) on this corpus`);
+// And the deduped index loses no reference: same keys, same membership.
+const sameKeys = Object.keys(dupIndex).length === Object.keys(WBAPI._questsByNode).length;
+const sameMembers = Object.entries(dupIndex).every(([k, l]) =>
+  new Set(l).size === (WBAPI._questsByNode[k] || []).length && l.every(id => (WBAPI._questsByNode[k] || []).includes(id)));
+ok(sameKeys && sameMembers, 'dedupe removed only repeats — every key and every distinct quest id survives');
+
 // [5] insert absent array field
 WBAPI.load(GAME);
 const qNoTM = Object.keys(q).find(id => !q[id].targetMonsterKeys);
@@ -230,4 +256,4 @@ r = WBAPI.editField('quest', qCond, 'noSuchFieldAtAll', null);
 ok(!r.ok, 'removing an absent field reports failure');
 
 if (fail) { console.log(`\n✗ check-array-patch: ${fail} FAILED, ${pass} passed`); process.exit(1); }
-console.log(`✓ §WBAPI-01 ph3 structured-field PATCH: all ${pass} checks pass (array/object/number round-trip + insert + fn-reject + {__fn:…} closure round-trip + drop refusal + comment-loss refusal across the corpus + substitution round-trip and its three refusals + expression-field removal)`);
+console.log(`✓ §WBAPI-01 ph3 structured-field PATCH: all ${pass} checks pass (array/object/number round-trip + insert + fn-reject + {__fn:…} closure round-trip + drop refusal + comment-loss refusal across the corpus + substitution round-trip and its three refusals + duplicate-free quest indexes + expression-field removal)`);

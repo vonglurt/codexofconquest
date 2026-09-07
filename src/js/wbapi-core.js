@@ -944,11 +944,16 @@ const WBAPI = {
       }
     }
     this._questsByNode = {}; this._questsByNpc = {}; this._questsByWaypoint = {};
+    // §DX-02bd — activateNode and waypointNode index into the SAME map, so a quest naming
+    // one node in both fields would land under it twice. A Set makes that impossible by
+    // construction rather than by a guard at the push site; it is materialised back to
+    // arrays below, in first-occurrence order, because every consumer reads an array.
+    const _byNodeSets = {};
     for (const [id, q] of Object.entries(this.questDb)) {
       for (const field of ['activateNode','waypointNode'])
         if (q[field]) {
-          if (!this._questsByNode[q[field]]) this._questsByNode[q[field]] = [];
-          this._questsByNode[q[field]].push(id);
+          if (!_byNodeSets[q[field]]) _byNodeSets[q[field]] = new Set();
+          _byNodeSets[q[field]].add(id);
         }
       if (q.waypointNode) {
         if (!this._questsByWaypoint[q.waypointNode]) this._questsByWaypoint[q.waypointNode] = [];
@@ -964,6 +969,7 @@ const WBAPI = {
         this._questsByNpc[npcKey].push(id);
       }
     }
+    for (const code of Object.keys(_byNodeSets)) this._questsByNode[code] = [..._byNodeSets[code]];
     this._questFlags = {}; this._flagToQuests = {};
     if (this._rawQuestSrc) {
       for (const { id, src } of this._splitQuestBlocks(this._rawQuestSrc)) {

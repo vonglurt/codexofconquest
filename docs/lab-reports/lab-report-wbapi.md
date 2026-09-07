@@ -274,19 +274,28 @@ quests.** A safety mechanism did not fail; it quietly stopped applying.
 
 → **§DX-02ar** (already open). This increment contributes the coverage figure.
 
-### VI-2 🔴 LIVE — the node index counts a quest twice, and has since day one
+### VI-2 ✅ FIXED 2026-09-07 — the node index counted a quest twice, and had since day one
 
-`src/js/wbapi-core.js:this._questsByNode[q[field]].push(id);@791` sits inside
-`for (const field of ['activateNode','waypointNode'])` with no dedupe. A quest whose two node fields
-name the same node is indexed **twice**.
+The push sat inside `for (const field of ['activateNode','waypointNode'])` with no dedupe, both
+fields writing into one map, so a quest whose two node fields named the same node was indexed
+**twice**.
 
-**49 of 416 nodes are affected** (worst: `NUE`, 9 duplicates in a 186-entry list). Every consumer
-inherits it — `./api.sh list quest --node X` double-lists, `location.get(X).quests` over-counts, and
-`_deps.node()` reports the same blocker twice in the delete guard.
+**49 of 416 nodes were affected** (worst: `NUE`, 9 duplicates in a 186-entry list), and every
+consumer inherited it — `./api.sh list quest --node X` double-listed, `location.get(X).quests`
+over-counted, and `_deps.node()` reported the same blocker twice in the delete guard.
 
-It was there at filing: this report's own DELETE example returns
+It was there at filing, in this report's own words: the DELETE example returns
 `blockedBy.quests: ['quest_antecedent_01', …]`, and the elided tail is `quest_signal_01` **listed
-twice**. The ellipsis hid a live bug for 76 days. → **§DX-02bd NEW.**
+twice**. *The ellipsis hid a live bug in the document that introduced it, for 76 days.*
+
+**Fixed by §DX-02bd**: the map is now built through a Set — `` `src/js/wbapi-core.js:_byNodeSets[q[field]].add(id);@956` `` — and materialised to arrays in
+first-occurrence order after the loop, so duplication is impossible by construction rather than
+guarded against at the push site. **Measured: 49 affected nodes → 0, 97 duplicate entries → 0,
+`NUE` 186 → 177.** `_deps.node()` on `ADA` now names `quest_barnach_finds` once and still refuses
+the delete. Fenced in `check:arraypatch` as a **property over the corpus** — every key of all
+three quest indexes lists each id once — with a non-vacuity control that rebuilds the old
+push-per-field index and requires the same assertion to fail on it, and a third check proving the
+dedupe removed only repeats: same keys, same distinct membership. → **§DX-02bd ✅.**
 
 ### VI-3 ⚠️ The precedence that never existed
 
