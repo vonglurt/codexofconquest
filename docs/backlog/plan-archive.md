@@ -19,6 +19,30 @@
 
 ---
 
+## Archived 2026-09-07 — §DX-02jg (the help is called, not only compared)
+
+### §DX-02jg — nothing checks that `/api/help` describes the API that is running, and a literal-comparison gate would have caught two of the last five defects (NEW 2026-09-07 during §DX-02fp/fq/fr/fs, 🟡 one design call on scope)
+
+- [x] ✅ SHIPPED 2026-09-07 `e1495ff` + `d06adc2` **§DX-02jg — the row's recommendation was (c), (a) first, and both halves are in. Neither is a superset of the other, and that is measured over six mutations of the real source rather than argued.** The row was filed because `ec604a3` fixed **five** independently-filed contradictions between the help and the server in one sitting, and `lab-report-wbapi-evolution.md` §IX rests an argument on that surface being authoritative. **(a) `check-help-conformance.js`** — `check:walk` gate **#23**, chain 26 → 27, selftest **14** checks — asserts `NONCE_TTL`, `validTypes` and `Object.keys(exportMap)` against the topics that quote them, each in **both** directions, lifting the `HELP` object out of the source by brace-matching so **no server is started**. **(b) `src/tests/help-behaviour.mjs`** — `npm run test:help`, selftest **17** checks — boots a throwaway server on a **copy** of `play.html` and *calls* what the prose claims: **79 GET calls over 43 distinct paths**, every documented `export` collection, and every documented nonce `type`.
+> **The (a)/(b) boundary, measured — six mutations of `wbapi-server.js`, each reverted:**
+>
+> | mutation | (a) literal | (b) behavioural |
+> |---|---|---|
+> | `NONCE_TTL` five times short | **RED** | green |
+> | `snapshot` dropped from the help's `type:` line | **RED** | green |
+> | `condition_items` dropped from `exportMap` | **RED** | **RED** |
+> | `curl ${b}/api/read/node/CY` restored — an endpoint that has never been a route | green | **RED** (`400`) |
+> | the index renamed to `help/exports`, a topic the server does not have | green | **RED** (both directions) |
+> | `e.g. curl ${b}/api/quest/quest_wis_99` — an example naming a gone entity | green | **RED** (`404`) |
+>
+> **The reverse enum direction is (a)'s and cannot be (b)'s.** From outside, the accepted set cannot be enumerated — a harness can prove every documented value works and that the validator refuses a value nobody documents, but not that nothing undocumented is accepted. That is why dropping `snapshot` from the help is red under (a) and green under (b), and the harness header says so rather than implying coverage it has not got.
+> **The row's own stated verify condition for (b) — *"fails against a help topic naming an endpoint that 404s"* — was discharged against the real defect.** §DX-02jf had already removed `/api/read/node/CY` by hand; putting it back turns the harness red naming the `400` and quoting the line.
+> **(b) defeated its own first assertion, which is the finding worth keeping.** The handler is `HELP[topic] || HELP['index']` and the response reports the topic that was **asked for**, not the one served — so `GET /api/help/exports` answers **200**, `"topic":"exports"`, and the body of the index. The harness's first version compared `json.topic` to the requested name and the mutation went **green**. It now asserts the **title**, the only thing outside the body that changes. Filed as **§DX-02jk**.
+> **One waiver, named with its reason rather than filtered by a pattern.** `import`'s `` `/api/quest/stn_01_act1/chain` `` is the single documented GET path that cannot answer: the walkthrough creates that quest one step earlier, so the line is correct read end to end and unreachable replayed against an untouched corpus — the **1 non-200** §DX-02jf's hand sweep also left. The harness asserts the waiver is still **needed**: a waived path that has started answering is itself a finding, or the list becomes a place defects go to be forgotten. Removing the waiver at HEAD turns the run red on exactly that one path, so it is live and not dead code.
+> **Not a Playwright spec, and the row's own scoping sentence is what changed.** The row scoped (b) as *"a `npm test` suite that needs a live server"*. `npm test` does not complete on this musl host (§DX-02ir), and §DX-02jd already records **427** browser-free assertions nothing runs behind that — §GR-FU2 found one of them red in the tree since `3c816a5`. An assertion filed there would have been one more. It ships as a pure-HTTP harness on `test:mud`'s precedent (`src/tests/mud-harness.mjs`, in CI since §WALK-5 Inc 4), runs in **~2.3 s**, and joins the `mud` job — the one CI job that installs, because it is the one that boots a server.
+> **The two tables the row named and (a) did not fence are handed on rather than pre-decided**, each with its measurement: **§DX-02ji** — the four `help/{type}` field tables diverge from `SCHEMAS` on **39** names (`quest` 8/16, `node` 4/11, `monster` 8/3, `terrain` 1/1), which is a second and older schema rather than a drifting copy, so the answer is to render `GET /api/schema/{type}` and not to compare against it; **§DX-02jj** — quest `type` is **five lists and no two agree** (help 6 at two sites, `VALID_QUEST_TYPES` 8, `NE_VALID_TYPES` 10, corpus 9), with `delivery` at **57 real quests** in neither validator and `explore`/`trade`/`social` at **0 quests each** offered by the help. Item `VALID_TYPES` is documented in **no** topic at all, so there is no prose to compare against; that is recorded in (a)'s header comment.
+> **Verification:** `npm run check:walk --prefix src` **27/27** (25.9 s), `npm run test:help --prefix src` green, selftest 17/17. `play.html` untouched and no world data written, so the audit's input is byte-identical to `85795f2`.
+
 ## Archived 2026-09-07 — §DX-02jf (every runnable example in the help names something that exists)
 
 ### §DX-02jf — the write path's own onboarding example teaches the write §AUDIT-03av just reversed (NEW 2026-09-07 during §AUDIT-03av, 🟢 no design call, two string edits)
