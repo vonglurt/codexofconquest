@@ -19,6 +19,20 @@
 
 ---
 
+## Archived 2026-09-07 — §DX-02jo (the announce daemon is launched from where it lives)
+
+### §DX-02jo — `say.sh` launches its daemon from the repo root, and the daemon lives in `src/bin/`, so nothing has ever spoken (NEW 2026-09-07 during §DX-02jm, 🟢 no design call)
+
+- [x] ✅ SHIPPED 2026-09-07 `69a38ad` **§DX-02jo — the premise held exactly as filed, and the queue directory was carrying the receipt.** `src/bin/say.sh:11` set `DAEMON="$ROOT/sayd.sh"`, where `ROOT` is the repo root and the daemon is `src/bin/sayd.sh`; the launch discarded **every** stream, so exit **127** was indistinguishable from a daemon that started. **Re-measured at `f06aa06` before anything was written:** `"$ROOT/sayd.sh"` by hand → `not found`, **exit 127**; **0** `sayd.sh` alive after three `say.sh` calls.
+> **The row did not have the number that makes the case, and it was one `ls` away.** `build/milepoints/say.queue.d` held **58 undrained messages, dated 2026-09-05 through 2026-09-07** — every announcement this loop has made since the daemon moved, written to disk in call order and read by nobody. The enqueue half has worked the whole time, which is exactly why nobody noticed: the text appears on stdout, `say.log` grows, and the only thing missing is the part that happens in another room.
+> **What ships is the row's own prescription, both halves.** `DAEMON` resolves from the script's own directory rather than from `ROOT`. A missing or non-executable daemon prints the path on stderr and **exits 1** instead of being swallowed, and the daemon's own stderr goes to `build/milepoints/sayd.log` rather than `/dev/null` — a launch that fails can now say so, which is the property whose absence hid this for three days.
+> **The guard is §DX-02jm's `match_pids`, one row old.** It replaces the `pgrep -f` that **§DX-02jc had patched at this very line two rows earlier** — a fix that was correct and could not matter, because the thing it guarded could not start. That was this file's last raw `pgrep -f`: the only occurrence remaining anywhere in the repo is **inside `procmatch.sh` itself**. `docs/design/index.md`'s procmatch row claims a new `pgrep -f`/`pkill -f` is the defect that file exists to prevent, and the census now backs the claim rather than asserting it.
+> **Verified on all three of the row's own conditions.** Three `say.sh` calls take **0 → exactly 1** `sayd.sh`; the **59**-file queue drains to **0**; and a `DAEMON` pointed at a nonexistent file prints the path and exits **1**, where the identical script pre-fix printed nothing and exited **0**.
+> **The kept stderr produced its first finding within seconds, which is the argument for keeping it — §DX-02jp, found on the path and filed not done.** This host has **no `say` binary**, and none of `espeak`, `espeak-ng` or `spd-say` either, so draining the backlog wrote **62** `FileNotFoundError` at **18 lines each — 1,116 lines** into the log that had just stopped being `/dev/null`. The launcher is fixed and provably so; the last step still does nothing on this host, and under the old redirect there would have been no way to learn that.
+> `check:walk` **27/27** · `npm run test:help` green · `./bin/api audit` 0 errors · `play.html` untouched, no world data written.
+
+---
+
 ## Archived 2026-09-07 — §DX-02jm (the matcher cannot match the caller)
 
 ### §DX-02jm — `./run.sh stop` and `pkill -f` will kill the shell that called them if the caller's own command line names the file (NEW 2026-09-07 during §DX-02jc, 🟡 one design call: pin the pattern or match the PID file)
