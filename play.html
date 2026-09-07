@@ -27382,9 +27382,10 @@ const SWEELINCK_NAMING_LINES = { // → doc: story.md §Covenant Ceremony (per-N
   // ROUGH_WHISKEY_REACTIONS, NPC_ACT_THREE_LINES, FROBERGER_TRACES, NPC_CROSS_REFS) were
   // keyed to the profiles' SURNAMES — 'couperin'/'weckmann'/'bruhns' — which the favor
   // ledger never writes, so every lookup returned undefined and 21 authored entries were
-  // unreachable. The ledger spends the PROFILE keys, and only these six exist:
+  // unreachable. The ledger spends the PROFILE keys, and these are the ones it spends:
   //   quill = Bard Tomas Couperin (MHQ) · crov = Pit Master Weckmann (HKG)
   //   auros = Cmdr Seraphine Bruhns (HKG) · yael (LHR) · brynn (TLL) · pachelbel (LLA)
+  //   emmer · gret
   // Same defect and same three names as §AUDIT-03j's NODE_NPC_KEYS/NPC_FAREWELLS columns.
   // Fenced by `check:npcregs` (check:walk gate #14) — a key here must resolve in the
   // 4-registry npcKeyVocab(), and a new all-lowercase table must be classified there.
@@ -27416,6 +27417,17 @@ const SWEELINCK_NAMING_LINES = { // → doc: story.md §Covenant Ceremony (per-N
   // sets 3 outright and _setNpcFavor only ever raises. A 2 authored here would be dead.
   kenickie: {
     3: "Kenickie, who took the book without opening it. Who is still holding onto it."
+  },
+  // The three below have no tier-3 state: their favor bits top out at 2 and none of them
+  // has a DEAR_FRIEND_BITS entry to raise it, so an authored 3 would be dead.
+  emmer: {
+    2: "Emmer Finch, who does not know which morning his grip stopped being wrong."
+  },
+  gret: {
+    2: "Gret Orrens, who carried the proof for twelve years and went to the Academy anyway."
+  },
+  rennau: {
+    2: "Harbor Master Rennau, who keeps the ledger of the ships that never came back, and stopped calling them weather losses."
   }
 };
 

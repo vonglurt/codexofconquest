@@ -39,10 +39,13 @@ const src = () => fs.readFileSync(GAME, 'utf8');
 // The surnames that keyed these tables. `quill` = Bard Tomas Couperin, `crov` = Pit Master
 // Weckmann, `auros` = Cmdr Seraphine Bruhns — the profile keys the ledger actually spends.
 const SURNAMES = ['couperin', 'weckmann', 'bruhns'];
-// The seven repaired registries, and the six keys each must now carry.
+// The seven repaired registries, and the six keys each must carry. Six of the seven carry
+// exactly those; the ceremony table is keyed by the favor ledger's reach instead, so it
+// grows with the corpus and check:npcregs phase 6 owns its membership (§GR-FU2).
 const REPAIRED = ['SWEELINCK_NAMING_LINES', 'NPC_EPILOGUES', 'NPC_NG_PLUS_GREETINGS',
                   'ROUGH_WHISKEY_REACTIONS', 'NPC_ACT_THREE_LINES', 'FROBERGER_TRACES',
                   'NPC_CROSS_REFS'];
+const CEREMONY = 'SWEELINCK_NAMING_LINES';
 const CANON = ['yael', 'brynn', 'quill', 'pachelbel', 'crov', 'auros'];
 
 // Depth-1 keys of a top-level `const NAME = {` … `};`, via the shared comment/string-aware
@@ -79,14 +82,17 @@ test.describe('§AUDIT-03n — engine NPC registries resolve', () => {
     }
   });
 
-  test('all seven repaired registries carry exactly the six canonical profile keys', () => {
+  test('all seven repaired registries carry the six canonical profile keys', () => {
     const W = freshWorld();
     const s = src();
     for (const name of REPAIRED) {
       const keys = topKeys(W, s, name);
       expect(keys, `${name} not found`).not.toBeNull();
-      expect(keys.slice().sort(), `${name} keys`).toEqual(CANON.slice().sort());
+      for (const k of CANON) expect(keys, `${name} lost ${k}`).toContain(k);
+      if (name !== CEREMONY) expect(keys.slice().sort(), `${name} keys`).toEqual(CANON.slice().sort());
     }
+    expect(topKeys(W, s, CEREMONY).length, 'the ceremony table stopped growing past the six')
+      .toBeGreaterThan(CANON.length);
   });
 
   test('every npc-keyed registry key resolves in the 4-registry vocabulary', () => {

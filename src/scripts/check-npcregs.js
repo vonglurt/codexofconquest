@@ -39,6 +39,8 @@
 //   4. order          — every element of an `npcOrder` array literal resolves
 //   5. aliases        — no `npc:` slug is an alias, and every alias-shaped collision
 //                       between an inline display name and a profile is classified
+//   6. ceremony       — every NPC the corpus can raise to the Covenant Ceremony's own
+//                       threshold has a line there to be named with (§GR-FU2)
 //
 // NOT covered here on purpose: whether an npc-VALUED string field RESOLVES. Quest anchors
 // are pinned by tests/integration/audit03h-npc-normalize.test.js, and NODE_MAP's inline
@@ -119,6 +121,13 @@ const NOT_AN_ALIAS = {
               + 'HMS — the occupation matches, the character does not',
 };
 
+// §GR-FU2 — the Covenant Ceremony names by favor, so its table is not a curated cast: it
+// is a function of the favor ledger. A key the corpus can raise to the threshold that the
+// ceremony deliberately does not name needs a reason here, for the same reason
+// NOT_NPC_KEYED does — a silence and an oversight are otherwise the same text.
+const CEREMONY_TABLE = 'SWEELINCK_NAMING_LINES';
+const CEREMONY_EXEMPT = {};
+
 const LOWERKEY = /^[a-z][a-z0-9_'-]*$/;
 
 // ── helpers ───────────────────────────────────────────────────────────────────
@@ -160,6 +169,43 @@ function nestedObject(body, key) {
 }
 
 function lineOf(src, idx) { return src.slice(0, idx).split('\n').length; }
+
+// §GR-FU2 — the ceremony's threshold, read out of the builder rather than restated here:
+// _buildSweelinckNamingSequence emits states[N] at `fav >= N`, and the lowest N it tests is
+// the favor at which a missing table entry becomes a person the ending cannot name.
+function ceremonyThreshold(src) {
+  const m = src.match(/function _buildSweelinckNamingSequence\(\)\s*\{([\s\S]*?)\n\}/);
+  if (!m) return null;
+  const tiers = [...m[1].matchAll(/fav >= (\d+)/g)].map(x => Number(x[1]));
+  return tiers.length ? Math.min(...tiers) : null;
+}
+
+// The highest favor the corpus can put each NPC at. `set` is a level the ledger raises to,
+// `add` stacks on whatever a `set` already reached (bounded by the bit's own `cap`), a
+// literal _setNpcFavor(key, N) is a `set` written in code rather than in a bit, and a
+// DEAR_FRIEND_BITS entry is one further step on top of the result.
+function favorCeiling(src, objs) {
+  const cap = Number((src.match(/const NPC_FAVOR_CAP = (\d+)/) || [])[1] || 3);
+  const set = new Map(), add = new Map();
+  const raise = (m, k, v) => m.set(k, Math.max(m.get(k) || 0, v));
+  const bitRe = /kind:\s*["']favor["']\s*,\s*npc:\s*["']([a-z][a-z0-9_]*)["']\s*,\s*(set|add)\s*:\s*(\d+)(?:\s*,\s*cap\s*:\s*(\d+))?/g;
+  let m;
+  while ((m = bitRe.exec(src))) {
+    const [, key, op, n, bitCap] = m;
+    if (op === 'set') raise(set, key, Number(n));
+    else add.set(key, Math.min(bitCap == null ? cap : Number(bitCap), (add.get(key) || 0) + Number(n)));
+  }
+  const callRe = /_setNpcFavor\(\s*'([a-z][a-z0-9_]*)'\s*,\s*(\d+)\s*\)/g;
+  while ((m = callRe.exec(src))) raise(set, m[1], Number(m[2]));
+  const dfb = objs.get('DEAR_FRIEND_BITS');
+  const step = new Set(dfb ? WBAPI._sectionTopKeys(dfb.body) : []);
+  const out = new Map();
+  for (const k of new Set([...set.keys(), ...add.keys()])) {
+    const base = Math.min(cap, (set.get(k) || 0) + (add.get(k) || 0));
+    out.set(k, Math.min(cap, base >= 1 && step.has(k) ? base + 1 : base));
+  }
+  return out;
+}
 
 // §AUDIT-03k — the identity of every NPC that has one, from the two registries that carry
 // name/occupation/node metadata (BIRKA_NPC's lean profiles + NPC_DIALOGUES' meta block).
@@ -288,6 +334,22 @@ function audit(src, vocab, model) {
     findings.push(`[alias] node ${c.codes.join('/')} inline npc '${c.slug}' matches the identity of `
       + `${c.hits.join(' / ')} but is in neither WBAPI.NPC_ALIASES nor NOT_AN_ALIAS — classify it`);
   }
+
+  // 6. ceremony — the ending names by favor (§GR-FU2). The table is a function of the
+  //    ledger, so a person the ledger raises and the table omits is silence at the payoff.
+  const thr = ceremonyThreshold(src);
+  const cer = objs.get(CEREMONY_TABLE);
+  if (thr == null) findings.push('[ceremony] _buildSweelinckNamingSequence tests no `fav >= N` tier — '
+    + 'the ceremony threshold can no longer be read from the builder');
+  else if (!cer) findings.push(`[ceremony] ${CEREMONY_TABLE} — named as the ceremony table but not found in the file`);
+  else {
+    const named = new Set(WBAPI._sectionTopKeys(cer.body));
+    for (const [k, v] of favorCeiling(src, objs)) {
+      if (v < thr || named.has(k) || CEREMONY_EXEMPT[k]) continue;
+      findings.push(`[ceremony] the corpus raises '${k}' to favor ${v} and ${CEREMONY_TABLE} (line ${cer.line}) `
+        + `has no entry for them — the ceremony names at fav >= ${thr}, so this one is helped and never named`);
+    }
+  }
   return findings;
 }
 
@@ -308,6 +370,7 @@ function selftest(src, vocab, model) {
                              "const npcOrder = ['yael','brynn','couperin','pachelbel','crov','auros'];"), model],
     ['alias',    src.replace('npc:"yael"', 'npc:"city_guard_captain"'), model],
     ['alias',    src, collide],
+    ['ceremony', src.replace(`{ kind:'favor', npc:"solvak", set:1 }`, `{ kind:'favor', npc:"solvak", set:2 }`), model],
   ];
   // Findings are compared against the UNPLANTED baseline, so a plant is only "caught" if
   // it produced a finding that was not already there — otherwise a corpus that is already
@@ -347,4 +410,5 @@ if (findings.length) {
 }
 console.log(`✓ check:npcregs — ${NPC_KEYED.length} npc-keyed registries, ${NPC_KEYED_PATHS.length} nested table(s), `
   + `plus every _npcFavor()/npcFavorability[] literal and npcOrder entry resolve against ${vocab.size} live NPC keys; `
-  + `${Object.keys(WBAPI.NPC_ALIASES).length} display-name aliases collapse to their profile key and no npc: value is one`);
+  + `${Object.keys(WBAPI.NPC_ALIASES).length} display-name aliases collapse to their profile key and no npc: value is one; `
+  + `every NPC the corpus raises to fav >= ${ceremonyThreshold(src)} has a line in ${CEREMONY_TABLE}`);

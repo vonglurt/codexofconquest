@@ -1569,6 +1569,8 @@ Fires after final boss defeat. Sequence:
 3. `_renderFinalMap()` — map renders with all visited nodes highlighted
 4. Victory modal opens with full run stats + `#victory-question` (Sweelinck's Last Question)
 
+**Who gets named is not a curated cast.** `` `_buildSweelinckNamingSequence@28204` `` walks `SWEELINCK_NAMING_LINES` and emits `states[3]` at `fav >= 3` and `states[2]` at `fav >= 2`, so the table's membership is whatever the favor ledger can reach — **10 keys** as of 2026-09-07 (`yael brynn quill pachelbel crov auros kenickie emmer gret rennau`). `check:npcregs` phase 6 asserts that every NPC the corpus can raise to `fav >= 2` has a line here, and reads the threshold out of the builder rather than restating it (§GR-FU2).
+
 ### Sweelinck's Last Question (`#victory-question`)
 
 Appended to the victory modal. Variant determined by mission completion + curse score:
