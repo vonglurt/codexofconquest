@@ -19,6 +19,17 @@
 
 ---
 
+## Archived 2026-09-07 — §DX-02jc (the monitor line can be true)
+
+### §DX-02jc — `./run.sh status` asks `pgrep` for a flag it does not have, so the monitor always reads down (NEW 2026-09-07 during §DX-02ix, 🟢 no design call)
+
+- [x] ✅ SHIPPED 2026-09-07 `b1cb2f7` **§DX-02jc — the defect is real, the cause named in the row is not, and the prescribed fix is right for a better reason than the row gave.** **Disproof on the ground, before anything was written:** this host is **not** busybox. `pgrep --version` is **procps-ng 4.0.6**, whose pgrep spells the flag `--quiet` and has **no short form** — `-q` is **BSD/macOS** pgrep's spelling (and procps-ng `pkill`'s). So the row's *"`-q` is a procps extension busybox rejects"* has it backwards, and the portable form is not a concession to one host: `pgrep -f "…" >/dev/null 2>&1` is the only spelling that works on BSD, procps-ng **and** busybox.
+> **Both branches measured, which is what makes it a defect rather than a nuisance.** The `-q` form exits **2 whether or not a match exists** — it cannot distinguish, so the `&&`/`||` choice was decided by the error and not by the process table, and `monitor: down` was unfalsifiable. The fixed form exits **0** on a match and **1** on none. `./run.sh status` now prints `monitor: UP` against exactly **1** matching process in `ps` and `monitor: down` against **0**, and neither branch prints a usage block.
+> **The row's own census found a second site, and it is the more consequential one.** `src/bin/say.sh:35` — the guard that decides whether to fork `sayd.sh`, which is the tool `AGENTS.md` mandates after every commit — carried the same `-qf`, behind a `2>/dev/null` that swallowed the usage block, **which is why nobody ever saw it**. Fixed in the same increment: same flag, same one line, and leaving it would have shipped a known-broken sibling of the row being closed. **Stated at the strength it was measured:** on this host `sayd.sh` does not survive at all (**0** daemons alive at t=1…5 s after three calls, before *and* after the fix), so the repeated fork is **latent here**, not observable; on macOS, where the daemon does run, BSD `pgrep -q` works. The fix makes the guard correct on **every** host rather than on one.
+> **Found on the path, filed not done: §DX-02jm.** The verification run itself produced a false `monitor: UP` with the monitor stopped — `pgrep -f` matched the *invoking shell*, whose command line contained the pattern. Harmless for `pgrep`; `run.sh:37–38` and `wbapi-toggle.sh` use the same shape with **`pkill`**, which would kill that shell.
+> **Docs synced:** `lab-report-map-audit-layout-tooling.md` §5's verification table asserted `pgrep -qf "sayd\.sh"` **✅ at HEAD**; the literal and both line references were corrected (`say.sh:34` → `:35`, which was pointing at the comment).
+> **Verification:** `bash -n` clean on both files · `check:walk` **27/27** · `play.html` untouched, no world data written.
+
 ## Archived 2026-09-07 — §DX-02jk (a mistyped help topic is corrected, not answered)
 
 ### §DX-02jk — `GET /api/help/<a-name-that-does-not-exist>` answers 200 with the index, and echoes the name back as if it were real (NEW 2026-09-07 during §DX-02jg(b), 🟡 one design call — MADE)

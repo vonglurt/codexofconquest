@@ -101,8 +101,8 @@ Three voices at once.
 | `say.sh` enqueues and returns; `tee -a` to `milepoints/say.log` | ✅ `say.sh:24` |
 | monotonic `say.seq` breaks same-second filename ties | ✅ `say.sh:27–31` |
 | queue file `YYYYMMDD-HHMMSS-000NNN.txt` | ✅ `say.sh:31` |
-| `pgrep -qf "sayd\.sh"` instead of a PID file — the kernel table is consistent immediately after `fork()` | ✅ `say.sh:34` |
-| daemon started detached via `disown` | ✅ `say.sh:34` |
+| `pgrep -f "sayd\.sh"` instead of a PID file — the kernel table is consistent immediately after `fork()` | ✅ `say.sh:35` (the flag was `-qf` until §DX-02jc; `-q` is BSD pgrep's spelling and this host's procps-ng has no short form for it) |
+| daemon started detached via `disown` | ✅ `say.sh:35` |
 | `sayd.sh` writes its PID, `trap` removes it on exit | ✅ `sayd.sh:30–31` |
 | atomic claim by `mv FILE FILE.speaking` — two daemons can never double-speak | ✅ `sayd.sh:41` |
 | `MAX_IDLE=34` hardcoded, ≈10 s of silence; the `bc -l` startup latency it replaced | ✅ `sayd.sh:22`, comment intact |
