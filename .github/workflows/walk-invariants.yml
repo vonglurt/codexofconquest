@@ -4,12 +4,15 @@
 # `src/scripts/run-gates.js` and is stdlib-only: no server, no browser, no install.
 # A `check:*` script that is not in that chain fails the runner before any gate starts.
 #
-# Job `mud` (§WALK-5 Inc 3/4) spins a throwaway wbapi-server and drives K seeded
-# SSE clients to assert co-presence broadcast, instanced no-bleed encounters, and
-# idle-TTL prune. It needs `npm ci` because the server top-level-requires the
-# Anthropic SDK, so it can't ride the stdlib-only `invariants` job above.
+# Job `mud` (§WALK-5 Inc 3/4) holds every harness that needs a LIVE server, which is
+# why it is the one job that runs `npm ci`: the server top-level-requires the Anthropic
+# SDK, so none of them can ride the stdlib-only `invariants` job above. It spins a
+# throwaway wbapi-server and drives K seeded SSE clients to assert co-presence broadcast,
+# instanced no-bleed encounters and idle-TTL prune (§WALK-5), then calls every endpoint,
+# collection and enum value `GET /api/help` claims (§DX-02jg(b)).
 #
-# Red on any gate failure or MUD-property failure; green on current main.
+# Red on any gate failure, MUD-property failure or help-conformance finding; green on
+# current main.
 name: WALK invariants
 
 on:
@@ -33,6 +36,7 @@ on:
       - 'src/scripts/check-ladder-migration.js'
       - 'src/scripts/world-diff.js'
       - 'src/tests/mud-harness.mjs'
+      - 'src/tests/help-behaviour.mjs'
       - 'src/api/wb.js'
       - 'src/package.json'
       - '.github/workflows/walk-invariants.yml'
@@ -55,6 +59,7 @@ on:
       - 'src/scripts/check-ladder-migration.js'
       - 'src/scripts/world-diff.js'
       - 'src/tests/mud-harness.mjs'
+      - 'src/tests/help-behaviour.mjs'
       - 'src/api/wb.js'
       - 'src/package.json'
       - '.github/workflows/walk-invariants.yml'
@@ -88,3 +93,5 @@ jobs:
         run: npm ci --prefix src
       - name: Run MUD multi-client harness (co-presence + instancing + TTL prune)
         run: npm run test:mud --prefix src
+      - name: Run help behavioural conformance (every documented endpoint is called)
+        run: npm run test:help --prefix src
