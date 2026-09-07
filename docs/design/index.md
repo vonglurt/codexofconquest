@@ -58,6 +58,11 @@ codexofconquest/
 │   │                       It also counts the gates it CANNOT see — `gate:{_legacyFn:true}`,
 │   │                       read as unconditionally satisfiable — against `LEGACY_GATE_CEILING`,
 │   │                       a ratchet that only goes down (§DX-02dy 14 → 6, §DX-02iu → 0)
+│   │                       §AUDIT-03bk added the ARRIVAL-ROUTE census: `completion.atNode` is an
+│   │                       AND term, so it can only WITHHOLD completion — a quest requiring
+│   │                       arrival must publish a route. go-there (`atNode == waypointNode`, 16)
+│   │                       · routed another way (a waypoint, or `atNode == activateNode`, 7)
+│   │                       · UNROUTED, fatal — 1 → 0 (`quest_sea_01` published no waypoint)
 │   ├── tools/              layout solvers, node parser, region renderer
 │   ├── bin/                internal utilities — api.sh, say.sh, sayd.sh, coc
 │   ├── tests/              80 Playwright files, 960 tests, plus the MUD harness
