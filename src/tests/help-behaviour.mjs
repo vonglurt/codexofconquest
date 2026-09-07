@@ -12,10 +12,9 @@
 // COPY of play.html (HELP_HARNESS_PORT, default 13671 — never the dev server on 1367,
 // never the real game file), reads the help out of the running server, and asserts:
 //
-//   [help/topics]        every topic the index lists resolves to ITSELF, and every topic
-//                        the server has is listed. `HELP[topic] || HELP['index']` answers
-//                        200 with the index for a name that does not exist, so a wrong
-//                        entry in the index is invisible to a reader and to a status code.
+//   [help/topics]        every topic the index lists resolves to ITSELF, every topic the
+//                        server has is listed, and a name no topic can be answers 404 —
+//                        the control, without which the first two assert nothing.
 //   [help/endpoints]     every concrete GET path any topic names answers < 400.
 //   [export/collections] every collection the `export` topic documents exports 200.
 //   [nonce/types]        every documented `type` value issues a nonce, and a value the
@@ -123,7 +122,7 @@ export function docNonceTypes(text) {
 
 // ── the checks — pure over (topics, probe), so the selftest drives the real code ──
 // `topics` is name → text. `probe(method, path, body)` → { status, json }.
-export async function runChecks({ topics, liveTopicKeys, indexTitle, probe }) {
+export async function runChecks({ topics, liveTopicKeys, probe }) {
   const findings = [];
   const index = topics.index;
   if (typeof index !== 'string') return ['[source] the server served no `index` help topic — the harness cannot read the surface it checks'];
@@ -135,16 +134,17 @@ export async function runChecks({ topics, liveTopicKeys, indexTitle, probe }) {
   } else {
     for (const t of listed) {
       const r = await probe('GET', `/api/help/${t}?format=json`);
-      // The fallback is invisible from outside except in the body: the status is 200 and
-      // the `topic` field is the name that was ASKED for, echoed back, not the one resolved.
-      // The title is the only thing that changes, so the title is what is asserted.
-      if (r.status !== 200) findings.push(`[help/topics] the index lists \`${t}\`, and GET /api/help/${t} answers ${r.status}`);
-      else if (r.json && r.json.title === indexTitle) findings.push(`[help/topics] the index lists \`${t}\`, and the server has no such topic — \`HELP[topic] || HELP['index']\` answers 200 with the index itself and echoes \`${t}\` back, so a wrong entry reads exactly like a right one`);
+      if (r.status !== 200) findings.push(`[help/topics] the index lists \`${t}\`, and GET /api/help/${t} answers ${r.status} — the server has no such topic`);
     }
     for (const k of liveTopicKeys) {
       if (k !== 'index' && !listed.includes(k)) findings.push(`[help/topics] the server serves \`${k}\`, which the index does not list — a topic nothing points at`);
     }
   }
+  // The control. Both checks above read a status, so both are vacuous unless a name that
+  // cannot be a topic is refused (§DX-02jk).
+  const bogus = 'not_a_help_topic';
+  const rb = await probe('GET', `/api/help/${bogus}?format=json`);
+  if (rb.status < 400) findings.push(`[help/topics] GET /api/help/${bogus} answers ${rb.status}, so an unknown topic is indistinguishable from a real one and the checks above assert nothing`);
 
   // [help/endpoints]
   const waived = new Set(EXPECTED_404.map((e) => `${e.topic} ${e.path}`));
@@ -217,9 +217,12 @@ async function selftest() {
     if (method === 'POST' && clean === '/api/nonce')
       return routes.nonceTypes.includes(body.type) ? { status: 200, json: { nonce: 'n' } } : { status: 400, json: { ok: false } };
     if (clean.startsWith('/api/help/')) {
-      // The real server echoes the requested name and falls back to the index BODY.
       const t = clean.slice('/api/help/'.length);
-      return { status: 200, json: { topic: t, title: routes.topics.includes(t) ? `Topic ${t}` : INDEX_TITLE, topics: routes.topics } };
+      if (routes.topics.includes(t)) return { status: 200, json: { topic: t, title: `Topic ${t}`, topics: routes.topics } };
+      // `helpFallback` models a server that answers 200 with the index under any name at all.
+      return routes.helpFallback
+        ? { status: 200, json: { topic: t, title: INDEX_TITLE, topics: routes.topics } }
+        : { status: 404, json: { ok: false, error: `unknown help topic '${t}'`, topic: t, topics: routes.topics } };
     }
     return routes.get.includes(clean) ? { status: 200, json: {} } : { status: 404, json: {} };
   };
@@ -227,16 +230,22 @@ async function selftest() {
     topics: ['nonce', 'export'],
     get: ['/api/ping', '/api/export/node_map', '/api/export/quest_db'],
     nonceTypes: ['node', 'quest'],
+    helpFallback: false,
     ...over,
   });
   const run = (t = {}, r = {}, keys = ['index', 'nonce', 'export']) =>
-    runChecks({ topics: stubTopics(t), liveTopicKeys: keys, indexTitle: INDEX_TITLE, probe: stubProbe(stubRoutes(r)) });
+    runChecks({ topics: stubTopics(t), liveTopicKeys: keys, probe: stubProbe(stubRoutes(r)) });
 
   ok((await run()).length === 0, 'a help whose every claim answers produces no findings');
 
   ok((await run({ index: stubTopics().index.replace('/api/help/export', '/api/help/exports') }))
-    .some((f) => f.includes('no such topic') && f.includes('exports')),
-    'an index entry the server answers 200-with-the-index for is caught — neither the status nor the echoed name can reveal it');
+    .some((f) => f.includes('no such topic') && f.includes('exports') && f.includes('404')),
+    'an index entry naming a topic the server does not have is caught by its status');
+  ok((await run({}, { helpFallback: true })).some((f) => f.includes('not_a_help_topic') && f.includes('assert nothing')),
+    'a server that answers 200 for any name at all is caught by the control, whatever the index says');
+  ok((await run({ index: stubTopics().index.replace('/api/help/export', '/api/help/exports') }, { helpFallback: true }))
+    .every((f) => !f.includes('`exports`')),
+    'and that server hides the wrong index entry from the status check — which is why the control is the assertion, not a spare');
   ok((await run({}, {}, ['index', 'nonce', 'export', 'wizard'])).some((f) => f.includes('`wizard`') && f.includes('does not list')),
     'a topic the server serves and the index omits is caught — the check runs in both directions');
 
@@ -315,10 +324,10 @@ async function main() {
   for (const t of new Set([...liveTopicKeys, ...docTopics(idx.json.text)])) {
     if (t === 'index') continue;
     const r = await probe('GET', `/api/help/${t}?format=json`);
-    if (r.status === 200 && r.json && r.json.title !== idx.json.title) topics[t] = r.json.text || '';
+    if (r.status === 200 && r.json) topics[t] = r.json.text || '';
   }
 
-  const findings = await runChecks({ topics, liveTopicKeys, indexTitle: idx.json.title, probe });
+  const findings = await runChecks({ topics, liveTopicKeys, probe });
   const calls = Object.values(topics).flatMap((text) => docGetPaths(text).map((e) => e.path));
   console.log(`  ${Object.keys(topics).length} topics read from the running server · ${calls.length} documented GET calls over ${new Set(calls).size} distinct paths`);
   if (findings.length) {

@@ -2811,15 +2811,27 @@ async function route(req, res) {
       });
     }
 
-    const entry = HELP[topic] || HELP['index'];
+    // `cli` is served above and is not a HELP key, so the servable set is not Object.keys(HELP).
+    const TOPIC_NAMES = [...Object.keys(HELP), 'cli'];
     const plain = method === 'GET' && (url.searchParams.get('format') || 'text') === 'text';
+    const entry = HELP[topic];
+    if (!entry) {
+      const error = `unknown help topic '${topic}'`;
+      logResponse(method, url.pathname, 404, error);
+      if (plain) {
+        cors(res);
+        res.writeHead(404, { 'Content-Type': 'text/plain; charset=utf-8' });
+        return res.end(`\n${error}\n\nTOPICS\n${TOPIC_NAMES.map(t => '  ' + t).join('\n')}\n\nGET /api/help   for the index.\n\n`);
+      }
+      return json(res, 404, { ok: false, error, topic, topics: TOPIC_NAMES });
+    }
     logResponse(method, url.pathname, 200, entry.title);
     if (plain) {
       cors(res);
       res.writeHead(200, { 'Content-Type': 'text/plain; charset=utf-8' });
       return res.end(`\n${entry.title}\n${'─'.repeat(entry.title.length)}\n\n${entry.body}\n\n`);
     }
-    return json(res, 200, { topic, title: entry.title, text: entry.body, topics: Object.keys(HELP) });
+    return json(res, 200, { topic, title: entry.title, text: entry.body, topics: TOPIC_NAMES });
   }
 
   // ── 67 ──
