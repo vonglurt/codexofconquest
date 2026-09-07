@@ -25200,7 +25200,6 @@ function _overlayOffhandAttack() {
 // Void-touched if its name/key carries Void/undead vocabulary OR the fight is on a Void-ish
 // terrain; everything else is a mundane beast.
 const _VOID_ENEMY_RE   = /void|corrupt|wraith|shade|revenant|spectr|phantom|wight|ghoul|lich|undead|skeleton|skeletal|necro|hollow|dread|abyss|blight|cursed|haunt|wretch|shadow|demon|fiend|zombie|vampire|mummy|ghost|banshee|bone|grave|draug|fleder|bruxa|curse spirit|death knight/i;
-const _VOID_TERRAIN_RE = /void|corrupt|blight|abyss|wither|graveyard|tomb|necro|dread|ash/i;
 function _isVoidEnemy() {
   const key = (S.enemy && S.enemy.key) || '';
   // §DX-02dj: the per-monster field is the authority; the name vocabulary is the fallback.
@@ -25208,12 +25207,9 @@ function _isVoidEnemy() {
   if (entry && typeof entry.voidTainted === 'boolean') return entry.voidTainted;
   // §AUDIT-03bn: the twenty-rank lake ladder is fish. A fish in a lake is a beast, whatever it is called.
   if (/^(fish|night)_/.test(key)) return false;
+  // §DX-02di: Void-touched is a property of the monster, not of where the fight happens.
   const nm = ((S.enemy && S.enemy.name) || '') + ' ' + key;
-  if (_VOID_ENEMY_RE.test(nm)) return true;
-  const node = NODE_MAP[S_story.currentCode];
-  if (node && _VOID_TERRAIN_RE.test(node.name || '')) return true;
-  const t = _inferTerrain(S_story.playerR || 0, S_story.playerC || 0);
-  return _VOID_TERRAIN_RE.test(t || '');
+  return _VOID_ENEMY_RE.test(nm);
 }
 // Press magnitude scales with tier so "Deadly" reads as a duel, not just big numbers.
 function _voidEnrage(tier) {

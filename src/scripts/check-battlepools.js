@@ -25,6 +25,14 @@ const GAME = path.join(__dirname, '..', '..', 'play.html');
 // the key anywhere outside its own MONSTER_POOL row and MONSTER_DROPS row.
 // Entries here are known-unreachable and owned by an open row; an entry that becomes
 // reachable is a stale exemption and fails, the same rule as SYNTHETIC_BATTLE_CODES.
+// §DX-02di — which roster each of `_isVoidEnemy`'s regex vocabularies is tested against.
+// A vocabulary the function reads and this table does not name is a finding, and so is a
+// name here the function no longer reads: the gate can only intersect alternatives with a
+// roster if it is told which roster.
+const CLASSIFICATION_CORPUS = {
+  _VOID_ENEMY_RE: 'monsters',
+};
+
 const UNREACHABLE_DEADLY = {
   dragon_of_fyresdal: '§DX-02gw',
   slyzard_matriarch: '§DX-02gw',
@@ -106,7 +114,71 @@ function scan(src) {
     }
   }
 
+  // ── Direction 3: every classification vocabulary matches something it is tested against ──
+  // §DX-02di. `_isVoidEnemy` decides press-vs-flee from regex vocabularies. A vocabulary
+  // whose alternatives appear nowhere in the roster it is tested against is a live const,
+  // read by a live caller, whose OUTCOME is constant — invisible to a dead-const or
+  // unread-field check, and invisible to a test that exercises only its negative case.
+  // Only a source carrying the WORLDBUILDER section markers holds the rosters to
+  // intersect against; the selftest's synthetic pools do not, and are not judged here.
+  const isGameFile = src.includes('// ◆◆◆ WORLDBUILDER:MONSTER_POOL:START ◆◆◆');
+  const read = new Map(isGameFile ? classificationVocabularies(src) : []);
+  if (isGameFile && !read.size) {
+    findings.push('[vocab] _isVoidEnemy declares no regex vocabulary this gate can find — the press-vs-flee classifier is no longer shaped the way this check reads it');
+  }
+  for (const [name, re] of read) {
+    const corpusName = CLASSIFICATION_CORPUS[name];
+    if (!corpusName) {
+      findings.push(`[vocab] _isVoidEnemy reads '${name}' and CLASSIFICATION_CORPUS does not say which roster it is tested against — add it, so the alternatives can be intersected with the world`);
+      continue;
+    }
+    const corpus = worldVocabulary(src)[corpusName];
+    if (![...corpus].some(w => re.test(w))) {
+      findings.push(`[vocab] '${name}' matches none of the ${corpus.size} ${corpusName} in the file — the branch that reads it cannot return true`);
+    }
+  }
+  for (const name of Object.keys(isGameFile ? CLASSIFICATION_CORPUS : {})) {
+    if (!read.has(name)) {
+      findings.push(`[vocab] CLASSIFICATION_CORPUS declares a roster for '${name}', which _isVoidEnemy no longer reads — retire the entry`);
+    }
+  }
+
   return findings;
+}
+
+// The regex constants `_isVoidEnemy` reads, by name, with their /g flag dropped so a
+// repeated `.test` cannot walk `lastIndex` off the end of the corpus.
+function classificationVocabularies(src) {
+  const fn = src.match(/function _isVoidEnemy\s*\(\)\s*\{[\s\S]*?\n\}/);
+  if (!fn) return [];
+  const out = [];
+  for (const name of new Set((fn[0].match(/_[A-Z0-9_]+_RE\b/g) || []))) {
+    const decl = src.match(new RegExp('const\\s+' + name + '\\s*=\\s*(/.*?/[gimsuy]*)\\s*;'));
+    if (!decl) continue;
+    const lit = decl[1], cut = lit.lastIndexOf('/');
+    out.push([name, new RegExp(lit.slice(1, cut), lit.slice(cut + 1).replace('g', ''))]);
+  }
+  return out;
+}
+
+// The two rosters a classification vocabulary can be tested against. `monsters` is what
+// `S.enemy.name + ' ' + key` can hold; `terrains` is what `NODE_MAP[*].name` and
+// `_inferTerrain` can return — the terrain KEY, plus that function's own three literals.
+function worldVocabulary(src) {
+  const monsters = new Set(), terrains = new Set(['ocean', 'road', 'midlands']);
+  const pool = section(src, 'MONSTER_POOL') + section(src, 'EPIC_BOSS_POOL');
+  for (const m of pool.matchAll(/key\s*:\s*["'](\w+)["']/g)) monsters.add(m[1]);
+  for (const m of pool.matchAll(/name\s*:\s*["']([^"']+)["']/g)) monsters.add(m[1]);
+  const world = section(src, 'WORLD_DB');
+  for (const m of world.matchAll(/^ {2}(\w+)\s*:\s*\{/gm)) terrains.add(m[1]);
+  for (const m of section(src, 'NODE_MAP').matchAll(/name\s*:\s*["'](\w+)["']/g)) terrains.add(m[1]);
+  return { monsters, terrains };
+}
+
+function section(src, name) {
+  const S = `// ◆◆◆ WORLDBUILDER:${name}:START ◆◆◆`, E = `// ◆◆◆ WORLDBUILDER:${name}:END ◆◆◆`;
+  const a = src.indexOf(S), b = src.indexOf(E);
+  return (a > -1 && b > a) ? src.slice(a + S.length, b) : '';
 }
 
 // Two kinds of exemption, and they are different promises: a row-owned one names the
@@ -177,6 +249,46 @@ if (process.argv.includes('--selftest')) {
     'the census covers EVERY tier, not just the one direction 2 walks');
   ok(scan(censusBase).filter(real).some(f => f.startsWith('[deadly]')) === false,
     'a census-visible unreachable at a non-deadly tier is NOT a gate failure');
+
+  // §DX-02di — the three vocabulary rules, on a synthetic source shaped like the game.
+  const gameShaped = (vocabDecls, fnBody) => [
+    '// ◆◆◆ WORLDBUILDER:MONSTER_POOL:START ◆◆◆',
+    'const MONSTER_POOL = {',
+    "  void_walker: { key:'void_walker', name:'Void Walker', ac:15, hp:97, tier:'hard' },",
+    '};',
+    '// ◆◆◆ WORLDBUILDER:MONSTER_POOL:END ◆◆◆',
+    '// ◆◆◆ WORLDBUILDER:WORLD_DB:START ◆◆◆',
+    'const WORLD_DB = {',
+    "  catacombs: { label:'Catacombs' },",
+    '};',
+    '// ◆◆◆ WORLDBUILDER:WORLD_DB:END ◆◆◆',
+    vocabDecls,
+    'function _isVoidEnemy() {',
+    fnBody,
+    '}',
+  ].join('\n');
+  const vocab = f => f.startsWith('[vocab]');
+
+  ok(scan(gameShaped(
+    'const _VOID_ENEMY_RE = /void|wraith/i;',
+    "  return _VOID_ENEMY_RE.test('x');")).filter(vocab).length === 0,
+    'a vocabulary that matches its declared roster passes');
+
+  ok(scan(gameShaped(
+    'const _VOID_ENEMY_RE = /void|wraith/i;\nconst _VOID_TERRAIN_RE = /blight|barrow/i;',
+    "  if (_VOID_TERRAIN_RE.test('t')) return true;\n  return _VOID_ENEMY_RE.test('x');"))
+    .some(f => vocab(f) && f.includes('does not say which roster')),
+    'a vocabulary the classifier reads with no declared roster is caught');
+
+  ok(scan(gameShaped(
+    'const _VOID_ENEMY_RE = /nothing_in_this_world/i;',
+    "  return _VOID_ENEMY_RE.test('x');"))
+    .some(f => vocab(f) && f.includes('matches none of the')),
+    'a vocabulary whose alternatives appear in no monster name or key is caught');
+
+  ok(scan(gameShaped('const _OTHER_RE = /void/i;', "  return _OTHER_RE.test('x');"))
+    .some(f => vocab(f) && f.includes('retire the entry')),
+    'a declared roster for a vocabulary the classifier no longer reads is caught');
 
   const summary = exemptionSummary();
   const owned = [...Object.values(UNREACHABLE_DEADLY), ...Object.values(UNRESOLVED_BATTLE_KEYS)]

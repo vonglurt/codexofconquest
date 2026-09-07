@@ -112,8 +112,7 @@ The ship added **77 lines in four regions**, none of them inside the kernel:
 | the effort dial | `const EFFORT_XP_PCT@24490` | `0.25` — fraction of a full success a partial action earns |
 | per-encounter reset | `S.opp.enraged                = false@24704` | inside `_storyRollInit`, the guard's only writer-to-false |
 | Void vocabulary | `const _VOID_ENEMY_RE@25196` | 24 alternatives matched against monster name + key |
-| terrain vocabulary | `const _VOID_TERRAIN_RE@25197` | 10 alternatives matched against node terrain and `_inferTerrain` |
-| the classifier | `function _isVoidEnemy@25198` | name-or-terrain heuristic; the only caller of both regexes |
+| the classifier | `function _isVoidEnemy@25203` | `voidTainted` first, then the `fish_*`/`night_*` beast rule, then the name vocabulary |
 | press magnitude | `function _voidEnrage@25213` | trivial +1/+1 … deadly +4/+4 and an extra damage die |
 | flee probability | `function _fleeChance@25223` | trivial 0.6 · easy 0.5 · medium 0.35 · hard 0.2 · deadly 0.1 |
 | the escape | `function _storyEnemyFlees@25229` | closes the overlay, grants effort XP, no loot, node not cleared |
@@ -224,7 +223,7 @@ terrain half never fires. No test in the file can distinguish a working terrain 
 
 ## 9. Findings → BACKLOG
 
-### D1 — the terrain half of the classifier has never returned true (§DX-02di 🟡)
+### D1 — the terrain half of the classifier has never returned true (§DX-02di ✅ SHIPPED 2026-09-06)
 
 `_isVoidEnemy@25198` has two terrain call sites: `_VOID_TERRAIN_RE.test(node.name)` and the same regex over
 `_inferTerrain@28535`. Both draw from one vocabulary — `NODE_MAP[*].name` is the **terrain key** (repo rule:
@@ -240,6 +239,16 @@ The two vocabularies were minted independently and **share not one word**. The r
 `catacombs`, `crypt`, `sewers`, `ruins`, `monster_cave`, `vampire_castle`, `drowned_shore`, `sunken_hall`,
 `fog_bank`, `cosmic_realm`. **Half the shipped classifier is a constant-false predicate, and it has been one
 since 2026-07-12.**
+
+**Resolved 2026-09-06 (§DX-02di).** The terrain half is deleted, `_VOID_TERRAIN_RE` with it. **Classification
+is a property of the monster, not of where the fight happens** — the reading the file had already reached twice,
+in §DX-02dj's `voidTainted` authority and in §AUDIT-03bn's *"a fish in a lake is a beast, whatever it is
+called"*. Deleting was **behaviour-identical**: the branch returned false at all 416 nodes and for every value
+`_inferTerrain` can produce, so the swept classification of a rat and of a Void Wolf is unchanged either side.
+Enabling it would not have been — which of the world's 111 terrains read as Void is a content decision, filed
+as **§DX-02iy**. The gate class this finding named now exists: `check:battlepools` Direction 3 intersects each
+vocabulary `_isVoidEnemy` reads with the roster it is tested against, and a vocabulary with no declared roster
+is itself a finding.
 
 > ***A new gate class.*** This is not a dead const (§DX-02n) and not an unread field (§DX-02y): the const is
 > live, its reader is live, and the reader is called on every enemy turn. What is dead is the **outcome**. A

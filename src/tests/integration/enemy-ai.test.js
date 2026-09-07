@@ -10,13 +10,29 @@ test.describe('§PLAY-01-B — enemy AI per tier (press vs flee)', () => {
     const r = await page.evaluate(() => {
       storyNewGame({ str:10, dex:8, con:8, int:8, wis:8, cha:8 });   // S_story valid; at LHR (non-void)
       const out = {};
-      // classification heuristic (name/terrain)
+      // classification: the per-monster field, then the name vocabulary
       S.enemy = Object.assign({}, S.enemy, { name:'Void Wolf', key:'void_wolf' });
       out.voidByName = _isVoidEnemy();
       S.enemy = Object.assign({}, S.enemy, { name:'Skeletal Archer', key:'skel_1' });
       out.voidByUndead = _isVoidEnemy();
       S.enemy = Object.assign({}, S.enemy, { name:'Giant Rat', key:'giant_rat' });
-      out.mundane = _isVoidEnemy();                                   // rat at Birka city — not void
+      out.mundane = _isVoidEnemy();
+      // §DX-02di — and it does not depend on where the fight happens: the same rat, and
+      // the same wolf, classify the same standing on every node in the world
+      out.ratAnywhere = new Set(), out.wolfAnywhere = new Set();
+      const here = S_story.currentCode, r0 = S_story.playerR, c0 = S_story.playerC;
+      for (const code of Object.keys(NODE_MAP)) {
+        S_story.currentCode = code;
+        const co = NODE_COORDS[code]; if (co) { S_story.playerR = co.r; S_story.playerC = co.c; }
+        S.enemy = Object.assign({}, S.enemy, { name:'Giant Rat', key:'giant_rat' });
+        out.ratAnywhere.add(_isVoidEnemy());
+        S.enemy = Object.assign({}, S.enemy, { name:'Void Wolf', key:'void_wolf' });
+        out.wolfAnywhere.add(_isVoidEnemy());
+      }
+      out.nodesSwept = Object.keys(NODE_MAP).length;
+      out.ratAnywhere = [...out.ratAnywhere]; out.wolfAnywhere = [...out.wolfAnywhere];
+      S_story.currentCode = here; S_story.playerR = r0; S_story.playerC = c0;
+      S.enemy = Object.assign({}, S.enemy, { name:'Giant Rat', key:'giant_rat' });
       // tier scaling
       out.enrageEasy = _voidEnrage('easy');
       out.enrageDeadly = _voidEnrage('deadly');
@@ -28,6 +44,9 @@ test.describe('§PLAY-01-B — enemy AI per tier (press vs flee)', () => {
     expect(r.voidByName).toBe(true);
     expect(r.voidByUndead).toBe(true);
     expect(r.mundane).toBe(false);
+    expect(r.nodesSwept).toBeGreaterThan(400);
+    expect(r.ratAnywhere).toEqual([false]);      // one outcome across every node
+    expect(r.wolfAnywhere).toEqual([true]);
     expect(r.enrageEasy).toEqual({ atk:1, dmg:1, die:0 });
     expect(r.enrageDeadly).toEqual({ atk:4, dmg:4, die:1 });
     expect(r.fleeEasyGtHard).toBe(true);
