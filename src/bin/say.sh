@@ -32,4 +32,4 @@ printf '%d\n' "$SEQ" > "$SEQ_FILE"
 printf '%s\n' "$TEXT" > "$QUEUE_DIR/$(date +%Y%m%d-%H%M%S)-$(printf '%06d' "$SEQ").txt"
 
 # use pgrep so the check is reliable even when the daemon was just forked
-pgrep -qf "sayd\\.sh" 2>/dev/null || { "$DAEMON" </dev/null &>/dev/null & disown; }
+pgrep -f "sayd\\.sh" >/dev/null 2>&1 || { "$DAEMON" </dev/null &>/dev/null & disown; }

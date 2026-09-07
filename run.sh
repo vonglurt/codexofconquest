@@ -38,6 +38,6 @@ case "${1:-help}" in
     pkill -f "src/bin/monitor-snapshots.py" 2>/dev/null && echo "monitor stopped" || true ;;
   status)
     server_up && echo "API   : UP   (:$PORT)" || echo "API   : down"
-    pgrep -qf "src/bin/monitor-snapshots.py" && echo "monitor: UP" || echo "monitor: down" ;;
+    pgrep -f "src/bin/monitor-snapshots.py" >/dev/null 2>&1 && echo "monitor: UP" || echo "monitor: down" ;;
   *) sed -n '4,6p' "$0" ;;
 esac
