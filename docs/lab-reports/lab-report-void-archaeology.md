@@ -226,9 +226,11 @@ defect that took 39 days to notice would now take one push.*
 The arc is correct. It is also, at HEAD, **unreachable in normal play**, for two independent reasons
 that both sit upstream of everything above.
 
-**(1) `wmFirstResearcherKnown` has no writer that is not its own consequence.** The flag's only
-writer is `set:['wmFirstResearcherKnown'] }, { kind:'reward', gold:300 }@11122`, inside the
-`onComplete` of the very quest whose completion condition is
+**(1) `wmFirstResearcherKnown` had no writer that was not its own consequence.** ✅ **Repaired
+2026-09-07 (§AUDIT-03au):** the flag is written where the quest's own hint puts it — the unredacted
+read of Document 3, `` `if (unsealed) S_story.wmFirstResearcherKnown = true;@28030` `` — and the
+`flag_write` is gone from the `onComplete`. As measured, the only writer was that `flag_write`,
+inside the `onComplete` of the very quest whose completion condition is
 `completion:{ flags:['wmFirstResearcherKnown'] }@11121`. The quest cannot complete until the flag is
 set, and nothing else sets it. Tracked as **§AUDIT-03au** (the fix is one line, and the quest's own
 hint says where the grant belongs). `_vaReady` inherits the block whole.

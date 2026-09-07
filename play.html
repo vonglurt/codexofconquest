@@ -11119,7 +11119,7 @@ const QUEST_DB = { // → doc: quest.md §Quest Format
     npc:"benedikt_rasp",
   },
   quest_wm_04: { id:'quest_wm_04', type:'side', schema:'UQF-1.0', gate:{ flags:['wmBenediktCircleComplete'] }, bits:[], completion:{ flags:['wmFirstResearcherKnown'] }, title:'Benedikt: The First Researcher',
-    onComplete:[ { kind:'flag_write', set:['wmFirstResearcherKnown'] }, { kind:'reward', gold:300 }, { kind:'narrative', msg:'📙 Benedikt\'s Annotated Copy (Tome) obtained. +300gp. The First Researcher is known.' } ], // §ARCH-01 W7c
+    onComplete:[{kind:'reward',gold:300},{kind:'narrative',msg:'📙 Benedikt\'s Annotated Copy (Tome) obtained. +300gp. The First Researcher is known.'}], // §ARCH-01 W7c
     itemChain:[{action:'grant',name:'Benedikt\'s Annotated Copy',icon:'📙',type:'tome',sell:0,bonus:{atkWhileQuestActive:1},silent:true,desc:'"He was right about this one too." — B. Rasp'}], // §EDITOR-01-D-FU(b) b2b
     desc:"Benedikt knows who the First Researcher was. He waited three sessions to be sure you were the kind of person to be told.",
     hint:'Return to the lower archive and read the unredacted personnel file.',
@@ -24088,6 +24088,7 @@ function storyNewGamePlus() {
   const savedPitPerks          = (S_story.pitPerks || []).slice();
   const savedNgRun             = (S_story.ngPlusRun || 0) + 1;
   const savedEntry42Written    = !!(S_story.entry42Written);
+  const savedFirstResearcher   = !!(S_story.wmFirstResearcherKnown);
   const savedEntry42Text       = S_story.entry42Text || '';
   const savedPriorQuestMinus1  = !!(S_story.questMinusOne);
   const savedPlayerKey         = S_story.playerKey || '';
@@ -24099,6 +24100,7 @@ function storyNewGamePlus() {
   S_story.pitPerks          = savedPitPerks;
   S_story.ngPlusRun         = savedNgRun;
   S_story.entry42Written    = savedEntry42Written;
+  S_story.wmFirstResearcherKnown = savedFirstResearcher;
   S_story.entry42Text       = savedEntry42Text;
   S_story.priorQuestMinusOne = savedPriorQuestMinus1;
   S_story.playerKey         = savedPlayerKey;
@@ -28007,18 +28009,27 @@ function _storyWmArchiveModal(wrap) {
   };
   WM_ARCHIVE_DOCS.forEach((doc, i) => {
     const read = !!(S_story[doc.key]);
-    const body = read || (i === 2 && S_story.wmDoc3Unredacted)
-      ? (i === 2 && S_story.wmDoc3Unredacted && S_story.wmFirstResearcherKnown
+    // Document 3 is readable twice: redacted, then again once the reading circle unseals it.
+    // The second read is what puts the First Researcher's name in the player's hands, so it is
+    // where `wmFirstResearcherKnown` is written — quest_wm_04 completes on that flag.
+    const unsealed = i === 2 && !!S_story.wmDoc3Unredacted;
+    const unread = !read || (unsealed && !S_story.wmFirstResearcherKnown);
+    const body = unread
+      ? null
+      : (unsealed && S_story.wmFirstResearcherKnown
           ? doc.body.replace('[REDACTED]','Marta Eilene Vass').replace(/\[REDACTED\]/g,'Marta Eilene Vass — First Tier, Tier-1 Researcher')
-          : doc.body)
-      : null;
+          : doc.body);
     let btn = null;
     if (!body) {
       btn = document.createElement('button');
       btn.className = 'inv-use-btn';
       btn.style.cssText = 'margin-top:4px;';
-      btn.textContent = (i === 2 && S_story.wmDoc3Unredacted) ? '🔓 Read (unredacted)' : '📄 Read';
-      btn.addEventListener('click', () => { S_story[doc.key] = true; storyAutoSave(); _storyWmArchiveModal(_wrap); });
+      btn.textContent = unsealed ? '🔓 Read (unredacted)' : '📄 Read';
+      btn.addEventListener('click', () => {
+        S_story[doc.key] = true;
+        if (unsealed) S_story.wmFirstResearcherKnown = true;
+        storyAutoSave(); _storyWmArchiveModal(_wrap);
+      });
     }
     sub.appendChild(_makeDoc(read ? '#3a6a3a' : '#3a2010', read ? '#90c890' : '#f0c070',
       (read ? '✓ ' : '') + 'Document ' + (i+1) + ': ' + doc.title, body, btn));

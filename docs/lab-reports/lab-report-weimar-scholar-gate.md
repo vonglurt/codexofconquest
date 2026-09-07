@@ -199,7 +199,7 @@ engine defect, not report rot.
 | # | Report claim | Measured at HEAD | Verdict |
 |---|---|---|---|
 | 1 | `wmSessionsDays` "tracks **`gameDay`** values" | the code read `S_story.dayCounter`, a field that never existed; it reads `` `const today = S_story.gameDay || 0;@35014` `` now | **ENGINE DEFECT, the report was right — SHIPPED 2026-09-07** (§AUDIT-03at) |
-| 2 | `quest_wm_04` completes on `wmFirstResearcherKnown` | true — and that flag's only writer is `quest_wm_04`'s own `onComplete` | **ENGINE DEFECT — circular** (§AUDIT-03au) |
+| 2 | `quest_wm_04` completes on `wmFirstResearcherKnown` | true — and that flag's only writer was `quest_wm_04`'s own `onComplete`; it is now the unredacted read of Document 3 | **ENGINE DEFECT, circular — SHIPPED 2026-09-07** (§AUDIT-03au) |
 | 3 | "Benedikt → **Dear Friend** on quest_wm_03" (stated 3×) | `` `npc:'benedikt_rasp',set:2@11112` `` — the report was right and the bit was wrong; Dear Friend begins at 2 (`` `fav >= 2 ? p.dearFriend@23749` ``) | **SHIPPED 2026-09-07** (§AUDIT-03ar); inert until §AUDIT-03at |
 | 4 | Isolde "Key line **at Dear Friend**" | she has no `dearFriend` pool at all; that line is her `friendly` tier, and `` `npc:"isolde_voss", set:1@11102` `` is her ceiling | **MISATTRIBUTED — internally consistent, so harmless** |
 | 5 | Isolde "Begins Neutral" | base tier is named `impartial` | cosmetic |
@@ -282,9 +282,9 @@ Three consequences:
 - **(a)** Benedikt's Annotated Copy is never granted, so the `atkWhileQuestActive` mechanic — an
   entire designed bonus class — has never contributed to a single attack roll; and +300gp is never
   paid.
-- **(b)** `` `S_story.wmDoc3Unredacted && S_story.wmFirstResearcherKnown@27982` `` guards the
+- **(b)** `` `unsealed && S_story.wmFirstResearcherKnown@28019` `` guards the
   substitution, so **`Marta Eilene Vass` — one occurrence in the file, at
-  `` `Marta Eilene Vass — First Tier@27983` `` — has never rendered.** The arc's declared climax is
+  `` `Marta Eilene Vass — First Tier@28020` `` — had never rendered until §AUDIT-03au.** The arc's declared climax is
   a string in a dead branch. And `` `const _vaReady = (S_story.ngPlusRun || 0) >= 1@31858` ``
   requires the same flag, so Layer 52 inherits the block.
 - **(c)** The `` `Read (unredacted)' : '📄 Read'@27991` `` label is computed only in the branch
@@ -364,7 +364,7 @@ content-per-edit ratio the verification program has measured.
 | Row | Severity | Summary |
 |---|---|---|
 | **§AUDIT-03at** ✅ | 🟢 no design call | `S_story.dayCounter` (1 occurrence, 1 commit, 0 writers, ever) → `gameDay`; unblocks `quest_wm_03`, and activates `quest_wm_04`. **SHIPPED 2026-09-07** |
-| **§AUDIT-03au** | 🟢 no design call | `quest_wm_04`'s completion is its own effect; plus NG+ wipes the flag `_vaReady` requires; plus a dead button label |
+| **§AUDIT-03au** ✅ | 🟢 no design call | `quest_wm_04`'s completion was its own effect; plus NG+ wiped the flag `_vaReady` requires; plus a dead button label. **All three SHIPPED 2026-09-07** |
 | **§AUDIT-03av** | 🟡 small design call | `NUE` carries a Weimar label and four Nuremberg player-facing strings |
 | §AUDIT-03ar | *corroborated* | this report **specifies** Dear Friend in three places, so it is a spec→shipped delta, not an ambiguity — and the row's premise needs one correction: `quest_wm_03`'s `onComplete` never runs, so Benedikt's favor is **0**, not 1. The fix is inert until §AUDIT-03at lands |
 | §AUDIT-03b | *corroborated* | `quest_wm_01`'s `npc:` stamp names Sweelinck while its own text quotes Isolde — authoring metadata, inert |
