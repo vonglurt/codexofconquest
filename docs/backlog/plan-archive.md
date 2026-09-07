@@ -19,6 +19,18 @@
 
 ---
 
+## Archived 2026-09-07 — §DX-02bd (a quest is listed once per node, not once per field that names it)
+
+### §DX-02bd — `_questsByNode` indexes a quest once per node field with no dedupe, so 49 of 416 nodes over-report their quests and the delete-cascade guard names the same blocker twice (NEW 2026-08-13 during §DOC-02aq)
+
+- [x] ✅ SHIPPED 2026-09-07 `fe385f8` **§DX-02bd — the map is built through a `Set` and materialised to arrays after the loop (`` `src/js/wbapi-core.js:_byNodeSets[q[field]].add(id);@956` ``), which is the row's own preferred option: duplication becomes impossible by construction rather than guarded against at the push site.** **The row's measurement reproduced exactly at `d1733b3`, to the number:** **49** of 388 indexed nodes carrying duplicates, **97** duplicate entries, worst **`NUE` at 186 entries and 177 distinct**. `_questsByWaypoint` and `_questsByNpc` measured **0** and structurally cannot be otherwise — they push at most once per quest, where `_questsByNode` folds `activateNode` **and** `waypointNode` into one map.
+> **Why no gate saw it, in the row's own words and confirmed:** the guard *"refuses the delete for the right reason with the wrong arithmetic"* — every id in the list resolves, the list is non-empty, the delete is correctly blocked, and a duplicate is visible only if you compare `arr.length` against `new Set(arr).size`, which nothing did.
+> **After: 49 → 0 and 97 → 0**, on the index and on all three consumer surfaces the row names: `./bin/api location NUE` reports **177** quests, `./bin/api list quest --node NUE` returns **177 ids, 177 distinct**, and `_deps.node()` — exercised for real with a nonce'd `DELETE /api/node/ADA`, whose old index listed `quest_barnach_finds` twice — now names it **once** and **still refuses the delete**, with the node intact afterwards. The array shape every consumer reads is unchanged, and `[...set]` preserves first-occurrence order, so the list is the old one minus its repeats and nothing else.
+> **`check:arraypatch` 51 → 56 checks, and not one of them pins a number.** (i) A **property over the whole corpus** — every key of all three quest indexes lists each id once — so it cannot rot as quests are authored. (ii) A **non-vacuity control** that rebuilds the pre-fix push-per-field index from the same `QUEST_DB` and requires the assertion to fail on it, reporting how many keys it duplicates; that is the mutation test written into the gate rather than performed once by hand. (iii) A proof the **dedupe removed only repeats**: same keys, same distinct membership, so no consumer lost a real reference — the row's stated risk, discharged.
+> **Docs re-synced.** `lab-report-wbapi.md` §VI-2 — the report that filed this against itself — is marked ✅ FIXED with its anchor repaired **by name**, and it keeps the sentence that makes it worth reading: *the ellipsis in its own DELETE example hid a live bug in the document that introduced it, for 76 days.* `./bin/api audit` **0 errors** · `check:walk` **26/26** · `play.html` untouched — this is a `src/` fix with no world-data change.
+
+
+
 ## Archived 2026-09-07 — §DX-02fp/fq/fr/fs + §DX-02bb (the API's self-description stops disagreeing with the API)
 
 ### §DX-02fp/fq/fr/fs — the server's own `/api/help` teaches four things that are not true (NEW 2026-08-23 during §DOC-02da) · §DX-02bb — the WBAPI's built-in help contradicts itself in two places, and one of them states the wrong nonce TTL (NEW 2026-08-13 during §DOC-02ap)
