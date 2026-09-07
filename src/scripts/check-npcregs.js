@@ -48,6 +48,8 @@
 //   9. spoken         — a favor key resolves to a NAME, not merely into the vocabulary,
 //                       and the promotion path still goes through the one resolver and
 //                       still takes the run's message sink (§DX-02gc)
+//  10. writers        — `S_story.npcFavorability` is written only by the setter and the
+//                       two functions declared beside it here (§DX-02x)
 //
 // NOT covered here on purpose: whether an npc-VALUED string field RESOLVES. Quest anchors
 // are pinned by tests/integration/audit03h-npc-normalize.test.js, and NODE_MAP's inline
@@ -132,6 +134,17 @@ const NOT_AN_ALIAS = {
 // is a function of the favor ledger. A key the corpus can raise to the threshold that the
 // ceremony deliberately does not name needs a reason here, for the same reason
 // NOT_NPC_KEYED does — a silence and an oversight are otherwise the same text.
+// §DX-02x — who may write the favor ledger, and why. A raw write is not a style
+// preference: `_setNpcFavor` is ABSOLUTE (a `+ 1` is only correct while the field is
+// known-zero), it refuses to lower a level, and it is the only thing that speaks the tier
+// line — so a promotion written past it is silent, relative and unguarded, all three.
+// Listed by name with a reason, and a name here that no longer writes is itself a finding.
+const FAVOR_WRITERS = {
+  _setNpcFavor: 'the canonical setter — absolute, only ever raises, speaks the tier line',
+  _checkDearFriendUpgrade: 'the Dear Friend upgrade, reached only from the setter',
+  storyNewGamePlus: 'NG+ carries the whole ledger across the reset — it restores the map, it promotes nobody',
+};
+
 const CEREMONY_TABLE = 'SWEELINCK_NAMING_LINES';
 const CEREMONY_EXEMPT = {};
 
@@ -226,6 +239,14 @@ function functionBody(src, name) {
     else if (src[k] === '}' && --depth === 0) return src.slice(i, k + 1);
   }
   return null;
+}
+
+// The top-level `function NAME(` a source index sits inside, or '' at file scope.
+function enclosingFunction(src, idx) {
+  const re = /\nfunction ([A-Za-z_$][\w$]*)\s*\(/g;
+  let m, name = '';
+  while ((m = re.exec(src)) && m.index < idx) name = m[1];
+  return name;
 }
 
 function npcIdentities() {
@@ -481,6 +502,26 @@ function audit(src, vocab, model) {
       + `the promotion line would read "🤝 ${k} looks at you differently now."`);
   }
 
+  // 10. writers — §DX-02x. One arc promoted one NPC through the host and another by a raw
+  //     `+ 1` into the ledger; that site closed at §DX-02cm, and this is the fence that
+  //     keeps the class closed. Every assignment is classified by the function it sits in.
+  const writeRe = /S_story\.npcFavorability(\s*\[[^\]]*\])?\s*=(?!=)/g;
+  let wm, writes = 0;
+  const seenWriters = new Set();
+  while ((wm = writeRe.exec(src))) {
+    writes++;
+    const fn = enclosingFunction(src, wm.index) || '(file scope)';
+    seenWriters.add(fn);
+    if (!FAVOR_WRITERS[fn]) findings.push(`[writers] ${wm[0].trim()} at line ${lineOf(src, wm.index)} is inside ${fn}, `
+      + 'which is not a declared favor writer — a raw ledger write is relative, silent and unguarded, where '
+      + '_setNpcFavor is absolute, speaks the tier line and refuses to lower a level. Use the setter, or declare '
+      + 'the writer with its reason in scripts/check-npcregs.js');
+  }
+  if (!writes) findings.push('[writers] no S_story.npcFavorability assignment found at all — the phase cannot pass by failing to find its own subject');
+  for (const [fn, why] of Object.entries(FAVOR_WRITERS)) {
+    if (!seenWriters.has(fn)) findings.push(`[writers] FAVOR_WRITERS lists '${fn}' (${why}) and it no longer writes the ledger — drop the exemption`);
+  }
+
   return findings;
 }
 
@@ -511,6 +552,9 @@ function selftest(src, vocab, model) {
     ['spoken', src.replace('const d = NPC_DIALOGUES[key];', 'const d = null;'), model],
     ['spoken', src.replace("  const n = _npcDisplayName(key);", "  const n = (BIRKA_NPC_PROFILES[key] || {}).name || key;"), model],
     ['spoken', src.replace('      favor(bit, ctx) {', '      favor(bit) {'), model],
+    // §DX-02x — the raw `+ 1` this row was filed against, replanted, and a stale exemption.
+    ['writers', src.replace('function _lubeckFriends() {', "function _plantedHook() { S_story.npcFavorability['aldo_sardino'] = (S_story.npcFavorability['aldo_sardino'] || 0) + 1; }\nfunction _lubeckFriends() {"), model],
+    ['writers', src.replace('  S_story.npcFavorability   = savedFavorability;', '  /* moved */'), model],
   ];
   // Findings are compared against the UNPLANTED baseline, so a plant is only "caught" if
   // it produced a finding that was not already there — otherwise a corpus that is already
@@ -554,4 +598,5 @@ console.log(`✓ check:npcregs — ${NPC_KEYED.length} npc-keyed registries, ${N
   + `every NPC the corpus raises to fav >= ${ceremonyThreshold(src)} has a line in ${CEREMONY_TABLE}, `
   + 'and no favor threshold in the file is above the favor its NPC can be written to, '
   + 'and every favor bit writes the tier its own entry announces to the player, and every favor write '
-  + 'names someone the game can put a display name to, through the one resolver, into the run\'s message stream');
+  + 'names someone the game can put a display name to, through the one resolver, into the run\'s message stream, '
+  + `and all ${Object.keys(FAVOR_WRITERS).length} writers of the favor ledger are the ones declared here`);
