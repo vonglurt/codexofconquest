@@ -1,19 +1,15 @@
 # §WALK-4 Inc 2 / §WALK-5 — CI gate for the terrain-field invariants + walk parity + MUD harness.
 #
-# Job `invariants` runs the self-contained Node proofs (no server, no browser, no install):
-#   • check-invariants  — I1 totality / I2 no-stubs / I3 reachability (409/409, 1 component)
-#   • check-mover-parity     — structural: MOVER:CORE inlined byte-identical to mover.js
-#   • check-mover-behaviour  — behavioural: shared kernel reproduces every cellMove decision
-#   • check-terrain-parity   — §WALK-5: server getMoverWorld() terrain/encounter inputs
-#                              (rate table, SEA_LANES, terrainAt) match the client byte-for-behaviour
+# Job `invariants` runs `check:walk` — the whole gate chain, which is named in
+# `src/scripts/run-gates.js` and is stdlib-only: no server, no browser, no install.
+# A `check:*` script that is not in that chain fails the runner before any gate starts.
 #
 # Job `mud` (§WALK-5 Inc 3/4) spins a throwaway wbapi-server and drives K seeded
 # SSE clients to assert co-presence broadcast, instanced no-bleed encounters, and
 # idle-TTL prune. It needs `npm ci` because the server top-level-requires the
 # Anthropic SDK, so it can't ride the stdlib-only `invariants` job above.
 #
-# Red on any I1/I2/I3 violation, parity mismatch, or MUD-property failure;
-# green on current main (lab report §6).
+# Red on any gate failure or MUD-property failure; green on current main.
 name: WALK invariants
 
 on:
@@ -31,6 +27,8 @@ on:
       - 'src/scripts/check-terrain-parity.js'
       - 'src/scripts/check-noderegs.js'
       - 'src/scripts/check-array-patch.js'
+      - 'src/js/duel.js'
+      - 'src/scripts/check-duel-parity.js'
       - 'src/scripts/check-itemchain.js'
       - 'src/scripts/check-ladder-migration.js'
       - 'src/scripts/world-diff.js'
@@ -51,6 +49,8 @@ on:
       - 'src/scripts/check-terrain-parity.js'
       - 'src/scripts/check-noderegs.js'
       - 'src/scripts/check-array-patch.js'
+      - 'src/js/duel.js'
+      - 'src/scripts/check-duel-parity.js'
       - 'src/scripts/check-itemchain.js'
       - 'src/scripts/check-ladder-migration.js'
       - 'src/scripts/world-diff.js'
@@ -70,25 +70,8 @@ jobs:
       # No `npm ci` — these proofs depend only on the Node stdlib and the
       # committed mover.js / play.html, so install would just pull
       # Playwright + the SDK for nothing.
-      - name: Run terrain-field invariant + walk-parity suite
+      - name: Run the check:walk gate chain
         run: npm run check:walk --prefix src
-      # §WBAPI-01 ph3: structured-field PATCH round-trip guard — also stdlib-only
-      # (requires wbapi-core, which pulls in just fs/path), loads the committed HTML
-      # read-only. No install needed.
-      - name: Run WBAPI structured-field PATCH guard
-        run: npm run check:arraypatch --prefix src
-      # §EDITOR-01-D: declarative itemChain runtime + source round-trip guard —
-      # stdlib-only (vm + wbapi-core), loads the committed HTML read-only.
-      - name: Run itemChain guard
-        run: npm run check:itemchain --prefix src
-      # §EDITOR-01-D-FU(b): reward-ladder → itemChain migration parity guard —
-      # stdlib-only (vm + wbapi-core), loads the committed HTML read-only.
-      - name: Run ladder-migration parity guard
-        run: npm run check:laddermigration --prefix src
-      # §MESH-01-FU 9: world-diff deep-diff selftest — stdlib-only (crypto +
-      # wbapi-core), synthetic in-memory worlds, no HTML load.
-      - name: Run world-diff selftest
-        run: npm run check:worlddiff --prefix src
 
   mud:
     runs-on: ubuntu-latest

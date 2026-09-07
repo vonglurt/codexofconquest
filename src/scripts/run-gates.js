@@ -36,8 +36,21 @@ const GATES = [
   'check:noderegs', 'check:npcregs', 'check:anchors', 'check:legacycodes',
   'check:battlepools', 'check:arraypatch',
   'check:spdx', 'check:backlogcounts', 'check:condprices',
-  'check:docpointers',
+  'check:docpointers', 'check:duelparity', 'check:itemchain',
+  'check:laddermigration', 'check:worlddiff',
 ];
+
+// A gate named here is deliberately outside the chain; the value is the reason it is.
+const GATE_EXEMPT = {};
+
+const gateScripts = (pkg) => Object.keys(pkg.scripts || {})
+  .filter((k) => k.startsWith('check:') && k !== 'check:walk' && k !== 'check:walk:serial');
+
+const unchained = (pkg, gates, exempt) =>
+  gateScripts(pkg).filter((k) => !gates.includes(k) && !(k in exempt));
+
+const serialChain = (pkg) => String((pkg.scripts || {})['check:walk:serial'] || '')
+  .split('&&').map((s) => s.trim().replace(/^npm run /, '')).filter(Boolean);
 
 const argv = process.argv.slice(2);
 const argOf = (flag, dflt) => {
@@ -93,6 +106,12 @@ async function selftest() {
   checks.push(['planted-pass-still-green', green.timedOut === false && green.code === 0]);
   const out = await runGate('planted:output', 'echo marker-9f3c', 5000);
   checks.push(['output-survives-buffering', out.out.includes('marker-9f3c')]);
+  const planted = { scripts: { 'check:planted': 'true', 'check:walk': 'x', 'check:walk:serial': 'y' } };
+  checks.push(['unchained-gate-caught', unchained(planted, [], {}).join(',') === 'check:planted']);
+  checks.push(['exemption-honoured', unchained(planted, [], { 'check:planted': 'why' }).length === 0]);
+  checks.push(['serial-chain-parsed',
+    serialChain({ scripts: { 'check:walk:serial': 'npm run check:a && npm run check:b' } })
+      .join(' ') === 'check:a check:b']);
   console.log('selftest ' + checks.map(([k, v]) => `${k}=${v}`).join(' ') + ` (hang caught in ${fmt(elapsed)})`);
   if (checks.some(([, v]) => !v)) { console.error('✗ run-gates selftest failed'); process.exit(1); }
   console.log('');
@@ -100,6 +119,22 @@ async function selftest() {
 
 (async () => {
   if (SELFTEST) await selftest();
+
+  const orphans = unchained(PKG, GATES, GATE_EXEMPT);
+  if (orphans.length) {
+    console.error(`✗ run-gates: ${orphans.length} check:* script(s) in package.json are in neither GATES nor GATE_EXEMPT:`);
+    for (const name of orphans) console.error(`    ${name}`);
+    console.error('  A gate outside the chain is run by nobody. Add it to GATES (and to');
+    console.error('  check:walk:serial, in the same order), or name it in GATE_EXEMPT with its reason.');
+    process.exit(1);
+  }
+  const serial = serialChain(PKG);
+  if (serial.join(' ') !== GATES.join(' ')) {
+    console.error('✗ run-gates: check:walk:serial does not mirror GATES.');
+    console.error(`    GATES  : ${GATES.join(' ')}`);
+    console.error(`    serial : ${serial.join(' ')}`);
+    process.exit(1);
+  }
 
   const gates = GATES.map((name) => {
     const script = PKG.scripts[name];

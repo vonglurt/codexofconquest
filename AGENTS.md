@@ -45,7 +45,7 @@ The server holds the file text from when it started. A write after a hand-edit s
 ./bin/api get <type> <id> [--fns]      # round trip, AFTER a reload, from disk — never "GET agrees with me"
                                        # --fns carries function values as {__fn:'<src>'}; without it a write over
                                        # a field holding a closure is refused, not silently emptied (§DX-02iv)
-npm run check:walk --prefix src        # 22 gates in parallel, ~21s; the final ✓ N/N line is the verdict
+npm run check:walk --prefix src        # 26 gates in parallel, ~21s; the final ✓ N/N line is the verdict
 ./run.sh stop && npm test --prefix src # 1023 tests, server stopped
 ```
 
