@@ -345,13 +345,14 @@ function getLuck() {
 | 20 | 18 | 20 | 16 | 18 | 14 | 17 | +3 |
 | 8 | 8 | 8 | 8 | 8 | 8 | 8 | −1 |
 
-**Application — single call site *(§DROP-02 — ✅ 2026-06-05):***
+**Application — two call sites *(§DROP-02 — ✅ 2026-06-05, restored 2026-09-07 by §DROP-02-FU; §DROP-03 lake magic postdates it):***
 
 | Context | Formula | Effect |
 |---------|---------|--------|
 | Fishing — Type / Rarity roll | `typeTotal = tDie + bait.type + LuckMod + eelBonus` | Shifts catch rarity: common → rare → enchanted → golden → legendary |
+| Lake magic — item bonus | `bonus = base + level × levelScale + LuckMod × luckScale` | Scales a `lake_magic` item's effect: AC, attack, first strike, night type roll, all-ability (`luckScale` non-zero on 7 of 8 `LAKE_MAGIC_DB` entries) |
 
-Luck's sole mechanical role is improving what you get from a fish catch. All other former uses (bait search DC, d100 combat drops, death saves, encounter rate, tournament tiebreaker) have been removed.
+Luck reaches the game through those two terms and nothing else, and `check:invariants` **I5** holds the set: every `_luckMod()` call site in `play.html` is declared with the reason it is there. The uses §DROP-02 removed — bait search DC, d100 combat drops, death saves, encounter rate, tournament tiebreaker — are removed. **They were restored the same afternoon by a commit that mentioned none of it and stood for 68 days** (§DROP-02-FU); this table read as if they had not been. The lake-magic term is not one of them: it shipped later, with §DROP-03, and gives Luck a combat reach §DROP-02's own rationale did not contemplate — filed as §DROP-02-FU2.
 
 **Rarity thresholds** (`_rarityFromRoll`):
 

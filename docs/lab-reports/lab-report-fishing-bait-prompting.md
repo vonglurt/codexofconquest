@@ -107,8 +107,8 @@ Two-way. **STALE** = the report aged. **NOT SHIPPED** = specified, absent at HEA
 | 4 | 3 zones: Shore / Reeds / Deep | Shipped as `bank` / `reeds` / `shallows`, bridged by `_zoneMap = { bank:'shore'@30629` | **SHIPPED, renamed** |
 | 5 | Zone gate = Tier 2 / Tier 4 bait held | Gate = catch-log progress (≥1 catch; a Large+ catch) | **SHIPPED, different mechanism** |
 | 6 | Per-zone find DC 8 / 12 / 16 | Flat `S_story.fishingBaitSatchel ? 8 : 10@30622` in all three zones | **NOT SHIPPED** → §AUDIT-03v/w |
-| 7 | Effective DC = zoneDC − Luck Mod | `- _luckMod()@30622` | **SHIPPED** |
-| 8 | Bare Hook = −3 to Catch Roll | `catch:_luckMod()@30682` — **+1** at the default statline | **NOT SHIPPED** (sign inverted) |
+| 7 | Effective DC = zoneDC − Luck Mod | `- _luckMod()` | **SHIPPED** |
+| 8 | Bare Hook = −3 to Catch Roll | `catch:_luckMod()` — **+1** at the default statline | **NOT SHIPPED** (sign inverted) |
 | 9 | `predatorRank = clamp(2d20 + baitBonus + LuckMod, 1, 20)` | 4-phase cast; `tDie + bait.type + _luckMod()@30712` | **RETIRED** (§DOC-02m) |
 | 10 | Condition ladder by rank (Poisoned→Paralyzed→Cursed, CON DC 12–20) | No rank→condition map; conditions are player-applied from `CONDITION_ITEMS = [@22437` | **NOT SHIPPED** |
 | 11 | Rank-20 predator "Yugurt's Dread" | Shipped as a **monster name**, `fish_20: { key:'fish_20'@5373` (AC 20 — matches) | **SHIPPED, as data not mechanic** |
@@ -120,7 +120,7 @@ Two-way. **STALE** = the report aged. **NOT SHIPPED** = specified, absent at HEA
 | 17 | `Luck Mod = floor((Luck − 10) / 2)` | `_luckMod()@23455` — byte-exact | **SHIPPED, exact** |
 | 18 | Luck never stored, computed on demand | Correct — no `S_story` field | **SHIPPED, exact** |
 | 19 | Luck at 7 roll points | 4 shipped, 3 not (see §V-C); **2 unspecified additions** | **PARTIAL / EXTENDED** |
-| 20 | Luck on fishing death saves only | `Math.ceil(_combatRng() * 20) + _luckMod()@26029` applies to **all** death saves | **EXTENDED** |
+| 20 | Luck on fishing death saves only | `Math.ceil(_combatRng() * 20) + _luckMod()` applies to **all** death saves | **EXTENDED** |
 | 21 | Tournament tiebreaker: higher Luck Mod, **coin flip on equal** | Higher Luck Mod shipped; equal Luck Mod leaves `'tie'` — no coin flip | **PARTIAL** |
 | 22 | Q-FISH-00 … Q-FISH-05 (6 quests) | Only `quest_fish_01` exists | **1 of 6** |
 | 23 | Q-TOUR-01 … Q-TOUR-06 (6 quests) | `quest_tour_01`–`06` all live | **6 of 6 SHIPPED** |
@@ -180,8 +180,8 @@ promises, and both are this report's own specifications surviving as player-faci
 
 `_calcLuck()@23470` reproduces the specified formula byte-for-byte, including the `product <= 0`
 guard, over the exact default statline. Of the seven specified roll points: **shipped** — zone DC
-(`- _luckMod()@30622`), type roll (`tDie + bait.type + _luckMod()@30712`), death save
-(`Math.ceil(_combatRng() * 20) + _luckMod()@26029`), tournament tiebreak (minus the coin flip);
+(`- _luckMod()`), type roll (`tDie + bait.type + _luckMod()@30712`), death save
+(`Math.ceil(_combatRng() * 20) + _luckMod()`), tournament tiebreak (minus the coin flip);
 **not shipped** — bait catch roll (no bait combat), predator hit roll, weapon drop quality.
 **Unspecified additions:** a Luck term in the d100 loot roll, and `luckScale` in `LAKE_MAGIC_DB`.
 
@@ -276,7 +276,7 @@ points at this report for its contents, and so this table is the specification o
   `fishingQuestFlags.q01`; plus `_magicTierAllowed` as a **live function reachable only from dead
   branches**, which a reader/writer census scores as live.
 - **§DX-02m, named instance outside the fishing block** — unseeded `Math.random()` on story death
-  saves at `Math.ceil(_combatRng() * 20) + _luckMod()@26029`.
+  saves at `Math.ceil(_combatRng() * 20) + _luckMod()`.
 - **§DX-02v extended** — `monsters.md:317` (370 vs 398 monsters), `monsters.md:645` (retired `YL`).
 
 **Blocked on §FISH-01.** Every defect above except §FISH-02's d100 half and the death-save roll sits

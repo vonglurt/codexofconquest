@@ -144,8 +144,8 @@ async function openFishingModalViaButton(page) {
  *     MISS: castBtn hidden, recastBtn "Cast Again" → click recast → loop
  *     HIT:  castBtn "⚔ Fight [fish]!", recastBtn "🪣 Throw Back" → return true
  *
- * Randomness is live — with luckMod+2 and DEX mod+2, P(hit per cast) ≈ 85%.
- * 25 casts gives P(at least one hit) > 99.99%.
+ * Randomness is live — the Bare Hook adds nothing to the catch roll (§DROP-02-FU), so with
+ * DEX mod+2 P(hit per cast) ≈ 74%. 25 casts gives P(at least one hit) > 99.99%.
  */
 async function castUntilFishRevealed(page, maxCasts = 25) {
   const castBtn   = page.locator('#btn-fishing-cast');

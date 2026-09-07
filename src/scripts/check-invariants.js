@@ -14,6 +14,10 @@
 //   I4 (advertised cost): every `⏱ N hour` cost hint on a story card names an action
 //                       whose handler charges the clock. A card that advertises a cost
 //                       the code never takes is a promise the game does not keep.
+//   I5 (luck scope):    every `_luckMod()` call site in play.html is one of the sites
+//                       declared in LUCK_SITES with the reason it is there. §DROP-02
+//                       scoped Luck deliberately; a commit that said nothing about it
+//                       put six sites back the same afternoon, unobserved for 68 days.
 //   I3 (reachability):  every named node is reachable from hub LHR by a
 //                       4-connected LAND walk (E↔W wrap, N/S clamp) over the
 //                       passable terrain field — i.e. unreachable===0 and the
@@ -194,6 +198,29 @@ for (const [label, handler] of Object.entries(TIME_COST_CARDS)) {
     fails.push(`I4: TIME_COST_CARDS declares '${label}' → ${handler}(), and no story card advertises that cost any more — retire the entry`);
 }
 
+// ── I5: every _luckMod() call site is a declared one (§DROP-02-FU) ───────────
+// §DROP-02 scoped Luck to the fishing type/rarity roll with a written rationale per
+// removal, and a commit whose subject and body mention none of it put all six back the
+// same afternoon. Nothing could see that, and two home docs certified the reverted state
+// for 68 days. A call site is cheap to add and impossible to notice, so the set is
+// declared here — stale in either direction is a violation.
+const LUCK_SITES = {
+  'function _luckMod()': 'the definition',
+  'const lm = _luckMod();': '§DROP-03 lake magic — a lake_magic item bonus scales with luck (luckScale, 7 of 8 LAKE_MAGIC_DB entries)',
+  'typeTotal  = tDie + bait.type + _luckMod()': '§DROP-02 — the fishing type/rarity roll, the one place luck belongs',
+  '[${m(_luckMod())}]': 'character sheet ✦ LUCK display, read-only',
+};
+const luckLines = SRC_LINES.filter(l => l.includes('_luckMod('));
+const luckSeen = new Set();
+for (const line of luckLines) {
+  const key = Object.keys(LUCK_SITES).find(k => line.includes(k));
+  if (!key) fails.push(`I5: an undeclared _luckMod() call site — declare it in LUCK_SITES with its reason, or take it out: ${line.trim().slice(0, 110)}`);
+  else luckSeen.add(key);
+}
+for (const key of Object.keys(LUCK_SITES)) {
+  if (!luckSeen.has(key)) fails.push(`I5: LUCK_SITES declares '${key}' (${LUCK_SITES[key]}) and no line in play.html carries it any more — retire the entry`);
+}
+
 // ── Report ───────────────────────────────────────────────────────────────────
 console.log('§WALK-4 terrain-field invariant proof');
 console.log(`  hub=${HUB}  nodes=${allCodes.length}  sea-cells=${IMPASSABLE.size}  terrains=${terrainKeys.size}`);
@@ -201,10 +228,11 @@ console.log(`  I3  reachable=${reachableCount}/${allCodes.length}  unreachable=$
 console.log(`  I2  junction:true=${junctionTrue}  WORLD_DB.junction=${terrainKeys.has('junction')}`);
 console.log(`  I1  node-terrains=${Object.keys(nodeTerrains).length}  missing-in-WORLD_DB=${missingTerrain.length}  midlands=${terrainKeys.has('midlands')}`);
 console.log(`  I4  advertised-hour-cards=${advertised.size}  declared=${Object.keys(TIME_COST_CARDS).length}`);
+console.log(`  I5  _luckMod-call-sites=${luckLines.length}  declared=${Object.keys(LUCK_SITES).length}`);
 
 if (fails.length) {
   console.error('\n✗ INVARIANT VIOLATIONS:');
   for (const f of fails) console.error('   ✗ ' + f);
   process.exit(1);
 }
-console.log('\n✓ I1 + I2 + I3 + I4 hold — terrain field is total, stub-free and fully reachable from ' + HUB, '\n  and every advertised hour is an hour the code charges');
+console.log('\n✓ I1 + I2 + I3 + I4 + I5 hold — terrain field is total, stub-free and fully reachable from ' + HUB, '\n  every advertised hour is an hour the code charges, and every _luckMod() call site is declared');

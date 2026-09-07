@@ -1200,7 +1200,7 @@ All six are Birka city nodes. No other nodes have NIGHT_AMBIENT entries.
 
 Read-only derived stat. Never stored in `S_story`. `_calcLuck()` = `⌈(STR×DEX×CON×INT×WIS×CHA)^(1/6)⌉`. `_luckMod()` = `floor((luck−10)/2)`.
 
-**Active applications:** Character sheet ✦ LUCK display; bare hook catch bonus → LuckMod; fishing Type Roll +LuckMod; bait search DC reduced by LuckMod (floor 4); d100 loot roll +max(0,LuckMod); death save roll +LuckMod; hunt-mode encounter chance −LuckMod×0.5. No new `_S_DEFAULTS()` field.
+**Active applications (§DROP-02, restored 2026-09-07 by §DROP-02-FU):** fishing Type Roll +LuckMod; a `lake_magic` item's bonus scaled by `luckScale` (§DROP-03, later than §DROP-02); character sheet ✦ LUCK display, read-only. **Removed by §DROP-02:** bare hook catch bonus, bait search DC, d100 loot roll, death save roll, tournament tie-break; the hunt-mode encounter term went with the corridor layer. `check:invariants` **I5** declares the surviving set. No new `_S_DEFAULTS()` field.
 
 ---
 

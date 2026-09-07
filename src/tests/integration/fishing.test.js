@@ -63,8 +63,8 @@ test.describe('Fishing — Yugurt Lake (BOO)', () => {
   });
 
   // ── Stage 5: Hit path is reachable ───────────────────────────────────────
-  // Randomness allowed. With luckMod+2 and DEX mod+2, P(hit/cast) ≈ 85%.
-  // 25 casts → P(at least one hit) > 99.99%.
+  // Randomness allowed. The Bare Hook adds nothing to the catch roll (§DROP-02-FU), so with
+  // DEX mod+2, P(hit/cast) ≈ 74%. 25 casts → P(at least one hit) > 99.99%.
 
   test('5 — fish is revealed within 25 casts', async ({ page }) => {
     await openFishingModal(page);

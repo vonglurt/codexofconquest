@@ -24609,7 +24609,7 @@ function _rollD100Loot() {
 
   // Up to 3 attempts; on failure fall back to Minor Healing Potion
   for (let attempt = 0; attempt < 3; attempt++) {
-    const roll = Math.min(99, Math.floor(_seededNext() * 100) + Math.max(0, _luckMod())); // Layer 48: Luck bonus · §VM-01-B: seeded stream
+    const roll = Math.min(99, Math.floor(_seededNext() * 100)); // §VM-01-B: seeded stream
     const row  = _d100Result(roll);
 
     if (row._type === 'potion_minor')    return { name:'Minor Healing Potion',    icon:'🧪', type:'potion',    sell:25  };
@@ -26028,7 +26028,7 @@ function _storyRollDeathSave() {
   if (!ds.active) return;
   document.getElementById('btn-sbo-ds-roll').disabled = true;
 
-  let d20 = Math.ceil(_combatRng() * 20) + _luckMod(); // Layer 48: Luck applies to death saves
+  let d20 = Math.ceil(_combatRng() * 20);
   let indomUsed = false;
   // Indomitable I (Lv9): if roll fails (<10) and charges remain, reroll once
   if (d20 < 10 && (S_story.indomitableCharges || 0) > 0) {
@@ -30628,7 +30628,7 @@ function storyFishing() {
     rollEl.style.display = 'none'; revealEl.style.display = 'none';
     const title = document.createElement('div');
     title.style.cssText = 'font-size:11px;color:#1A4060;margin-bottom:2px;';
-    title.textContent = 'Search location — Survival (WIS) DC ' + Math.max(4, (S_story.fishingBaitSatchel ? 8 : 10) - _luckMod()) + ':';
+    title.textContent = 'Search location — Survival (WIS) DC ' + (S_story.fishingBaitSatchel ? 8 : 10) + ':';
     baitSearch.appendChild(title);
     // Auto-unlock zones based on catch log progress
     const _zoneUnlocks = S_story.tackleboxZoneUnlocks || { shore:true, reeds:false, deep:false };
@@ -30653,7 +30653,7 @@ function storyFishing() {
       btn.textContent = lbl;
       btn.addEventListener('click', () => {
         const wisMod = Math.floor(((S_story.abilityScores||{}).wis || 12) - 10) / 2;
-        const dc     = Math.max(4, (S_story.fishingBaitSatchel ? 8 : 10) - _luckMod()); // Layer 48: Luck reduces Survival DC
+        const dc     = S_story.fishingBaitSatchel ? 8 : 10;
         const die    = Math.ceil(Math.random() * 20);
         const total  = die + Math.floor(wisMod);
         baitSearch.style.display = 'none'; baitSearch.innerHTML = '';
@@ -30688,7 +30688,7 @@ function storyFishing() {
 
   const doCast = () => {
     baitSearch.style.display = 'none'; baitSearch.innerHTML = '';
-    const bait = _getSessionBait() || { name:'Bare Hook', icon:'🪝', catch:_luckMod(), type:0, advantage:false, sizeUp:false }; // Layer 48: bare hook uses LuckMod
+    const bait = _getSessionBait() || { name:'Bare Hook', icon:'🪝', catch:0, type:0, advantage:false, sizeUp:false };
     const isBare = bait.name === 'Bare Hook';
     if (!isBare) _consumeBait(bait);
 
@@ -34344,7 +34344,6 @@ function _nodeHookSsjTournament(node, { row, _mkSection, _mkCard }) {
               const pRoll = _tourRoll(playerBonus);
               const nRoll = _tourRoll(opp.bonus);
               let outcome = pRoll.fishRank > nRoll.fishRank ? 'win' : pRoll.fishRank < nRoll.fishRank ? 'lose' : 'tie';
-              if (outcome === 'tie') outcome = _luckMod() > 0 ? 'win' : _luckMod() < 0 ? 'lose' : 'tie';
               // Display
               const pMod = (playerBonus>=0?'+':'')+playerBonus, nMod = (opp.bonus>=0?'+':'')+opp.bonus;
               let html = 'You: d20('+pRoll.die+')'+pMod+'='+pRoll.tot+' → <strong>'+pRoll.fishName+'</strong> (Rank '+pRoll.fishRank+')<br>';

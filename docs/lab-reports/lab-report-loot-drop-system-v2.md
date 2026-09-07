@@ -105,7 +105,7 @@ The §IV-A "BEFORE" block was diffed against `440eb5d^`:
 | 8 | Key invariant: monsters never drop +1…+4 equipment | ✅ **enforced** | `// FC06: monster drops capped at base tier@24646`, `magicBonus === 0` filter |
 | 9 | Fishing is the exclusive source of positive-magic equipment | ⚠️ **vacuously true** — no live grant path exists for *any* +N equipment | §V-F4 |
 | 10 | `LAKE_MAGIC_DB` = 8 items, `base + floor(lv×levelScale) + floor(luck×luckScale)` | ✅ 8 items; formula live, one guard added | `function _lakeMagicBonuses() {@23452`, `if (bonus <= 0) return;` |
-| 11 | Luck applies to the d100 roll as `min(99, floor(rand×100) + max(0,luckMod))` | ✅ exact (RNG now seeded) | `Math.min(99, Math.floor(_seededNext() * 100) + Math.max(0, _luckMod())@24606` |
+| 11 | Luck applies to the d100 roll as `min(99, floor(rand×100) + max(0,luckMod))` | ✅ exact (RNG now seeded) | `Math.min(99, Math.floor(_seededNext() * 100) + Math.max(0, _luckMod())` |
 | 12 | Superior potion odds rise ~3 % → ~9 % with luck +3 | ⛔ **wrong** — 3 % → 6 %, and luck contributes exactly **0** | §V-F5 |
 | 13 | Luck "biases the roll toward higher-indexed entries" | ⚠️ **only the last entry** — a uniform shift moves *L* weight from the first row to the last | §V-F5 |
 | 14 | Max practical luck mod +3, theoretical +4 | ⛔ wrong, and self-contradictory (§II-C says +5) | all-18s = **+4**, all-20s = **+5** |

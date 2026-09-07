@@ -7,6 +7,17 @@
 **Ship commit:** `3f11e5b` (2026-05-24 22:35) *"implement Layer 48: Luck — The Seventh Stat"*
 **License:** MIT — CodexOfConquest.com — Copyright (c) 2026 Paul Richeson
 
+> **⚠️ SUPERSEDED IN PART, 2026-09-07 (§DROP-02-FU).** The five §DROP-02 removals this report
+> found *restored* at HEAD — d100 loot roll, death saves, bait search DC (and its title twin),
+> bare hook catch, tournament tie-break — were **re-applied**, so §V's *"Live and reachable
+> consumers (4)"* and *"Live but unreachable consumers (4)"* tables describe the reverted state
+> and are now history, not HEAD. Luck reaches the game through **two** terms: the fishing
+> Type/Rarity roll, and `luckScale` in `_lakeMagicBonuses` (§DROP-03, later than §DROP-02 and
+> outside its census — filed as **§DROP-02-FU2**). `check:invariants` **I5** now declares the
+> whole set, so a silent restoration is a red gate rather than a 68-day drift. Every anchor in
+> this report that named one of the removed lines was reduced to a plain quotation of the code
+> it described; nothing else in the text was rewritten.
+
 ---
 
 ## Abstract
@@ -109,14 +120,14 @@ transcription in the original §II-A is exact, `product <= 0` guard included.
 
 | Site | Anchor | Behaviour at HEAD |
 |---|---|---|
-| d100 loot roll | `Math.max(0, _luckMod())); // Layer 48: Luck bonus@24606` | `min(99, u + max(0, L))`; now on the seeded stream (§VM-01-B) |
-| Death saves | `let d20 = Math.ceil(_combatRng() * 20) + _luckMod();@26029` | flat `+L`; **unseeded** — §DX-02m's named instance |
-| Tournament tie-break | `outcome = _luckMod() > 0 ? 'win'@34338` | undocumented; added after this report; hosted at `SSJ:{r:4,c:192},@9443` |
+| d100 loot roll | `Math.max(0, _luckMod())); // Layer 48: Luck bonus` | `min(99, u + max(0, L))`; now on the seeded stream (§VM-01-B) |
+| Death saves | `let d20 = Math.ceil(_combatRng() * 20) + _luckMod();` | flat `+L`; **unseeded** — §DX-02m's named instance |
+| Tournament tie-break | `outcome = _luckMod() > 0 ? 'win'` | undocumented; added after this report; hosted at `SSJ:{r:4,c:192},@9443` |
 | Character sheet | `✦ LUCK@37885` | `${_calcLuck()} [${m(_luckMod())}]` + the italic note, verbatim |
 
 **Live but unreachable consumers (4)** — all behind **§FISH-01**
 
-`Luck reduces Survival DC@30647` (and its title twin) · `bare hook uses LuckMod@30682` ·
+`Luck reduces Survival DC` (and its title twin) · `bare hook uses LuckMod` ·
 `typeTotal  = tDie + bait.type + _luckMod()@30712` · `const lm = _luckMod();@23455` (§DROP-03
 `luckScale`, added later).
 
@@ -355,7 +366,7 @@ range was too narrow and guessed the wrong bound in the safe direction.
   cha:8 }` fallback literals. Unreachable since before this report, and the direct cause of a wrong
   claim in four documents. Sixth widening of the proposed `check:deadconsts`: a **dead alternative
   in a fallback chain that names a plausible data shape** is a documentation hazard, not inert.
-- **§DX-02m (existing, +confirmation)** — `let d20 = Math.ceil(_combatRng() * 20) + _luckMod();@26029`
+- **§DX-02m (existing, +confirmation)** — `let d20 = Math.ceil(_combatRng() * 20) + _luckMod();`
   and the Indomitable reroll three lines below remain the highest-stakes unseeded rolls in the file.
   Already filed by §DOC-02n; no new row.
 - **§FISH-01 (existing, +4 stranded consumers)** — this row now gates **four** of Luck's nine call
@@ -376,11 +387,11 @@ range was too narrow and guessed the wrong bound in the safe direction.
 | `const scores = startScores || { str:10, dex:8, con:8, int:8, wis:8, cha:8 };@24012` | `storyNewGame` |
 | `const _CC_COST = [0,1,2,3,4,5,7,9];@38756` · `const CC_BUDGET = 27;@38757` | the space enumerated in §V-B |
 | `let _cc_scores = { str:10, dex:10, con:10, int:8, wis:8, cha:8 };@38759` | untouched-panel default → Mod −1 |
-| `Math.max(0, _luckMod())); // Layer 48: Luck bonus@24606` | loot roll |
+| `Math.max(0, _luckMod())); // Layer 48: Luck bonus` | loot roll |
 | `const _D100_TABLE = [@24576` · `const gp = Math.floor(_seededNext() * 200) + 50;@24616` | what luck's 1 pp actually moves |
-| `let d20 = Math.ceil(_combatRng() * 20) + _luckMod();@26029` | death saves |
-| `outcome = _luckMod() > 0 ? 'win'@34338` · `SSJ:{r:4,c:192},@9443` | tournament tie-break (undocumented) |
-| `Luck reduces Survival DC@30647` · `bare hook uses LuckMod@30682` · `typeTotal  = tDie + bait.type + _luckMod()@30712` | stranded fishing trio |
+| `let d20 = Math.ceil(_combatRng() * 20) + _luckMod();` | death saves |
+| `outcome = _luckMod() > 0 ? 'win'` · `SSJ:{r:4,c:192},@9443` | tournament tie-break (undocumented) |
+| `Luck reduces Survival DC` · `bare hook uses LuckMod` · `typeTotal  = tDie + bait.type + _luckMod()@30712` | stranded fishing trio |
 | `const lm = _luckMod();@23455` | §DROP-03 `luckScale`, also stranded |
 | `function storyFishing() {@30548` · `const hasFish = node.isFishingLake;@35574` | the single entry point |
 | `BOO:{r:2,c:194},@9435` · `LYR:{r:2,c:194},@9436` · `const CELL_GRID = (() => {@9865` | §FISH-01 |
