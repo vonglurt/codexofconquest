@@ -36,7 +36,7 @@ const GATES = [
   'check:noderegs', 'check:npcregs', 'check:anchors', 'check:legacycodes',
   'check:battlepools', 'check:arraypatch',
   'check:spdx', 'check:backlogcounts', 'check:condprices',
-  'check:docpointers', 'check:duelparity', 'check:itemchain',
+  'check:docpointers', 'check:helpconformance', 'check:duelparity', 'check:itemchain',
   'check:laddermigration', 'check:worlddiff',
 ];
 

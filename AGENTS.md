@@ -47,7 +47,7 @@ The server holds the file text from when it started. A write after a hand-edit s
                                        # a field holding a closure is refused, not silently emptied (§DX-02iv)
 ./bin/api put <type> <id> --drop-comments  # a comment inside a field's value has no escape through JSON, so a
                                        # write that would delete one is refused; this accepts the loss (§DX-02ix)
-npm run check:walk --prefix src        # 26 gates in parallel, ~21s; the final ✓ N/N line is the verdict
+npm run check:walk --prefix src        # 27 gates in parallel, ~21s; the final ✓ N/N line is the verdict
 ./run.sh stop && npm test --prefix src # 1023 tests, server stopped
 ```
 
