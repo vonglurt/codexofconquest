@@ -438,6 +438,25 @@ function analyse(db, startFlags, legacyClosures, hostWrites) {
 // ═══════════════════════════════════════════════════════════════════════════
 // SELF-TEST — validate the analyser against a synthetic graph (CI mode).
 // ═══════════════════════════════════════════════════════════════════════════
+// §AUDIT-03bk — arrival as completion, and whether the player is told where to arrive.
+// `completion.atNode` is an AND term (`if (g.atNode && st.currentCode !== g.atNode)
+// return false;`), so it can only WITHHOLD completion, never trigger it. A quest that
+// requires arrival therefore has to publish a route, and there are exactly two ways to be
+// routed: a `waypointNode` (the Navigate button + live step/bearing tag), or an `atNode`
+// that IS the `activateNode` — you complete where you were given it and never travel.
+// Anything else is a destination the engine knows and will not transmit.
+function arrivalRoutes(db) {
+  const goThere = [], fetchReturn = [], unrouted = [];
+  for (const id of Object.keys(db)) {
+    const q = db[id]; if (!q || !q.completion || !q.completion.atNode) continue;
+    const at = q.completion.atNode;
+    if (q.waypointNode === at) goThere.push(id);
+    else if (q.waypointNode || at === q.activateNode) fetchReturn.push(id);
+    else unrouted.push({ quest: id, atNode: at, activateNode: q.activateNode || '(none)' });
+  }
+  return { goThere, fetchReturn, unrouted };
+}
+
 function selftest() {
   let pass = 0, fail = 0;
   const ok = (c, m) => { if (c) pass++; else { fail++; console.error('  ✗ FAIL:', m); } };
@@ -466,6 +485,21 @@ function selftest() {
   ok(r.readByNothing.includes('deadFlag'), 'deadFlag flagged read-by-nothing (dead write)');
   ok(r.ND.some(x => x.quest === 'qF'), 'qF nondeterministic closure detected');
   ok(!r.ND.some(x => x.quest === 'qE'), 'qE deterministic closure NOT flagged');
+
+  // §AUDIT-03bk — the three arrival shapes, and the one that is a defect.
+  const ar = arrivalRoutes({
+    goThere:  { id:'goThere',  activateNode:'AAA', waypointNode:'BBB', completion:{ atNode:'BBB' } },
+    ret:      { id:'ret',      activateNode:'AAA', waypointNode:'BBB', completion:{ atNode:'AAA' } },
+    inPlace:  { id:'inPlace',  activateNode:'AAA',                     completion:{ atNode:'AAA' } },
+    unrouted: { id:'unrouted', activateNode:'AAA',                     completion:{ atNode:'CCC' } },
+    noArrival:{ id:'noArrival',activateNode:'AAA', waypointNode:'BBB', completion:{ flags:['f'] } },
+  });
+  ok(ar.goThere.length === 1 && ar.goThere[0] === 'goThere', 'atNode == waypointNode is the go-there shape');
+  ok(ar.fetchReturn.length === 2, 'fetch-and-return and complete-in-place are both routed');
+  ok(ar.unrouted.length === 1 && ar.unrouted[0].quest === 'unrouted',
+    'a quest requiring arrival somewhere it never publishes is the only unrouted shape');
+  ok(!ar.goThere.includes('noArrival') && !ar.fetchReturn.includes('noArrival'),
+    'a waypoint quest with no atNode is not an arrival quest at all');
   // §VM-01-E-FU host-write filtering: a host-provided gate flag is NOT a soft-lock,
   // its reader IS reachable, and a genuinely-unwritten flag is still surfaced.
   ok(!r.writtenByNothing.includes('hostFlag'), 'hostFlag NOT written-by-nothing (host code provides it)');
@@ -528,6 +562,7 @@ function main() {
   // soft-lock hiding behind one would be reported reachable forever, and until this
   // line the blind spot had no number anywhere in the output.
   const legacyGates = Object.keys(db).filter(id => db[id] && db[id].gate && db[id].gate._legacyFn).sort();
+  const arrival = arrivalRoutes(db);
 
   const report = {
     quests: r.ids.length,
@@ -573,6 +608,15 @@ function main() {
   }
   const wbnUnexpected = r.writtenByNothing.filter(f => !KNOWN_UNWRITTEN_FLAG[f]);
 
+  console.log('\n  arrival as completion (§AUDIT-03bk):');
+  console.log('     go-there (atNode == waypointNode)   :', arrival.goThere.length);
+  console.log('     routed another way (return / in place):', arrival.fetchReturn.length,
+    '— atNode is the giver, so the player either walks back or never left');
+  console.log('     UNROUTED                            :', arrival.unrouted.length,
+    arrival.unrouted.length ? '' : '✓ (every quest that completes on arrival says where)');
+  arrival.unrouted.forEach(x => console.log('     ✗', x.quest, 'completes only at', x.atNode,
+    '— given at', x.activateNode, 'and publishing no waypointNode, so nothing tells the player where to go'));
+
   console.log('\n  self-deadlock (completion.flags ∩ own onComplete flag_write):');
   console.log('     fatal (no other writer):', dl.fatal.length, dlUnexpected.length ? '' : '✓ (each one accounted for)');
   dl.fatal.forEach(x => console.log('     ✗', x.quest, '/', x.flag,
@@ -581,6 +625,12 @@ function main() {
   dl.inert.forEach(x => console.log('       ·', (x.quest + ' / ' + x.flag).padEnd(46), 'written by', x.by));
   if (wbnUnexpected.length) {
     console.error('\ncheck:questgraph FAILED — ' + wbnUnexpected.length + ' gate flag(s) are read by a quest and written by nothing — quest bit, host code or panel: every quest behind them can never activate (§AUDIT-03bj). ' + wbnUnexpected.join(', '));
+    process.exit(1);
+  }
+  if (arrival.unrouted.length) {
+    console.error('\ncheck:questgraph FAILED — ' + arrival.unrouted.length + ' quest(s) complete only on arrival at a node they '
+      + 'never publish: no waypointNode, and the atNode is not where the quest was given, so the Navigate button never appears '
+      + 'and the engine keeps the destination to itself (§AUDIT-03bk). ' + arrival.unrouted.map(x => x.quest + '→' + x.atNode).join(', '));
     process.exit(1);
   }
   if (dlUnexpected.length) {
