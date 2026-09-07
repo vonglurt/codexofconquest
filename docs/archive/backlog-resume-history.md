@@ -13,19 +13,20 @@
 
 | # | Date | Increment | Ship | Headline |
 |---:|---|---|---|---|
-| 1 | 2026-08-24 | §DX-02gv + §WAVE-01 | `4bac567` | the Act VIII wall had a 210-HP statblock, a `sell:95` shard and no fight. `void_warlord` occurred **twice** in 38,700 lines — its `MONSTER_POOL` row `@5789` and its… |
-| 2 | 2026-08-24 | §AUDIT-03bi | `c0888aa` | the fifth ending stops being downstream of a console command |
-| 3 | 2026-08-24 | §AUDIT-03bk | `7cac4d2` | the quest that could be offered and never finished, and the host record its design lost |
-| 4 | 2026-08-24 | §AUDIT-03bj | `3571a64` | the prover that spent 27 days proving the world is not finishable and reporting success |
-| 5 | 2026-08-24 | §DX-02go | `5e17dc2` | the last inert field on a granted readable, and an anchor with a known expiry date |
-| 6 | 2026-08-24 | §DX-02ge | `6237606` | the field four files agreed to carry and no code path ever looked at |
-| 7 | 2026-08-24 | §DX-02gb + §DX-02fc | `763c70f` | the Dear-Friend step is granted once, and either order earns it |
-| 8 | 2026-08-24 | §DX-02aj | `1222d8d` | the latch that was always already set, and the harness that was always already rendered |
-| 9 | 2026-08-24 | §DX-02gd | `898c692` | eleven items, three spellings of one field, and a tooltip that was never rendered |
-| 10 | 2026-08-24 | §DX-02cm | `d117b2f` | the exception that outlived the deferral, and the difference between debt and an unexercised bug |
-| 11 | 2026-08-23 | §DX-02cy | `724682c` | the counter that had been monotone at zero for ninety days, and the gate that refused to let the docs stay wrong |
+| 1 | 2026-09-07 | §AUDIT-03ar | `2a6b4f9` | `quest_wm_03` wrote `set:1` (Friendly) beside its own narrative bit saying *"Benedikt is **Dear Friend**"*, against two design docs and both live thresholds that begin Dear Friend at 2 — only the write said 1. **`set:1` → `set:2`** through `./bin/api`. Inert until §AUDIT-03at gives the reading circle a working clock, exactly as the row says. `check:npcregs` gains **phase 7** (every `_npcFavor(k) >= N` and `favorMin:{k:N}` at or below the NPC's favor ceiling — 26 of 27 were reachable, the 27th this site) and **phase 8**, the row's own class note made executable: a favor bit must write the tier its entry announces to the player — 7 real pairs, 6 already agreeing. Selftest 7 → 10 checks. §GR-FU2's phase 6 then demanded a Covenant Ceremony line for him, unprompted, and he has one. The sweep had refiled this as §DX-02je; `check:anchors` caught the duplicate and §DX-02je was deleted |
+| 2 | 2026-08-24 | §DX-02gv + §WAVE-01 | `4bac567` | the Act VIII wall had a 210-HP statblock, a `sell:95` shard and no fight. `void_warlord` occurred **twice** in 38,700 lines — its `MONSTER_POOL` row `@5789` and its… |
+| 3 | 2026-08-24 | §AUDIT-03bi | `c0888aa` | the fifth ending stops being downstream of a console command |
+| 4 | 2026-08-24 | §AUDIT-03bk | `7cac4d2` | the quest that could be offered and never finished, and the host record its design lost |
+| 5 | 2026-08-24 | §AUDIT-03bj | `3571a64` | the prover that spent 27 days proving the world is not finishable and reporting success |
+| 6 | 2026-08-24 | §DX-02go | `5e17dc2` | the last inert field on a granted readable, and an anchor with a known expiry date |
+| 7 | 2026-08-24 | §DX-02ge | `6237606` | the field four files agreed to carry and no code path ever looked at |
+| 8 | 2026-08-24 | §DX-02gb + §DX-02fc | `763c70f` | the Dear-Friend step is granted once, and either order earns it |
+| 9 | 2026-08-24 | §DX-02aj | `1222d8d` | the latch that was always already set, and the harness that was always already rendered |
+| 10 | 2026-08-24 | §DX-02gd | `898c692` | eleven items, three spellings of one field, and a tooltip that was never rendered |
+| 11 | 2026-08-24 | §DX-02cm | `d117b2f` | the exception that outlived the deferral, and the difference between debt and an unexercised bug |
+| 12 | 2026-08-23 | §DX-02cy | `724682c` | the counter that had been monotone at zero for ninety days, and the gate that refused to let the docs stay wrong |
 
-**11 completed entries.**
+**12 completed entries.**
 
 ---
 
