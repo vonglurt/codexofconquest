@@ -1921,8 +1921,8 @@ ${C.bold}═══════════════════════�
   ── quests ───────────────────────────────────────────────────────
 
   # 1. Find the quest by keyword
-  ./bin/api list quest --q "wolsey"
-  ./bin/api list quest --arc shk --q "inventory"
+  ./bin/api list quest --q "ledger"
+  ./bin/api list quest --arc shk --q "merchant"
   ./bin/api list quest --node BK --type skill_check
 
   # 2. Fetch all fields for the exact quest
@@ -1938,9 +1938,9 @@ ${C.bold}═══════════════════════�
   ── nodes ────────────────────────────────────────────────────────
 
   # 1. Find the node
-  ./bin/api list node --q "nuremberg"
+  ./bin/api list node --q "weimar"
   ./bin/api list node --terrain scholars_qtr
-  ./bin/api list node --act 2 --q "birka"
+  ./bin/api list node --act 1 --q "birka"
 
   # 2. Get composite view — node + quests + NPCs + monsters
   ./bin/api location NUE
@@ -1948,7 +1948,7 @@ ${C.bold}═══════════════════════�
   # → label, terrain, coords, N/E/S/W links, quest list, NPC list
 
   # 3. Edit
-  ./bin/api put node NUE label="Nuremberg Scholar Quarter"
+  ./bin/api put node NUE label="Scholar's Quarter — Weimar (Revised)"
   ./bin/api put node NUE N=BMA S=KRN
 
   ── NPCs ─────────────────────────────────────────────────────────
@@ -2001,7 +2001,7 @@ ${C.bold}═══════════════════════�
   ./bin/api get npc marta_vby
 
   # Link a quest to it
-  ./bin/api list quest --arc shk --q "visby"    # find the quest ID
+  ./bin/api list quest --arc shk --q "format"   # find the quest ID
   ./bin/api put quest shk6_act2 npc=marta_vby   # link it
 
   # Audit — confirm zero errors/warnings
@@ -2577,7 +2577,7 @@ ${C.bold}═══════════════════════�
 
   Examples — node:
     ./bin/api post node code=MM name=mimic_meadows label="Mimic Meadows" act=3
-    ./bin/api post node code=SW name=scholars_qtr label="Scholar Workshop" act=3 N=CY W=BK
+    ./bin/api post node code=SW name=scholars_qtr label="Scholar Workshop" act=3 N=NUE W=BK
     ./bin/api post node code=EHZ name=void label="Event Horizon Zone" act=5
     ./bin/api post node \\
       code=VAULT name=crypt label="The Sealed Vault" act=2 \\
