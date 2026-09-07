@@ -232,30 +232,31 @@
 
 | # | Date | Increment | Ship | Headline |
 |---:|---|---|---|---|
-| 1 | 2026-08-24 | §DX-02gn + §DX-02eu | `41ffaae` | the suite's screenshot overwrote a tracked file, and the fix was to move the write rather than untrack the file. `living-world-l44.spec.js:210` wrote to… |
-| 2 | 2026-08-24 | §DX-02gt + §AUDIT-03bj | `a72688a` | the suite was red at HEAD and the gate chain was green, because they do not test the same thing. `npm test --prefix src` measured **2 failed / 1016 passed**: Waves 2q… |
-| 3 | 2026-08-24 | §DX-02bs + §PAUL-01 | `b152350` | the soft-lock gate learns the one writer idiom it could not see, and the row's own count of its false positives was one short. `scanFlagWrites` folded five host writer… |
-| 4 | 2026-08-23 | §DOC-METHOD | — | the resumption method written down, and the corpus measured against the window that has to read it |
-| 5 | 2026-08-23 | §RELEASE-01 | — | §RELEASE-01 ✅ the infrastructure record landed, and the remedy it prescribes is the one thing this repo does not do |
-| 6 | 2026-08-23 | §DX-01g + §DX-02 | — | `BACKLOG.md` split into six phase backlogs by subsystem; the 2.2 MB single file is now a 37 KB routing index.** On *"read backlog. its big. we need to split it."* The… |
-| 7 | 2026-08-14 | §DOC-02bm | — | two hours from spec to closed series, twelve of twelve pointers exact, and the one assertion that is red today is the one it wrote to close the series |
-| 8 | 2026-06-26 | §DOC-02bk | `7f4b73c` | `7f4b73c` 11:41 → `95c4143` 13:33 on 2026-06-26, one hour fifty-two minutes for spec + 4 increments + an unplanned follow-up.** (§DOC-02bk's "under 20 hours" was the… |
-| 9 | 2026-08-14 | §DOC-02bi | — | every filename it catalogued is real, and it counted sixty-five of seventy-one |
-| 10 | 2026-08-12 | §DOC-02ak | `7add1d7` | a verification pass tests what it CHANGES and assumes what it LEAVES |
-| 11 | 2026-08-12 | §DOC-02x | — | the report that wrote the repo's operating manual, audited by the program it recommended |
-| 12 | 2026-08-11 | §DOC-02i | `a123904` | the report that designed the documentation system was right about every number it measured and wrong about the one it cited — and the instrument it recommended is now… |
-| 13 | 2026-05-25 | §DX-01e + §DOC-02 | — | FC01 ✅ · FC03 ✅ (`docs/mechanics/mechanics-combat.md` + `-economy.md`) · **FC05 half-shipped** — 93 `// → doc:` pointers live, 48 top-level CAPS consts still without… |
-| 14 | 2026-08-11 | §DOC-02b + §DOC-02 | `d5b1cb9` | the same uncommitted user recolor is still in the tree (HP bar gradient / light-green playfield / theme-ink die numerals, self-labelled *"user recolor 2026-08-06"*) —… |
-| 15 | 2026-08-04 | §AUDIT-03q + §AUDIT-03d | `28c6f8a` | phase 2 in `src/scripts/legacy-codes.js` (+`eachProseLine`/`localCue` extracted so both phases share one scanner), `BORN_DEAD` + `NOT_A_NODE_CODE` explicit tables with a… |
-| 16 | 2026-08-04 | §AUDIT-03m-FU + §AUDIT-03d | `79987d3` | `story-arc-ngplus.md` annotated **8** references and was left carrying **11** — because `nodeContextLine` is a **LINE** test, and *"Write Entry 42 at CI"*, the commonest… |
-| 17 | 2026-08-04 | §AUDIT-03m + §AUDIT-03d | `b399318` | `src/scripts/legacy-codes.js` / `npm run legacy`, which reads the LEGACY CODE MAP out of the **generated** node index (never re-typed) and counts a token only in a node… |
-| 18 | 2026-08-03 | §DX-01e-FU + §AUDIT-03d | `f4bc624` | `21722`, cited for `execBits`, is now a Mother-Mimic quest body; `25558`, cited for `BOSS_COMMANDER_AUROS`, an `sbo-refocus-bar` style write; `26822` is past the end of… |
-| 19 | 2026-07-31 | §DX-01e + §AUDIT-03d | `57d79d7` | the **symbol** is the pointer (any literal substring of the line meant, optionally file-qualified — `` `src/js/wbapi-server.js:function seededNext@1147` ``), the… |
-| 20 | 2026-07-30 | §DX-01d + §DX-01i | `e4c03a0` | `WBAPI.deleteEntrySource(section,key)`, one source-level excision for all four types with **verify-or-revert** (the section's depth-1 key *multiset* must lose exactly… |
-| 21 | 2026-07-30 | §DX-02f + §7 | `dfeeff4` | `effort-xp` forces the fail through the engine's own dial via a scoped `forceFail(id, fn)` that raises `sc.dc` to 999 and restores in `finally` — the same idiom… |
-| 22 | 2026-07-28 | §AUDIT-03a + §DX-01a | — | `check:dupkeys` is gate #11 of `check:walk`; the last-key-wins rot class is now CI-fenced.** Scanner details + the 2 corpus survivors… |
-| 23 | 2026-07-28 | §DX-01a + §JUNK-01 | `7f75c54` | J14/J15 deleted (hand-edit per Hazard #4, server confirmed stopped; zero other live refs by repo grep), then `build-roads.js --apply` (the canonical do-not-hand-edit… |
-| 24 | 2026-07-28 | §DX-01f + §RESUME-tail | `c9f3946` | 276 lines of closed content moved **verbatim** (scripted line-range surgery — no paraphrase, boundaries asserted before cutting) to plan-archive.md §"Archived 2026-07-28… |
+| 1 | 2026-09-07 | §DX-02iw + §DX-02cr | `ea0f156` | four `check:*` scripts were defined in `package.json` and absent from `GATES`, so `check:walk` printed 22/22 over a chain 26 scripts wide. All four are in `GATES` and in `check:walk:serial` now, and `run-gates.js` refuses to start when a `check:*` script is in neither `GATES` nor the named `GATE_EXEMPT` map, or when the serial chain stops mirroring `GATES` — selftest 4 checks → 7, both proved by planting. The row said the four were run by nobody; CI disproved that for three, and `check:duelparity` — the third parity-fenced kernel — was the one run by nothing at all, which is §DX-02cr, closed here with `src/js/duel.js` into both `paths:` filters. The four bespoke CI steps collapse into `check:walk`. 22/22 wall 25.6 s → **26/26 wall 21.1 s** |
+| 2 | 2026-08-24 | §DX-02gn + §DX-02eu | `41ffaae` | the suite's screenshot overwrote a tracked file, and the fix was to move the write rather than untrack the file. `living-world-l44.spec.js:210` wrote to… |
+| 3 | 2026-08-24 | §DX-02gt + §AUDIT-03bj | `a72688a` | the suite was red at HEAD and the gate chain was green, because they do not test the same thing. `npm test --prefix src` measured **2 failed / 1016 passed**: Waves 2q… |
+| 4 | 2026-08-24 | §DX-02bs + §PAUL-01 | `b152350` | the soft-lock gate learns the one writer idiom it could not see, and the row's own count of its false positives was one short. `scanFlagWrites` folded five host writer… |
+| 5 | 2026-08-23 | §DOC-METHOD | — | the resumption method written down, and the corpus measured against the window that has to read it |
+| 6 | 2026-08-23 | §RELEASE-01 | — | §RELEASE-01 ✅ the infrastructure record landed, and the remedy it prescribes is the one thing this repo does not do |
+| 7 | 2026-08-23 | §DX-01g + §DX-02 | — | `BACKLOG.md` split into six phase backlogs by subsystem; the 2.2 MB single file is now a 37 KB routing index.** On *"read backlog. its big. we need to split it."* The… |
+| 8 | 2026-08-14 | §DOC-02bm | — | two hours from spec to closed series, twelve of twelve pointers exact, and the one assertion that is red today is the one it wrote to close the series |
+| 9 | 2026-06-26 | §DOC-02bk | `7f4b73c` | `7f4b73c` 11:41 → `95c4143` 13:33 on 2026-06-26, one hour fifty-two minutes for spec + 4 increments + an unplanned follow-up.** (§DOC-02bk's "under 20 hours" was the… |
+| 10 | 2026-08-14 | §DOC-02bi | — | every filename it catalogued is real, and it counted sixty-five of seventy-one |
+| 11 | 2026-08-12 | §DOC-02ak | `7add1d7` | a verification pass tests what it CHANGES and assumes what it LEAVES |
+| 12 | 2026-08-12 | §DOC-02x | — | the report that wrote the repo's operating manual, audited by the program it recommended |
+| 13 | 2026-08-11 | §DOC-02i | `a123904` | the report that designed the documentation system was right about every number it measured and wrong about the one it cited — and the instrument it recommended is now… |
+| 14 | 2026-05-25 | §DX-01e + §DOC-02 | — | FC01 ✅ · FC03 ✅ (`docs/mechanics/mechanics-combat.md` + `-economy.md`) · **FC05 half-shipped** — 93 `// → doc:` pointers live, 48 top-level CAPS consts still without… |
+| 15 | 2026-08-11 | §DOC-02b + §DOC-02 | `d5b1cb9` | the same uncommitted user recolor is still in the tree (HP bar gradient / light-green playfield / theme-ink die numerals, self-labelled *"user recolor 2026-08-06"*) —… |
+| 16 | 2026-08-04 | §AUDIT-03q + §AUDIT-03d | `28c6f8a` | phase 2 in `src/scripts/legacy-codes.js` (+`eachProseLine`/`localCue` extracted so both phases share one scanner), `BORN_DEAD` + `NOT_A_NODE_CODE` explicit tables with a… |
+| 17 | 2026-08-04 | §AUDIT-03m-FU + §AUDIT-03d | `79987d3` | `story-arc-ngplus.md` annotated **8** references and was left carrying **11** — because `nodeContextLine` is a **LINE** test, and *"Write Entry 42 at CI"*, the commonest… |
+| 18 | 2026-08-04 | §AUDIT-03m + §AUDIT-03d | `b399318` | `src/scripts/legacy-codes.js` / `npm run legacy`, which reads the LEGACY CODE MAP out of the **generated** node index (never re-typed) and counts a token only in a node… |
+| 19 | 2026-08-03 | §DX-01e-FU + §AUDIT-03d | `f4bc624` | `21722`, cited for `execBits`, is now a Mother-Mimic quest body; `25558`, cited for `BOSS_COMMANDER_AUROS`, an `sbo-refocus-bar` style write; `26822` is past the end of… |
+| 20 | 2026-07-31 | §DX-01e + §AUDIT-03d | `57d79d7` | the **symbol** is the pointer (any literal substring of the line meant, optionally file-qualified — `` `src/js/wbapi-server.js:function seededNext@1147` ``), the… |
+| 21 | 2026-07-30 | §DX-01d + §DX-01i | `e4c03a0` | `WBAPI.deleteEntrySource(section,key)`, one source-level excision for all four types with **verify-or-revert** (the section's depth-1 key *multiset* must lose exactly… |
+| 22 | 2026-07-30 | §DX-02f + §7 | `dfeeff4` | `effort-xp` forces the fail through the engine's own dial via a scoped `forceFail(id, fn)` that raises `sc.dc` to 999 and restores in `finally` — the same idiom… |
+| 23 | 2026-07-28 | §AUDIT-03a + §DX-01a | — | `check:dupkeys` is gate #11 of `check:walk`; the last-key-wins rot class is now CI-fenced.** Scanner details + the 2 corpus survivors… |
+| 24 | 2026-07-28 | §DX-01a + §JUNK-01 | `7f75c54` | J14/J15 deleted (hand-edit per Hazard #4, server confirmed stopped; zero other live refs by repo grep), then `build-roads.js --apply` (the canonical do-not-hand-edit… |
+| 25 | 2026-07-28 | §DX-01f + §RESUME-tail | `c9f3946` | 276 lines of closed content moved **verbatim** (scripted line-range surgery — no paraphrase, boundaries asserted before cutting) to plan-archive.md §"Archived 2026-07-28… |
 
 **24 completed entries.**
 
