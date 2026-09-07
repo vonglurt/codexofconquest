@@ -615,7 +615,7 @@ Every monster in MONSTER_POOL has an entry in `MONSTER_DROPS`:
 | Dark lore creatures (leshen, drowner, etc.) | Creature parts | 🧪 🌿 | 4–45gp |
 | Fiends (imp, succubus, etc.) | Ichor, Horns, Hearts | 💜 🩸 | 8–35gp |
 
-Drops with `sell > 0` are **trophies** — sellable at vendor nodes.
+Drops with `sell > 0` are **trophies** — sellable at vendor nodes. **Every entry in `MONSTER_DROPS` is one** (`awk 'NR>=5797 && NR<=6270' play.html | grep -c 'sell:0'` → 0): the collection's last `sell:0` row was `hollow_hands_guard`, whose drop also carried the exact name and icon of a quest item an NPC grants, and §AUDIT-03ap made it *Hollow Hands Tally*, 🧾, 8gp — in the humanoid band above. A monster drop is loot; a quest item comes from the scene that means something.
 
 ---
 

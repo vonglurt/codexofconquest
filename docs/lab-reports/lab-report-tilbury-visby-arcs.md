@@ -113,7 +113,7 @@ withheld from a player who did one.
 | Item | Spec | HEAD | Verdict |
 |------|------|------|---------|
 | Statline | `ac:13 hp:22 atk:4 dmgDie:6 dmgCount:1 dmgFlat:2 tier:'easy'` | `name:'Hollow Hands Guard'@5405` | **byte-exact** |
-| Drop | → "Hollow Hands Seal", 🖤, `sell:0` | `hollow_hands_guard:   { name:'Hollow Hands Seal'@5850` | **byte-exact** |
+| Drop | → "Hollow Hands Seal", 🖤, `sell:0` | `` `hollow_hands_guard: { icon:"🧾", name:"Hollow Hands Tally"@5850` ``, `sell:8` | **was byte-exact; renamed 2026-09-07 by §AUDIT-03ap.** The spec'd name collided exactly with the quest item Yva grants at `` `id:'trd-yva'@34601` ``, and the trophy set no flag — so a farmed copy did nothing and was silently eaten by the delivery step's `` `filter(i => i.name !== 'Hollow Hands Seal')@35156` ``. It was also the collection's **only** `sell:0` row, against this doc's own rule that *drops with `sell > 0` are trophies* |
 | Terrain pool | added to `goblin_cave` | `P.hollow_hands_guard ] }@6313`, 13th of 13 | **live** |
 
 ### B. State fields — 8 of 8 live under their specified names
@@ -357,7 +357,7 @@ Per instrument 10, a report's self-criticism is a claim like any other.
 
 | Target | Anchor |
 |--------|--------|
-| Monster | `name:'Hollow Hands Guard'@5405` · drop `hollow_hands_guard:   { name:'Hollow Hands Seal'@5850` · pool `P.hollow_hands_guard ] }@6313` |
+| Monster | `name:'Hollow Hands Guard'@5405` · drop `` `hollow_hands_guard: { icon:"🧾", name:"Hollow Hands Tally"@5850` `` (§AUDIT-03ap) · pool `P.hollow_hands_guard ] }@6313` |
 | Nodes | `label:'Harbor Docks — Tilbury'@8645` · `label:'The Map Shop'@8649` · `label:'Broken Tooth Tavern'@8697` · `TL: { num:278@9098` · `VS: { num:279@9101` |
 | NPCs | `rennau: { meta: { name:"Harbor Master Rennau"@10425` … `yva: { meta: { name:"Yva"@10428` |
 | Quests | `quest_tl_01: { id:'quest_tl_01'@11185` · `quest_vs_01: { id:'quest_vs_01'@13531` · `quest_vs_warden: { id:'quest_vs_warden'@13576` |
