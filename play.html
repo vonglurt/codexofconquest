@@ -35585,8 +35585,7 @@ function storyRender(node, prefix) {
     const { sec, body } = _mkSection(null, '🎣', 'Fish');
     body.appendChild(_mkCard({
       lbl: 'FISH', main: 'Cast a Line',
-      hint: '⏱ 1 hour · fishing session',
-      tag: '1h', btn: 'Fish', btnClass: 'btn-hunt',
+      btn: 'Fish', btnClass: 'btn-hunt',
       btnClick: () => storyFishing()
     }));
     row.appendChild(sec);

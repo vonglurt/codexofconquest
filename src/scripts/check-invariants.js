@@ -11,6 +11,9 @@
 //                       neighbour terrain is always defined too).
 //   I2 (no stubs):      no `junction:true` node and no `junction:` WORLD_DB entry
 //                       (junctions were bulk-deleted in §WALK-1/§CELL-05).
+//   I4 (advertised cost): every `⏱ N hour` cost hint on a story card names an action
+//                       whose handler charges the clock. A card that advertises a cost
+//                       the code never takes is a promise the game does not keep.
 //   I3 (reachability):  every named node is reachable from hub LHR by a
 //                       4-connected LAND walk (E↔W wrap, N/S clamp) over the
 //                       passable terrain field — i.e. unreachable===0 and the
@@ -153,16 +156,55 @@ if (missingTerrain.length)
 if (Object.keys(nodeTerrains).length < allCodes.length * 0.9)
   fails.push(`I1: only parsed ${Object.keys(nodeTerrains).length} node terrains for ${allCodes.length} coord'd nodes — regex likely stale, re-check NODE_MAP format`);
 
+// ── I4: an advertised hour is an hour the code charges (§DX-02bz) ────────────
+// The `⏱ N hour` hints are the game's only statement of what an action costs, and the
+// cost is real: each charged hour raises `hoursSinceSlept`, which grants disadvantage at
+// 24. The card cannot be traced to its handler from source text, so the mapping is
+// declared — and stale in either direction is a violation, the same rule the monster
+// exemptions in check-battlepools run on.
+const TIME_COST_CARDS = {
+  'combat': '_storyRollInit',
+  'roll HD · recover HP': 'storyShortRest',
+};
+function fnBody(name) {
+  const i = src.indexOf('function ' + name + '(');
+  if (i === -1) return null;
+  let d = 0;
+  for (let k = src.indexOf('{', i); k < src.length; k++) {
+    if (src[k] === '{') d++;
+    else if (src[k] === '}') { d--; if (!d) return src.slice(i, k + 1); }
+  }
+  return null;
+}
+const advertised = new Set();
+for (const m of src.matchAll(/hint:\s*[^\n]*?'⏱ \d+ hours? · ([^']+)'/g)) advertised.add(m[1]);
+for (const label of advertised) {
+  const handler = TIME_COST_CARDS[label];
+  if (!handler) {
+    fails.push(`I4: a story card advertises '⏱ … · ${label}' and TIME_COST_CARDS does not name the handler that charges it — declare it, or drop a cost the game does not take`);
+    continue;
+  }
+  const body = fnBody(handler);
+  if (!body) fails.push(`I4: TIME_COST_CARDS names '${handler}' for '${label}' and no such function is declared`);
+  else if (!/S_story\.hoursElapsed\s*=/.test(body))
+    fails.push(`I4: '${label}' advertises an hour and its handler ${handler}() does not write S_story.hoursElapsed`);
+}
+for (const [label, handler] of Object.entries(TIME_COST_CARDS)) {
+  if (!advertised.has(label))
+    fails.push(`I4: TIME_COST_CARDS declares '${label}' → ${handler}(), and no story card advertises that cost any more — retire the entry`);
+}
+
 // ── Report ───────────────────────────────────────────────────────────────────
 console.log('§WALK-4 terrain-field invariant proof');
 console.log(`  hub=${HUB}  nodes=${allCodes.length}  sea-cells=${IMPASSABLE.size}  terrains=${terrainKeys.size}`);
 console.log(`  I3  reachable=${reachableCount}/${allCodes.length}  unreachable=${unreachable.length}  components=${componentCount}`);
 console.log(`  I2  junction:true=${junctionTrue}  WORLD_DB.junction=${terrainKeys.has('junction')}`);
 console.log(`  I1  node-terrains=${Object.keys(nodeTerrains).length}  missing-in-WORLD_DB=${missingTerrain.length}  midlands=${terrainKeys.has('midlands')}`);
+console.log(`  I4  advertised-hour-cards=${advertised.size}  declared=${Object.keys(TIME_COST_CARDS).length}`);
 
 if (fails.length) {
   console.error('\n✗ INVARIANT VIOLATIONS:');
   for (const f of fails) console.error('   ✗ ' + f);
   process.exit(1);
 }
-console.log('\n✓ I1 + I2 + I3 hold — terrain field is total, stub-free, and fully reachable from ' + HUB);
+console.log('\n✓ I1 + I2 + I3 + I4 hold — terrain field is total, stub-free and fully reachable from ' + HUB, '\n  and every advertised hour is an hour the code charges');

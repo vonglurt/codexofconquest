@@ -19,6 +19,21 @@
 
 ---
 
+## Archived 2026-09-06 — §DX-02bz (a card that advertised an hour the game never took)
+
+### §DX-02bz — the fishing card advertises an hour it has never charged, and the game's two clocks disagree (NEW 2026-08-14 during §DOC-02bl, 🟡 small design call)
+
+- [x] ✅ SHIPPED 2026-09-06 `SHA4` **§DX-02bz — the fishing card no longer claims a cost the game does not take, and a gate now holds every card that does.** 🟡 **The design call was charge-the-hour or drop-the-label, and three facts settled it — one of them found only by reading the siblings.**
+> **Re-derived at `437601c`:** `S_story.hoursElapsed` has **four** writers — the short-rest button, `_storyRollInit` at battle start, `storyShortRest`, and `storyConfirmSleep` at `+8` — and **none is fishing**, exactly as at `017d7d8` where there were six. The label has been decorative since `213d14b` introduced it.
+> **The row named one `⏱ 1 hour` hint. There are three, and the other two are honest** — `⏱ 1 hour · combat` is charged by `_storyRollInit`, `⏱ 1 hour · roll HD · recover HP` by `storyShortRest`. ***That is what made the convention real rather than arbitrary:*** the tag is not decoration on two cards out of three, so on the third it was not a stylistic flourish, it was a false statement about a cost the player is being asked to weigh.
+> **The hour is not free, which is the fact that decided the call.** Every charged hour also raises `hoursSinceSlept`, and `` `(S_story.hoursSinceSlept || 0) >= 24@28333` `` grants **disadvantage**. So charging fishing an hour would have been a real balance change — and one running *against* the direction of the increment that removed hunting: **§TIMELESS-01 deleted `HUNTING_GROUNDS` and the Stalk mechanic and made movement free; it removed time costs, it did not add them.** Dropping the claim changes nothing a player can measure; charging it changes the exhaustion ladder for anyone who fishes. **Both the hint and its `1h` tag are deleted** — no replacement hint, because fishing needs no rod (the rod changes the fish *fight*, not the cast) and gates on nothing, so there is no true non-obvious thing for the slot to say.
+> **`check:invariants` gains I4, and it is the row's own stated Verify.** Every `⏱ N hour` hint must name a handler that writes `S_story.hoursElapsed`, through a declared `TIME_COST_CARDS` map, and a declared entry no card advertises any more is equally a violation — the two-way staleness rule. **Red at `437601c`** (*"a story card advertises '⏱ … · fishing session' and TIME_COST_CARDS does not name the handler that charges it"*), green after; the gate reports `advertised-hour-cards=2 declared=2` where it read 3 and 2.
+> **The row's second half is separated, and the ground widened it.** §DX-02bz recorded that sleep advances `hoursElapsed` by 8 and the wall clock by 6. The full census says more: **a short rest advances elapsed time by 1 and the wall clock by nothing at all**, so battle is the only action of the four where the two clocks agree. Because the wall clock's one mechanical consumer is night fishing (`isNight`, §XLVIII), reconciling them changes when night falls and which fish are catchable — a balance decision, filed as **§DX-02iz** with the census, the two consumers, three options and a recommendation.
+> **Verified.** `check:walk` **22/22** · `./bin/api audit` **0 errors** · no world data written (engine JS, server stopped). The `lab-report-timeless-movement-hunt-removal.md` finding **B** that filed this row is closed out in place.
+> **Provenance:** §DOC-02bl.
+
+---
+
 ## Archived 2026-09-06 — §DX-02di (half a classifier, and the gate class that could not see it)
 
 ### §DX-02di — half of the enemy-AI classifier is a constant-false predicate (NEW 2026-08-18 during §DOC-02ce, 🟡 design call: which terrains read as Void)

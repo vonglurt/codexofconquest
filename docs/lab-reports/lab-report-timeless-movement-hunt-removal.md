@@ -169,10 +169,18 @@ reads as confirmed while being false.
 *"movement and battle no longer advance the clock"* — **battle always did**, by D1 of this very
 report, and the engine's comment at 28366 says so.
 
-**B · §DX-02bz** 🟡 — the fishing card advertises `⏱ 1 hour · fishing session` (35371) and charges
-nothing. There were exactly **six** clock writers at `017d7d8` — the six in this report's own §2.1
-table — and none was fishing; four now, still none. The row also records that sleep advances
-`hoursElapsed` by 8 but the wall clock `hour` by 6, and the wall clock decides night fishing.
+**B · §DX-02bz** ✅ **SHIPPED 2026-09-06** — the fishing card advertised `⏱ 1 hour · fishing session`
+and charged nothing. There were exactly **six** clock writers at `017d7d8` — the six in this report's
+own §2.1 table — and none was fishing; four at HEAD, still none. **The hint and its `1h` tag are
+deleted**, which is the only option that changes no behaviour: the hour is not decorative, since every
+charged hour raises `hoursSinceSlept` and **24 of them grant disadvantage**, so charging fishing would
+have been a balance change *against* this report's own direction — §TIMELESS-01 removed time costs, it
+did not add them. The other two `⏱ 1 hour` cards, combat and short rest, do charge, which is what made
+the convention real rather than arbitrary. `check:invariants` **I4** now holds it: an advertised hour
+must name a handler that writes `hoursElapsed`, and a declared handler no card advertises is equally a
+violation. **The clock divergence the row also recorded is separated as §DX-02iz** — and it is wider
+than the row stated: sleep moves `hoursElapsed` by 8 and the wall clock by 6, and a **short rest moves
+elapsed time by 1 and the wall clock by nothing at all**.
 
 **C · §AUDIT-03bf** 🟢 — `index.md:523` reads *"All 193 `S_story` fields from `_S_DEFAULTS()`"*. That
 sentence was written by **this report's own Inc D** (`1d6263a`), and at that commit the function held
