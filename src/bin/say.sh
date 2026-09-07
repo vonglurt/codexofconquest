@@ -8,7 +8,10 @@
 ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
 LOG="$ROOT/build/milepoints/say.log"
 QUEUE_DIR="$ROOT/build/milepoints/say.queue.d"
-DAEMON="$ROOT/sayd.sh"
+BIN="$(cd "$(dirname "$0")" && pwd)"
+DAEMON="$BIN/sayd.sh"
+DAEMON_LOG="$ROOT/build/milepoints/sayd.log"
+. "$BIN/procmatch.sh"
 
 if [[ $# -gt 0 ]]; then
     TEXT="$*"
@@ -31,5 +34,13 @@ printf '%d\n' "$SEQ" > "$SEQ_FILE"
 
 printf '%s\n' "$TEXT" > "$QUEUE_DIR/$(date +%Y%m%d-%H%M%S)-$(printf '%06d' "$SEQ").txt"
 
-# use pgrep so the check is reliable even when the daemon was just forked
-pgrep -f "sayd\\.sh" >/dev/null 2>&1 || { "$DAEMON" </dev/null &>/dev/null & disown; }
+# a caller's own argv can name sayd.sh, so ancestors must be excluded from the match
+if [ -z "$(match_pids "sayd\\.sh")" ]; then
+    if [[ -x "$DAEMON" ]]; then
+        # stderr is kept so a daemon that dies at startup can say why
+        "$DAEMON" </dev/null >/dev/null 2>>"$DAEMON_LOG" & disown
+    else
+        echo "say.sh: say daemon is missing or not executable: $DAEMON" >&2
+        exit 1
+    fi
+fi
