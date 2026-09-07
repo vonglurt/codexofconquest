@@ -83,7 +83,7 @@ The same regex with `-o` returns 125. Signature split: `fn:() => {…}` 116, `fn
 | **NEW-HP** | 3 | Finding 4 | Live-sheet HP writes: `quest_stoning_lystra`, `quest_inquisitor_questions`, `quest_spark_01`. |
 | **NEW-ABILITY** | 3 | Finding 3 | Guarded one-shot ability +1: `quest_sunken_02` (INT), `quest_guide_06` / `quest_scar_04` (WIS, capped 20). |
 | **NEW-DERIVED** | 2 | Finding 6 | `whisperCrownComplete` / `waneCrownComplete` — a flag computed from quest counts; a gate wearing a write's clothing. |
-| **FAVOR** | 2 | No | `_setNpcFavor(key, level)@23505` / `_checkDearFriendUpgrade(key)@23514` — the `favor` opcode already wraps `E.setFavor`. |
+| **FAVOR** | 2 | No | `_setNpcFavor(key, level, say)@23527` / `_checkDearFriendUpgrade(key, say)@23538` — the `favor` opcode already wraps `E.setFavor`. |
 | **NEW-ITEMEDIT** | 1 | Finding 7 | `quest_va_04` appends a sentence to an item description. Cosmetic, gate-irrelevant. |
 | **NONDET** | 1 | Finding 0 (P0) | `quest_1367_f_plague` onFail: `if (Math.random() > 0.5)`. The only non-deterministic bit in all of quest data. |
 
@@ -308,8 +308,8 @@ one unguarded effect call in the kernel this report's port routes through).
 `quest_1367_d_hansa: {@13988` · `quest_scar_03: {@14042` · `plague_exposed: false,@23322` ·
 `_legacy_fn(bit, ctx)@22355` · `_legacy_fn:  { required:@22022` ·
 `const d20  = Math.ceil(E.rng() * 20)@22276` · `function _innKindness(n)@23551` ·
-`function _addCroneMark()@23561` · `function _setNpcFavor(key, level)@23505` ·
-`function _checkDearFriendUpgrade(key)@23516` · `const WM_ARCHIVE_DOCS = [@27928` ·
+`function _addCroneMark()@23561` · `function _setNpcFavor(key, level, say)@23527` ·
+`function _checkDearFriendUpgrade(key, say)@23538` · `const WM_ARCHIVE_DOCS = [@27928` ·
 `seaStrangenessNoticed@12498` · `is not expressible in canActivate@14001` · `S_story[ngEbKey] = true;@35516`
 (the eleventh computed-key writer, omitted from the original §9-FU list of ten) ·
 `src/js/quest.js:resolveSkillCheck(bit, ctx)@327` · `src/js/quest.js:const d20  = Math.ceil(E.rng() * 20)@319` ·

@@ -230,7 +230,7 @@ report **filed this correctly as deferred**, with a suggested text. It is a clea
 oversight discovered late. → **§GR-FU**.
 
 Second, smaller defect: Aldo's promotion was a **raw increment** into `S_story.npcFavorability`,
-bypassing `function _setNpcFavor(key, level) {@23505` — the absolute, only-ever-raises setter that
+bypassing `function _setNpcFavor(key, level, say) {@23527` — the absolute, only-ever-raises setter that
 the CDG verb's own comment cites as canonical and that emits the tier-change line. **Within one arc,
 one NPC was promoted through the host and the other by a direct write into the ledger.** → **§DX-02x**.
 

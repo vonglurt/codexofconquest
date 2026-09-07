@@ -45,6 +45,9 @@
 //                       no branch waits on a level nobody can reach (§AUDIT-03ar)
 //   8. announced      — a `favor` bit whose entry announces a tier in prose writes that
 //                       tier. Correct as data, wrong as intent (§AUDIT-03ar)
+//   9. spoken         — a favor key resolves to a NAME, not merely into the vocabulary,
+//                       and the promotion path still goes through the one resolver and
+//                       still takes the run's message sink (§DX-02gc)
 //
 // NOT covered here on purpose: whether an npc-VALUED string field RESOLVES. Quest anchors
 // are pinned by tests/integration/audit03h-npc-normalize.test.js, and NODE_MAP's inline
@@ -213,6 +216,18 @@ function favorCeiling(src, objs) {
 
 // §AUDIT-03k — the identity of every NPC that has one, from the two registries that carry
 // name/occupation/node metadata (BIRKA_NPC's lean profiles + NPC_DIALOGUES' meta block).
+// The body of `function NAME(` … `}` at column 0 — enough to ask what a function reads.
+function functionBody(src, name) {
+  const i = src.indexOf(`function ${name}(`);
+  if (i < 0) return null;
+  let depth = 0;
+  for (let k = src.indexOf('{', i); k < src.length; k++) {
+    if (src[k] === '{') depth++;
+    else if (src[k] === '}' && --depth === 0) return src.slice(i, k + 1);
+  }
+  return null;
+}
+
 function npcIdentities() {
   const out = {};
   const add = (k, m) => {
@@ -258,9 +273,11 @@ function aliasCandidates(identities, inline) {
 }
 
 // §AUDIT-03ar — the tier each favor level is called in player-facing prose. The corpus
-// announces a promotion by hand in a sibling `narrative` bit, because _setNpcFavor's own
-// message is overwritten in the same render (§DX-02gc), so the prose is a second, human
-// statement of what the bit was meant to write — and the two can disagree.
+// announces a promotion by hand in a sibling `narrative` bit, which it took up while
+// _setNpcFavor's own message was still overwritten in the same render; §DX-02gc closed the
+// overwrite, and the hand-written sentences stay because they say more than the tier line
+// does. Either way the prose is a second, human statement of what the bit was meant to
+// write — and the two can disagree.
 const FAVOR_TIER_NAMES = { 1: 'Friendly', 2: 'Dear Friend', 3: 'Dear Friend' };
 
 // The QUEST_DB / hook entry a source index sits in: back to the nearest `  name: {` at the
@@ -416,6 +433,54 @@ function audit(src, vocab, model) {
         + `"${a[0]}" — the write is correct as data and wrong as intent`);
     }
   }
+  // 9. spoken — §DX-02gc. Phase 3 asks whether a favor key RESOLVES; a key can resolve
+  //    into the vocabulary and still have no display name, and then the promotion line
+  //    speaks the database slug at the player. The resolver is `_npcDisplayName`, and the
+  //    registries it reads are lifted from its own body rather than restated here: if it
+  //    grows a third table, this phase says so instead of quietly asserting the old chain.
+  const RESOLVER = '_npcDisplayName';
+  const resolver = functionBody(src, RESOLVER);
+  if (!resolver) {
+    findings.push(`[spoken] ${RESOLVER} is not in the file — the favor path has no single name resolver, `
+      + 'so every speaking site is free to invent its own (§DX-02gc)');
+  } else {
+    const reads = [...new Set([...resolver.matchAll(/([A-Z][A-Z0-9_]*)\s*\[\s*key\s*\]/g)].map(m => m[1]))].sort();
+    const modelled = ['BIRKA_NPC_PROFILES', 'NPC_DIALOGUES'];   // what npcIdentities() merges
+    const unmodelled = reads.filter(r => !modelled.includes(r));
+    if (unmodelled.length) findings.push(`[spoken] ${RESOLVER} reads ${unmodelled.join(', ')}, which this gate's `
+      + 'identity model does not — teach npcIdentities() the same table or the phase asserts the wrong chain');
+    for (const m of modelled) {
+      if (!reads.includes(m)) findings.push(`[spoken] ${RESOLVER} no longer reads ${m}, and npcIdentities() still does `
+        + '— the gate would pass keys the game can no longer name');
+    }
+  }
+  // The speaking sites must ask the resolver, not a registry. A direct profile read here is
+  // exactly the defect: it is right for the nine Birka keys and wrong for everyone else.
+  for (const fn of ['_setNpcFavor', '_checkDearFriendUpgrade']) {
+    const body = functionBody(src, fn);
+    if (!body) { findings.push(`[spoken] ${fn} is not in the file`); continue; }
+    if (/BIRKA_NPC_PROFILES\s*\[/.test(body)) findings.push(`[spoken] ${fn} reads BIRKA_NPC_PROFILES directly — `
+      + `the name it speaks must come from ${RESOLVER}, or a dialogue-only NPC is announced by their key`);
+    if (!body.includes(RESOLVER)) findings.push(`[spoken] ${fn} does not call ${RESOLVER}`);
+  }
+  // And the line must survive the render that follows it: the promotion carries the run's
+  // message sink from the grammar down, or storyCheckQuests' caller overwrites it.
+  const favHandler = /favor\((bit)(?:,\s*(ctx))?\)\s*\{([\s\S]{0,600}?)\n      \},/.exec(src);
+  if (!favHandler) findings.push('[spoken] the QUEST:CORE `favor` handler could not be read — this phase cannot check the message seam');
+  else if (!favHandler[2] || !/E\.setFavor\([^)]*,\s*say\s*\)/.test(favHandler[3])) {
+    findings.push('[spoken] the `favor` handler does not pass the run\'s message sink to E.setFavor — a tier line '
+      + 'emitted from a completion is overwritten in the same synchronous render (§DX-02gc)');
+  }
+  // Every key a favor write can name must have a name to speak.
+  const spokenKeys = new Set();
+  for (const m of src.matchAll(/kind:\s*["']favor["'][^}]*?npc:\s*["']([a-z][a-z0-9_]*)["']/g)) spokenKeys.add(m[1]);
+  for (const m of src.matchAll(/_setNpcFavor\(\s*'([a-z][a-z0-9_]*)'/g)) spokenKeys.add(m[1]);
+  for (const k of [...spokenKeys].sort()) {
+    const nm = String((model.identities[k] || {}).name || '');
+    if (!nm) findings.push(`[spoken] a favor write names '${k}', and no registry gives them a display name — `
+      + `the promotion line would read "🤝 ${k} looks at you differently now."`);
+  }
+
   return findings;
 }
 
@@ -440,6 +505,12 @@ function selftest(src, vocab, model) {
     ['gates',    src.replace(`_npcFavor('brynn') >= 3`, `_npcFavor('quill') >= 3`), model],
     ['gates',    src.replace('favorMin:{ yael:3 }', 'favorMin:{ yva:3 }'), model],
     ['announced', src.replace(`{kind:'favor',npc:'benedikt_rasp',set:2}`, `{kind:'favor',npc:'benedikt_rasp',set:1}`), model],
+    // §DX-02gc — the four ways the promotion line goes back to speaking a slug, or to a
+    // channel that is cleared before it is painted.
+    ['spoken', src.replace(`{ kind:'favor', npc:"solvak", set:1 }`, `{ kind:'favor', npc:"no_such_person", set:1 }`), model],
+    ['spoken', src.replace('const d = NPC_DIALOGUES[key];', 'const d = null;'), model],
+    ['spoken', src.replace("  const n = _npcDisplayName(key);", "  const n = (BIRKA_NPC_PROFILES[key] || {}).name || key;"), model],
+    ['spoken', src.replace('      favor(bit, ctx) {', '      favor(bit) {'), model],
   ];
   // Findings are compared against the UNPLANTED baseline, so a plant is only "caught" if
   // it produced a finding that was not already there — otherwise a corpus that is already
@@ -482,4 +553,5 @@ console.log(`✓ check:npcregs — ${NPC_KEYED.length} npc-keyed registries, ${N
   + `${Object.keys(WBAPI.NPC_ALIASES).length} display-name aliases collapse to their profile key and no npc: value is one; `
   + `every NPC the corpus raises to fav >= ${ceremonyThreshold(src)} has a line in ${CEREMONY_TABLE}, `
   + 'and no favor threshold in the file is above the favor its NPC can be written to, '
-  + 'and every favor bit writes the tier its own entry announces to the player');
+  + 'and every favor bit writes the tier its own entry announces to the player, and every favor write '
+  + 'names someone the game can put a display name to, through the one resolver, into the run\'s message stream');

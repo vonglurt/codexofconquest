@@ -63,7 +63,7 @@ The eight subsystems: **(II)** Froberger's traces · **(III)** NPC cross-referen
 | VIII | Cross-item connections | ✅ 3/3 | All three live. Two gated one tier below the lock's own words (**F8**). The Fighter's Token is removed from inventory but never *"sits on Weckmann's counter"* |
 | IX | The composite truth | ⚠️ | Arithmetically incomplete: the portrait is missing Crov's panel, and Brynn's depends on quest order |
 
-Anchors at HEAD: `function _checkFrobergerTrace(npcKey)@27789` · `function _getYaelLocation()@27801` · `function _buildWeckmannLog()@27808` · `const FROBERGER_TRACES = {@27826` · `const NPC_CROSS_REFS = {@27835` · `const NIVERS_DIALOGUE = "Evening.";@27867` · `const YAEL_PATROL_NODES = [@27869` · `const WECKMANN_TRAINING_LOG =@27877` · `function _npcFavor(key)@23492` · `function _setNpcFavor(key, level)@23505` · `function _checkDearFriendUpgrade(key)@23516` · `function _nodeHookBirkaNiversPasses(node,@32443` · `function _nodeHookBirkaYaelPatrolLine(node,@32733` · `function _nodeHookBirkaRoom6(node,@32993`.
+Anchors at HEAD: `function _checkFrobergerTrace(npcKey)@27789` · `function _getYaelLocation()@27801` · `function _buildWeckmannLog()@27808` · `const FROBERGER_TRACES = {@27826` · `const NPC_CROSS_REFS = {@27835` · `const NIVERS_DIALOGUE = "Evening.";@27867` · `const YAEL_PATROL_NODES = [@27869` · `const WECKMANN_TRAINING_LOG =@27877` · `function _npcFavor(key)@23492` · `function _setNpcFavor(key, level, say)@23527` · `function _checkDearFriendUpgrade(key, say)@23538` · `function _nodeHookBirkaNiversPasses(node,@32443` · `function _nodeHookBirkaYaelPatrolLine(node,@32733` · `function _nodeHookBirkaRoom6(node,@32993`.
 
 ---
 
@@ -71,7 +71,7 @@ Anchors at HEAD: `function _checkFrobergerTrace(npcKey)@27789` · `function _get
 
 ### F1 — the favor ceiling is 2, and the content was written for 3 ⚠️ *the headline*
 
-Every write to `npcFavorability` in the file resolves to four sites: `_setNpcFavor`'s own assignment, two hardcoded auto-upgrade lines, and one unrelated NPC. The two auto-upgrade sites — inside `function _setNpcFavor(key, level)@23505` and `function _checkDearFriendUpgrade(key)@23516` — are identical and both write the literal **2**:
+Every write to `npcFavorability` in the file resolves to four sites: `_setNpcFavor`'s own assignment, two hardcoded auto-upgrade lines, and one unrelated NPC. The two auto-upgrade sites — inside `function _setNpcFavor(key, level, say)@23527` and `function _checkDearFriendUpgrade(key, say)@23538` — are identical and both write the literal **2**:
 
 ```js
 const check = dearFriendBits[key];

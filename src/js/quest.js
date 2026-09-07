@@ -24,7 +24,7 @@
 //           rng:()=>[0,1),                // §VM-01-B seeded stream
 //           lakeMagic:()=>({allAbility}), checkLevelUp:(), mint:(item),
 //           preBattle:(node), msg:(text), grantMissionBit:(flag,label,state),
-//           setFavor:(npc,level), getFavor:(npc)=>number } }
+//           setFavor:(npc,level,say?), getFavor:(npc)=>number } }
 // createQuestRuntime(host) -> { canActivate, canComplete, execBits, _rollSkill,
 //   resolveSkillCheck, HANDLERS, validateQuest, adaptLegacyQuest, SCHEMA_VERSION }
 
@@ -383,10 +383,13 @@ function createQuestRuntime(host) {
       mission_bit(bit, ctx) { if (E.grantMissionBit) E.grantMissionBit(bit.flag, bit.label, ctx.state); else ctx.state[bit.flag] = true; },   // §VM-01-C/D: host grant, else env fallback
       // §ARCH-01 W7c — NPC favorability: `set` writes an absolute level; `add`
       // increments the current level, clamped to `cap` (default 3 = Dear Friend).
-      favor(bit) {
+      favor(bit, ctx) {
         if (!E.setFavor) return;
-        if (typeof bit.add === 'number') E.setFavor(bit.npc, Math.min(bit.cap == null ? 3 : bit.cap, (E.getFavor ? E.getFavor(bit.npc) : 0) + bit.add));
-        else E.setFavor(bit.npc, bit.set);
+        // The tier line the host speaks is durable only if it joins the run's message
+        // stream; `narrative` above takes the same seam for the same reason (§DX-02gc).
+        const say = ctx && ctx.pushMsg ? ctx.pushMsg : null;
+        if (typeof bit.add === 'number') E.setFavor(bit.npc, Math.min(bit.cap == null ? 3 : bit.cap, (E.getFavor ? E.getFavor(bit.npc) : 0) + bit.add), say);
+        else E.setFavor(bit.npc, bit.set, say);
       },
       item_check(bit, ctx) { const inv = ctx.state.inventory || []; ctx._itemCheck = inv.filter(x => x.name === bit.name).length >= (bit.count || 1); },   // §VM-01-C: reads the env inventory
       unlock(bit, ctx) { (bit.quests || []).forEach(qid => { const st = ctx.state; st.quests = st.quests || {}; if (!st.quests[qid]) st.quests[qid] = 'active'; }); },   // §VM-01-C: env quests

@@ -22335,10 +22335,13 @@ function createQuestRuntime(host) {
       mission_bit(bit, ctx) { if (E.grantMissionBit) E.grantMissionBit(bit.flag, bit.label, ctx.state); else ctx.state[bit.flag] = true; },   // §VM-01-C/D: host grant, else env fallback
       // §ARCH-01 W7c — NPC favorability: `set` writes an absolute level; `add`
       // increments the current level, clamped to `cap` (default 3 = Dear Friend).
-      favor(bit) {
+      favor(bit, ctx) {
         if (!E.setFavor) return;
-        if (typeof bit.add === 'number') E.setFavor(bit.npc, Math.min(bit.cap == null ? 3 : bit.cap, (E.getFavor ? E.getFavor(bit.npc) : 0) + bit.add));
-        else E.setFavor(bit.npc, bit.set);
+        // The tier line the host speaks is durable only if it joins the run's message
+        // stream; `narrative` above takes the same seam for the same reason (§DX-02gc).
+        const say = ctx && ctx.pushMsg ? ctx.pushMsg : null;
+        if (typeof bit.add === 'number') E.setFavor(bit.npc, Math.min(bit.cap == null ? 3 : bit.cap, (E.getFavor ? E.getFavor(bit.npc) : 0) + bit.add), say);
+        else E.setFavor(bit.npc, bit.set, say);
       },
       item_check(bit, ctx) { const inv = ctx.state.inventory || []; ctx._itemCheck = inv.filter(x => x.name === bit.name).length >= (bit.count || 1); },   // §VM-01-C: reads the env inventory
       unlock(bit, ctx) { (bit.quests || []).forEach(qid => { const st = ctx.state; st.quests = st.quests || {}; if (!st.quests[qid]) st.quests[qid] = 'active'; }); },   // §VM-01-C: env quests
@@ -22382,7 +22385,7 @@ const QuestRuntime = createQuestRuntime({
     preBattle: n => { if (typeof storyPreBattle === 'function') storyPreBattle(n); },
     msg:       t => { if (typeof storyMsg === 'function') storyMsg(t); },
     grantMissionBit: (flag, label, st) => { if (typeof _grantMissionBit === 'function') _grantMissionBit(flag, label); else if (st) st[flag] = true; },
-    setFavor:  (npc, level) => { if (typeof _setNpcFavor === 'function') _setNpcFavor(npc, level); },
+    setFavor:  (npc, level, say) => { if (typeof _setNpcFavor === 'function') _setNpcFavor(npc, level, say); },
     getFavor:  npc => (typeof _npcFavor === 'function' ? _npcFavor(npc) : 0),
   },
 });
@@ -23508,18 +23511,31 @@ const DEAR_FRIEND_BITS = {
   crov: () => (S_story.pitTrainingWins||0) >= 3,
 };
 const NPC_FAVOR_CAP = 3;
-function _setNpcFavor(key, level) {
+// A favor key is a profile key OR a dialogue-only key: §NPC-01-SF2's nine live at STN/TL/VS/
+// GC/CQ/SQ and carry their name in `NPC_DIALOGUES[key].meta.name` instead. Reads the raw
+// table, never `_getNPCDialogue`, which rotates the pool and counts a visit.
+function _npcDisplayName(key) {
+  const p = BIRKA_NPC_PROFILES[key];
+  if (p && p.name) return p.name;
+  const d = NPC_DIALOGUES[key];
+  if (d && d.meta && d.meta.name) return d.meta.name;
+  return key;
+}
+// `say` is the run's message sink when a promotion comes from a quest's own bits. Without
+// it the tier line goes to `storyMsg`, which storyCheckQuests' caller overwrites in the
+// same synchronous render, before a frame is painted (§DX-02gc).
+function _setNpcFavor(key, level, say) {
   if (!S_story.npcFavorability) S_story.npcFavorability = {};
   const prev = _npcFavor(key);
   if (level <= prev) return;
   S_story.npcFavorability[key] = level;
-  const p = BIRKA_NPC_PROFILES[key] || {};
-  const n = p.name || key;
-  if (level === 1) storyMsg('🤝 ' + n + ' looks at you differently now.');
-  if (level === 2) storyMsg('💛 ' + n + ' says your name when you walk in.');
-  _checkDearFriendUpgrade(key);
+  const speak = say || storyMsg;
+  const n = _npcDisplayName(key);
+  if (level === 1) speak('🤝 ' + n + ' looks at you differently now.');
+  if (level === 2) speak('💛 ' + n + ' says your name when you walk in.');
+  _checkDearFriendUpgrade(key, say);
 }
-function _checkDearFriendUpgrade(key) {
+function _checkDearFriendUpgrade(key, say) {
   const fav = _npcFavor(key);
   if (fav < 1 || fav >= NPC_FAVOR_CAP) return;
   const check = DEAR_FRIEND_BITS[key];
@@ -23528,8 +23544,7 @@ function _checkDearFriendUpgrade(key) {
   if (S_story.dearFriendGranted[key]) return;
   S_story.dearFriendGranted[key] = true;
   S_story.npcFavorability[key] = fav + 1;
-  const p2 = BIRKA_NPC_PROFILES[key] || {};
-  storyMsg('💛 ' + (p2.name||key) + ' says your name when you walk in.');
+  (say || storyMsg)('💛 ' + _npcDisplayName(key) + ' says your name when you walk in.');
 }
 // §NPC-01-D — a Talk action on the NPC card raises favor toward Friendly (fav 1) ONLY, making the
 // ⚔ enemy footer (fav≥1) reachable by talking while Dear Friend (fav 2, the ✦ worldTruth footer)
@@ -23542,8 +23557,7 @@ const TALK_TO_FRIENDLY = 3;   // deliberate talks (on distinct game-days) to rea
 function _talkToNpc(key) {
   const dlg = _getNPCDialogue(key);
   if (!dlg) return;
-  const p = BIRKA_NPC_PROFILES[key];
-  const name = (p && p.name) || (dlg.meta && dlg.meta.name) || key;
+  const name = _npcDisplayName(key);
   if (_npcFavor(key) >= 1) { storyMsg('🤝 ' + name + ' already counts you a friend.'); return; }
   if (!S_story.npcTalk) S_story.npcTalk = {};
   const t = S_story.npcTalk[key] || { count: 0, lastDay: 0 };

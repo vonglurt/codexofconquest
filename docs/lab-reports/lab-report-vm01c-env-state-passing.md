@@ -79,7 +79,7 @@ Seven handlers change; **only the state access changes, all other logic is verba
 
 ### 4.3 The host-fence handlers — unchanged, by design
 
-`combat(bit) { if (E.preBattle)@22328`, `narrative(bit, ctx) {@22329`, `favor(bit) {@22334` and the `skill_check(bit, ctx) {@22293` roll keep host access. These are host *effects*. A static reachability check never executes them; routing them through a scratch env would buy nothing and would falsely imply the host could be redirected. `_legacy_fn` still runs arbitrary code and remains E's stated blocker — giving it `ctx.state` makes it consistent, not analysable.
+`combat(bit) { if (E.preBattle)@22328`, `narrative(bit, ctx) {@22329`, `favor(bit, ctx) {@22338` and the `skill_check(bit, ctx) {@22293` roll keep host access. These are host *effects*. A static reachability check never executes them; routing them through a scratch env would buy nothing and would falsely imply the host could be redirected. `_legacy_fn` still runs arbitrary code and remains E's stated blocker — giving it `ctx.state` makes it consistent, not analysable.
 
 ## 5. Anchor ledger — the §7 table, re-scored
 

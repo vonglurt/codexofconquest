@@ -248,7 +248,7 @@ days on. → **§DX-02fv**.
 > too. Pinned by `src/tests/integration/dx02fv-tl-vonn-choice.test.js` 5/5.
 
 **N4 — the `favor` correction is right, and its stated reason is wrong.** §12⅞ recorded: *"`add:1`
-would have **lowered** a favor already at 2."* `function _setNpcFavor(key, level)@23505` opens
+would have **lowered** a favor already at 2."* `function _setNpcFavor(key, level, say)@23527` opens
 `if (level <= prev) return;` — **it cannot lower anything**. And the `favor` handler's `add` path
 reads the live level through `E.getFavor` (bound `2026-07-22`, twelve days *before* G4c) and clamps
 at 3, so `add:1` on a favor of 2 **raises it to Dear Friend**. `set:1` is still the correct bit — it
@@ -340,7 +340,7 @@ about the numbers it takes from the file and casual about the ones it takes from
 `function _verbBits(verb, st)@6919` · `function _uqfRunVerb(verb, mount)@6925` ·
 `function _uqfRunChain(bits)@6960` · `*execBits(bits, ctx)@22251` · `*choice(bit, ctx)@22347` ·
 `reward(bit, ctx)@22297` · `combat(bit)@22328` · `item_remove(bit, ctx)@22330` ·
-`function _setNpcFavor(key, level)@23505` · `src/js/quest.js:cost(bit, ctx)@359`
+`function _setNpcFavor(key, level, say)@23527` · `src/js/quest.js:cost(bit, ctx)@359`
 
 ---
 
