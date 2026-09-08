@@ -4471,7 +4471,7 @@ body.act-three .npc-card-chip { filter: saturate(0.85); }
           <div id="vendor-whiskey-section" class="buy-item" style="margin-top:6px;display:none">
             <div>
               <div class="buy-item-desc">🥃 Rough Whiskey — 5gp <span style="color:#7A4A10;font-size:10px">★ Social</span></div>
-              <div class="buy-item-heal">Hold it entering battle · drunk fight at CY pit</div>
+              <div class="buy-item-heal">Hold it entering battle · drunk fight at the Undercity pit</div>
             </div>
             <button id="btn-buy-whiskey">Buy</button>
           </div>
@@ -8642,7 +8642,7 @@ const NODE_MAP = { // → doc: maps.md §NODE_MAP
   },
   // ── §LV: The Antecedent Chamber ──
   HAJ:{ num:83, code:'HAJ', name:'antecedent_chamber', label:'The Antecedent Chamber', act:1, 
-    text:"The descent past the CY checkpoint level goes another twelve meters before the floor levels. The conduit cables end at a partition wall — not brick, not data-center partition, something older than either. The indicators in this section run on a power source that predates the undercity infrastructure by a margin no one has calculated because no one has thought to ask.\n\nThe chamber was designed, from the start, to be exactly this: a room with one function and one occupant. The function is containment. The occupant is still here.\n\nIt is not large. It does not need to be. It has been here long enough that the word 'waiting' no longer applies — waiting implies an expectation of change. This is older than that. This is patience as a physical property of the space.\n\nThe Antecedent Seal activates on entry. The seal runs warm. The indicators change from standby to receiving.\n\nYou are, apparently, expected.", npc:'The Antecedent', battle:null, loot:null, sleep:false,
+    text:"The descent past the Undercity checkpoint level goes another twelve meters before the floor levels. The conduit cables end at a partition wall — not brick, not data-center partition, something older than either. The indicators in this section run on a power source that predates the undercity infrastructure by a margin no one has calculated because no one has thought to ask.\n\nThe chamber was designed, from the start, to be exactly this: a room with one function and one occupant. The function is containment. The occupant is still here.\n\nIt is not large. It does not need to be. It has been here long enough that the word 'waiting' no longer applies — waiting implies an expectation of change. This is older than that. This is patience as a physical property of the space.\n\nThe Antecedent Seal activates on entry. The seal runs warm. The indicators change from standby to receiving.\n\nYou are, apparently, expected.", npc:'The Antecedent', battle:null, loot:null, sleep:false,
   },
   // ── ACT II — SALTWICK
   LCY:{ num:7,  code:'LCY', name:'docks',          label:'Harbor Docks — Tilbury',       act:2, text:"Three ships offload simultaneously at Tilbury. The crane operators don't speak — they work by sound: the groan of the chain, the pace of the tackle, the thud of a crate landing right. At the third berth something in the hold has been wrong since morning. The dockworkers avoid that side without discussing it.\n\nThe vermin here are standard harbor stock: wererats in the cargo nets, spies in the chandler's office, pirates who read Tilbury's inspection schedule as an invitation. What comes off the wrong ships — the deep-run vessels whose cargo lists say ballast — belongs to a different tier.\n\nMagistra Elara Muffat is at the gate. She was there before you arrived. She already knows which berth you'll walk toward.", npc:'Magistra Elara Muffat', battle:null, loot:'Trade Seal (Shard #1) · Smoke Bomb', sleep:false,
@@ -11265,7 +11265,7 @@ const QUEST_DB = { // → doc: quest.md §Quest Format
   // ── §LVII: The Field Analyst ──
   quest_solm_01: { id:'quest_solm_01', type:'side', schema:'UQF-1.0', gate:{ flags:['antecedentMet'] }, bits:[], completion:{ flags:['solmFound'] }, title:'The Field Analyst',
     onComplete:[ { kind:'reward', gold:150 }, { kind:'narrative', msg:'💰 +150gp. 📋 Analyst Solm Field File obtained. File closed. The archive still has an archivist.' } ], // §ARCH-01 W7c
-    itemChain:[{action:'grant',name:'Analyst Solm Field File', icon:'📋', type:'readable', sell:0, readText:"FIELD FILE — ANALYST I. SOLM\nStation 7, Frequency 14.225 Monitoring Assignment\nClass 3, Scholar Kings Research Division\n\n[Vol. 1, Day 1 — three months prior:]\nTransmission cut mid-entry. Suppressor origin: CY access corridor. Operator unknown to me. I do not believe the suppression was deliberate interference — the timing and mechanism suggest an automated device, not a hand on a dial. I have nonetheless lost the fourth transmission before it completed.\n\nI cannot return to Station 7. The Scholar Kings will not acknowledge the record. I am here instead, where things that cannot be officially held are held unofficially.\n\n[Vol. 1, Days 2–87:]\nTransmission confirmed, bearing 047°, no repeat. [repeated daily, same hand, same composure]\n\n[Vol. 1, Day 88 — closing entry, ink slightly different pressure:]\nRecord from the terminus received. Source confirmed: contained, non-hostile, question answered. Absence confirmed on 14.225. The archive still has an archivist.\n\nFile closed.\n\n— I. Solm",silent:true}], // §EDITOR-01-D-FU(b) b2b
+    itemChain:[{action:'grant',name:'Analyst Solm Field File', icon:'📋', type:'readable', sell:0, readText:"FIELD FILE — ANALYST I. SOLM\nStation 7, Frequency 14.225 Monitoring Assignment\nClass 3, Scholar Kings Research Division\n\n[Vol. 1, Day 1 — three months prior:]\nTransmission cut mid-entry. Suppressor origin: Undercity access corridor. Operator unknown to me. I do not believe the suppression was deliberate interference — the timing and mechanism suggest an automated device, not a hand on a dial. I have nonetheless lost the fourth transmission before it completed.\n\nI cannot return to Station 7. The Scholar Kings will not acknowledge the record. I am here instead, where things that cannot be officially held are held unofficially.\n\n[Vol. 1, Days 2–87:]\nTransmission confirmed, bearing 047°, no repeat. [repeated daily, same hand, same composure]\n\n[Vol. 1, Day 88 — closing entry, ink slightly different pressure:]\nRecord from the terminus received. Source confirmed: contained, non-hostile, question answered. Absence confirmed on 14.225. The archive still has an archivist.\n\nFile closed.\n\n— I. Solm",silent:true}], // §EDITOR-01-D-FU(b) b2b
     desc:"The Station 7 operator went to Magistra Muffat three months ago with classified knowledge she could no longer safely carry. Muffat sent her to the Map Shop. Dusk holds things without asking why. He has been holding her.",
     hint:'Find Analyst Solm at the Map Shop. She has been waiting for someone who finished what she could not.',
     activateNode:'LCY', 
@@ -11277,19 +11277,19 @@ const QUEST_DB = { // → doc: quest.md §Quest Format
   quest_antecedent_01: { id:'quest_antecedent_01', type:'side', schema:'UQF-1.0', gate:{ flags:['suppressorLogRead'] }, bits:[], completion:{ flags:['antecedentMet'] }, title:'The Question',
     onComplete:[ { kind:'narrative', msg:'🏛️ The question is closed. The archive still has an archivist.' } ], // §ARCH-01 W7c
     desc:"Bearing 047°, depth 18m. The Antecedent Seal activates the receiving array. The thing that has been asking for forty-one volumes is still there. It was waiting for an answer, not an archivist. It turns out those are the same thing.",
-    hint:'Descend past the CY checkpoint with the Antecedent Seal. The chamber is south.',
+    hint:'Descend past the Undercity checkpoint with the Antecedent Seal. The chamber is south.',
     activateNode:'HKG', 
     xpAward:400, waypointNode:'HAJ', reward:0,
     disposition:'"The question is closed." — The Antecedent',
     passText:"The question is closed. The receiving array goes dark. Forty-one volumes, and then this.",
-    failText:"The thing that has been asking is still waiting. The chamber is south of CY, depth 18 meters.",
+    failText:"The thing that has been asking is still waiting. The chamber is south of the Undercity, depth 18 meters.",
     npc:"auros",
   },
   // ── §LIV: The Warrant ──
   quest_signal_01: { id:'quest_signal_01', type:'side', schema:'UQF-1.0', gate:{ flags:['station7LogRead'] }, bits:[], completion:{atNode:'HKG'}, title:'The Warrant',
     onComplete:[ { kind:'reward', gold:300 }, { kind:'flag_write', set:['suppressorLogRead'] }, { kind:'narrative', msg:'💰 +300gp. 📡 Warrant Suppressor Log recovered — three suppressions, Day 14 cut mid-transmission. Source at bearing 047°, depth 18m. Source has not repeated.' } ], // §ARCH-01 W7c
-    itemChain:[{action:'grant',name:'Warrant Suppressor Log', icon:'📡', type:'readable', sell:0, readText:"WARRANT SUPPRESSOR — AUTOMATIC SIGNAL LOG\nDevice ID: WSP-CY-04 (Neon Undercity, Station Corridor)\nOperator: Commander S. Bruhns (unaware of logging function)\n\n[Months 1–41: 14.225 monitored. No structured transmission detected. Log: confirmed absent. Cross-reference with Frequency Row Vol. 1–41: consistent.]\n\nDay 3, Vol. 41: Auto-suppression fired. Signal on 14.225, duration 0.4s, character: non-mechanical, subsurface origin — depth est. 18m, bearing 047° from HM. Suppression effective. Signal terminated.\nDay 9, Vol. 41: Auto-suppression fired. Signal on 14.225, duration 1.1s, character: non-mechanical, partial internal structure. Suppression effective. Signal terminated.\nDay 14, Vol. 41: Auto-suppression fired. Signal on 14.225, duration 3.1s, character: non-mechanical, structured content, transmission in progress at suppression. Suppression effective. Signal terminated mid-transmission.\n\n[Post-Day 14: 14.225 monitored. No structured transmission detected. Source remains at bearing 047°, depth 18m.]\n\nAuto-assessment: Signal suppression achieved. Source has not repeated transmission.\n\nNote: Either source ceased voluntarily, or source is aware of suppression.\n\n[End of log. Device continues active monitoring.]",silent:true}], // §EDITOR-01-D-FU(b) b2b
-    desc:"Station 7's log ends mid-entry. Bearing 047° points at the Neon Undercity. Seraphine Bruhns has been running a Warrant suppressor at CY since before you arrived. The suppressor fires automatically on structured transmissions. It keeps a log. She did not know it kept a log.",
+    itemChain:[{action:'grant',name:'Warrant Suppressor Log', icon:'📡', type:'readable', sell:0, readText:"WARRANT SUPPRESSOR — AUTOMATIC SIGNAL LOG\nDevice ID: WSP-NU-04 (Neon Undercity, Station Corridor)\nOperator: Commander S. Bruhns (unaware of logging function)\n\n[Months 1–41: 14.225 monitored. No structured transmission detected. Log: confirmed absent. Cross-reference with Frequency Row Vol. 1–41: consistent.]\n\nDay 3, Vol. 41: Auto-suppression fired. Signal on 14.225, duration 0.4s, character: non-mechanical, subsurface origin — depth est. 18m, bearing 047° from HM. Suppression effective. Signal terminated.\nDay 9, Vol. 41: Auto-suppression fired. Signal on 14.225, duration 1.1s, character: non-mechanical, partial internal structure. Suppression effective. Signal terminated.\nDay 14, Vol. 41: Auto-suppression fired. Signal on 14.225, duration 3.1s, character: non-mechanical, structured content, transmission in progress at suppression. Suppression effective. Signal terminated mid-transmission.\n\n[Post-Day 14: 14.225 monitored. No structured transmission detected. Source remains at bearing 047°, depth 18m.]\n\nAuto-assessment: Signal suppression achieved. Source has not repeated transmission.\n\nNote: Either source ceased voluntarily, or source is aware of suppression.\n\n[End of log. Device continues active monitoring.]",silent:true}], // §EDITOR-01-D-FU(b) b2b
+    desc:"Station 7's log ends mid-entry. Bearing 047° points at the Neon Undercity. Seraphine Bruhns has been running a Warrant suppressor down there since before you arrived. The suppressor fires automatically on structured transmissions. It keeps a log. She did not know it kept a log.",
     hint:'Return to Commander Seraphine Bruhns at the Neon Undercity and ask about the suppressor log.',
     activateNode:"SVO", 
     xpAward:250, waypointNode:'HKG', reward:300,
@@ -12336,11 +12336,11 @@ const QUEST_DB = { // → doc: quest.md §Quest Format
     activateNode:'DA2', 
     onComplete:[
       { kind:'flag_write', set:['antecedentDepthMet'] },
-      { kind:'reward', knowledge:"Constructor Design: Both the Antecedent's archival installation (CY→AC) and the tidal installation (DA3, bearing 047°, depth 18m) were built on the same foundation. The Constructor required one person to close both chains — the archival question and the tidal question are independent but the answer to each requires the same archivist." },
+      { kind:'reward', knowledge:"Constructor Design: Both the Antecedent's archival installation (HKG→AC) and the tidal installation (DA3, bearing 047°, depth 18m) were built on the same foundation. The Constructor required one person to close both chains — the archival question and the tidal question are independent but the answer to each requires the same archivist." },
       // §LXX-01-FU — the DA3 button's Station 7 prose, recovered: on HEAD the handler's
       // storyMsg was destroyed by its own bare storyRender (§BOARD-01-FU6 class), so this
       // richer text had never been readable. The narrative bit rides the completion stream.
-      { kind:'narrative', msg:'⚓ The signal returns to Station 7.\n\nBertha No-Bank spent forty-one volumes recording the absence. The absence ends now. The monitoring protocol completes. The Antecedent\'s tidal configuration closes.\n\nYou followed both chains — the archival from CY to AC, the tidal from DSF to DA3. The Constructor built both gates on the same foundation knowing these chains would require the same hands.\n\nKnowledge entry added: Constructor Design. +500 XP.' },
+      { kind:'narrative', msg:'⚓ The signal returns to Station 7.\n\nBertha No-Bank spent forty-one volumes recording the absence. The absence ends now. The monitoring protocol completes. The Antecedent\'s tidal configuration closes.\n\nYou followed both chains — the archival from HKG to AC, the tidal from DSF to DA3. The Constructor built both gates on the same foundation knowing these chains would require the same hands.\n\nKnowledge entry added: Constructor Design. +500 XP.' },
     ],
     xpAward:500,
     disposition:'"The question is not different from here. The answer is not different from here. The foundation is the same. The chain is the same. You are the same." — The Antecedent, Tidal Configuration',
@@ -21184,11 +21184,11 @@ const QUEST_DB = { // → doc: quest.md §Quest Format
   tbs_c9a4: { id:"tbs_c9a4", type:"combat", schema:'UQF-1.0', gate:{ flags:['tbs_c9a3'] }, bits:[{ kind:'skill_check', stat:'WIS', dc:12, onPass:[{ kind:'mission_bit', flag:'tbs_c9a4' }], onFail:[] }], title:"The Claimant's Last Option", desc:"The claimant's agent, having lost the notarial certification, has resorted to direct action. A hired man is at the Caffa harbor gate — the only exit toward the western routes to Weimar — with a straightforward instruction: take the ledger fragment by force. He is large and he is angry on behalf of his employer and he has been standing at the gate since morning with the specific patience of someone who has been paid to wait for exactly one thing to happen.", passText:"You see him before he sees you — he is watching the main harbor road and you approach from the factor quarter's internal passage. He commits before he has the right position. The fight happens at the gate with the harbor behind you.", failText:"He has the gate and the direct road. The fight happens in the gate opening. The harbor-keeper sees it and will have questions when you board.", npc:"archivus_sweelinck", activateNode:"CAF" },
   // ── §D01-07 — "The Maintenance Plate" (HKG — Neon Undercity Scholar King arc) ──
   quest_d0207_a1: { id:'quest_d0207_a1', type:'skill_check', title:'Act I — The Plate',
-    hint:'First entry to CY. The neon is loud. The plate on the wall is quiet.',
+    hint:'First entry to the Undercity. The neon is loud. The plate on the wall is quiet.',
     schema:'UQF-1.0',
     activateNode:'HKG', gate:{ notFlags:['d0207_a1_passed'] },
     retryable:true,
-    vignetteText:'First entry to CY. The neon is loud. A copper plate on the wall is quiet. Dated three centuries ago. Scholar King cipher. You should not be able to read this.',
+    vignetteText:'First entry to the Undercity. The neon is loud. A copper plate on the wall is quiet. Dated three centuries ago. Scholar King cipher. You should not be able to read this.',
     passText:'You see it. It is there. The neon does not erase it.',
     failText:'Your attention is pulled by the neon. Retry — the plate doesn\'t move.',
     bits:[{ kind:'skill_check', stat:'WIS', skill:'Perception', dc:10,
@@ -21196,12 +21196,12 @@ const QUEST_DB = { // → doc: quest.md §Quest Format
     npc:"auros",
   },
   quest_d0207_a2: { id:'quest_d0207_a2', type:'side', title:'Act II — The Madness Save',
-    hint:'The CY aesthetic makes no sense. A fantasy city should not have neon.',
+    hint:'The Undercity aesthetic makes no sense. A fantasy city should not have neon.',
     schema:'UQF-1.0',
     activateNode:'HKG', gate:{ flags:['d0207_a1_passed'] },
     completion:{ flags:['cyMadnessRoll'] }, bits:[],
     reward:0, waypointNode:'HKG',
-    desc:'The WIS save fires on first CY entry (already handled). Both results — clear or fractured — leave the plate visible. This act completes when the save has resolved.',
+    desc:'The WIS save fires on first Undercity entry (already handled). Both results — clear or fractured — leave the plate visible. This act completes when the save has resolved.',
     npc:"auros",
   },
   quest_d0207_a3: { id:'quest_d0207_a3', type:'side', title:'Act III — The Data Wraith',
@@ -21210,7 +21210,7 @@ const QUEST_DB = { // → doc: quest.md §Quest Format
     activateNode:'HKG', gate:{ flags:['cyMadnessRoll','d0207_a1_passed'] },
     completion:{ battles:['HKG'] }, bits:[],
     reward:0, waypointNode:'HKG',
-    desc:'The Data Wraith moves toward the plate at the same moment you do. There is only one plate. Win the CY node battle to examine it safely.',
+    desc:'The Data Wraith moves toward the plate at the same moment you do. There is only one plate. Win the Undercity node battle to examine it safely.',
     npc:"auros",
   },
   quest_d0207_a4: { id:'quest_d0207_a4', type:'skill_check', title:'Act IV — The Cipher',
@@ -24470,7 +24470,7 @@ function storyBuyWhiskey() {
   S_story.inventory.push({name:'Rough Whiskey',icon:'🥃',type:'consumable_misc',sell:2});
   storyUpdateStatus();
   storyRenderVendor();
-  storyMsg('🥃 Bought Rough Whiskey. ★ Social — each NPC reacts differently if you visit them while it\'s in effect. Take it into the CY pit fight for a... memorable outcome.');
+  storyMsg('🥃 Bought Rough Whiskey. ★ Social — each NPC reacts differently if you visit them while it\'s in effect. Take it into the Undercity pit fight for a... memorable outcome.');
 }
 
 function storyEnter() {
@@ -26393,7 +26393,7 @@ const KEY_EVENTS = [
   { id:'ke_antecedent', node:'HKG', item:'Antecedent Seal', label:'🏛️ Activate the Antecedent Seal',
     ability:'int', abilityLabel:'Arcana', dc:14, flag:'keyEvent_antecedent',
     successText:'The seal runs warm the moment you hold it toward the partition wall. Not hot — warm, the way a thing feels when it recognizes something it has been waiting for. The indicators change from standby to receiving. The change is immediate.\n\nThe Antecedent has been asking the same question across forty-one volumes. You have the forty-second answer. It does not ask for credentials. It was waiting for someone who arrived here anyway.',
-    failText:'The seal activates on a partial sequence — the indicators shift from standby but pause before resolving to receiving. Something in the handshake is slightly wrong: the order, the angle, the number of times you have passed through the CY checkpoint. The Antecedent adjusts its assessment. After a moment the indicators settle to receiving. It still accepts what you brought.',
+    failText:'The seal activates on a partial sequence — the indicators shift from standby but pause before resolving to receiving. Something in the handshake is slightly wrong: the order, the angle, the number of times you have passed through the Undercity checkpoint. The Antecedent adjusts its assessment. After a moment the indicators settle to receiving. It still accepts what you brought.',
     worldNote:'Receiving array active. The Antecedent acknowledged. Indicators: receiving. The forty-second volume delivered.' },
 ];
 
@@ -27904,7 +27904,7 @@ const NPC_CROSS_REFS = { // → doc: world.md §Cross-References (17 lines; ever
   ],
   crov:     [
     { fav:1, text:"The guard captain checks on the pit results without checking on the pit. Smart. She knows what she needs to know without knowing what she can't unknow. I respect the line she's drawn." },
-    { fav:1, text:"Auros does her surveys at the bottom of the CY access shaft. I hear the equipment. I don't ask. She doesn't ask about the pit. We work in parallel. That's a good arrangement." },
+    { fav:1, text:"Auros does her surveys at the bottom of the Undercity access shaft. I hear the equipment. I don't ask. She doesn't ask about the pit. We work in parallel. That's a good arrangement." },
     { fav:2, text:"She found something down there six months ago. I could tell by the way she came back up. She didn't say what. I didn't ask. But I've been keeping the pit fighters away from the north corner of the shaft since then." }
   ],
   auros:  [
@@ -27924,8 +27924,8 @@ const YAEL_PATROL_NODES = [ // → doc: world.md §Yael's Named Report Scene (pa
 ];
 
 const WECKMANN_TRAINING_LOG = // → doc: world.md §Weckmann Training Log (Layer 68b — contains riot funding evidence; yaelNamedReport cross-ref)
-`WECKMANN'S TRAINING LOG — CY Fighting Pit
-—————————————————————————————————————————
+`WECKMANN'S TRAINING LOG — Undercity Fighting Pit
+————————————————————————————————————————————————
 
 Year 6, Day 14
 New fighter — Cabanilles. Strong, untrained. Good instincts, no patience.
@@ -28197,10 +28197,10 @@ Item 1: Research correspondence, circa Year 3 of survey.
 "The undercity predates the city. The city was built on top of a decision that was never recorded. I have found the original survey markers. They point inward, not outward. Someone was trying to contain something. The containment held for two hundred and eleven years. Then it didn't. The next survey is in this archive. It is labeled as a water assessment. It is not a water assessment."
 
 Item 2: Unsigned architectural notation, deposited same year.
-[The notation describes load-bearing structures below the CY district. Measurements. Stress points. A hand-written margin note: "This would take three people and a reason. I have one of the three."]
+[The notation describes load-bearing structures below the Undercity district. Measurements. Stress points. A hand-written margin note: "This would take three people and a reason. I have one of the three."]
 
 Item 3: Cross-reference, Froberger citation in Scholar King inventory records.
-"Researcher F. accessed restricted depth survey maps, Year 3, Day 41. Maps not returned. Researcher F. did not return the following week. Maps were found in the CY district, folded into the wall behind the training room. We did not ask why."`;
+"Researcher F. accessed restricted depth survey maps, Year 3, Day 41. Maps not returned. Researcher F. did not return the following week. Maps were found in the Undercity district, folded into the wall behind the training room. We did not ask why."`;
 
 // S52: Night-mode ambient lines per node (gameDay % 4 >= 2 = night)
 const NIGHT_AMBIENT = { // → doc: world.md §City at Night (shown when gameDay % 4 >= 2; per-node ambient paragraph)
@@ -31590,7 +31590,7 @@ function _openBlueShuttersContent(wrap) {
     surveyBtn.addEventListener('click', () => {
       S_story.archiveUndercitySurveyTaken = true;
       S_story.inventory.push({name:'Undercity Survey (Partial)',icon:'🗺',type:'key_item',sell:0,
-        desc:"Froberger's depth notation, deposited at the Blue Shutters Archive. Describes stress points in the CY district substructure. The margin says: 'This would take three people and a reason.'"});
+        desc:"Froberger's depth notation, deposited at the Blue Shutters Archive. Describes stress points in the Undercity district substructure. The margin says: 'This would take three people and a reason.'"});
       storyMsg("You take the notation. You're not supposed to. The catalogue entry lists it as a water assessment, which you now know it isn't.");
       surveyBtn.remove();
     });
