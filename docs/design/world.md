@@ -541,7 +541,7 @@ These six NPCs are fully implemented with `npcFavorability` states, `NPC_DIALOGU
 
 *(Layer 67b — ✅ Implemented. Const: `S29_AUROS_THEORY` (HTML 11659). Triggered at `HKG` (historical `CY`) when `frobergerLastEntryRead && fav_auros >= 2`. Sets `s29LineDelivered`. HTML comment at 8628 labels this Layer 67b.)*
 
-**Weckmann Training Log** — available at `HKG` (historical `CY`) after Dear Friend. Shows pit fight history. `_buildWeckmannLog()` builds it dynamically. Contains personal combat philosophy.
+**Weckmann Training Log** — available at `HKG` (historical `CY`) after Dear Friend. Shows pit fight history. `_buildWeckmannLog()` builds it dynamically. Contains personal combat philosophy. Titled `WECKMANN'S TRAINING LOG — CY Fighting Pit` since §DX-02jq; it read `CROV'S` — the `NPC_DIALOGUES` key — until 2026-09-08, and the `CY` in it is §DX-02jr's open call.
 
 **Pit Training Perks** (`const PIT_PERK_UNLOCKS = {@27467`) — unlocked sequentially by `function _checkPitPerkUnlock()@28311` as `pitTrainingWins` accumulates. One perk per win threshold. Five total, in order:
 
