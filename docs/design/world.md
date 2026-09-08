@@ -541,7 +541,7 @@ These six NPCs are fully implemented with `npcFavorability` states, `NPC_DIALOGU
 
 *(Layer 67b — ✅ Implemented. Const: `S29_AUROS_THEORY` (HTML 11659). Triggered at `HKG` (historical `CY`) when `frobergerLastEntryRead && fav_auros >= 2`. Sets `s29LineDelivered`. HTML comment at 8628 labels this Layer 67b.)*
 
-**Weckmann Training Log** — available at `HKG` (historical `CY`) after Dear Friend. Shows pit fight history. `_buildWeckmannLog()` builds it dynamically. Contains personal combat philosophy. Titled `WECKMANN'S TRAINING LOG — CY Fighting Pit` since §DX-02jq; it read `CROV'S` — the `NPC_DIALOGUES` key — until 2026-09-08, and the `CY` in it is §DX-02jr's open call.
+**Weckmann Training Log** — available at `HKG` (historical `CY`) after Dear Friend. Shows pit fight history. `_buildWeckmannLog()` builds it dynamically. Contains personal combat philosophy. Titled `WECKMANN'S TRAINING LOG — Undercity Fighting Pit`; the title was rewritten twice on 2026-09-08, `CROV'S` → `WECKMANN'S` (§DX-02jq, the `NPC_DIALOGUES` key had been printing as the character's name) and `CY` → `Undercity` (§DX-02jr), with the em-dash rule beneath it re-cut each time to match.
 
 **Pit Training Perks** (`const PIT_PERK_UNLOCKS = {@27467`) — unlocked sequentially by `function _checkPitPerkUnlock()@28311` as `pitTrainingWins` accumulates. One perk per win threshold. Five total, in order:
 
@@ -1331,7 +1331,7 @@ The Froberger memorial stone sits at the `LHR` (historical `CI`) crossroads. It 
 
 **Background:** Former city pit champion. Lost the title in a contested bout she disputes. Has been taking irregular exhibition matches since. Known to Weckmann through the forge/training network. When Weckmann contacts her, she says yes.
 
-**The pit circuit:** The CY pit training bouts are informal affairs — traveling fighters, neighborhood challengers, occasional visiting professionals. The championship is a step above: Ogundimu is the standard by which serious fighters are measured. Reaching her requires five documented wins in the circuit. Weckmann is the one who knows when a fighter has earned the right to ask.
+**The pit circuit:** The Undercity pit training bouts are informal affairs — traveling fighters, neighborhood challengers, occasional visiting professionals. The championship is a step above: Ogundimu is the standard by which serious fighters are measured. Reaching her requires five documented wins in the circuit. Weckmann is the one who knows when a fighter has earned the right to ask.
 
 **Post-championship world:** After `pitChampionWon = true`, the world does not change visibly — no new NPCs, no changed nodes, no altered terrain. Ogundimu passes through. The fight happened. Weckmann's log records it. The player's favorability status with the world does not shift. This is intentional: the championship is recognized by those who would know, invisible to those who wouldn't.
 
