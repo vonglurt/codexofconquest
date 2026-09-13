@@ -7679,6 +7679,16 @@ async function route(req, res) {
     // Each entry has lat, lon, region, and current game grid (r,c) if placed.
     if (method === 'GET' && layoutAction === 'worldmap') {
       const nm = WBAPI.nodeMap;
+      // §AUDIT-03bc — `label` here is an Earth gazetteer name, not the game's name for the node:
+      //   • It names the real-world place, for author orientation (TRD → 'Trondheim'). It is NOT
+      //     NODE_MAP[code].label (TRD → 'Goblin Warrens'); 5 of these 155 happen to agree. For the
+      //     name a player sees, read NODE_MAP.
+      //   • Every code in this table is a live NODE_MAP node (155 of 155, no orphans, 2026-09-13), so
+      //     "an anchor with no node behind it" is not a state this table can be in. MAD is a node.
+      //   • Two labels are shared by two codes each: 'Jerusalem' (JAR, JRS, 11 km apart) and 'Palermo'
+      //     (PAR, PMO, 28 km). Neighbouring anchors are expected: at 1° a cell holds several.
+      //   src/tools/worldmap.js carries a copy with the same 155 codes. The labels have drifted: NUE
+      //   is "Scholar's Quarter — Weimar" here and "Scholar's Quarter" there.
       const GEO = {
         HHL:{lat:65.0,lon:-22.0,label:'Herdholt',region:'Iceland'},
         ISL:{lat:64.1,lon:-21.9,label:'Althing Ground',region:'Iceland'},
