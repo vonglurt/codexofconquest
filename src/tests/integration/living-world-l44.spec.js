@@ -127,8 +127,8 @@ test.describe('Layer 44 — Living World', () => {
     expect(out.printedFixed).toBe(142);
   });
 
-  // ── F5: 19 of 20 EB returns carry a receipt; 5 authored Birka receipts are dead ──
-  test('quiet return receipts: INV has none, and the 5 Birka keys cannot be looked up', async ({ page }) => {
+  // ── F5: all 20 EB returns carry a receipt (INV since §DX-02ev(c)); 5 authored Birka receipts are dead ──
+  test('quiet return receipts: every EB return has one, and the 5 Birka keys cannot be looked up', async ({ page }) => {
     await seedAndLoad(page, {});
     await dismissContinue(page);
 
@@ -146,7 +146,7 @@ test.describe('Layer 44 — Living World', () => {
     });
 
     expect(out.ebCount).toBe(20);
-    expect(out.missing).toEqual(['INV']);        // Shepherd Rona returns to silence
+    expect(out.missing).toEqual([]);             // Shepherd Rona's receipt landed with §DX-02ev(c)
     expect(out.nonEbKeys.sort()).toEqual(
       ['auros_depths', 'crov_pit', 'deacon_redd', 'quill_debt', 'yael_ghetto']);
   });
