@@ -117,6 +117,8 @@ Rendered proof (`test-results/l44-final-map.png`): the grid is correct — 129 c
 
 **Cost to fix: delete one line.**
 
+> **✅ SHIPPED 2026-09-13 (§DX-02eu) `f3f5053`.** The line is deleted. It was the only write to the overlay's `position`, and a fixed box already contains its absolutely-positioned caption, so the overlay keeps `position: fixed; inset: 0` through the caption's append. This report's F9 spec case now asserts the fixed state (inline empty, computed `fixed`, top 0). Chromium is not installed on the host that shipped it, so the 262 px figure was not re-measured there; the spec case is the pin.
+
 ### F3b — §X, the Void's First Sign, did not ship
 
 `VOID_SIGN_ROW`, `VOID_SIGN_COL`, `void-flicker`, `_renderMinimapCell`: **zero occurrences each**. The three-act arc — a barely-off-color pixel in Act I, gone by Act III, a one-tile traversable space in Act V reading *"You saw this before. It was waiting for you to be ready."* — is absent in every part. It is the only whole section of this report with no implementation at all, and it is the section that most depended on being built once and never touched.
@@ -257,7 +259,7 @@ Worth stating plainly, since this program mostly records the other direction: **
 |---|---|---|
 | **§DX-02es** | Gigault is named by nobody — add the two NPC lines the spec quotes; decide whether the stall belongs at `LLA` or `LHR` | 🟡 two strings + one node call |
 | **§DX-02et** | Six world-progression notes are written into the movement breadcrumb array and never rendered; `.journal-entry.world` is dead CSS | 🟡 one reader, one design call |
-| **§DX-02eu** | `overlay.style.position = 'relative'` drops the ending map out of full-screen — delete one line | 🟢 one line, no design call |
+| **§DX-02eu** ✅ SHIPPED 2026-09-13 | `overlay.style.position = 'relative'` drops the ending map out of full-screen — delete one line | 🟢 one line, no design call |
 | **§DX-02ev** | Auros's two farewells and the five Birka quiet receipts are unreachable; `INV` has no receipt at all | 🟡 implement-or-retire |
 | **§DX-02ew** | Brynn's ledger prints `+138` under a `−8` balance, and reaches `+1` against a spec that forbids surplus | 🟡 one design call |
 | **§DX-02ex** | `couperiDebtDegraded` carries two opposite meanings; the dialogue reader speaks absolution over neglect | 🟡 one flag split |

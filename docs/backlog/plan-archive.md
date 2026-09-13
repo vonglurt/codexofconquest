@@ -19,6 +19,19 @@
 
 ---
 
+## Archived 2026-09-13 — §DX-02eu (the closing map keeps its full-screen position)
+
+### §DX-02eu — one line of inline CSS drops the game's closing image out of full-screen (NEW 2026-08-23 during §DOC-02cy, 🟢 delete one line, NO DESIGN CALL)
+
+- [x] ✅ SHIPPED 2026-09-13 `f3f5053` **§DX-02eu — one line deleted: `_renderFinalMap` no longer writes an inline `position` over the stylesheet's `position: fixed`.**
+> **The row as filed.** `#final-map-overlay` is declared `position: fixed; inset: 0; z-index: 470`, and `_renderFinalMap` wrote `overlay.style.position = 'relative';` before appending Layer 66b's S55 caption, so the absolutely-positioned caption would have a containing block. The inline style beat the rule, and §DOC-02cy measured the overlay starting **262 px** down the page, under the UI chrome. `lab-report-living-world.md` F3.
+> **Disproof attempted first and failed.** The line was still there, once, at HEAD. It was the only write to the overlay's `position` anywhere (`grep -c "overlay.style.position" play.html` **1**), and no other rule in `play.html` or `edit.html` names `#final-map-overlay`. The stylesheet rule is unchanged (`position: fixed; inset: 0`). A fixed-position box is itself the containing block for its absolutely-positioned descendants, so the caption's `bottom:12%;left:0;right:0` resolves against the viewport-sized overlay with or without the deleted line.
+> **Shipped:** the line, deleted by hand with the server stopped. **Inline `position` writes on the overlay: 1 → 0.** `living-world-l44.spec.js`'s F9 case asserted the broken state (inline `relative`, computed `relative`, top > 200); it now asserts the fixed state (inline empty, computed `fixed`, top 0, covers the viewport), and its comment describing the defect is gone. `lab-report-living-world.md` F3 carries a ✅ SHIPPED note and its Rows-filed table marks the row shipped.
+> **What could not be re-measured here.** Chromium is not installed on this host, so the computed-style and bounding-box numbers were not re-derived; the inverted spec case is the pin for them, and it adds to the browser-launch count until it can run.
+> **Verified:** `check:walk` **27/27** · `npm test` 152 passed / 1083 failed, identical to baseline — 1081 browser-launch, the 2 real ones are §DX-02js’s.
+
+---
+
 ## Archived 2026-09-13 — §DX-02fh (a delivered Froberger trace comes back)
 
 ### §DX-02fh — a delivered Froberger trace never rejoins the pool (NEW 2026-08-23 during §DOC-02cz, 🟢 implement-or-retire)
