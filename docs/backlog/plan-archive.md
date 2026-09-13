@@ -19,6 +19,19 @@
 
 ---
 
+## Archived 2026-09-13 — §DX-02jz (the plague exposure's declaration stops promising a bit and a quest that do not exist)
+
+### §DX-02jz — plague exposure is written and never read, and its declaration promises an Exhaustion effect and a cure quest that do not exist (NEW 2026-09-13 during §DX-02jy, 🟡 ONE DESIGN CALL: give exposure a consequence, or let the flag be a record)
+
+- [x] ✅ SHIPPED 2026-09-13 `64f80ae` **§DX-02jz — the call is (b), a record: the declaration keeps the two clauses that are true and loses the two that are not.**
+> **The row as filed.** `plague_exposed` has one writer — `quest_1367_f_plague`'s nested `{ kind:"skill_check", stat:"CON", dc:13, onFail:[{ kind:"flag_write", set:["plague_exposed"] }] }` — and no reader, and its `_S_DEFAULTS` comment read *"Black Death exposure flag. Set on failed CON DC 13 save. Grants Exhaustion 1 mission bit. Cleared by cure quest."*
+> **Measured before, re-derived at `1e31192`:** `plague_exposed` occurs on **2** lines of `play.html` (the writer and the declaration), **0** in `edit.html`. **Sites for the two effect clauses: 0.** No site grants an Exhaustion mission bit or flag from exposure — the only other `exhaust` token that could be one is the combat condition table's `exhausted: { side:'player', adv:'dis', label:'EXHAUSTED' }`, which nothing connects to the flag. No site clears the flag (`plague_exposed = false`, `clear:`/`unset` naming it: **0**), and no quest id contains `cure` (**0**). **No design lock names the effect:** `docs/notes/Year1367AD.md` has no exposure, Exhaustion or cure entry, and `docs/design/quest.md` records the vignette's fail as *"`plague_exposed` risk"* only.
+> **Why (b) and not (a).** Giving exposure a consequence would feed the existing `exhausted` condition from a story flag and add a cure quest — a combat-touching increment with its own balance question, and the 1367 tracks it sits beside were declared a record by §DX-02ka for the same reason. `docs/design/potential.md` already holds the seed that 1367 factions and faiths are *"vocabulary, not actors"*; exposure belongs with it if the layer is ever given teeth. (c), deleting the flag and the save, would reopen §VM-01-E's port and break `uqf-softlock.test.js`, which asserts the write.
+> **Shipped — one engine comment, edited by hand with the server stopped:** *"Black Death exposure flag. Set on failed CON DC 13 save."* Both remaining clauses have a site (the declaration and the nested save). **Claims without a site: 2 → 0.** The failText §DX-02jy wrote (*"or carry the sickness out with you"*) already promises no effect, so nothing on screen changes.
+> **Verified:** `check:walk` **27/27** · `npm test` **152 passed / 1083 failed, identical to baseline** — 1078 browser-launch (§DX-02ir) plus the 3 untracked §DX-02fh tests, which cannot launch a browser here; the 2 real ones are §DX-02js’s. No doc or anchor quoted the deleted clauses outside this row.
+
+---
+
 ## Archived 2026-09-13 — §DX-02ka (four 1367 track declarations stop promising effects nothing implements)
 
 ### §DX-02ka — the 1367 chronicle moves four faith and faction tracks, and one of them is read, once, by a gate (NEW 2026-09-13 during §DX-02jz, 🟡 ONE DESIGN CALL: give the tracks consequences, or declare them a record)
