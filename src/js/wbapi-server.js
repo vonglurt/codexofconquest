@@ -7969,13 +7969,20 @@ async function route(req, res) {
         seeded.push(code);
       }
 
+      // §DX-02cb: a node the gazetteer cannot place is a gap in the projection's source table.
+      // Name the codes in the log, and refuse to apply a regeneration that would leave them out.
+      const skippedNote = skipped.length ? ` [${skipped.join(', ')}]` : '';
       if (dryRun) {
-        logResponse(method, url.pathname, 200, `geo-seed dry-run: ${seeded.length} placed (${JSON.stringify(bySrc)}), ${collisions.length} collisions, ${skipped.length} skipped, ${lockedKept.length} locked kept`);
+        logResponse(method, url.pathname, 200, `geo-seed dry-run: ${seeded.length} placed (${JSON.stringify(bySrc)}), ${collisions.length} collisions, ${skipped.length} skipped${skippedNote}, ${lockedKept.length} locked kept`);
         return json(res, 200, { ok:true, dryRun:true, projection:'equirectangular-1deg', latN, latS, rows, cols,
           seeded:seeded.length, bySrc, distinctCells:occ.size, skipped, lockedKept, collisions, coords });
       }
 
       // Apply
+      if (skipped.length) {
+        logResponse(method, url.pathname, 409, `geo-seed refused: ${skipped.length} node(s) have no lat/lon source${skippedNote}`);
+        return json(res, 409, { ok:false, error:`${skipped.length} node(s) have no lat/lon in GEO2 or walk-geo-gazetteer.json — add them before regenerating`, skipped });
+      }
       for (const [code, p] of Object.entries(coords)) WBAPI.nodeCoords[code] = p;
       const START_M='// ◆◆◆ WORLDBUILDER:NODE_COORDS:START ◆◆◆', END_M='// ◆◆◆ WORLDBUILDER:NODE_COORDS:END ◆◆◆';
       const sI=WBAPI._rawSrc.indexOf(START_M)+START_M.length, eI=WBAPI._rawSrc.indexOf(END_M);
