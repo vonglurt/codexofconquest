@@ -19,6 +19,20 @@
 
 ---
 
+## Archived 2026-09-13 — §DX-02dm (Yael's first card badges her welcome as Impartial)
+
+### §DX-02dm — the card that exists to make one NPC honest labels her honest line with the wrong relationship tier (NEW 2026-08-18 during §DOC-02ch, 🟢 no design call)
+
+- [x] ✅ SHIPPED 2026-09-13 `acdda86` **§DX-02dm — the onboarding branch returns `tier: 'impartial'`, and the card's Quest Active badge defers to it.**
+> **The row as filed.** §PLAY-01-D forces Yael's welcome monologue, `impartial[0]`, on the first meeting of a fresh run, because `quest_slums_cleanup` is active from turn one and its `questActive` pool would otherwise shadow the speech. `_renderNpcCard` computed the badge separately, from `_hasActiveQuestFor(key)`, which is still true, so the fresh-game card at `LHR` read **📋 Quest Active** above the Impartial text. `lab-report-play-01d-friendships-with-magic.md` §X, Finding 5.
+> **Disproof attempted first and failed.** The badge expression was unchanged at HEAD, `fav >= 2 ? … : fav >= 1 ? … : (_hasActiveQuestFor(key) ? '📋 Quest Active' : '👤 Impartial')`, and the onboarding branch returned `{ quote, meta, fav }` with nothing the badge could read. `_renderNpcCard` is `_getNPCDialogue`'s only caller, so a new field on the returned object reaches exactly one reader.
+> **Measured through the real `_getNPCDialogue` and the real `badgeTxt` line in a Node vm (fresh run, fav 0, the Slums quest active), HEAD → fix:** first meeting, quote `impartial[0]`, badge **📋 Quest Active → 👤 Impartial**; second meeting, a `questActive` line, badge **📋 Quest Active** in both.
+> **Shipped: the row's first option.** The guaranteed-delivery branch returns `tier: 'impartial'`, and the badge's quest clause reads `dlg.tier !== 'impartial' && _hasActiveQuestFor(key)`. The second option, badging from the pool actually used, was set aside: eight one-time lines return before any pool is chosen, and giving each of them a tier is a design question, not this row. Two lines, outside all four parity fences; the Friendly and Dear Friend branches are untouched. `friendships-with-magic.smoke.test.js` gains an assertion that the Yael card `storyNewGame` renders says Impartial and not Quest Active.
+> **What could not be re-measured here.** Chromium is not installed on this host, so the rendered-card assertion has run in no browser. It sits inside an existing test, so the suite's counts do not move; the Node measurement above is the evidence until it can run.
+> **Verified:** `check:walk` **27/27** · `npm test` 152 passed / 1084 failed, identical to baseline — 1082 browser-launch, the 2 real ones are §DX-02js’s.
+
+---
+
 ## Archived 2026-09-13 — §DX-02dq (a Talk is not a visit)
 
 ### §DX-02dq — the Talk verb advances the passive-visit counter its own design doc refuses to reuse (NEW 2026-08-21 during §DOC-02ck, 🟢 two lines, NO DESIGN CALL)

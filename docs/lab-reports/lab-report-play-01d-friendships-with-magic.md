@@ -277,6 +277,8 @@ the badge is computed separately from `_hasActiveQuestFor(key)`. Browser-proved 
 game at LHR: the card reads **📋 Quest Active** above the *Impartial* welcome speech. A
 one-line mismatch, on the one card this increment exists to make honest. → **§DX-02dm** 🟢.
 
+> **✅ SHIPPED 2026-09-13 (§DX-02dm) `acdda86`.** The onboarding branch returns `tier: 'impartial'` and the badge's quest clause defers to it, so this card reads **👤 Impartial** above the welcome speech. The second meeting, which shows a `questActive` line, still reads Quest Active. Measured through the real functions in a Node vm; `friendships-with-magic.smoke.test.js` asserts the rendered card, and Chromium is not installed on this host, so that check has not yet run in a browser.
+
 ---
 
 ## XI. Finding 6 — the transmission failure was position, and position did not change
@@ -319,7 +321,7 @@ part: any future signpost added to this speech lands in the same place.
 
 | Row | Severity | Summary |
 |---|---|---|
-| §DX-02dm | 🟢 | Yael's card shows the **Quest Active** badge above the force-delivered **Impartial** monologue |
+| §DX-02dm ✅ SHIPPED 2026-09-13 | 🟢 | Yael's card shows the **Quest Active** badge above the force-delivered **Impartial** monologue |
 | §AUDIT-03r | amended | duplicate `num` is **14 groups, not 1** — `num:77` plus a contiguous 420–432 block, including `CI`/`RGS` at 429 |
 
 **Corroborated without re-filing** (instrument 7): **§FISH-01** 🔴 (the lake is unreachable —
