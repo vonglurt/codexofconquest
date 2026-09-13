@@ -181,6 +181,8 @@ than a feature to postpone. A property has a test; a postponed feature has good 
   out). `docs/api/wbapi-help.md` documents the hazard; the in-game surface that can trigger
   it does not.
 
+> **✅ SHIPPED 2026-09-13 (§DX-02cs) `5b42dbc`.** `readBody` rejects valid JSON that is not an object, and every call site already answers a rejection with 400 `Invalid JSON`. Measured on a throwaway server, four endpoints × five non-object bodies went from four 500s, a silent 200 and four 409s to twenty 400s. The MUD harness's `[R]` block pins a `null` and a numeric body.
+
 ## VII. Verification Method and Results (§DOC-02bx)
 
 1. **Instrument 101 (path-parts router).** `mesh/acl` and `mesh/blocklist` grep to **0** as

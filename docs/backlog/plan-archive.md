@@ -19,6 +19,20 @@
 
 ---
 
+## Archived 2026-09-13 — §DX-02cs (a non-object body is a 400 at every endpoint)
+
+### §DX-02cs — `readBody()` hands non-object JSON to 44 handlers that all assume an object (NEW 2026-08-17 during §DOC-02bx, 🟢 no design call)
+
+- [x] ✅ SHIPPED 2026-09-13 `5b42dbc` **§DX-02cs — `readBody` rejects valid JSON that is not an object, so all 44 call sites answer with the 400 they already had.**
+> **The row as filed.** `readBody` resolved whatever `JSON.parse` returned, and every handler reads its body as an object, so `-d 'null'` reached `'mode' in ab` or `cb.addr` and came back as a 500 carrying the raw V8 message, where `lab-report-mesh02-connections-ui.md` §3.1 promises *"Unknown body fields → 400"*.
+> **Disproof attempted first and failed.** The parse at `readBody` was unguarded at HEAD, and `grep -c 'await readBody(req)'` is still **44**.
+> **Measured live, HEAD → fix,** on a throwaway server (`PORT=1379`, scratch `MESH_ACL_FILE` and `PEERS_CACHE_FILE`), started and killed inside one foreground command with the user's approval: four endpoints × five bodies. At HEAD, **`null` → 500** on the ACL PUT, `mesh/connect` and `session/start` (V8 messages: *"Cannot use 'in' operator…"*, *"…reading 'addr'"*, *"…reading 'name'"*); **`5` → 500 on the ACL PUT**; malformed `{` → 400 `Invalid JSON` on all four. After: **all 20 → 400 `Invalid JSON`**, and the scratch ACL file was untouched both times.
+> **The ground corrected the row, and changed the fix.** The row said arrays and strings already 400. They do not, reliably: `[]` on the ACL PUT returned **200 ok**, a silent no-op, and `"oops"` returned 400 only because `Object.keys("oops")` yields `0`; on `mesh/connect` and `session/start`, `5`, `"oops"` and `[]` 400 on a missing field rather than on the body; `mesh/gossip` answered **409** to every non-object body because its compat gate runs before the body is read. The row's recommended coercion to `{}` would have turned `"oops"` and `[]` into 200 no-ops on the ACL PUT. **Rejecting is the smaller change in behaviour here**, because all **44** call sites already wrap `readBody` in their own `try`/`catch` returning 400 `Invalid JSON` — the outer handler's catch-all 500 is never reached from a body, so nothing else needed touching. No endpoint takes a top-level array: `POST /api/import/book` is `{ book, nodes, cycles, npcs }`, and the one array `body:` in the tests is a Playwright `route.fulfill` response, not a request.
+> **Shipped:** three lines in `readBody` (`null`, scalars and arrays throw `request body must be a JSON object`), and two checks in the MUD harness's `[R]` block — a `null` and a numeric PUT each expect 400. `[R]` **19 → 21** checks, and the harness **272 passed, 0 failed**; `npm run test:mud` exit 0.
+> **Verified:** `check:walk` **27/27** · `npm test` 152 passed / 1084 failed across three foreground shards, identical to baseline — 1082 browser-launch, the 2 real ones are §DX-02js’s.
+
+---
+
 ## Archived 2026-09-13 — §AUDIT-03bc (the GEO tables say what their labels are)
 
 ### §AUDIT-03bc — the GEO tables' `label` column is an Earth city name, the node's `label` is the game place name, and nothing says which you are reading (NEW 2026-08-14 during §DOC-02bj, 🟢 no design call)
