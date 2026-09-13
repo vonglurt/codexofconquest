@@ -31,3 +31,7 @@ vendor/
 
 # ── Stray timestamped game snapshots at root ─────────────────────────────────
 play-2*.html
+
+# ── Stray runtime dirs at root — the live ones live under build/ ─────────────
+/milepoints/
+/test-results/
