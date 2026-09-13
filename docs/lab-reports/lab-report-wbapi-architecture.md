@@ -293,6 +293,8 @@ occurrence of `WBAPI.conditionItems` in the repo — `load()` never sets it. The
 `200 {"data":{}}` and logs "0 records", which is indistinguishable from an empty-but-real
 collection. Delete the getter or wire the field.
 
+> **✅ SHIPPED 2026-09-13 (§DX-02fk) `27f2223`.** Wired rather than deleted: `WBAPI.load()` reads `CONDITION_ITEMS` off the raw source, and `export condition_items` returns its 12 entries instead of `{}` (measured on a throwaway server, before and after). The help now calls the collection an array.
+
 **7.4 — §DX-02fl 🟢 `ITEM_DB` is an anchored, parsed, exported section with zero entries.**
 `const ITEM_DB = { // General item definitions — weapons, amulets, consumables, readables. };`
 — `` `const ITEM_DB = { // General item definitions@26682` ``. Not a parse failure — the section is genuinely empty. Decide: seed

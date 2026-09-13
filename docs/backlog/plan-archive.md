@@ -19,6 +19,19 @@
 
 ---
 
+## Archived 2026-09-13 — §DX-02fk (export condition_items exports the condition items)
+
+### §DX-02fk — `export/condition_items` is a phantom collection (NEW 2026-08-23 during §DOC-02da, 🟢 delete or wire)
+
+- [x] ✅ SHIPPED 2026-09-13 `27f2223` **§DX-02fk — wired, not deleted: `WBAPI.load()` reads `CONDITION_ITEMS`, so the export returns the 12 entries instead of `{}`.**
+> **The row as filed.** `condition_items: () => WBAPI.conditionItems` was the only reference to `WBAPI.conditionItems`; `load()` never set it, and `GET /api/export/condition_items` answered `200` with an empty collection and logged *"0 records"* — the §DX-02fi signature, a missing source that reads as an empty one. The row offered delete or wire. `lab-report-wbapi-architecture.md` §7.3.
+> **Disproof attempted first and failed.** Still the only reference at HEAD (by then `|| {}`). **Measured on a throwaway server** (`PORT=1381`, started and killed inside one foreground command with the user's approval): `./bin/api export condition_items` → **`{}`, 0 records**, while `play.html` declares `const CONDITION_ITEMS = [` exactly once with **12** entries.
+> **Why wire, not delete.** The table is real and live: the game reads `CONDITION_ITEMS` at three sites (the inventory condition-use flow), the server's own help lists `condition_items` as a collection, and `check:help-conformance` asserts that help and the export map agree, so deleting the getter would have removed a documented surface to hide a loader gap. The help also called it an *object*; it is an array.
+> **Shipped.** `wbapi-core.js`: `conditionItems: []` in the defaults, and in `load()` `this.conditionItems = parseArr(src, 'CONDITION_ITEMS') || [];`, read off the raw source because the array sits outside every `WORLDBUILDER` marker (the `EB_NPC_DIALOGUE` precedent). `wbapi-server.js`: the getter falls back to `[]`, and the help line says *array*. **Round trip, HEAD → fix:** `0 records, {}` → **12 records, an array**, `Earthbind Root` through `Feint Scroll`, every entry carrying `match`, `condition`, `effect` and `icon`.
+> **Verified:** `node --check` on both files · `check:walk` **27/27** (help conformance included) · `npm test` 152 passed / 1084 failed across three foreground shards, identical to baseline — 1082 browser-launch, the 2 real ones are §DX-02js’s.
+
+---
+
 ## Archived 2026-09-13 — §DX-02cs (a non-object body is a 400 at every endpoint)
 
 ### §DX-02cs — `readBody()` hands non-object JSON to 44 handlers that all assume an object (NEW 2026-08-17 during §DOC-02bx, 🟢 no design call)

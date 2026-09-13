@@ -127,11 +127,6 @@
 - [ ] **§DX-02fj — 20+ endpoints save, reload, and return 200 without comparing anything.** 🟡 `` `src/js/wbapi-server.js:function saveAndVerify(res, status, payload, expectedFields@1548` `` does a genuine post-write round trip — save, reload from disk, read the fields back, 422 on mismatch — and it is the minority path. `` `src/js/wbapi-server.js:function saveAndRestart(res, status, payload)@1520` `` is what the structural writers call, and it only `try`/`catch`es the reload, which per §DX-02fi cannot throw. **Fix:** route the structural writers through `saveAndVerify`, or give `saveAndRestart` a minimal count assertion.
 > **Provenance:** §DOC-02da, finding F2.
 
-### §DX-02fk — `export/condition_items` is a phantom collection (NEW 2026-08-23 during §DOC-02da, 🟢 delete or wire)
-
-- [ ] **§DX-02fk — the export getter is the only reference to the field it exports.** 🟢 `` `src/js/wbapi-server.js:condition_items: () => WBAPI.conditionItems@9846` `` is the sole occurrence of `WBAPI.conditionItems` in the repo; `load()` never sets it. The endpoint returns `200 {"data":{}}` and logs *"0 records"* — indistinguishable from an empty-but-real collection, which is precisely the §DX-02fi failure signature. **Fix:** delete the getter, or wire the field.
-> **Provenance:** §DOC-02da, finding F3.
-
 ### §DX-02fl — `ITEM_DB` is anchored, parsed, and exported with zero entries (NEW 2026-08-23 during §DOC-02da, 🟢 seed or retire)
 
 - [ ] **§DX-02fl — 0-entry infrastructure that reads as a live surface.** 🟢 `` `const ITEM_DB = { // General item definitions@26682` `` is a genuinely empty section, not a parse failure — its comment promises *"weapons, amulets, consumables, readables."* It is one of 12 anchored sections and parses into `itemDb` on every load. **Fix:** seed it or retire the anchor. Pairs with §DX-02fi: until that lands, an emptied `ITEM_DB` and a corrupted one are the same observation.
