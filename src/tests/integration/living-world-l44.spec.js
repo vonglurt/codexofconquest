@@ -211,8 +211,8 @@ test.describe('Layer 44 — Living World', () => {
     await page.screenshot({ path: '../build/test-results/l44-final-map.png' });
   });
 
-  // ── F9: the closing image is not full-screen, because the caption code says so ──
-  test('final map overlay loses position:fixed to an inline style from Layer 66b', async ({ page }) => {
+  // ── F9: the closing image covers the viewport, caption included ──
+  test('final map overlay keeps position:fixed after the caption is appended', async ({ page }) => {
     await seedAndLoad(page, { visited: { LHR: true } });
     await dismissContinue(page);
 
@@ -229,14 +229,10 @@ test.describe('Layer 44 — Living World', () => {
                top: Math.round(r.top), coversViewport: Math.round(r.top) === 0 };
     });
 
-    // _renderFinalMap() writes `overlay.style.position = 'relative'` so its
-    // absolutely-positioned caption has a containing block -- but `fixed`
-    // already provided one. The overlay drops into normal flow and the game's
-    // closing image renders BELOW the UI chrome instead of over it.
-    expect(after.inline).toBe('relative');
-    expect(after.position).toBe('relative');
-    expect(after.coversViewport).toBe(false);
-    expect(after.top).toBeGreaterThan(200);
+    expect(after.inline).toBe('');
+    expect(after.position).toBe('fixed');
+    expect(after.coversViewport).toBe(true);
+    expect(after.top).toBe(0);
   });
 
   // ── F8: the Act III weight is live ──
