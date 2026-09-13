@@ -19,6 +19,19 @@
 
 ---
 
+## Archived 2026-09-13 — §DX-02jy (the plague village's failure line names the sickness instead of its state key)
+
+### §DX-02jy — one failText prints a state key at the player where the exposure it names should be (NEW 2026-09-13 during §DX-02jv, 🟢 one string, NO DESIGN CALL)
+
+- [x] ✅ SHIPPED 2026-09-13 `1e31192` **§DX-02jy — one string, and the ground added one thing the row had not claimed: the exposure it names is written and never read.**
+> **The row as filed.** `quest_1367_f_plague.failText` read *"You retreat with a wound that smells wrong. Roll CON DC 13 or gain plague_exposed."* — the `_S_DEFAULTS` key printed where a word belongs. §DX-02jv's identifier-shaped scan (`snake_case`, bracketed camelCase) over `hint`, `passText`, `failText`, `disposition` and `title` across 2,853 quests returned exactly this one hit.
+> **Measured before, over the export taken after §DX-02jv's writes (`a20a77f`):** identifier-shaped tokens across all six player-text fields (`desc` included) **1**. **The mechanic is real**, re-read at HEAD: the quest's `onFail` is `{ kind:"skill_check", stat:"CON", dc:13, onFail:[{ kind:"flag_write", set:["plague_exposed"] }] }`, which `uqf-softlock.test.js` asserts structurally (it names `innerSet`, never the failText wording). So `CON DC 13` stays, in the register the engine already prints.
+> **Shipped through `./bin/api sub quest quest_1367_f_plague`, 1 occurrence:** *"Roll CON DC 13 or gain plague_exposed."* → *"Roll CON DC 13 or carry the sickness out with you."* **The wording promises no effect on purpose**, because of what the grounding found: `plague_exposed` appears on exactly **two** lines of `play.html` — this quest's writer and its `_S_DEFAULTS` declaration — and nowhere in `edit.html` or `src/` outside one test's scratch state. **Nothing reads it.** The declaration's comment, *"Grants Exhaustion 1 mission bit. Cleared by cure quest."*, describes an effect and a quest that do not exist (`exhaustion` has no mission-bit site; no quest names the flag). The sentence says the player carries the sickness out, which the flag records, and stops there.
+> **Verified from disk, not from `✓`:** `gain plague_exposed` in `play.html` **1 → 0**, the new sentence **1**; the server restarted, `quest_db` re-exported, identifier-shaped tokens across the six player-text fields **1 → 0**, and the failText read back whole from the export. `check:walk` **27/27** · `npm test` **152 passed / 1080 failed, identical to baseline** — 1078 browser-launch (§DX-02ir), the 2 real ones are §DX-02js’s. `lab-report-vm01e-softlock-prover.md` quotes the old sentence twice as the record of what §VM-01-E ported; that is history and is left as written. `quest.md`'s 1367 table says *"fail `plague_exposed` risk"* in an author-facing column, which is correct.
+> **One finding on the path, filed as §DX-02jz (Phase 2):** the exposure is written and never read, and the declaration's comment promises Exhaustion and a cure quest. Whether exposure should do anything is a design call, not a string.
+
+---
+
 ## Archived 2026-09-13 — §DX-02jv (eight quest descriptions stop reading as notes to the author)
 
 ### §DX-02jv — two quest descriptions are authoring notes, and the mission list renders them to the player (NEW 2026-09-08 during §DX-02jr, 🟡 a census first — how many of 2,853 do this)
