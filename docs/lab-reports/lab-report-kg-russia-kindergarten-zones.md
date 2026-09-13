@@ -328,6 +328,8 @@ label names *the place*. Corpus-wide **26 of 416** nodes stutter — and **five 
 minted here**, 19% of the class in one increment. §7 step 5(d) said *"node cards render NPC + prose"*;
 they do, with the name said twice. → **§DX-02el**
 
+> **✅ SHIPPED 2026-09-13 (§DX-02el) `58983d4`.** The five terrains now name the kind of place: *Soviet Checkpoint*, *Drill Hall*, *Gladiator Pit*, *Jack-In Fabrika*, *Transit Waystation*, written through `./bin/api`, so SPB reads *Nevsky Checkpoint · Soviet Checkpoint*. Stutter corpus-wide 26 → 21. `check:invariants` I7 fails on any new stutter; the 21 left are §DX-02kb, where five anchor shared terrains and need the node label changed instead.
+
 ### F8 — The five nodes never reached their own home doc
 
 `NODE_MAP` and `NODE_COORDS` both carry `// → doc: maps.md`. §7 step 6 named *"world.md/maps.md"*.
@@ -405,7 +407,7 @@ game at HEAD, 45 days on, with `kg-zones.test.js` green and the corridor propert
 coordinate-pinned. Increment 3's quest chain shipped the same evening (`d6aeefd`) and is **blocked**
 for unrelated reasons — see §DX-02cy (the `monsterKills` counter has no writer) and §AUDIT-03bl.
 
-**Filed by this re-measurement:** §DX-02ek 🟡 (zone encounter rates, F6) · §DX-02el 🟢 (the duplicated
+**Filed by this re-measurement:** §DX-02ek 🟡 (zone encounter rates, F6) · §DX-02el 🟢 ✅ SHIPPED 2026-09-13 (the duplicated
 node header, F7) · §DX-02em 🟢 (`maps.md` never synced, F8).
 
 **Not filed, because already tracked:** §DX-02cy 🔴 · §AUDIT-03bl 🟡 · §AUDIT-03e (closed — it is the fix

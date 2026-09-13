@@ -19,6 +19,20 @@
 
 ---
 
+## Archived 2026-09-13 — §DX-02el (the §KG corridor stops saying its names twice)
+
+### §DX-02el — twenty-six nodes announce themselves twice, and five of them were minted in one increment (NEW 2026-08-22 during §DOC-02cw, 🟢 five string edits, NO DESIGN CALL)
+
+- [x] ✅ SHIPPED 2026-09-13 `58983d4` **§DX-02el — the five §KG terrains name the kind of place, and `check:invariants` I7 stops the class growing.**
+> **The row as filed.** The story header composes `node.label · terrainLabel`. §KG Increment 2 gave each of its five nodes a dedicated terrain labelled with the node's own display name, so SPB read *Nevsky Checkpoint · Nevsky Checkpoint* and the other four the same. Corpus-wide, 26 of 416 nodes did it. `lab-report-kg-russia-kindergarten-zones.md` F7.
+> **Disproof attempted first and failed.** The header is still composed at `document.getElementById('s-node-name').textContent = node.label + (_terrain ? ' · ' + _terrain : '');`, and the five labels were unchanged at HEAD. **Measured at HEAD with the gate's own line slicing:** **26 of 416**, the row's list exactly.
+> **The ground split the 26 into two kinds**, which is why 21 of them are a new row and not this one. Sixteen own their terrain alone. Five (`MAN`, `KIR`, `BGI`, `TRF`, `PDL`) anchor a terrain shared by 3 to 17 nodes, and renaming that terrain would change the header of every node on it; there the node label is the thing to change. Both kinds need a naming call per node. → **§DX-02kb**, filed at the top of Phase 4.
+> **Shipped.** Five labels through `./bin/api put terrain` with the server freshly started: `soviet_checkpoint` → *Soviet Checkpoint*, `komsomol_school` → *Drill Hall*, `gladiator_zavod` → *Gladiator Pit*, `skill_fabrika` → *Jack-In Fabrika*, `soviet_transit` → *Transit Waystation*. They are the row's names, and they match `world.md`'s notes on each place (the drill, honor duels, the jack-in trade school, the rest stop). Node labels are untouched, and the server rewrote only those five lines. **Round trip:** `POST /api/reload`, then `get terrain` returns all five new labels; `./bin/api audit` 0 errors. `check:invariants` gains **I7**: a node whose terrain label equals its own label fails, unless it is one of the 21 in `STUTTER_KNOWN`, and a listed code that stops stuttering also fails, so the list only shrinks. **Proved against HEAD's `play.html` in a scratch tree: red on exactly SPB, KMS, ZVD, FBR, TVR; green on the fix.**
+> **Measured, HEAD → fix:** nodes whose header repeats their name **26 → 21**. `kg-zones.test.js` pins the node labels, which did not change, so no test moved.
+> **Verified:** `check:walk` **27/27** (I7 included) · `npm test` 152 passed / 1084 failed across three foreground shards, identical to baseline — 1082 browser-launch, the 2 real ones are §DX-02js’s.
+
+---
+
 ## Archived 2026-09-13 — §DX-02ev(c) (Rona's return gets its receipt)
 
 ### §DX-02ev — seven authored lines with no lookup path, and one battleground return met with silence (NEW 2026-08-23 during §DOC-02cy, 🟡 implement-or-retire)
