@@ -23559,8 +23559,7 @@ function _checkDearFriendUpgrade(key, say) {
 // the card button re-renders separately in its click handler. Outside all parity fences.
 const TALK_TO_FRIENDLY = 3;   // deliberate talks (on distinct game-days) to reach Friendly. Tunable.
 function _talkToNpc(key) {
-  const dlg = _getNPCDialogue(key);
-  if (!dlg) return;
+  if (!NPC_DIALOGUES[key]) return;
   const name = _npcDisplayName(key);
   if (_npcFavor(key) >= 1) { storyMsg('🤝 ' + name + ' already counts you a friend.'); return; }
   if (!S_story.npcTalk) S_story.npcTalk = {};
