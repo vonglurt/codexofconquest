@@ -23623,7 +23623,7 @@ function _getNPCDialogue(npcKey) {
   // (NG+ has its own greeting + already knows the world).
   if (npcKey === 'yael' && !(S_story.ngPlusRun > 0) && !S_story.yaelOnboardingSeen) {
     S_story.yaelOnboardingSeen = true;
-    return { quote: d.impartial[0], meta: d.meta, fav };
+    return { quote: d.impartial[0], meta: d.meta, fav, tier: 'impartial' };   // §DX-02dm: the card badge reads this
   }
   // L44-E / Layer 69 / S30 — the debt Quill released, and the debt he stopped looking at
   if (npcKey === 'quill' && (S_story.couperiDebtReleased || S_story.couperiDebtDegraded)) {
@@ -23773,7 +23773,7 @@ function _renderNpcCard(key, container) {
     p = { name: dlg.meta.name, occupation: dlg.meta.occupation || '' };
   }
   const fav = dlg.fav;
-  const badgeTxt = fav >= 2 ? '💛 Dear Friend' : fav >= 1 ? '🤝 Friendly' : (_hasActiveQuestFor(key) ? '📋 Quest Active' : '👤 Impartial');
+  const badgeTxt = fav >= 2 ? '💛 Dear Friend' : fav >= 1 ? '🤝 Friendly' : (dlg.tier !== 'impartial' && _hasActiveQuestFor(key) ? '📋 Quest Active' : '👤 Impartial');
   const staticProfile = fav >= 2 ? p.dearFriend : fav >= 1 ? p.friendly : p.neutral;
   // §NPC-01-A: "lean" profiles (key/name/occupation/node only — the ~194 non-Birka NPCs) carry no
   // per-tier greeting object, so staticProfile is undefined and staticProfile.greeting would throw.
