@@ -148,6 +148,8 @@ Measured exhaustively: `_getFarewell` swept over all ordered pairs of `NODE_MAP`
 
 Separately, the file defines **20** EB return quests. Exactly one has no receipt: **`INV`** (`quest_eh_return` — *Return: Shepherd Rona*). This is not remap damage — the ship build authored 19 legacy keys too, so Rona has been returning to silence since the initial commit while her nineteen colleagues each get a sentence.
 
+> **✅ SHIPPED 2026-09-13 (§DX-02ev(c)) `e0f3fa0`.** `QUIET_RETURN_RECEIPTS` now holds `INV`, written from Rona's Q53 entry in `story.md`: *"The shepherd doesn't look at the water again. She looks up the hill, toward the churchyard. 'I have somewhere to go now.'"* All 20 EB returns carry a receipt, and this report's F5 spec case asserts none missing. The five Birka keys are unchanged and still unreachable (§DX-02ev(b)).
+
 ### F6 — the ledger does not balance, and never has
 
 §VII's balance sheet is the section's centerpiece and its arithmetic does not close. The printed lines, as authored and as shipped:
@@ -260,7 +262,7 @@ Worth stating plainly, since this program mostly records the other direction: **
 | **§DX-02es** | Gigault is named by nobody — add the two NPC lines the spec quotes; decide whether the stall belongs at `LLA` or `LHR` | 🟡 two strings + one node call |
 | **§DX-02et** | Six world-progression notes are written into the movement breadcrumb array and never rendered; `.journal-entry.world` is dead CSS | 🟡 one reader, one design call |
 | **§DX-02eu** ✅ SHIPPED 2026-09-13 | `overlay.style.position = 'relative'` drops the ending map out of full-screen — delete one line | 🟢 one line, no design call |
-| **§DX-02ev** | Auros's two farewells and the five Birka quiet receipts are unreachable; `INV` has no receipt at all | 🟡 implement-or-retire |
+| **§DX-02ev** (c) ✅ SHIPPED 2026-09-13 | Auros's two farewells and the five Birka quiet receipts are unreachable; `INV` has no receipt at all | 🟡 implement-or-retire |
 | **§DX-02ew** | Brynn's ledger prints `+138` under a `−8` balance, and reaches `+1` against a spec that forbids surplus | 🟡 one design call |
 | **§DX-02ex** | `couperiDebtDegraded` carries two opposite meanings; the dialogue reader speaks absolution over neglect | 🟡 one flag split |
 | **§DX-02ey** | Five `→ doc:` pointers wrong across Layer 44; `check:anchors` does not resolve section pointers at all | 🟢 four comments + a gate |

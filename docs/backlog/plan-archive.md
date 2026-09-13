@@ -19,6 +19,20 @@
 
 ---
 
+## Archived 2026-09-13 — §DX-02ev(c) (Rona's return gets its receipt)
+
+### §DX-02ev — seven authored lines with no lookup path, and one battleground return met with silence (NEW 2026-08-23 during §DOC-02cy, 🟡 implement-or-retire)
+
+- [x] ✅ SHIPPED 2026-09-13 `e0f3fa0` **§DX-02ev(c) — `QUIET_RETURN_RECEIPTS` gains `INV`, so all 20 Epic Battleground returns end on a quiet line.** *(Rows (a) and (b) of this section stay open in Phase 3.)*
+> **The row as filed.** The file defines **20** EB return quests and `QUIET_RETURN_RECEIPTS` held a line for 19 of them; `INV` (`quest_eh_return`, *Return: Shepherd Rona*) had none, and the ship build's legacy keys had no `EH` either, so Rona returned to silence from the first commit. `lab-report-living-world.md` F5.
+> **Disproof attempted first and failed.** `INV` was absent from the table at HEAD, and its only consumer, `_storyEbReturnBeat`, reads `QUIET_RETURN_RECEIPTS[ebCode]` and posts nothing when it is undefined. `living-world-l44.spec.js`'s F5 case asserted exactly that gap, `missing` = `['INV']`.
+> **The line, and where it came from.** Written from Rona's own entry in `story.md` Q53, not invented free: her Opening buries her husband Coll's coat in the churchyard because *"I need somewhere to go"*, and her Return has her at the loch saying *"It's just water now."* The receipt closes that: *"The shepherd doesn't look at the water again. She looks up the hill, toward the churchyard. 'I have somewhere to go now.'"* It follows the table's form (the role noun, a gesture, one short quote) and does not restate `returnBeat`'s brooch or `passText`'s flock count, which print in the same return. It is placed after `PRN`, in `_ebPool` order.
+> **Measured, HEAD → fix:** EB return codes without a receipt **1 → 0** (`INV` → none), table keys **24 → 25**, the five Birka keys unchanged. `play.html` edited by hand with the server stopped: the table is an engine constant with no `./bin/api` type, as §DX-02jq's was. The F5 spec case now asserts `missing` is empty.
+> **What could not be re-measured here.** Chromium is not installed on this host, so the 800 ms `storyMsg` has not been watched in a browser; the updated F5 case is the pin.
+> **Verified:** `check:walk` **27/27** · `npm test` 152 passed / 1084 failed across three foreground shards, identical to baseline — 1082 browser-launch, the 2 real ones are §DX-02js’s.
+
+---
+
 ## Archived 2026-09-13 — §DX-02dm (Yael's first card badges her welcome as Impartial)
 
 ### §DX-02dm — the card that exists to make one NPC honest labels her honest line with the wrong relationship tier (NEW 2026-08-18 during §DOC-02ch, 🟢 no design call)
