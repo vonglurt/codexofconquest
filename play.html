@@ -23635,6 +23635,11 @@ function _getNPCDialogue(npcKey) {
       pool = [...pool, debtLine];
     }
   }
+  // L45-B: a delivered Froberger trace stays in the Dear Friend cycle
+  const _trace = FROBERGER_TRACES[npcKey];
+  if (_trace && S_story['frobergerTrace_' + npcKey + '_delivered'] && fav >= _trace.minFav && !pool.includes(_trace.text)) {
+    pool = [...pool, _trace.text];
+  }
   // L44-J: Act III weight injection — one-time per NPC at Friendly+
   if (fav >= 1 && (S_story.actNumber || 1) >= 3
       && NPC_ACT_THREE_LINES[npcKey]
@@ -27872,7 +27877,7 @@ function _buildWeckmannLog() {
 
 
 /* ── Layer 45: Web of Connections Consts ── */
-const FROBERGER_TRACES = { // → doc: world.md §Froberger Traces (6 one-time NPC memories; fav >= 2 + visit-count gated)
+const FROBERGER_TRACES = { // → doc: world.md §Froberger Traces (6 NPC memories; minFav + visit-count gated, then part of the Dear Friend pool)
   yael:     { minFav:2, visitTrigger:3, text:"A researcher came through once. Froberger, he said. Knew every patrol route by the second day. Left without saying why. I assumed it was urgent. It usually is, with that type." },
   brynn:    { minFav:3, visitTrigger:1, text:"He stayed in room 6. Very quiet. Read all night — I could see the light under the door. I brought him water twice. He said thank you both times. He left early. He didn't say goodbye, but he left the room cleaner than he found it. I think that's what he could manage." },
   quill:    { minFav:2, visitTrigger:2, text:"He came in once, sat at the back, didn't request anything. Just listened. At the end he said: 'You're good.' I said thank you. He said: 'I mean technically. There's something else. You'll find it or you won't.' And he left. I've been thinking about what the something else is ever since." },
