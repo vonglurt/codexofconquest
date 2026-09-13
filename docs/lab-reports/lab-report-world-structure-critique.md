@@ -312,6 +312,8 @@ not be where they belong. Worth noting that `LIM` is act **6**, so the choice is
 that `label` is the Earth city name rather than the node's name, and that every anchor is a node. Two sentences
 would have prevented both false findings in §V. → **§AUDIT-03bc**.
 
+> **✅ SHIPPED 2026-09-13 (§AUDIT-03bc) `68171ef`.** Both tables carry the header: `label` is the Earth name and not `NODE_MAP.label`, and every code is a live node (155/155). Re-measured on the way: the shared labels are two pairs, *Jerusalem* (`JAR`/`JRS`) and *Palermo* (`PAR`/`PMO`); and the tables have drifted on `NUE`, so the rows agreeing with the node's label are 5 in the server's copy and 4 in `worldmap.js`.
+
 ---
 
 ## IX. Conclusion
@@ -361,7 +363,7 @@ Per the Lab Report Policy a failed claim is corrected in place and kept, never d
 
 - **§AUDIT-03bb** 🟡 — `PDL`'s anchor lies outside the projection domain; excluded from every region cell,
   clamped to the west wall by the seeding phase.
-- **§AUDIT-03bc** 🟢 — the GEO tables' `label` column is an Earth gazetteer name, diverging from the node's own
+- **§AUDIT-03bc** 🟢 ✅ SHIPPED 2026-09-13 — the GEO tables' `label` column is an Earth gazetteer name, diverging from the node's own
   label in 150 of 155 rows, and nothing says so. Two comment headers.
 
 ---

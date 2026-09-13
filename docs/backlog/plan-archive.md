@@ -19,6 +19,19 @@
 
 ---
 
+## Archived 2026-09-13 — §AUDIT-03bc (the GEO tables say what their labels are)
+
+### §AUDIT-03bc — the GEO tables' `label` column is an Earth city name, the node's `label` is the game place name, and nothing says which you are reading (NEW 2026-08-14 during §DOC-02bj, 🟢 no design call)
+
+- [x] ✅ SHIPPED 2026-09-13 `68171ef` **§AUDIT-03bc — a comment header on each GEO table: `label` is the Earth gazetteer name, every code is a live node, and which labels are shared.**
+> **The row as filed.** The anchor tables in `src/tools/worldmap.js` and `src/js/wbapi-server.js` carry `label:`, which is the real-world city (`TRD` → *Trondheim*), while the node's own label is the game place (*Goblin Warrens*). Nothing said which you were reading, and a lab report generalised from the five rows that happen to agree and reported six nodes as anchors with no node behind them. `lab-report-world-structure-critique.md` §V and its recommendation 5.
+> **Disproof attempted first and failed.** Neither table had a header saying either thing; `worldmap.js` said only *"real-world approximate positions for each game city"*.
+> **Measured at HEAD, against `NODE_MAP` sliced as the gates slice it.** Both tables: **155 entries, 155 live nodes, 0 orphans**. The ground corrected the row twice. **(1)** Labels shared by two codes are **two pairs, not one**: *Jerusalem* (`JAR`, `JRS`, 11 km) and *Palermo* (`PAR`, `PMO`, 28 km). The row's other example, `NID`/`TRD`, has distinct labels; it is one of **29** anchor pairs within 30 km, which is ordinary at 1° and is said so rather than listed. **(2)** The two tables are not identical. They hold the same 155 codes, but `NUE` reads *Scholar's Quarter — Weimar* in the server and *Scholar's Quarter* in `worldmap.js`, so labels agreeing with `NODE_MAP` are **5** in the server (`STN`, `AMS`, `CDG`, `NUE`, `ACE`, the row's five) and **4** in `worldmap.js`. Each header states its own file's number, and the server's names the drift.
+> **Shipped:** the two headers, comments only (`+9` and `+10` lines). Each says `label` is the Earth name for author orientation and is not `NODE_MAP[code].label`, gives the TRD example, says every code is a live node (*"MAD is a node"*, the row's own test question), and names the two shared labels. `node --check` on both files.
+> **Verified:** both headers present · `check:walk` **27/27** · `npm test` 152 passed / 1084 failed across three foreground shards, identical to baseline — 1082 browser-launch, the 2 real ones are §DX-02js’s.
+
+---
+
 ## Archived 2026-09-13 — §DX-02cb (the gazetteer places every node, and geo-seed says when it cannot)
 
 ### §DX-02cb — seven live nodes have no lat/lon in any source, and the only thing that notices is a JSON field nobody reads (NEW 2026-08-14 during §DOC-02bn, 🟢 no design call)
