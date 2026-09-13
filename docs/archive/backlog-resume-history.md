@@ -198,25 +198,26 @@
 
 | # | Date | Increment | Ship | Headline |
 |---:|---|---|---|---|
-| 1 | 2026-09-13 | §DX-02el | `58983d4` | the five §KG terrains carried their node's own label, so each header said the name twice; relabelled to the kind of place through `./bin/api`, stutter **26 → 21**, and `check:invariants` I7 fails on any new one while the 21 left (§DX-02kb) may only shrink |
-| 2 | 2026-08-22 | §DOC-02cw + §KG-01 | `65d65c0` | the content report whose every number survived 45 days, whose road was laid by the method it forbids, whose sea-cell violation hid behind a red that was already red, and… |
-| 3 | 2026-08-17 | §DOC-02by | `7a4570e` | a design lock written 23 minutes before the code, exact in every number six weeks on, and wrong about one room's occupant |
-| 4 | 2026-08-17 | §DOC-02bt | — | every statistic in the diagnosis re-derives exactly, and the one sentence nobody filed as a row cost four red tests for six weeks |
-| 5 | 2026-07-05 | §ARCH-01 | — | expected `docs/lab-reports/lab-report-uqf-migration-playbook.md` (`2026-07-05 14:42:46`), the §ARCH-01 UQF migration playbook. It is a **method** document rather than a… |
-| 6 | 2026-08-14 | §DOC-02bn + §AUDIT-03x | — | the corpus's most accurate report, and the one sentence in it nobody measured is the origin of §AUDIT-03x |
-| 7 | 2026-08-14 | §DOC-02bl | `c946a01` | the removal shipped completely, and was undone twelve days later by a track that reused every one of its names |
-| 8 | 2026-08-14 | §DOC-02bk | — | the program's first FULLY-SHIPPED verdict, its highest symbol score (43/43 node codes), and the one exception it asked for was taken and then given back |
-| 9 | 2026-08-14 | §DOC-02bj | — | its geography is byte-perfect and its arithmetic reverses its own thesis. THE 2026-06-16 BLOCK IS NOW EMPTY |
-| 10 | 2026-08-13 | §DOC-02be | — | an unusually strong transcriber and an unreliable narrator — 31 of 31 citations exact, and every error in a sentence the author composed |
-| 11 | 2026-08-14 | §DOC-02bd | — | everything it borrowed is exact, everything it counted is wrong, and the world it describes is three times too small because of a space before a brace |
-| 12 | 2026-08-13 | §DOC-02az | — | the report is correct and the ground moved |
-| 13 | 2026-08-12 | §DOC-02z | — | the program's most faithful content spec, into a world that moved out from under four of its nodes |
-| 14 | 2026-08-11 | §DOC-02f + §DOC-02 | `ffe7720` | the uncommitted user recolor (HP-bar gradient / light-green playfield, self-labelled *"user recolor 2026-08-06"*) is still in the tree — **left untouched and unstaged**;… |
-| 15 | 2026-07-31 | §AUDIT-03j + §AUDIT-03d | `c5f9079` | (1) **the table's other column was dead too** — its npc keys were the profiles' SURNAMES (`couperin`=Bard Tomas Couperin=`quill`, `weckmann`=Pit Master Weckmann=`crov`,… |
-| 16 | 2026-07-29 | §AUDIT-03l + §AUDIT-03c | `d42a707` | `check:walk` **12/12 exit 0**; new `audit03l-node-index.test.js` **5/5**; **two negative controls** — a bogus row appended to the committed index, and a real node… |
-| 17 | 2026-07-29 | §AUDIT-03c + §AUDIT-03d | `710bb75` | `CQ` = **`CDG`** (The Cat Quarter) and `FR` = **`AMS`** (Fishmonger's Row) are both **right**, corroborated three ways each — the nodes' own labels/inline NPCs, and the… |
-| 18 | 2026-07-29 | §DX-02e + §KG | `8fc9a2e` | auto-travel routes with `_roadGridPathCore` (§NAV-01d road-weighted Dijkstra, road/sea-lane cost 1, everything else 2), and all six legs `TLL→SPB→KMS→ZVD→FBR→TVR→SVO`… |
-| 19 | 2026-07-29 | §AUDIT-03e + §KG | `2da7fbb` | one normalisation line after `NODE_MAP:END` (the data section keeps its 129 authored `code:` fields — not 287 new ones) + the `NODE_CODE_BACKFILLED` set captured just… |
+| 1 | 2026-09-13 | §DX-02cb | `5513728` | seven live nodes had no lat/lon in any source and geo-seed reported only a count; seven gazetteer entries on their live cells take skipped **7 → 0** (placed 409 → 416), the server names skipped codes and refuses to apply around a gap, and four math-realm nodes that disagree with their anchor are filed as §DX-02kc |
+| 2 | 2026-09-13 | §DX-02el | `58983d4` | the five §KG terrains carried their node's own label, so each header said the name twice; relabelled to the kind of place through `./bin/api`, stutter **26 → 21**, and `check:invariants` I7 fails on any new one while the 21 left (§DX-02kb) may only shrink |
+| 3 | 2026-08-22 | §DOC-02cw + §KG-01 | `65d65c0` | the content report whose every number survived 45 days, whose road was laid by the method it forbids, whose sea-cell violation hid behind a red that was already red, and… |
+| 4 | 2026-08-17 | §DOC-02by | `7a4570e` | a design lock written 23 minutes before the code, exact in every number six weeks on, and wrong about one room's occupant |
+| 5 | 2026-08-17 | §DOC-02bt | — | every statistic in the diagnosis re-derives exactly, and the one sentence nobody filed as a row cost four red tests for six weeks |
+| 6 | 2026-07-05 | §ARCH-01 | — | expected `docs/lab-reports/lab-report-uqf-migration-playbook.md` (`2026-07-05 14:42:46`), the §ARCH-01 UQF migration playbook. It is a **method** document rather than a… |
+| 7 | 2026-08-14 | §DOC-02bn + §AUDIT-03x | — | the corpus's most accurate report, and the one sentence in it nobody measured is the origin of §AUDIT-03x |
+| 8 | 2026-08-14 | §DOC-02bl | `c946a01` | the removal shipped completely, and was undone twelve days later by a track that reused every one of its names |
+| 9 | 2026-08-14 | §DOC-02bk | — | the program's first FULLY-SHIPPED verdict, its highest symbol score (43/43 node codes), and the one exception it asked for was taken and then given back |
+| 10 | 2026-08-14 | §DOC-02bj | — | its geography is byte-perfect and its arithmetic reverses its own thesis. THE 2026-06-16 BLOCK IS NOW EMPTY |
+| 11 | 2026-08-13 | §DOC-02be | — | an unusually strong transcriber and an unreliable narrator — 31 of 31 citations exact, and every error in a sentence the author composed |
+| 12 | 2026-08-14 | §DOC-02bd | — | everything it borrowed is exact, everything it counted is wrong, and the world it describes is three times too small because of a space before a brace |
+| 13 | 2026-08-13 | §DOC-02az | — | the report is correct and the ground moved |
+| 14 | 2026-08-12 | §DOC-02z | — | the program's most faithful content spec, into a world that moved out from under four of its nodes |
+| 15 | 2026-08-11 | §DOC-02f + §DOC-02 | `ffe7720` | the uncommitted user recolor (HP-bar gradient / light-green playfield, self-labelled *"user recolor 2026-08-06"*) is still in the tree — **left untouched and unstaged**;… |
+| 16 | 2026-07-31 | §AUDIT-03j + §AUDIT-03d | `c5f9079` | (1) **the table's other column was dead too** — its npc keys were the profiles' SURNAMES (`couperin`=Bard Tomas Couperin=`quill`, `weckmann`=Pit Master Weckmann=`crov`,… |
+| 17 | 2026-07-29 | §AUDIT-03l + §AUDIT-03c | `d42a707` | `check:walk` **12/12 exit 0**; new `audit03l-node-index.test.js` **5/5**; **two negative controls** — a bogus row appended to the committed index, and a real node… |
+| 18 | 2026-07-29 | §AUDIT-03c + §AUDIT-03d | `710bb75` | `CQ` = **`CDG`** (The Cat Quarter) and `FR` = **`AMS`** (Fishmonger's Row) are both **right**, corroborated three ways each — the nodes' own labels/inline NPCs, and the… |
+| 19 | 2026-07-29 | §DX-02e + §KG | `8fc9a2e` | auto-travel routes with `_roadGridPathCore` (§NAV-01d road-weighted Dijkstra, road/sea-lane cost 1, everything else 2), and all six legs `TLL→SPB→KMS→ZVD→FBR→TVR→SVO`… |
+| 20 | 2026-07-29 | §AUDIT-03e + §KG | `2da7fbb` | one normalisation line after `NODE_MAP:END` (the data section keeps its 129 authored `code:` fields — not 287 new ones) + the `NODE_CODE_BACKFILLED` set captured just… |
 
 **18 completed entries.**
 

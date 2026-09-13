@@ -19,6 +19,20 @@
 
 ---
 
+## Archived 2026-09-13 — §DX-02cb (the gazetteer places every node, and geo-seed says when it cannot)
+
+### §DX-02cb — seven live nodes have no lat/lon in any source, and the only thing that notices is a JSON field nobody reads (NEW 2026-08-14 during §DOC-02bn, 🟢 no design call)
+
+- [x] ✅ SHIPPED 2026-09-13 `5513728` **§DX-02cb — seven gazetteer entries, and geo-seed names what it skips and refuses to apply around a gap.**
+> **The row as filed.** `POST /api/layout/geo-seed` resolves lat/lon through `GEO2` → `realPlaces` → `anchors`, then chains `satellites`/`offEarth`. Seven live nodes resolved to nothing, and the only record was a `skipped` array in the dry-run JSON, never logged by name, counted against a threshold or gated.
+> **Disproof attempted first and failed.** Measured two ways at HEAD, and they agree exactly. An offline Node replica of the resolver (the server's inline `GEO2`, the gazetteer, `NODE_MAP` sliced as the gates slice it) and the live endpoint's dry-run both give **409 placed** (`geo2 154 · real 133 · anchor 58 · anchored 64`), **7 skipped: `DNF`, `TGS`, `SPB`, `KMS`, `ZVD`, `FBR`, `TVR`**. The log line said `7 skipped` with no names.
+> **Shipped, in two parts.** **(1) The guard,** in `src/js/wbapi-server.js`: the dry-run log names the skipped codes, and an applied regeneration with a non-empty `skipped` returns **409** naming them before it writes anything. Probed on the live server before the entries went in: the dry-run log read `7 skipped [DNF, TGS, SPB, KMS, ZVD, FBR, TVR]`, `{"dryRun":false}` returned 409 with the seven, and `play.html` was untouched. **(2) Seven entries** in `src/config/walk-geo-gazetteer.json`, each with a lat/lon chosen to land in the node's **live** cell (`row = ⌊70 − lat⌋`, `col = ⌊lon + 180⌋`), so a regeneration keeps them where they are. `realPlaces`: `SPB` St Petersburg (59.94, 30.31) and `KMS` Veliky Novgorod (58.52, 31.27), the cities `world.md` names. `anchors`, each with a `why`: `ZVD` in the Valdai Hills on the Novgorod–Tver road, `FBR` near Tver, `TVR` on the Tver–Moscow road toward Station 7, `TGS` the forest north of the corridor, all under `SVO`; `DNF`, the loch harbor §CELL-14-FU split from `ZRH`, under `KIR`. Tver itself lies in FBR's cell, not TVR's, which is why the waystation is an anchor rather than a real place.
+> **Measured, HEAD → fix:** skipped **7 → 0**, placed **409 → 416** (`real 133 → 135`, `anchor 58 → 63`), on the live dry-run and the offline replica alike; all seven land on their live cells. The config file and server code only; `play.html` has no diff. The server was started for this row with the user's approval and stopped after.
+> **Found en route, filed not fixed.** The row's Verify also asks that the computed cells reproduce all 416 live `NODE_COORDS`. **412 do; four do not**, and they did not at HEAD either: `EHZ`, `MONS`, `ZERO` and `CNTR` project near Jerusalem, where the gazetteer anchors them, and live 32 columns east beside the Samarkand endgame cells. Which is right is a call, and now that nothing is skipped an apply would move them silently. → **§DX-02kc**, filed at the top of Phase 4.
+> **Verified:** `check:walk` **27/27** · `npm test` 152 passed / 1084 failed across three foreground shards, identical to baseline — 1082 browser-launch, the 2 real ones are §DX-02js’s.
+
+---
+
 ## Archived 2026-09-13 — §DX-02el (the §KG corridor stops saying its names twice)
 
 ### §DX-02el — twenty-six nodes announce themselves twice, and five of them were minted in one increment (NEW 2026-08-22 during §DOC-02cw, 🟢 five string edits, NO DESIGN CALL)
