@@ -1617,6 +1617,10 @@ function readBody(req) {
     req.on('end', () => {
       try {
         const parsed = JSON.parse(buf || '{}');
+        // §DX-02cs: `null`, `5`, `"x"` and `[]` are valid JSON, and every handler reads its body as an
+        // object. Reject them here, and all 44 call sites answer with their existing 400.
+        if (parsed === null || typeof parsed !== 'object' || Array.isArray(parsed))
+          throw new Error('request body must be a JSON object');
         logBody('in', parsed);
         resolve(parsed);
       } catch(e) { reject(e); }

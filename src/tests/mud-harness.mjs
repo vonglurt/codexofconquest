@@ -1413,6 +1413,9 @@ async function main() {
   check(await putRaw({ shareBlocklist: 'yes' }) === 400, 'PUT a non-boolean shareBlocklist → 400');
   check(await putRaw({ blockIps: 'not-an-array' }) === 400, 'PUT a non-array list → 400');
   check(await putRaw({ blockIps: ['ok', ''] }) === 400, 'PUT a list holding an empty string → 400');
+  // §DX-02cs — valid JSON that is not an object used to reach the handler and 500 on `'mode' in null`.
+  check(await putRaw(null) === 400, 'PUT a null body → 400, not a 500');
+  check(await putRaw(5) === 400, 'PUT a numeric body → 400, not a 500');
   check(JSON.parse(fs.readFileSync(aclR2, 'utf8')).mode === 'open', 'no rejected PUT touched the file');
 
   // R4 — blocklist share flip: 403 by default, 200 after the opt-in, 403 again off.
