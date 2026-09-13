@@ -19,6 +19,19 @@
 
 ---
 
+## Archived 2026-09-13 — §DX-02ka (four 1367 track declarations stop promising effects nothing implements)
+
+### §DX-02ka — the 1367 chronicle moves four faith and faction tracks, and one of them is read, once, by a gate (NEW 2026-09-13 during §DX-02jz, 🟡 ONE DESIGN CALL: give the tracks consequences, or declare them a record)
+
+- [x] ✅ SHIPPED 2026-09-13 `7fa563e` **§DX-02ka — the call is (b), a record: each declaration now says only what the file does.**
+> **The row as filed.** `faith_orthodox`, `faith_reform`, `faith_folk` and `faction_hansa` are each written by a 1367 vignette's `_legacy_fn` (clamped to ±5), and between them have exactly **one** reader — `quest_lxvii67`'s activation gate `countMin:[{path:'faith_folk',min:1}]`. Their `_S_DEFAULTS` comments listed effects across quest availability, dialogue, port entry and prices.
+> **Disproof attempted before the call, and it failed:** no dynamic read of a track exists in `play.html` or `edit.html` — **0** string-built keys (`'faith_' + …`, `'faction_' + …`); the generic path reader (`c.path.split('.')…` in the gate evaluator) reaches a track only through a gate path, and `quest_lxvii67`'s is the only one. **No design lock names the effects:** `docs/notes/Year1367AD.md` specifies no effect list, and `docs/design/quest.md`'s 1367 table records only each vignette's write. **Option (a) already has a home:** `docs/design/potential.md` records *"`faction_hansa` (8 refs), three `faith_*` tracks … Factions are vocabulary, not actors"* as a seed, so giving the tracks teeth needs no new planned row.
+> **Measured before, over the four declaration lines:** **12** claimed effects with no site — `faith_orthodox` *inquisitor quests, bishop dialogue, pilgrimage availability* · `faith_reform` *heresy quests, itinerant preacher dialogue, pamphlet availability* · `faith_folk` *saint shrines, monster lore, magic springs* (its fourth clause, *the jester LXVII67*, was the one true one) · `faction_hansa` *trade quest availability, port entry, prices at BK/LB/DZ/RG/BG*.
+> **Shipped — engine comments, edited by hand with the server stopped (not world data):** each `Affects …` sentence deleted; kept *"Range -5 to +5."*, which every writer enforces with `Math.min(5, …)` / `Math.max(-5, …)`, and for `faith_folk` *"Gates quest_lxvii67."* Each added line passed CC-5 on its own. **Measured after: 12 → 0.** No doc or anchor quoted the deleted text (fixed-string grep over `docs/` and `src/` found only this row).
+> **Verified:** `check:walk` **27/27** · `npm test` **152 passed / 1080 failed, identical to baseline** — 1078 browser-launch (§DX-02ir), the 2 real ones are §DX-02js’s. §DX-02jz, the `plague_exposed` declaration on the next line, is a separate row and was not touched here.
+
+---
+
 ## Archived 2026-09-13 — §DX-02jy (the plague village's failure line names the sickness instead of its state key)
 
 ### §DX-02jy — one failText prints a state key at the player where the exposure it names should be (NEW 2026-09-13 during §DX-02jv, 🟢 one string, NO DESIGN CALL)
