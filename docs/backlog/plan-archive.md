@@ -19,6 +19,20 @@
 
 ---
 
+## Archived 2026-09-13 — §DX-02dq (a Talk is not a visit)
+
+### §DX-02dq — the Talk verb advances the passive-visit counter its own design doc refuses to reuse (NEW 2026-08-21 during §DOC-02ck, 🟢 two lines, NO DESIGN CALL)
+
+- [x] ✅ SHIPPED 2026-09-13 `516b595` **§DX-02dq — `_talkToNpc` checks `NPC_DIALOGUES[key]` and no longer calls `_getNPCDialogue`.**
+> **The row as filed.** §NPC-01-D gave Talk its own `npcTalk` map so that looking could not raise favor, then opened `_talkToNpc` with `const dlg = _getNPCDialogue(key); if (!dlg) return;`. That function's third statement bumps `S_story.npcVisitCounts[key]`, ahead of both of Talk's early returns, and `_checkFrobergerTrace` gates the six Froberger memory texts on that count. `lab-report-npc-01-d-talk-verb.md` §VI–§VII.
+> **Disproof attempted first and failed, and the ground went past the row.** The call was still there at HEAD, and `dlg` was read by its null check and nothing else. So a Talk did more than advance a counter. `_getNPCDialogue` is where every one-time line is *spent*, and Talk spent whichever was due and threw the quote away; the card re-render after the click then showed the next line. The function writes **eight** one-shot flags: `yaelOnboardingSeen`, `actThreeLine_<key>`, `frobergerTrace_<key>_delivered`, `crossRefIdx_<key>`, `brynRoom6LineDelivered`, `crovChampionLineDelivered`, `isoldeGurtAckDelivered` and `voidPressureLine_<key>`. Four of them need favor ≥ 1, which is exactly the *"already counts you a friend"* path where Talk refuses and does nothing else.
+> **Measured through the real `_talkToNpc`, `_getNPCDialogue`, `_npcDisplayName`, `_checkFrobergerTrace` and `FROBERGER_TRACES` in a Node vm, HEAD → fix:** two Talks on one game-day add **2 → 0** visits; five refused Talks on a Friendly NPC add **5 → 0**; one Talk on Auros at fav 2 spends his Froberger trace unseen, **spent → kept**; one Talk on Brynn with `brynRoom6Line` set spends the Room 6 line, **spent → kept**. The Talk counter itself reaches **2** in both.
+> **Shipped: the row's second option, not the hoist.** Hoisting the two guards would still run `_getNPCDialogue` on the Talks that count, and spend a line on each. Reading `NPC_DIALOGUES[key]` leaves counting and delivery to the card render that owns them. One function, outside all four parity fences. `_npcDisplayName` already falls back to `NPC_DIALOGUES[key].meta.name`, so the printed name is unchanged. `npc-card-map.test.js` gains *"Talk is not a visit"*, which pins the four measured cases and the Talk counter.
+> **What could not be re-measured here.** Chromium is not installed on this host, so the new case has run in no browser and adds to the browser-launch count; the Node measurement above is the evidence until it can run.
+> **Verified:** `check:walk` **27/27** · `npm test` 152 passed / 1084 failed, identical to baseline plus the new case — 1082 browser-launch, the 2 real ones are §DX-02js’s.
+
+---
+
 ## Archived 2026-09-13 — §DX-02eu (the closing map keeps its full-screen position)
 
 ### §DX-02eu — one line of inline CSS drops the game's closing image out of full-screen (NEW 2026-08-23 during §DOC-02cy, 🟢 delete one line, NO DESIGN CALL)
