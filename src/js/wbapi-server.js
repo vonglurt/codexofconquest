@@ -2517,7 +2517,7 @@ async function route(req, res) {
           '  fish_pool       — { day: [...], night: [...] }',
           '  lake_magic      — LAKE_MAGIC_DB object',
           '  monster_drops   — MONSTER_DROPS object',
-          '  condition_items — CONDITION_ITEMS object',
+          '  condition_items — CONDITION_ITEMS array',
           '  all             — NODE_MAP, QUEST_DB, MONSTER_POOL, WORLD_DB, FISH_POOL,',
           '                    NIGHT_FISH_POOL and LAKE_MAGIC_DB. monster_drops and',
           '                    condition_items are exported only by naming them.',
@@ -9904,7 +9904,7 @@ async function route(req, res) {
       fish_pool:       () => ({ day: WBAPI.fishPool, night: WBAPI.nightFishPool }),
       lake_magic:      () => WBAPI.lakeMagicDb,
       monster_drops:   () => WBAPI.monsterDrops || {},
-      condition_items: () => WBAPI.conditionItems || {},
+      condition_items: () => WBAPI.conditionItems || [],
       all:             () => ({
         NODE_MAP: WBAPI.nodeMap, QUEST_DB: WBAPI.questDb,
         MONSTER_POOL: WBAPI.monsterPool, WORLD_DB: WBAPI.worldDb,

@@ -879,6 +879,7 @@ const WBAPI = {
   nodeMap: {}, nodeCoords: {}, questDb: {}, monsterPool: {},
   monsterDrops: {}, worldDb: {}, birkaNpcs: {},
   fishPool: [], nightFishPool: [], lakeMagicDb: {}, itemDb: {}, npcDialogues: {}, ebNpcDialogue: {}, d100Table: [],
+  conditionItems: [],
   _terrainToMonsters: {}, _monsterToTerrains: {},
   _questsByNode: {}, _questsByNpc: {}, _questsByWaypoint: {},
   _questFlags: {}, _flagToQuests: {}, _questArcs: {},
@@ -922,6 +923,9 @@ const WBAPI = {
     // each entry names a real, rendered quest-giver (EB_NPC_DIALOGUE lives OUTSIDE the
     // WORLDBUILDER markers, so it is read straight off the raw source).
     this.ebNpcDialogue = parseSanitized(src, 'EB_NPC_DIALOGUE') || {};
+    // §DX-02fk — the condition-item registry (item name → condition + effect + icon). Also outside
+    // the markers, and an array; `export condition_items` returned {} while nothing set this.
+    this.conditionItems = parseArr(src, 'CONDITION_ITEMS') || [];
     this._npcVocab     = null;   // invalidate the cached npcKeyVocab() union
     const qSrc = extrSection(src,'QUEST_DB');
     this._rawQuestSrc = qSrc || '';
