@@ -190,12 +190,36 @@ The monster must exist first; a second `drop` without `--update` is refused with
 ```bash
 ./api.sh export node_map               # full node_map as JSON
 ./api.sh export quest_db
-./api.sh export all                    # all 14 collections, 5,084 records (§DX-02fo)
+./api.sh export all                    # all 15 collections, 5,158 records (§DX-02fo, §DX-02km)
 ./api.sh export node_coords            # 416 {code:{r,c}} — the seed export needs these
 ./api.sh export npc_profiles           # 204 BIRKA_NPC_PROFILES
+./api.sh export npc_dialogue           # 74 NPC_DIALOGUE — the node-keyed Talk voices
+./api.sh export npc_dialogues          # 214 NPC_DIALOGUES — the npc-keyed favor profiles
 ./api.sh export node_map --format js   # as JS constant
 ./api.sh import book.json             # bulk import nodes + quest cycles
 ```
+
+### The node Talk registry (§DX-02km)
+
+`NPC_DIALOGUE` is keyed by **node code** and holds the line the Talk button renders at
+that place. It is the sibling of `NPC_DIALOGUES` (plural), which is keyed by **NPC key**
+and holds the favor-tier profiles — the two are not interchangeable, and the engine's own
+comment beside the plural says so.
+
+```bash
+./bin/api list ids npcdialogue            # the 74 keyed nodes
+./bin/api get npcdialogue EHZ             # one entry + the node it renders at
+./bin/api get npcdialogue HAJ --fns       # a closure entry, as {__fn:'<source>'}
+./bin/api put npcdialogue EHZ name='…' quote='"…"'
+```
+
+**`quoteFn` is readable and not writable.** 41 of the 74 entries render through a closure
+instead of a string, and fourteen distinct `S_story` flags are written from inside them.
+`editField` patches string literals, so a string write over `quoteFn` finds no quoted value
+and *inserts a second `quoteFn:`* that wins by last-key — silently retiring the flag write
+while reporting `ok:true`. Both the verb and `editField` refuse it by name; edit a closure
+by hand with the server stopped, the way engine JS is edited. The general form of that
+hazard — `editField` over any expression-valued field — is **§DX-02kp**.
 
 ### Audit
 

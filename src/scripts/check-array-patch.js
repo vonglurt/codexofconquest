@@ -255,5 +255,44 @@ WBAPI.load(GAME);
 r = WBAPI.editField('quest', qCond, 'noSuchFieldAtAll', null);
 ok(!r.ok, 'removing an absent field reports failure');
 
+// ── §DX-02km — NPC_DIALOGUE, the node-keyed Talk registry ─────────────────────
+// It had no section markers and no verb, so §2.5's "write through ./bin/api" could not
+// be met for it at all and §DX-02cv hand-edited six entries. The markers make it a
+// writable section like any other; these assertions are what "writable" has to mean.
+WBAPI.load(GAME);
+const nd = WBAPI.npcDialogue;
+ok(nd && Object.keys(nd).length > 0, 'NPC_DIALOGUE parses at all');
+ok(nd !== WBAPI.npcDialogues, 'the singular node-keyed registry is not the plural npc-keyed one');
+const ndPlain = Object.keys(nd).find(k => typeof nd[k].quote === 'string' && !('quoteFn' in nd[k]));
+const ndFn    = Object.keys(nd).find(k => 'quoteFn' in nd[k]);
+ok(!!ndPlain && !!ndFn, 'the registry holds both plain-quote and quoteFn entries');
+
+r = WBAPI.editField('npcdialogue', ndPlain, 'quote', '"A patched line."');
+ok(r.ok, 'a plain quote writes through editField: ' + (r.error || ''));
+WBAPI.load(WBAPI._rawSrc);
+ok(WBAPI.npcDialogue[ndPlain].quote === '"A patched line."', 'the quote round-trips from source');
+
+// A quoteFn is a closure that in fourteen places writes S_story. Editing a SIBLING field
+// must not disturb it — a dropped closure here is a story flag that stops being set.
+WBAPI.load(GAME);
+const fnSrcBefore = WBAPI.entryWithFns('npcdialogue', ndFn);
+ok(fnSrcBefore.ok && fnSrcBefore.fnCount > 0, 'entryWithFns reaches NPC_DIALOGUE: ' + (fnSrcBefore.error || ''));
+ok(typeof (fnSrcBefore.entry.quoteFn || {}).__fn === 'string', 'the closure comes back as {__fn:<source>}');
+r = WBAPI.editField('npcdialogue', ndFn, 'name', 'Patched Name');
+ok(r.ok, 'a sibling field writes on a closure-bearing entry: ' + (r.error || ''));
+WBAPI.load(WBAPI._rawSrc);
+const fnSrcAfter = WBAPI.entryWithFns('npcdialogue', ndFn);
+ok(WBAPI.npcDialogue[ndFn].name === 'Patched Name', 'the sibling field round-trips');
+ok(fnSrcAfter.ok && fnSrcAfter.entry.quoteFn.__fn === fnSrcBefore.entry.quoteFn.__fn,
+   'the quoteFn closure survives a sibling write byte-identically');
+
+// §DX-02iv — writing the function-bearing field back without the escape is refused,
+// not silently emptied.
+WBAPI.load(GAME);
+const rawBefore = WBAPI._rawSrc;
+r = WBAPI.editField('npcdialogue', ndFn, 'quoteFn', '() => "plain"');
+ok(!r.ok, 'writing a raw function source over quoteFn is refused');
+ok(WBAPI._rawSrc === rawBefore, 'the refused write left the source alone');
+
 if (fail) { console.log(`\n✗ check-array-patch: ${fail} FAILED, ${pass} passed`); process.exit(1); }
-console.log(`✓ §WBAPI-01 ph3 structured-field PATCH: all ${pass} checks pass (array/object/number round-trip + insert + fn-reject + {__fn:…} closure round-trip + drop refusal + comment-loss refusal across the corpus + substitution round-trip and its three refusals + duplicate-free quest indexes + expression-field removal)`);
+console.log(`✓ §WBAPI-01 ph3 structured-field PATCH: all ${pass} checks pass (array/object/number round-trip + insert + fn-reject + {__fn:…} closure round-trip + drop refusal + comment-loss refusal across the corpus + substitution round-trip and its three refusals + duplicate-free quest indexes + expression-field removal + NPC_DIALOGUE round-trip and closure survival)`);

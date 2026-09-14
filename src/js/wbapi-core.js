@@ -143,6 +143,14 @@ function entrySpan(body, key) {
   return { start: cutStart, end: e };
 }
 
+// §DX-02km — the entry-level section maps, declared once. Three functions carried
+// byte-identical copies and a fourth (`editField`) a superset, so a section with a
+// writer could still answer `unknown type` to `entryWithFns`. `terrain` is absent on
+// purpose: WORLD_DB entries hold `P.<key>` proxy references, and an entry-level
+// re-parse of one is not the same object the rest of the API hands out.
+const ENTRY_SECTION = { quest:'QUEST_DB', node:'NODE_MAP', npc:'BIRKA_NPC', monster:'MONSTER_POOL', npcdialogue:'NPC_DIALOGUE' };
+const ENTRY_COLLECTION = { quest:'questDb', node:'nodeMap', npc:'birkaNpcs', monster:'monsterPool', npcdialogue:'npcDialogue' };
+
 function extractObj(block, name) {
   if (!block) return null;
   const re = new RegExp(`(?:const|let|var)\\s+${name}\\s*=\\s*`);
@@ -917,6 +925,11 @@ const WBAPI = {
     this.nightFishPool = parseArr(fishSrc, 'NIGHT_FISH_POOL');
     this.lakeMagicDb   = parseSimple(extrSection(src,'LAKE_MAGIC'), 'LAKE_MAGIC_DB');
     this.npcDialogues  = parseSanitized(extrSection(src,'NPC_DIALOGUES'), 'NPC_DIALOGUES') || {};
+    // §DX-02km — the singular, NODE-keyed Talk registry; `npcDialogues` is the plural
+    // NPC-keyed favor profiles and they are not interchangeable. 41 of its 74 entries
+    // render through a `quoteFn` closure and fourteen distinct `S_story` flags are
+    // written from inside them, so it parses sanitized and `quoteFn` is not writable.
+    this.npcDialogue   = parseSanitized(extrSection(src,'NPC_DIALOGUE'), 'NPC_DIALOGUE') || {};
     this.d100Table     = parseArr(extrSection(src,'D100_TABLE'), '_D100_TABLE') || [];
     // §AUDIT-03b — the Epic-Battleground quest-givers. Keyed by battleground node code,
     // each entry names a real, rendered quest-giver (EB_NPC_DIALOGUE lives OUTSIDE the
@@ -1450,15 +1463,23 @@ const WBAPI = {
     // §DX-02h — `terrain` was absent from both maps, so WORLD_DB had NO source-level
     // writer at all: PUT /api/terrain set worldDb[k][field] in memory, returned ok:true,
     // and never touched _rawSrc. GET then read the edit back until the next restart.
-    const sectionMap = { quest:'QUEST_DB', node:'NODE_MAP', npc:'BIRKA_NPC', monster:'MONSTER_POOL', terrain:'WORLD_DB' };
+    const sectionMap = { quest:'QUEST_DB', node:'NODE_MAP', npc:'BIRKA_NPC', monster:'MONSTER_POOL', terrain:'WORLD_DB', npcdialogue:'NPC_DIALOGUE' };
     const section = sectionMap[type]; if (!section) return { ok:false, error:'unknown type' };
-    const col = { quest:this.questDb, node:this.nodeMap, npc:this.birkaNpcs, monster:this.monsterPool, terrain:this.worldDb }[type];
+    const col = { quest:this.questDb, node:this.nodeMap, npc:this.birkaNpcs, monster:this.monsterPool, terrain:this.worldDb, npcdialogue:this.npcDialogue }[type];
     const key = this._findKey(col, idOrTitle); if (!key) return { ok:false, error:'not found' };
     // A terrain roster is `P.<key>` identifiers, not a string. patchStringField would
     // find no quoted value and insertStringField would then ADD a second `monsters:"…"`
     // field — the last-key-wins rot §AUDIT-03a's gate #11 exists to catch. Refuse here.
     if (type === 'terrain' && field === 'monsters')
       return { ok:false, error:'terrain rosters hold P.<key> identifiers — use editTerrainRoster(key, monsterKeys)' };
+
+    // §DX-02km — a quoteFn is a closure, and fourteen of them write S_story. patchStringField
+    // finds no quoted value on it, so insertStringField adds a SECOND `quoteFn:` that wins by
+    // last-key and silently retires the flag write, reporting ok:true, inserted:true. Refused
+    // here rather than in the HTTP handler so every caller is covered. The general form of
+    // this hazard — editField over ANY expression-valued field — is §DX-02kp.
+    if (type === 'npcdialogue' && field === 'quoteFn')
+      return { ok:false, error:'quoteFn holds a closure — a string write would insert a second quoteFn that wins by last-key. Edit NPC_DIALOGUE by hand with the server stopped, or remove it first with quoteFn=null' };
 
     // §AUDIT-03k — normalize a quest anchor onto the canonical key ON WRITE, so the split
     // cannot re-form one quest at a time. Scoped to (quest, npc) deliberately: NODE_MAP's
@@ -1508,9 +1529,8 @@ const WBAPI = {
   // it returns is what editStructuredField will accept back without losing anything.
   entryWithFns(type, idOrTitle) {
     if (!this._rawSrc) return { ok:false, error:'no source loaded' };
-    const sectionMap = { quest:'QUEST_DB', node:'NODE_MAP', npc:'BIRKA_NPC', monster:'MONSTER_POOL' };
-    const section = sectionMap[type]; if (!section) return { ok:false, error:'unknown type' };
-    const col = { quest:this.questDb, node:this.nodeMap, npc:this.birkaNpcs, monster:this.monsterPool }[type];
+    const section = ENTRY_SECTION[type]; if (!section) return { ok:false, error:'unknown type' };
+    const col = this[ENTRY_COLLECTION[type]];
     const key = this._findKey(col, idOrTitle); if (!key) return { ok:false, error:'not found' };
     const sectionSrc = extrSection(this._rawSrc, section);
     const bnd = findEntryBounds(sectionSrc, key);
@@ -1529,9 +1549,8 @@ const WBAPI = {
   // Falls back to inserting the field if absent. Strings/null still belong to editField.
   editStructuredField(type, idOrTitle, field, value, opts) {
     if (!this._rawSrc) return { ok:false, error:'no source loaded' };
-    const sectionMap = { quest:'QUEST_DB', node:'NODE_MAP', npc:'BIRKA_NPC', monster:'MONSTER_POOL' };
-    const section = sectionMap[type]; if (!section) return { ok:false, error:'unknown type' };
-    const col = { quest:this.questDb, node:this.nodeMap, npc:this.birkaNpcs, monster:this.monsterPool }[type];
+    const section = ENTRY_SECTION[type]; if (!section) return { ok:false, error:'unknown type' };
+    const col = this[ENTRY_COLLECTION[type]];
     const key = this._findKey(col, idOrTitle); if (!key) return { ok:false, error:'not found' };
 
     const literal = serializeJsLiteral(value);
@@ -1592,9 +1611,8 @@ const WBAPI = {
   // are out of its reach by construction rather than by care.
   substituteText(type, idOrTitle, from, to) {
     if (!this._rawSrc) return { ok:false, error:'no source loaded' };
-    const sectionMap = { quest:'QUEST_DB', node:'NODE_MAP', npc:'BIRKA_NPC', monster:'MONSTER_POOL' };
-    const section = sectionMap[type]; if (!section) return { ok:false, error:'unknown type' };
-    const col = { quest:this.questDb, node:this.nodeMap, npc:this.birkaNpcs, monster:this.monsterPool }[type];
+    const section = ENTRY_SECTION[type]; if (!section) return { ok:false, error:'unknown type' };
+    const col = this[ENTRY_COLLECTION[type]];
     const key = this._findKey(col, idOrTitle); if (!key) return { ok:false, error:'not found' };
     if (typeof from !== 'string' || from === '') return { ok:false, error:'"from" must be a non-empty string' };
     if (typeof to !== 'string') return { ok:false, error:'"to" must be a string' };

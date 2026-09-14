@@ -2117,7 +2117,7 @@ async function route(req, res) {
           '  type: node | quest | monster | npc | terrain | fish | lake-magic',
           '  Optional filters narrow results.',
           '',
-          `GET ${b}/api/{node|quest|monster|npc|terrain}/{id}[?fns=1]`,
+          `GET ${b}/api/{node|quest|monster|npc|terrain|npcdialogue}/{id}[?fns=1]`,
           '  Full entity detail including cross-references and connections.',
           `  e.g.  curl ${b}/api/quest/quest_wis_01`,
           "  fns=1 carries function values as {__fn:'<source>'} instead of null (§DX-02iv),",
@@ -2133,8 +2133,8 @@ async function route(req, res) {
           '  Dump a full array as JSON, JS literal, or CommonJS module.',
           '  collection: node_map | node_coords | quest_db | monster_pool |',
           '              monster_drops | world_db | npc_profiles | npc_dialogues |',
-          '              eb_npc_dialogue | fish_pool | lake_magic | condition_items |',
-          '              d100_table | all',
+          '              npc_dialogue | eb_npc_dialogue | fish_pool | lake_magic |',
+          '              condition_items | d100_table | all',
           `  e.g.  curl '${b}/api/export/quest_db?format=json' -o quests.json`,
           '',
           `GET ${b}/api/fish[/{key}][?rank=&night=]`,
@@ -2178,6 +2178,10 @@ async function route(req, res) {
           `  PUT  ${b}/api/quest/{id}    body: {title?, type?, startText?, failText?, ...}`,
           `  PUT  ${b}/api/monster/{key} body: {name?, ac?, hp?, atk?, dmg?, xp?, tier?}`,
           `  PUT  ${b}/api/terrain/{key} body: {label?, icon?, monsters?:[key,...]}`,
+          `  PUT  ${b}/api/npcdialogue/{code} body: {name?, quote?}`,
+          '       the node-keyed Talk registry. 41 of 74 entries render through a quoteFn',
+          '       closure and fourteen of those write S_story; quoteFn is not writable here',
+          '       (?fns=1 reads it), because a string write would insert a second one.',
           `  PUT  ${b}/api/npc/{key}     body: {name?, role?, desc?}`,
           `  PUT  ${b}/api/loot          body: {entries:[{weight,_type,_magic?},...]}  (full replace)`,
           `  PUT  ${b}/api/loot/{index}  body: {weight?,_type?,_magic?}  (single entry)`,
@@ -2510,7 +2514,8 @@ async function route(req, res) {
           '  condition_items — CONDITION_ITEMS array',
           '  node_coords     — NODE_COORDS object, {code:{r,c}}',
           '  npc_profiles    — BIRKA_NPC_PROFILES object',
-          '  npc_dialogues   — NPC_DIALOGUES object',
+          '  npc_dialogues   — NPC_DIALOGUES object, keyed by NPC key (the favor-tier profiles)',
+          '  npc_dialogue    — NPC_DIALOGUE object, keyed by NODE code (the Talk voices)',
           '  eb_npc_dialogue — EB_NPC_DIALOGUE object',
           '  d100_table      — D100_TABLE array',
           '  all             — every collection above, each under its section name.',
@@ -8054,13 +8059,14 @@ async function route(req, res) {
     // ── /api/list/ids/{type} — IDs only ──────────────────────────────────────
     if (type === 'ids') {
       const subtype = parts[2];
-      if (!subtype) return json(res,400,{error:'Usage: /api/list/ids/{node|quest|monster|npc|terrain}',available:['node','quest','monster','npc','terrain']});
+      if (!subtype) return json(res,400,{error:'Usage: /api/list/ids/{node|quest|monster|npc|terrain|npcdialogue}',available:['node','quest','monster','npc','terrain','npcdialogue']});
       if (subtype==='node')    return json(res,200,{ type:'node',    count:WBAPI.nodes.all().length,    ids: WBAPI.nodes.all().map(n=>n.id) });
       if (subtype==='quest')   return json(res,200,{ type:'quest',   count:WBAPI.quests.all().length,   ids: WBAPI.quests.all().map(q=>q.id) });
       if (subtype==='monster') return json(res,200,{ type:'monster', count:WBAPI.monsters.all().length, ids: WBAPI.monsters.all().map(m=>m.key) });
       if (subtype==='npc')     return json(res,200,{ type:'npc',     count:WBAPI.npcs.all().filter(n=>!n._inline).length, ids: WBAPI.npcs.all().filter(n=>!n._inline).map(n=>n.key) });
       if (subtype==='terrain') return json(res,200,{ type:'terrain', count:Object.keys(WBAPI.worldDb).length, ids: Object.keys(WBAPI.worldDb) });
-      return json(res,404,{error:`Unknown type: ${subtype}`,available:['node','quest','monster','npc','terrain']});
+      if (subtype==='npcdialogue') return json(res,200,{ type:'npcdialogue', count:Object.keys(WBAPI.npcDialogue).length, ids: Object.keys(WBAPI.npcDialogue) });
+      return json(res,404,{error:`Unknown type: ${subtype}`,available:['node','quest','monster','npc','terrain','npcdialogue']});
     }
 
     if (type === 'node') {
@@ -9832,6 +9838,7 @@ async function route(req, res) {
       node_coords:     () => WBAPI.nodeCoords || {},
       npc_profiles:    () => WBAPI.birkaNpcs || {},
       npc_dialogues:   () => WBAPI.npcDialogues || {},
+      npc_dialogue:    () => WBAPI.npcDialogue || {},
       eb_npc_dialogue: () => WBAPI.ebNpcDialogue || {},
       d100_table:      () => WBAPI.d100Table || [],
       all:             () => ({
@@ -9840,6 +9847,7 @@ async function route(req, res) {
         MONSTER_POOL: WBAPI.monsterPool, MONSTER_DROPS: WBAPI.monsterDrops || {},
         WORLD_DB: WBAPI.worldDb,
         BIRKA_NPC_PROFILES: WBAPI.birkaNpcs, NPC_DIALOGUES: WBAPI.npcDialogues,
+        NPC_DIALOGUE: WBAPI.npcDialogue || {},
         EB_NPC_DIALOGUE: WBAPI.ebNpcDialogue,
         FISH_POOL: WBAPI.fishPool, NIGHT_FISH_POOL: WBAPI.nightFishPool,
         LAKE_MAGIC_DB: WBAPI.lakeMagicDb,
@@ -10481,6 +10489,104 @@ async function route(req, res) {
     const allIds = WBAPI.nodes.all().map(n=>n.id);
     logResponse(method, url.pathname, 404, `location "${rawId}" not found`);
     return json(res, 404, { error:`Location "${rawId}" not found`, hint:'GET /api/location lists all locations', allNodeCodes:allIds, count:allIds.length });
+  }
+
+  // ── Node Talk registry (NPC_DIALOGUE) ── §DX-02km
+  //
+  // The singular, node-keyed registry the Talk button renders, and the only world-data
+  // section that had no verb at all: §DX-02cv needed six entries and hand-edited them,
+  // which is the one thing §2.5 forbids. It is genuinely hybrid — 41 of 74 entries are
+  // `quoteFn` closures and fourteen distinct `S_story` flags are written from inside
+  // them — so a write over `quoteFn` goes through the §DX-02iv `--fns` path like any
+  // other closure field, and `name`/`quote` are plain strings on all 74.
+  if (type === 'npcdialogue') {
+    const code = String(rawId || '').toUpperCase();
+    const entry = WBAPI.npcDialogue[code];
+    if (!entry) {
+      const all = Object.keys(WBAPI.npcDialogue);
+      logResponse(method, url.pathname, 404, `npcdialogue "${rawId}" not found`);
+      return json(res, 404, { error: `No Talk entry for node "${rawId}"`,
+        hint: 'GET /api/list/ids/npcdialogue lists every keyed node', count: all.length, allCodes: all });
+    }
+
+    if (method === 'GET') {
+      const node = WBAPI.nodeMap[code] || null;
+      const speaks = 'quoteFn' in entry ? 'quoteFn (closure — use ?fns=1 to read the source)' : 'quote';
+      // §DX-02iv — the shared ?fns=1 re-read sits on the CONNECT path this handler does not
+      // take, and a silent `quoteFn: null` under --fns is the failure class that rule exists
+      // for: it reads as "there is no closure" rather than "you are not being shown it".
+      let fnsMeta = null, shown = { ...entry };
+      if (/^(1|true)$/.test(url.searchParams.get('fns') || '')) {
+        const wf = WBAPI.entryWithFns('npcdialogue', code);
+        if (wf.ok) { shown = { ...wf.entry }; fnsMeta = { markers: wf.fnCount, shape: "{__fn:'<source>'}", note: 'pass these back unchanged in PUT to keep the closures' }; }
+        else fnsMeta = { error: wf.error };
+      }
+      logRow('talk', `${code}  ·  ${entry.name || '(unnamed)'}`);
+      logRow('renders', speaks);
+      logResponse(method, url.pathname, 200, `npcdialogue/${code}`);
+      return json(res, 200, {
+        entity: { ...shown, code },
+        ...(fnsMeta ? { _fns: fnsMeta } : {}),
+        connections: { node: node ? { code, label: node.label, act: node.act } : null },
+        _meta: { speaks, canDelete: false,
+          blockedBy: { reason: 'the Talk button reads this registry directly; removing an entry silences a node' } },
+      });
+    }
+
+    if (method === 'PUT') {
+      let body;
+      try { body = await readBody(req); } catch (e) { return json(res, 400, { error:'Invalid JSON' }); }
+      // `quoteFn` is deliberately NOT editable: it holds a closure, and a string write
+      // inserts a second one that wins by last-key (§DX-02km's guard in editField; the
+      // general form is §DX-02kp). The data half of the section — the two authored
+      // strings on all 74 entries — is what this verb exists to write.
+      const allowed = ['name', 'quote'];
+      const unknown = Object.keys(body).filter(f => !allowed.includes(f));
+      if (unknown.length || !Object.keys(body).length) {
+        const err = unknown.length
+          ? `Field(s) not directly editable: ${unknown.join(', ')}. Editable: ${allowed.join(', ')}`
+          : 'No fields given. Editable: ' + allowed.join(', ');
+        logResponse(method, url.pathname, 422, `npcdialogue/${code}: ${err}`);
+        return json(res, 422, { ok:false, error: err, editable: allowed });
+      }
+      // All-or-nothing, validated before source is touched (§DX-01c's create shape).
+      // `quote` and `quoteFn` are the same slot rendered two ways: a node that holds a
+      // closure and is given a plain `quote` keeps rendering the closure, so refuse it
+      // rather than write a field nothing reads (§DX-02gy's class).
+      if ('quote' in body && 'quoteFn' in entry) {
+        const err = `"${code}" renders through quoteFn, so a plain quote would be written and never read (§DX-02gy's class) — edit the closure by hand with the server stopped`;
+        logResponse(method, url.pathname, 422, `npcdialogue/${code}: quote under a live quoteFn`);
+        return json(res, 422, { ok:false, error: err });
+      }
+      for (const [field, value] of Object.entries(body)) {
+        if (value === null) continue;
+        if (typeof value !== 'string') {
+          logResponse(method, url.pathname, 422, `npcdialogue/${code}: ${field} must be a string`);
+          return json(res, 422, { ok:false, error:`Field "${field}" must be a string — nothing was written` });
+        }
+      }
+
+      const results = [];
+      for (const [field, value] of Object.entries(body)) {
+        const r = WBAPI.editField('npcdialogue', code, field, value);
+        results.push({ field, ok: !!r.ok, ...(r.ok ? {} : { error: r.error }) });
+      }
+      const allOk = results.every(r => r.ok);
+      logRow('target', `npcdialogue › ${code}`);
+      results.forEach(r => logRow(r.field, r.ok ? `${C.green}\u2713${C.reset}` : `${C.red}\u2717 ${r.error}${C.reset}`));
+      if (!allOk) {
+        logResponse(method, url.pathname, 422, `npcdialogue/${code}: no field written`);
+        return json(res, 422, { ok:false, fields: results, error:'npcdialogue PUT failed — source NOT modified' });
+      }
+      logResponse(method, url.pathname, 200, `npcdialogue/${code} updated`);
+      // The proof is the re-parse from disk, never the echo (§DX-02gy).
+      return saveAndVerify(res, 200, { ok:true, fields: results }, null, null, null, () => {
+        const e2 = WBAPI.npcDialogue[code];
+        return Object.entries(body).map(([field, value]) => ({
+          field, ok: value === null ? !(field in (e2 || {})) : (e2 || {})[field] === value,
+        }));
+      });
+    }
   }
 
   // ── Terrain (WORLD_DB) ──
