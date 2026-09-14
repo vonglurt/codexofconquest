@@ -999,7 +999,7 @@ const WBAPI = {
     }
     this._questArcs = {};
     for (const id of Object.keys(this.questDb)) {
-      const arc = id.replace(/_\d+$/, '').replace(/_[a-z]{2}$/, '');
+      const arc = id.replace(/_\d+$/, '');
       if (!this._questArcs[arc]) this._questArcs[arc] = [];
       this._questArcs[arc].push(id);
     }

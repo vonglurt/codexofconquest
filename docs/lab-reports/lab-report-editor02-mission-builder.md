@@ -172,7 +172,12 @@ This is the second consecutive report in the §DOC-02 series to be bitten in the
 
 ## 9. A defect in the convention §1 cites
 
-§1 grounds the id convention on the arc-prefix strip at `wbapi-core.js:588` / `edit.html:1653`, which is still live at `src/js/wbapi-core.js:.replace(/_[a-z]{2}$/, '')@820` and `edit.html:.replace(/_[a-z]{2}$/, '')@1742`:
+§1 grounds the id convention on the arc-prefix strip at `wbapi-core.js:588` / `edit.html:1653`, which was still live when this
+report was written, at `src/js/wbapi-core.js:.replace(/_[a-z]{2}$/, '')`@820 and `edit.html:.replace(/_[a-z]{2}$/, '')`@1742.
+**It is gone as of 2026-09-14 (§DX-02cf):** the strip had **0** legitimate targets in 2,853 quest ids and all 35 of its firings
+were the false merge described below. Six copies were deleted — the two named here, three more in `edit.html` that read
+`_questArcs` back (the sibling graph, `arcName`, the shared-flag list) and one in `wbapi-server.js` that served `connections.arc`.
+The `@N` above sits outside the code span deliberately, so these read as a record of what the code said and not as live anchors:
 
 ```js
 const arc = id.replace(/_\d+$/, '').replace(/_[a-z]{2}$/, '');

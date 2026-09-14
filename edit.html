@@ -1739,7 +1739,7 @@ const WBAPI = {
     // Quest arcs
     this._questArcs = {};
     for (const id of Object.keys(this.questDb)) {
-      const arc = id.replace(/_\d+$/, '').replace(/_[a-z]{2}$/, '');
+      const arc = id.replace(/_\d+$/, '');
       if (!this._questArcs[arc]) this._questArcs[arc] = [];
       this._questArcs[arc].push(id);
     }
@@ -3898,7 +3898,7 @@ function renderRelGraph(type, centerId, container) {
       addEdge(centerRid, addNode('node', q.waypointNode, q.waypointNode), '→');
     const nk = q.npc || q.npcKey;
     if (nk) addEdge(centerRid, addNode('npc', nk, WBAPI.birkaNpcs[nk]?.name||nk), 'npc');
-    const arc = centerId.replace(/_\d+$/,'').replace(/_[a-z]{2}$/,'');
+    const arc = centerId.replace(/_\d+$/,'');
     for (const s of (WBAPI._questArcs[arc]||[]).filter(s=>s!==centerId).slice(0,3))
       addEdge(centerRid, addNode('quest', s, s), 'arc');
     for (const u of ch.upstream.slice(0,3))   addEdge(addNode('quest',u,u), centerRid, '↑');
@@ -4218,7 +4218,7 @@ function selectQuest(id){
   const nodeInfo = q.activateNode
     ? `<span style="cursor:pointer;color:var(--orange)" onclick="switchTab('map');selectMapNode('${q.activateNode}')">${q.activateNode}${WBAPI.nodeMap[q.activateNode]?.label ? ' — '+WBAPI.nodeMap[q.activateNode].label : ''}</span>`
     : '<span style="color:var(--muted)">no node</span>';
-  const arcName = id.replace(/_\d+$/, '').replace(/_[a-z]{2}$/, '');
+  const arcName = id.replace(/_\d+$/, '');
   const arcSize = (WBAPI._questArcs[arcName]||[]).length;
   const qcls = _classifyQuestWB(q);
   const clsColor = QUEST_CLASS_COLORS[qcls] || '#888';
@@ -4348,7 +4348,7 @@ function selectQuest(id){
   }
   if(!chain.upstream.length&&!chain.downstream.length){ cb.innerHTML='<div style="color:var(--muted);font-size:12px">No linked quests detected via shared flags.</div>'; }
   // Shared-flag quests (same arc)
-  const sameArc=Object.keys(WBAPI.questDb).filter(qid=>qid!==id&&qid.replace(/_\d+$/,'').replace(/_[a-z]{2}$/,'')===id.replace(/_\d+$/,'').replace(/_[a-z]{2}$/,''));
+  const sameArc=Object.keys(WBAPI.questDb).filter(qid=>qid!==id&&qid.replace(/_\d+$/,'')===id.replace(/_\d+$/,''));
   if(sameArc.length){
     const ag=document.createElement('div'); ag.style.marginTop='12px'; ag.className='fg';
     ag.innerHTML=`<div class="fl">Same Arc</div>`;

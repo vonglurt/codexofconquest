@@ -1218,7 +1218,7 @@ function questConnections(key) {
       activateNode: quest.activateNode ? { code:quest.activateNode, label:WBAPI.nodeMap[quest.activateNode]?.label } : null,
       waypointNode: quest.waypointNode ? { code:quest.waypointNode, label:WBAPI.nodeMap[quest.waypointNode]?.label } : null,
       npc:          quest.npc ? WBAPI.npcs.get(quest.npc) : null,
-      arc:          key.replace(/_\d+$/, '').replace(/_[a-z]{2}$/, ''),
+      arc:          key.replace(/_\d+$/, ''),
       upstream:     chain.upstream.map(id => ({ id, title:WBAPI.questDb[id]?.title })),
       downstream:   chain.downstream.map(id => ({ id, title:WBAPI.questDb[id]?.title })),
     },
