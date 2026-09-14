@@ -4,7 +4,7 @@
 
 **Project:** `play.html` — a single-file, quest-driven MUD-style fighter RPG
 **Live counts:** 416 nodes · 398 monsters · 111 terrains · 2,853 quests · 204 NPC profiles · 8 acts · 38,859 lines · 5.51 MB
-**Last updated:** 2026-09-03 — §DX-02aq split the inventory's knowledge array by shape into 🔮 Necklace beads and 📖 Field Notes
+**Last updated:** 2026-09-14 — §DX-02fo completed `export all` from 7 collections to 14 (`./bin/api export all` → 5,084 records)
 
 > **📁 Repository restructured 2026-08-23 for the first public release.** The
 > game was renamed *Roll2Hit* → **Codex of Conquest**; `roll2hit-v3.html` →

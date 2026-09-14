@@ -190,7 +190,9 @@ The monster must exist first; a second `drop` without `--update` is refused with
 ```bash
 ./api.sh export node_map               # full node_map as JSON
 ./api.sh export quest_db
-./api.sh export all                    # all collections
+./api.sh export all                    # all 14 collections, 5,084 records (§DX-02fo)
+./api.sh export node_coords            # 416 {code:{r,c}} — the seed export needs these
+./api.sh export npc_profiles           # 204 BIRKA_NPC_PROFILES
 ./api.sh export node_map --format js   # as JS constant
 ./api.sh import book.json             # bulk import nodes + quest cycles
 ```
