@@ -64,6 +64,55 @@
 
 ---
 
+## Archived 2026-09-14 — §DX-02fe (one scale, one wrong comment, and a gate that shipped two weeks before the row was read)
+
+### §DX-02fe — two favor scales in circulation, and the engine's own comments assert both (NEW 2026-08-23 during §DOC-02cz, 🟡 reconcile centrally)
+
+- [x] **§DX-02fe — is Dear Friend 2 or 3?** 🟡 The file answers both ways in its own comments: `@22305` says *"cap (default **3 = Dear Friend**)"*; `@23088` says *"progress toward **Friendly (fav 1)**"*; `@23507` says *"**Dear Friend (fav 2**, the ✦ worldTruth footer)"*. Content is split across the two scales accordingly. **On the 0–3 scale:** `FROBERGER_TRACES` (`minFav` 2/3), Room 6 (`>= 3`), Layer 44's `_getNodeMapColor` (tiers at 1/2/3) and `weckmann_class` (`>= 3`). **On the 0–2 scale:** `NPC_CROSS_REFS` (`fav` 1/2), the Nivers→Yael line (`>= 2` where the lock says Dear Friend), Froberger-note×Auros (`>= 2` where the lock says Dear Friend), RoughWhiskey×Brynn (`>= 1` where the lock says Friendly), and Layer 44's farewells (`>= 1` where the lock says Friendly) and Brynn maintenance (`>= 1` where the lock says Friendly). **Roughly a dozen gates, split.**
+> **This is §DX-02fb and §DX-02fc's root cause, not a separate issue.** Content on the 0–3 scale either fires one tier early or — where the ceiling bites — never fires. **Fix:** pick one scale, publish it in `mechanics.md` with the tier names, and sweep the gates once. If 0–3 wins, every NPC needs a path to 3 (currently only `yael` has one, via `_setNpcFavor('yael', 3)@21452`). If 0–2 wins, four gates drop by one and `_getNodeMapColor`'s top tier retires. **A `check:favortiers` gate is cheap afterward:** assert every `minFav`/`_npcFavor(x) >= n` in the file is ≤ the enumerated reachable ceiling for that NPC — it would have failed on the day Layer 45 was written.
+> **Provenance:** §DOC-02cz, finding F8; §DOC-02cy's F7 is the same defect seen one layer up.
+
+> **✅ SHIPPED 2026-09-14 `65c8c49`** — **and mostly as ALREADY SHIPPED, which is the finding.** **MEASURED
+> BEFORE, re-derived at HEAD (`2319a90`):** the row's premise is *two scales in circulation*. There is **one**
+> scale, `const NPC_FAVOR_CAP = 3;`@23523, and the engine names its tiers unambiguously: `_setNpcFavor`@23537
+> speaks exactly two lines — level **1** *"looks at you differently now"*, level **2** *"says your name when you
+> walk in"* — and `_checkDearFriendUpgrade`@23548, the function that carries the name, fires at `fav >= 1 && fav < NPC_FAVOR_CAP`,
+> adds one, and speaks **the level-2 line**. The shipped quest narratives agree:
+> `{kind:'favor',npc:'auros',set:2}` announces ***"Dear Friend!"***@21349 and every `set:1` announces
+> *"Friendly!"*. **So Dear Friend is 2, level 3 is a tier above it, and the row's *"is Dear Friend 2 or 3?"* has
+> a one-word answer with four independent witnesses.** **The row's central claim is DISPROVED at HEAD, and the
+> disproof is the increment's real product.** It says content on the 0–3 scale *"either fires one tier early or
+> — where the ceiling bites — never fires"*. **Every tier-3 gate in the file lands on an NPC whose ceiling is
+> 3.** `FROBERGER_TRACES`@27880 carries `minFav:3` on **brynn** and **crov** and `minFav:2` on
+> yael/quill/pachelbel/auros; `weckmann_class` needs `_npcFavor('crov') >= 3`@27597; the remaining literal is
+> `_npcFavor('yael') >= 3` — and §GR-FU2's measured ceilings are **yael 3 · brynn 3 · crov 3 · kenickie 3**,
+> auros/emmer/gret/pachelbel/quill/rennau 2. Not one is unreachable. `_getNodeMapColor`@27753 tiers at 1/2/3 are
+> a **colour ramp**, not a content gate, and make no reachability claim at all. **What happened is that the row
+> was overtaken.** It was written 2026-08-23; **§GR-FU2 shipped the favor-ceiling machinery on 2026-09-07** and
+> **§AUDIT-03ar shipped `check-npcregs.js` phase 7** — *"a threshold above what any writer can reach is not a
+> strict gate; it is content with no door"* — which is, line for line, the `check:favortiers` gate this row
+> proposes as future work. And `mechanics.md`@853-856 **already publishes the table the row asks for**: Friendly
+> 1 · Dear Friend 2 · **Dear Friend+ 3**. Three of the row's four deliverables were done before it was read.
+> **TWO RESIDUES REMAINED, AND BOTH SHIPPED HERE.** **(1) The one genuinely wrong comment** — `` `// increments the current level, clamped to `cap` (default 3 = Dear Friend).`
+> `` — the single site that attaches the name to the wrong level, against `mechanics.md` and against the
+> engine's own message. It now reads *"(default 3 = Dear Friend+; Dear Friend is 2)"*. **It sits inside the
+> `QUEST:CORE` parity fence, and the fence caught the first attempt** — edited in `play.html` alone,
+> `check:questparity` went red naming the line; corrected in `src/js/quest.js` and re-asserted byte-identical at
+> 26,429 bytes. That is the fence doing exactly its job on exactly the mistake it exists for. **(2) Phase 7 did
+> not cover `minFav`.** It scans `_npcFavor('x') >= N` and `favorMin:{}` — and `minFav:` is the field this row
+> names **first**, the one `FROBERGER_TRACES` uses for all six of its entries. The corpus is green there by luck
+> rather than by coverage: brynn and crov happen to have ceiling 3. Phase 7 now also scans `key: { … minFav: N … }`
+> and gates it against the same ceilings, **with a plant in the selftest** (`crov`'s `minFav:3` re-keyed to
+> `quill`, ceiling 2) which reports *"minFav:3 on 'quill' at line 27885 needs favor 3 and nothing in the corpus
+> can raise 'quill' past 2 — the branch behind it can never run"*. **Unknown keys are deliberately NOT
+> exempted:** a `minFav` on a key no writer raises reports against ceiling 0, which is the alarm worth having.
+> **Left to §GR-FU3, whose ASK it is:** whether the six NPCs that cap at 2 *should* be able to reach Dear
+> Friend+ is a content decision the user already owns, and nothing here pre-empts it. **VERIFIED:**
+> `check-npcregs --selftest` **all phases green including the new plant** · `check:walk` **28/28 green** ·
+> `check:questparity` byte-identical · `npm test --prefix src` server stopped: **1,238 passed / 7 failed**, the seven pre-existing.
+
+---
+
 ## Archived 2026-09-14 — §DX-02cv (six people the game showed you and would not let you speak to)
 
 ### §DX-02cv — six nodes show the player a named NPC and disable the button that would let them speak (NEW 2026-08-17 during §DOC-02by, 🟡 small design call: write the lines, or drop the chip)
