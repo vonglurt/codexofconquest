@@ -11066,7 +11066,7 @@ const QUEST_DB = { // → doc: quest.md §Quest Format
   quest_ng_02: { id:'quest_ng_02', type:'side', schema:'UQF-1.0', gate:{ countMin:[{ path:'ngPlusRun', min:1 }], flags:['priorQuestMinusOne'] }, bits:[], completion:{ flags:['entry42Written'] }, title:'Froberger: The Open Page',
     onComplete:[ { kind:'narrative', msg:'📖 Entry 42 is in the journal.' } ], // §ARCH-01 W7c — reward is the act itself
     desc:"Froberger's journal ends at forty-one. The forty-second page is blank — not torn, not missing, blank. He stopped there on purpose. You can tell because the previous entry ends mid-thought and the blank page comes after it like an answer to a question he decided not to answer himself. He knew someone would come back a second time with enough of the story to fill it. That someone is whoever is holding this journal now.",
-    hint:'Visit the City Inn to find the open page.',
+    hint:"Visit the city streets of Birka to find the open page.",
     activateNode:'LHR', onActivate:null, boardExempt:true,
     waypointNode:'LHR', reward:0,
     disposition:'"Forty-two. I stopped there on purpose. Someone else will finish this one." — Froberger\'s margin note',
@@ -11145,7 +11145,7 @@ const QUEST_DB = { // → doc: quest.md §Quest Format
   quest_va_01: { id:'quest_va_01', type:'side', schema:'UQF-1.0', gate:{}, bits:[], completion:{ flags:['vaAllMarksFound'] }, title:'The Architecture: Five Marks',
     onComplete:[ { kind:'narrative', msg:'🏛️ Five marks found. The pattern is complete.' } ], // §ARCH-01 W7c
     desc:"Someone passed through five sites two hundred years ago and left marks. The marks are in places you have already visited — you walked past them without knowing. No one told you they were there because no one who knew is still alive to tell. What you have instead are Froberger's margin notes, which mention the marks in the way a person mentions something they saw in passing and could not explain and never went back for. Follow the track. Each site will say where he was and how long ago.",
-    hint:"Investigate: City Inn, Birka Slums, the Unbanked Quarter, Scholar's Quarter, Mountain Pass.",
+    hint:"Investigate: City Streets, Birka Slums, the Unbanked Quarter, Scholar's Quarter, Mountain Pass.",
     activateNode:null, 
     waypointNode:'LHR', reward:0,
     disposition:'"Five marks. One pattern. She was everywhere before anyone was looking." — Froberger, Entry 7 marginal note (between the lines)',
