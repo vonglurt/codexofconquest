@@ -1,7 +1,7 @@
 <!-- SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson -->
 # CodexOfConquest WBAPI — User Guide
 
-> **This guide uses `./api.sh`** — a thin wrapper around `src/api/wb.js` that delegates every call to the server at `localhost:1367`. All examples use real data from the live game file.
+> **This guide uses `./bin/api`** — a thin wrapper around `src/api/wb.js` that delegates every call to the server at `localhost:1367`. All examples use real data from the live game file.
 
 ---
 
@@ -12,10 +12,10 @@
 ./bin/wbapi start
 
 # 2. Confirm it's alive
-./api.sh ping
+./bin/api ping
 
 # 3. Read anything safely — no writes yet
-./api.sh get node LHR
+./bin/api get node LHR
 ```
 
 ---
@@ -68,7 +68,7 @@ curl -s -XPOST http://localhost:1367/api/reload | jq
 ## 2. Health & Status: ping
 
 ```bash
-./api.sh ping
+./bin/api ping
 ```
 
 **What it returns:**
@@ -92,7 +92,7 @@ If the server is down, `ping` exits with a clear error and start instructions.
 ## 3. Reading One Entity: get
 
 ```
-./api.sh get <type> <id> [--fns]
+./bin/api get <type> <id> [--fns]
 ```
 
 **Types:** `node`  `quest`  `monster`  `npc`  `terrain`
@@ -106,15 +106,15 @@ refused: *"the patch would drop 1 function value(s) from the entry"*, and the so
 left alone.
 
 ```bash
-./api.sh get quest quest_wm_01 --fns          # closures arrive as {"__fn": "S => { … }"}
-./api.sh get quest quest_wm_01 --fns --raw | jq '{onComplete: .entity.onComplete}' \
-  | ./api.sh put quest quest_wm_01            # and go back unchanged
+./bin/api get quest quest_wm_01 --fns          # closures arrive as {"__fn": "S => { … }"}
+./bin/api get quest quest_wm_01 --fns --raw | jq '{onComplete: .entity.onComplete}' \
+  | ./bin/api put quest quest_wm_01            # and go back unchanged
 ```
 
 ### 3.1 Get a node
 
 ```bash
-./api.sh get node LHR
+./bin/api get node LHR
 ```
 
 Returns the full node with its connections, terrain, quests, NPCs, and coordinates:
@@ -147,18 +147,18 @@ Returns the full node with its connections, terrain, quests, NPCs, and coordinat
 
 More nodes to explore:
 ```bash
-./api.sh get node TLL       # The First Inn — has sleep + NPC Brynn
-./api.sh get node KRN       # The Birka Crypt — has battle
-./api.sh get node BK        # Birka Shore — Northern Longship Landing
-./api.sh get node FRO       # Aldric's Forest — act 3
-./api.sh get node TRD       # Goblin Warrens — act 5
-./api.sh get node SDQ       # The Crones' Domain — act 3
+./bin/api get node TLL       # The First Inn — has sleep + NPC Brynn
+./bin/api get node KRN       # The Birka Crypt — has battle
+./bin/api get node BK        # Birka Shore — Northern Longship Landing
+./bin/api get node FRO       # Aldric's Forest — act 3
+./bin/api get node TRD       # Goblin Warrens — act 5
+./bin/api get node SDQ       # The Crones' Domain — act 3
 ```
 
 ### 3.2 Get a quest
 
 ```bash
-./api.sh get quest mq_1
+./bin/api get quest mq_1
 ```
 
 ```json
@@ -181,17 +181,17 @@ More nodes to explore:
 
 More quest examples:
 ```bash
-./api.sh get quest mq_2          # Find Brother Aldric
-./api.sh get quest mq_3          # The Sea Road South
-./api.sh get quest sq_1          # Side: The Disappeared Merchants
-./api.sh get quest sq_2          # Side: Kelpie in the Loch
-./api.sh get quest quest_wis_01  # Skill check quest
+./bin/api get quest mq_2          # Find Brother Aldric
+./bin/api get quest mq_3          # The Sea Road South
+./bin/api get quest sq_1          # Side: The Disappeared Merchants
+./bin/api get quest sq_2          # Side: Kelpie in the Loch
+./bin/api get quest quest_wis_01  # Skill check quest
 ```
 
 ### 3.3 Get a monster
 
 ```bash
-./api.sh get monster goblin
+./bin/api get monster goblin
 ```
 
 ```json
@@ -215,17 +215,17 @@ More quest examples:
 
 More monster examples:
 ```bash
-./api.sh get monster skeleton   # ac:13 hp:13 tier:easy
-./api.sh get monster shadow     # ac:12 hp:16 tier:easy
-./api.sh get monster bandit     # ac:12 hp:11 tier:easy
-./api.sh get monster wolf       # ac:13 hp:11 tier:easy
-./api.sh get monster leshen     # boss-tier forest creature
+./bin/api get monster skeleton   # ac:13 hp:13 tier:easy
+./bin/api get monster shadow     # ac:12 hp:16 tier:easy
+./bin/api get monster bandit     # ac:12 hp:11 tier:easy
+./bin/api get monster wolf       # ac:13 hp:11 tier:easy
+./bin/api get monster leshen     # boss-tier forest creature
 ```
 
 ### 3.4 Get a terrain
 
 ```bash
-./api.sh get terrain city
+./bin/api get terrain city
 ```
 
 Returns the terrain definition with all associated monster keys and every node that uses this terrain:
@@ -252,21 +252,21 @@ Returns the terrain definition with all associated monster keys and every node t
 
 More terrain examples:
 ```bash
-./api.sh get terrain forest       # 🌲 Forest / Trees
-./api.sh get terrain crypt        # ⚰ Crypt
-./api.sh get terrain inn          # 🛏 Inn — Night
-./api.sh get terrain tavern       # 🍷 Tavern — Common Room
-./api.sh get terrain bar          # 🍺 Tavern Brawl
-./api.sh get terrain goblin_cave  # 👺 Goblin Warrens
-./api.sh get terrain hag_swamp    # 🧙 Hag's Domain
+./bin/api get terrain forest       # 🌲 Forest / Trees
+./bin/api get terrain crypt        # ⚰ Crypt
+./bin/api get terrain inn          # 🛏 Inn — Night
+./bin/api get terrain tavern       # 🍷 Tavern — Common Room
+./bin/api get terrain bar          # 🍺 Tavern Brawl
+./bin/api get terrain goblin_cave  # 👺 Goblin Warrens
+./bin/api get terrain hag_swamp    # 🧙 Hag's Domain
 ```
 
 ### 3.5 Get an NPC
 
 ```bash
-./api.sh get npc yael
-./api.sh get npc brynn
-./api.sh get npc archivus_sweelinck
+./bin/api get npc yael
+./bin/api get npc brynn
+./bin/api get npc archivus_sweelinck
 ```
 
 ---
@@ -274,13 +274,13 @@ More terrain examples:
 ## 4. Listing Collections: list
 
 ```
-./api.sh list <type> [filters...]
+./bin/api list <type> [filters...]
 ```
 
 ### 4.1 List all types (index)
 
 ```bash
-./api.sh list
+./bin/api list
 ```
 
 Returns available list routes with counts and filter options.
@@ -288,7 +288,7 @@ Returns available list routes with counts and filter options.
 ### 4.2 List all nodes
 
 ```bash
-./api.sh list node
+./bin/api list node
 ```
 
 Returns summary rows: `{ id, label, terrain, act, coords, connections, _meta }`.
@@ -296,10 +296,10 @@ Returns summary rows: `{ id, label, terrain, act, coords, connections, _meta }`.
 #### Filter by act
 
 ```bash
-./api.sh list node --act 1     # Act 1 nodes (Birka arc)
-./api.sh list node --act 3     # Act 3 nodes
-./api.sh list node --act 4     # Act 4 nodes (Paul's journeys)
-./api.sh list node --act 5     # Act 5 nodes
+./bin/api list node --act 1     # Act 1 nodes (Birka arc)
+./bin/api list node --act 3     # Act 3 nodes
+./bin/api list node --act 4     # Act 4 nodes (Paul's journeys)
+./bin/api list node --act 5     # Act 5 nodes
 ```
 
 Wait — act is a URL query param, not a `--flag`. Use the underlying list filter syntax:
@@ -364,7 +364,7 @@ curl -s 'http://localhost:1367/api/list/node?has_quests=true&terrain=forest' | j
 ### 4.3 List quests
 
 ```bash
-./api.sh list quest
+./bin/api list quest
 ```
 
 #### Filter by node (quests that activate at or waypoint through a node)
@@ -409,7 +409,7 @@ curl -s 'http://localhost:1367/api/list/ids/quest' | jq '.ids | length'
 ### 4.4 List monsters
 
 ```bash
-./api.sh list monster
+./bin/api list monster
 ```
 
 #### Filter by terrain
@@ -446,7 +446,7 @@ curl -s 'http://localhost:1367/api/list/ids/monster' | jq '.ids[]' | sort
 ### 4.5 List NPCs
 
 ```bash
-./api.sh list npc
+./bin/api list npc
 ```
 
 #### Filter by node
@@ -472,7 +472,7 @@ curl -s 'http://localhost:1367/api/list/npc?q=brynn' | jq '.'
 ### 4.6 List terrains
 
 ```bash
-./api.sh list terrain
+./bin/api list terrain
 ```
 
 #### Text search
@@ -495,15 +495,15 @@ curl -s 'http://localhost:1367/api/list/ids/terrain' | jq '.ids[]'
 `location` combines node data, monsters, quests, and NPCs in one call — the canonical view for a node from the game engine's perspective.
 
 ```bash
-./api.sh location LHR   # City Streets — Birka
-./api.sh location TLL   # The First Inn
-./api.sh location KRN   # The Birka Crypt
-./api.sh location BK    # Birka Shore
-./api.sh location FRO   # Aldric's Forest
-./api.sh location TRD   # Goblin Warrens
+./bin/api location LHR   # City Streets — Birka
+./bin/api location TLL   # The First Inn
+./bin/api location KRN   # The Birka Crypt
+./bin/api location BK    # Birka Shore
+./bin/api location FRO   # Aldric's Forest
+./bin/api location TRD   # Goblin Warrens
 ```
 
-Sample output for `./api.sh location KRN`:
+Sample output for `./bin/api location KRN`:
 ```json
 {
   "code": "KRN",
@@ -530,10 +530,10 @@ Sample output for `./api.sh location KRN`:
 Shows all quests that depend on (or are depended on by) a given quest. Use this before deleting a quest to check whether anything downstream will break.
 
 ```bash
-./api.sh chain mq_1
-./api.sh chain mq_3
-./api.sh chain sq_1
-./api.sh chain quest_wis_01
+./bin/api chain mq_1
+./bin/api chain mq_3
+./bin/api chain sq_1
+./bin/api chain quest_wis_01
 ```
 
 Sample output:
@@ -555,7 +555,7 @@ Sample output:
 ### Full integrity scan
 
 ```bash
-./api.sh audit
+./bin/api audit
 ```
 
 Returns a structured list of errors, warnings, and suggestions across all quest and node data.
@@ -563,7 +563,7 @@ Returns a structured list of errors, warnings, and suggestions across all quest 
 ### Map audit (bidirectional link check)
 
 ```bash
-./api.sh audit --map
+./bin/api audit --map
 ```
 
 Checks every N/E/S/W link: if node A has `E=B`, then B must have `W=A`. Reports every mismatch with the exact fix command.
@@ -571,14 +571,14 @@ Checks every N/E/S/W link: if node A has `E=B`, then B must have `W=A`. Reports 
 ### Plain text output
 
 ```bash
-./api.sh audit --map --text
+./bin/api audit --map --text
 ```
 
 Human-readable format. Pipe to `grep` for quick scanning:
 
 ```bash
-./api.sh audit --map --text | grep ERROR
-./api.sh audit --text | grep "missing"
+./bin/api audit --map --text | grep ERROR
+./bin/api audit --text | grep "missing"
 ```
 
 ### First failing item (guided fix)
@@ -600,7 +600,7 @@ curl -s 'http://localhost:1367/api/next-error?severity=error' | jq '.'   # error
 ## 8. Editing Fields: put
 
 ```
-./api.sh put <type> <id> [k=v ...]
+./bin/api put <type> <id> [k=v ...]
 ```
 
 The `put` command issues a `PUT /api/{type}/{id}` with the fields you specify. **No nonce required** — put uses a lighter confirmation model.
@@ -609,60 +609,60 @@ The `put` command issues a `PUT /api/{type}/{id}` with the fields you specify. *
 
 ```bash
 # Change a node's label
-./api.sh put node LHR label="City Streets — Birka (Updated)"
+./bin/api put node LHR label="City Streets — Birka (Updated)"
 
 # Change terrain (must be a valid terrain key)
-./api.sh put node LHR name=city_slums
+./bin/api put node LHR name=city_slums
 
 # Change act number
-./api.sh put node LHR act=2
+./bin/api put node LHR act=2
 
 # Set a directional connection
-./api.sh put node LHR N=BMA
-./api.sh put node LHR W=WRO
+./bin/api put node LHR N=BMA
+./bin/api put node LHR W=WRO
 
 # Clear a directional connection (null)
-./api.sh put node LHR W=null
+./bin/api put node LHR W=null
 
 # Set sleep flag and cost
-./api.sh put node TLL sleep=true sleepCost=5
+./bin/api put node TLL sleep=true sleepCost=5
 
 # Add/change NPC string
-./api.sh put node LHR npc="City Guard Captain"
+./bin/api put node LHR npc="City Guard Captain"
 ```
 
 ### 8.2 Edit a quest field
 
 ```bash
 # Update pass text
-./api.sh put quest mq_1 passText="Muffat takes the map and nods slowly."
+./bin/api put quest mq_1 passText="Muffat takes the map and nods slowly."
 
 # Update fail text
-./api.sh put quest mq_1 failText="The docks are empty. Come back."
+./bin/api put quest mq_1 failText="The docks are empty. Come back."
 
 # Update hint
-./api.sh put quest mq_1 hint="Check the Tilbury docks first."
+./bin/api put quest mq_1 hint="Check the Tilbury docks first."
 
 # Change waypoint node
-./api.sh put quest mq_2 waypointNode=FRO
+./bin/api put quest mq_2 waypointNode=FRO
 
 # Change the NPC
-./api.sh put quest sq_1 npc=brynn
+./bin/api put quest sq_1 npc=brynn
 ```
 
 ### 8.3 Edit a monster field
 
 ```bash
 # Adjust stats
-./api.sh put monster goblin hp=10
-./api.sh put monster goblin ac=14
-./api.sh put monster goblin atk=5
+./bin/api put monster goblin hp=10
+./bin/api put monster goblin ac=14
+./bin/api put monster goblin atk=5
 
 # Change tier
-./api.sh put monster goblin tier=medium
+./bin/api put monster goblin tier=medium
 
 # Change name
-./api.sh put monster goblin name="Goblin Scout"
+./bin/api put monster goblin name="Goblin Scout"
 ```
 
 ### 8.4 Pipe JSON body
@@ -671,19 +671,19 @@ For multi-field updates, pipe a JSON object instead of k=v pairs:
 
 ```bash
 echo '{"passText":"You recalled the text.","failText":"Try again."}' \
-  | ./api.sh put quest quest_wis_01
+  | ./bin/api put quest quest_wis_01
 
 echo '{"label":"City Streets — Birka","act":1}' \
-  | ./api.sh put node LHR
+  | ./bin/api put node LHR
 
 echo '{"hp":20,"ac":16,"tier":"medium"}' \
-  | ./api.sh put monster skeleton
+  | ./bin/api put monster skeleton
 ```
 
 ### 8.5 Write to a file
 
 ```bash
-./api.sh put node LHR label="Updated" --out /tmp/lhr-put-result.json
+./bin/api put node LHR label="Updated" --out /tmp/lhr-put-result.json
 cat /tmp/lhr-put-result.json
 ```
 
@@ -692,7 +692,7 @@ cat /tmp/lhr-put-result.json
 ## 9. Creating Entities: post
 
 ```
-./api.sh post <type> [k=v ...]
+./bin/api post <type> [k=v ...]
 ```
 
 The `post` command issues a `POST /api/{type}` with a nonce auto-handled. If you supply an `id`/`code`/`key` field, the nonce is acquired automatically before the create call.
@@ -700,7 +700,7 @@ The `post` command issues a `POST /api/{type}` with a nonce auto-handled. If you
 ### 9.1 Create a node
 
 ```bash
-./api.sh post node \
+./bin/api post node \
   code=MM \
   name=mimic_meadows \
   label="Mimic Meadows" \
@@ -711,7 +711,7 @@ The `post` command issues a `POST /api/{type}` with a nonce auto-handled. If you
 With directional connections:
 
 ```bash
-./api.sh post node \
+./bin/api post node \
   code=SW \
   name=scholars_qtr \
   label="Scholar Workshop" \
@@ -723,7 +723,7 @@ With directional connections:
 With sleep:
 
 ```bash
-./api.sh post node \
+./bin/api post node \
   code=NEW_INN \
   name=inn \
   label="The Silver Lantern Inn" \
@@ -738,7 +738,7 @@ With sleep:
 Minimum required fields: `id`, `type`, `title`, `activateNode`.
 
 ```bash
-./api.sh post quest \
+./bin/api post quest \
   id=sq_birka_rat \
   type=combat \
   title="The Rat Problem" \
@@ -754,7 +754,7 @@ Minimum required fields: `id`, `type`, `title`, `activateNode`.
 Side quest with item reward:
 
 ```bash
-./api.sh post quest \
+./bin/api post quest \
   id=sq_crypt_candle \
   type=side \
   title="The Black Candle" \
@@ -769,7 +769,7 @@ Side quest with item reward:
 Skill check quest:
 
 ```bash
-./api.sh post quest \
+./bin/api post quest \
   id=quest_int_01 \
   type=skill_check \
   title="Decipher the Cipher" \
@@ -784,7 +784,7 @@ Skill check quest:
 ### 9.3 Create a monster
 
 ```bash
-./api.sh post monster \
+./bin/api post monster \
   key=bog_crawler \
   name="Bog Crawler" \
   ac=11 \
@@ -799,7 +799,7 @@ Skill check quest:
 Boss-tier example:
 
 ```bash
-./api.sh post monster \
+./bin/api post monster \
   key=swamp_sovereign \
   name="Swamp Sovereign" \
   ac=16 \
@@ -811,12 +811,12 @@ Boss-tier example:
   tier=deadly
 ```
 
-> **All nine fields are required, and `tier` is one of `trivial | easy | medium | hard | deadly`** — there is no `boss` tier, and no `dmg` / `xp` field (damage is `dmgCount·d(dmgDie) + dmgFlat`; battle XP is computed from AC·maxHP, never stored). A body that misses a field or names a retired one is rejected **422 with the offending fields listed, and nothing is written** (§DX-01c). The new monster starts in **no terrain** — place it with `./api.sh put terrain <terrainKey> monsters=[…]`.
+> **All nine fields are required, and `tier` is one of `trivial | easy | medium | hard | deadly`** — there is no `boss` tier, and no `dmg` / `xp` field (damage is `dmgCount·d(dmgDie) + dmgFlat`; battle XP is computed from AC·maxHP, never stored). A body that misses a field or names a retired one is rejected **422 with the offending fields listed, and nothing is written** (§DX-01c). The new monster starts in **no terrain** — place it with `./bin/api put terrain <terrainKey> monsters=[…]`.
 
 ### 9.4 Create a terrain
 
 ```bash
-./api.sh post terrain \
+./bin/api post terrain \
   key=temple_ruins \
   label="Temple Ruins" \
   icon=🏛
@@ -827,9 +827,9 @@ After creating the terrain, set its roster with `put terrain … monsters=` (§D
 `label`/`icon`, and every terrain PUT reported success without writing anything to disk):
 
 ```bash
-./api.sh get terrain temple_ruins                       # read the CURRENT roster first
-./api.sh put terrain temple_ruins label="Temple Ruins — Fallen Columns"
-./api.sh put terrain temple_ruins monsters=skeleton,ghast,wight
+./bin/api get terrain temple_ruins                       # read the CURRENT roster first
+./bin/api put terrain temple_ruins label="Temple Ruins — Fallen Columns"
+./bin/api put terrain temple_ruins monsters=skeleton,ghast,wight
 ```
 
 ⚠️ **`monsters` replaces the whole roster, it does not append** — read, append, write back.
@@ -842,7 +842,7 @@ JSON-string array re-parses cleanly while silently breaking the encounter picker
 For complex creates, pipe a full JSON object:
 
 ```bash
-cat <<'EOF' | ./api.sh post node
+cat <<'EOF' | ./bin/api post node
 {
   "code": "EHZ",
   "name": "void",
@@ -855,7 +855,7 @@ EOF
 ```
 
 ```bash
-cat <<'EOF' | ./api.sh post quest
+cat <<'EOF' | ./bin/api post quest
 {
   "id": "quest_math_01",
   "type": "side",
@@ -875,7 +875,7 @@ EOF
 ## 10. Deleting Entities: del
 
 ```
-./api.sh del <type> <id>
+./bin/api del <type> <id>
 ```
 
 The `del` command auto-acquires a nonce before issuing the DELETE. **Before deleting**, run `chain` (for quests) or check `_meta.canDelete` (for nodes) to confirm nothing depends on it.
@@ -886,7 +886,7 @@ Three behaviors worth knowing:
 
 | Behavior | What it means |
 |---|---|
-| **Cascades** | Deleting a node also removes its `NODE_COORDS` row; deleting a monster also removes its `MONSTER_DROPS` trophy entry — so no orphan is left for `./api.sh audit` to report. |
+| **Cascades** | Deleting a node also removes its `NODE_COORDS` row; deleting a monster also removes its `MONSTER_DROPS` trophy entry — so no orphan is left for `./bin/api audit` to report. |
 | **Verify-or-revert** | If excising the entry would alter *any* other entry in the section, nothing is written and the delete fails loudly. A refused delete leaves the source byte-identical. |
 | **Guards unchanged** | A node with quests/NPCs, or a quest with downstream dependents, is still blocked — `409` with `blockedBy`. |
 
@@ -894,26 +894,26 @@ Three behaviors worth knowing:
 
 ```bash
 # Check first
-./api.sh chain sq_birka_rat
+./bin/api chain sq_birka_rat
 
 # Delete if canDelete is true
-./api.sh del quest sq_birka_rat
+./bin/api del quest sq_birka_rat
 ```
 
 ### 10.2 Delete a node
 
 ```bash
 # Check first — must have no quests and no named NPCs
-./api.sh location MM
+./bin/api location MM
 
 # Delete
-./api.sh del node MM
+./bin/api del node MM
 ```
 
 ### 10.3 Delete a monster
 
 ```bash
-./api.sh del monster bog_crawler
+./bin/api del monster bog_crawler
 ```
 
 ### 10.4 Manual nonce + curl (for complex scripts)
@@ -936,7 +936,7 @@ curl -s -XDELETE http://localhost:1367/api/quest/sq_birka_rat \
 ## 11. Exporting Data: export
 
 ```
-./api.sh export <collection> [--format json|js|module] [--out file]
+./bin/api export <collection> [--format json|js|module] [--out file]
 ```
 
 **Collections:** `node_map`  `quest_db`  `monster_pool`  `world_db`  `all`
@@ -944,17 +944,17 @@ curl -s -XDELETE http://localhost:1367/api/quest/sq_birka_rat \
 ### 11.1 Export as JSON (default)
 
 ```bash
-./api.sh export node_map    | jq 'keys | length'  # count nodes
-./api.sh export quest_db    | jq 'keys | length'  # count quests
-./api.sh export monster_pool | jq 'keys | length' # count monsters
-./api.sh export world_db    | jq 'keys'           # list terrain keys
+./bin/api export node_map    | jq 'keys | length'  # count nodes
+./bin/api export quest_db    | jq 'keys | length'  # count quests
+./bin/api export monster_pool | jq 'keys | length' # count monsters
+./bin/api export world_db    | jq 'keys'           # list terrain keys
 ```
 
 ### 11.2 Export as JS literal
 
 ```bash
-./api.sh export node_map   --format js
-./api.sh export quest_db   --format js
+./bin/api export node_map   --format js
+./bin/api export quest_db   --format js
 ```
 
 Output is a JS `const NODE_MAP = {...}` assignment suitable for embedding.
@@ -962,8 +962,8 @@ Output is a JS `const NODE_MAP = {...}` assignment suitable for embedding.
 ### 11.3 Export as ESM module
 
 ```bash
-./api.sh export node_map   --format module
-./api.sh export quest_db   --format module
+./bin/api export node_map   --format module
+./bin/api export quest_db   --format module
 ```
 
 Output is `export const NODE_MAP = {...}` for use in modern JS projects.
@@ -971,19 +971,19 @@ Output is `export const NODE_MAP = {...}` for use in modern JS projects.
 ### 11.4 Write export to file
 
 ```bash
-./api.sh export quest_db   --out world/quests.json
-./api.sh export node_map   --out world/nodes.json
-./api.sh export monster_pool --out world/monsters.json
+./bin/api export quest_db   --out world/quests.json
+./bin/api export node_map   --out world/nodes.json
+./bin/api export monster_pool --out world/monsters.json
 
 # All collections to one file
-./api.sh export all --format json --out world/full-export.json
+./bin/api export all --format json --out world/full-export.json
 ```
 
 ### 11.5 Backup before large edits
 
 ```bash
-./api.sh export node_map --out backup-nodes-$(date +%Y%m%d).json
-./api.sh export quest_db --out backup-quests-$(date +%Y%m%d).json
+./bin/api export node_map --out backup-nodes-$(date +%Y%m%d).json
+./bin/api export quest_db --out backup-quests-$(date +%Y%m%d).json
 ```
 
 ---
@@ -991,7 +991,7 @@ Output is `export const NODE_MAP = {...}` for use in modern JS projects.
 ## 12. NPC Voiced Dialogue: speak
 
 ```
-./api.sh speak <npc-id> "<prompt>" [--state neutral|friendly|dearFriend] [--model <model>]
+./bin/api speak <npc-id> "<prompt>" [--state neutral|friendly|dearFriend] [--model <model>]
 ```
 
 Generates voiced NPC dialogue using Claude. Requires `ANTHROPIC_API_KEY` to be set.
@@ -1003,35 +1003,35 @@ export ANTHROPIC_API_KEY=sk-ant-...
 ### 12.1 Basic speak
 
 ```bash
-./api.sh speak yael "Good afternoon."
-./api.sh speak brynn "Do you have a room available?"
-./api.sh speak archivus_sweelinck "I have all seven shards."
+./bin/api speak yael "Good afternoon."
+./bin/api speak brynn "Do you have a room available?"
+./bin/api speak archivus_sweelinck "I have all seven shards."
 ```
 
 ### 12.2 With relationship state
 
 ```bash
 # Neutral — first meeting
-./api.sh speak yael "What happened here?" --state neutral
+./bin/api speak yael "What happened here?" --state neutral
 
 # Friendly — after helping
-./api.sh speak yael "I cleared the crypt." --state friendly
+./bin/api speak yael "I cleared the crypt." --state friendly
 
 # Dear friend — deep trust established
-./api.sh speak yael "Tell me what you know about the Void." --state dearFriend
+./bin/api speak yael "Tell me what you know about the Void." --state dearFriend
 ```
 
 ### 12.3 With a different model
 
 ```bash
-./api.sh speak brynn "What can you tell me about Froberger?" --model claude-haiku-4-5-20251001
-./api.sh speak yael "I need your help." --model claude-sonnet-4-6
+./bin/api speak brynn "What can you tell me about Froberger?" --model claude-haiku-4-5-20251001
+./bin/api speak yael "I need your help." --model claude-sonnet-4-6
 ```
 
 ### 12.4 Capture reply
 
 ```bash
-./api.sh speak yael "What is happening in this city?" --state friendly \
+./bin/api speak yael "What is happening in this city?" --state friendly \
   | tee /tmp/yael-reply.txt
 ```
 
@@ -1048,7 +1048,7 @@ the most important thing on that board.
 ## 13. Bulk Import: import
 
 ```
-./api.sh import <file.json>
+./bin/api import <file.json>
 ```
 
 Import format: a JSON object with a `nodes` array and `cycles` array (each cycle has `acts` with quests).
@@ -1056,21 +1056,21 @@ Import format: a JSON object with a `nodes` array and `cycles` array (each cycle
 ### 13.1 Import from file
 
 ```bash
-./api.sh import import_cdg.json
-./api.sh import import_vie.json
-./api.sh import import_rkv.json
+./bin/api import import_cdg.json
+./bin/api import import_vie.json
+./bin/api import import_rkv.json
 ```
 
 ### 13.2 Import from stdin (pipe)
 
 ```bash
-cat import_cdg.json | ./api.sh import
+cat import_cdg.json | ./bin/api import
 ```
 
 ### 13.3 Import with output capture
 
 ```bash
-./api.sh import import_cdg.json --out /tmp/cdg-import-result.json
+./bin/api import import_cdg.json --out /tmp/cdg-import-result.json
 cat /tmp/cdg-import-result.json | jq '{created: .nodesCreated, skipped: .nodesSkipped}'
 ```
 
@@ -1118,19 +1118,19 @@ cat /tmp/cdg-import-result.json | jq '{created: .nodesCreated, skipped: .nodesSk
 ### 14.1 `ai` subcommand
 
 ```bash
-./api.sh ai "how do I link two nodes?"
-./api.sh ai "what monsters appear in dungeon terrain?"
-./api.sh ai "how do I add a quest that requires two items to complete?"
-./api.sh ai "what is the difference between activateNode and waypointNode?"
-./api.sh ai "how do I create a junction between KRN and HKG?"
+./bin/api ai "how do I link two nodes?"
+./bin/api ai "what monsters appear in dungeon terrain?"
+./bin/api ai "how do I add a quest that requires two items to complete?"
+./bin/api ai "what is the difference between activateNode and waypointNode?"
+./bin/api ai "how do I create a junction between KRN and HKG?"
 ```
 
 ### 14.2 `--ai` shorthand (no subcommand needed)
 
 ```bash
-./api.sh --ai "how do I wire two nodes bidirectionally?"
-./api.sh --ai "show me how to bulk-export and then re-import node_map"
-./api.sh --ai "what curl command fills a gap between two nodes?"
+./bin/api --ai "how do I wire two nodes bidirectionally?"
+./bin/api --ai "show me how to bulk-export and then re-import node_map"
+./bin/api --ai "what curl command fills a gap between two nodes?"
 ```
 
 The AI assistant is Claude Haiku, tuned with the full WBAPI cheat sheet. It replies in 1–3 lines leading with a concrete `wb` command.
@@ -1145,18 +1145,18 @@ For scripting complex write sequences where you want the nonce separately:
 
 ```bash
 # Print a nonce (then use it yourself)
-./api.sh nonce quest sq_new_01
+./bin/api nonce quest sq_new_01
 # → prints: ab12cd34ef56gh78
 
 # Capture and use
-NONCE=$(./api.sh nonce node NEW_NODE)
+NONCE=$(./bin/api nonce node NEW_NODE)
 curl -s -XPOST http://localhost:1367/api/node \
   -H 'Content-Type: application/json' \
   -H "X-Nonce: $NONCE" \
   -d '{"code":"NEW_NODE","name":"city","label":"New City Node","act":1}'
 ```
 
-**Note:** In normal use, `./api.sh post` and `./api.sh del` acquire nonces automatically. Only use `nonce` directly when scripting raw curl calls or when you need the token for your own orchestration.
+**Note:** In normal use, `./bin/api post` and `./bin/api del` acquire nonces automatically. Only use `nonce` directly when scripting raw curl calls or when you need the token for your own orchestration.
 
 **Nonce expiry:** 5 minutes. If the write fails with 401, get a new nonce and retry.
 
@@ -1164,43 +1164,43 @@ curl -s -XPOST http://localhost:1367/api/node \
 
 ## 16. Global Flags
 
-All these flags work on any `./api.sh` command:
+All these flags work on any `./bin/api` command:
 
 ### `--server <url>` — Override API base URL
 
 ```bash
-./api.sh ping --server http://localhost:1367        # default
-./api.sh ping --server http://192.168.1.10:1367     # remote dev machine
-./api.sh get node LHR --server http://localhost:9999
+./bin/api ping --server http://localhost:1367        # default
+./bin/api ping --server http://192.168.1.10:1367     # remote dev machine
+./bin/api get node LHR --server http://localhost:9999
 ```
 
 Also settable via environment:
 ```bash
 export WBAPI_URL=http://localhost:1367
-./api.sh ping   # picks up from env
+./bin/api ping   # picks up from env
 ```
 
 ### `--out <file>` — Write output to file
 
 ```bash
-./api.sh get node LHR --out /tmp/lhr.json
-./api.sh list quest --out /tmp/quests.json
-./api.sh export quest_db --out backup/quests-$(date +%Y%m%d).json
+./bin/api get node LHR --out /tmp/lhr.json
+./bin/api list quest --out /tmp/quests.json
+./bin/api export quest_db --out backup/quests-$(date +%Y%m%d).json
 ```
 
 ### `--raw` — Compact JSON (no pretty-print)
 
 ```bash
-./api.sh get node LHR --raw             # single-line JSON
-./api.sh list quest --raw | wc -c       # byte size
-./api.sh list node --raw | python3 -c "import json,sys; d=json.load(sys.stdin); print(len(d))"
+./bin/api get node LHR --raw             # single-line JSON
+./bin/api list quest --raw | wc -c       # byte size
+./bin/api list node --raw | python3 -c "import json,sys; d=json.load(sys.stdin); print(len(d))"
 ```
 
 ### `--retry <n>` — Max retries on 5xx or connection error
 
 ```bash
-./api.sh put quest mq_1 passText="Updated." --retry 5
-./api.sh import big-import.json --retry 2
+./bin/api put quest mq_1 passText="Updated." --retry 5
+./bin/api import big-import.json --retry 2
 ```
 
 Default: 3. Exponential backoff: 1s → 2s → 4s → 8s (capped).
@@ -1208,8 +1208,8 @@ Default: 3. Exponential backoff: 1s → 2s → 4s → 8s (capped).
 ### `--timeout <ms>` — Per-request timeout in milliseconds
 
 ```bash
-./api.sh export monster_pool --timeout 30000   # 30s for large export
-./api.sh import import_vie.json --timeout 15000
+./bin/api export monster_pool --timeout 30000   # 30s for large export
+./bin/api import import_vie.json --timeout 15000
 ```
 
 Default: 10000 (10s).
@@ -1218,7 +1218,7 @@ Default: 10000 (10s).
 
 ## 17. Coordinate & Graph Endpoints (curl-direct)
 
-These endpoints exist on the server but are not wrapped by `./api.sh` subcommands. Use `curl` directly. All are part of the same `localhost:1367` server.
+These endpoints exist on the server but are not wrapped by `./bin/api` subcommands. Use `curl` directly. All are part of the same `localhost:1367` server.
 
 ### 17.1 Read all coordinates
 
@@ -1377,9 +1377,9 @@ curl -s -XPOST http://localhost:1367/api/layout/apply \
 ### 17.13 Save to disk — the deliberate dated backup
 
 ```bash
-./api.sh save            # POST /api/save — dated backup beside the game file, then overwrite + reload
-./api.sh snapshots       # list those dated backups (they are gitignored — nothing else will tell you)
-./api.sh snapshots --sweep [--force]
+./bin/api save            # POST /api/save — dated backup beside the game file, then overwrite + reload
+./bin/api snapshots       # list those dated backups (they are gitignored — nothing else will tell you)
+./bin/api snapshots --sweep [--force]
 ```
 
 Every write already persists on its own (temp beside `play.html` + atomic rename, §DX-02k) — you do **not** need `save` after a `put`/`post`/`del`. What `save` gives you is the *dated snapshot* the `milepoints/patches` chain is built from.
@@ -1412,7 +1412,7 @@ curl -s 'http://localhost:1367/api/help/curl?format=text'
 
 ```
 ═══════════════════════════════════════════════════════════════════
-  ./api.sh COMMANDS
+  ./bin/api COMMANDS
 ═══════════════════════════════════════════════════════════════════
 
 ping                                 Server health + data counts
@@ -1454,7 +1454,7 @@ world_db            All WORLD_DB terrain entries
 all                 Full combined export
 
 ═══════════════════════════════════════════════════════════════════
-  LIST FILTERS (use curl for these — not ./api.sh flags)
+  LIST FILTERS (use curl for these — not ./bin/api flags)
 ═══════════════════════════════════════════════════════════════════
 
 /api/list/node?act=1
@@ -1507,9 +1507,9 @@ POST /api/graph/fill-gap {..., dryRun:false}   Execute junction chain
 GET  /api/layout/solve?root=LHR&step=8        Propose layout
 POST /api/layout/apply {"coords":{...}}        Apply layout
 
-POST /api/save                                 Dated snapshot + copy (writes already persist)  → ./api.sh save
-GET  /api/snapshots                            List the dated snapshots + total size          → ./api.sh snapshots
-DELETE /api/snapshots[?force=true]             Sweep them (nonce; archived-only unless force)  → ./api.sh snapshots --sweep
+POST /api/save                                 Dated snapshot + copy (writes already persist)  → ./bin/api save
+GET  /api/snapshots                            List the dated snapshots + total size          → ./bin/api snapshots
+DELETE /api/snapshots[?force=true]             Sweep them (nonce; archived-only unless force)  → ./bin/api snapshots --sweep
 POST /api/reload                               Re-read from disk
 GET  /api/next-error?skip=N&severity=error     First failing item
 GET  /api/help/{topic}                         Server man pages
@@ -1565,10 +1565,10 @@ TERRAINS (sample)
 
 ```bash
 # Is the server up?
-./api.sh ping
+./bin/api ping
 
 # Quick node look
-./api.sh get node LHR | jq .entity
+./bin/api get node LHR | jq .entity
 
 # All quests at a node
 curl -s 'http://localhost:1367/api/list/quest?node=LHR' | jq '[.[] | {id,title}]'
@@ -1600,25 +1600,25 @@ NODES=($(curl -s 'http://localhost:1367/api/list/ids/node' | jq -r '.ids[]'))
 echo "Total: ${#NODES[@]}"
 
 # Audit map and show only errors
-./api.sh audit --map --text | grep -E "ERROR|WARN"
+./bin/api audit --map --text | grep -E "ERROR|WARN"
 
 # Update a quest passText from a heredoc
-./api.sh put quest mq_1 passText="$(cat <<'EOF'
+./bin/api put quest mq_1 passText="$(cat <<'EOF'
 Muffat takes the map and unfolds it on the dock counter. She does
 not ask how you came by it. She asks if you have time.
 EOF
 )"
 
 # Back up then edit
-./api.sh export node_map --out /tmp/backup-nodes.json && \
-  ./api.sh put node LHR label="City Streets — Birka"
+./bin/api export node_map --out /tmp/backup-nodes.json && \
+  ./bin/api put node LHR label="City Streets — Birka"
 
 # Full workflow: create node → add quest → verify → save
-./api.sh post node code=TEST name=city label="Test Node" act=1
-./api.sh post quest id=quest_test_01 type=side title="Test Quest" \
+./bin/api post node code=TEST name=city label="Test Node" act=1
+./bin/api post quest id=quest_test_01 type=side title="Test Quest" \
   activateNode=TEST desc="test" passText="pass" failText="fail"
-./api.sh location TEST
-./api.sh save                      # optional: a dated backup (the writes above already persisted)
+./bin/api location TEST
+./bin/api save                      # optional: a dated backup (the writes above already persisted)
 ```
 
 ---
@@ -1627,11 +1627,11 @@ EOF
 
 ```bash
 # 1. Check the area
-./api.sh get node KRN
+./bin/api get node KRN
 curl -s 'http://localhost:1367/api/coords/near/KRN?radius=12' | jq '.nearby[:5]'
 
 # 2. Create the node
-./api.sh post node \
+./bin/api post node \
   code=VAULT \
   name=crypt \
   label="The Sealed Vault" \
@@ -1639,7 +1639,7 @@ curl -s 'http://localhost:1367/api/coords/near/KRN?radius=12' | jq '.nearby[:5]'
   N=KRN
 
 # 3. Wire the reverse link
-./api.sh put node KRN S=VAULT
+./bin/api put node KRN S=VAULT
 
 # Or do both ends at once via graph/link:
 curl -s -XPOST http://localhost:1367/api/graph/link \
@@ -1655,7 +1655,7 @@ curl -s -XPUT http://localhost:1367/api/coords/VAULT \
 curl -s 'http://localhost:1367/api/graph/validate/VAULT?maxGap=4' | jq
 
 # 6. Add a quest
-./api.sh post quest \
+./bin/api post quest \
   id=quest_vault_01 \
   type=combat \
   title="The Vault Guardian" \
@@ -1667,13 +1667,13 @@ curl -s 'http://localhost:1367/api/graph/validate/VAULT?maxGap=4' | jq
   waypointNode=VAULT
 
 # 7. Composite view
-./api.sh location VAULT
+./bin/api location VAULT
 
 # 8. Audit
-./api.sh audit --map
+./bin/api audit --map
 
 # 9. Dated backup (the writes above already reached disk)
-./api.sh save
+./bin/api save
 ```
 
 ---

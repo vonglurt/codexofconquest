@@ -145,7 +145,7 @@ test, and host** that one file:
   document, every doc entry traces back to a line in the HTML.
 - **The WBAPI server** (`wbapi-server.js`) is an optional local REST API that
   reads the HTML and writes edits back in place, so content can be authored via
-  `edit.html` / `./api.sh` instead of editing 37k lines by hand.
+  `edit.html` / `./bin/api` instead of editing 37k lines by hand.
 - **Tests** (`src/tests/`, `src/scripts/`) guard the world's invariants.
 
 If you only want to play, you never need any of that — just open the HTML.
@@ -192,9 +192,9 @@ npm install
 #   (equivalently: npm start  →  node wbapi-server.js)
 
 # Talk to it from the CLI
-./api.sh ping
-./api.sh help
-./api.sh list node
+./bin/api ping
+./bin/api help
+./bin/api list node
 
 # Author visually: open edit.html in a browser while the server runs
 ```

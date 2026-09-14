@@ -1858,12 +1858,12 @@ ${C.bold}./bin/api${C.reset}  —  Codex of Conquest World Builder CLI  ${C.dim}
   Start the server first:  ${C.dim}./bin/wbapi start${C.reset}
 
 ${C.bold}═══════════════════════════════════════════════════════════════════
-  PREFERRED TOOL — USE api.sh, NOT curl
+  PREFERRED TOOL — USE ./bin/api, NOT curl
 ═══════════════════════════════════════════════════════════════════${C.reset}
 
   ${C.yellow}Always use ./bin/api for day-to-day work. Raw curl is a fallback only.${C.reset}
 
-  api.sh handles automatically:
+  ./bin/api handles automatically:
     • Nonces (one-time write tokens) — acquired and attached for you
     • Retry with exponential backoff on 5xx or connection errors
     • Pipe-safe JSON — errors land on stdout so | jq and | python3 work
@@ -1871,7 +1871,7 @@ ${C.bold}═══════════════════════�
     • Auto-reload notification — the server watches play.html;
       you do not need POST /api/reload after an external edit
 
-  If a feature is missing from api.sh, request an API refactor — do not
+  If a feature is missing from ./bin/api, request an API refactor — do not
   fall back to curl. Describe the operation and it will be added as a
   named command. See API-README.md §Requesting new features.
 

@@ -4,8 +4,8 @@
 
 ## Directive
 
-> **Always use `./api.sh`. Never use raw curl.**
-> If a feature is missing from `./api.sh`, request an API refactor — do not reach for curl.
+> **Always use `./bin/api`. Never use raw curl.**
+> If a feature is missing from `./bin/api`, request an API refactor — do not reach for curl.
 > Verify, validate, and maintain the node network after every change.
 
 ---
@@ -17,7 +17,7 @@
 ./bin/wbapi status                 # is it answering, and on which port
 ./bin/wbapi restart                # after server-code changes
 src/bin/wbapi-toggle.sh tracker    # §MESH tracker role on :1368 (rendezvous only)
-./api.sh ping                      # verify it's up
+./bin/api ping                      # verify it's up
 ```
 
 ---
@@ -25,10 +25,10 @@ src/bin/wbapi-toggle.sh tracker    # §MESH tracker role on :1368 (rendezvous on
 ## Network health — run every session
 
 ```bash
-./api.sh worldmap --regions     # visual overview: which zones have cities
-./api.sh broken                 # broken edges (target: 0)
-./api.sh reachability           # % reachable from hub (target: 100%)
-./api.sh worldmap --city LHR   # inspect a specific node's connections
+./bin/api worldmap --regions     # visual overview: which zones have cities
+./bin/api broken                 # broken edges (target: 0)
+./bin/api reachability           # % reachable from hub (target: 100%)
+./bin/api worldmap --city LHR   # inspect a specific node's connections
 ```
 
 ---
@@ -37,25 +37,25 @@ src/bin/wbapi-toggle.sh tracker    # §MESH tracker role on :1368 (rendezvous on
 
 ```bash
 # Find
-./api.sh list node --q "birka"
-./api.sh list quest --node LHR --type side
-./api.sh list monster --tier hard
-./api.sh list npc --occupation "merchant"
+./bin/api list node --q "birka"
+./bin/api list quest --node LHR --type side
+./bin/api list monster --tier hard
+./bin/api list npc --occupation "merchant"
 
 # Inspect
-./api.sh get node LHR           # full node detail
-./api.sh location LHR           # composite: node + quests + NPCs + monsters
-./api.sh get quest shk6_act1
-./api.sh chain quest_anath      # upstream/downstream quest chain
+./bin/api get node LHR           # full node detail
+./bin/api location LHR           # composite: node + quests + NPCs + monsters
+./bin/api get quest shk6_act1
+./bin/api chain quest_anath      # upstream/downstream quest chain
 
 # Edit
-./api.sh put node LHR label="New Label" N=BMA S=KRN
-./api.sh put quest shk6_act1 desc="..." passText="..."
-./api.sh put npc egil_thorvaldsen occupation="wool factor"
+./bin/api put node LHR label="New Label" N=BMA S=KRN
+./bin/api put quest shk6_act1 desc="..." passText="..."
+./bin/api put npc egil_thorvaldsen occupation="wool factor"
 
 # Create / Delete
-./api.sh post node code=NEW name=city label="New City" act=1
-./api.sh del node OLD_CODE
+./bin/api post node code=NEW name=city label="New City" act=1
+./bin/api del node OLD_CODE
 ```
 
 ---
@@ -63,13 +63,13 @@ src/bin/wbapi-toggle.sh tracker    # §MESH tracker role on :1368 (rendezvous on
 ## Map commands
 
 ```bash
-./api.sh worldmap                          # world map (76 cities)
-./api.sh worldmap --regions                # 6×6 region grid
-./api.sh worldmap --region B2             # zoom into region
-./api.sh worldmap --city LHR             # city map + connection status
-./api.sh worldmap --search "forest"      # search by label/terrain/battle
-./api.sh worldmap --monster skeleton     # monster-hunt map
-./api.sh worldmap --route LHR --to CON  # BFS navigation A→B
+./bin/api worldmap                          # world map (76 cities)
+./bin/api worldmap --regions                # 6×6 region grid
+./bin/api worldmap --region B2             # zoom into region
+./bin/api worldmap --city LHR             # city map + connection status
+./bin/api worldmap --search "forest"      # search by label/terrain/battle
+./bin/api worldmap --monster skeleton     # monster-hunt map
+./bin/api worldmap --route LHR --to CON  # BFS navigation A→B
 ```
 
 ---
@@ -77,17 +77,17 @@ src/bin/wbapi-toggle.sh tracker    # §MESH tracker role on :1368 (rendezvous on
 ## Coordinate wiring
 
 ```bash
-./api.sh geo-seed --execute              # anchor cities to lat/lon
+./bin/api geo-seed --execute              # anchor cities to lat/lon
 node layout-solve.js --apply             # propagate all nodes
 
-./api.sh connect WOR E SAL              # wire two nodes
-./api.sh highway LHR CON --execute      # full junction highway
-./api.sh junction LHR S --execute       # single junction node
-./api.sh fill-gap WOR E SAL --execute   # junction chain for gap > 4
-./api.sh move LHR 12 18 --swap          # move/swap coordinates
+./bin/api connect WOR E SAL              # wire two nodes
+./bin/api highway LHR CON --execute      # full junction highway
+./bin/api junction LHR S --execute       # single junction node
+./bin/api fill-gap WOR E SAL --execute   # junction chain for gap > 4
+./bin/api move LHR 12 18 --swap          # move/swap coordinates
 
-./api.sh fix-diagonal LHR S --execute   # fix one broken edge
-./api.sh fix-all-broken --execute       # batch-fix all broken edges
+./bin/api fix-diagonal LHR S --execute   # fix one broken edge
+./bin/api fix-all-broken --execute       # batch-fix all broken edges
 ```
 
 ---
@@ -95,10 +95,10 @@ node layout-solve.js --apply             # propagate all nodes
 ## Export / Import / Audit
 
 ```bash
-./api.sh export node_map                 # export as JSON
-./api.sh export all --format js
-./api.sh import book.json               # bulk import
-./api.sh audit --map                    # full integrity scan
+./bin/api export node_map                 # export as JSON
+./bin/api export all --format js
+./bin/api import book.json               # bulk import
+./bin/api audit --map                    # full integrity scan
 ```
 
 ---
@@ -269,20 +269,20 @@ connection-center UI + ACL/blocklist design: `docs/lab-reports/lab-report-mesh02
 
 ```bash
 # CLI wrappers (§MESH-01-FU 10) — the preferred read surface; all read-only
-./api.sh mesh status                     # identity · world hash · ACL/rate · peers · players  [--json]
-./api.sh mesh peers                      # gossip peer table (live/dead, last seen, last error) + remote players
-./api.sh mesh tracker [url]              # server browser: live servers on the configured tracker(s), or an explicit one
+./bin/api mesh status                     # identity · world hash · ACL/rate · peers · players  [--json]
+./bin/api mesh peers                      # gossip peer table (live/dead, last seen, last error) + remote players
+./bin/api mesh tracker [url]              # server browser: live servers on the configured tracker(s), or an explicit one
 #   → servers on a different worldHash are flagged "≠ different world"; --json for tooling
 
 # CLI wrappers (§MESH-02g) — connection-center parity; acl/connect WRITE to the server
-./api.sh mesh acl                        # show mode · shareBlocklist · six allow/block lists  [--json]
-./api.sh mesh acl mode=allowlist shareBlocklist=true blockIps=1.2.3.4,5.6.7.8
+./bin/api mesh acl                        # show mode · shareBlocklist · six allow/block lists  [--json]
+./bin/api mesh acl mode=allowlist shareBlocklist=true blockIps=1.2.3.4,5.6.7.8
 #   → validated merge-PUT (lists comma-split; k= empty clears a list; bad field/mode → 400)
-./api.sh mesh blocklist                  # what THIS server shares (403 until shareBlocklist=true)
-./api.sh mesh blocklist host:1367        # preview a PEER's shared blocklist — read-only (D2: merging
+./bin/api mesh blocklist                  # what THIS server shares (403 until shareBlocklist=true)
+./bin/api mesh blocklist host:1367        # preview a PEER's shared blocklist — read-only (D2: merging
 #                                          into your client blacklist is an explicit click in 🛡 Lists)
-./api.sh mesh connect lan-host:1367      # dial a gossip peer NOW (no restart; persists via peers cache)
-./api.sh mesh connect http://trk:1368    # add a tracker announce target NOW
+./bin/api mesh connect lan-host:1367      # dial a gossip peer NOW (no restart; persists via peers cache)
+./bin/api mesh connect http://trk:1368    # add a tracker announce target NOW
 
 # Start / wire up (see also "Start the server" above)
 ./bin/wbapi start                  # game server :1367 (loads .env — TRACKER_URL etc.)
@@ -304,7 +304,7 @@ curl http://localhost:1367/api/mesh/status
 curl -XPOST http://localhost:1367/api/mesh/gossip -d '{...meshPayload}'
 # → 200 (merged, reply payload) | 409 incompatible world | 403 ACL refused | 429 rate limited
 
-# ACL editor (§MESH-02a — the game's 🛡 Lists pane + ./api.sh mesh acl ride these)
+# ACL editor (§MESH-02a — the game's 🛡 Lists pane + ./bin/api mesh acl ride these)
 curl http://localhost:1367/api/mesh/acl
 # → { ok, file, exists, acl: {mode, shareBlocklist, block*/allow* ×6} }  (no file → safe defaults)
 curl -XPUT http://localhost:1367/api/mesh/acl -d '{"mode":"allowlist","blockIps":["1.2.3.4"]}'
@@ -346,7 +346,7 @@ npm run check:worlddiff                            # selftest (synthetic worlds;
 Applies to gossip ingress (403), dial-out, tracker announce/sync merges, ledger sync/ingest, and the
 trade relay. **Start from the commented template:** `cp mesh-acl.json.example mesh-acl.json` — it is
 valid JSON as-is (`"//"`-keys are ignored comments) and documents every field — or skip the file
-entirely and edit through `./api.sh mesh acl` / the game's map tab → 🛡 Lists pane (both ride
+entirely and edit through `./bin/api mesh acl` / the game's map tab → 🛡 Lists pane (both ride
 `GET/PUT /api/mesh/acl`; the PUT merge-write creates the file on first edit and preserves comment
 keys). `shareBlocklist:true` additionally publishes the three block* lists at `/api/mesh/blocklist`
 (D3 opt-in; D2: peers only ever *preview* it — importing is an explicit merge click, never automatic).
@@ -378,7 +378,7 @@ default 120); a healthy peer spends ~0.5 token/s, so the defaults leave ~60×
 headroom. Current config is surfaced in `GET /api/mesh/status → rate`, and
 the traffic ring logs one `rate` row per flood.
 
-**Test gate:** `npm run test:mud` — 270 checks incl. the [L] partition-heal harness, [P] rate limiting, the `./api.sh mesh` CLI wrappers, [Q] ACL template / tracker cache+bootstrap / chat backlog (§MESH-01-FU 11–13), and [R] the §MESH-02a ACL editor endpoints + blocklist share flip; client side: `src/tests/integration/mesh-connections-ui.test.js` (hermetic connection-center UI).
+**Test gate:** `npm run test:mud` — 270 checks incl. the [L] partition-heal harness, [P] rate limiting, the `./bin/api mesh` CLI wrappers, [Q] ACL template / tracker cache+bootstrap / chat backlog (§MESH-01-FU 11–13), and [R] the §MESH-02a ACL editor endpoints + blocklist share flip; client side: `src/tests/integration/mesh-connections-ui.test.js` (hermetic connection-center UI).
 
 ---
 
@@ -388,13 +388,13 @@ Exits are **derived from cell adjacency**, not stored. Use cell/grid endpoints
 to inspect the grid without scanning NODE_MAP manually.
 
 ```bash
-./api.sh cell 5 16               # node at (r,c): code, terrain, exits
-./api.sh cell 5 16 neighbors     # N/E/S/W neighbor detail
+./bin/api cell 5 16               # node at (r,c): code, terrain, exits
+./bin/api cell 5 16 neighbors     # N/E/S/W neighbor detail
 
-./api.sh grid heatmap            # all cells with adjacency heat (0–4)
-./api.sh grid reachability       # reachable vs unreachable from LHR
-./api.sh grid reachability --hub CY   # use a different hub
-./api.sh grid region --r1=0 --c1=0 --r2=10 --c2=20  # bounding box
+./bin/api grid heatmap            # all cells with adjacency heat (0–4)
+./bin/api grid reachability       # reachable vs unreachable from LHR
+./bin/api grid reachability --hub CY   # use a different hub
+./bin/api grid region --r1=0 --c1=0 --r2=10 --c2=20  # bounding box
 ```
 
 **Node create/update rules (§CELL-08 enforcement):**
@@ -409,14 +409,14 @@ to inspect the grid without scanning NODE_MAP manually.
 - `GET /api/roads` — the full net for the overlay: parsed `ROAD_RUNS` (`runs` RLE + `cells`/`junctions` census) merged with the pins file (`pins`, `links`, `locked`)
 - `PUT /api/roads/pins` — body `{pins:[{r,c}], links:[["r,c","r,c"]]}`; replaces the authored net (`locked` preserved). Endpoints must be a pin cell or a settlement cell; pins are rejected on sea and on settlement cells. Saving does **not** touch the game file.
 - `PUT /api/roads` — **Reweave Net**: runs `src/scripts/build-roads.js --apply` (patches the `◆ §NAV-01b` ROAD_RUNS block in-place), then `src/scripts/check-roads.js` (R1–R4). A red check **rolls the game file back** — the on-disk game always passes `check:roads`. One reweave at a time (409 while busy).
-- CLI: `./api.sh roads [pins] [--json]` · `./api.sh reweave`
+- CLI: `./bin/api roads [pins] [--json]` · `./bin/api reweave`
 
 ---
 
-## Need a feature curl can do but api.sh can't?
+## Need a feature curl can do but `./bin/api` can't?
 
 Describe the operation and request an API refactor. It will be added as a named
-`./api.sh` command. Do not use raw curl as a workaround — it bypasses nonces,
+`./bin/api` command. Do not use raw curl as a workaround — it bypasses nonces,
 retry logic, and pipe-safe error handling.
 
 Full reference: **API-README.md**
@@ -431,29 +431,29 @@ The canonical workflow for adding any quest chain via the API. Steps are invaria
 
 ```bash
 # Step 0: confirm node exists and terrain is correct
-./api.sh location {startNode}
+./bin/api location {startNode}
 
 # Step 1: register new flags in _S_DEFAULTS (manual edit in play.html)
 
 # Step 2: inspect quest schema
-./api.sh get quest --schema
+./bin/api get quest --schema
 
 # Step 3: create one quest
-./api.sh post quest id=quest_{arc}_{nn} type=side npc={npc_key} activateNode={code} title="..."
+./bin/api post quest id=quest_{arc}_{nn} type=side npc={npc_key} activateNode={code} title="..."
 
 # Step 4: verify quest readable
-./api.sh get quest quest_{arc}_{nn}
+./bin/api get quest quest_{arc}_{nn}
 
 # Step 5: patch text fields
-./api.sh put quest quest_{arc}_{nn} passText="..." failText="..."
+./bin/api put quest quest_{arc}_{nn} passText="..." failText="..."
 
 # Step 6: repeat steps 3–5 for each quest in chain
 
 # Step 7: verify dependency graph
-./api.sh chain quest_{arc}_{nn}
+./bin/api chain quest_{arc}_{nn}
 
 # Step 8: run audit — must be clean before save
-./api.sh audit
+./bin/api audit
 
 # Step 9: commit to timestamped HTML
 ```
@@ -492,12 +492,12 @@ The canonical workflow for adding any quest chain via the API. Steps are invaria
 
 ### C. Pre-flight Checklist
 
-Before `./api.sh save` (`POST /api/save` — the dated backup; the writes themselves already persisted):
+Before `./bin/api save` (`POST /api/save` — the dated backup; the writes themselves already persisted):
 
 1. All `activateCond` flags exist in `_S_DEFAULTS`
 2. All `checkPassFlag` values are unique across QUEST_DB
 3. All `activateNode` and `waypointNode` codes exist in NODE_MAP
-4. Chain is connected: `./api.sh chain {firstQuestId}` shows all expected quests downstream
+4. Chain is connected: `./bin/api chain {firstQuestId}` shows all expected quests downstream
 
 ---
 
@@ -530,10 +530,10 @@ The 12 operand kinds for quest `bits[]` arrays. Used when creating new quests vi
 
 **Fix workflow when ready:**
 ```bash
-./api.sh location LHR     # shows NPCs at that node
-./api.sh list npc --node LHR
-./api.sh list quest --node LHR --raw | jq '.[].id' | xargs -I{} ./api.sh put quest {} npc=yael
-./api.sh audit --raw | jq '.errors | length'
+./bin/api location LHR     # shows NPCs at that node
+./bin/api list npc --node LHR
+./bin/api list quest --node LHR --raw | jq '.[].id' | xargs -I{} ./bin/api put quest {} npc=yael
+./bin/api audit --raw | jq '.errors | length'
 ```
 
 **Finding 2:** 13 NPCs have no quests:

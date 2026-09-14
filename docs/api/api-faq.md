@@ -1119,7 +1119,7 @@ These endpoints were added to give fast breakdowns without loading every entity.
 ### 12.1 Master count (all collections)
 
 ```bash
-./api.sh count
+./bin/api count
 # or:
 curl -s http://localhost:1367/api/count | jq
 ```
@@ -1137,7 +1137,7 @@ Returns:
 ### 12.2 Node breakdown
 
 ```bash
-./api.sh count nodes
+./bin/api count nodes
 # or:
 curl -s http://localhost:1367/api/count/nodes | jq
 ```
@@ -1152,7 +1152,7 @@ curl -s http://localhost:1367/api/count/coords | jq '{total, nodesWithoutCoords:
 ### 12.3 Quest breakdown
 
 ```bash
-./api.sh count quests
+./bin/api count quests
 ```
 
 Returns: `total`, `byType`, `topArcs` (top 10 arcs by quest count), `topNodes` (top 10 activateNodes by quest count).
@@ -1165,7 +1165,7 @@ curl -s http://localhost:1367/api/count/quests | jq '.topArcs[0]'
 ### 12.4 Monster breakdown
 
 ```bash
-./api.sh count monsters
+./bin/api count monsters
 ```
 
 Returns: `total`, `byTier`, `withDrops`, `withoutDrops`, `withTerrain`, `withoutTerrain`.
@@ -1178,7 +1178,7 @@ curl -s http://localhost:1367/api/count/monsters | jq '{withDrops, withoutDrops}
 ### 12.5 NPC breakdown
 
 ```bash
-./api.sh count npcs
+./bin/api count npcs
 ```
 
 Returns: `total`, `byNode` (count per node), `questCounts` (how many quests reference each NPC key).
@@ -1186,7 +1186,7 @@ Returns: `total`, `byNode` (count per node), `questCounts` (how many quests refe
 ### 12.6 Terrain breakdown
 
 ```bash
-./api.sh count terrains
+./bin/api count terrains
 ```
 
 Returns: `total`, `withMonsters`, `emptyTerrains`, `usedByNodes`, `unusedByNodes`.
@@ -1199,7 +1199,7 @@ curl -s http://localhost:1367/api/count/terrains | jq '.emptyTerrains'
 ### 12.7 Coord coverage
 
 ```bash
-./api.sh count coords
+./bin/api count coords
 ```
 
 Returns: `total`, `inNodeMap`, `orphanCoords`, `nodesWithoutCoordsList`.
@@ -1213,38 +1213,38 @@ curl -s http://localhost:1367/api/count/coords | jq '.nodesWithoutCoordsList'
 
 ## Part 13 — Enhanced List Filters
 
-All filters apply to `GET /api/list/{type}`. Use `./api.sh list <type> --flag value` in the CLI or `curl` with query params.
+All filters apply to `GET /api/list/{type}`. Use `./bin/api list <type> --flag value` in the CLI or `curl` with query params.
 
 ### 13.1 New node filters
 
 ```bash
 # Nodes with no coordinates yet
-./api.sh list node --no-coords
+./bin/api list node --no-coords
 curl -s 'http://localhost:1367/api/list/node?no_coords=true' | jq '[.[] | .id]'
 
 # Nodes with at least one quest
-./api.sh list node --has-quests true
+./bin/api list node --has-quests true
 curl -s 'http://localhost:1367/api/list/node?has_quests=true' | jq '[.[] | {id, label}]'
 
 # Nodes with NO quests (good for finding dead nodes)
 curl -s 'http://localhost:1367/api/list/node?has_quests=false&junction=false' | jq '[.[] | .id]'
 
 # Only junction nodes (J* codes)
-./api.sh list node --junction true
+./bin/api list node --junction true
 curl -s 'http://localhost:1367/api/list/node?junction=true' | jq 'length'
 
 # Only named nodes (not junctions)
 curl -s 'http://localhost:1367/api/list/node?junction=false' | jq 'length'
 
 # Text search across label and ID
-./api.sh list node --q birka
+./bin/api list node --q birka
 curl -s 'http://localhost:1367/api/list/node?q=crypt' | jq '[.[] | {id, label}]'
 
 # Combine: act 1 forest nodes with quests
 curl -s 'http://localhost:1367/api/list/node?act=1&terrain=forest&has_quests=true' | jq '[.[] | .id]'
 
 # Return IDs only (compact)
-./api.sh list node --no-coords --ids
+./bin/api list node --no-coords --ids
 curl -s 'http://localhost:1367/api/list/node?no_coords=true&ids=true' | jq '.ids'
 ```
 
@@ -1252,27 +1252,27 @@ curl -s 'http://localhost:1367/api/list/node?no_coords=true&ids=true' | jq '.ids
 
 ```bash
 # Quests assigned to a specific NPC
-./api.sh list quest --npc yael
+./bin/api list quest --npc yael
 curl -s 'http://localhost:1367/api/list/quest?npc=yael' | jq '[.[] | {id, title}]'
 
 # Quests that reference a monster (e.g. goblin in desc/battle)
-./api.sh list quest --monster goblin
+./bin/api list quest --monster goblin
 curl -s 'http://localhost:1367/api/list/quest?monster=goblin' | jq '[.[] | {id, title}]'
 
 # Quests with an NPC assigned
-./api.sh list quest --has-npc true
+./bin/api list quest --has-npc true
 curl -s 'http://localhost:1367/api/list/quest?has_npc=true' | jq 'length'
 
 # Quests WITHOUT an NPC
-./api.sh list quest --has-npc false
+./bin/api list quest --has-npc false
 
 # Quests that have a completeFn (complex completion logic)
-./api.sh list quest --complete true
+./bin/api list quest --complete true
 curl -s 'http://localhost:1367/api/list/quest?complete=true' | jq '[.[] | .id]'
 
 # Filter by arc prefix
-./api.sh list quest --arc mq_
-./api.sh list quest --arc quest_wis
+./bin/api list quest --arc mq_
+./bin/api list quest --arc quest_wis
 curl -s 'http://localhost:1367/api/list/quest?arc=sq_' | jq '[.[] | .id]'
 
 # Combine: side quests at LHR with NPC
@@ -1283,11 +1283,11 @@ curl -s 'http://localhost:1367/api/list/quest?node=LHR&type=side&has_npc=true' |
 
 ```bash
 # Monsters with loot drops
-./api.sh list monster --has-drop true
+./bin/api list monster --has-drop true
 curl -s 'http://localhost:1367/api/list/monster?has_drop=true' | jq '[.[] | {key, name}]'
 
 # Monsters NOT in any terrain (orphan monsters)
-./api.sh list monster --no-terrain
+./bin/api list monster --no-terrain
 curl -s 'http://localhost:1367/api/list/monster?no_terrain=true' | jq '[.[] | .key]'
 
 # Combine: easy tier without drops
@@ -1297,11 +1297,11 @@ curl -s 'http://localhost:1367/api/list/monster?tier=easy&has_drop=false' | jq '
 ### 13.4 IDs-only for any type
 
 ```bash
-./api.sh list ids node
-./api.sh list ids quest
-./api.sh list ids monster
-./api.sh list ids npc
-./api.sh list ids terrain
+./bin/api list ids node
+./bin/api list ids quest
+./bin/api list ids monster
+./bin/api list ids npc
+./bin/api list ids terrain
 
 # Equivalent curl forms:
 curl -s 'http://localhost:1367/api/list/ids/node'    | jq '.ids | length'
@@ -1317,7 +1317,7 @@ curl -s 'http://localhost:1367/api/list/monster?tier=deadly&ids=true'    | jq '.
 ### 13.5 List index
 
 ```bash
-./api.sh list
+./bin/api list
 # or:
 curl -s http://localhost:1367/api/list | jq
 ```
@@ -1333,7 +1333,7 @@ Returns every available list route with counts, available filters, and example p
 ### 14.1 List all locations
 
 ```bash
-./api.sh location
+./bin/api location
 curl -s http://localhost:1367/api/location | jq 'length'
 ```
 
@@ -1343,18 +1343,18 @@ Each entry: `{ code, label, terrain, act, counts:{quests, npcs, monsters, linked
 
 ```bash
 # Act 1 locations only
-./api.sh location --act 1
+./bin/api location --act 1
 curl -s 'http://localhost:1367/api/location?act=1' | jq '[.[] | {code, label, counts}]'
 
 # Locations with quests in act 3
 curl -s 'http://localhost:1367/api/location?act=3&has_quests=true' | jq '[.[] | .code]'
 
 # Forest terrain locations
-./api.sh location --terrain forest
+./bin/api location --terrain forest
 curl -s 'http://localhost:1367/api/location?terrain=crypt' | jq '[.[] | {code, label}]'
 
 # Text search
-./api.sh location --q birka
+./bin/api location --q birka
 curl -s 'http://localhost:1367/api/location?q=tavern' | jq '[.[] | {code, label}]'
 
 # IDs only
