@@ -69,6 +69,7 @@
     "check:battlepools": "node scripts/check-battlepools.js --selftest && node scripts/check-battlepools.js",
     "check:condprices": "node scripts/check-condition-prices.js --selftest && node scripts/check-condition-prices.js",
     "check:laddermigration": "node scripts/check-ladder-migration.js",
+    "check:restart": "node scripts/check-restart.js --selftest && node scripts/check-restart.js",
     "check:worlddiff": "node scripts/world-diff.js --selftest",
     "test:mud": "node tests/mud-harness.mjs",
     "test:help": "node tests/help-behaviour.mjs --selftest && node tests/help-behaviour.mjs",

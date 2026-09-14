@@ -33,6 +33,7 @@ make wbapi && ./bin/api ping     # restart before EVERY write session
 ./bin/api put node CLJ battle='{"label":"…","key":"…","count":1}'
 ./bin/api list quest --q keyword
 ./run.sh stop                    # before any Playwright run
+./run.sh procs                   # how many servers are actually up — never `ps aux | grep -c`
 ```
 
 World data goes through `./bin/api`. **Never hand-edit `play.html`'s data sections. Never `curl`.** If the API cannot express it, **add the endpoint to `src/js/wbapi-server.js` first** — that is a real instruction, not a formality. `play.html` directly is for engine JS/CSS only, server stopped first.
@@ -49,6 +50,7 @@ The server holds the file text from when it started. A write after a hand-edit s
                                        # write that would delete one is refused; this accepts the loss (§DX-02ix)
 npm run check:walk --prefix src        # 27 gates in parallel, ~21s; the final ✓ N/N line is the verdict
 ./run.sh stop && npm test --prefix src # 1023 tests, server stopped
+npm run check:restart --prefix src     # the restart itself — outside check:walk, it binds :1367
 ```
 
 **Never pipe a test run** — a pipe returns the last stage's exit code. Redirect to a file and read the counts. `check:walk` exists only in `src/package.json`. Each gate carries a **120 s deadline**, so a stuck gate now fails by name instead of hanging (`--timeout` / `GATE_TIMEOUT_MS`, `--jobs` / `GATE_JOBS`; `check:walk:serial` runs the old one-at-a-time chain).

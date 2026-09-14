@@ -41,7 +41,12 @@ const GATES = [
 ];
 
 // A gate named here is deliberately outside the chain; the value is the reason it is.
-const GATE_EXEMPT = {};
+const GATE_EXEMPT = {
+  // The chain's invariant is that every gate is a pure, concurrent read over play.html.
+  // check:restart stops and starts the WBAPI server and binds :1367, so it can neither
+  // run beside the others nor be assumed hung when it is merely slow (§DX-02kq).
+  'check:restart': 'spawns a server and binds :1367 — run it alone: npm run check:restart --prefix src',
+};
 
 const gateScripts = (pkg) => Object.keys(pkg.scripts || {})
   .filter((k) => k.startsWith('check:') && k !== 'check:walk' && k !== 'check:walk:serial');

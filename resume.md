@@ -341,6 +341,13 @@ make wbapi          # or: ./run.sh server   — start the WBAPI server on :1367
   `src/js/wbapi-server.js` first**, restart, and then use it. Do not fall back to
   hand-editing and do not fall back to curl. "Request an API refactor" is the
   documented path and it is a real instruction, not a formality.
+- **The restart is asserted, not trusted (§DX-02kq).** `./run.sh restart` and
+  `./run.sh stop && ./run.sh server` are one code path, they drain the old process before
+  launching, and they exit **non-zero** when nothing answered — before this row `run.sh
+  server` printed `API server → :1` and exited 0 over a server that never came up.
+  `npm run check:restart --prefix src` asserts both, and `./run.sh procs` is the process
+  count: **never `ps aux | grep -c '[w]bapi-server'`**, which matches the measuring
+  command's own argv and reports 1 with zero servers running.
 - **Restart the server before any write session.** It holds the whole file text
   from when it started and patches data sections into that stale buffer — a write
   after a hand-edit to CSS/JS silently reverts the hand-edit. A full session of
