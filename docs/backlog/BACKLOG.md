@@ -36,9 +36,9 @@ Split by **subsystem**, not by track prefix (121 of the 175 sections were `§DX-
 |---|---|---:|---:|---|
 | **1** | [Playable Truth](BACKLOG-1-playable-truth.md) | 4 | 17 | Shipped content the player can never reach or complete: unreachable act-gated beats, inert counters, gate flags with no writer, quest deadlocks, endings out of range. |
 | **2** | [Engine & Systems](BACKLOG-2-engine-systems.md) | 13 | 105 | Rules and mechanics: combat math, XP and economy, progression and New Game+, save/state defaults, the render pipeline, the quest VM and its migration fronts. |
-| **3** | [Content & Narrative](BACKLOG-3-content-narrative.md) | 10 | 68 | Authored strings and the people who say them: NPC dialogue and relationships, favor scales, arc beats, epilogue and ending prose, lines with no lookup path. |
+| **3** | [Content & Narrative](BACKLOG-3-content-narrative.md) | 9 | 68 | Authored strings and the people who say them: NPC dialogue and relationships, favor scales, arc beats, epilogue and ending prose, lines with no lookup path. |
 | **4** | [World & Navigation](BACKLOG-4-world-navigation.md) | 8 | 22 | The map and moving on it: node registration and labels, terrain tables and encounter rates, GEO anchors and projection bounds, road nets, movement results. |
-| **5** | [Platform & Tooling](BACKLOG-5-platform-tooling.md) | 28 | 41 | Everything outside the game loop: the WBAPI server and its endpoints, the worldbuilder and editors, the HTML parse/export layer, multiplayer mesh, the NPC-speak service. |
+| **5** | [Platform & Tooling](BACKLOG-5-platform-tooling.md) | 29 | 41 | Everything outside the game loop: the WBAPI server and its endpoints, the worldbuilder and editors, the HTML parse/export layer, multiplayer mesh, the NPC-speak service. |
 | **6** | [Verification & Documentation](BACKLOG-6-verification-docs.md) | 68 | 28 | What proves the rest is true: CI gates and parity fences, Playwright and MUD suites, the anchor resolver, engine comments, maintained-doc rot, and the §DOC-02 lab-report verification program. |
 
 > **Phase order is a suggested work order, not a dependency chain.** Phase 1 is content the player cannot reach — the defects that make shipped work invisible — so it pays first. Phase 6 is what proves the other five stayed true. Any phase can be picked up on its own.
