@@ -19,6 +19,30 @@
 
 ---
 
+## Archived 2026-09-14 — §DX-02kx (three repair commands that could not fail, retired)
+
+### §DX-02kx — the `fix-*` repair family reports a clean world over 93 isolated cells (NEW 2026-09-14 during §DX-02gh, 🟡 one design call: migrate the family, or retire it) — [x] ✅ SHIPPED 2026-09-14 `0a57566`
+
+- [x] ✅ SHIPPED 2026-09-14 `0a57566` — **§DX-02kx — every number in the row reproduced, and the ground settled the call the row left open.**
+
+  **Re-derived at HEAD `0445d74`, before touching anything.** `./bin/api broken` → **93 isolated cell(s)** (LYR, KRN, LLA, SFT, …); `./bin/api fix-all-broken` → **`✓ 0 broken edges found`**; `./bin/api fix-diagonal LHR S` → **`✓ LHR.S → null: status=unset gap=undefined offset=undefined`** then **`✓ No auto-fix available`**; `./bin/api fix-bidirectional` → **`✓ 0 bidirectional violations found`**. Four commands, four green ticks, one of them over 93 defects.
+
+  **The input set is empty, and the census proves it rather than citing §CELL-01.** `N`/`E`/`S`/`W` occur **6 times each** in `play.html` and **not one is in `NODE_MAP`** — they are `__ROOM_DIRWORD`, `_MAP_OPP`, two `ARROWS` tables, an `OPP` table and a label map, all engine-local. `GET /api/graph/broken` (`wbapi-server.js`@6184) iterates `nm[code][N|E|S|W]` over exactly that empty set, which is why it answers `broken: 0` honestly. The other half of the family migrated: `broken` reads `GET /api/grid/heatmap` and counts cells with no occupied neighbour (`wb.js`@1062).
+
+  **The call: (b) retire, as the row recommended.** (a) migrate would mean re-deriving *"broken edge"* against the cell grid — which is what `broken` already is, and `reweave` (`PUT /api/roads`, `build-roads.js --apply` + `check:roads`) and `cluster-bridge` already repair. Three commands whose only remaining behaviour is to print `✓` are not worth a second repair path.
+
+  **A retired verb now says so, which is the half §WALK-3 left undone.** Deleting the handlers alone gives `✗ Unknown command "fix-all-broken"` — indistinguishable from a typo, and the reason §DX-02bf had to be filed to say *these were retired, the docs still prescribe them*. A `RETIRED` table in the dispatcher answers each of the three with the reason and the replacement, at **exit 1**: *"`fix-all-broken` is retired (§DX-02kx). It read node.N/S/E/W, stripped to zero by §CELL-01. Census: ./bin/api broken — repair: ./bin/api reweave"*.
+
+  **Shipped:** the three handlers deleted from `src/api/wb.js`; the `RETIRED` table; the verbs cut from all three help surfaces (the §22 NETWORK HEALTH banner, the two `fix-bidirectional` examples, the synopsis line); **both `API-README.md` warning blocks deleted** — §DX-02gh's interim, which existed only until this row ran — and replaced by one *Retired (§DX-02kx)* paragraph beside §WALK-3's, carrying the 93-vs-0 measurement; the two prescription blocks rewritten to `broken` / `reweave` / `cluster-bridge`; the *Endpoint → CLI* table's `POST /api/audit/map/fix` row now reads *(no wrapper — `fix-bidirectional` retired §DX-02kx)*.
+
+  **Found en route and fixed in the same block:** `docs/api/wbapi-help.md` still prescribed `./bin/api fill-gap WOR E SAL --execute` — retired to **410** by §WALK-3 — one line above the two `fix-*` lines being deleted. One line, same fence, same defect class.
+
+  **Before → after:** runnable `./bin/api fix-*` invocations in the two swept API docs **11 → 0** (`grep -c -E '^\./bin/api (fix-diagonal|fix-all-broken|fix-bidirectional)'`); `./bin/api fix-all-broken` **`✓ 0 broken edges found`, exit 0 → `✗ … is retired`, exit 1**; `./bin/api broken` unchanged at **93**, which is the point — the two commands no longer disagree, because only one of them still answers.
+
+  **Filed:** **§DX-02ky** — `GET /api/graph/broken` is still live and still walks the stripped field set, answering `broken:0` to `edit.html`'s endpoint browser and to two swept documents that teach it by raw curl. **§DX-02kz** — `check-doc-commands` (gate #30) resolves `./bin/api` as a *file* and never looks at the verb, which is why nine dead `fix-*` lines and a dead `fill-gap` line sat in swept documents under a green gate; `./run.sh` already gets its verbs checked against run.sh's own case arms, so the shape exists.
+
+  **Verified:** `./bin/api audit` **0 errors** · `npm run check:walk --prefix src` **30/30 gates, 14.7 s** (gate #30, doc commands: 1,236 invocations in 236 fenced blocks across 8 swept documents) · `npm test --prefix src` **1239 passed / 7 failed**, the host baseline — the same 7 specs fail at clean HEAD and at `e567e83`, `e567e83~1` and `767027a`, checked by re-running `uqf-gate-ast.test.js` at each. `play.html` byte-unchanged; no world data was written, so there is nothing to round-trip. `docs/design/index.md` names none of the three and needed no sync (`grep -n 'fix-all-broken\|fix-diagonal\|fix-bidirectional' docs/design/index.md` → 0).
+
 ## Archived 2026-09-14 — §DX-02kp (10,339 fields the sanctioned write path would have corrupted, reporting success)
 
 ### §DX-02cf — the arc-grouping regex strips a suffix that no quest id has, and merges ten arcs into one bucket doing it (NEW 2026-08-17 during §DOC-02bq, 🟢 no design call) — [x] ✅ SHIPPED 2026-09-14 `b450046`
