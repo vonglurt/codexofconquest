@@ -878,7 +878,7 @@ function _classifyQuest(q) {
 const WBAPI = {
   nodeMap: {}, nodeCoords: {}, questDb: {}, monsterPool: {},
   monsterDrops: {}, worldDb: {}, birkaNpcs: {},
-  fishPool: [], nightFishPool: [], lakeMagicDb: {}, itemDb: {}, npcDialogues: {}, ebNpcDialogue: {}, d100Table: [],
+  fishPool: [], nightFishPool: [], lakeMagicDb: {}, npcDialogues: {}, ebNpcDialogue: {}, d100Table: [],
   conditionItems: [],
   _terrainToMonsters: {}, _monsterToTerrains: {},
   _questsByNode: {}, _questsByNpc: {}, _questsByWaypoint: {},
@@ -916,7 +916,6 @@ const WBAPI = {
     this.fishPool      = parseArr(fishSrc, 'FISH_POOL');
     this.nightFishPool = parseArr(fishSrc, 'NIGHT_FISH_POOL');
     this.lakeMagicDb   = parseSimple(extrSection(src,'LAKE_MAGIC'), 'LAKE_MAGIC_DB');
-    this.itemDb        = parseSimple(extrSection(src,'ITEM_DB'), 'ITEM_DB') || {};
     this.npcDialogues  = parseSanitized(extrSection(src,'NPC_DIALOGUES'), 'NPC_DIALOGUES') || {};
     this.d100Table     = parseArr(extrSection(src,'D100_TABLE'), '_D100_TABLE') || [];
     // §AUDIT-03b — the Epic-Battleground quest-givers. Keyed by battleground node code,

@@ -30,7 +30,7 @@ const path = require('path');
 const ROOT = path.resolve(__dirname, '..', '..');
 const SECTIONS = [
   'NODE_MAP', 'QUEST_DB', 'WORLD_DB', 'MONSTER_POOL', 'MONSTER_DROPS',
-  'ITEM_DB', 'FISH_DB', 'BIRKA_NPC', 'NPC_DIALOGUES', 'LAKE_MAGIC', 'NODE_COORDS',
+  'FISH_DB', 'BIRKA_NPC', 'NPC_DIALOGUES', 'LAKE_MAGIC', 'NODE_COORDS',
 ];
 
 function sectionText(src, name) {
@@ -86,7 +86,7 @@ function auditSection(src, name, fails) {
 
 // ── §AUDIT-03f parse parity: textual entry keys ↔ WBAPI-parsed keys ──────────
 // Sections whose parsed collection is an object keyed by entry id. FISH_DB /
-// ITEM_DB / NODE_COORDS-style array or empty sections are covered where mapped.
+// NODE_COORDS-style array or empty sections are covered where mapped.
 const PARSE_PARITY = [
   ['QUEST_DB', 'questDb'], ['NODE_MAP', 'nodeMap'], ['NODE_COORDS', 'nodeCoords'],
   ['WORLD_DB', 'worldDb'], ['MONSTER_POOL', 'monsterPool'], ['MONSTER_DROPS', 'monsterDrops'],

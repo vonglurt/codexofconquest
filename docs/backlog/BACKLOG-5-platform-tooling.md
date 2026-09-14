@@ -129,7 +129,7 @@
 
 ### §DX-02fl — `ITEM_DB` is anchored, parsed, and exported with zero entries (NEW 2026-08-23 during §DOC-02da, 🟢 seed or retire)
 
-- [ ] **§DX-02fl — 0-entry infrastructure that reads as a live surface.** 🟢 `` `const ITEM_DB = { // General item definitions@26682` `` is a genuinely empty section, not a parse failure — its comment promises *"weapons, amulets, consumables, readables."* It is one of 12 anchored sections and parses into `itemDb` on every load. **Fix:** seed it or retire the anchor. Pairs with §DX-02fi: until that lands, an emptied `ITEM_DB` and a corrupted one are the same observation.
+- [ ] **§DX-02fl — 0-entry infrastructure that reads as a live surface.** 🟢 *`const ITEM_DB = { // General item definitions`@26682* is a genuinely empty section, not a parse failure — its comment promises *"weapons, amulets, consumables, readables."* It is one of 12 anchored sections and parses into `itemDb` on every load. **Fix:** seed it or retire the anchor. Pairs with §DX-02fi: until that lands, an emptied `ITEM_DB` and a corrupted one are the same observation.
 > **Provenance:** §DOC-02da, finding F4.
 
 ### §DX-02fm — `WORLD_DB` has a string writer but no structured writer (NEW 2026-08-23 during §DOC-02da, 🟡 one map entry)
