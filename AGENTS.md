@@ -51,7 +51,10 @@ The server holds the file text from when it started. A write after a hand-edit s
 npm run check:walk --prefix src        # 27 gates in parallel, ~21s; the final ✓ N/N line is the verdict
 ./run.sh stop && npm test --prefix src # 1023 tests, server stopped
 npm run check:restart --prefix src     # the restart itself — outside check:walk, it binds :1367
+npm run test:write --prefix src        # what the write path REFUSES, on a throwaway copy
 ```
+
+**A write of a field name nothing uses is refused** (§DX-02gy): `put` rejects any key absent from both the type's corpus and its schema, with 400 and the accepted set, and routes a `related` field (`drop`) to the section that owns it. The vocabulary is derived from the corpus, never from the schema alone — `SCHEMAS` omits `id` and `desc`, which nearly every quest carries.
 
 **Never pipe a test run** — a pipe returns the last stage's exit code. Redirect to a file and read the counts. `check:walk` exists only in `src/package.json`. Each gate carries a **120 s deadline**, so a stuck gate now fails by name instead of hanging (`--timeout` / `GATE_TIMEOUT_MS`, `--jobs` / `GATE_JOBS`; `check:walk:serial` runs the old one-at-a-time chain).
 

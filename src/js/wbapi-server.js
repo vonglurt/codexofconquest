@@ -1426,6 +1426,45 @@ const SCHEMAS = {
   },
 };
 
+// §DX-02gy — the field vocabulary the write path did not have.
+//
+// `put monster desert_wanderer dropName=… dropIcon=… dropSell=16` returned `ok:true` with
+// `verified: [{dropName, ok:true}, {dropIcon, ok:true}]` and appended all three to the
+// MONSTER_POOL row, where nothing reads any of them. `verified` only ever asked whether the
+// text was PRESENT, which is why a typo came back green.
+//
+// The vocabulary is DERIVED from the loaded corpus and unioned with what SCHEMAS declares —
+// never taken from SCHEMAS alone. Measured 2026-09-14 against the live file: SCHEMAS
+// declares 9 monster fields where MONSTER_POOL carries 10 (`voidTainted`), 15 node fields
+// where NODE_MAP carries 18, and 23 quest fields where QUEST_DB carries 31, so a whitelist
+// read off the schema would refuse `id` on all 2,853 quests and `desc` on 2,806. A field a
+// collection already uses is writable by definition; a field in neither is a typo.
+//
+// STATED LIMIT: this rejects names nothing has ever used, not names used wrongly. Two live
+// keys are read by nothing — `targetMonsterKeys` (12 quests) and `questComplete` (1) — and
+// the corpus half of the vocabulary therefore accepts them; both are filed as §DX-02kt.
+const VOCAB_COLLECTION = { node:'nodeMap', quest:'questDb', monster:'monsterPool', npc:'birkaNpcs', terrain:'worldDb' };
+
+function fieldVocabulary(type) {
+  const sc = SCHEMAS[type] || {};
+  const out = new Set([...Object.keys(sc.fields || {}), ...Object.keys(sc.related || {})]);
+  const col = WBAPI[VOCAB_COLLECTION[type]];
+  if (col) {
+    for (const entry of Object.values(col)) {
+      if (entry && typeof entry === 'object') for (const k of Object.keys(entry)) out.add(k);
+    }
+  }
+  return out;
+}
+
+// A `related` field declares the section it actually lives in. `put` ignored that and
+// appended it to the entity's own literal — §DX-02gy defect (b): `put monster … drop='{…}'`
+// wrote `drop:{…}` onto the pool row rather than into MONSTER_DROPS.
+function relatedSection(type, field) {
+  const rel = (SCHEMAS[type] || {}).related || {};
+  return rel[field] && rel[field].section ? rel[field].section : null;
+}
+
 function resolveId(type, raw) {
   const col = { node:WBAPI.nodeMap, quest:WBAPI.questDb, monster:WBAPI.monsterPool, npc:WBAPI.birkaNpcs }[type];
   if (!col) return raw;
@@ -11285,6 +11324,62 @@ async function route(req, res) {
       }
     }
 
+    // §DX-02gy(a) — a field name the corpus and the schema have both never seen is a typo,
+    // and appending it to the entity literal makes it inert data with a green receipt.
+    const vocab = fieldVocabulary(type);
+    const unknown = Object.keys(body).filter((f) => f !== 'autoJunction' && !vocab.has(f));
+    if (unknown.length) {
+      logResponse(method, url.pathname, 400, `unknown ${type} field(s): ${unknown.join(', ')}`);
+      return json(res, 400, { ok:false,
+        error: `Unknown ${type} field(s): ${unknown.join(', ')}. No ${type} in the corpus carries `
+             + `${unknown.length === 1 ? 'that name' : 'those names'} and the field schema does not declare `
+             + `${unknown.length === 1 ? 'it' : 'them'}, so the write would land where nothing reads it.`,
+        unknownFields: unknown,
+        accepted: [...vocab].sort(),
+        hint: `GET /api/schema/${type} for what each field means. A field that belongs to another `
+            + `section has its own endpoint — see the "related" block of the schema.` });
+    }
+
+    // §DX-02gy(b) — route a `related` field to the writer that owns its section, instead of
+    // appending it to this entity's literal. `drop` is declared { section:'MONSTER_DROPS' }.
+    const routed = [];
+    for (const field of Object.keys(body)) {
+      const relSection = relatedSection(type, field);
+      if (!relSection) continue;
+      if (!(type === 'monster' && field === 'drop')) {
+        logResponse(method, url.pathname, 400, `"${field}" lives in ${relSection}`);
+        return json(res, 400, { ok:false,
+          error: `"${field}" lives in ${relSection}, not on the ${type} entry, and this server has no writer that routes it there.`,
+          hint: `Add one to wbapi-server.js before writing it — do not hand-edit ${relSection}.` });
+      }
+      const patch = typeof body[field] === 'string' ? JSON.parse(body[field]) : body[field];
+      if (!patch || typeof patch !== 'object' || Array.isArray(patch)) {
+        logResponse(method, url.pathname, 400, 'drop must be an object');
+        return json(res, 400, { ok:false, error:'drop must be an object {icon,name,sell}' });
+      }
+      const existing = WBAPI.monsterDrops[key];
+      if (Array.isArray(existing)) {
+        logResponse(method, url.pathname, 400, `drop for "${key}" is a weighted table`);
+        return json(res, 400, { ok:false,
+          error:`Drop for "${key}" is a weighted table of ${existing.length} entries, not a single trophy.`,
+          hint:`PUT /api/monster/${key}/drop/<index>.` });
+      }
+      const merged = existing ? { ...existing, ...patch } : { icon: patch.icon || '📦', name: patch.name, sell: Number(patch.sell || 0) };
+      if (patch.sell !== undefined) merged.sell = Number(patch.sell);
+      if (!merged.name) {
+        logResponse(method, url.pathname, 400, 'drop.name required');
+        return json(res, 400, { ok:false, error:'drop.name is required' });
+      }
+      const w = existing
+        ? WBAPI.replaceEntrySource('MONSTER_DROPS', key, serializeDropLiteral(key, merged))
+        : insertBeforeSectionClose('MONSTER_DROPS', serializeDropLiteral(key, merged));
+      if (!w.ok) { logResponse(method, url.pathname, 500, w.error); return json(res, 500, w); }
+      WBAPI.monsterDrops[key] = merged;
+      logRow(existing ? 'updated' : 'drop', `drop › ${key}  →  ${merged.icon||''} ${merged.name}  ·  ${merged.sell}gp  (routed from PUT /api/${type}/${key})`);
+      routed.push({ field, section: relSection, drop: merged, created: !existing });
+      delete body[field];
+    }
+
     const results = [];
     for (const [field, value] of Object.entries(body)) {
       if (field === 'autoJunction') continue; // internal flag, not a real field
@@ -11334,7 +11429,9 @@ async function route(req, res) {
     const autoJunctionInfo = autoJunctionCreated.length
       ? { autoJunctionsCreated: autoJunctionCreated, note: `${autoJunctionCreated.length} junction(s) auto-inserted (source was deg=3). Pass autoJunction:false to bypass.` }
       : {};
-    return saveAndVerify(res, 200, { ok:true, fields: results, ...autoJunctionInfo, ...putReminder }, expectedFields, type, resolvedKey);
+    // §DX-02gy(b) — a routed field is reported as routed, with the section it went to.
+    const routedInfo = routed.length ? { routed, note: routed.map((r) => `"${r.field}" was written to ${r.section}, not onto the ${type} entry`).join('; ') } : {};
+    return saveAndVerify(res, 200, { ok:true, fields: results, ...routedInfo, ...autoJunctionInfo, ...putReminder }, expectedFields, type, resolvedKey);
   }
 
   // ── DELETE ──
