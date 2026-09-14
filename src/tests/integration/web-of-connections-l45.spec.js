@@ -133,36 +133,69 @@ test.describe('Layer 45 — Web of Connections', () => {
     expect(await at(3)).toBe(true);
   });
 
-  // ── F3: the patrol loop is first-match-wins, with the loosest condition first ──
-  test('on odd game days Yael is always at MSY, whatever else is true', async ({ page }) => {
+  // ── F3: the patrol loop is first-match-wins, newest arc beat first (§DX-02fd) ──
+  test('the patrol line follows the newest arc beat, and day parity is only the fallback', async ({ page }) => {
     await seedAndLoad(page, {});
     await dismissContinue(page);
 
     const out = await page.evaluate(() => {
-      // Satisfy EVERY other patrol condition at once.
+      const look = (day) => { S_story.gameDay = day; const p = _getYaelLocation(); return p && p.line; };
+      const reset = () => {
+        S_story.quests = Object.assign({}, S_story.quests, { quest_slums_cleanup: undefined });
+        S_story.yaelEscortUsed = false;
+        S_story.yaelNamedReportDelivered = false;
+        S_story.npcFavorability = {};
+        S_story.actNumber = 1;
+      };
+
+      reset();
+      const bareOdd = look(1), bareEven = look(2);
+
+      reset();
+      S_story.quests = Object.assign({}, S_story.quests, { quest_slums_cleanup: 'complete' });
+      const slumsOdd = look(1), slumsEven = look(2);
+
+      reset();
+      S_story.quests = Object.assign({}, S_story.quests, { quest_slums_cleanup: 'complete' });
+      S_story.yaelEscortUsed = true;
+      const escort = look(1);
+
+      reset();
+      S_story.quests = Object.assign({}, S_story.quests, { quest_slums_cleanup: 'complete' });
+      S_story.yaelEscortUsed = true;
+      S_story.npcFavorability = { yael: 3 };
+      S_story.actNumber = 5;
+      const quill = look(1);
+
+      reset();
       S_story.quests = Object.assign({}, S_story.quests, { quest_slums_cleanup: 'complete' });
       S_story.yaelEscortUsed = true;
       S_story.yaelNamedReportDelivered = true;
       S_story.npcFavorability = { yael: 3 };
       S_story.actNumber = 5;
-      const odd = (S_story.gameDay = 1, _getYaelLocation());
-      const even = (S_story.gameDay = 2, _getYaelLocation());
-      return {
-        oddNode: odd && odd.nodeSlug, oddLine: odd && odd.line,
-        evenNode: even && even.nodeSlug, evenLine: even && even.line,
-        firstCondIsParity: YAEL_PATROL_NODES[0].line.startsWith('Eastern check'),
-        total: YAEL_PATROL_NODES.length,
-      };
+      const allOdd = look(1), allEven = look(2);
+
+      return { bareOdd, bareEven, slumsOdd, slumsEven, escort, quill, allOdd, allEven,
+        lastCondIsParity: YAEL_PATROL_NODES[YAEL_PATROL_NODES.length - 1].line.startsWith('Eastern check'),
+        total: YAEL_PATROL_NODES.length };
     });
 
     expect(out.total).toBe(5);
-    expect(out.firstCondIsParity).toBe(true);
-    // Every other condition is true, and the parity entry still wins.
-    expect(out.oddNode).toBe('MSY');
-    expect(out.oddLine).toContain('Eastern check');
-    // The other four are reachable only on even days.
-    expect(out.evenNode).toBe('BMA');
-    expect(out.evenLine).toContain('Showing my face');
+    expect(out.lastCondIsParity).toBe(true);
+
+    // With no arc beat earned, parity is what it was always meant to be: the fallback.
+    expect(out.bareOdd).toContain('Eastern check');
+    expect(out.bareEven).toBe(null);
+
+    // A latched beat outranks the clock, so it no longer matters which day it is.
+    expect(out.slumsOdd).toContain('Showing my face');
+    expect(out.slumsEven).toContain('Showing my face');
+
+    // And each later beat supersedes the one before it, which is what the order buys.
+    expect(out.escort).toContain('I walk this route now');
+    expect(out.quill).toContain('Checking on Quill');
+    expect(out.allOdd).toContain('The second report is filed');
+    expect(out.allEven).toContain('The second report is filed');
   });
 
   // ── F4: the connection map declares two relationships with no lines ──

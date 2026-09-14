@@ -637,6 +637,24 @@ All three together bring the balance to exactly 0 — `-8 + 4 + 2 + 2`, in any o
 *(Layer 74 — ✅ Implemented. Const: `YAEL_NAMED_REPORT_SCENE` (HTML 12704). Flag: `yaelNamedReportDelivered` in `_S_DEFAULTS()` (HTML 8460). `WECKMANN_TRAINING_LOG` second meaning applied retroactively.)*
 > ⚠️ **UNREACHABLE at HEAD, and the shipped gate is not the designed one** (measured §VM-01-G2b, 2026-08-04). The design above says *"a `LLA` or `HKG` visit (fav_yael ≥ 2, Act IV+)"*; the shipped block (`_nodeHookBirkaYaelNamedReport`) fires at **`LHR`** with `(S_story.actNumber || 1) >= 6`. Since `actNumber` is re-assigned from `node.act` each render and `NODE_MAP.LHR.act = 1`, it can never fire — so the choice, the flag, and the §XXXVI epilogue addendum that reads it are all dead. **Do not "fix" this by trusting either number** — which node and which signal is a design call: **§VM-01-G2b-FU**.
 
+### Yael's Patrol Arc
+
+`YAEL_PATROL_NODES` — five field lines, read by `_getYaelLocation()` first-match-wins and rendered by `_nodeHookBirkaYaelPatrolLine` as an ambient row at whichever node the matching entry names.
+
+| Order | Condition | Node | Beat |
+|---:|---|---|---|
+| 1 | `yaelNamedReportDelivered` | `MSY` | the second report is filed (Layer 74) |
+| 2 | `_npcFavor('yael') >= 3 && actNumber >= 3` | `MHQ` | checking on Quill |
+| 3 | `yaelEscortUsed` | `TLL` | she walks the escort route now |
+| 4 | `quest_slums_cleanup` complete | `BMA` | showing her face in the Slums |
+| 5 | `gameDay % 2 === 1` | `MSY` | the eastern check — the fallback |
+
+**The order is load-bearing, and it is newest-beat-first.** Entries 1–4 are permanent latches: once the flag sets it never clears, so under first-match-wins the highest-ranked condition that can ever be true is the *only* line a player will ever see. Ranking them by arc recency makes the line advance as the story does — the escort line gives way to Quill, Quill to the second report. **The parity entry must stay last:** it depends on nothing, is true half the time, and ranked first it made the other four even-day-only and starved them one by one as their latches set.
+
+**Yael is not removed from `LHR` when she is in the field.** `_nodeHookBirkaYaelPatrolLine` runs `if (node.code !== 'LHR')` and only *adds* a row elsewhere; her home card is untouched. This is the shipped design, not a gap in it — suppressing the home card is not available while entries 1–4 latch, because `_getYaelLocation()` would then match forever and `_nodeHookBirkaYaelNamedReport`, which fires **at `LHR`**, could never run again.
+
+**Not shipped:** the lock's sixth patrol row — Yael near `RKV` (historical `ER`), *"I know about the Redwater situation…"*. `Redwater` occurs **0** times in `play.html`.
+
 ### Froberger Traces
 
 `FROBERGER_TRACES` — 6 NPC memories of Froberger. Each gated by its own `minFav` (2, or 3 for `brynn` and `crov`) and a visit count. First delivered via `_checkFrobergerTrace(npcKey)` priority injection in `_getNPCDialogue()`; from then on `_getNPCDialogue()` appends the trace to that NPC's Dear Friend pool while favor stays at `minFav`, derived from the saved `frobergerTrace_<key>_delivered` flag.

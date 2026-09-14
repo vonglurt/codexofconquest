@@ -27914,12 +27914,15 @@ const NPC_CROSS_REFS = { // → doc: world.md §Cross-References (17 lines; ever
 
 const NIVERS_DIALOGUE = "Evening.";
 
-const YAEL_PATROL_NODES = [ // → doc: world.md §Yael's Named Report Scene (patrol arc; BA and CY also delivery nodes per Layer 74)
-  { condition: () => (S_story.gameDay || 0) % 2 === 1, nodeSlug:'MSY', line:"Eastern check. You're traveling late." },
-  { condition: () => !!(S_story.quests && S_story.quests['quest_slums_cleanup'] === 'complete'), nodeSlug:'BMA', line:"Showing my face. They should see someone who isn't making a report." },
-  { condition: () => !!(S_story.yaelEscortUsed), nodeSlug:'TLL', line:"I walk this route now. It adds six minutes. Worth it." },
+// Latest arc beat first, day parity last: every condition above the parity entry is a
+// permanent latch, so the first match that can ever be true is the only one a player
+// would ever see. Ordering them newest-first makes the line advance with the story.
+const YAEL_PATROL_NODES = [ // → doc: world.md §Yael's Patrol Arc
+  { condition: () => !!(S_story.yaelNamedReportDelivered), nodeSlug:'MSY', line:"The second report is filed. I'm not watching to see if it disappears." },
   { condition: () => _npcFavor('yael') >= 3 && (S_story.actNumber || 1) >= 3, nodeSlug:'MHQ', line:"Checking on Quill. Don't tell him." },
-  { condition: () => !!(S_story.yaelNamedReportDelivered), nodeSlug:'MSY', line:"The second report is filed. I'm not watching to see if it disappears." }
+  { condition: () => !!(S_story.yaelEscortUsed), nodeSlug:'TLL', line:"I walk this route now. It adds six minutes. Worth it." },
+  { condition: () => !!(S_story.quests && S_story.quests['quest_slums_cleanup'] === 'complete'), nodeSlug:'BMA', line:"Showing my face. They should see someone who isn't making a report." },
+  { condition: () => (S_story.gameDay || 0) % 2 === 1, nodeSlug:'MSY', line:"Eastern check. You're traveling late." }
 ];
 
 const WECKMANN_TRAINING_LOG = // → doc: world.md §Weckmann Training Log (Layer 68b — contains riot funding evidence; yaelNamedReport cross-ref)
