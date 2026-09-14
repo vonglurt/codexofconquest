@@ -64,6 +64,52 @@
 
 ---
 
+## Archived 2026-09-14 — §DX-02kj (a code that resolves to somebody else's node)
+
+### §DX-02kj — `CI` is a live node called the Chancery Court, and fourteen sites in the Birka hooks use it to mean `LHR` — one of them out loud to the player (NEW 2026-09-14 during §DX-02kh, 🟢 the comments · 🟡 the player-facing line)
+
+- [x] **§DX-02kj — `grep -n '\bCI\b' play.html` is 26 lines; `CI` resolves, and it does not resolve to the node the code around it runs at.** **Measured 2026-09-14 at `d08670a`:** `CI: { num:429, name:"city", label:"Chancery Court — The Officer's Pen"`@9245 with `CI:{r:17,c:190}`@9566 — a live, standable node seven rows south and seven columns west of `LHR` (`LHR:{r:10,c:197}`@9488). **This is not §DX-02jt's shape.** §DX-02jt's `CY` is dead: 22 comments naming a code that resolves nowhere, so a reader is merely stranded. `CI` is the worse case — **it resolves to the wrong place**, so a reader who checks is told a confident lie. **Fourteen sites say *at CI* about hooks that run at `LHR`:** six `_runNodeHook` trailing comments `@35481`–`@35486` and the six banner comments they repeat `@32526`–`@32785`, plus *`// ── Layer 50: §XV Entry 42 — blank journal page at CI`@34959* — the very block §DX-02kh traced — and three `→ doc:` parentheticals (`FROBERGER_MEMORIAL_TEXT`@26891, `S54_JOINT_MOMENT`@27234, `BLUE_SHUTTERS_ARCHIVE_TEXT`@28192), which need `check:docpointers` re-run one at a time because the gate resolves the file and heading before the parenthetical (§DX-02jt's own caution). **One is player-facing and it is the 🟡 half:** the Act-VIII rumor *"Someone left flowers at the old Froberger memorial stone near the CI crossroads."*@27011 — its six sibling rumors in the same array say *the First Inn*, *the Crypt*, *the northern gate*, all places a player can find, and this one names a code that points at a different district. **The call is what the memorial's crossroads is called**, which `LHR.text` does not settle: it gives *"corner posts, lamplighters"* and Yael's corner, and no crossroads. `ACCESS: Letter of Introduction required (Yael, CI guard command)`@28194 is a second string to check for player reach. **Verify:** `grep -c '\bCI\b' play.html` over comments and strings → 0 outside `NODE_MAP`/`CELL_GRID`; `check:docpointers` 90/90; `./bin/api audit` errors 0. **Provenance:** §DX-02kh, which followed *City Inn* to the Entry 42 hook and found the comment above it naming `CI` — and then found `CI` is somebody else's node.
+
+> **✅ SHIPPED 2026-09-14 `91f09d8`.** **MEASURED BEFORE, re-derived at HEAD (`15c56f0`):** `grep -c '\bCI\b' play.html`
+> → **25** lines, not the row's 26. **MEASURED AFTER: 25 → 4**, and every survivor is legitimate: the `NODE_MAP`
+> entry`@9245`, its `NODE_COORDS` row`@9566`, the quest that owns the node`@18529`, and one annotated
+> record-of-the-defect comment. **`grep -c '^\s*//.*\bCI\b' play.html` → 0.** **Three corrections to the row,
+> and the first two change its shape.** (1) **There are three player-facing strings, not one.** Besides the
+> Act-VIII rumor, Yael's `NPC_CROSS_REFS` line at `fav:2` said *"making sure the **CI** district stays stable"*
+> and `YAEL_NAMED_REPORT_SCENE.setup` said *"watching the market corner from the **CI** door"* — plus `ACCESS: Letter of Introduction required (Yael, CI guard command)`
+> inside `BLUE_SHUTTERS_ARCHIVE_TEXT`, which the player reads on entering. Four strings in total. (2) **`CI` is
+> not a recycled code, and `erf_01_act5` is not misplaced.** The row treated node 429 as an accident to be
+> checked; the quest is titled ***"Falada Speaks — The Officer's Pen"*** and `CI.label` is ***"Chancery Court —
+> The Officer's Pen"*** — an exact match, so node 429 was authored for that quest and is current. Nothing about
+> it needs a row. (3) **The row is a duplicate of a filed one, and that is the useful finding.** **§AUDIT-03ba**
+> (Phase 6, 2026-08-14) already censused **47** such comments and already named *`CI` → Chancery Court
+> `num:429`* and the eight `CI` banners by anchor. This increment ships that subset; §AUDIT-03ba's paragraph now
+> records it and asks the next worker to re-derive the 47 with the row's own method, because the eight are out
+> of it. **The four banner-comment sites were each TWO edits, not one** — the hook-body banner at
+> `@32526`–`@32785` and the `_runNodeHook` trailing comment that repeats it verbatim at `@35481`–`@35486` —
+> which is why the first pass asserted `count == 1` and refused to write. **Replacements, and why each reads as
+> it does:** every comment and all four `→ doc:` parentheticals name `LHR`, the code the `NODE_HOOKS` registry
+> actually declares (`nodes:['LHR']`@34514–34519, verified before writing). The rumor takes *"by the Birka
+> crossroads"* — its six siblings name *the First Inn*, *the Crypt*, *the northern gate*, and
+> `FROBERGER_MEMORIAL_BOOK` signs an entry *"W. of the Crossroads Forge"*, so the crossroads is the memorial's
+> own geography. Yael's line takes **"the district"** with no code at all, because the line directly beneath it
+> in the same array already says *"one of the only clean operations in **the district**"* and an NPC does not
+> name the quarter she is standing in (§DX-02kd's rule). The report scene takes *"from the archive door"* — she
+> has just been in the archive and the next sentence already says *"a riot in this district"*. **The `birkaNpcs`
+> comment is ANNOTATED, not swept** (§DX-02jt's rule for a record of the defect): it asserted *"No NODE_MAP
+> entry ever existed for CI/IN/TV/BA/CY"*, which is **false at HEAD**, so it now says *when this was written*
+> and names the reuse. **`world.md` carried three bare-`CI` claims** the file's own `LHR` (historical `CI`)
+> convention had missed, two of which describe code — *`storyRender(NODE_MAP['CI'])`* and *"renders CI"* — where
+> `storyNewGame`@24039 reads `storyRender(NODE_MAP['LHR']);`. Corrected against the source, not against the row.
+> **`check:anchors` went red twice** and both times on live docs quoting comments this increment retired —
+> §AUDIT-03ba's eight, §DX-02kd-era prose in `lab-report-play-01d-friendships-with-magic.md`, and this row's own
+> — all now in the resolver's history form (§DX-02hv). **Found on the path → filed `§DX-02kl`:** the
+> verification run reported **1 flaky**, `worldbuilder-mesh.test.js:67`, which is the test `80ebdfb` closed
+> §DX-02ia on **the day before**. **VERIFIED:** `grep -c '\bCI\b' play.html` **25 → 4** · `grep -c '^\s*//.*\bCI\b'`
+> **8 → 0** · `check:walk` **28/28 green** · `npm test --prefix src` server stopped: **1,237 passed / 7 failed / 1 flaky**, the seven pre-existing and the flaky filed as §DX-02kl.
+
+---
+
 ## Archived 2026-09-14 — §DX-02kh (the City Inn was LHR's old name, and the wrong inn was three nodes away)
 
 ### §DX-02kh — two mission hints send the player to "the City Inn", and no node is labelled that (NEW 2026-09-14 during §DX-02kg, 🟡 which name is the real one)

@@ -189,8 +189,9 @@ scope promise was kept — this increment did not sprawl.
   fairy-tale chancery; the remap incidentally prevented that.
 
 **Why this is worth recording rather than scolding.** The file itself teaches the wrong lesson.
-In the same render layer, the comment `// ── No Fishing Sign at CI ──@32633` sits directly
-above `if (node.code === 'LHR')` — a rename that moved the code and left the comment. And
+In the same render layer, the comment *`// ── No Fishing Sign at CI ──`@32633* sat directly
+above `if (node.code === 'LHR')` — a rename that moved the code and left the comment. All eight
+`CI` comments were corrected 2026-09-14 by §DX-02kj; the lesson below is why they lasted. And
 `src/scripts/legacy-codes.js` opens by stating that codes like `CI` *"name nodes that no longer
 exist under those names"*, carries `CI` in its ambiguity set, and offers an `--annotate` mode
 that rewrites `CI` to `` `LHR` (historical `CI`) ``. An author reading
