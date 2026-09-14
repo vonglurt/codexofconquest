@@ -3,8 +3,8 @@
 # Codex of Conquest — The Shattered Codex: Document Index
 
 **Project:** `play.html` — a single-file, quest-driven MUD-style fighter RPG
-**Live counts:** 416 nodes · 398 monsters · 111 terrains · 2,853 quests · 204 NPC profiles · 8 acts · 38,859 lines · 5.51 MB
-**Last updated:** 2026-09-03 — §DX-02aq split the inventory's knowledge array by shape into 🔮 Necklace beads and 📖 Field Notes
+**Live counts:** 416 nodes · 398 monsters · 111 terrains · 2,853 quests · 204 NPC profiles · 8 acts · 39,046 lines · 5.53 MB (`wc -l play.html`, `ls -l play.html`, 2026-09-14)
+**Last updated:** 2026-09-14 — §DX-02jv censused `q.desc` across all 2,853 quests and kept the field rendered
 
 > **📁 Repository restructured 2026-08-23 for the first public release.** The
 > game was renamed *Roll2Hit* → **Codex of Conquest**; `roll2hit-v3.html` →
@@ -614,6 +614,7 @@ All 54 source books are marked `[x]` in `books.md` — all have been processed t
 | `GEO_PROJ` | §2.1 equirectangular 1° grid dims `{ROWS:90, COLS:360}`; passed to the mover kernel as `world.proj` for N/S clamp + E↔W wrap |
 | `Mover` / `_moverWorld()` | §WALK-2 client handle to `mover.js` (`Mover.move(world,pos,dir)`); `_moverWorld()` builds the read-only world snapshot (`proj`/`impassable`/`cellCodes`/`terrainAt`/`encounterRate`) per move. See `mover.js` in Core Reference |
 | `QUEST_DB` | Quest definitions (UQF-1.0: `gate`/`bits`/`completion`/`onComplete`); ~2,848 quests — ALL UQF after §ARCH-01 close 2026-07-05 + the §MATH-01 migration 2026-07-07, except the 30 dead `blq` stubs |
+| `q.desc` | **Player-facing.** `` `descDiv.textContent = q.desc || '';@31013` `` renders it in the mission list between `.quest-title` and `.quest-hint`, unconditionally — there is no branch that hides it. §DX-02jv censused all 2,853 quests: **8 of 2,806 non-empty descs were written in the author's register**, 0.29%, against a 97.2% false-positive rate on the obvious tells (`DC` is house style — 267 descs weave it into a sentence, and §HINT-01-0 exists to keep it visible). The field stays rendered; the eight were rewritten. Census command in `git log --grep '§DX-02jv'` |
 | `q.retryGateDays` | Days a failed retryable skill check stays locked. Read at exactly one site — `S_story.day < att.lastDay + (q.retryGateDays || 1)@6822`, inside `function _ceremoRetryBlocked@6817` — so **the absent field and `1` are the same thing, and `0` was never expressible** (`0 || 1` is `1`). §DX-02ee deleted all 42 zeros through `./bin/api put quest <id> retryGateDays=null` and kept the coercion; **21 entries carry `1`** (`grep -c 'retryGateDays:1' play.html`, 2026-08-26) and none carries `0`. Pinned by `src/tests/integration/dx02ee-scalar-field-clear.test.js`. |
 | `CONDITION_ITEMS` | 11 condition items: name, icon, effect, sell value |
 | `CONDITION_GOLD` | Pre-battle cost per condition (flat gold, not inventory) |
