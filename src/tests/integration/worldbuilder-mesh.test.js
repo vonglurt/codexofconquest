@@ -44,9 +44,16 @@ const FIXTURE = {
 // flakes carries the trace and the other ~80 files do not.
 test.use({ trace: 'retain-on-failure' });
 
-async function openMeshTab(page) {
+// §DX-02kl — `awaitOffline` is not a convenience, it is the resolution of a direct
+// contradiction. The offline line is written by the FIRST poll's rejection handler,
+// and §DX-02ia's freeze exists to gate exactly that handler. A test that asserts the
+// offline line and then freezes is racing the fix: when the freeze wins, the handler
+// returns early, #mesh-identity is still "Loading mesh status…", and the assertion
+// times out. Await the line first, then freeze, and neither side is left to chance.
+async function openMeshTab(page, { awaitOffline = false } = {}) {
   await openEditor(page);
   await page.click('.nav-tab[data-tab="mesh"]');
+  if (awaitOffline) await expect(page.locator('#mesh-identity')).toContainText('unreachable');
   await page.evaluate(() => window.__meshTest.freezeMeshPoll());
 }
 
@@ -64,11 +71,20 @@ test.describe('🌐 Mesh tab (§MESH-01 UI)', () => {
     await expect(page.locator('#mesh-identity')).not.toContainText('WBAPI server unreachable');
   });
 
+  // The behaviour §DX-02kl's ordering depends on, pinned where no freeze can race it:
+  // with the poll left running, the first fetch's rejection writes the offline line.
+  // If this goes red, `awaitOffline` is waiting for something that no longer happens.
+  test('the live poll writes the offline line when no WBAPI answers (§DX-02kl)', async ({ page }) => {
+    await openEditor(page);
+    await page.click('.nav-tab[data-tab="mesh"]');
+    await expect(page.locator('#mesh-identity')).toContainText('WBAPI server unreachable');
+  });
+
   test('tab activates and renders a full status fixture', async ({ page }) => {
-    await openMeshTab(page);
+    // The one test here that asserts the live poll's offline fallback, so the one
+    // that must await it before the freeze (§DX-02kl).
+    await openMeshTab(page, { awaitOffline: true });
     await expect(page.locator('#tab-mesh')).toHaveClass(/active/);
-    // no WBAPI behind the static test server → offline fallback line
-    await expect(page.locator('#mesh-identity')).toContainText('unreachable');
 
     await page.evaluate((d) => window.__meshTest.renderMeshStatus(d), FIXTURE);
     await expect(page.locator('#mesh-identity')).toContainText('a1b2c3d4');
