@@ -10608,13 +10608,22 @@ window.__walkG = {
       : '<div style="color:var(--muted)">no packets yet</div>';
   }
 
+  // A poll already in flight resolves AFTER a caller has rendered its own status,
+  // so freezing has to gate the handlers and not just the interval.
+  let meshPollFrozen = false;
   async function meshPoll() {
+    if (meshPollFrozen) return;
     try {
       const d = await (await fetch('/api/mesh/status')).json();
-      if (d.ok) renderMeshStatus(d);
+      if (!meshPollFrozen && d.ok) renderMeshStatus(d);
     } catch {
+      if (meshPollFrozen) return;
       document.getElementById('mesh-identity').textContent = '🔌 WBAPI server unreachable — start it with ./bin/wbapi start.';
     }
+  }
+  function freezeMeshPoll() {
+    meshPollFrozen = true;
+    if (meshTimer) { clearInterval(meshTimer); meshTimer = null; }
   }
   window.meshTabActivated = () => {
     meshPoll();
@@ -10718,7 +10727,7 @@ window.__walkG = {
       meshPoll();
     } catch { note.textContent = '🔌 WBAPI server unreachable'; }
   };
-  window.__meshTest = { renderMeshStatus, renderServerBrowser };   // server-free hooks for the Playwright spec
+  window.__meshTest = { renderMeshStatus, renderServerBrowser, freezeMeshPoll };   // server-free hooks for the Playwright spec
 })();
 </script>
 </body>

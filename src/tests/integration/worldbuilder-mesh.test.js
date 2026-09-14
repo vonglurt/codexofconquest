@@ -8,6 +8,12 @@ const { openEditor } = require('./helpers');
 // server-free: the render fn is exposed at window.__meshTest.renderMeshStatus
 // and fed a fixture; the live poll path is only asserted for its offline
 // fallback (no WBAPI server behind the static test host).
+//
+// §DX-02ia — openMeshTab() freezes that poll before any fixture is rendered.
+// Activating the tab fires meshPoll() immediately and every 2s after, and with
+// no WBAPI behind this host each one lands in the offline branch and overwrites
+// #mesh-identity. Asserting fast enough to win that race is not a test, it is a
+// coin flip that comes up heads until the poll gets 200ms quicker.
 
 const FIXTURE = {
   ok: true, trackerMode: false, serverId: 'a1b2c3d4', addr: 'localhost:1367',
@@ -38,10 +44,28 @@ const FIXTURE = {
 // flakes carries the trace and the other ~80 files do not.
 test.use({ trace: 'retain-on-failure' });
 
+async function openMeshTab(page) {
+  await openEditor(page);
+  await page.click('.nav-tab[data-tab="mesh"]');
+  await page.evaluate(() => window.__meshTest.freezeMeshPoll());
+}
+
 test.describe('🌐 Mesh tab (§MESH-01 UI)', () => {
+  // The durable assertion for §DX-02ia. Everything else in this file asserts
+  // within milliseconds of rendering and would still pass against an unfrozen
+  // poll on a fast run; this one outlives the 2s interval, so it fails on a
+  // regression instead of flaking on one.
+  test('a frozen poll does not overwrite the rendered strip (§DX-02ia)', async ({ page }) => {
+    await openMeshTab(page);
+    await page.evaluate((d) => window.__meshTest.renderMeshStatus(d), FIXTURE);
+    await expect(page.locator('#mesh-identity')).toContainText('🌍 CodexOfConquest-feedf');
+    await page.waitForTimeout(2600);   // longer than the 2s meshPoll interval
+    await expect(page.locator('#mesh-identity')).toContainText('🌍 CodexOfConquest-feedf');
+    await expect(page.locator('#mesh-identity')).not.toContainText('WBAPI server unreachable');
+  });
+
   test('tab activates and renders a full status fixture', async ({ page }) => {
-    await openEditor(page);
-    await page.click('.nav-tab[data-tab="mesh"]');
+    await openMeshTab(page);
     await expect(page.locator('#tab-mesh')).toHaveClass(/active/);
     // no WBAPI behind the static test server → offline fallback line
     await expect(page.locator('#mesh-identity')).toContainText('unreachable');
@@ -69,8 +93,7 @@ test.describe('🌐 Mesh tab (§MESH-01 UI)', () => {
   });
 
   test('⬇ world sits behind the BIG WARNING modal (§MESH-01d3)', async ({ page }) => {
-    await openEditor(page);
-    await page.click('.nav-tab[data-tab="mesh"]');
+    await openMeshTab(page);
     await page.evaluate((d) => window.__meshTest.renderMeshStatus(d), FIXTURE);
     // magnet link lands on the identity strip (assert before the 2s offline
     // poll overwrites the strip — this static test host has no WBAPI behind it)
@@ -89,8 +112,7 @@ test.describe('🌐 Mesh tab (§MESH-01 UI)', () => {
   });
 
   test('server browser renders tracker rows: name · world tag · players · ping (§MESH-01-FU 2)', async ({ page }) => {
-    await openEditor(page);
-    await page.click('.nav-tab[data-tab="mesh"]');
+    await openMeshTab(page);
     await page.evaluate(() => window.__meshTest.renderServerBrowser([
       { serverId: 'aa', addr: 'localhost:59999', name: 'Hub Alpha', worldTag: 'NextWorldMod-131ea',
         worldHash: '131eabc131eabc00', playerCount: 3 },
@@ -106,8 +128,7 @@ test.describe('🌐 Mesh tab (§MESH-01 UI)', () => {
   });
 
   test('empty status renders friendly placeholders (no peers / no packets)', async ({ page }) => {
-    await openEditor(page);
-    await page.click('.nav-tab[data-tab="mesh"]');
+    await openMeshTab(page);
     await page.evaluate(() => window.__meshTest.renderMeshStatus({
       ok: true, trackerMode: false, serverId: 'a1b2c3d4', addr: 'localhost:1367',
       proto: 1, engineVer: 'coc-3.104.0', worldHash: 'feedfacefeedface',
