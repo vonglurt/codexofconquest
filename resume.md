@@ -52,8 +52,11 @@
   shipped story, and the "statted-priced-unfought = defect" premise collapsed against 50/384 unreachable monsters. A backlog row is
   a hypothesis written before someone read the code.
 
-  "round-trip the write from disk" — the mandated write path returns ok:true for fields nothing reads (§DX-02gy). Until that row
-  closes, the API's own success report is not evidence.
+  "round-trip the write from disk" — the mandated write path used to return ok:true for fields nothing reads (§DX-02gy, closed
+  2026-09-14 `d4059c3`): a field name in neither the corpus nor the schema is now refused 400, and a field belonging to another
+  section is routed there. The rule stands anyway, and the reason is narrower than it was. `verified` still only asks whether the
+  text is PRESENT, and the two live fields nothing reads (§DX-02kt) are accepted by name — so a receipt proves a write LANDED, never
+  that anything READS what landed. Read it back from disk.
 
   Keep AGENTS.md in the read list — it's the short card that survives compaction, where resume.md is long enough that its §2.5 hard
   rule can fall out of a summary.

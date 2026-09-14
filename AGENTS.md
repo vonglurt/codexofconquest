@@ -40,6 +40,8 @@ World data goes through `./bin/api`. **Never hand-edit `play.html`'s data sectio
 
 The server holds the file text from when it started. A write after a hand-edit silently reverts the hand-edit.
 
+**Every mutating route autosaves** (§DX-02gz) — you do not run `save` after a `put`/`post`/`del`, and a response carrying `autoSaved:true` is the receipt. A route that tells you to save by hand is a defect, not an instruction.
+
 ## Verify — in this order
 
 ```bash

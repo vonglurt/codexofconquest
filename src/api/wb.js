@@ -496,8 +496,6 @@ const CMD = {
       process.exit(1);
     }
     if (r.status >= 400) { printError(r); process.exit(1); }
-    const sv = await request('POST', '/api/save', {});
-    if (sv.status >= 400) { printError(sv); process.exit(1); }
     printResult(r.body, flags);
   },
 
@@ -516,8 +514,6 @@ const CMD = {
       const r = await request('POST', `/api/npc/${encodeURIComponent(key)}/dialogue`, body);
       if (r.status === 409) { printError(r); info('An entry already exists. Edit it with: ./bin/api dialogue ' + key + ' meta k=v'); process.exit(1); }
       if (r.status >= 400) { printError(r); process.exit(1); }
-      const sv = await request('POST', '/api/save', {});
-      if (sv.status >= 400) { printError(sv); process.exit(1); }
       return printResult(r.body, flags);
     }
 
@@ -537,8 +533,6 @@ const CMD = {
     }
     const r = await request('PUT', path, body);
     if (r.status >= 400) { printError(r); process.exit(1); }
-    const sv = await request('POST', '/api/save', {});
-    if (sv.status >= 400) { printError(sv); process.exit(1); }
     printResult(r.body, flags);
   },
 
@@ -564,8 +558,6 @@ const CMD = {
       r = await request('PUT', '/api/loot', body);
     }
     if (r.status >= 400) { printError(r); process.exit(1); }
-    const sv = await request('POST', '/api/save', {});
-    if (sv.status >= 400) { printError(sv); process.exit(1); }
     printResult(r.body, flags);
   },
 

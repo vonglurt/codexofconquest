@@ -33,6 +33,9 @@ const BASE = `http://127.0.0.1:${PORT}`;
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
 const KEY = 'zz_write_acceptance_probe';
+// A second probe, so the §DX-02gz persist checks POST a drop that does not exist yet —
+// the §DX-02gy routing check above has already given KEY one.
+const KEY2 = 'zz_write_persist_probe';
 const NEW_MONSTER = { key: KEY, name: 'Acceptance Probe', ac: 10, hp: 10, atk: 1,
   dmgDie: 4, dmgCount: 1, dmgFlat: 0, tier: 'trivial' };
 
@@ -49,7 +52,7 @@ const SCHEMA_BLIND_SPOTS = ['id', 'desc', 'retryable', 'vignetteText', 'itemChai
 // ── the checks, as pure functions of a probe ─────────────────────────────────
 // Each returns a finding string or null. `poolRow` reads the entity's literal back out of
 // the scratch file, so "where it landed" is answered from disk and not from the response.
-export async function runChecks({ probe, poolRow, dropRow }) {
+export async function runChecks({ probe, poolRow, dropRow, onDisk }) {
   const out = [];
   const add = (f) => { if (f) out.push(f); };
 
@@ -95,8 +98,31 @@ export async function runChecks({ probe, poolRow, dropRow }) {
   add(q.status !== 400 || missing.length === 0 ? null
     : `[over-strict] the quest vocabulary has lost ${missing.join(', ')} — a schema-only whitelist refuses \`id\` on all 2,853 quests`);
 
+  // §DX-02gz — a write that reports success and is not on disk. Twelve routes returned
+  // `note:'POST /api/save to persist.'` while every other write autosaved, and the CLI help
+  // says "You do NOT need to run save after a put/post/del." Both shipped; one was wrong.
+  // The CLI hid four of them by issuing POST /api/save itself, so only a client calling the
+  // route directly lost the write.
+  for (const w of PERSIST_ROUTES) {
+    const r = await probe(w.method, w.path, w.body);
+    if (r.status >= 400) { add(`[red] ${w.method} ${w.path} answered ${r.status}: ${JSON.stringify(r.json).slice(0, 160)}`); continue; }
+    add(!/POST \/api\/save to persist/.test(r.json?.note || '') ? null
+      : `[manual-save] ${w.method} ${w.path} still tells the caller to save by hand: ${JSON.stringify(r.json.note)}`);
+    add(r.json?.autoSaved === true ? null
+      : `[unsaved] ${w.method} ${w.path} reported ok without autoSaved — every other write route saves`);
+    add(await onDisk(w.marker) ? null
+      : `[lost] ${w.method} ${w.path} reported ok and "${w.marker}" is not in the file on disk`);
+  }
+
   return out;
 }
+
+// §DX-02gz — one mutating route per family that used to answer with the persist note.
+// `marker` is looked for in the scratch file, so "did it persist" is read off disk.
+const PERSIST_ROUTES = [
+  { method:'POST', path:`/api/monster/${KEY2}/drop`, body:{ name:'Persist Tooth', icon:'🦷', sell:5 }, marker:'Persist Tooth' },
+  { method:'POST', path:'/api/fish', body:{ key:'zz_probe_fish', name:'Probe Fish', rank:99 }, marker:'zz_probe_fish' },
+];
 
 // ── selftest — the check functions against a stub probe ─────────────────────
 if (process.argv.includes('--selftest')) {
@@ -109,10 +135,11 @@ if (process.argv.includes('--selftest')) {
       if (p.startsWith('/api/quest/')) return { status: 400, json: { accepted: [...SCHEMA_BLIND_SPOTS, 'title'], unknownFields: ['nosuchfield'] } };
       if (body.drop) return { status: 200, json: { ok: true, routed: [{ field: 'drop', section: 'MONSTER_DROPS' }] } };
       if (Object.keys(body).some((k) => k in TYPOS)) return { status: 400, json: { unknownFields: Object.keys(TYPOS), accepted: ['hp', 'tier'] } };
-      return { status: 200, json: { ok: true } };
+      return { status: 200, json: { ok: true, autoSaved: true } };
     },
     poolRow: async () => goodRow,
     dropRow: async () => `${KEY}: { icon:"🏆", name:"Probe Tooth", sell:9 },`,
+    onDisk: async () => true,
   };
   ok((await runChecks(healthy)).length === 0, 'a healthy write path produces no findings');
 
@@ -139,7 +166,7 @@ if (process.argv.includes('--selftest')) {
       if (b.drop) return { status: 200, json: { ok: true, routed: [{ field: 'drop', section: 'MONSTER_DROPS' }] } };
       if (Object.keys(b).some((k) => k in TYPOS)) return { status: 400, json: { unknownFields: Object.keys(TYPOS), accepted: ['hp', 'tier'] } };
       if (CORPUS_ONLY in b) return { status: 400, json: { error: 'unknown' } };
-      return { status: 200, json: { ok: true } };
+      return { status: 200, json: { ok: true, autoSaved: true } };
     } }))).filter((f) => f.startsWith('[over-strict]')).length === 2,
     'a whitelist narrowed to SCHEMAS alone is caught twice — once per type');
 
@@ -147,9 +174,28 @@ if (process.argv.includes('--selftest')) {
       if (p.startsWith('/api/quest/')) return { status: 400, json: { accepted: [...SCHEMA_BLIND_SPOTS, 'title'] } };
       if (b.drop) return { status: 200, json: { ok: true } };
       if (Object.keys(b).some((k) => k in TYPOS)) return { status: 400, json: { unknownFields: Object.keys(TYPOS), accepted: ['hp', 'tier'] } };
-      return { status: 200, json: { ok: true } };
+      return { status: 200, json: { ok: true, autoSaved: true } };
     } }))).some((f) => f.startsWith('[unreported]')),
     'a routed write that does not say so is caught as [unreported]');
+
+  // §DX-02gz — the three shapes a write that does not persist takes.
+  ok((await runChecks(bend({ probe: async (m, p, b) => p.startsWith('/api/quest/')
+      ? { status: 400, json: { accepted: [...SCHEMA_BLIND_SPOTS, 'title'] } }
+      : b && b.drop && !b.name ? { status: 200, json: { ok: true, routed: [{ field: 'drop', section: 'MONSTER_DROPS' }], autoSaved: true } }
+      : Object.keys(b || {}).some((k) => k in TYPOS) ? { status: 400, json: { unknownFields: Object.keys(TYPOS), accepted: ['hp', 'tier'] } }
+      : { status: 200, json: { ok: true, autoSaved: true, note: 'POST /api/save to persist.' } } })))
+    .some((f) => f.startsWith('[manual-save]')), 'a route still telling the caller to save by hand is caught as [manual-save]');
+
+  ok((await runChecks(bend({ probe: async (m, p, b) => p.startsWith('/api/quest/')
+      ? { status: 400, json: { accepted: [...SCHEMA_BLIND_SPOTS, 'title'] } }
+      : b && b.drop && !b.name ? { status: 200, json: { ok: true, routed: [{ field: 'drop', section: 'MONSTER_DROPS' }], autoSaved: true } }
+      : Object.keys(b || {}).some((k) => k in TYPOS) ? { status: 400, json: { unknownFields: Object.keys(TYPOS), accepted: ['hp', 'tier'] } }
+      : { status: 200, json: { ok: true } } })))
+    .some((f) => f.startsWith('[unsaved]')), 'a write that reports ok without autoSaved is caught as [unsaved]');
+
+  ok((await runChecks(bend({ onDisk: async () => false })))
+    .filter((f) => f.startsWith('[lost]')).length === PERSIST_ROUTES.length,
+    'a write that reports ok and is not on disk is caught as [lost], once per route');
 
   if (fail) { console.log(`\n✗ write-acceptance selftest: ${fail} FAILED, ${pass} passed`); process.exit(1); }
   console.log(`✓ write-acceptance selftest: all ${pass} checks pass`);
@@ -194,10 +240,12 @@ const lineFrom = async (marker) => {
   return src.slice(start, close === -1 ? at + 200 : close + 2);
 };
 
-const created = await probe('POST', '/api/monster', NEW_MONSTER);
-if (created.status !== 201 && created.status !== 200) {
-  console.error(`✗ write-acceptance: could not create the probe monster (${created.status}): ${JSON.stringify(created.json).slice(0, 300)}`);
-  done(1);
+for (const key of [KEY, KEY2]) {
+  const created = await probe('POST', '/api/monster', { ...NEW_MONSTER, key });
+  if (created.status !== 201 && created.status !== 200) {
+    console.error(`✗ write-acceptance: could not create probe monster "${key}" (${created.status}): ${JSON.stringify(created.json).slice(0, 300)}`);
+    done(1);
+  }
 }
 
 const poolRow = () => lineFrom(`  ${KEY}: { key:`);
@@ -210,7 +258,9 @@ const dropRow = async () => {
   return m ? m[0] : '';
 };
 
-const findings = await runChecks({ probe, poolRow, dropRow });
+const onDisk = async (marker) => fs.readFileSync(scratch, 'utf8').includes(marker);
+
+const findings = await runChecks({ probe, poolRow, dropRow, onDisk });
 console.log(`  probe monster written to a throwaway copy · pool row read from disk: ${(await poolRow()).trim().slice(0, 100)}`);
 if (findings.length) {
   findings.forEach((f) => console.log('  ✗ ' + f));
@@ -219,5 +269,5 @@ if (findings.length) {
   console.log('  API-first rule exists to prevent (§DX-02gy). Fix the write path, not this test.');
   done(1);
 }
-console.log('✓ §DX-02gy write acceptance: an unknown field is refused 400 naming itself and the accepted set, a section-declared field is routed to MONSTER_DROPS and reported as routed, and a corpus-only field a schema-read whitelist would have rejected still round-trips.');
+console.log(`✓ §DX-02gy/§DX-02gz write acceptance: an unknown field is refused 400 naming itself and the accepted set, a section-declared field is routed to MONSTER_DROPS and reported as routed, a corpus-only field a schema-read whitelist would have rejected still round-trips, and ${PERSIST_ROUTES.length} routes that used to answer 'POST /api/save to persist.' autosave and are read back off disk.`);
 done(0);

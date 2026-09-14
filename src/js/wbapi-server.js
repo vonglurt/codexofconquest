@@ -3484,7 +3484,7 @@ async function route(req, res) {
       WBAPI.fishPool.sort((a,b) => a.rank - b.rank);
       log('LOGIC', `Created fish "${key}" rank ${rank} (${isNight ? 'night' : 'day'} pool, inserted into ${arrName})`);
       logResponse(method, url.pathname, 201, `created fish "${key}"`);
-      return json(res, 201, { ok:true, key, note:'POST /api/save to persist.', fish:fishObj });
+      return saveAndRestart(res, 201, { ok:true, key, fish:fishObj });
     }
   }
 
@@ -3554,7 +3554,7 @@ async function route(req, res) {
         logRow('updated', `loot[${idx}]  →  ${JSON.stringify(table[idx])}`);
         logRow('totalWeight', `${total}/100`);
         logResponse(method, url.pathname, 200, `loot[${idx}] updated  ·  ${total}/100`);
-        return json(res, 200, { ok:true, index:idx, entry:table[idx], totalWeight:total, note:'POST /api/save to persist.' });
+        return saveAndRestart(res, 200, { ok:true, index:idx, entry:table[idx], totalWeight:total });
       }
 
       // PUT /api/loot — full table replacement
@@ -3582,7 +3582,7 @@ async function route(req, res) {
       logRow('entries', entries.length);
       logRow('totalWeight', `${totalWeight}/100  ·  gap: ${gap}`);
       logResponse(method, url.pathname, 200, `loot table replaced  ·  ${entries.length} entries  ·  ${totalWeight}/100`);
-      return json(res, 200, { ok:true, entries:lootAnnotate(WBAPI.d100Table), totalWeight, gap, suggestions:lootSuggestions(gap), note:'POST /api/save to persist.' });
+      return saveAndRestart(res, 200, { ok:true, entries:lootAnnotate(WBAPI.d100Table), totalWeight, gap, suggestions:lootSuggestions(gap) });
     }
   }
 
@@ -3753,7 +3753,7 @@ async function route(req, res) {
       if (!ins.ok) { logResponse(method, url.pathname, 500, ins.error); return json(res, 500, ins); }
       WBAPI.lakeMagicDb[key] = { key, type:'lake_magic', sell:0, base:0, levelScale:0, luckScale:0, minRank:1, minLevel:1, ...body };
       logResponse(method, url.pathname, 201, `created lake-magic "${key}"`);
-      return json(res, 201, { ok:true, key, note:'POST /api/save to persist.', item: WBAPI.lakeMagicDb[key] });
+      return saveAndRestart(res, 201, { ok:true, key, item: WBAPI.lakeMagicDb[key] });
     }
   }
 
@@ -11173,7 +11173,7 @@ async function route(req, res) {
         if (!r.ok) { logResponse(method, url.pathname, 500, r.error); return json(res, 500, r); }
         logRow('updated', `${key}.${dlgField}[${dlgIdx}]  →  ${String(text).slice(0,60)}`);
         logResponse(method, url.pathname, 200, `dialogue/${key}/${dlgField}/${dlgIdx} replaced`);
-        return json(res, 200, { ok:true, key, field:dlgField, index:dlgIdx, text: arr[dlgIdx], note:'POST /api/save to persist.' });
+        return saveAndRestart(res, 200, { ok:true, key, field:dlgField, index:dlgIdx, text: arr[dlgIdx] });
       }
 
       // PUT /api/npc/:key/dialogue/quote
@@ -11188,7 +11188,7 @@ async function route(req, res) {
         if (!r.ok) { logResponse(method, url.pathname, 500, r.error); return json(res, 500, r); }
         logRow('updated', `${key}.quote  →  ${String(text).slice(0,80)}`);
         logResponse(method, url.pathname, 200, `dialogue/${key}/quote updated`);
-        return json(res, 200, { ok:true, key, field:'quote', quote: dlg.quote, note:'POST /api/save to persist.' });
+        return saveAndRestart(res, 200, { ok:true, key, field:'quote', quote: dlg.quote });
       }
 
       // PUT /api/npc/:key/dialogue/meta — patch meta fields
@@ -11207,7 +11207,7 @@ async function route(req, res) {
         if (!r.ok) { logResponse(method, url.pathname, 500, r.error); return json(res, 500, r); }
         logRow('updated', `${key}.meta  →  ${updated.join(', ')}`);
         logResponse(method, url.pathname, 200, `dialogue/${key}/meta updated`);
-        return json(res, 200, { ok:true, key, field:'meta', meta: dlg.meta, note:'POST /api/save to persist.' });
+        return saveAndRestart(res, 200, { ok:true, key, field:'meta', meta: dlg.meta });
       }
 
       // PUT /api/npc/:key/dialogue/:array — replace whole array
@@ -11227,14 +11227,14 @@ async function route(req, res) {
         if (!r.ok) { logResponse(method, url.pathname, 500, r.error); return json(res, 500, r); }
         logRow('replaced', `${key}.${dlgField}  →  ${lines.length} lines`);
         logResponse(method, url.pathname, 200, `dialogue/${key}/${dlgField} replaced (${lines.length} lines)`);
-        return json(res, 200, { ok:true, key, field:dlgField, count: lines.length, value: dlg[dlgField], note:'POST /api/save to persist.' });
+        return saveAndRestart(res, 200, { ok:true, key, field:dlgField, count: lines.length, value: dlg[dlgField] });
       }
 
       // PUT /api/npc/:key/dialogue — merge full object (session-only convenience)
       Object.assign(dlg, body);
       logRow('updated', `dialogue › ${key}  (in-memory only)`);
       logResponse(method, url.pathname, 200, `dialogue/${key} updated`);
-      return json(res, 200, { ok:true, key, dialogue: dlg, note:'Whole-object merge is in-memory only. Use field sub-routes (PUT /dialogue/quote etc.) for persistent edits. POST /api/save to persist.' });
+      return json(res, 200, { ok:true, key, dialogue: dlg, note:'Whole-object merge is in-memory only — it never patches the source, so POST /api/save cannot persist it either and a reload drops it. Use the field sub-routes (PUT /dialogue/quote etc.) for a persistent edit.' });
     }
 
     const col = { node:WBAPI.nodeMap, quest:WBAPI.questDb, monster:WBAPI.monsterPool, npc:WBAPI.birkaNpcs }[type];
@@ -11461,7 +11461,7 @@ async function route(req, res) {
       logRow('removed', `${key}.${dlgField}[${dlgIdx}]  →  ${String(removed).slice(0,60)}`);
       logRow('remaining', arr.length);
       logResponse(method, url.pathname, 200, `removed dialogue/${key}/${dlgField}/${dlgIdx}`);
-      return json(res, 200, { ok:true, key, field:dlgField, removed, remaining: arr.length, note:'POST /api/save to persist.' });
+      return saveAndRestart(res, 200, { ok:true, key, field:dlgField, removed, remaining: arr.length });
     }
 
     // DELETE /api/monster/:key/drop — remove a drop entry (nonce type:monster, id:key)
@@ -11613,7 +11613,7 @@ async function route(req, res) {
       logRow('appended', `${key}.${dlgField}[${idx}]  →  ${String(text).slice(0,60)}`);
       logRow('count', dlg[dlgField].length);
       logResponse(method, url.pathname, 201, `appended to dialogue/${key}/${dlgField}`);
-      return json(res, 201, { ok:true, key, field:dlgField, index:idx, text: dlg[dlgField][idx], count: dlg[dlgField].length, note:'POST /api/save to persist.' });
+      return saveAndRestart(res, 201, { ok:true, key, field:dlgField, index:idx, text: dlg[dlgField][idx], count: dlg[dlgField].length });
     }
 
     // POST /api/monster/:id/drop  — create drop entry
@@ -11636,7 +11636,7 @@ async function route(req, res) {
       WBAPI.monsterDrops[key] = { icon: body.icon||'📦', name: body.name, sell: Number(body.sell||0) };
       logRow('drop', `${key}  →  ${body.icon||'📦'} ${body.name}  ·  ${body.sell||0}gp`);
       logResponse(method, url.pathname, 201, `created drop for monster/${key}`);
-      return json(res, 201, { ok:true, key, drop: WBAPI.monsterDrops[key], note:'POST /api/save to persist.' });
+      return saveAndRestart(res, 201, { ok:true, key, drop: WBAPI.monsterDrops[key] });
     }
 
     // POST /api/npc/:id/dialogue  — create NPC_DIALOGUES entry
@@ -11657,7 +11657,7 @@ async function route(req, res) {
       WBAPI.npcDialogues[key] = enriched;
       logRow('dialogue', `${key}  ·  quote: ${body.quote.slice(0,60)}…`);
       logResponse(method, url.pathname, 201, `created dialogue for npc/${key}`);
-      return json(res, 201, { ok:true, key, dialogue: WBAPI.npcDialogues[key], note:'POST /api/save to persist.' });
+      return saveAndRestart(res, 201, { ok:true, key, dialogue: WBAPI.npcDialogues[key] });
     }
 
     // POST /api/monster/:id/rename
