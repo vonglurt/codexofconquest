@@ -287,7 +287,7 @@
 
 | # | Date | Increment | Ship | Headline |
 |---:|---|---|---|---|
-| 6 | 2026-09-07 | §DX-02iw + §DX-02cr | `ea0f156` | four `check:*` scripts were defined in `package.json` and absent from `GATES`, so `check:walk` printed 22/22 over a chain 26 scripts wide. All four are in `GATES` and in `check:walk:serial` now, and `run-gates.js` refuses to start when a `check:*` script is in neither `GATES` nor the named `GATE_EXEMPT` map, or when the serial chain stops mirroring `GATES` — selftest 4 checks → 7, both proved by planting. The row said the four were run by nobody; CI disproved that for three, and `check:duelparity` — the third parity-fenced kernel — was the one run by nothing at all, which is §DX-02cr, closed here with `src/js/duel.js` into both `paths:` filters. The four bespoke CI steps collapse into `check:walk`. 22/22 wall 25.6 s → **26/26 wall 21.1 s** |
+| 1 | 2026-09-14 | §DX-02kl | `887d4ac` | the mesh flake was §DX-02ia's fix working: the offline line is written by the first poll's rejection handler, which the freeze gates, and `openMeshTab()` froze immediately after the click — so ~4 % of runs never rendered anything and failed at `:71` on *unreachable*, not at `:74` on the fixture as the row recorded. `{awaitOffline}` waits for the line before freezing in the one test that asserts it; **2/50 flaky → 50/50**, 120/120 for the file. A second test pins the unfrozen behaviour, checked red |\n| 6 | 2026-09-07 | §DX-02iw + §DX-02cr | `ea0f156` | four `check:*` scripts were defined in `package.json` and absent from `GATES`, so `check:walk` printed 22/22 over a chain 26 scripts wide. All four are in `GATES` and in `check:walk:serial` now, and `run-gates.js` refuses to start when a `check:*` script is in neither `GATES` nor the named `GATE_EXEMPT` map, or when the serial chain stops mirroring `GATES` — selftest 4 checks → 7, both proved by planting. The row said the four were run by nobody; CI disproved that for three, and `check:duelparity` — the third parity-fenced kernel — was the one run by nothing at all, which is §DX-02cr, closed here with `src/js/duel.js` into both `paths:` filters. The four bespoke CI steps collapse into `check:walk`. 22/22 wall 25.6 s → **26/26 wall 21.1 s** |
 | 7 | 2026-08-24 | §DX-02gn + §DX-02eu | `41ffaae` | the suite's screenshot overwrote a tracked file, and the fix was to move the write rather than untrack the file. `living-world-l44.spec.js:210` wrote to… |
 | 8 | 2026-08-24 | §DX-02gt + §AUDIT-03bj | `a72688a` | the suite was red at HEAD and the gate chain was green, because they do not test the same thing. `npm test --prefix src` measured **2 failed / 1016 passed**: Waves 2q… |
 | 9 | 2026-08-24 | §DX-02bs + §PAUL-01 | `b152350` | the soft-lock gate learns the one writer idiom it could not see, and the row's own count of its false positives was one short. `scanFlagWrites` folded five host writer… |
@@ -313,7 +313,7 @@
 | 29 | 2026-07-28 | §DX-01a + §JUNK-01 | `7f75c54` | J14/J15 deleted (hand-edit per Hazard #4, server confirmed stopped; zero other live refs by repo grep), then `build-roads.js --apply` (the canonical do-not-hand-edit… |
 | 30 | 2026-07-28 | §DX-01f + §RESUME-tail | `c9f3946` | 276 lines of closed content moved **verbatim** (scripted line-range surgery — no paraphrase, boundaries asserted before cutting) to plan-archive.md §"Archived 2026-07-28… |
 
-**24 completed entries.**
+**25 completed entries.**
 
 ---
 

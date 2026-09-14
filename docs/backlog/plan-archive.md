@@ -19,6 +19,19 @@
 
 ---
 
+## Archived 2026-09-14 — §DX-02kl (the flake was the previous fix working, in the one test that needed it not to)
+
+### §DX-02kl — the mesh status test §DX-02ia de-raced yesterday came back flaky the next day (NEW 2026-09-14 during §DX-02kj, 🟡 is the fix incomplete or is there a second race) — [x] ✅ SHIPPED 2026-09-14 `887d4ac`
+
+- [x] **§DX-02kl — reproduced first, as the row insists, and the reproduction answered the question by itself.** `npx playwright test tests/integration/worldbuilder-mesh.test.js --repeat-each=50 -g "tab activates and renders a full status fixture"` at `f8f693e`: **2 flaky · 48 passed**, in **19.4 s**. So it does not need full-suite load — a ~4 % rate in isolation — and *"do not re-fix by raising a timeout"* was right for a reason the row had not yet found.
+- [x] **The answer is neither of the row's two readings, and the row names the wrong assertion.** It records the failure as `#mesh-identity` `toContainText('a1b2c3d4')`@74, the fixture line. **Both reproductions failed at `:71`, `toContainText('unreachable')`** — the *offline fallback* line — with the element still reading **`"Loading mesh status…"`**, its initial markup, after 14 polls of the locator. Nothing had overwritten the fixture; **nothing had ever rendered at all**.
+- [x] **The flake is §DX-02ia's fix working.** `meshPoll`@`edit.html`:10614 writes the offline line from its `catch`, guarded by `if (meshPollFrozen) return;` — the handler gate §DX-02ia added on purpose, because *"a poll already in flight resolves AFTER a caller has rendered its own status"*. `openMeshTab()` froze immediately after the tab click, so when the freeze won the race against the in-flight fetch's rejection, the `catch` returned early and `#mesh-identity` was never written. **The fence is complete; this one test asserts the exact thing the fence exists to suppress**, and the two were racing each other. That is why the fix landed and the flake appeared the next day rather than before it — and it is why no amount of looking for a *second* race would have found anything.
+- [x] **`openMeshTab(page, { awaitOffline })`, and the ordering is the whole fix.** The one test that asserts the offline line now waits for it **before** the freeze; the other five keep freezing first, which is what they need. No timeout was raised and no assertion was weakened. **Measured after: 50/50 green** on the repeat that was 2/50 flaky, and **120/120** for the whole file at `--repeat-each=20`.
+- [x] **A second test pins what that ordering now depends on.** `the live poll writes the offline line when no WBAPI answers` opens the tab and asserts the line **unfrozen** — so if the live poll ever stops writing it, `awaitOffline` would wait for something that no longer happens and every other test would keep passing. **Checked red** by planting a `freezeMeshPoll()` ahead of its assertion, then restored. This is §DX-02ia's own durable-assertion pattern applied to the fix that followed it.
+- [x] **Verification.** `check:walk` **29/29**. `npm test --prefix src`, server stopped, foreground, unpiped to a log: **1239 passed / 7 failed / 0 flaky** — one more passing test than `e567e83`'s 1238 (the new pin), the same seven host-baseline failures, and the flaky column empty for the first time in three runs this session. `docs/design/index.md`'s suite row goes 4 tests → 6 and now records why two of them are slow on purpose.
+
+---
+
 ## Archived 2026-09-14 — §DX-02km (the Talk registry had no verb, and the row undercounted its closures sevenfold)
 
 ### §DX-02km — `NPC_DIALOGUE` is a world-data registry with no API verb, so the mandated write path cannot express it (NEW 2026-09-14 during §DX-02cv, 🟡 endpoint or declared exemption) — [x] ✅ SHIPPED 2026-09-14 `e567e83`
