@@ -19,6 +19,20 @@
 
 ---
 
+## Archived 2026-09-13 — §DX-02fl (ITEM_DB and the item endpoints are retired)
+
+### §DX-02fl — `ITEM_DB` is anchored, parsed, and exported with zero entries (NEW 2026-08-23 during §DOC-02da, 🟢 seed or retire)
+
+- [x] ✅ SHIPPED 2026-09-13 `767027a` **§DX-02fl — retired, by the user's call: the empty `ITEM_DB` section, `GET`/`POST`/`PUT /api/item`, their help and route entries, and every loader and gate reference.**
+> **The row as filed.** `ITEM_DB` was one of 12 anchored sections, parsed into `itemDb` on every load, with zero entries and a comment promising *"weapons, amulets, consumables, readables. Granted via quest handlers or found in world."* The row said seed it or retire the anchor. `lab-report-wbapi-architecture.md` §7.4.
+> **The ground, before any call.** The section was born in `7c48073` (2026-06-02, *"wbapi: POST /api/item — ITEM_DB endpoint + anchor section"*) as that endpoint's landing zone, and **has held no entry in any commit since**. Nothing in `play.html` reads `ITEM_DB`: its only occurrences were its two markers and its own empty declaration. No `./bin/api` verb, no test and no design doc uses `/api/item`. So neither of the row's options was clean. Seeding would add items that nothing in the game reads, and retiring the anchor alone would have broken a documented, if unused, write path. **Put to the user with three options (record it honestly, retire section and endpoints, wire a game reader); the user chose retire.**
+> **Shipped, with the server stopped.** `play.html`: the four-line empty section, markers included. `src/js/wbapi-server.js`: the item handler block (71 lines), the now-callerless `serializeItemLiteral`, the `POST /api/item` line in the write-endpoints help, and the three `/api/item` route entries. `src/js/wbapi-core.js`: the `itemDb` default and its loader line. `src/scripts/check-dupkeys.js`: `ITEM_DB` in its section list and comment. `docs/notes/docs-dev-environment.md`: the supplementary-tables line.
+> **Measured, HEAD → fix:** references to `ITEM_DB`, `itemDb`, `/api/item` or `serializeItemLiteral` outside history docs **24 → 0**; `WORLDBUILDER` sections in `play.html` **12 → 11**; routes in the server's listing **92 → 89**. `node --check` on all three JS files.
+> **Found on the way, and fixed in the same edit.** `check:anchors` went red on two *live* anchors to the deleted declaration — this row's own text and §7.4 of the lab report — and the Node-only `dx01e-anchor-convention.test.js` failed its two gate cases with it, which the first shard-1 run showed as 138/274 against 140/272. Both anchors now use the resolver's history form, *`const ITEM_DB = { // General item definitions`@26682*, with the number outside the code span; `check:anchors` resolves all 4,091, and the test file passes 6/6. **Left alone:** §DX-02b's idea row in Phase 5 still describes `ITEM_DB` as *an empty scaffold*; it is below the open range and records a 2026-07-28 idea, and the §DX-02fi row loses one of the empty sections it could not tell from a corrupted one.
+> **Verified:** `check:walk` **27/27** · `npm test` 152 passed / 1084 failed across three foreground shards, identical to baseline — 1082 browser-launch, the 2 real ones are §DX-02js’s (shard 1 re-run after the anchor fix).
+
+---
+
 ## Archived 2026-09-13 — §DX-02fk (export condition_items exports the condition items)
 
 ### §DX-02fk — `export/condition_items` is a phantom collection (NEW 2026-08-23 during §DOC-02da, 🟢 delete or wire)

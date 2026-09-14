@@ -301,6 +301,8 @@ collection. Delete the getter or wire the field.
 it, or retire the anchor. As it stands it is 0-entry infrastructure that reads as a live surface,
 and §7.1 means an emptied `ITEM_DB` and a *corrupted* `ITEM_DB` look identical.
 
+> **✅ SHIPPED 2026-09-13 (§DX-02fl) `767027a`.** Retired, by the user's call: the section had existed only as `POST /api/item`'s landing zone since `7c48073`, never held an entry, and was read by nothing in the game. The section, the item endpoints, their help and routes, `itemDb` and the dupkeys entry are gone; anchored sections 12 → 11.
+
 **7.5 — §DX-02fm 🟡 `WORLD_DB` has no structured-field writer.** `editStructuredField`'s
 `sectionMap` omits `terrain`, so any non-string terrain field 422s with `unknown type`. Add
 `terrain:'WORLD_DB'` (the roster guard in `editField` already shows the pattern), or reword the
