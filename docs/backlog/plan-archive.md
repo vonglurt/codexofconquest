@@ -21,6 +21,24 @@
 
 ## Archived 2026-09-14 — §DX-02kp (10,339 fields the sanctioned write path would have corrupted, reporting success)
 
+### §DX-02gz — the drop routes are the only writes that do not persist, and the CLI help says persistence is automatic (NEW 2026-08-25 during §DX-02fy, 🟢 no design call) — [x] ✅ SHIPPED 2026-09-14 `1d4b1e9`
+
+- [x] ✅ SHIPPED 2026-09-14 `1d4b1e9` — **§DX-02gz — the defect is real, one of the three named routes has it, and the family is four times wider than the row.**
+
+  **Re-derived at HEAD, per route.** `PUT /api/monster/:key/drop` already returned through `saveAndRestart` and `DELETE` through `saveAndVerify`; **only `POST` did not.** Measured directly at the route, no CLI in the way: `201 {ok:true, note:'POST /api/save to persist.'}` and `grep -c 'GZ Tooth' play.html` = **0**. The row's *"the drop routes"* is one route.
+
+  **And twelve routes had it, not one.** Every route returning that note patches the source and then answers with plain `json()`: fish create, both loot writes, lake-magic create, **seven NPC_DIALOGUE routes** — added three days earlier by §DX-02km — and the monster drop create. All twelve now return through `saveAndRestart`, the same path every other write uses, and the note is deleted.
+
+  **The thirteenth keeps its note, because it is the honest one — and it was still wrong.** The whole-object dialogue merge (`PUT /api/npc/:key/dialogue`, no sub-path) really is in-memory only. Its note ended *"POST /api/save to persist."*, and a save writes `_rawSrc`, which that merge never reaches: following the instruction produces a file without the edit and a success line about it. Rewritten to say a reload drops it and to name the field sub-routes. **The route itself is filed as §DX-02kw.**
+
+  **Why it survived ten months in a repo that round-trips everything.** §DX-02fy's workaround taught `wb.js` to issue `POST /api/save` after `drop`, and three more verbs had grown the same two lines — `dialogue --create`, `dialogue` edit and `loot`. The CLI honoured the documented contract, so the only caller that would have noticed had been taught not to. All four workarounds are removed; `./bin/api help`'s *"You do NOT need to run save after a put/post/del"* is now true of the server rather than true of the client.
+
+  **Measured before and after, at the route:** `ok:true, note:'POST /api/save to persist.', **0** on disk` → `ok:true, autoSaved:true, no note, **1** on disk`.
+
+  **Verified.** `src/tests/write-acceptance.mjs` gains the persistence half — one mutating route per family called and read back **off disk**, with `[manual-save]` / `[unsaved]` / `[lost]` for the three shapes. **Non-vacuous: 6 findings against the pre-fix server, 3 per family**, green on restore; selftest **7 → 10** checks. `./bin/api audit` 0 errors · `check:walk` **29/29, 14.5 s** · `test:help` and `test:mud` green · `npm test` **1239 passed / 7 failed**, the baseline · `play.html` byte-unchanged.
+
+  **Found on the path, filed as §DX-02kw:** the whole-object dialogue merge is the only mutating route that patches no section, so nothing — not the route, not `POST /api/save` — can persist it.
+
 ### §DX-02gy — `put monster` accepts field names it does not know, writes them onto the pool row, and reports `verified: ok` (NEW 2026-08-25 during §DX-02fy, 🟢 no design call) — [x] ✅ SHIPPED 2026-09-14 `d4059c3`
 
 - [x] ✅ SHIPPED 2026-09-14 `d4059c3` — **§DX-02gy — both defects reproduce exactly as filed, and the row's prescription would have broken the write path worse than the defect it fixes.**
