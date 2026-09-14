@@ -111,7 +111,7 @@ quest_ng_03: gate:{ countMin:[{ path:'ngPlusRun', min:1 }] }
 
 **quest_ng_01 — "The Remembered Path":** Revisit 3 Dear Friends. Tracked via `ngMemoryDelivered` — each Dear Friend NPC (fav ≥ 2) whose card renders in NG+ counts toward the three required. Reward: 500gp. **NOT SHIPPED (kept):** earlier revisions said it sets `nextFrobergerComplete = true`; nothing in the file's history has ever assigned that field (§DX-02n).
 
-**quest_ng_02 — "The Open Page":** Write Entry 42 at `LHR` (historical `CI`). Its shipped hint — `hint:'Visit the City Inn to find the open page.',@11066` — names the wrong place: `LHR` is City Streets, the inn is `TLL` (§AUDIT-03s). Only activated if `priorQuestMinusOne`. Reward is the act itself — writing in the blank page is its own completion. No gold. The mechanic does not require substantive prose; choosing "Leave It Blank" completes the quest.
+**quest_ng_02 — "The Open Page":** Write Entry 42 at `LHR` (historical `CI`). Its hint — `hint:"Visit the city streets of Birka to find the open page.",@11069` — named *the City Inn* until §DX-02kh (2026-09-14), which sent the player to `TLL`, *The First Inn*, rather than to `LHR`. Only activated if `priorQuestMinusOne`. Reward is the act itself — writing in the blank page is its own completion. No gold. The mechanic does not require substantive prose; choosing "Leave It Blank" completes the quest.
 
 **quest_ng_03 — "The Letter":** Find Froberger's sealed letter at `TLS` (historical `CO`). Only available in NG+; not present in a first run. One "Take the letter." button on `TLS` (historical `CO`) visit when `!frobergerLetterFound`. Sets `frobergerLetterFound = true`. Reward: 300gp.
 

@@ -301,10 +301,12 @@ The birth commit reads `node.code === 'CI'`; HEAD reads `'LHR'`. The remap is **
 `num` + terrain + label triple-match. What the report gets wrong is the *place*: it calls CI *"(inn)"*
 throughout, and the inn is `TLL`, *The First Inn*.
 
-That error is still on screen. `hint:'Visit the City Inn to find the open page.',@11066` sends the player to
-an inn; the panel renders on the city street. Wrong when written, live for 79 days, and invisible to every
-gate — `check:legacycodes` scans `.md`, `check:noderegs` scans references, and neither reads English.
-→ **§AUDIT-03s +1.**
+That error was on screen for 113 days. The hint read *Visit the City Inn to find the open page* and sent the
+player to an inn — `TLL`, *The First Inn*, the node that hands over the journal — while the panel renders on
+the city street at `LHR`. Invisible to every gate: `check:legacycodes` scans `.md`, `check:noderegs` scans
+references, and neither reads English. **Fixed 2026-09-14 by §DX-02kh** —
+`hint:"Visit the city streets of Birka to find the open page.",@11069`.
+→ **§AUDIT-03s +1, closed.**
 
 ### G. One more, found on the way: NG+ draws from `Math.random()`
 
@@ -366,7 +368,7 @@ remain good, cheap ideas and are the natural content follow-up to this layer.
 | **§DX-02aj** (new) | 🟢 | `ngGreetedKey` is written and read in one pass, so the "second NG+ visit" state is unreachable: memory lines fire on visit 1, or (if an NPC has no greeting entry) never. Two-line fix. |
 | **§AUDIT-03ah** (new) | 🟡 design call | The Entry 42 panel — and through it the fifth ending — requires 3 preserved Dear Friends, undocumented and silently. Wants a signpost, not a threshold change. |
 | **§DX-02n** +2 | 🟢 | `nextFrobergerComplete` (0 reads, 0 writes, **ever** — a new shape for `check:deadconsts`) and `entry42Read` (1 render-side-effect write, 0 reads). |
-| **§AUDIT-03s** +1 | 🟢 | `hint:'Visit the City Inn to find the open page.',@11066` names the wrong node; the panel is at City Streets. |
+| **§AUDIT-03s** +1 | ✅ | shipped as **§DX-02kh** 2026-09-14 — `hint:"Visit the city streets of Birka to find the open page.",@11069`; it named `TLL` and the panel is at `LHR`. |
 | **§DX-02m** +1 | 🟢 | `frobergerNoteNode` drawn from `Math.random()` at both new-game sites — invariant #6. |
 
 Doc corrections applied in the same increment: `docs/story/story-arc-ngplus.md` (7 rows) and `index.md`
