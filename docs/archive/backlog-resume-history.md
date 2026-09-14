@@ -208,6 +208,7 @@
 
 | # | Date | Increment | Ship | Headline |
 |---:|---|---|---|---|
+| 5 | 2026-09-14 | §DX-02ki | `cf44432` | §CELL-01 retired the `N/E/S/W` pointers, so a compass bearing in authored prose is the only direction the game still states to the player and no gate read one; the census is 84 of 216 `text` fields over 118 sentences, 21 beside a resolvable node name, and **11 of those assert nothing** (FEATURE — *"Damascus's southern gate"*), excluded by construction. `WRO`'s carved signpost said *East, Birka* and Birka is **dr −8, dc 0 — due north**; `SEA`'s four-quadrant sweep had Malta and Philippi **swapped**. `check:bearings` is gate #29 (20 selftest checks), placed last so §DX-02jb's hand-maintained gate numbers do not shift; **2 → 0** contradicted, `EXEMPT` empty. Filed §DX-02ke2 |
 | 6 | 2026-09-13 | §DX-02by | `a37a15b` | `MoveResult.via` restated `ok` since the ferry branch was deleted, written on every step and read nowhere (both callers reach the kernel as `Mover.move`, and neither reads it or sends the object); removed from both `MOVER:CORE` copies, parity 1,847 → 1,823 bytes identical |
 | 7 | 2026-09-13 | §AUDIT-03bc | `68171ef` | the GEO tables' `label` is the real-world city and nothing said so; a header on each in `worldmap.js` and `wbapi-server.js` says it, and that all 155 codes are live nodes. Shared labels are two pairs (*Jerusalem*, *Palermo*), and the two tables have drifted on `NUE` |
 | 8 | 2026-09-13 | §DX-02cb | `5513728` | seven live nodes had no lat/lon in any source and geo-seed reported only a count; seven gazetteer entries on their live cells take skipped **7 → 0** (placed 409 → 416), the server names skipped codes and refuses to apply around a gap, and four math-realm nodes that disagree with their anchor are filed as §DX-02kc |
@@ -231,7 +232,7 @@
 | 26 | 2026-07-29 | §DX-02e + §KG | `8fc9a2e` | auto-travel routes with `_roadGridPathCore` (§NAV-01d road-weighted Dijkstra, road/sea-lane cost 1, everything else 2), and all six legs `TLL→SPB→KMS→ZVD→FBR→TVR→SVO`… |
 | 27 | 2026-07-29 | §AUDIT-03e + §KG | `2da7fbb` | one normalisation line after `NODE_MAP:END` (the data section keeps its 129 authored `code:` fields — not 287 new ones) + the `NODE_CODE_BACKFILLED` set captured just… |
 
-**18 completed entries.**
+**19 completed entries.**
 
 ---
 
