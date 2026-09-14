@@ -19,6 +19,24 @@
 
 ---
 
+## Archived 2026-09-14 — §DX-02ku (the notary stops writing an engine identifier)
+
+### §DX-02ku — seven quests say "He writes: questComplete." to the player (NEW 2026-09-14 during §DX-02gy, 🟡 one design call: the replacement line) — [x] ✅ SHIPPED 2026-09-14 `748cf40`
+
+- [x] ✅ SHIPPED 2026-09-14 `748cf40` — **§DX-02ku — seven, exactly as filed, and the design call was already answered in the corpus.**
+
+  **Re-derived at HEAD `aa3c0ae`.** Seven `passText`s carry the token, in the Sweelinck archive register, shown at the moment a `skill_check` passes: `zth07_act5`, `zth11_act5`, `flr07_act5`, `flr11_act5`, `jrs07_act5`, `lis07_act5`, `lis13_act5`. **Three grammatical positions**, which is why the row's *do not substitute mechanically* was right: four read *"He writes: questComplete."*, one of those mid-paragraph with a sentence after it, and three end on a **bare** *"questComplete."* after *"He files."* or a closing quote.
+
+  **The replacement is not invented — it is quoted.** `grep -o "He writes: [^.]*\."` over the corpus returns 37 completions of that sentence in this voice, and **`"He writes: closed."` is already there, twice**: `gci_07_act5`'s `passText` and `failText`, in the **identical structural position** — Sweelinck opens the file index, then writes it. The row asked for *"the register's own vocabulary"*; the register had already written the line. Nothing about the archive voice had to be guessed, which is the difference between a design call and a preference.
+
+  **Per-sentence, not per-token.** The three that already carried *"He files."* keep it. `flr11_act5` takes the phrase alone, because *"You receive the Archive Receipt: Prophecy Fulfilled."* follows it and a second *"He files."* would push that sentence out of the beat. `jrs07_act5`, `lis07_act5` and `lis13_act5` ended on a bare token after a filing or a quoted title and **gain** *"He files."*, so all seven land on one form — *"He files. He writes: closed."* — which is what the row means by *one voice, one form, varied where the sentence demands it*.
+
+  **Written through `./bin/api sub`** (§AUDIT-03av), which matches only inside string literals, so a comment or a key cannot be reached by construction — the right verb for a phrase inside authored prose, where `put passText=…` would re-send the whole paragraph. Seven substitutions, **1 occurrence each**, read back from disk after a restart.
+
+  **Before → after:** `grep -c 'questComplete' play.html` **8 → 0**. **The row predicted 8 → 1** — *"the surviving field is §DX-02kt's"* — and that field was removed an hour earlier in the same loop, so the two rows filed together by §DX-02gy closed together and the token is gone from the file entirely.
+
+  **Verified:** `./bin/api audit` **0 errors** · `npm run check:walk --prefix src` **31/31 gates, 15.4 s** · `npm test --prefix src` **1239 passed / 7 failed**, the host baseline (§DX-02ke) — including `web-of-connections-l45.spec.js:248`, the one baseline red that asserts a *deliberate* bracketed placeholder, unchanged: this row was the undeliberate case and does not touch it. `play.html` **7 lines changed, 0 net**.
+
 ## Archived 2026-09-14 — §DX-02kt (two inert fields, and the verb the write path did not have)
 
 ### §DX-02kt — two quest fields are written by the data and read by nothing (NEW 2026-09-14 during §DX-02gy, 🟡 one design call: remove them, or wire them up) — [x] ✅ SHIPPED 2026-09-14 `267635d`
