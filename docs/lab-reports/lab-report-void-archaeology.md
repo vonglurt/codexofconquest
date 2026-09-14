@@ -10,7 +10,7 @@
 
 > **Historical node codes.** Written before the §WALK/§NAV world rewrite renamed every node to
 > airport-style codes. Throughout: **CI → `LHR`** (City Streets — Birka; the Blue Shutters Archive),
-> **SL → `BMA`** (Birka Slums), **DF → `ZRH`** (`defi_land`, the Defiant Fields), **WM / SQ → `NUE`**
+> **SL → `BMA`** (Birka Slums), **DF → `ZRH`** (`defi_land`, *The Unbanked Quarter*; the Defiant Fields is the pre-city name of the ground, kept in the ward text alone — §DX-02kg), **WM / SQ → `NUE`**
 > (Scholar's Quarter — Weimar; the archive *is* the Quarter), **MT → `GVA`** (Mountain Pass — High
 > Crest), **CO → `TLS`** (the victory screen's node). This is a HISTORY doc: the retired codes are
 > annotated, never rewritten.
@@ -73,7 +73,7 @@ as a survival trait — the third measured instance in the corpus.*
 
 Benedikt names four contributors to the Antecedent containment: **the First Researcher** built the
 cage and wrote the Log; **Froberger** found the mechanism and died for it; **the player** activated
-it at the Defiant Fields without knowing; **Entry 42** is the fourth link, and it is the player's
+it at `ZRH`, the Unbanked Quarter, without knowing; **Entry 42** is the fourth link, and it is the player's
 own handwriting. Four links is a chain. *"That is the only kind of answer this work produces — not a
 solution, a chain."*
 

@@ -8442,7 +8442,7 @@ const NODE_MAP = { // → doc: maps.md §NODE_MAP
   LHR:{ num:1,  code:'LHR', name:'city',            label:"City Streets — Birka",       act:1, text:"Birka wakes in layers. The market carts come first, wheels finding the same ruts they found yesterday, and the gate lamps still burn pale against a sky that hasn't decided on morning. Cobbles slick with the night's damp; the smell of tar and fish and cold stone.\n\nThe city keeps a rhythm — corner posts, lamplighters, the watch changing without a word. On one corner stands the guard captain, Yael Scheidemann: square-shouldered in city colours, a duty log open in one hand, marking the street the way other people breathe. She misses nothing and hurries at nothing.\n\nNotices flutter on the board by the fountain. Down the hill the lower districts stay shuttered. Up here the day simply begins, the way it always does, whether or not anyone is ready for it.", npc:'City Guard Captain', battle:null, loot:'Bloodstained Map', sleep:false,
     board:true,
   },
-  BMA:{ num:51, code:'BMA', name:'city_slums',     label:'Birka Slums',                act:1, text:"The alleys north of the Birka market are too narrow for carts and too cramped for anything to move through quickly. This is their primary defense. The refuse heaps at each junction attract every pest the city produces — rats in the lower layers, cockroach swarms in the dry section above, wasps where the heat concentrates in the overhang. The city does not come here to clean. The city does not come here.\n\nThree children are playing a dare game at the gutter crossroads when you arrive. The rules are visible in how they stand: one touches the leech-covered stones, two watch. They have run this game long enough to know exactly how close you can get before a leech detaches and looks for warmer purchase.\n\nThey don't look at you when you pass. In the slums, ignoring strangers is the social courtesy — it means you have decided not to be a problem.\n\nThe road north goes to the Defiant Fields. The children don't go north.", npc:null, battle:null, loot:null, sleep:false,
+  BMA:{ num:51, code:'BMA', name:'city_slums',     label:'Birka Slums',                act:1, text:"The alleys north of the Birka market are too narrow for carts and too cramped for anything to move through quickly. This is their primary defense. The refuse heaps at each junction attract every pest the city produces — rats in the lower layers, cockroach swarms in the dry section above, wasps where the heat concentrates in the overhang. The city does not come here to clean. The city does not come here.\n\nThree children are playing a dare game at the gutter crossroads when you arrive. The rules are visible in how they stand: one touches the leech-covered stones, two watch. They have run this game long enough to know exactly how close you can get before a leech detaches and looks for warmer purchase.\n\nThey don't look at you when you pass. In the slums, ignoring strangers is the social courtesy — it means you have decided not to be a problem.\n\nThe road south goes to the Unbanked Quarter. The children don't go south.", npc:null, battle:null, loot:null, sleep:false,
   },
   TLL:{ num:2,  code:'TLL', name:'inn',             label:'The First Inn',                 act:1, text:"The breakfast is already waiting when you sit down. She hasn't asked what you take in your tea.\n\nInnkeeper Brynn wipes the same section of counter she wiped when you walked in. Two stools down, a ledger sits open to an entry that hasn't been filled — harbor arrivals, last Tuesday. Two names in the margin. No departure columns.\n\nShe sets the journal in front of you. Forty-one entries. The author's name is Froberger.\n\n\"Free,\" she says. \"The room's free too, if you need it.\"\n\nShe goes back to the counter.", npc:'Innkeeper Brynn', battle:null, loot:"Merchant Ledger · Froberger's Journal", sleep:true, sleepCost:5,
   },
@@ -11145,7 +11145,7 @@ const QUEST_DB = { // → doc: quest.md §Quest Format
   quest_va_01: { id:'quest_va_01', type:'side', schema:'UQF-1.0', gate:{}, bits:[], completion:{ flags:['vaAllMarksFound'] }, title:'The Architecture: Five Marks',
     onComplete:[ { kind:'narrative', msg:'🏛️ Five marks found. The pattern is complete.' } ], // §ARCH-01 W7c
     desc:"Someone passed through five sites two hundred years ago and left marks. The marks are in places you have already visited — you walked past them without knowing. No one told you they were there because no one who knew is still alive to tell. What you have instead are Froberger's margin notes, which mention the marks in the way a person mentions something they saw in passing and could not explain and never went back for. Follow the track. Each site will say where he was and how long ago.",
-    hint:'Investigate: City Inn, Birka Slums, Defiant Fields, Scholar\'s Quarter, Mountain Pass.',
+    hint:"Investigate: City Inn, Birka Slums, the Unbanked Quarter, Scholar's Quarter, Mountain Pass.",
     activateNode:null, 
     waypointNode:'LHR', reward:0,
     disposition:'"Five marks. One pattern. She was everywhere before anyone was looking." — Froberger, Entry 7 marginal note (between the lines)',
@@ -28373,9 +28373,9 @@ function _buildEpilogueScroll() {
   else lines.push(FROBERGER_EPILOGUE.efficient);
   // Arc epilogue additions (§XXXVI — Layers 62–70)
   ARC_EPILOGUE_CONDITIONS.forEach(({ cond, line }) => { if (cond()) lines.push(line); });
-  // §D01-04 Secret Gate — anonymous recorded truth from the Defiant Fields toll rune
+  // §D01-04 Secret Gate — anonymous recorded truth from the Unbanked Quarter toll rune
   if (S_story._voidTollSecret) {
-    lines.push('At the Defiant Fields, before the end, someone knelt at the void rune and spoke one true thing aloud. The rune recorded it. It is here now. Anonymous. Undated. Just the truth as it was said:\n\n"' + _mpEsc(S_story._voidTollSecret) + '"');
+    lines.push('At the Unbanked Quarter, before the end, someone knelt at the void rune and spoke one true thing aloud. The rune recorded it. It is here now. Anonymous. Undated. Just the truth as it was said:\n\n"' + _mpEsc(S_story._voidTollSecret) + '"');
   }
   return lines;
 }
@@ -31940,8 +31940,8 @@ function _nodeHookVoidArchaeology(node) {
     const _vaReady = (S_story.ngPlusRun || 0) >= 1 && S_story.wmFirstResearcherKnown && S_story.entry42Written;
     const _vaSites = {
       LHR: { flag:'vaCI', text:'In the back of the Blue Shutters Archive — a partial shelf record. Researcher Category: Containment. Date: [REDACTED]. The same shelf that held the archive letter. She worked here. The marks start here.' },
-      BMA: { flag:'vaSL', text:'A carved marker on a corner building in the Birka Slums. The pattern matches the stones at the Defiant Fields exactly. This building predates the city by 80 years — predates the Scholar Kings. The mark was here before there was anyone to put it there.' },
-      ZRH: { flag:'vaDF', text:'A stone alignment in the scorched terrain of the Defiant Fields. Not random — spaced to a mathematical interval. The battle happened at the activation point. This is where the sealing mechanism triggered. You didn\'t choose this spot. She chose it, 200 years before you arrived.' },
+      BMA: { flag:'vaSL', text:'A carved marker on a corner building in the Birka Slums. The pattern matches the stone alignment in the Unbanked Quarter exactly. This building predates the city by 80 years — predates the Scholar Kings. The mark was here before there was anyone to put it there.' },
+      ZRH: { flag:'vaDF', text:'A stone alignment under the cracked pavement of the Unbanked Quarter — the transmitter mast is bolted straight through it. Not random: spaced to a mathematical interval. Two hundred years ago this block was open ground and the maps called it the Defiant Fields; the battle happened at the activation point. This is where the sealing mechanism triggered. You didn\'t choose this spot. She chose it, 200 years before you arrived.' },
       NUE: { flag:'vaWM', text:'Document 3 in the lower archive — but now the project codename is visible: ANTECEDENT CONTAINMENT PROTOCOL. The word "Void" appears nowhere in the original documents. She never called it that. She called it what it was: a cage.' },
       GVA: { flag:'vaMT', text:'A sealed access tunnel at the Mountain Pass. Never opened by anyone in the records. Sealed before the Scholar Kings existed. Not collapsed — sealed from inside. The seal is intact. It is waiting.' },
     };
@@ -32014,7 +32014,7 @@ function _nodeHookVoidShamanWarden(node) {
     if (!S_story.vshamanFound) {
       S_story.vshamanFound = true;
       if (!S_story.quests['quest_vs_warden']) S_story.quests['quest_vs_warden'] = 'active';
-      storyMsg('Inside the tunnel, past where you stopped before.\n\nThe walls are marked — not the stone alignment from the Defiant Fields, but new work, carved in the past six months. A workbench. Notes in a language that mixes goblin glyphs and Old Scholar script.\n\nThe Warden is not surprised to see you. They knew Mordus would send someone eventually.\n\n"You came to stop me. Or to understand. Either is fine. I have been working for eleven years to do the right thing. I may be wrong about what the right thing is."');
+      storyMsg('Inside the tunnel, past where you stopped before.\n\nThe walls are marked — not the stone alignment from the Unbanked Quarter, but new work, carved in the past six months. A workbench. Notes in a language that mixes goblin glyphs and Old Scholar script.\n\nThe Warden is not surprised to see you. They knew Mordus would send someone eventually.\n\n"You came to stop me. Or to understand. Either is fine. I have been working for eleven years to do the right thing. I may be wrong about what the right thing is."');
       storyAutoSave();
     }
     const _wardenBtnGroup = document.createElement('div');
@@ -35090,7 +35090,7 @@ function storyRender(node, prefix) {
     }
   }
   _runNodeHook('void-archaeology', node); // ── Layer 52: §XVII Void Archaeology — extracted verbatim to NODE_HOOKS (§VM-01-G2) ──
-  // ── §D01-04: Secret Gate — DF Defiant Fields void toll rune ──
+  // ── §D01-04: Secret Gate — ZRH Unbanked Quarter void toll rune ──
   if (node.code === 'ZRH' && !S_story._voidTollSecret && !S_story.secretGatePassed) {
     const _sgDiv = document.createElement('div');
     _sgDiv.className = 'sweelinck-variant';
@@ -35098,7 +35098,7 @@ function storyRender(node, prefix) {
     _sgDiv.style.cssText = 'margin-top:10px;border-left-color:#4a2a5a;';
     _sgDiv.innerHTML = '<div style="color:#9060a0;font-weight:700;margin-bottom:4px;">🔮 The Void Toll Rune</div>'
       + '<div style="font-size:12px;color:#bba;margin-bottom:8px;">'
-      + 'A rune in the stone here predates everything else at the Defiant Fields. It has one word above it in Scholar King notation: <em>SPEAK</em>. The rune will accept one thing: a secret. Something true. Something not yet said aloud.<br><br>'
+      + 'A rune in the stone here predates everything else in the Unbanked Quarter. It has one word above it in Scholar King notation: <em>SPEAK</em>. The rune will accept one thing: a secret. Something true. Something not yet said aloud.<br><br>'
       + 'If you speak it, the rune records it. It will appear in the ending — anonymous, undated, just the truth you said here.'
       + '</div>'
       + '<textarea id="sg-secret-input" placeholder="Type your secret here..." style="width:100%;height:60px;background:#1a1a2a;color:#ccc;border:1px solid #5a4060;border-radius:3px;padding:6px;font-size:12px;box-sizing:border-box;resize:vertical;"></textarea>'
