@@ -1839,7 +1839,7 @@ Six Birka NPCs are fully interactive across all 8 acts. Each has a quest chain, 
 At **Dear Friend+** (level 3), joint NPC moments unlock:
 - Quill + Brynn at `MHQ` (historical `TV`): joint ambient moment
 - Weckmann + Auros at `HKG` (historical `CY`): mid-conversation the player interrupts
-- Froberger traces fire (one-time NPC memory of Froberger per Dear Friend NPC)
+- Froberger traces fire (an NPC memory of Froberger per Dear Friend NPC, delivered once and then part of that NPC's Dear Friend pool)
 - Entry 41 reaction lines at `TLL` (historical `IN`) (Brynn) and NUE (Sweelinck) after `frobergerLastEntryRead`
 
 ---

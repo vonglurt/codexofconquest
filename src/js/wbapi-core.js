@@ -878,7 +878,8 @@ function _classifyQuest(q) {
 const WBAPI = {
   nodeMap: {}, nodeCoords: {}, questDb: {}, monsterPool: {},
   monsterDrops: {}, worldDb: {}, birkaNpcs: {},
-  fishPool: [], nightFishPool: [], lakeMagicDb: {}, itemDb: {}, npcDialogues: {}, ebNpcDialogue: {}, d100Table: [],
+  fishPool: [], nightFishPool: [], lakeMagicDb: {}, npcDialogues: {}, ebNpcDialogue: {}, d100Table: [],
+  conditionItems: [],
   _terrainToMonsters: {}, _monsterToTerrains: {},
   _questsByNode: {}, _questsByNpc: {}, _questsByWaypoint: {},
   _questFlags: {}, _flagToQuests: {}, _questArcs: {},
@@ -915,13 +916,15 @@ const WBAPI = {
     this.fishPool      = parseArr(fishSrc, 'FISH_POOL');
     this.nightFishPool = parseArr(fishSrc, 'NIGHT_FISH_POOL');
     this.lakeMagicDb   = parseSimple(extrSection(src,'LAKE_MAGIC'), 'LAKE_MAGIC_DB');
-    this.itemDb        = parseSimple(extrSection(src,'ITEM_DB'), 'ITEM_DB') || {};
     this.npcDialogues  = parseSanitized(extrSection(src,'NPC_DIALOGUES'), 'NPC_DIALOGUES') || {};
     this.d100Table     = parseArr(extrSection(src,'D100_TABLE'), '_D100_TABLE') || [];
     // §AUDIT-03b — the Epic-Battleground quest-givers. Keyed by battleground node code,
     // each entry names a real, rendered quest-giver (EB_NPC_DIALOGUE lives OUTSIDE the
     // WORLDBUILDER markers, so it is read straight off the raw source).
     this.ebNpcDialogue = parseSanitized(src, 'EB_NPC_DIALOGUE') || {};
+    // §DX-02fk — the condition-item registry (item name → condition + effect + icon). Also outside
+    // the markers, and an array; `export condition_items` returned {} while nothing set this.
+    this.conditionItems = parseArr(src, 'CONDITION_ITEMS') || [];
     this._npcVocab     = null;   // invalidate the cached npcKeyVocab() union
     const qSrc = extrSection(src,'QUEST_DB');
     this._rawQuestSrc = qSrc || '';

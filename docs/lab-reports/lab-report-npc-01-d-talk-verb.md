@@ -130,7 +130,7 @@ One §3 argument did **not** survive contact. The report refuses to reuse `npcVi
 at a card would raise favor"* — and the separate map does hold for favor. But `_talkToNpc@23536` opens by
 calling `function _getNPCDialogue@23582`, which bumps `npcVisitCounts` as a side effect **including on both
 early-return paths**: the passive counter it was protecting is advanced by the deliberate act, and by clicks
-that do nothing at all. Filed as §DX-02dq.
+that do nothing at all. Filed as §DX-02dq; shipped 2026-09-13 at `516b595`.
 
 ---
 
@@ -141,6 +141,7 @@ that do nothing at all. Filed as §DX-02dq.
   `const visits = (S_story.npcVisitCounts@27795` against `const FROBERGER_TRACES = {@27826`, so Talk clicks
   accelerate content meant to reward genuine revisits, and an already-Friendly NPC can be clicked forever for
   free increments. Two-line fix: hoist the favor and same-day guards above the `_getNPCDialogue` call.
+  > **✅ SHIPPED 2026-09-13 (§DX-02dq) `516b595`.** `_talkToNpc` now checks `NPC_DIALOGUES[key]` and never calls `_getNPCDialogue`, the row's second option rather than the hoist. The defect was wider than filed here: the discarded call also spent one-time lines unseen, Auros's Froberger trace and Brynn's Room 6 line among them, because that function is where they are delivered. Measured through the real functions in a Node vm, Talk-driven visits **2 → 0** and **5 → 0**. `npc-card-map.test.js` pins it; Chromium is not installed on this host, so that case has not yet run in a browser.
 - **§AUDIT-03bo — one NPC has a name, a node, an occupation and two quests, and renders nothing.**
   `watcher_gvw: { key@23021` is The Greenwood Watcher, quest-giver for `clr_01_act3@21964` and `clr_01_act4`,
   listed in the derived render map at `GVW`, with **no `NPC_DIALOGUES` entry** — so `function

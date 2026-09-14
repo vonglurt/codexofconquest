@@ -247,6 +247,37 @@ for (const [needle, why] of Object.entries(SINK_BRANCHES)) {
   }
 }
 
+// ── I7: a node's header does not say its name twice (§DX-02el) ───────────────
+// The story header composes `node.label · terrainLabel`, so a terrain labelled with the
+// node's own label prints the name twice (`Nevsky Checkpoint · Nevsky Checkpoint`). The
+// terrain label names the kind of place; the node label names the place. STUTTER_KNOWN is
+// the 21 nodes that already did this when the gate landed. It may only shrink: a new
+// stutter fails, and so does an entry that no longer stutters, so the list cannot go stale.
+const STUTTER_KNOWN = new Set(['MAN', 'KIR', 'MSY', 'BGI', 'PDL', 'RAI', 'GIB', 'TRF', 'SID', 'TRD', 'NAS',
+  'FEZ', 'AHB', 'BEL', 'HER', 'BKK', 'BOO', 'SSJ', 'CDG', 'SZG', 'LIM']);
+const LABEL_RE = /\blabel\s*:\s*(['"])((?:\\.|(?!\1).)*)\1/;
+const labelOf = line => { const m = line.match(LABEL_RE); return m ? m[2].replace(/\\(['"])/g, '$1') : null; };
+const terrainLabels = {};
+{
+  let cur = null;
+  for (const line of worldBody.split('\n')) {
+    const m = line.match(/^ {2}([A-Za-z_][A-Za-z0-9_]*)\s*:/);
+    if (m) cur = m[1];
+    if (cur && !(cur in terrainLabels)) { const l = labelOf(line); if (l !== null) terrainLabels[cur] = l; }
+  }
+}
+const stutter = [];
+for (const line of nodeMapBody.split('\n')) {
+  const m = line.match(/^ {2}([A-Za-z0-9_]{2,8})\s*:\s*\{/);
+  if (!m || !nodeTerrains[m[1]]) continue;
+  const label = labelOf(line);
+  if (label !== null && terrainLabels[nodeTerrains[m[1]]] === label) stutter.push(m[1]);
+}
+for (const code of stutter) if (!STUTTER_KNOWN.has(code))
+  fails.push(`I7: ${code}'s header reads '${terrainLabels[nodeTerrains[code]]} · ${terrainLabels[nodeTerrains[code]]}' — terrain '${nodeTerrains[code]}' carries the node's own label; give the terrain the kind of place`);
+for (const code of STUTTER_KNOWN) if (!stutter.includes(code))
+  fails.push(`I7: ${code} no longer repeats its name — remove it from STUTTER_KNOWN, which may only shrink`);
+
 // ── Report ───────────────────────────────────────────────────────────────────
 console.log('§WALK-4 terrain-field invariant proof');
 console.log(`  hub=${HUB}  nodes=${allCodes.length}  sea-cells=${IMPASSABLE.size}  terrains=${terrainKeys.size}`);
@@ -257,9 +288,11 @@ console.log(`  I4  advertised-hour-cards=${advertised.size}  declared=${Object.k
 console.log(`  I5  _luckMod-call-sites=${luckLines.length}  declared=${Object.keys(LUCK_SITES).length}`);
 console.log(`  I6  skill-check branches with a message sink=${Object.keys(SINK_BRANCHES).filter(n => SRC_LINES.some(l => l.includes('execBits(' + n) && /pushMsg\s*:/.test(l))).length}/${Object.keys(SINK_BRANCHES).length}`);
 
+console.log(`  I7  nodes-whose-header-repeats-their-name=${stutter.length}  known=${STUTTER_KNOWN.size}`);
+
 if (fails.length) {
   console.error('\n✗ INVARIANT VIOLATIONS:');
   for (const f of fails) console.error('   ✗ ' + f);
   process.exit(1);
 }
-console.log('\n✓ I1 + I2 + I3 + I4 + I5 + I6 hold — terrain field is total, stub-free and fully reachable from ' + HUB, '\n  every advertised hour is an hour the code charges, every _luckMod() call site is declared,\n  and both branches of the skill-check resolver can be heard');
+console.log('\n✓ I1 + I2 + I3 + I4 + I5 + I6 + I7 hold — terrain field is total, stub-free and fully reachable from ' + HUB, '\n  every advertised hour is an hour the code charges, every _luckMod() call site is declared,\n  both branches of the skill-check resolver can be heard, and no new node says its name twice');

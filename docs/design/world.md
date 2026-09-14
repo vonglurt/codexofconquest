@@ -639,7 +639,7 @@ All three together bring the balance to exactly 0 — `-8 + 4 + 2 + 2`, in any o
 
 ### Froberger Traces
 
-`FROBERGER_TRACES` — 6 one-time NPC memories of Froberger. Each gated by fav ≥ 2 and sufficient visit count. Delivered via `_checkFrobergerTrace(npcKey)` priority injection in `_getNPCDialogue()`.
+`FROBERGER_TRACES` — 6 NPC memories of Froberger. Each gated by its own `minFav` (2, or 3 for `brynn` and `crov`) and a visit count. First delivered via `_checkFrobergerTrace(npcKey)` priority injection in `_getNPCDialogue()`; from then on `_getNPCDialogue()` appends the trace to that NPC's Dear Friend pool while favor stays at `minFav`, derived from the saved `frobergerTrace_<key>_delivered` flag.
 
 #### NPC_NG_MEMORY_LINES *(Layer 50 — ✅ Implemented)*
 

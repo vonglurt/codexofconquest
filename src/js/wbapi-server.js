@@ -1617,6 +1617,10 @@ function readBody(req) {
     req.on('end', () => {
       try {
         const parsed = JSON.parse(buf || '{}');
+        // §DX-02cs: `null`, `5`, `"x"` and `[]` are valid JSON, and every handler reads its body as an
+        // object. Reject them here, and all 44 call sites answer with their existing 400.
+        if (parsed === null || typeof parsed !== 'object' || Array.isArray(parsed))
+          throw new Error('request body must be a JSON object');
         logBody('in', parsed);
         resolve(parsed);
       } catch(e) { reject(e); }
@@ -1809,17 +1813,6 @@ function serializeNpcLiteral(key, body) {
   if (neutral)    parts.push(`neutral:${neutral}`);
   if (friendly)   parts.push(`friendly:${friendly}`);
   if (dearFriend) parts.push(`dearFriend:${dearFriend}`);
-  return parts.join(', ') + ' },\n';
-}
-
-function serializeItemLiteral(key, body) {
-  const STR  = ['name','icon','type','desc','readText','effect'];
-  const NUM  = ['sell','atkBonus','dmgDie','dmgCount','dmgFlat','minLevel','uses','base','levelScale','luckScale','minRank'];
-  const BOOL = ['passive'];
-  const parts = [`  ${key}: { key:${JSON.stringify(key)}`];
-  for (const f of STR)  if (body[f] !== undefined) parts.push(`${f}:${JSON.stringify(body[f])}`);
-  for (const f of NUM)  if (body[f] !== undefined) parts.push(`${f}:${Number(body[f])}`);
-  for (const f of BOOL) if (body[f] !== undefined) parts.push(`${f}:${!!body[f]}`);
   return parts.join(', ') + ' },\n';
 }
 
@@ -2174,7 +2167,6 @@ async function route(req, res) {
           `  POST ${b}/api/monster       body: {key, name, ac, hp, atk, dmgDie, dmgCount, dmgFlat, tier}  (all required; tier is trivial|easy|medium|hard|deadly)`,
           `  POST ${b}/api/terrain       body: {key, label, icon?, monsters:[key,...]}`,
           `  POST ${b}/api/npc           body: {key, name, node, occupation?, neutral?, friendly?, dearFriend?}`,
-          `  POST ${b}/api/item          body: {key, name, type, icon?, sell?, desc?, atkBonus?, passive?, readText?}`,
           `  POST ${b}/api/fish          body: {key, name, rank, desc?, isNight?}`,
           `  POST ${b}/api/lake-magic    body: {key, name, effect, ...}`,
           `  POST ${b}/api/flags         body: {name, defaultValue, comment?}`,
@@ -2513,7 +2505,7 @@ async function route(req, res) {
           '  fish_pool       — { day: [...], night: [...] }',
           '  lake_magic      — LAKE_MAGIC_DB object',
           '  monster_drops   — MONSTER_DROPS object',
-          '  condition_items — CONDITION_ITEMS object',
+          '  condition_items — CONDITION_ITEMS array',
           '  all             — NODE_MAP, QUEST_DB, MONSTER_POOL, WORLD_DB, FISH_POOL,',
           '                    NIGHT_FISH_POOL and LAKE_MAGIC_DB. monster_drops and',
           '                    condition_items are exported only by naming them.',
@@ -3657,77 +3649,6 @@ async function route(req, res) {
         note:          'd100 consumable table at GET /api/loot  ·  magic weapons are fishing-only',
       },
     });
-  }
-
-  // ── Items (ITEM_DB) ──────────────────────────────────────────────────────
-  if (parts[0] === 'item') {
-    const itemKey = parts[1];
-
-    if (method === 'GET') {
-      if (!itemKey) {
-        const typeFilter = url.searchParams.get('type');
-        let list = Object.values(WBAPI.itemDb);
-        if (typeFilter) list = list.filter(i => i.type === typeFilter);
-        logRow('total', `${list.length} items${typeFilter ? `  ·  type=${typeFilter}` : ''}`);
-        logRow('sample', sample(list.map(i => i.key || i.name), 5));
-        logResponse(method, url.pathname, 200, `${list.length} items`);
-        return json(res, 200, { ok:true, count:list.length, items: list });
-      }
-      const item = WBAPI.itemDb[itemKey];
-      if (!item) {
-        logResponse(method, url.pathname, 404, `item "${itemKey}" not found`);
-        return json(res, 404, { error:`item "${itemKey}" not found` });
-      }
-      logRow('item', `${item.icon||''}  ${item.name}  ·  type: ${item.type||'—'}`);
-      logResponse(method, url.pathname, 200, `item/${itemKey}`);
-      return json(res, 200, { ok:true, item, _meta:{ canDelete: true } });
-    }
-
-    if (method === 'POST' && !itemKey) {
-      let body;
-      try { body = await readBody(req); } catch(e) { return json(res, 400, { error:'Invalid JSON' }); }
-      const { key, name, type } = body;
-      if (!key || !name || !type) {
-        logResponse(method, url.pathname, 400, 'item create: missing required fields');
-        return json(res, 400, { error:'Required fields: key, name, type. Optional: icon, sell, desc, atkBonus, dmgDie, dmgCount, dmgFlat, minLevel, passive, readText, uses' });
-      }
-      if (!/^[a-z_][a-z0-9_]*$/.test(key)) {
-        logResponse(method, url.pathname, 400, `item key "${key}" invalid`);
-        return json(res, 400, { error:'key must be snake_case (a-z, 0-9, underscore, no leading digit)' });
-      }
-      if (WBAPI.itemDb[key]) {
-        logResponse(method, url.pathname, 409, `item "${key}" already exists`);
-        return json(res, 409, { error:`Item "${key}" already exists` });
-      }
-      const VALID_TYPES = ['weapon','amulet','consumable','readable','armor','tool','mission_bit','lake_magic'];
-      if (!VALID_TYPES.includes(type)) {
-        logResponse(method, url.pathname, 400, `unknown item type "${type}"`);
-        return json(res, 400, { error:`type must be one of: ${VALID_TYPES.join(', ')}` });
-      }
-      const defaults = { sell: 0 };
-      const itemObj = { key, ...defaults, ...body };
-      const entry = serializeItemLiteral(key, itemObj);
-      const ins = insertBeforeSectionClose('ITEM_DB', entry);
-      if (!ins.ok) { logResponse(method, url.pathname, 500, ins.error); return json(res, 500, ins); }
-      WBAPI.itemDb[key] = itemObj;
-      logRow('key', key);
-      logRow('item', `${body.icon||''}  ${name}  ·  type: ${type}${body.sell !== undefined ? `  ·  sell: ${body.sell}gp` : ''}`);
-      logResponse(method, url.pathname, 201, `created item/${key}`);
-      return json(res, 201, { ok:true, key, note:'POST /api/save to persist.', item: WBAPI.itemDb[key] });
-    }
-
-    if (method === 'PUT' && itemKey) {
-      let body;
-      try { body = await readBody(req); } catch(e) { return json(res, 400, { error:'Invalid JSON' }); }
-      if (!WBAPI.itemDb[itemKey]) {
-        logResponse(method, url.pathname, 404, `item "${itemKey}" not found`);
-        return json(res, 404, { error:`Item "${itemKey}" not found` });
-      }
-      Object.assign(WBAPI.itemDb[itemKey], body);
-      logRow('updated', `item › ${itemKey}`);
-      logResponse(method, url.pathname, 200, `item/${itemKey} updated`);
-      return json(res, 200, { ok:true, item: WBAPI.itemDb[itemKey], note:'PUT only updates in-memory. POST /api/save to persist.' });
-    }
   }
 
   // ── Lake Magic Items (LAKE_MAGIC) ─────────────────────────────────────────
@@ -7679,6 +7600,16 @@ async function route(req, res) {
     // Each entry has lat, lon, region, and current game grid (r,c) if placed.
     if (method === 'GET' && layoutAction === 'worldmap') {
       const nm = WBAPI.nodeMap;
+      // §AUDIT-03bc — `label` here is an Earth gazetteer name, not the game's name for the node:
+      //   • It names the real-world place, for author orientation (TRD → 'Trondheim'). It is NOT
+      //     NODE_MAP[code].label (TRD → 'Goblin Warrens'); 5 of these 155 happen to agree. For the
+      //     name a player sees, read NODE_MAP.
+      //   • Every code in this table is a live NODE_MAP node (155 of 155, no orphans, 2026-09-13), so
+      //     "an anchor with no node behind it" is not a state this table can be in. MAD is a node.
+      //   • Two labels are shared by two codes each: 'Jerusalem' (JAR, JRS, 11 km apart) and 'Palermo'
+      //     (PAR, PMO, 28 km). Neighbouring anchors are expected: at 1° a cell holds several.
+      //   src/tools/worldmap.js carries a copy with the same 155 codes. The labels have drifted: NUE
+      //   is "Scholar's Quarter — Weimar" here and "Scholar's Quarter" there.
       const GEO = {
         HHL:{lat:65.0,lon:-22.0,label:'Herdholt',region:'Iceland'},
         ISL:{lat:64.1,lon:-21.9,label:'Althing Ground',region:'Iceland'},
@@ -7969,13 +7900,20 @@ async function route(req, res) {
         seeded.push(code);
       }
 
+      // §DX-02cb: a node the gazetteer cannot place is a gap in the projection's source table.
+      // Name the codes in the log, and refuse to apply a regeneration that would leave them out.
+      const skippedNote = skipped.length ? ` [${skipped.join(', ')}]` : '';
       if (dryRun) {
-        logResponse(method, url.pathname, 200, `geo-seed dry-run: ${seeded.length} placed (${JSON.stringify(bySrc)}), ${collisions.length} collisions, ${skipped.length} skipped, ${lockedKept.length} locked kept`);
+        logResponse(method, url.pathname, 200, `geo-seed dry-run: ${seeded.length} placed (${JSON.stringify(bySrc)}), ${collisions.length} collisions, ${skipped.length} skipped${skippedNote}, ${lockedKept.length} locked kept`);
         return json(res, 200, { ok:true, dryRun:true, projection:'equirectangular-1deg', latN, latS, rows, cols,
           seeded:seeded.length, bySrc, distinctCells:occ.size, skipped, lockedKept, collisions, coords });
       }
 
       // Apply
+      if (skipped.length) {
+        logResponse(method, url.pathname, 409, `geo-seed refused: ${skipped.length} node(s) have no lat/lon source${skippedNote}`);
+        return json(res, 409, { ok:false, error:`${skipped.length} node(s) have no lat/lon in GEO2 or walk-geo-gazetteer.json — add them before regenerating`, skipped });
+      }
       for (const [code, p] of Object.entries(coords)) WBAPI.nodeCoords[code] = p;
       const START_M='// ◆◆◆ WORLDBUILDER:NODE_COORDS:START ◆◆◆', END_M='// ◆◆◆ WORLDBUILDER:NODE_COORDS:END ◆◆◆';
       const sI=WBAPI._rawSrc.indexOf(START_M)+START_M.length, eI=WBAPI._rawSrc.indexOf(END_M);
@@ -9883,7 +9821,7 @@ async function route(req, res) {
       fish_pool:       () => ({ day: WBAPI.fishPool, night: WBAPI.nightFishPool }),
       lake_magic:      () => WBAPI.lakeMagicDb,
       monster_drops:   () => WBAPI.monsterDrops || {},
-      condition_items: () => WBAPI.conditionItems || {},
+      condition_items: () => WBAPI.conditionItems || [],
       all:             () => ({
         NODE_MAP: WBAPI.nodeMap, QUEST_DB: WBAPI.questDb,
         MONSTER_POOL: WBAPI.monsterPool, WORLD_DB: WBAPI.worldDb,
@@ -11672,9 +11610,6 @@ server.listen(PORT, BIND_ADDR, () => {
     ['GET',    '/api/fish[/{key}][?rank=&night=]     → fish list or single'],
     ['POST',   '/api/fish/simulate                  body: {dexMod, catchMod, typeMod, luckMod, rodBonus}'],
     ['POST',   '/api/fish                           body: {key, name, rank, desc?, isNight?}'],
-    ['GET',    '/api/item[/{key}][?type=]              → item list or single (ITEM_DB)'],
-    ['POST',   '/api/item                            body: {key, name, type, icon?, sell?, desc?, atkBonus?, ...}'],
-    ['PUT',    '/api/item/{key}                      body: {field:value,...}'],
     ['GET',    '/api/lake-magic[/{key}][?effect=&minRank=] → magic item list or single'],
     ['POST',   '/api/lake-magic                     body: {key, name, effect, ...}'],
     ['GET',    '/api/drops[?sell=&q=]                → drop table list/filter'],

@@ -58,7 +58,7 @@ The game file embeds structured data as JavaScript object literals inside
 - `NODE_MAP` — 20 000+ geographic nodes with connections
 - `QUEST_DB` — 2 200+ quests with dependency chains and flag logic
 - `BIRKA_NPC` / `NPC_DIALOGUES` — named characters with dialogue trees
-- `ITEM_DB`, `FISH_DB`, `LAKE_MAGIC`, `D100_TABLE` — supplementary tables
+- `FISH_DB`, `LAKE_MAGIC`, `D100_TABLE` — supplementary tables
 
 ### wbapi-server.js
 

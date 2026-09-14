@@ -230,6 +230,8 @@ dependency.
   says which seven are missing.** Adjacent to §DX-02bo, which asks whether geo-seeding should be repaired
   or retired; if repaired, gazetteer coverage is the acceptance test.
 
+> **✅ SHIPPED 2026-09-13 (§DX-02cb) `5513728`.** Seven gazetteer entries, each on its node's live cell, take geo-seed from **409 placed / 7 skipped** to **416 / 0**, on the live dry-run and an offline replica alike. The server now names skipped codes in its log and refuses an applied regeneration around a gap with 409. Checking the row's Verify found four math-realm nodes whose projection disagrees with their live cell, filed as §DX-02kc.
+
 ---
 
 ## 11. Ship record

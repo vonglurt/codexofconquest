@@ -32,6 +32,10 @@ test.describe('§PLAY-01-D — Friendships With Magic (magic-path signpost)', ()
       out.slumsAutoActive = S_story.quests['quest_slums_cleanup'] === 'active';  // the shadow condition
       // storyNewGame's own LHR render already delivered the monologue → flag set (the real delivery)
       out.deliveredOnNewGame = S_story.yaelOnboardingSeen === true;
+      // §DX-02dm: that card's badge names the tier of the line it shows, not the Slums quest
+      const yaelCard = [...document.querySelectorAll('#story-npc-cards-row .npc-card-chip')]
+        .map(c => c.textContent).find(t => /Yugurt/.test(t)) || '';
+      out.firstCardImpartial = /Impartial/.test(yaelCard) && !/Quest Active/.test(yaelCard);
       // reset to simulate a clean first meeting and drive the one-time delivery directly
       S_story.yaelOnboardingSeen = false; S_story.npcVisitCounts = {};
       const first = _getNPCDialogue('yael');
@@ -54,6 +58,7 @@ test.describe('§PLAY-01-D — Friendships With Magic (magic-path signpost)', ()
     expect(r.keepsOnboarding).toBe(true);
     expect(r.slumsAutoActive).toBe(true);
     expect(r.deliveredOnNewGame).toBe(true);
+    expect(r.firstCardImpartial, 'the first card badges the Impartial welcome as Impartial').toBe(true);
     expect(r.firstVisitIsMonologue).toBe(true);
     expect(r.firstVisitSignposts).toBe(true);
     expect(r.seenFlagSet).toBe(true);

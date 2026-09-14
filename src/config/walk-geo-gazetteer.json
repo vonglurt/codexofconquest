@@ -153,7 +153,9 @@
 
     "EF2": {"lat": 37.94, "lon": 27.34},
     "CI2": {"lat": 35.00, "lon": 33.30},
-    "J13": {"lat": 51.00, "lon": -6.00}
+    "J13": {"lat": 51.00, "lon": -6.00},
+    "SPB": {"lat": 59.94, "lon": 30.31},
+    "KMS": {"lat": 58.52, "lon": 31.27}
   },
 
   "satellites": {
@@ -243,7 +245,12 @@
     "HKG": {"anchor": "SAM", "lat": 40.5,  "lon": 66.5,  "why": "cyberpunk_streets — 'Neon Undercity' (pit/arena arc); anachronistic endgame realm, no Earth home. §WALK-1.5-FU(a): de-piled from SAM to its own E-frontier cell (29,246), N of Samarkand"},
     "BKK": {"anchor": "SAM", "lat": 38.5,  "lon": 66.5,  "why": "oriental_palace — Dragon Palace; anachronistic endgame realm. §WALK-1.5-FU(a): own cell (31,246), S of Samarkand"},
     "CTU": {"anchor": "SAM", "lat": 39.5,  "lon": 67.5,  "why": "heavenly_clouds — Sky Road; anachronistic endgame realm. §WALK-1.5-FU(a): own cell (30,247), E of Samarkand"},
-    "SJO": {"anchor": "SAM", "lat": 39.5,  "lon": 65.5,  "why": "epic_jungle — Canopy Cathedral; anachronistic endgame realm. §WALK-1.5-FU(a): own cell (30,245), W of Samarkand"}
+    "SJO": {"anchor": "SAM", "lat": 39.5,  "lon": 65.5,  "why": "epic_jungle — Canopy Cathedral; anachronistic endgame realm. §WALK-1.5-FU(a): own cell (30,245), W of Samarkand"},
+    "DNF": {"anchor": "KIR", "lat": 52.80, "lon": -8.44, "why": "Dunfall — The Loch Harbor (§PORT-02/§SPARK-02); §CELL-14-FU split it from the duplicate ZRH. §DX-02cb: a loch harbor inland of Kerry, own cell (17,171)"},
+    "TGS": {"anchor": "SVO", "lat": 62.50, "lon": 37.50, "why": "The Tungas — forest north of the §KG corridor, reached by the road spur at 8,217/9,217. §DX-02cb: own cell (7,217)"},
+    "ZVD": {"anchor": "SVO", "lat": 57.98, "lon": 33.24, "why": "Gulag Gladiator Zavod — §KG machine-works pit; the Valdai Hills, on the Novgorod–Tver road. §DX-02cb: own cell (12,213)"},
+    "FBR": {"anchor": "SVO", "lat": 56.90, "lon": 35.50, "why": "The Skill Fabrika — §KG jack-in trade school, near Tver. §DX-02cb: own cell (13,215)"},
+    "TVR": {"anchor": "SVO", "lat": 56.50, "lon": 36.50, "why": "Rzhev Transit Waystation — §KG rest stop on the Tver–Moscow road toward Station 7 (SVO). §DX-02cb: own cell (13,216)"}
   },
 
   "offEarth": {

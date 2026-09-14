@@ -293,11 +293,15 @@ occurrence of `WBAPI.conditionItems` in the repo — `load()` never sets it. The
 `200 {"data":{}}` and logs "0 records", which is indistinguishable from an empty-but-real
 collection. Delete the getter or wire the field.
 
+> **✅ SHIPPED 2026-09-13 (§DX-02fk) `27f2223`.** Wired rather than deleted: `WBAPI.load()` reads `CONDITION_ITEMS` off the raw source, and `export condition_items` returns its 12 entries instead of `{}` (measured on a throwaway server, before and after). The help now calls the collection an array.
+
 **7.4 — §DX-02fl 🟢 `ITEM_DB` is an anchored, parsed, exported section with zero entries.**
 `const ITEM_DB = { // General item definitions — weapons, amulets, consumables, readables. };`
-— `` `const ITEM_DB = { // General item definitions@26682` ``. Not a parse failure — the section is genuinely empty. Decide: seed
+— *`const ITEM_DB = { // General item definitions`@26682*. Not a parse failure — the section is genuinely empty. Decide: seed
 it, or retire the anchor. As it stands it is 0-entry infrastructure that reads as a live surface,
 and §7.1 means an emptied `ITEM_DB` and a *corrupted* `ITEM_DB` look identical.
+
+> **✅ SHIPPED 2026-09-13 (§DX-02fl) `767027a`.** Retired, by the user's call: the section had existed only as `POST /api/item`'s landing zone since `7c48073`, never held an entry, and was read by nothing in the game. The section, the item endpoints, their help and routes, `itemDb` and the dupkeys entry are gone; anchored sections 12 → 11.
 
 **7.5 — §DX-02fm 🟡 `WORLD_DB` has no structured-field writer.** `editStructuredField`'s
 `sectionMap` omits `terrain`, so any non-string terrain field 422s with `unknown type`. Add

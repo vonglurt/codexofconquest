@@ -34,7 +34,7 @@ function __moverStep(proj, r, c, dr, dc) {
 function __moverBlocked(from, reason) {
   return {
     ok: false, reason,
-    from: { r: from.r, c: from.c }, to: { r: from.r, c: from.c }, via: null,
+    from: { r: from.r, c: from.c }, to: { r: from.r, c: from.c },
     destCodes: [], destKind: reason === 'sea' ? 'sea' : 'empty',
     terrain: null, encounter: { eligible: false, baseRate: 0 },
   };
@@ -60,7 +60,7 @@ function moverMove(world, pos, dir) {
 
   return {
     ok: true, reason: null,
-    from, to: { r: s.nr, c: s.nc }, via: 'step',
+    from, to: { r: s.nr, c: s.nc },
     destCodes, destKind, terrain,
     encounter: { eligible: destKind === 'empty', baseRate },
   };

@@ -6292,11 +6292,11 @@ const WORLD_DB = { // → doc: docs/spec/spec-world.md §III-C. WORLD_DB Top-Lev
   scholars_qtr:     { label:"Scholar's Quarter",    icon:'📚',  monsters:[ P.commoner, P.homunculus, P.mage, P.specter, P.ghost, P.intellect_dev, P.archmage, P.lich, P.library_ghost, P.hym, P.bone_naga, P.scholars_guard ] },
   cyberpunk_streets:{ label:'Cyberpunk Neon Streets',icon:'🔌',  monsters:[ P.techno_thug, P.hacker, P.corrupted_android, P.cyber_guard, P.street_samurai, P.virus_spawn, P.neon_golem, P.cyber_vampire, P.data_wraith, P.neural_predator ] },
   // §KG Increment 2 — Soviet-cyberpunk low-level corridor (St. Petersburg → Moscow), pools deepen W→E
-  soviet_checkpoint:{ label:'Nevsky Checkpoint',      icon:'☭',  monsters:[ P.sparring_droid, P.komsomol_cadet, P.commoner ] },
-  komsomol_school:  { label:'Komsomol School',        icon:'🎖',  monsters:[ P.komsomol_cadet, P.sparring_droid, P.zavod_sparbot ] },
-  gladiator_zavod:  { label:'Gulag Gladiator Zavod',  icon:'⚙',  monsters:[ P.zavod_sparbot, P.gladiator_bot, P.trainer_bot_prime ] },
-  skill_fabrika:    { label:'The Skill Fabrika',      icon:'🧠',  monsters:[ P.fabrika_enforcer, P.gladiator_bot, P.trainer_bot_prime ] },
-  soviet_transit:   { label:'Rzhev Transit Waystation',icon:'🚉', monsters:[ P.komsomol_cadet, P.zavod_sparbot, P.commoner ] },
+  soviet_checkpoint:{ label:"Soviet Checkpoint",      icon:'☭',  monsters:[ P.sparring_droid, P.komsomol_cadet, P.commoner ] },
+  komsomol_school:  { label:"Drill Hall",        icon:'🎖',  monsters:[ P.komsomol_cadet, P.sparring_droid, P.zavod_sparbot ] },
+  gladiator_zavod:  { label:"Gladiator Pit",  icon:'⚙',  monsters:[ P.zavod_sparbot, P.gladiator_bot, P.trainer_bot_prime ] },
+  skill_fabrika:    { label:"Jack-In Fabrika",      icon:'🧠',  monsters:[ P.fabrika_enforcer, P.gladiator_bot, P.trainer_bot_prime ] },
+  soviet_transit:   { label:"Transit Waystation",icon:'🚉', monsters:[ P.komsomol_cadet, P.zavod_sparbot, P.commoner ] },
   // ── Social / Indoor ──────────────────────────────────────
   storefront:       { label:'Market District',      icon:'🏪',  monsters:[ P.commoner, P.bandit, P.spy, P.imp, P.homunculus, P.kenku, P.thug, P.mimic, P.intellect_dev, P.doppelganger, P.succubus, P.assassin, P.vampire, P.hym, P.botchling, P.ekimara ] },
   bar:              { label:'Tavern Brawl',          icon:'🍺',  monsters:[ P.commoner, P.thug, P.bandit, P.berserker, P.cult_fanatic, P.wererat, P.wereboar, P.werewolf, P.doppelganger, P.bandit_captain, P.gladiator, P.veteran, P.redcap, P.barghest, P.botchling ] },
@@ -9943,7 +9943,7 @@ function __moverStep(proj, r, c, dr, dc) {
 function __moverBlocked(from, reason) {
   return {
     ok: false, reason,
-    from: { r: from.r, c: from.c }, to: { r: from.r, c: from.c }, via: null,
+    from: { r: from.r, c: from.c }, to: { r: from.r, c: from.c },
     destCodes: [], destKind: reason === 'sea' ? 'sea' : 'empty',
     terrain: null, encounter: { eligible: false, baseRate: 0 },
   };
@@ -9969,7 +9969,7 @@ function moverMove(world, pos, dir) {
 
   return {
     ok: true, reason: null,
-    from, to: { r: s.nr, c: s.nc }, via: 'step',
+    from, to: { r: s.nr, c: s.nc },
     destCodes, destKind, terrain,
     encounter: { eligible: destKind === 'empty', baseRate },
   };
@@ -11144,7 +11144,7 @@ const QUEST_DB = { // → doc: quest.md §Quest Format
   // ── Layer 52: Void Archaeology quests ──
   quest_va_01: { id:'quest_va_01', type:'side', schema:'UQF-1.0', gate:{}, bits:[], completion:{ flags:['vaAllMarksFound'] }, title:'The Architecture: Five Marks',
     onComplete:[ { kind:'narrative', msg:'🏛️ Five marks found. The pattern is complete.' } ], // §ARCH-01 W7c
-    desc:"Someone passed through five sites two hundred years ago and left marks. The marks are at nodes you have already visited — you walked past them without knowing. No one told you they were there because no one who knew is still alive to tell. What you have instead are Froberger's margin notes, which mention the marks in the way a person mentions something they saw in passing and could not explain and never went back for. Follow the track. Each site will say where he was and how long ago.",
+    desc:"Someone passed through five sites two hundred years ago and left marks. The marks are in places you have already visited — you walked past them without knowing. No one told you they were there because no one who knew is still alive to tell. What you have instead are Froberger's margin notes, which mention the marks in the way a person mentions something they saw in passing and could not explain and never went back for. Follow the track. Each site will say where he was and how long ago.",
     hint:'Investigate: City Inn, Birka Slums, Defiant Fields, Scholar\'s Quarter, Mountain Pass.',
     activateNode:null, 
     waypointNode:'LHR', reward:0,
@@ -13973,7 +13973,7 @@ const QUEST_DB = { // → doc: quest.md §Quest Format
     failText:"The Fisherman at Yugurt Cabin has not been beaten. He has been here eleven years. The lake may be on his side.",
     npc:"emmer",
   },
-  quest_1367_e_wycliffe: { id:"quest_1367_e_wycliffe", type:"skill_check", title:"The Sealed Pamphlet", desc:"Thomas Cobb must smuggle a Wycliffe vernacular pamphlet past a bishop's checkpoint. DC 13 Deception. faith_reform track.", hint:"The pamphlet is inside your coat. The bishop's man is looking at your face, not your coat.", passText:"You hold their gaze and ask about the road ahead, whether the mud past the mill is as bad as everyone says, whether the bishop has men at the ford as well — all the while your coat does not move and your voice does not move and they decide you are boring and wave you through. The pamphlet crosses the checkpoint. The words in it will be read tonight in a back room by candlelight by people who have never heard the scripture in a language they understand.", failText:"The functionary's eyes drop to your coat at the wrong moment. Not suspicion — reflex. But the outline is wrong. He says: open your coat, please. The please does not help. The pamphlet is taken. You are let go with a warning. The words do not cross today.", disposition:"The word in a language the people understand is a weapon. The bishop knows this. That is why he guards the bridge.", activateNode:"LGW", schema:"UQF-1.0", gate:{}, vignetteText:"The road narrows at the mill bridge. Two men in the bishop's livery stand at the gate — not soldiers, functionaries, which is worse. Soldiers look at weapons. Functionaries look at faces. The pamphlet is inside your coat, folded twice, wrapped in oilcloth. It is the size of a prayer book. It is not a prayer book. They will recognize the difference if they look. You need them not to look.", retryable:true, bits:[{ kind:"skill_check", stat:"CHA", skill:"Deception", dc:13, onPass:[{ kind:"reward", xp:110 }, { kind:"_legacy_fn", fn:() => { S_story.faith_reform = Math.min(5, (S_story.faith_reform || 0) + 1); } }, { kind:"narrative", msg:"🖋️ In the candlelit back room the Warrant's reader finishes the pamphlet and writes one line in the margin: they are asking why the villages emptied. Then a second dispatch — France, a village nineteen years empty, a claim no notary can certify until it is cleared. 'They ask the question. Go stand in the answer.' A new bounty surfaces on the Warrant's Board." }, { kind:"unlock", quests:["quest_1367_f_plague"] } /* §BOARD-01-FU6 (1367 chronicle) */], onFail:[] }],
+  quest_1367_e_wycliffe: { id:"quest_1367_e_wycliffe", type:"skill_check", title:"The Sealed Pamphlet", desc:"Thomas Cobb must smuggle a Wycliffe vernacular pamphlet past a bishop's checkpoint. DC 13 Deception.", hint:"The pamphlet is inside your coat. The bishop's man is looking at your face, not your coat.", passText:"You hold their gaze and ask about the road ahead, whether the mud past the mill is as bad as everyone says, whether the bishop has men at the ford as well — all the while your coat does not move and your voice does not move and they decide you are boring and wave you through. The pamphlet crosses the checkpoint. The words in it will be read tonight in a back room by candlelight by people who have never heard the scripture in a language they understand.", failText:"The functionary's eyes drop to your coat at the wrong moment. Not suspicion — reflex. But the outline is wrong. He says: open your coat, please. The please does not help. The pamphlet is taken. You are let go with a warning. The words do not cross today.", disposition:"The word in a language the people understand is a weapon. The bishop knows this. That is why he guards the bridge.", activateNode:"LGW", schema:"UQF-1.0", gate:{}, vignetteText:"The road narrows at the mill bridge. Two men in the bishop's livery stand at the gate — not soldiers, functionaries, which is worse. Soldiers look at weapons. Functionaries look at faces. The pamphlet is inside your coat, folded twice, wrapped in oilcloth. It is the size of a prayer book. It is not a prayer book. They will recognize the difference if they look. You need them not to look.", retryable:true, bits:[{ kind:"skill_check", stat:"CHA", skill:"Deception", dc:13, onPass:[{ kind:"reward", xp:110 }, { kind:"_legacy_fn", fn:() => { S_story.faith_reform = Math.min(5, (S_story.faith_reform || 0) + 1); } }, { kind:"narrative", msg:"🖋️ In the candlelit back room the Warrant's reader finishes the pamphlet and writes one line in the margin: they are asking why the villages emptied. Then a second dispatch — France, a village nineteen years empty, a claim no notary can certify until it is cleared. 'They ask the question. Go stand in the answer.' A new bounty surfaces on the Warrant's Board." }, { kind:"unlock", quests:["quest_1367_f_plague"] } /* §BOARD-01-FU6 (1367 chronicle) */], onFail:[] }],
     npc:"auros",
     rumor:"A pamphlet that must not be read, and therefore must be, has a bishop's checkpoint to pass. The Warrant wants it through. The bishop's man is watching faces.",
   },
@@ -13989,11 +13989,11 @@ const QUEST_DB = { // → doc: quest.md §Quest Format
     npc:"auros",
     rumor:"A contested checkpoint stands between a courier and Adrianople. The Warrant wants him through — the soldiers are cold and bored; give them a reason that costs them nothing.",
   },
-  quest_1367_d_hansa: { id:"quest_1367_d_hansa", type:"skill_check", title:"The Amber Embargo", desc:"Hilde Magnusdottir must negotiate with a Hanseatic factor to lift an embargo strangling Birka. DC 15 Persuasion. faction_hansa affected.", hint:"The League wants profit, not punishment. Show him a number that makes lifting the embargo worth more than keeping it.", passText:"You lay out the numbers he has not added yet — what the embargo costs the League in lost future trade if Birka's amber network collapses entirely. He listens. He re-adds. He opens the book. The embargo lifts in the morning.", failText:"He listens. He does not re-add anything. The embargo stands. He says it will be reviewed in thirty days. The thirty days will be long for everyone except the factor, who has other ports.", disposition:"The Hanseatic League does not embargo out of malice. It embargoes out of arithmetic. You have to speak arithmetic back at it.", activateNode:"BK", schema:"UQF-1.0", gate:{}, vignetteText:"The Hanseatic factor has a face like a ledger page. The embargo is two months old. Birka's amber market is half its normal size. Three warehouses have closed. The factor sits across the table with his hands folded and his account books closed because he already knows what is in them.", retryable:true, bits:[{ kind:"skill_check", stat:"CHA", skill:"Persuasion", dc:15, onPass:[{ kind:"reward", xp:140 }, { kind:"_legacy_fn", fn:() => { S_story.faction_hansa = Math.min(5, (S_story.faction_hansa || 0) + 2); } }, { kind:"narrative", msg:"🖋️ The factor opens his book and the amber road breathes again — and the Warrant follows that road to its far end, south, where it runs through a rope and two Ottoman spears and a question no one has bothered to answer about who you are. 'The road you reopened has a checkpoint at the other end. Carry ambiguity like a document.' A new bounty surfaces on the Warrant's Board." }, { kind:"unlock", quests:["quest_1367_c_ottoman"] } /* §BOARD-01-FU6 (1367 chronicle) */], onFail:[{ kind:"_legacy_fn", fn:() => { S_story.faction_hansa = Math.max(-5, (S_story.faction_hansa || 0) - 1); } }] }],
+  quest_1367_d_hansa: { id:"quest_1367_d_hansa", type:"skill_check", title:"The Amber Embargo", desc:"Hilde Magnusdottir must negotiate with a Hanseatic factor to lift an embargo strangling Birka. DC 15 Persuasion.", hint:"The League wants profit, not punishment. Show him a number that makes lifting the embargo worth more than keeping it.", passText:"You lay out the numbers he has not added yet — what the embargo costs the League in lost future trade if Birka's amber network collapses entirely. He listens. He re-adds. He opens the book. The embargo lifts in the morning.", failText:"He listens. He does not re-add anything. The embargo stands. He says it will be reviewed in thirty days. The thirty days will be long for everyone except the factor, who has other ports.", disposition:"The Hanseatic League does not embargo out of malice. It embargoes out of arithmetic. You have to speak arithmetic back at it.", activateNode:"BK", schema:"UQF-1.0", gate:{}, vignetteText:"The Hanseatic factor has a face like a ledger page. The embargo is two months old. Birka's amber market is half its normal size. Three warehouses have closed. The factor sits across the table with his hands folded and his account books closed because he already knows what is in them.", retryable:true, bits:[{ kind:"skill_check", stat:"CHA", skill:"Persuasion", dc:15, onPass:[{ kind:"reward", xp:140 }, { kind:"_legacy_fn", fn:() => { S_story.faction_hansa = Math.min(5, (S_story.faction_hansa || 0) + 2); } }, { kind:"narrative", msg:"🖋️ The factor opens his book and the amber road breathes again — and the Warrant follows that road to its far end, south, where it runs through a rope and two Ottoman spears and a question no one has bothered to answer about who you are. 'The road you reopened has a checkpoint at the other end. Carry ambiguity like a document.' A new bounty surfaces on the Warrant's Board." }, { kind:"unlock", quests:["quest_1367_c_ottoman"] } /* §BOARD-01-FU6 (1367 chronicle) */], onFail:[{ kind:"_legacy_fn", fn:() => { S_story.faction_hansa = Math.max(-5, (S_story.faction_hansa || 0) - 1); } }] }],
     npc:"auros",
     rumor:"A Hanseatic embargo is strangling Birka, and the League will not lift it out of mercy. The Warrant wants it lifted out of arithmetic. Show the factor a better number.",
   },
-  quest_1367_f_plague: { id:"quest_1367_f_plague", type:"combat", title:"The Empty Village", desc:"Clear Sainte-Marthe-des-Pres of 4 Plague Walkers and 1 Hollow Reeve. plague_exposed risk on fail. faith_folk track.", hint:"The Hollow Reeve does not want to fight. It wants to be acknowledged. That is different.", passText:"The Plague Walkers dissolve when the Hollow Reeve sits down on the stone at the edge of the pit and then is not there. Cecile seals the pit, writes her report, recommends the cousin's claim. She adds the village to a list she keeps of places visited. She does not know why she keeps the list. She thinks it is for the same reason the carver carved the names: so something remembers where the empty places are.", failText:"The Hollow Reeve does not dissolve. You retreat with a wound that smells wrong. Roll CON DC 13 or gain plague_exposed. The village is still empty. The cousin waits.", disposition:"The sky counts them. But someone has to give them to the sky.", activateNode:"CDG", schema:"UQF-1.0", gate:{}, vignetteText:"The village has been empty for nineteen years. The plague took it in three weeks in 1348. The property belongs now to a distant cousin whose claim Cecile is here to certify, if the village is inhabitable, which requires the village to be cleared, which is why there is a notary's commission in her satchel and a sword at her belt that she did not have before she took this work.", retryable:true, bits:[{ kind:"skill_check", stat:"STR", dc:12, onPass:[{ kind:"reward", xp:160 }, { kind:"_legacy_fn", fn:() => { S_story.faith_folk = Math.min(5, (S_story.faith_folk || 0) + 1); } }, { kind:"narrative", msg:"🖋️ Cecile's report joins the ledger and the Warrant tallies another empty place — then sets beside it an entry with no bodies at all: Birka, where an amber embargo has closed the warehouses by arithmetic instead of plague. 'You cleared a village the sky counted. Now open a market the League shut.' A new bounty surfaces on the Warrant's Board." }, { kind:"unlock", quests:["quest_1367_d_hansa"] } /* §BOARD-01-FU6 (1367 chronicle) */], onFail:[{ kind:"skill_check", stat:"CON", dc:13, onFail:[{ kind:"flag_write", set:["plague_exposed"] }] }] /* §VM-01-E: was a 50/50 unseeded coin-flip; the failText + the _S_DEFAULTS decl both document a CON DC 13 save. Now a nested seeded skill_check — deterministic from a save, and the last nondeterministic bit in QUEST_DB is gone. */ }],
+  quest_1367_f_plague: { id:"quest_1367_f_plague", type:"combat", title:"The Empty Village", desc:"Clear Sainte-Marthe-des-Pres of 4 Plague Walkers and 1 Hollow Reeve.", hint:"The Hollow Reeve does not want to fight. It wants to be acknowledged. That is different.", passText:"The Plague Walkers dissolve when the Hollow Reeve sits down on the stone at the edge of the pit and then is not there. Cecile seals the pit, writes her report, recommends the cousin's claim. She adds the village to a list she keeps of places visited. She does not know why she keeps the list. She thinks it is for the same reason the carver carved the names: so something remembers where the empty places are.", failText:"The Hollow Reeve does not dissolve. You retreat with a wound that smells wrong. Roll CON DC 13 or carry the sickness out with you. The village is still empty. The cousin waits.", disposition:"The sky counts them. But someone has to give them to the sky.", activateNode:"CDG", schema:"UQF-1.0", gate:{}, vignetteText:"The village has been empty for nineteen years. The plague took it in three weeks in 1348. The property belongs now to a distant cousin whose claim Cecile is here to certify, if the village is inhabitable, which requires the village to be cleared, which is why there is a notary's commission in her satchel and a sword at her belt that she did not have before she took this work.", retryable:true, bits:[{ kind:"skill_check", stat:"STR", dc:12, onPass:[{ kind:"reward", xp:160 }, { kind:"_legacy_fn", fn:() => { S_story.faith_folk = Math.min(5, (S_story.faith_folk || 0) + 1); } }, { kind:"narrative", msg:"🖋️ Cecile's report joins the ledger and the Warrant tallies another empty place — then sets beside it an entry with no bodies at all: Birka, where an amber embargo has closed the warehouses by arithmetic instead of plague. 'You cleared a village the sky counted. Now open a market the League shut.' A new bounty surfaces on the Warrant's Board." }, { kind:"unlock", quests:["quest_1367_d_hansa"] } /* §BOARD-01-FU6 (1367 chronicle) */], onFail:[{ kind:"skill_check", stat:"CON", dc:13, onFail:[{ kind:"flag_write", set:["plague_exposed"] }] }] /* §VM-01-E: was a 50/50 unseeded coin-flip; the failText + the _S_DEFAULTS decl both document a CON DC 13 save. Now a nested seeded skill_check — deterministic from a save, and the last nondeterministic bit in QUEST_DB is gone. */ }],
     npc:"auros",
     rumor:"Sainte-Marthe-des-Pres has stopped answering the road. The Warrant wants the village cleared — and the thing at its heart that asks only to be acknowledged is the real work.",
   },
@@ -14005,7 +14005,7 @@ const QUEST_DB = { // → doc: quest.md §Quest Format
   // lxvii67's faith_folk>=1 gate is not expressible in canActivate's term set ⇒ gate:{_legacyFn:true}
   // keeps activateCond load-bearing (canActivate returns true for _legacyFn gates; activateCond still
   // runs at the activation site). guide_04's quest-done gate (below) maps cleanly to questsDone.
-  quest_lxvii67: { id:"quest_lxvii67", type:"skill_check", schema:"UQF-1.0", title:"The Unseen Pen", desc:"At a forest fork stands a painted post and a jester who asks nothing aloud. Two must arrive alone and answer the unasked question. DC 10 Insight. Self-serve. No Help action. faith_folk track.", hint:"The answer is written nowhere — not in a book, not on the post. You already carry it. The jester is asking whether you can be useful to whoever arrives after you.", passText:"You take a blank page from the satchel — you carry ink, not a sword — and write a number on it: 67. You set it on the stone and nod once. The jester catches the coin without looking and nods back. One. Someone else will be the second. When the second person writes the same number, alone, he stands and dabs — completely sincere — taps his chest twice, and the post opens. Inside the hollow is a carved wooden coin: LXVII on one face, 67 on the other. Faith folk +2 — not for believing, not for doubting, but for knowing that some questions need not be asked aloud to be answered honestly, and that two people answering separately is worth more than two conferring.", failText:"You write a different number. His expression does not change. He folds the page carefully and tucks it into his own coat — he collects wrong answers too, not to shame them, but because wrong answers need somewhere to go. The post stays shut. You may come back. It is always here, and so is he. He does not remember your face, or pretends not to. It does not matter.", disposition:"al-qalam al-ghaib — the unseen pen. It has no body; the copies are real. Two people answering honestly and separately is worth more than two conferring. taps chest twice. ⁶⁷", activateNode:"FRO", vignetteText:"The road forks at a painted post with no sign. A jester sits on a stone, tossing a very old coin — one face has a number, the other face has the same number. He does not look up. He holds up two fingers. He is asking something and you do not know what, and there is no skill check to roll for it. You have only what you brought and the knowledge that the question is not about you — it is about whether you can be useful to someone who arrives at this same post after you do. The answer is 67. You must arrive at it alone. The puzzle requires two.", retryable:true, gate:{countMin:[{path:'faith_folk',min:1}]}, bits:[{ kind:"skill_check", stat:"WIS", skill:"Insight", dc:10, onPass:[{ kind:"reward", xp:67 }, { kind:"_legacy_fn", fn:() => { S_story.faith_folk = Math.min(5, (S_story.faith_folk || 0) + 2); } }], onFail:[] }],
+  quest_lxvii67: { id:"quest_lxvii67", type:"skill_check", schema:"UQF-1.0", title:"The Unseen Pen", desc:"At a forest fork stands a painted post and a jester who asks nothing aloud. Two must arrive alone and answer the unasked question. DC 10 Insight.", hint:"The answer is written nowhere — not in a book, not on the post. You already carry it. The jester is asking whether you can be useful to whoever arrives after you.", passText:"You take a blank page from the satchel — you carry ink, not a sword — and write a number on it: 67. You set it on the stone and nod once. The jester catches the coin without looking and nods back. One. Someone else will be the second. When the second person writes the same number, alone, he stands and dabs — completely sincere — taps his chest twice, and the post opens. Inside the hollow is a carved wooden coin: LXVII on one face, 67 on the other. Faith folk +2 — not for believing, not for doubting, but for knowing that some questions need not be asked aloud to be answered honestly, and that two people answering separately is worth more than two conferring.", failText:"You write a different number. His expression does not change. He folds the page carefully and tucks it into his own coat — he collects wrong answers too, not to shame them, but because wrong answers need somewhere to go. The post stays shut. You may come back. It is always here, and so is he. He does not remember your face, or pretends not to. It does not matter.", disposition:"al-qalam al-ghaib — the unseen pen. It has no body; the copies are real. Two people answering honestly and separately is worth more than two conferring. taps chest twice. ⁶⁷", activateNode:"FRO", vignetteText:"The road forks at a painted post with no sign. A jester sits on a stone, tossing a very old coin — one face has a number, the other face has the same number. He does not look up. He holds up two fingers. He is asking something and you do not know what, and there is no skill check to roll for it. You have only what you brought and the knowledge that the question is not about you — it is about whether you can be useful to someone who arrives at this same post after you do. The answer is 67. You must arrive at it alone. The puzzle requires two.", retryable:true, gate:{countMin:[{path:'faith_folk',min:1}]}, bits:[{ kind:"skill_check", stat:"WIS", skill:"Insight", dc:10, onPass:[{ kind:"reward", xp:67 }, { kind:"_legacy_fn", fn:() => { S_story.faith_folk = Math.min(5, (S_story.faith_folk || 0) + 2); } }], onFail:[] }],
     npc:"auros",
   },
   quest_guide_01: { id:"quest_guide_01", type:"side", schema:'UQF-1.0', gate:{itemsAll:['Fishing Rod']}, bits:[], completion:{ countMin:[{ path:'fishingCatchLog', min:1 }] }, title:"The Fool's First Cast", desc:"A young man arrived at Yugurt Cabin this morning with a market rod, a broken guide ring, and total confidence. He cast immediately without asking anything. The line went sideways. He said: Is that normal? He was smiling. He has never fished a lake. He does not know he has never fished a lake. The Fisherman watched from the cabin steps and said nothing. You are holding it like a question.", hint:"Go to Yugurt Lake and make your first catch.", disposition:"\"Is that normal?\" — Emmer Finch", npc:"emmer", activateNode:"SSJ", waypointNode:"BOO", xpAward:50, reward:0, passText:"Emmer Finch made his first cast and it went sideways. He was smiling. He asked: is that normal?", failText:"The first catch at Yugurt Lake has not been made. Go and try the rod." },
@@ -21201,7 +21201,7 @@ const QUEST_DB = { // → doc: quest.md §Quest Format
     activateNode:'HKG', gate:{ flags:['d0207_a1_passed'] },
     completion:{ flags:['cyMadnessRoll'] }, bits:[],
     reward:0, waypointNode:'HKG',
-    desc:'The WIS save fires on first Undercity entry (already handled). Both results — clear or fractured — leave the plate visible. This act completes when the save has resolved.',
+    desc:'The Undercity tests your mind the first time you walk into it: a WIS save against neon that has no business in this century. Keep your head or lose a piece of it — either way, the plate on the wall stays in view.',
     npc:"auros",
   },
   quest_d0207_a3: { id:'quest_d0207_a3', type:'side', title:'Act III — The Data Wraith',
@@ -21210,7 +21210,7 @@ const QUEST_DB = { // → doc: quest.md §Quest Format
     activateNode:'HKG', gate:{ flags:['cyMadnessRoll','d0207_a1_passed'] },
     completion:{ battles:['HKG'] }, bits:[],
     reward:0, waypointNode:'HKG',
-    desc:'The Data Wraith moves toward the plate at the same moment you do. There is only one plate. Win the Undercity node battle to examine it safely.',
+    desc:'The Data Wraith moves toward the plate at the same moment you do. There is only one plate. Win the fight in the Undercity corridor and you can examine it in peace.',
     npc:"auros",
   },
   quest_d0207_a4: { id:'quest_d0207_a4', type:'skill_check', title:'Act IV — The Cipher',
@@ -21657,7 +21657,7 @@ const QUEST_DB = { // → doc: quest.md §Quest Format
     activateNode:'RAI', gate:{ flags:['d0209_a2_passed'] },
     completion:{ flags:['voidFluxCleared'] }, bits:[],
     reward:0, waypointNode:'RAI',
-    desc:'Three Void-flux constructs inside the inversion field. They do not find it confusing. Clear the chamber to proceed. [voidFluxCleared flag set on victory]',
+    desc:'Three Void-flux constructs inside the inversion field. They do not find it confusing. Clear the chamber to proceed.',
     npc:"captain_selene_draketide",
   },
   quest_d0209_a4: { id:'quest_d0209_a4', type:'skill_check', title:'Act IV — The Scroll',
@@ -23328,11 +23328,11 @@ const _S_DEFAULTS = () => ({
   visbyUnderground: false,
   wisArchiveLetter: false,
   personalLegendMature: false,
-    faith_orthodox: 0, // Church orthodoxy track. Range -5 to +5. Affects inquisitor quests, bishop dialogue, pilgrimage availability.
-    faith_reform: 0, // Wycliffe reform track. Range -5 to +5. Affects heresy quests, itinerant preacher dialogue, pamphlet availability.
-    faith_folk: 0, // Folk belief track. Range -5 to +5. Affects saint shrines, monster lore, magic springs, the jester LXVII67.
-    faction_hansa: 0, // Hanseatic League disposition. Range -5 to +5. Affects trade quest availability, port entry, prices at BK/LB/DZ/RG/BG.
-    plague_exposed: false, // Black Death exposure flag. Set on failed CON DC 13 save. Grants Exhaustion 1 mission bit. Cleared by cure quest.
+    faith_orthodox: 0, // Church orthodoxy track. Range -5 to +5.
+    faith_reform: 0, // Wycliffe reform track. Range -5 to +5.
+    faith_folk: 0, // Folk belief track. Range -5 to +5. Gates quest_lxvii67.
+    faction_hansa: 0, // Hanseatic League disposition. Range -5 to +5.
+    plague_exposed: false, // Black Death exposure flag. Set on failed CON DC 13 save.
     GAME_YEAR: 1367, // Canonical game year. Anno Domini MCCCLXVII.
     game_year: 1367, // Canonical game year. Anno Domini MCCCLXVII.
     emmerMet: false, // §GUIDE-01: Emmer Finch introduced at SSJ
@@ -23559,8 +23559,7 @@ function _checkDearFriendUpgrade(key, say) {
 // the card button re-renders separately in its click handler. Outside all parity fences.
 const TALK_TO_FRIENDLY = 3;   // deliberate talks (on distinct game-days) to reach Friendly. Tunable.
 function _talkToNpc(key) {
-  const dlg = _getNPCDialogue(key);
-  if (!dlg) return;
+  if (!NPC_DIALOGUES[key]) return;
   const name = _npcDisplayName(key);
   if (_npcFavor(key) >= 1) { storyMsg('🤝 ' + name + ' already counts you a friend.'); return; }
   if (!S_story.npcTalk) S_story.npcTalk = {};
@@ -23624,7 +23623,7 @@ function _getNPCDialogue(npcKey) {
   // (NG+ has its own greeting + already knows the world).
   if (npcKey === 'yael' && !(S_story.ngPlusRun > 0) && !S_story.yaelOnboardingSeen) {
     S_story.yaelOnboardingSeen = true;
-    return { quote: d.impartial[0], meta: d.meta, fav };
+    return { quote: d.impartial[0], meta: d.meta, fav, tier: 'impartial' };   // §DX-02dm: the card badge reads this
   }
   // L44-E / Layer 69 / S30 — the debt Quill released, and the debt he stopped looking at
   if (npcKey === 'quill' && (S_story.couperiDebtReleased || S_story.couperiDebtDegraded)) {
@@ -23634,6 +23633,11 @@ function _getNPCDialogue(npcKey) {
     if (!pool.includes(debtLine)) {
       pool = [...pool, debtLine];
     }
+  }
+  // L45-B: a delivered Froberger trace stays in the Dear Friend cycle
+  const _trace = FROBERGER_TRACES[npcKey];
+  if (_trace && S_story['frobergerTrace_' + npcKey + '_delivered'] && fav >= _trace.minFav && !pool.includes(_trace.text)) {
+    pool = [...pool, _trace.text];
   }
   // L44-J: Act III weight injection — one-time per NPC at Friendly+
   if (fav >= 1 && (S_story.actNumber || 1) >= 3
@@ -23769,7 +23773,7 @@ function _renderNpcCard(key, container) {
     p = { name: dlg.meta.name, occupation: dlg.meta.occupation || '' };
   }
   const fav = dlg.fav;
-  const badgeTxt = fav >= 2 ? '💛 Dear Friend' : fav >= 1 ? '🤝 Friendly' : (_hasActiveQuestFor(key) ? '📋 Quest Active' : '👤 Impartial');
+  const badgeTxt = fav >= 2 ? '💛 Dear Friend' : fav >= 1 ? '🤝 Friendly' : (dlg.tier !== 'impartial' && _hasActiveQuestFor(key) ? '📋 Quest Active' : '👤 Impartial');
   const staticProfile = fav >= 2 ? p.dearFriend : fav >= 1 ? p.friendly : p.neutral;
   // §NPC-01-A: "lean" profiles (key/name/occupation/node only — the ~194 non-Birka NPCs) carry no
   // per-tier greeting object, so staticProfile is undefined and staticProfile.greeting would throw.
@@ -26700,11 +26704,6 @@ const LAKE_MAGIC_DB = { // Lake magic items — found via high-rank fishing; sta
 };
 // ◆◆◆ WORLDBUILDER:LAKE_MAGIC:END ◆◆◆
 
-// ◆◆◆ WORLDBUILDER:ITEM_DB:START ◆◆◆
-const ITEM_DB = { // General item definitions — weapons, amulets, consumables, readables. Granted via quest handlers or found in world.
-};
-// ◆◆◆ WORLDBUILDER:ITEM_DB:END ◆◆◆
-
 /* ── Layer 53: Living World — Junction Vignettes + Road Companion ── */
 const JUNCTION_VIGNETTES = { // → doc: story.md §Junction Vignettes
   // §AUDIT-03j: these 8 scenes were keyed to J1–J7 + RD — the junction/road stubs §WALK
@@ -27704,6 +27703,7 @@ const BRYNN_MAINTENANCE_TASKS = [ // → doc: world.md §Brynn's Maintenance Tas
 const QUIET_RETURN_RECEIPTS = { // → doc: story.md §FL3 — Epic Battleground Quest Chain (per-node one-time text on return from CO endgame corridor)
   RKV: "The ranger takes the report without looking at it. Then looks at it. 'You actually went in.'",
   PRN: "The forester marks something on her map. 'That\'s been undocumented for six years.'",
+  INV: "The shepherd doesn't look at the water again. She looks up the hill, toward the churchyard. 'I have somewhere to go now.'",
   SDR: "The sea-watcher nods once. 'The tide knows you were there.'",
   PMO: "The warden closes the log. 'Good. That\'s one less thing keeping me up.'",
   FLR: "The border scout takes the notes. 'You went to the edge. Most don\'t.'",
@@ -27819,7 +27819,6 @@ function _renderFinalMap() {
   captionEl.id = 'final-map-caption';
   captionEl.style.cssText = 'position:absolute;bottom:12%;left:0;right:0;text-align:center;color:#bbb;font-style:italic;font-size:0.9em;opacity:0;transition:opacity 0.8s;pointer-events:none;';
   captionEl.textContent = caption;
-  overlay.style.position = 'relative';
   overlay.appendChild(captionEl);
   S_story.s55MapLineDelivered = true;
   setTimeout(() => {
@@ -27872,7 +27871,7 @@ function _buildWeckmannLog() {
 
 
 /* ── Layer 45: Web of Connections Consts ── */
-const FROBERGER_TRACES = { // → doc: world.md §Froberger Traces (6 one-time NPC memories; fav >= 2 + visit-count gated)
+const FROBERGER_TRACES = { // → doc: world.md §Froberger Traces (6 NPC memories; minFav + visit-count gated, then part of the Dear Friend pool)
   yael:     { minFav:2, visitTrigger:3, text:"A researcher came through once. Froberger, he said. Knew every patrol route by the second day. Left without saying why. I assumed it was urgent. It usually is, with that type." },
   brynn:    { minFav:3, visitTrigger:1, text:"He stayed in room 6. Very quiet. Read all night — I could see the light under the door. I brought him water twice. He said thank you both times. He left early. He didn't say goodbye, but he left the room cleaner than he found it. I think that's what he could manage." },
   quill:    { minFav:2, visitTrigger:2, text:"He came in once, sat at the back, didn't request anything. Just listened. At the end he said: 'You're good.' I said thank you. He said: 'I mean technically. There's something else. You'll find it or you won't.' And he left. I've been thinking about what the something else is ever since." },

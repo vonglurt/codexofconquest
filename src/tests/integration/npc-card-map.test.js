@@ -467,6 +467,41 @@ test.describe('§NPC-01-D — talk verb: reach Friendly (⚔) by talking, Dear F
     await expect(row.locator('.npc-talk-btn').first()).toContainText('1/' + await page.evaluate(() => TALK_TO_FRIENDLY));
     expect(pageErrors).toEqual([]);
   });
+  test('Talk is not a visit: no tier, blocked day or refusal advances npcVisitCounts or spends a one-shot line', async ({ page }) => {
+    const pageErrors = [];
+    page.on('pageerror', e => pageErrors.push(String(e)));
+    await page.goto('/play.html');
+
+    const r = await page.evaluate(() => {
+      const visits = k => (S_story.npcVisitCounts || {})[k] || 0;
+      S_story.npcFavorability = {}; S_story.npcTalk = {}; S_story.npcVisitCounts = {}; S_story.day = 1; S_story.actNumber = 1;
+
+      _talkToNpc('brynn');                         // counts toward Friendly
+      _talkToNpc('brynn');                         // same day, refused
+      const atImpartial = visits('brynn');
+
+      S_story.npcFavorability = { brynn: 1 };
+      for (let d = 2; d <= 6; d++) { S_story.day = d; _talkToNpc('brynn'); }   // "already counts you a friend"
+      const atFriendly = visits('brynn');
+
+      S_story.npcFavorability = { auros: 2 };
+      _talkToNpc('auros');
+      const frobergerSpent = !!S_story.frobergerTrace_auros_delivered;
+
+      S_story.npcFavorability = {}; S_story.brynRoom6Line = true; S_story.brynRoom6LineDelivered = false; S_story.day = 7;
+      _talkToNpc('brynn');
+      const room6Spent = !!S_story.brynRoom6LineDelivered;
+
+      return { atImpartial, atFriendly, frobergerSpent, room6Spent, talkCount: S_story.npcTalk.brynn.count };
+    });
+
+    expect(r.atImpartial, 'a Talk and a refused same-day Talk add no visit').toBe(0);
+    expect(r.atFriendly, 'five refused Talks on a Friendly NPC add no visit').toBe(0);
+    expect(r.frobergerSpent, 'a Talk does not deliver a Froberger trace').toBe(false);
+    expect(r.room6Spent, 'a Talk does not spend a one-shot line').toBe(false);
+    expect(r.talkCount, 'the Talk counter itself still advances').toBe(2);
+    expect(pageErrors).toEqual([]);
+  });
 });
 
 // §NPC-01-SF4 — the last three dead birkaNpcs codes (CQ/SQ/GC — never in NODE_MAP) remapped to the

@@ -54,7 +54,7 @@ The eight subsystems: **(II)** Froberger's traces · **(III)** NPC cross-referen
 
 | § | Subsystem | Shipped? | Delta |
 |---|---|---|---|
-| II | Froberger's traces | ✅ 6 of 6 deliverable | 6/6 present, byte-identical, tiers exact. **`crov`'s asks for favor 3; his ceiling was 2 until §DX-02fb** (**F1**, ✅ SHIPPED 2026-08-23 — `{kind:'favor',npc:'crov',add:2}` on `quest_pit_training`). **NOT SHIPPED:** *"added to the NPC's permanent pool so it can resurface"* — delivered once, then never again (**F6**) |
+| II | Froberger's traces | ✅ 6 of 6 deliverable | 6/6 present, byte-identical, tiers exact. **`crov`'s asks for favor 3; his ceiling was 2 until §DX-02fb** (**F1**, ✅ SHIPPED 2026-08-23 — `{kind:'favor',npc:'crov',add:2}` on `quest_pit_training`). *"added to the NPC's permanent pool so it can resurface"* was delivered once, then never again (**F6**, ✅ SHIPPED 2026-09-13 — §DX-02fh: `_getNPCDialogue` appends a delivered trace to the Dear Friend pool, derived from the saved flag) |
 | III | Cross-references | ✅ 17/17 | Distributed over all six NPCs, byte-identical. Delivered as a **consumed sequence** every 3rd visit, not the specified cycling pool (**F4**). Two declared relationships have **no lines** (**F3**) |
 | IV | Nivers | ✅ | `const NIVERS_DIALOGUE = "Evening."` live and rendered. Sits **at `LHR`**, not the specified intersection between CI and IN. Yael's follow-up gated at fav ≥ 2, not the specified Dear Friend. Her journal note hits the §DX-02et breadcrumb bug (**F7**) |
 | V | Yael's patrol | ⚠️ 4 of 5 usable | 5 entries (4 from the lock + 1 from Layer 74). **First-match-wins over non-exclusive conditions, loosest first** → four lines are even-day-only (**F2**). The lock's `ER`/Redwater row never shipped. Yael is **not removed** from her home node while "on patrol" |
@@ -167,6 +167,8 @@ So a player who opens Weckmann's battered notebook — a genuinely lovely object
 
 This is a small loss and a real one. The traces are the layer's best writing, and the design's argument for re-cycling them is sound — a memory of a dead man that surfaces again months later, unprompted, is a different experience from a memory you were shown once during a checklist of visits.
 
+> **✅ SHIPPED 2026-09-13 (§DX-02fh) `028e6a2`.** Implemented, not retired. The trace is still delivered once by `_checkFrobergerTrace`; from then on `_getNPCDialogue` appends it to that NPC's Dear Friend pool while favor is at the trace's `minFav`, derived from the saved `frobergerTrace_<key>_delivered` flag rather than pushed into `NPC_DIALOGUES`, so the authored table is untouched and the return survives a reload. Through the real functions with stub pools, 40 visits: `yael` at favor 2 shows the trace **1× → 11×** (after reload **0× → 5×**); `brynn` at favor 2, whose `minFav` is 3, stays **0×**. Every `minFav` is 2 or 3 and favor ≥ 2 always selects `dearFriend`, so §II's *"Friendly/Dear Friend pool"* is the Dear Friend pool in practice.
+
 ### F7 — Nivers ships, at the wrong address, with the breadcrumb bug attached
 
 §IV shipped nearly whole, and its centerpiece is intact: `const NIVERS_DIALOGUE = "Evening.";` rendered on every pass, the pass counter, Yael's eleven-years speech, and the "🛡 Who is the guard on the corner?" button that gives the player her name for no reward. Three deltas:
@@ -229,7 +231,7 @@ Worth stating plainly. All eight subsystems shipped. All 17 cross-references, al
 | **§DX-02fe** | Two favor scales (0–2 and 0–3) in circulation, with the engine's own comments asserting both; ~8 gates split between them | 🟡 reconcile centrally |
 | **§DX-02ff** | The connection map's `Yael — Pachelbel` and `All → Gigault` edges have no lines; the Gigault half is the other side of §DX-02es | 🟡 four strings |
 | **§DX-02fg** ✅ SHIPPED 2026-09-07 | Weckmann's training log renders `[years of entries — …]`, an authoring stage direction, as player-facing handwriting | 🟢 one string |
-| **§DX-02fh** | A delivered Froberger trace never rejoins the NPC's pool, as §II specifies it should | 🟢 implement-or-retire |
+| **§DX-02fh** ✅ SHIPPED 2026-09-13 | A delivered Froberger trace never rejoins the NPC's pool, as §II specifies it should | 🟢 implement-or-retire |
 | **§DX-02fa** | The new Code Comments directive (CC-1..CC-6) conflicts with the repo's §AUDIT-03n *"annotate, don't rewrite"* convention — needs a user call | 🟡 policy |
 
 ---

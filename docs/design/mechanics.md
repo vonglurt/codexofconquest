@@ -862,7 +862,7 @@ Six named Birka NPCs each have a favorability state tracked in `S_story.npcFavor
 Each NPC has 5 dialogue quotes per state in `NPC_DIALOGUES`, cycled by visit count. `_getNPCDialogue(npcKey)` runs a priority chain:
 1. Debt degradation check (Rough Whiskey debt)
 2. Act III weight injection (one-time at Friendly+)
-3. Froberger trace (`FROBERGER_TRACES` — one-time NPC memory of Froberger)
+3. Froberger trace (`FROBERGER_TRACES` — an NPC memory of Froberger, delivered once here and afterwards part of that NPC's Dear Friend pool)
 4. NPC cross-reference (`NPC_CROSS_REFS` — every 3rd visit)
 5. Room 6 trigger (CY node, fav ≥ 1)
 6. S29: Auros/Froberger theory line (bruhns, fav ≥ 2, Entry 41 found)
