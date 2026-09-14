@@ -83,11 +83,10 @@ node layout-solve.js --apply             # propagate all nodes
 ./bin/api connect WOR E SAL              # wire two nodes
 ./bin/api highway LHR CON --execute      # full junction highway
 ./bin/api junction LHR S --execute       # single junction node
-./bin/api fill-gap WOR E SAL --execute   # junction chain for gap > 4
 ./bin/api move LHR 12 18 --swap          # move/swap coordinates
 
-./bin/api fix-diagonal LHR S --execute   # fix one broken edge
-./bin/api fix-all-broken --execute       # batch-fix all broken edges
+./bin/api broken                         # nodes with no occupied neighbour cell
+./bin/api reweave                        # rebuild the road net
 ```
 
 ---

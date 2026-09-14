@@ -1405,115 +1405,6 @@ const CMD = {
   // and empty land cells are freely walkable (§WALK-1.5) — there is no gap to fill.
   // Verify connectivity with `./bin/api reachability` instead.
 
-  // ── fix-diagonal: auto-fix one diagonal (bendy) edge via move or elbow ───────
-  // Usage: ./bin/api fix-diagonal <CODE> <dir> [--dry-run]
-  //   Inspects the edge CODE[dir] and proposes the least-invasive fix:
-  //   1. Move target if it has only 1-2 connections (cheap)
-  //   2. Otherwise spawn elbow junction at axis intersection
-  async 'fix-diagonal'(pos, flags) {
-    const [, code, dir] = pos;
-    if (!code||!dir) die('Usage: ./bin/api fix-diagonal <CODE> <N|E|S|W> [--dry-run]');
-    const D    = dir.toUpperCase();
-    const exec = flags.execute && !flags['dry-run'];
-
-    // Validate the edge
-    const vResp = await request('GET', `/api/graph/validate/${code}`);
-    if (vResp.status >= 400) { printError(vResp); process.exit(1); }
-    const v = vResp.body;
-    const conn = v.connections?.[D];
-    if (!conn) { ok(`${code}.${D}: (no connection)`); return; }
-    if (conn.status === 'ok') { ok(`${code}.${D} → ${conn.target}: already OK (${conn.status})`); return; }
-
-    ok(`${code}.${D} → ${conn.target}:  status=${conn.status}  gap=${conn.gap}  offset=${conn.axisOffset}`);
-
-    if (conn.moveSuggestion) {
-      const s = conn.moveSuggestion;
-      ok(`Suggested fix: move "${s.node}" to r=${s.recommended?.r} c=${s.recommended?.c}`);
-      ok(`  ${conn.fix || ''}`);
-      if (exec && s.recommended && s.node !== '(junction)' && s.node !== '(new junction)') {
-        const mr = await request('POST', '/api/graph/move', {
-          code: s.node, r: s.recommended.r, c: s.recommended.c
-        });
-        if (mr.status >= 400) {
-          ok(`Move failed (${mr.body?.error}) — trying elbow junction instead`);
-          const jr = await request('POST', '/api/graph/spawn-junction', {
-            from: code, dir: D, dryRun: false
-          });
-          if (jr.status >= 400) { printError(jr); process.exit(1); }
-          ok(`Elbow ${jr.body.code} created at (${jr.body.r},${jr.body.c})`);
-        } else {
-          ok(`Moved ${s.node} → (${s.recommended.r},${s.recommended.c})`);
-        }
-      } else if (exec) {
-        // New junction needed
-        const jr = await request('POST', '/api/graph/spawn-junction', { from: code, dir: D, dryRun: false });
-        if (jr.status >= 400) { printError(jr); process.exit(1); }
-        ok(`Elbow ${jr.body.code} created at (${jr.body.r},${jr.body.c})`);
-      } else {
-        ok(`Add --execute to apply fix`);
-      }
-    } else {
-      ok(`No auto-fix available — inspect manually: ./bin/api worldmap --city ${code}`);
-    }
-  },
-
-  // ── fix-all-broken: batch-diagnose all broken edges, apply safe auto-fixes ───
-  // Usage: ./bin/api fix-all-broken [--dry-run] [--limit N]
-  //   Fetches /api/graph/broken, then for each edge either moves a light node
-  //   or spawns an elbow junction. Safe fixes only (no multi-hop guesses).
-  async 'fix-all-broken'(pos, flags) {
-    const exec  = flags.execute && !flags['dry-run'];
-    const limit = flags.limit ? +flags.limit : Infinity;
-    const resp  = await request('GET', '/api/graph/broken');
-    if (resp.status !== 200) { printError(resp); process.exit(1); }
-    const { edges, broken } = resp.body;
-    ok(`${broken} broken edges found`);
-    if (!exec) ok(`[DRY RUN] showing first ${Math.min(broken, 20)} — add --execute --limit N to fix`);
-
-    let fixed = 0, failed = 0, skipped = 0;
-    for (const edge of (edges||[]).slice(0, limit)) {
-      const { from, dir, to, type, moveSuggestion } = edge;
-      if (type === 'missing_coords') { skipped++; continue; }
-
-      process.stdout.write(`  ${from}─${dir}→${to}  [${type}]`);
-
-      if (!exec) {
-        const s = moveSuggestion;
-        if (s?.recommended) {
-          process.stdout.write(`  → move ${s.node} to (${s.recommended.r},${s.recommended.c})\n`);
-        } else {
-          process.stdout.write(`  → elbow junction\n`);
-        }
-        continue;
-      }
-
-      // Try move first, fall back to elbow
-      const s = moveSuggestion;
-      if (s?.recommended && s.node !== '(new junction)' && s.node !== '(junction)') {
-        const mr = await request('POST', '/api/graph/move', {
-          code: s.node, r: s.recommended.r, c: s.recommended.c
-        });
-        if (mr.status < 400) {
-          process.stdout.write(`  → moved ${s.node} ✓\n`);
-          fixed++; continue;
-        }
-      }
-      // Elbow
-      const jr = await request('POST', '/api/graph/spawn-junction', { from, dir, dryRun: false });
-      if (jr.status < 400) {
-        process.stdout.write(`  → elbow ${jr.body?.code} ✓\n`);
-        fixed++;
-      } else {
-        process.stdout.write(`  → FAILED: ${jr.body?.error}\n`);
-        failed++;
-      }
-    }
-    if (exec) {
-      ok(`Done: ${fixed} fixed, ${failed} failed, ${skipped} skipped (missing coords)`);
-      ok(`Re-check: ./bin/api fix-all-broken`);
-    }
-  },
-
   // ── nuke-junctions: P_NUKE — bulk-delete all J#### junction nodes ────────────
   // Usage: ./bin/api nuke-junctions [--execute]
   //   Dry-run (default): reports what would be deleted/stitched/deferred.
@@ -1563,35 +1454,6 @@ const CMD = {
     } else {
       printError(r); process.exit(1);
     }
-  },
-
-  // ── fix-bidirectional: batch-fix one-way links (A→B but B doesn't point back) ─
-  // Usage: ./bin/api fix-bidirectional [--execute]
-  //   Dry-run: calls GET /api/audit/map, counts bidirectional violations, shows summary.
-  //   --execute: POSTs to /api/audit/map/fix (no body) which fixes all diagonal + one-way
-  //              issues in one pass, then saves and reloads.
-  async 'fix-bidirectional'(pos, flags) {
-    await requireServer();
-    const exec = !!flags.execute;
-
-    if (!exec) {
-      // Dry-run: fetch audit to show how many violations exist
-      const r = await request('GET', '/api/audit/map');
-      if (r.status !== 200) { printError(r); process.exit(1); }
-      const errors = (r.body.errors || []).filter(e => e.check === 'bidirectional');
-      ok(`${errors.length} bidirectional violations found`);
-      if (errors.length) ok(`[DRY RUN] add --execute to fix all`);
-      return;
-    }
-
-    const r = await request('POST', '/api/audit/map/fix', {});
-    if (r.status !== 200) { printError(r); process.exit(1); }
-    const { fixed = [], errors = [], note } = r.body;
-    const bidir = fixed.filter(f => f.check === 'bidirectional');
-    const diag  = fixed.filter(f => f.check === 'diagonal_exit');
-    ok(`Done: ${bidir.length} bidirectional fixed, ${diag.length} diagonal fixed, ${errors.length} errors`);
-    if (note) ok(note);
-    ok(`Re-check: ./bin/api audit --map`);
   },
 
   // ── migrate: §CELL-14 data cleanup ─────────────────────────────────────────
@@ -1902,7 +1764,7 @@ ${C.bold}═══════════════════════�
   §19 MAP VISUALIZATION  (worldmap --regions --region --city --search --monster --route)
   §20 COORDINATE MANAGEMENT  (geo-seed  move  find-open-location)
   §21 NETWORK WIRING  (smart-connect  highway  junction  connect)
-  §22 NETWORK HEALTH & REPAIR  (verify  broken  reachability  junction-audit  fix-bidirectional  cluster-bridge)
+  §22 NETWORK HEALTH & REPAIR  (verify  broken  reachability  junction-audit  cluster-bridge)
   §23 CELL GRID QUERIES  (cell  grid region|heatmap|reachability)
   §24 COMMON RECIPES
   §25 SERVER LIFECYCLE
@@ -3112,10 +2974,6 @@ ${C.bold}═══════════════════════�
     ./bin/api clean
     ./bin/api clean --execute
 
-  Fix all one-way links (A→B but B doesn't point back):
-    ./bin/api fix-bidirectional
-    ./bin/api fix-bidirectional --execute
-
   Junction audit (if any J#### nodes still remain):
     ./bin/api junction-audit
 
@@ -3296,7 +3154,6 @@ const SYNOPSIS = [
   `  ${C.green}connect${C.reset} <A> <dir> <B>              direct wire (warns on deg=3/4 issues)  [--force]`,
   `  ${C.green}junction${C.reset} <from> <dir> [--label "…"] [--terrain T] [--execute]`,
   `  ${C.green}highway${C.reset} <from> <to>                ⚠️ route PLANNING only  [--step 4]  (--execute refused, §DX-01d)`,
-  `  ${C.green}fix-bidirectional${C.reset} [--execute]         fix all one-way links (A→B but B doesn't point back)`,
   `  ${C.green}cluster-bridge${C.reset} [--execute]             connect remaining isolated clusters`,
   `  ${C.green}migrate strip-exit-fields${C.reset} [--execute]   §CELL-14: strip dead N/S/E/W/portal/spire from NODE_MAP`,
   ``,
@@ -3311,6 +3168,12 @@ const SYNOPSIS = [
   `  ${C.green}ai${C.reset} "<question>"                    ask Claude  (ANTHROPIC_API_KEY)`,
   `  ${C.dim}types: node  quest  monster  npc  terrain  |  ./bin/api help for full manual${C.reset}`,
 ].join('\n');
+
+const RETIRED = {
+  'fix-diagonal':      'It read node.N/S/E/W, stripped to zero by §CELL-01. Census: ./bin/api broken',
+  'fix-all-broken':    'It read node.N/S/E/W, stripped to zero by §CELL-01. Census: ./bin/api broken — repair: ./bin/api reweave',
+  'fix-bidirectional': 'It read node.N/S/E/W, stripped to zero by §CELL-01. Census: ./bin/api broken',
+};
 
 function printSynopsis() {
   if (TTY) stderr(SYNOPSIS + '\n\n');
@@ -3333,6 +3196,7 @@ function printSynopsis() {
   }
 
   const cmd = pos[0] || 'help';
+  if (RETIRED[cmd]) die(`"${cmd}" is retired (§DX-02kx). ${RETIRED[cmd]}`);
   const fn  = CMD[cmd];
   if (!fn) die(`Unknown command "${cmd}". Run: ./bin/api help`);
 

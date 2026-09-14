@@ -44,12 +44,6 @@ Verify it's up:
 The node network is the skeleton of the game world. Every session should begin and end
 with a network health check. Broken edges silently disconnect navigation.
 
-> **⚠️ The `fix-*` repair family reads a field set that no longer exists (§DX-02kx).** §CELL-01 retired the
-> `N`/`S`/`E`/`W` node pointers and positions became `{r,c}` through `CELL_GRID`. These commands still run and
-> still print `✓`, and they are reporting on edges nothing carries: measured 2026-09-14, `./bin/api broken`
-> found **93 isolated cells** while `./bin/api fix-all-broken`, documented beside it, found **0 broken edges**.
-> Read their output as *"the old edge model has nothing to say"*, not as a clean bill of health.
-
 ```bash
 # Health snapshot — run this first, every session
 ./bin/api worldmap --regions            # visual: which zones have cities
@@ -67,9 +61,9 @@ with a network health check. Broken edges silently disconnect navigation.
 ./bin/api worldmap --city LHR          # visual + connection status
 ./bin/api get node LHR                 # full field dump
 
-# Fix broken edges
-./bin/api fix-diagonal LHR S           # fix one diagonal edge
-./bin/api fix-all-broken --execute     # batch-fix all broken edges
+# Repair
+./bin/api reweave                      # rebuild the road net (build-roads.js --apply + check:roads)
+./bin/api cluster-bridge --execute     # bridge remaining isolated clusters
 ./bin/api highway LHR CON --execute    # build full highway between two cities
 ```
 
@@ -341,24 +335,20 @@ dated snapshot the `milepoints/patches` chain is built from.
 
 ### Validation
 
-> **⚠️ The `fix-*` repair family reads a field set that no longer exists (§DX-02kx).** §CELL-01 retired the
-> `N`/`S`/`E`/`W` node pointers and positions became `{r,c}` through `CELL_GRID`. These commands still run and
-> still print `✓`, and they are reporting on edges nothing carries: measured 2026-09-14, `./bin/api broken`
-> found **93 isolated cells** while `./bin/api fix-all-broken`, documented beside it, found **0 broken edges**.
-> Read their output as *"the old edge model has nothing to say"*, not as a clean bill of health.
-
 ```bash
-./bin/api broken                        # all broken edges (diagonal, gap > 4)
+./bin/api broken                        # nodes with no occupied neighbour cell
 ./bin/api reachability                  # % reachable from hub node
-./bin/api fix-diagonal LHR S           # preview fix for one broken edge
-./bin/api fix-diagonal LHR S --execute # apply fix
-./bin/api fix-all-broken               # preview all fixes
-./bin/api fix-all-broken --execute --limit 50  # apply batch
-./bin/api fix-bidirectional            # preview one-way link violations
-./bin/api fix-bidirectional --execute  # fix all one-way links (A→B but B doesn't point back)
+./bin/api reweave                       # rebuild the road net
+./bin/api cluster-bridge --execute      # bridge remaining isolated clusters
 ```
 
-> **Retired (§WALK-3):** `reweave` / `reweave-all`, `fill-gap`, and `rip-and-connect`
+> **Retired (§DX-02kx):** `fix-diagonal`, `fix-all-broken` and `fix-bidirectional` are gone.
+> All three iterated the `N`/`S`/`E`/`W` node pointers §CELL-01 stripped to zero, so each printed a
+> `✓` over an empty input set — measured 2026-09-14, `./bin/api fix-all-broken` found **0 broken edges**
+> while `./bin/api broken` found **93 isolated cells**. The CLI now exits non-zero naming the replacement.
+> The census is `./bin/api broken`; the repair is `./bin/api reweave` and `./bin/api cluster-bridge`.
+
+> **Retired (§WALK-3):** `reweave-all`, `fill-gap`, and `rip-and-connect`
 > are gone — junction stubs were removed (§WALK-1/§WALK-1.5) and empty land cells are
 > now freely walkable, so there is no gap to fill or mesh to reweave. The CLI commands
 > return "Unknown command" and the endpoints return HTTP 410. To check connectivity use
@@ -467,9 +457,9 @@ node layout-solve.js --apply           # propagate all nodes from geo anchors
 ./bin/api reachability                  # target: 100%
 ./bin/api worldmap --route LHR --to SAM  # test Birka → Samarkand
 
-# 4. Fix remaining broken edges
+# 4. Repair remaining isolation
 ./bin/api broken                        # identify remaining issues
-./bin/api fix-all-broken --execute      # auto-fix where possible
+./bin/api reweave                       # rebuild the road net
 
 # 5. Place sub-locations near quest cities
 ./bin/api list node --no-coords        # find unplaced nodes
@@ -526,7 +516,7 @@ If you find yourself reaching for curl to hit one of these, request a `./bin/api
 | `POST /api/import/book` | `./bin/api import <file.json>` |
 | `GET /api/audit` | `./bin/api audit` |
 | `GET /api/audit/map` | `./bin/api audit --map` |
-| `POST /api/audit/map/fix` | `./bin/api fix-bidirectional --execute` |
+| `POST /api/audit/map/fix` | *(no wrapper — `fix-bidirectional` retired §DX-02kx)* |
 | `POST /api/save` | `./bin/api save` — dated backup beside the game file, then overwrite + reload (§DX-02l) |
 | `GET /api/snapshots` | `./bin/api snapshots` — list those dated backups (gitignored; nothing else reports them) |
 | `DELETE /api/snapshots` | `./bin/api snapshots --sweep [--force]` — deletes only snapshots already in the `milepoints/patches` chain unless forced |
