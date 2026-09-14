@@ -19,31 +19,33 @@ const ok = (c, m) => { if (c) { pass++; } else { fail++; console.log('  ✗ FAIL
 
 WBAPI.load(GAME);
 const q = WBAPI.questDb;
-// §ARCH-01 repoint (2026-07-06): this guard originally rode `completeItems` —
-// W7d/W8a swept that legacy field from QUEST_DB entirely, so the string-array
-// cases now ride `targetMonsterKeys` (two different quests so the edits don't
-// collide). The machinery under test is unchanged.
+// The string-array cases have been repointed twice — `completeItems` (swept by §ARCH-01
+// W7d) and then `targetMonsterKeys` (removed by §DX-02kt) — and QUEST_DB now carries no
+// top-level array of strings at all. What is under test is the serializer, not any one
+// field, so these cases ride a synthetic key on the in-memory copy and stop depending on
+// the corpus to supply a carrier. Two different quests, so the edits cannot collide.
+const SA = '_probeStringArray';
 const findQ = (field) => Object.keys(q).filter(id => Array.isArray(q[id][field]) && q[id][field].length);
-const [qTM1, qTM2] = findQ('targetMonsterKeys');
 const [qKG] = findQ('killGoals');
+const [qTM1, qTM2] = Object.keys(q).filter(id => id !== qKG).slice(0, 2);
 
 // [1] edits succeed via the structured path
-let r = WBAPI.editStructuredField('quest', qTM1, 'targetMonsterKeys', ['New Item A', "O'Brien's Token", 'multi\nline']);
+let r = WBAPI.editStructuredField('quest', qTM1, SA, ['New Item A', "O'Brien's Token", 'multi\nline']);
 ok(r.ok && r.strategy === 'editStructuredField', 'string array (escape-heavy) edit: ' + (r.error || ''));
 r = WBAPI.editStructuredField('quest', qKG, 'killGoals', [{ key: 'test_mob', need: 7, label: "O'Test" }, { key: 'm2', need: 1, label: 'Two' }]);
 ok(r.ok, 'killGoals (object array) edit: ' + (r.error || ''));
-r = WBAPI.editStructuredField('quest', qTM2, 'targetMonsterKeys', ['alpha', 'beta']);
+r = WBAPI.editStructuredField('quest', qTM2, SA, ['alpha', 'beta']);
 ok(r.ok, 'plain string array edit: ' + (r.error || ''));
 
 // [2] _rawSrc patched at source level (single-quoted, escaped, unquoted obj keys)
-ok(WBAPI._rawSrc.includes("targetMonsterKeys:['New Item A','O\\'Brien\\'s Token','multi\\nline']"), 'escape-heavy literal in _rawSrc');
+ok(WBAPI._rawSrc.includes(SA + ":['New Item A','O\\'Brien\\'s Token','multi\\nline']"), 'escape-heavy literal in _rawSrc');
 ok(WBAPI._rawSrc.includes("killGoals:[{key:'test_mob',need:7,label:'O\\'Test'},{key:'m2',need:1,label:'Two'}]"), 'killGoals literal in _rawSrc');
 
 // [3] round-trip: reload the patched source, re-read parsed values
 WBAPI.load(WBAPI._rawSrc);
-ok(JSON.stringify(WBAPI.questDb[qTM1].targetMonsterKeys) === JSON.stringify(['New Item A', "O'Brien's Token", 'multi\nline']), 'escape-heavy string array round-trips');
+ok(JSON.stringify(WBAPI.questDb[qTM1][SA]) === JSON.stringify(['New Item A', "O'Brien's Token", 'multi\nline']), 'escape-heavy string array round-trips');
 ok(JSON.stringify(WBAPI.questDb[qKG].killGoals) === JSON.stringify([{ key: 'test_mob', need: 7, label: "O'Test" }, { key: 'm2', need: 1, label: 'Two' }]), 'killGoals round-trips');
-ok(JSON.stringify(WBAPI.questDb[qTM2].targetMonsterKeys) === JSON.stringify(['alpha', 'beta']), 'plain string array round-trips');
+ok(JSON.stringify(WBAPI.questDb[qTM2][SA]) === JSON.stringify(['alpha', 'beta']), 'plain string array round-trips');
 
 // [4] a LIVE function value is rejected — it cannot be serialized, only escaped
 r = WBAPI.editStructuredField('quest', qTM1, 'completeFn', function () { return true; });
@@ -213,11 +215,11 @@ ok(sameKeys && sameMembers, 'dedupe removed only repeats — every key and every
 
 // [5] insert absent array field
 WBAPI.load(GAME);
-const qNoTM = Object.keys(q).find(id => !q[id].targetMonsterKeys);
-r = WBAPI.editStructuredField('quest', qNoTM, 'targetMonsterKeys', ['inserted_key']);
+const qNoTM = Object.keys(q).find(id => !q[id][SA]);
+r = WBAPI.editStructuredField('quest', qNoTM, SA, ['inserted_key']);
 ok(r.ok && r.inserted, 'inserted absent array field');
 WBAPI.load(WBAPI._rawSrc);
-ok(JSON.stringify(WBAPI.questDb[qNoTM].targetMonsterKeys) === JSON.stringify(['inserted_key']), 'inserted field round-trips');
+ok(JSON.stringify(WBAPI.questDb[qNoTM][SA]) === JSON.stringify(['inserted_key']), 'inserted field round-trips');
 
 // [6] number scalar persists via the structured path
 WBAPI.load(GAME);
@@ -338,5 +340,49 @@ if (tKey) {
      'an unquoted terrain field refuses by name, never "unknown type": ' + (r.error || ''));
 }
 
+// §DX-02kt — removeField: the write path's only key-DELETING operation. `put field=null`
+// clears a scalar and is refused outright on a structured value (§DX-02ee), so a field the
+// data carries and nothing reads had no way out at all. Asserted from both ends: the pair
+// leaves the source, every neighbour's literal is byte-identical, and the entry re-parses.
+WBAPI.load(GAME);
+const qRF = Object.keys(q).find(id => q[id].killGoals && q[id].killCounter);
+if (qRF) {
+  const secBefore = WBAPI._parse.extrSection(WBAPI._rawSrc, 'QUEST_DB');
+  const litBefore = WBAPI._parse.entryFieldLiterals(secBefore, qRF);
+  r = WBAPI.removeField('quest', qRF, 'killCounter');
+  ok(r.ok, 'removeField removes a scalar field: ' + (r.error || ''));
+  const litAfter = WBAPI._parse.entryFieldLiterals(WBAPI._parse.extrSection(WBAPI._rawSrc, 'QUEST_DB'), qRF);
+  ok(!('killCounter' in litAfter), 'the key is gone from the source, not set to null');
+  ok(Object.keys(litBefore).length - Object.keys(litAfter).length === 1, 'exactly one key left');
+  ok(Object.keys(litAfter).every(f => litAfter[f] === litBefore[f]),
+     'every neighbour field\'s literal is byte-identical — a removal that reflows is a defect');
+  WBAPI.load(WBAPI._rawSrc);
+  ok(WBAPI.questDb[qRF] && !('killCounter' in WBAPI.questDb[qRF]), 'the entry re-parses without it');
+  ok(WBAPI.questDb[qRF].killGoals !== undefined, 'and its neighbour survived the round trip');
+
+  WBAPI.load(GAME);
+  r = WBAPI.removeField('quest', qRF, 'nosuchfield');
+  ok(!r.ok && /not a top-level field/.test(r.error || ''), 'a field the entry does not carry is refused by name');
+  r = WBAPI.removeField('quest', 'no_such_quest_at_all', 'killGoals');
+  ok(!r.ok, 'an id that resolves to nothing is refused');
+  const rawBeforeRF = WBAPI._rawSrc;
+  WBAPI.removeField('quest', qRF, 'nosuchfield');
+  ok(WBAPI._rawSrc === rawBeforeRF, 'a refused removal left the source alone');
+}
+
+// §DX-02ix at removal scope — a comment inside the value would be deleted with the pair,
+// and JSON has no term to carry it back, so the removal is refused unless the loss is taken.
+WBAPI.load(GAME);
+const secC = WBAPI._parse.extrSection(WBAPI._rawSrc, 'QUEST_DB');
+const cId = Object.keys(q).find(id => Object.keys(WBAPI._parse.fieldsWithComments(secC, id) || {}).length);
+const cField = cId && Object.keys(WBAPI._parse.fieldsWithComments(secC, cId))[0];
+ok(!!cField, 'the corpus still carries a commented field for the guard to be tested against');
+if (cField) {
+  r = WBAPI.removeField('quest', cId, cField);
+  ok(!r.ok && /comment/.test(r.error || ''), 'a removal that would delete a comment is refused: ' + (r.error || ''));
+  r = WBAPI.removeField('quest', cId, cField, { dropComments: true });
+  ok(r.ok && r.droppedComments > 0, 'dropComments accepts the loss and reports it');
+}
+
 if (fail) { console.log(`\n✗ check-array-patch: ${fail} FAILED, ${pass} passed`); process.exit(1); }
-console.log(`✓ §WBAPI-01 ph3 structured-field PATCH: all ${pass} checks pass (array/object/number round-trip + insert + fn-reject + {__fn:…} closure round-trip + drop refusal + comment-loss refusal across the corpus + substitution round-trip and its three refusals + duplicate-free quest indexes + expression-field removal + NPC_DIALOGUE round-trip and closure survival + unquoted-field routing)`);
+console.log(`✓ §WBAPI-01 ph3 structured-field PATCH: all ${pass} checks pass (array/object/number round-trip + insert + fn-reject + {__fn:…} closure round-trip + drop refusal + comment-loss refusal across the corpus + substitution round-trip and its three refusals + duplicate-free quest indexes + expression-field removal + NPC_DIALOGUE round-trip and closure survival + unquoted-field routing + removeField excision, refusals and comment guard)`);

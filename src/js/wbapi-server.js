@@ -1388,8 +1388,6 @@ const SCHEMAS = {
       itemChain:   { type:'array',   required:false, editable:true,  note:'[{action,name,icon,…}] grant/take item steps run by the item-chain resolver (§EDITOR-01-D). Carried by 27.' },
       killGoals:   { type:'array',   required:false, editable:true,  note:'[{key,need,label}] per-monster kill targets rendered as quest progress. Carried by 11.' },
       killCounter: { type:'string',  required:false, editable:true,  note:'S_story counter name the killGoals progress is read from; defaults to catKills. Carried by 6.' },
-      targetMonsterKeys:{type:'array',required:false,editable:true,  note:'Declared by 12 quests and read by nothing — killGoals is what the progress line uses. Filed §DX-02kt.' },
-      questComplete:{type:'boolean', required:false, editable:true,  note:'Declared by 1 quest and read by nothing. Filed §DX-02kt.' },
       activateCond:{ type:'function',required:false, editable:false, note:'Legacy JS gate () => bool — still evaluated, but prefer gate:{…}. Not editable via API — edit in source. Carried by 30.' },
     },
   },
@@ -1451,15 +1449,12 @@ const SCHEMAS = {
 // text was PRESENT, which is why a typo came back green.
 //
 // The vocabulary is DERIVED from the loaded corpus and unioned with what SCHEMAS declares —
-// never taken from SCHEMAS alone. Measured 2026-09-14 against the live file: SCHEMAS
-// declares 9 monster fields where MONSTER_POOL carries 10 (`voidTainted`), 15 node fields
-// where NODE_MAP carries 18, and 23 quest fields where QUEST_DB carries 31, so a whitelist
-// read off the schema would refuse `id` on all 2,853 quests and `desc` on 2,806. A field a
-// collection already uses is writable by definition; a field in neither is a typo.
+// never taken from SCHEMAS alone. A whitelist read off the schema would have refused `id` on
+// all 2,853 quests and `desc` on 2,806; a field a collection already uses is writable by
+// definition, and a field in neither is a typo. `check:schema` (§DX-02kv) holds the two sets
+// together, so the union is now a narrow one rather than a workaround for schema rot.
 //
-// STATED LIMIT: this rejects names nothing has ever used, not names used wrongly. Two live
-// keys are read by nothing — `targetMonsterKeys` (12 quests) and `questComplete` (1) — and
-// the corpus half of the vocabulary therefore accepts them; both are filed as §DX-02kt.
+// STATED LIMIT: this rejects names nothing has ever used, not names used wrongly.
 const VOCAB_COLLECTION = { node:'nodeMap', quest:'questDb', monster:'monsterPool', npc:'birkaNpcs', terrain:'worldDb' };
 
 function fieldVocabulary(type) {
@@ -11521,6 +11516,33 @@ async function route(req, res) {
       return saveAndRestart(res, 200, { ok:true, key, field:dlgField, removed, remaining: arr.length });
     }
 
+    // DELETE /api/{type}/{id}/field/{field} — remove one top-level field, key and all.
+    // Nonce-gated like every other DELETE that removes authored data; ./bin/api unset
+    // fetches it for you. `put field=null` clears a scalar and refuses a structured value
+    // (§DX-02ee), so before this the write path could not delete a field at all.
+    if (action === 'field' && parts[3]) {
+      const fieldName = decodeURIComponent(parts[3]);
+      const nonce = req.headers['x-nonce'] || url.searchParams.get('nonce');
+      if (!nonce) {
+        logResponse(method, url.pathname, 403, 'DELETE field requires X-Nonce');
+        return json(res, 403, { ok:false,
+          error:`DELETE field requires a nonce. POST /api/nonce with {type:"${type}",id:"${key}"} first, or use ./bin/api unset ${type} ${key} ${fieldName}.` });
+      }
+      const nc = nonceConsume(nonce, type, key);
+      if (!nc.ok) {
+        logResponse(method, url.pathname, 403, `nonce rejected: ${nc.error}`);
+        return json(res, 403, { ok:false, error: nc.error });
+      }
+      const r = WBAPI.removeField(type, key, fieldName, { dropComments: url.searchParams.get('dropComments') === '1' });
+      if (!r.ok) {
+        logResponse(method, url.pathname, 400, r.error);
+        return json(res, 400, r);
+      }
+      logRow('removed', `${type} › ${key}.${fieldName}  ·  was ${String(r.was).slice(0,60)}`);
+      logResponse(method, url.pathname, 200, `removed ${type}/${key}/${fieldName}`);
+      return saveAndRestart(res, 200, r);
+    }
+
     // DELETE /api/monster/:key/drop — remove a drop entry (nonce type:monster, id:key)
     if (type === 'monster' && action === 'drop') {
       const nonce = req.headers['x-nonce'] || url.searchParams.get('nonce');
@@ -11939,6 +11961,7 @@ server.listen(PORT, BIND_ADDR, () => {
     ['PUT',    '/api/npc/{id}/dialogue/{array}      body: {value:[...]}  (replace array)'],
     ['PUT',    '/api/npc/{id}/dialogue/{array}/{i}  body: {text}  (replace one line)'],
     ['DELETE', '/api/npc/{id}/dialogue/{array}/{i}  (nonce-free — removes one line)'],
+    ['DELETE', '/api/{type}/{id}/field/{field}    remove one top-level field (nonce; ./bin/api unset)'],
     ['POST',   '/api/monster/{id}/rename            body: {name}'],
     ['POST',   '/api/monster/{id}/fork              body: {newKey, overrides?}'],
     ['POST',   '/api/terrain/{id}/swap              body: {oldKey, newKey}'],

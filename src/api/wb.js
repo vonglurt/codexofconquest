@@ -468,6 +468,19 @@ const CMD = {
     printResult(r.body, flags);
   },
 
+  // §DX-02kt — remove one field, key and all. `put <field>=null` clears a scalar and is
+  // refused on a structured value (§DX-02ee), so it cannot delete a field.
+  async unset(pos, flags) {
+    await requireServer();
+    const [, type, id, field] = pos;
+    if (!type || !id || !field) die('Usage: ./bin/api unset <type> <id> <field>   [--drop-comments]');
+    const nonce = await getNonce(type, id);
+    const q = flags['drop-comments'] ? '?dropComments=1' : '';
+    const r = await request('DELETE', `/api/${type}/${encodeURIComponent(id)}/field/${encodeURIComponent(field)}${q}`, null, { 'X-Nonce': nonce });
+    if (r.status >= 400) { printError(r); process.exit(1); }
+    ok(`${type}:${id} — removed ${field}  (was ${String(r.body.was).slice(0, 60)})`);
+  },
+
   async del(pos, flags) {
     await requireServer();
     const [, type, id] = pos;
@@ -1894,6 +1907,7 @@ ${C.bold}═══════════════════════�
   ${C.green}sub${C.reset} <type> <id> --from…  Substitute a phrase inside one entry's strings
   ${C.green}post${C.reset} <type> [k=v]      Create a new entity
   ${C.green}del${C.reset} <type> <id>        Delete an entity
+  ${C.green}unset${C.reset} <type> <id> <field>  Remove one field, key and all
   ${C.green}drop${C.reset} <monster> name=…    Trophy drop (MONSTER_DROPS; --update to replace)
   ${C.green}dialogue${C.reset} <npc> […]      NPC_DIALOGUES entry (--create to add; meta/array edits)
   ${C.green}audit${C.reset} [--map]          Integrity scan
@@ -3111,6 +3125,7 @@ const SYNOPSIS = [
   `  ${C.green}put${C.reset}   <type> <id> [k=v…]           update fields  (or pipe JSON)`,
   `  ${C.green}post${C.reset}  <type> [k=v…]                create  (nonce auto)`,
   `  ${C.green}del${C.reset}   <type> <id>                  delete  (nonce auto)`,
+  `  ${C.green}unset${C.reset} <type> <id> <field>          remove one top-level field, key and all  (nonce auto)`,
   `  ${C.green}speak${C.reset} <npc-id> "<prompt>"           Claude NPC reply  [--state neutral|friendly|dearFriend]`,
   `  ${C.green}import${C.reset} <file.json>                 bulk import nodes + quest cycles`,
   `  ${C.green}audit${C.reset} [--map]                      integrity scan`,
@@ -3138,6 +3153,7 @@ const SYNOPSIS = [
   `  ${C.green}post${C.reset}  <type> [k=v…]                create`,
   `  ${C.green}put${C.reset}   <type> <id> [k=v…]           update fields  (or pipe JSON)`,
   `  ${C.green}del${C.reset}   <type> <id>                  delete`,
+  `  ${C.green}unset${C.reset} <type> <id> <field>          remove one field`,
   `  ${C.green}speak${C.reset} <npc-id> "<prompt>"           Claude NPC reply`,
   `  ${C.green}import${C.reset} <file.json>                 bulk import nodes + quest cycles`,
   `  ${C.green}save${C.reset}                               dated backup beside the game file, then overwrite + reload`,

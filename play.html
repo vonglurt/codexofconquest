@@ -13601,7 +13601,7 @@ const QUEST_DB = { // → doc: quest.md §Quest Format
     onComplete:[ { kind:'reward', xp:120, gold:30 }, { kind:'mission_bit', flag:'kgEnlisted', label:'Guild Enlistment Papers' }, { kind:'narrative', msg:'📄 Recruiter Volkov stamps your papers. You are enlisted with the Guild.' } ],
     desc:'Recruiter Volkov signs your name and points at the row of dormant sparring droids by the gate. "Three droids, clean, and the Guild knows you can hold a line. Nothing you do here is a mugging — you fight who we match you against, nothing more. That is the honor of it."',
     hint:'Defeat 3 sparring droids near the Nevsky Checkpoint.',
-    targetMonsterKeys:['sparring_droid'], killGoals:[{key:'sparring_droid',need:3,label:'Sparring Droid'}], killCounter:'monsterKills',
+    killGoals:[{key:'sparring_droid',need:3,label:'Sparring Droid'}], killCounter:'monsterKills',
     activateNode:'SPB', waypointNode:'SPB', reward:30,
     disposition:'"Three droids, clean. The Guild does not sign softness. You fight who we match you against — that is the honor of it, and you just earned your papers." — Recruiter Volkov',
     passText:'Three droids, clean. The Guild does not sign softness. You fight who we match you against — that is the honor of it, and you just earned your papers.',
@@ -13623,7 +13623,7 @@ const QUEST_DB = { // → doc: quest.md §Quest Format
     itemChain:[{action:'grant',name:'Red Star Pin',icon:'⭐',type:'trophy',sell:0,silent:true}],
     desc:'Roshkova walks you onto the sparring floor. "Four cadets. They will not go easy and neither will you. Beat them clean — no cheap shots, no ganging. The School does not correct softness; it corrects sloppiness."',
     hint:'Best 4 Komsomol Cadets on the School sparring floor.',
-    targetMonsterKeys:['komsomol_cadet'], killGoals:[{key:'komsomol_cadet',need:4,label:'Komsomol Cadet'}], killCounter:'monsterKills',
+    killGoals:[{key:'komsomol_cadet',need:4,label:'Komsomol Cadet'}], killCounter:'monsterKills',
     activateNode:'KMS', waypointNode:'KMS', reward:40,
     disposition:'"Four cadets, clean. No cheap shots, no ganging. The School corrects sloppiness, not softness. You corrected yourself." — Commissar-Instructor Roshkova',
     passText:'Four cadets, clean. No cheap shots, no ganging. The School corrects sloppiness, not softness. You corrected yourself.',
@@ -13643,7 +13643,7 @@ const QUEST_DB = { // → doc: quest.md §Quest Format
     onComplete:[ { kind:'reward', xp:250, gold:50 }, { kind:'mission_bit', flag:'kgFirstBout', label:'Bout Token' }, { kind:'narrative', msg:'🎟️ Pit-Master Grimka logs your first clean bout.' } ],
     desc:'Pit-Master Grimka runs the Zavod honor card. "One gladiator-bot. These were fighters before the Zavod stripped their reactors — we fight them with honor because they fought us with it. No poison, no ganging. Win or lose, you do it standing up."',
     hint:'Win one honor duel against a Gladiator-Bot in the Zavod pit.',
-    targetMonsterKeys:['gladiator_bot'], killGoals:[{key:'gladiator_bot',need:1,label:'Gladiator-Bot'}], killCounter:'monsterKills',
+    killGoals:[{key:'gladiator_bot',need:1,label:'Gladiator-Bot'}], killCounter:'monsterKills',
     activateNode:'ZVD', waypointNode:'ZVD', reward:50,
     disposition:'"These bots were gladiators before the Zavod stripped their reactors. We fight them with honor because they fought us with it. One bout down. No poison, no ganging. You lost nothing standing up." — Pit-Master Grimka',
     passText:'These bots were gladiators before the Zavod stripped their reactors. We fight them with honor because they fought us with it. One bout down. You lost nothing standing up.',
@@ -13655,7 +13655,7 @@ const QUEST_DB = { // → doc: quest.md §Quest Format
     itemChain:[{action:'grant',name:'Clean-Card Trophy',icon:'🏆',type:'trophy',sell:0,silent:true},{action:'grant',name:'Stripped Reactor Core',icon:'☢️',type:'quest',sell:0,silent:true}],
     desc:'"A full card," Grimka says. "Three gladiator-bots, three sparbots, all of it clean. Do that and the pit knows your name." He nods at a decommissioned core on the rack. "Win it and I will send the stripped core west with you — the Fabrika wants it."',
     hint:'Win a full clean card: 3 Gladiator-Bots and 3 Zavod Sparbots.',
-    targetMonsterKeys:['gladiator_bot','zavod_sparbot'], killGoals:[{key:'gladiator_bot',need:3,label:'Gladiator-Bot'},{key:'zavod_sparbot',need:3,label:'Zavod Sparbot'}], killCounter:'monsterKills',
+    killGoals:[{key:'gladiator_bot',need:3,label:'Gladiator-Bot'},{key:'zavod_sparbot',need:3,label:'Zavod Sparbot'}], killCounter:'monsterKills',
     activateNode:'ZVD', waypointNode:'ZVD', reward:60,
     disposition:'"A full card, all of it clean. The pit knows your name now. Take the stripped core to the Fabrika — Iosif is expecting it." — Pit-Master Grimka',
     passText:'A full card, all of it clean. The pit knows your name now. Take the stripped core to the Fabrika — Iosif is expecting it.',
@@ -13677,7 +13677,7 @@ const QUEST_DB = { // → doc: quest.md §Quest Format
     itemChain:[{action:'grant',name:'Cortex Shunt',icon:'🧠',type:'trophy',sell:0,silent:true}],
     desc:'Iosif powers up the training floor. "The enforcers guard the chairs — three of them, running hot. Put them down and I can seat you safely. They do not feel honor, but you will fight them with it anyway. That is for you, not them."',
     hint:'Defeat 3 Fabrika Enforcers on the Skill Fabrika floor.',
-    targetMonsterKeys:['fabrika_enforcer'], killGoals:[{key:'fabrika_enforcer',need:3,label:'Fabrika Enforcer'}], killCounter:'monsterKills',
+    killGoals:[{key:'fabrika_enforcer',need:3,label:'Fabrika Enforcer'}], killCounter:'monsterKills',
     activateNode:'FBR', waypointNode:'FBR', reward:50,
     disposition:'"Three enforcers down. They do not feel honor — you fought them with it anyway. That is for you, not them. The chair is safe now." — Technician Iosif',
     passText:'Three enforcers down. They do not feel honor — you fought them with it anyway. That is for you, not them. The chair is safe now.',
@@ -13689,7 +13689,7 @@ const QUEST_DB = { // → doc: quest.md §Quest Format
     itemChain:[{action:'grant',name:'Certified Skill-Chit',icon:'🪪',type:'quest',sell:0,silent:true}],
     desc:'Iosif seats you in the chair and jacks you in. "Standard sim. Should be routine." The regulator light flickers red. "...that should not. The Trainer-Bot is fighting at full — the chair is writing faster than it reads. Ride it out or I pull you. Your call, recruit."',
     hint:'Survive the sim overload — defeat the Trainer-Bot Prime.',
-    targetMonsterKeys:['trainer_bot_prime'], killGoals:[{key:'trainer_bot_prime',need:1,label:'Trainer-Bot Prime'}], killCounter:'monsterKills',
+    killGoals:[{key:'trainer_bot_prime',need:1,label:'Trainer-Bot Prime'}], killCounter:'monsterKills',
     activateNode:'FBR', waypointNode:'FBR', reward:80,
     disposition:'"The regulator failed and the Trainer-Bot fought you at full — a sim overload, the chair writing faster than it reads. You held. Half the district is still in that chair. You walked out. Prime Core is yours." — Technician Iosif',
     passText:'The regulator failed and the Trainer-Bot fought you at full. You held. Half the district is still in that chair. You walked out. Prime Core is yours, and a certified chit with it.',
@@ -13721,7 +13721,6 @@ const QUEST_DB = { // → doc: quest.md §Quest Format
     onComplete:[ { kind:'reward', gold:200 }, { kind:'narrative', msg:'💰 +200gp from Jimmy. The Cat Quarter breathes easier.' } ], // §ARCH-01 W7c
     desc:"Jimmy Two-Tails wants the Cat Quarter settled. Clear the riff-raff — 5 strays and 3 fluffies.",
     hint:'Fight in the Cat Quarter until the quota is filled.',
-    targetMonsterKeys:['stray_alley_cat','fluffy_cat'],
     killGoals:[{key:'stray_alley_cat',need:5,label:'Stray'},{key:'fluffy_cat',need:3,label:'Fluffy'}],
     activateNode:'CDG', // §VM-01-G3 — the Layer-44 storyRender stanzas are retired; the chain sequencing lives in the gates below (the appended duplicate activateNode fields had made the whole chain activate at once)
     onActivate:{ msg:'Jimmy Two-Tails adjusts the brim of his tiny fedora.\n\n"Listen. LISTEN. I\'m gonna tell you somethin\' and I\'m only gonna say it once."\n\nHe leans forward.\n\n"You want to help this neighborhood? Clear out the riff-raff. Five strays. Three fluffies. They\'re harmless but they set a tone and the tone ain\'t good. Capisce? You do this, we talk about the bigger problems. Deal?"\n\n📋 Quest: The New Scratch — accepted.', delayMs:500 },
@@ -13735,7 +13734,6 @@ const QUEST_DB = { // → doc: quest.md §Quest Format
     onComplete:[ { kind:'reward', gold:350 }, { kind:'narrative', msg:'💰 +350gp from Jimmy. Sandy Scratchpad Mewlino has joined the Cat Quarter.' } ], // §ARCH-01 W7c
     desc:"Three Beefy Toms are running muscle for a rival outfit. Take them down and collect the proof.",
     hint:'Kill 3 Beefy Toms and collect their Cracked Claws.',
-    targetMonsterKeys:['beefy_tom'],
     killGoals:[{key:'beefy_tom',need:3,label:'Beefy Tom'}],
     activateNode:'CDG',
     onActivate:{ msg:'Jimmy: "Good work. Now. Beefy Toms — three of \'em — been running muscle for an outside operation. Take \'em down. Keep the claws. Three claws. I wanna see the proof."\n\n📋 Quest: Beefy Business — accepted.', delayMs:600 },
@@ -13750,7 +13748,6 @@ const QUEST_DB = { // → doc: quest.md §Quest Format
     itemChain:[{action:'grant',name:'Rhinestone Collar',icon:'💎',type:'trophy',sell:0,silent:true}], // §EDITOR-01-D-FU(b) b2a
     desc:"A Capo and a Boss Lady are circling each other. Kill them SEPARATE — let them merge and you\'re dealing with a Taz Devil.",
     hint:'Kill 1 Honcho Cat (Capo) and 1 Boss Lady Honcho.',
-    targetMonsterKeys:['honcho_cat_m','honcho_cat_f'],
     killGoals:[{key:'honcho_cat_m',need:1,label:'Honcho Capo'},{key:'honcho_cat_f',need:1,label:'Boss Lady'}],
     activateNode:'CDG',
     onActivate:{ msg:'Sandy "Scratchpad" Mewlino is here now. Tortoiseshell fur, eyes like she\'s already three moves ahead of you.\n\n"Sweetheart. You think this is about territory? This is about RESPECT. There\'s a Capo and a Boss Lady circling each other two blocks north. You kill \'em SEPARATE. Let \'em merge — and I promise you, a Taz Devil is nobody\'s problem they wanted.\n\nAlso — Don Fluffissimo. He\'s been sending his Merchant Cats into MY neighborhood. With Corrupted Cats for backup. Void-touched. Disgusting. He needs to be handled."\n\n📋 Quest: Honcho Problems — accepted.\n📋 Quest: Fat Cats Don\'t Tip — accepted.\n📋 Quest: Void Strays — accepted.', delayMs:700 }, // announces the 03/05/void trio that co-activates on cat_02's completion
@@ -13777,7 +13774,6 @@ const QUEST_DB = { // → doc: quest.md §Quest Format
     itemChain:[{action:'grant',name:"The Don's Signet Ring",icon:'💍',type:'trophy',sell:35,silent:true}], // §EDITOR-01-D-FU(b) b2a
     desc:"The Fat Merchant Cats are using Corrupted Cats as enforcers. Sandy wants Don Fluffissimo gone.",
     hint:'Kill 4 Fat Merchant Cats and defeat Don Fluffissimo.',
-    targetMonsterKeys:['fat_merchant_cat'],
     killGoals:[{key:'fat_merchant_cat',need:4,label:'Merchant Cat'}],
     activateNode:'CDG', onActivate:null, // cat_03's onActivate speaks for the 03/05/void trio
     waypointNode:'CDG', reward:900,
@@ -13803,7 +13799,6 @@ const QUEST_DB = { // → doc: quest.md §Quest Format
     onComplete:[ { kind:'reward', gold:400 }, { kind:'narrative', msg:'💰 +400gp from Sandy. The Void Strays are cleared.' } ], // §ARCH-01 W7c
     desc:"Strays in the Cat Quarter's back lanes have gone wrong. Wrong eyes, wrong fur. Sandy doesn't like it in her neighborhood.",
     hint:'Kill 5 Corrupted Cats in the Cat Quarter.',
-    targetMonsterKeys:['corrupted_cat'],
     killGoals:[{key:'corrupted_cat',need:5,label:'Corrupted Cat'}],
     activateNode:'CDG', onActivate:null, // cat_03's onActivate speaks for the 03/05/void trio
     waypointNode:'CDG', reward:400,
@@ -13826,7 +13821,6 @@ const QUEST_DB = { // → doc: quest.md §Quest Format
   quest_la_riva_02: { id:'quest_la_riva_02', type:'side', schema:'UQF-1.0', gate:{}, bits:[], completion:{countMin:[{path:'frCatKillCount',min:5}],itemsAll:['Vincenzo\'s Net'],atNode:'AMS'}, title:"Connie: The Weight of a Net",
     desc:"The Corrupted Cats have settled into the rubble of Fishmonger's Row. They're not just feral — they're holding something. Five of them. Find what they're carrying.",
     hint:"Kill 5 Corrupted Cats at Fishmonger's Row. Find what's in the rubble.",
-    targetMonsterKeys:['corrupted_cat'],
     activateNode:null, 
     waypointNode:'AMS', reward:500,
     disposition:'"He built that rack himself, the second season." — Connie Tuna',
@@ -20536,7 +20530,6 @@ const QUEST_DB = { // → doc: quest.md §Quest Format
   cid_c7a4: { id:"cid_c7a4", type:"skill_check", schema:'UQF-1.0', gate:{ flags:['cidC7A3Done'] }, bits:[{ kind:'skill_check', stat:'DEX', dc:13, onPass:[{ kind:'mission_bit', flag:'cidC7A4Done' }], onFail:[] }], title:"The Cardeña Gate", desc:"The monastery at Cardeña is receiving the Cid's body. King Alfonso has arrived from Toledo. The body has been set in the ivory chair. The gate is controlled by the King's guard. You are a carrier with a technical document. The gate check will hold you twenty minutes per standard procedure and there are forty people in the queue. The infirmary gate on the eastern wall requires a half-league detour through the hillside orchard.", passText:"You reach the infirmary gate in twelve minutes. The gate monk recognizes the Benedictine carrier-pass format. You enter.", failText:"You wait in the main queue. You reach the gate at the thirty-minute mark. Standard review. You pass.", npc:"gil_diaz_cid", activateNode:"CDN",
   },
   cid_c7a5: { id:"cid_c7a5", type:"skill_check", schema:'UQF-1.0', gate:{ flags:['cidC7A4Done'] }, bits:[{ kind:'skill_check', stat:'WIS', dc:11, onPass:[{ kind:'mission_bit', flag:'cidC7A5Done' }], onFail:[] }], title:"The Technical Record", desc:"Weimar Archive. Sweelinck reads the four pages carefully. He reads the bolt configuration. He reads the condition notes from each stage. He reads the final note: 'At Cardeña, the body was lifted from between the boards by King Alfonso VI himself and found to be still firm and still bearing its natural colour.' The seventh stage note is longer than the others.", passText:"You read the seventh-stage note to Sweelinck — it documents a real-time modification to the frame at the evening halt. This was a live commission with mid-journey adjustments, not just a documented plan. Sweelinck creates: Military Logistics — The Engineering Solution to an Impossible Commission, First Entry. Gil Díaz's frame-and-saddle account: the dead man rode nine days; Alfonso lifted the body and found it still firm; the technical record preceded the departure by four days because Gil Díaz knew it would be needed and would not be asked for at any convenient moment afterward.", failText:"Sweelinck files under Funerary Records — Notable Spanish Burials. Accurate but the engineering quality is lost.", npc:"gil_diaz_cid", activateNode:"NUE",
-    questComplete:true,
   },
   tbs_c1a1: { id:"tbs_c1a1", type:"skill_check", schema:'UQF-1.0', gate:{}, bits:[{ kind:'skill_check', stat:'WIS', dc:12, onPass:[{ kind:'mission_bit', flag:'tbsC1A1Done' }], onFail:[] }], title:"The Queen's Gift", desc:"The throne room of Queen Tinatin's Arabian court. The champion Avtandil is being formally commissioned to ride east and find a mysterious weeping knight. Tinatin descends her throne — something queens do not do — and places a sealed message capsule in Avtandil's palm. Her fingers do not linger. Her face does not change. You are assigned as escort to the border. The capsule is warm from being held.", passText:"You accept the charge and read the scene correctly: she has put herself in his pocket inside a case of bone, and smiled while doing it. The capsule will tell whoever finds him who sent him and why. You form up the escort detail.", failText:"You hesitate at the door-post. Tinatin's attention remains on Avtandil. You are reassigned from escort-captain to escort-member. The commission still stands.", npc:"tinatin_tbs", activateNode:"TBS" },
   tbs_c1a2: { id:"tbs_c1a2", type:"skill_check", schema:'UQF-1.0', gate:{ flags:['tbsC1A1Done'] }, bits:[{ kind:'skill_check', stat:'CON', dc:11, onPass:[{ kind:'mission_bit', flag:'tbsC1A2Done' }], onFail:[] }], title:"The Road's First Night", desc:"Three days east, camped in pines. Avtandil is carrying something too large to set down. At the fire he opens his mail coat and takes out the capsule. He turns it in his fingers without opening it. 'She said: come back. Not as a command. The way you say something when you know you cannot make it a command.' The road ahead is unknown country. Your role is to keep the party safe and moving.", passText:"You keep the party's pace and morale through difficult terrain without drawing attention to the weight he is carrying. By morning the outriders are rested and Avtandil has slept.", failText:"You push the pace too hard. A horse throws a shoe. Half a day lost. Avtandil waits without reproach while you arrange the repair.", npc:"tinatin_tbs", activateNode:"TBS" },

@@ -684,6 +684,74 @@ function patchLiteralField(sectionSrc, entryKey, field, literal) {
   return null; // field not present at top level
 }
 
+// §DX-02kt — the top-level fields of one entry, each with the exact source text of its
+// value. Same token walk as `patchLiteralField`, so a removal and its verification cannot
+// disagree about where a field begins and ends.
+function entryFieldLiterals(sectionSrc, entryKey) {
+  const b = findEntryBounds(sectionSrc, entryKey);
+  if (!b) return null;
+  const body = sectionSrc.slice(b.openEnd, b.bodyEnd);
+  const out = {};
+  let i = 0;
+  while (i < body.length) {
+    const c = body[i];
+    if (c === '"' || c === "'" || c === '`') { i = _valueEnd(body, i); continue; }
+    if (c === '/' && body[i+1] === '/') { while (i < body.length && body[i] !== '\n') i++; continue; }
+    if (c === '{' || c === '[' || c === '(') { i = _valueEnd(body, i); continue; }
+    if (/[A-Za-z_$]/.test(c)) {
+      let j = i; while (j < body.length && /[A-Za-z0-9_$]/.test(body[j])) j++;
+      const name = body.slice(i, j);
+      let k = j; while (k < body.length && /[ \t]/.test(body[k])) k++;
+      if (body[k] === ':') {
+        let v = k + 1; while (v < body.length && /[ \t\n\r]/.test(body[v])) v++;
+        const ve = _valueEnd(body, v);
+        out[name] = body.slice(v, ve);
+        i = ve; continue;
+      }
+      i = j; continue;
+    }
+    i++;
+  }
+  return out;
+}
+
+// §DX-02kt — excise one top-level `field: value` pair from an entry, key and all. The API
+// could clear a scalar to null and refuse an array outright (§DX-02ee), so a field the data
+// carries and nothing reads had no way out through the mandated write path.
+function removeLiteralField(sectionSrc, entryKey, field) {
+  const b = findEntryBounds(sectionSrc, entryKey);
+  if (!b) return null;
+  const { openEnd, bodyEnd } = b;
+  const body = sectionSrc.slice(openEnd, bodyEnd);
+  let i = 0;
+  while (i < body.length) {
+    const c = body[i];
+    if (c === '"' || c === "'" || c === '`') { i = _valueEnd(body, i); continue; }
+    if (c === '/' && body[i+1] === '/') { while (i < body.length && body[i] !== '\n') i++; continue; }
+    if (c === '{' || c === '[' || c === '(') { i = _valueEnd(body, i); continue; }
+    if (/[A-Za-z_$]/.test(c)) {
+      let j = i; while (j < body.length && /[A-Za-z0-9_$]/.test(body[j])) j++;
+      const name = body.slice(i, j);
+      let k = j; while (k < body.length && /[ \t]/.test(body[k])) k++;
+      if (body[k] === ':' && name === field) {
+        let v = k + 1; while (v < body.length && /[ \t\n\r]/.test(body[v])) v++;
+        let end = _valueEnd(body, v);
+        // Take the pair's own separator with it, and the blank line it leaves behind.
+        while (end < body.length && /[ \t]/.test(body[end])) end++;
+        if (body[end] === ',') end++;
+        while (end < body.length && /[ \t]/.test(body[end])) end++;
+        let start = i;
+        if (body[end] === '\n') { end++; while (start > 0 && /[ \t]/.test(body[start-1])) start--; }
+        const newBody = body.slice(0, start) + body.slice(end);
+        return sectionSrc.slice(0, openEnd) + newBody + sectionSrc.slice(bodyEnd);
+      }
+      i = j; continue;
+    }
+    i++;
+  }
+  return null;
+}
+
 // §DX-02ix: which of an entry's top-level fields hold a comment inside their VALUE, and how
 // many. The same token walk `patchLiteralField` uses to find the value it replaces, so the
 // census and the write path can never disagree about what a write would delete.
@@ -1612,6 +1680,54 @@ const WBAPI = {
              ...(dropped > 0 ? { droppedComments: dropped } : {}) };
   },
 
+  // §DX-02kt — remove one top-level field from an entry, key and all. `editField` can clear a
+  // scalar to null and refuses a structured value outright (§DX-02ee), so until this there was
+  // no way through the mandated write path to delete a field the data carries and nothing reads.
+  //
+  // Verified the way `deleteEntrySource` verifies an entry delete, one level down: the entry's
+  // field literals are read before and after through the same token walk the excision uses, and
+  // the write is refused unless EXACTLY the named key disappeared and every other field's source
+  // text is byte-identical. A removal that reflows a neighbour is a defect, not a formatting
+  // choice, and nothing downstream would see it.
+  removeField(type, idOrTitle, field, opts) {
+    if (!this._rawSrc) return { ok:false, error:'no source loaded' };
+    const section = ENTRY_SECTION[type]; if (!section) return { ok:false, error:'unknown type' };
+    const col = this[ENTRY_COLLECTION[type]];
+    const key = this._findKey(col, idOrTitle); if (!key) return { ok:false, error:'not found' };
+
+    const sectionSrc = extrSection(this._rawSrc, section);
+    const before = entryFieldLiterals(sectionSrc, key);
+    if (!before) return { ok:false, error:`entry "${key}" not found in ${section}` };
+    if (!(field in before))
+      return { ok:false, error:`"${field}" is not a top-level field of "${key}" — present: ${Object.keys(before).join(', ')}` };
+
+    const patched = removeLiteralField(sectionSrc, key, field);
+    if (!patched) return { ok:false, error:`could not locate "${field}" in the source text of "${key}"` };
+
+    const cBefore = _commentTally(sectionSrc, key);
+    const cAfter  = _commentTally(patched, key);
+    const dropped = cBefore.length - cAfter.length;
+    if (dropped > 0 && !(opts && opts.dropComments)) {
+      const kept = cAfter.slice();
+      const gone = cBefore.filter((c) => { const i = kept.indexOf(c); if (i >= 0) { kept.splice(i, 1); return false; } return true; });
+      const named = gone.slice(0, 3).map((c) => JSON.stringify(c.trim().slice(0, 70))).join(', ');
+      return { ok:false, error:`refusing to remove "${field}" from "${key}": it would delete ${dropped} comment(s) — ${named}${gone.length > 3 ? ` (+${gone.length - 3} more)` : ''}. Re-send with dropComments to accept the loss. Source NOT modified.` };
+    }
+
+    const after = entryFieldLiterals(patched, key);
+    if (!after) return { ok:false, error:`refused: "${key}" no longer parses after removing "${field}" — source NOT modified` };
+    const wanted = Object.keys(before).filter((f) => f !== field);
+    const changed = wanted.filter((f) => after[f] !== before[f]);
+    const extra   = Object.keys(after).filter((f) => !(f in before));
+    if (field in after || changed.length || extra.length || Object.keys(after).length !== wanted.length)
+      return { ok:false, error:`refused: removing "${field}" from "${key}" would also change ${[...changed, ...extra].join(', ') || 'the field set'} — source NOT modified` };
+
+    this._rawSrc = respliceSection(this._rawSrc, section, patched);
+    delete col[key][field];
+    return { ok:true, key, field, was: before[field].trim(),
+             ...(dropped > 0 ? { droppedComments: dropped } : {}) };
+  },
+
   // §AUDIT-03av — replace an authored phrase inside one entry without reflowing the field
   // that holds it. editStructuredField swaps a structured field's WHOLE literal, so a comment
   // interleaved with its elements is deleted with it and JSON has no term to carry one back
@@ -2165,5 +2281,5 @@ WBAPI._classifyQuest = _classifyQuest; // expose for server routes and direct us
 // §MESH-01-FU 9: low-level parse pipeline, exposed for scripts/world-diff.js —
 // the deep diff must parse ARBITRARY world files (not this singleton's loaded
 // one), so it needs the helpers, not the loaded state.
-WBAPI._parse = { extrSection, extractObj, extractArr, removeFns, parseSimple, parseArr, parseWithP, parseSanitized, isFunctionSource, commentTally: _commentTally, fieldsWithComments, findEntryBounds, stringSpans: _stringSpans };
+WBAPI._parse = { extrSection, extractObj, extractArr, removeFns, parseSimple, parseArr, parseWithP, parseSanitized, isFunctionSource, commentTally: _commentTally, fieldsWithComments, findEntryBounds, entryFieldLiterals, stringSpans: _stringSpans };
 module.exports = WBAPI;

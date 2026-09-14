@@ -175,10 +175,12 @@ and is recorded in the ship commit; it was not committed as a test.
 
 **Green at HEAD, 2026-08-14:** `✓ §WBAPI-01 ph3 structured-field PATCH: all 13 checks pass`.
 
-The gate carries its own repair history in a comment: it originally rode `completeItems`, and
-`src/scripts/check-array-patch.js:// §ARCH-01 repoint (2026-07-06)@21` records the day §ARCH-01's W7d/W8a
-swept that field out of QUEST_DB entirely and the string-array cases were moved to
-`targetMonsterKeys`. *A gate that documents why it changed subject is worth two that do not.*
+The gate carries its own repair history in a comment: it rode `completeItems` until §ARCH-01's
+W7d/W8a swept that field out of QUEST_DB, then `targetMonsterKeys` until §DX-02kt removed that
+one too — and QUEST_DB now carries **no** top-level array of strings, so
+`src/scripts/check-array-patch.js:const SA = '_probeStringArray'` says the cases ride a synthetic
+key instead of waiting for a third carrier to be swept. *A gate that documents why it changed
+subject is worth two that do not — and one that stops needing to change subject is worth more.*
 
 **Where the gate runs matters.** `check:arraypatch` is a **separate step in the CI `invariants` job**
 and is **not** part of `npm run check:walk`. A session that verifies with `check:walk` — which is what
