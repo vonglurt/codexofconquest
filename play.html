@@ -26888,7 +26888,7 @@ function _tourRoll(bonus) { // → doc: docs/archive/plan-archive-verbatim-2026-
 }
 
 // ── Layer 63: Froberger Memorial ──
-const FROBERGER_MEMORIAL_TEXT = { // → doc: world.md §The Froberger Memorial (4 unlock layers; CI crossroads stone)
+const FROBERGER_MEMORIAL_TEXT = { // → doc: world.md §The Froberger Memorial (4 unlock layers; LHR crossroads stone)
   base:        'FROBERGER\nChronicler of the Road\nWalked every corridor in Birka\nHis notes are still right',
   yael_friendly: '\n\n"He was the one who told me what was happening\n in the Unbanked Quarter before anyone else would.\n The story didn\'t die with him."\n                                    — Y.S.',
   dear_friend:   '\n\nThe Ivory Circle formally requested the stone be removed in 1312.\nThe city refused.',
@@ -27008,7 +27008,7 @@ const TOWN_CRIER_LINES = { // → doc: world.md §Town Crier Ambient Lines (crit
       'The unofficial sparring at the Crypt has stopped for the week. Weckmann closed it without explanation. The fighters are training on their own, quietly.',
       'Three of Yael\'s contacts have gone quiet in the last two days. The ones who usually have news. When sources go quiet all at once, it means they know something they can\'t say yet.',
       'The city feels like it\'s listening. Shopkeepers at their doors, watching the street. Not afraid — waiting. There\'s a difference, though it\'s a thin one.',
-      'Someone left flowers at the old Froberger memorial stone near the CI crossroads. Fresh ones. Every morning this week.',
+      'Someone left flowers at the old Froberger memorial stone by the Birka crossroads. Fresh ones. Every morning this week.',
     ],
   },
 };
@@ -27231,7 +27231,7 @@ She turns back to her notes.
 "He got to the end of the map. Then the Tide arrived."`;
 
 // ── Layer 66a: Joint Witness scene ──
-const S54_JOINT_MOMENT = // → doc: world.md §S54 — Joint NPC moment (Yael+Brynn at CI; s54JointMomentDelivered)
+const S54_JOINT_MOMENT = // → doc: world.md §S54 — Joint NPC moment (Yael+Brynn at LHR; s54JointMomentDelivered)
 `Brynn is at the crossroads when you arrive. She has a delivery basket — the kind she uses for rounds, not for waiting.
 
 Yael is already there.
@@ -27577,7 +27577,7 @@ const ROUGH_WHISKEY_REACTIONS = { // → doc: world.md §Rough Whiskey (BA vendo
 };
 
 /* ── Layer 44: Living World Consts ── */
-const PETRA_STALL_STATES = [ // → doc: world.md §Act III Optional Detour (Petra's CI bread stall; 3 visit-count states)
+const PETRA_STALL_STATES = [ // → doc: world.md §Act III Optional Detour (Petra's LHR bread stall; 3 visit-count states)
   '<div class="npc-ambient">Gigault\'s bread stall — a customer is blocking your view of the counter. You can see fresh loaves. You can smell them.</div>',
   '<div class="npc-ambient">Gigault\'s bread stall — unattended. The loaves are still warm. A handwritten sign: <em>Back at ninth bell.</em></div>',
   '<div class="npc-ambient">Gigault\'s bread stall — sold out. The sign reads: <em>Tomorrow</em>. The stall is clean.</div>'
@@ -27883,7 +27883,7 @@ const FROBERGER_TRACES = { // → doc: world.md §Froberger Traces (6 NPC memori
 const NPC_CROSS_REFS = { // → doc: world.md §Cross-References (17 lines; every-3rd-visit injection at fav >= 1)
   yael: [
     { fav:1, text:"Brynn's been running that inn alone for six years. Nobody asks if she's managing. I ask. She says fine. I ask again. She says fine and pours tea. I count the tea as the real answer." },
-    { fav:2, text:"If something happens to this city, Brynn will keep the inn open. That's not a prediction — that's a fact about who she is. I've been making sure the CI district stays stable partly because of that." },
+    { fav:2, text:"If something happens to this city, Brynn will keep the inn open. That's not a prediction — that's a fact about who she is. I've been making sure the district stays stable partly because of that." },
     { fav:1, text:"Weckmann's pit is one of the only clean operations in the district. I don't go in — conflict of interest — but I pay attention to who comes out. Mostly they come out standing. That's not nothing." }
   ],
   brynn: [
@@ -28189,9 +28189,9 @@ const QUILL_UNFINISHED_SONGS = [ // → doc: story.md §QUILL_UNFINISHED_SONGS (
 ];
 
 // S7: Blue Shutters Archive — Scholar King notes and Froberger research
-const BLUE_SHUTTERS_ARCHIVE_TEXT = // → doc: world.md §Blue Shutters Archive (CI node; Yael letter gated; Entry 33 + Undercity Survey)
+const BLUE_SHUTTERS_ARCHIVE_TEXT = // → doc: world.md §Blue Shutters Archive (LHR node; Yael letter gated; Entry 33 + Undercity Survey)
 `SCHOLAR KING ARCHIVE — OPEN STACK, READING ROOM B
-ACCESS: Letter of Introduction required (Yael, CI guard command)
+ACCESS: Letter of Introduction required (Yael, Birka guard command)
 
 CATALOGUE REF: Froberger, J. — Field Notes, Deposited Items
 
@@ -28269,7 +28269,7 @@ function _buildSweelinckNamingSequence() {
 
 // ── Layer 74: §XXXIX Yael's Named Report Scene ──
 const YAEL_NAMED_REPORT_SCENE = { // → doc: world.md §Yael's Named Report Scene (Layer 74; LHR, fav >= 2, Act VI+, yaelEscortUsed; yaelNamedReportDelivered)
-  setup: '"You\'ve been in the archive. You\'ve seen what happens to records."\n\nShe isn\'t looking at you. She\'s watching the market corner from the CI door.\n\n"Three years ago there was a riot in this district. I worked it for six weeks. Names, times, the transaction record that paid for it. Four weeks after I filed it, the evidence was gone — pulled from the guard archive. Someone with access above my rank took it cleanly."\n\nShe finally looks at you.\n\n"I filed a report at the time. Anonymous. I didn\'t want to become the story. The report disappeared too."',
+  setup: '"You\'ve been in the archive. You\'ve seen what happens to records."\n\nShe isn\'t looking at you. She\'s watching the market corner from the archive door.\n\n"Three years ago there was a riot in this district. I worked it for six weeks. Names, times, the transaction record that paid for it. Four weeks after I filed it, the evidence was gone — pulled from the guard archive. Someone with access above my rank took it cleanly."\n\nShe finally looks at you.\n\n"I filed a report at the time. Anonymous. I didn\'t want to become the story. The report disappeared too."',
   decision: '"I\'m filing again. Under my name. I\'m keeping three copies — one with the Commissioner, one with a Scholar Kings archivist in Weimar, one with Weckmann. He had records of the operation that funded the riot. His training log. The financial ledger is gone but the training log survived because no one thought to look there."\n\nShe turns back to the market.\n\n"I\'m telling you because you know what it means when something disappears from an archive. If you want to hold a fourth copy, I\'ll give you one. If not — you know it exists. That\'s also something."',
   choiceHold:  '"Good. Then it\'s in four places now."',
   choiceThree: '"Three is enough. I just wanted someone outside the system to know."',
@@ -32523,7 +32523,7 @@ function _nodeHookBirkaNightAmbient(node, { npcRowDiv }) {
       }
 }
 function _nodeHookBirkaNiversPasses(node, { npcRowDiv }) {
-      // ── L45-D/E: Nivers at CI ──
+      // ── L45-D/E: Nivers at LHR ──
       if (node.code === 'LHR') {
         const nivers = document.createElement('div');
         nivers.innerHTML = '<div class="npc-ambient">The guard on the corner — same post, same stillness. She\'s there when you arrive. She\'ll be there when you leave. She says: <em>"' + NIVERS_DIALOGUE + '"</em></div>';
@@ -32552,7 +32552,7 @@ function _nodeHookBirkaNiversPasses(node, { npcRowDiv }) {
       }
 }
 function _nodeHookBirkaBlueShutters(node, { npcRowDiv }) {
-      // ── S7: Blue Shutters Archive at CI ──
+      // ── S7: Blue Shutters Archive at LHR ──
       if (node.code === 'LHR') {
         const yealFav = _npcFavor('yael');
         const _bsWrap = document.createElement('div');
@@ -32630,7 +32630,7 @@ function _nodeHookBirkaBlueShutters(node, { npcRowDiv }) {
       }
 }
 function _nodeHookBirkaFrobergerMemorial(node, { npcRowDiv }) {
-      // ── Layer 63: Froberger Memorial at CI ──
+      // ── Layer 63: Froberger Memorial at LHR ──
       if (node.code === 'LHR') {
         const _memWrap = document.createElement('div');
         _memWrap.style.cssText = 'display:flex;flex-direction:column;gap:0;';
@@ -32712,7 +32712,7 @@ function _nodeHookBirkaFrobergerMemorial(node, { npcRowDiv }) {
       }
 }
 function _nodeHookBirkaNoFishingSign(node, { npcRowDiv }) {
-      // ── No Fishing Sign at CI ──
+      // ── No Fishing Sign at LHR ──
       if (node.code === 'LHR') {
         if (!S_story.noFishingSignRead) {
           const _fishWrap = document.createElement('div');
@@ -32773,7 +32773,7 @@ function _nodeHookBirkaNoFishingSign(node, { npcRowDiv }) {
       }
 }
 function _nodeHookBirkaS54JointWitness(node) {
-      // ── Layer 66a: S54 Yael + Brynn joint witness at CI (Act VIII) ──
+      // ── Layer 66a: S54 Yael + Brynn joint witness at LHR (Act VIII) ──
       if (node.code === 'LHR' && (S_story.actNumber || 1) >= 7
           && _npcFavor('yael') >= 1 && _npcFavor('brynn') >= 1
           && !S_story.s54JointMomentDelivered) {
@@ -32782,7 +32782,7 @@ function _nodeHookBirkaS54JointWitness(node) {
       }
 }
 function _nodeHookBirkaYaelNamedReport(node, { npcRowDiv }) {
-      // ── Layer 74 §XXXIX — Yael Named Report at CI ──
+      // ── Layer 74 §XXXIX — Yael Named Report at LHR ──
       if (node.code === 'LHR' && _npcFavor('yael') >= 2
           && (S_story.actNumber || 1) >= 6 && S_story.yaelEscortUsed
           && !S_story.yaelNamedReportDelivered) {
@@ -34956,7 +34956,7 @@ function storyRender(node, prefix) {
   _clearStoryTransient();
   // ── §VM-01-G1: data-driven flavor/arrival panels (former per-node special-case blocks) ──
   _renderNodePanels(node, S_story);
-  // ── Layer 50: §XV Entry 42 — blank journal page at CI (qualifying NG+ run) ──
+  // ── Layer 50: §XV Entry 42 — blank journal page at LHR (qualifying NG+ run) ──
   { const _e42Old = document.getElementById('story-entry42-prompt');
     if (_e42Old) _e42Old.remove();
     if (node.code === 'LHR' && (S_story.ngPlusRun || 0) >= 1 && S_story.priorQuestMinusOne
@@ -35425,7 +35425,7 @@ function storyRender(node, prefix) {
     const _ssjNpcs = S_story.emmerMet ? ['the_fisherman','emmer'] : ['the_fisherman']; // §NPC-01-SF5: the Fisherman is "always here in the morning" (SSJ text) and Yael signposts him — but SSJ's curated literal shadowed his derived card. List him unconditionally.
     const _nueNpcs = ['gret'];
     if (S_story.pierFalkWarm) _nueNpcs.push('pier');
-    const birkaNpcs = { LHR:['yael'], TLL:['brynn'], MHQ:['quill'], LLA:['pachelbel'], HKG:['crov','auros'], CDG:_cqNpcs, // §PLAY-01-G: dead pre-§WALK sublocation codes remapped to real nodes, each proved by its NPC's quest activateNode — IN→TLL (brynn/"The First Inn"), TV→MHQ (quill/"Birka Tavern"), BA→LLA (pachelbel/"The Rough Bar"; the Varga ambient below already checks LLA), CY→HKG (crov Weckmann + auros Bruhns/"Neon Undercity"). LHR was the §PLAY-01-D CI→LHR fix (yael/start node). No NODE_MAP entry ever existed for CI/IN/TV/BA/CY, so these cards previously rendered nowhere.
+    const birkaNpcs = { LHR:['yael'], TLL:['brynn'], MHQ:['quill'], LLA:['pachelbel'], HKG:['crov','auros'], CDG:_cqNpcs, // §PLAY-01-G: dead pre-§WALK sublocation codes remapped to real nodes, each proved by its NPC's quest activateNode — IN→TLL (brynn/"The First Inn"), TV→MHQ (quill/"Birka Tavern"), BA→LLA (pachelbel/"The Rough Bar"; the Varga ambient below already checks LLA), CY→HKG (crov Weckmann + auros Bruhns/"Neon Undercity"). LHR was the §PLAY-01-D CI→LHR fix (yael/start node). No NODE_MAP entry existed for CI/IN/TV/BA/CY when this was written (CI has since been reused for num:429, Chancery Court — §DX-02kj), so these cards previously rendered nowhere.
       // §NPC-01-SF4: the last three dead codes (CQ/SQ/GC) remapped by the same standard, each proved by
       // its arc's own render gate — CQ→CDG (Layer 44 Ally Cat Arc gates on node.code==='CDG'; Jimmy is
       // CDG's own NODE_MAP npc), SQ→NUE (Layer 51 Weimar Scholar Gate gates on 'NUE'; _sqNpcs merged
@@ -35478,12 +35478,12 @@ function storyRender(node, prefix) {
       _runNodeHook('birka-deacon-code', node, _npcHookCtx); // ── L44-Q: Deacon Code click target at BA ── → NODE_HOOKS (§VM-01-G2b)
       _runNodeHook('birka-brynn-maintenance', node, _npcHookCtx); // ── L44-L/N: Brynn maintenance + ledger at IN ── → NODE_HOOKS (§VM-01-G2b)
       _runNodeHook('birka-night-ambient', node, _npcHookCtx); // ── S52: Night-mode ambient text ── → NODE_HOOKS (§VM-01-G2b)
-      _runNodeHook('birka-nivers-passes', node, _npcHookCtx); // ── L45-D/E: Nivers at CI ── → NODE_HOOKS (§VM-01-G2b)
-      _runNodeHook('birka-blue-shutters', node, _npcHookCtx); // ── S7: Blue Shutters Archive at CI ── → NODE_HOOKS (§VM-01-G2b)
-      _runNodeHook('birka-froberger-memorial', node, _npcHookCtx); // ── Layer 63: Froberger Memorial at CI ── → NODE_HOOKS (§VM-01-G2b)
-      _runNodeHook('birka-no-fishing-sign', node, _npcHookCtx); // ── No Fishing Sign at CI ── → NODE_HOOKS (§VM-01-G2b)
-      _runNodeHook('birka-s54-joint-witness', node, _npcHookCtx); // ── Layer 66a: S54 Yael + Brynn joint witness at CI (Act VIII) ── → NODE_HOOKS (§VM-01-G2b)
-      _runNodeHook('birka-yael-named-report', node, _npcHookCtx); // ── Layer 74 §XXXIX — Yael Named Report at CI ── → NODE_HOOKS (§VM-01-G2b)
+      _runNodeHook('birka-nivers-passes', node, _npcHookCtx); // ── L45-D/E: Nivers at LHR ── → NODE_HOOKS (§VM-01-G2b)
+      _runNodeHook('birka-blue-shutters', node, _npcHookCtx); // ── S7: Blue Shutters Archive at LHR ── → NODE_HOOKS (§VM-01-G2b)
+      _runNodeHook('birka-froberger-memorial', node, _npcHookCtx); // ── Layer 63: Froberger Memorial at LHR ── → NODE_HOOKS (§VM-01-G2b)
+      _runNodeHook('birka-no-fishing-sign', node, _npcHookCtx); // ── No Fishing Sign at LHR ── → NODE_HOOKS (§VM-01-G2b)
+      _runNodeHook('birka-s54-joint-witness', node, _npcHookCtx); // ── Layer 66a: S54 Yael + Brynn joint witness at LHR (Act VIII) ── → NODE_HOOKS (§VM-01-G2b)
+      _runNodeHook('birka-yael-named-report', node, _npcHookCtx); // ── Layer 74 §XXXIX — Yael Named Report at LHR ── → NODE_HOOKS (§VM-01-G2b)
       _runNodeHook('birka-yael-patrol-line', node, _npcHookCtx); // ── L45-G: Yael patrol field line ── → NODE_HOOKS (§VM-01-G2b)
       _runNodeHook('birka-cy-madness-gate', node, _npcHookCtx); // ── §D01-07: CY Madness Gate — first visit WIS save ── → NODE_HOOKS (§VM-01-G2b)
       _runNodeHook('birka-cy-maintenance-plate', node, _npcHookCtx); // ── §D01-07: CY Maintenance Plate — live state indicator ── → NODE_HOOKS (§VM-01-G2b)

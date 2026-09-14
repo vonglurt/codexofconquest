@@ -1046,7 +1046,7 @@ MILEPOINT A  _missionComplete() — tallies 12 boolean bits
              Bits 1-12: yaelEscortUsed | journal entry 7 read | couperiSongReceived
                         pachelbel quest done | pitTrainingWins≥3 | bruhnsDepthsReported
                         ≥5 ebReturnDone | ≥9 journal entries | defeatedBattles['CO']
-                        _lubeckFriends()≥3 | _curseScore()<10 | CI visited at Lv5+
+                        _lubeckFriends()≥3 | _curseScore()<10 | `LHR` (historical `CI`) visited at Lv5+
              Returns true if ≥8 bits set (partial completion still wins)
 
 MILEPOINT B  _curseScore() — EB engagement audit across all 20 EB codes
@@ -1140,7 +1140,7 @@ MILEPOINT D  Saved fields restored: npcFavorability, pitPerks, ngPlusRun
              Starter loadout applied: Pointy Stick + Flint Dagger + Rusted Dagger + 2 Minor Potions
 
 MILEPOINT E  _continueChecked = true (suppresses continue modal on render)
-             storyUpdateStatus(); storyRender(NODE_MAP['CI']) — world resets at Birka CI
+             storyUpdateStatus(); storyRender(NODE_MAP['LHR']) — world resets at Birka `LHR` (historical `CI`)
 ```
 
 ---
@@ -1209,7 +1209,7 @@ All six are Birka city nodes. No other nodes have NIGHT_AMBIENT entries.
 | `storyCheckContinue()` | 8086 | On startup: checks for autosave; shows continue or gameover modal | localStorage 'coc_autosave', `save.hp` | DOM modals; `_continueChecked = true` |
 | `storyRespawnFromCheckpoint()` | 8146 | Loads checkpoint save; sets hp = max(1, hpMax/2); renders current node | localStorage 'coc_checkpoint' | `S_story.hp`; calls `storyRender` |
 | `storyLoadContinue()` | 8155 | Loads autosave; renders at currentCode; resumes pending battle if any | localStorage 'coc_autosave' | full `S_story`; calls `storyRender` |
-| `storyNewGame()` | 8164 | Full reset: clears localStorage, `_S_DEFAULTS()`, starter loadout, renders CI | `_S_DEFAULTS()`, `STARTER_*` consts | full `S_story` reset |
+| `storyNewGame()` | 8164 | Full reset: clears localStorage, `_S_DEFAULTS()`, starter loadout, renders `LHR` (historical `CI`) | `_S_DEFAULTS()`, `STARTER_*` consts | full `S_story` reset |
 | `storyNewGamePlus()` | 8186 | NG+ reset: preserves npcFavorability + pitPerks + ngPlusRun; resets all else | `npcFavorability`, `pitPerks`, `ngPlusRun` | full `S_story` reset + preserved fields |
 
 ---
