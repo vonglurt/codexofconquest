@@ -8,6 +8,7 @@
 # Picks up play-YYYYMMDD-HHMMSS.html from:
 #   ./ (root)
 #   ./build/milepoints/ (uncompressed stragglers)
+#   ./milepoints/ (legacy root dir, pre-§DX-02ic — absorbed so nothing is stranded)
 #
 # Patch store: build/milepoints/patches/
 #   _base.html.gz   — first snapshot, gzip base
@@ -21,7 +22,8 @@ set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 ROOT_DIR="$SCRIPT_DIR"
-MILEPOINTS="$ROOT_DIR/milepoints"
+MILEPOINTS="$ROOT_DIR/build/milepoints"
+LEGACY_MILEPOINTS="$ROOT_DIR/milepoints"
 PATCHES="$MILEPOINTS/patches"
 LAST_HTML="$PATCHES/_last.html"
 LAST_NAME="$PATCHES/_last.name"
@@ -31,9 +33,11 @@ mkdir -p "$PATCHES"
 shopt -s nullglob
 ROOT_SNAPS=("$ROOT_DIR"/play-????????-??????.html)
 MP_SNAPS=("$MILEPOINTS"/play-????????-??????.html)
+LEGACY_SNAPS=("$LEGACY_MILEPOINTS"/play-????????-??????.html)
 ALL_NEW=(
     "${ROOT_SNAPS[@]+"${ROOT_SNAPS[@]}"}"
     "${MP_SNAPS[@]+"${MP_SNAPS[@]}"}"
+    "${LEGACY_SNAPS[@]+"${LEGACY_SNAPS[@]}"}"
 )
 
 if [[ ${#ALL_NEW[@]} -eq 0 ]]; then
@@ -41,8 +45,9 @@ if [[ ${#ALL_NEW[@]} -eq 0 ]]; then
     exit 0
 fi
 
-# Sort alphabetically (= chronologically by timestamp)
-IFS=$'\n' SORTED=($(printf '%s\n' "${ALL_NEW[@]}" | sort))
+# Sort by BASENAME — the timestamp is in the filename, and the sources are three
+# different directories, so sorting whole paths orders by directory, not by time.
+IFS=$'\n' SORTED=($(printf '%s\n' "${ALL_NEW[@]}" | awk -F/ '{print $NF"\t"$0}' | sort -k1,1 | cut -f2-))
 unset IFS
 
 echo "Found ${#SORTED[@]} snapshot(s) to patch-archive."

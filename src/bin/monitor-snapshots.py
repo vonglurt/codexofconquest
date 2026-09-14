@@ -45,10 +45,11 @@ _RATE = "190"
 
 ROOT        = Path(__file__).resolve().parent.parent.parent
 _TOGGLE     = "./src/bin/wbapi-toggle.sh"
-PATCHES_DIR = ROOT / "milepoints" / "patches"
-SAY_LOG     = ROOT / "milepoints" / "say.log"
-SERVER_LOG  = ROOT / "milepoints" / "wbapi-server.log"
-SAY_LOCK_FILE = ROOT / "milepoints" / "say.lock"  # shared with sayd.sh
+MILEPOINTS  = ROOT / "build" / "milepoints"
+PATCHES_DIR = MILEPOINTS / "patches"
+SAY_LOG     = MILEPOINTS / "say.log"
+SERVER_LOG  = MILEPOINTS / "wbapi-server.log"
+SAY_LOCK_FILE = MILEPOINTS / "say.lock"  # the same file sayd.sh locks; both must resolve here
 LAST_HTML   = PATCHES_DIR / "_last.html"
 LAST_NAME_F = PATCHES_DIR / "_last.name"
 GLOB        = "play-????????-??????.html"
