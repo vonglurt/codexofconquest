@@ -22338,7 +22338,7 @@ function createQuestRuntime(host) {
       item_remove(bit, ctx) { const inv = ctx.state.inventory || []; const i = inv.findIndex(x => x.name === bit.name); if (i > -1) inv.splice(i, 1); },   // §VM-01-C: env inventory
       mission_bit(bit, ctx) { if (E.grantMissionBit) E.grantMissionBit(bit.flag, bit.label, ctx.state); else ctx.state[bit.flag] = true; },   // §VM-01-C/D: host grant, else env fallback
       // §ARCH-01 W7c — NPC favorability: `set` writes an absolute level; `add`
-      // increments the current level, clamped to `cap` (default 3 = Dear Friend).
+      // increments the current level, clamped to `cap` (default 3 = Dear Friend+; Dear Friend is 2).
       favor(bit, ctx) {
         if (!E.setFavor) return;
         // The tier line the host speaks is durable only if it joins the run's message

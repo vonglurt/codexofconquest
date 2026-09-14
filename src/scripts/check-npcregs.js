@@ -438,6 +438,11 @@ function audit(src, vocab, model) {
       gate(pair[1], Number(pair[2]), `favorMin:{ ${pair[1]}:${pair[2]} } at line ${lineOf(src, fm.index)}`);
     }
   }
+  const minFavRe = /([a-z][a-z0-9_]*)\s*:\s*\{[^{}]*?minFav\s*:\s*(\d+)/g;
+  let mv;
+  while ((mv = minFavRe.exec(src))) {
+    gate(mv[1], Number(mv[2]), `minFav:${mv[2]} on '${mv[1]}' at line ${lineOf(src, mv.index)}`);
+  }
 
   // 8. announced — the bit and the sentence beside it must name the same tier (§AUDIT-03ar).
   const names = model.identities;
@@ -545,6 +550,7 @@ function selftest(src, vocab, model) {
     ['ceremony', src.replace(`{ kind:'favor', npc:"solvak", set:1 }`, `{ kind:'favor', npc:"solvak", set:2 }`), model],
     ['gates',    src.replace(`_npcFavor('brynn') >= 3`, `_npcFavor('quill') >= 3`), model],
     ['gates',    src.replace('favorMin:{ yael:3 }', 'favorMin:{ yva:3 }'), model],
+    ['gates',    src.replace('  crov:     { minFav:3,', '  quill:    { minFav:3,'), model],
     ['announced', src.replace(`{kind:'favor',npc:'benedikt_rasp',set:2}`, `{kind:'favor',npc:'benedikt_rasp',set:1}`), model],
     // §DX-02gc — the four ways the promotion line goes back to speaking a slug, or to a
     // channel that is cleared before it is painted.
