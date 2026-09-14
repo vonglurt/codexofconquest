@@ -2829,7 +2829,10 @@ function selectMapNode(code){
 
 async function loadLocationDetail(code) {
   try {
-    const r = await fetch(`${SERVER.url}/api/location/${encodeURIComponent(code)}`);
+    // §DX-02kn — the strip renders monster chips, quest titles and NPC names, so it asks
+    // for the bodies the default now omits. It reads five fields out of them and pulls
+    // the full payload to do it; a summaries depth is §DX-02kr.
+    const r = await fetch(`${SERVER.url}/api/location/${encodeURIComponent(code)}?with=monsters,quests,npcs`);
     if (!r.ok) return;
     const d = await r.json();
     // Inject location summary strip at top of detail body

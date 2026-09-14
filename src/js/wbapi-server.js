@@ -2126,8 +2126,12 @@ async function route(req, res) {
           `GET ${b}/api/quest/{id}/chain`,
           '  Upstream and downstream quest chain for a quest.',
           '',
-          `GET ${b}/api/location/{code}`,
-          '  Composite view: node + quests + NPCs + monsters for a location.',
+          `GET ${b}/api/location/{code}[?with=quests,monsters,npcs,waypointQuests|all]`,
+          '  Composite view: node + terrain + coords + links + counts, and pointers to the',
+          '  verbs that return the rest. The four entity collections are OPT-IN (§DX-02kn):',
+          '  inlining them cost 327 KB at NUE (177 full quest bodies) against 2 KB now, and',
+          '  ?with=monsters restores terrain.monsters with them. ?with=all is the old shape,',
+          '  byte for byte. Quest bodies alone: GET /api/list/quest?node={code}.',
           '',
           `GET ${b}/api/export/{collection}[?format=json|js|module]`,
           '  Dump a full array as JSON, JS literal, or CommonJS module.',
@@ -10480,6 +10484,33 @@ async function route(req, res) {
         _nearby: `Nearby coords: GET /api/coords/near/${rawId}?radius=8`,
         _validate: `Walkability: GET /api/graph/validate/${rawId}`,
       };
+      // §DX-02kn — the four heavy keys are opt-in. `location` is the orientation call,
+      // and it inlined 177 full quest bodies at NUE — 264 KB of desc/passText/hint for a
+      // question usually answered by `coords` and `counts`. They are DELETED from the
+      // assembled object rather than assembled conditionally, so `?with=all` is the same
+      // object in the same key order as before the flag existed.
+      const OPTIONAL = ['monsters', 'quests', 'waypointQuests', 'npcs'];
+      const withRaw = (url.searchParams.get('with') || '').trim();
+      const withSet = withRaw === 'all' ? new Set(OPTIONAL)
+                    : new Set(withRaw.split(',').map((x) => x.trim()).filter(Boolean));
+      const unknownWith = [...withSet].filter((k) => !OPTIONAL.includes(k));
+      if (unknownWith.length) {
+        logResponse(method, url.pathname, 422, `location/${rawId}: unknown ?with=${unknownWith.join(',')}`);
+        return json(res, 422, { error:`Unknown ?with value(s): ${unknownWith.join(', ')}`, available:[...OPTIONAL, 'all'] });
+      }
+      const omitted = OPTIONAL.filter((k) => !withSet.has(k));
+      for (const k of omitted) delete out[k];
+      // `terrain.monsters` is the SAME roster as the top-level `monsters`, resolved through
+      // the `P.<key>` proxy into full statblocks — 3,658 B of the 7,941 B LHR default, and
+      // the larger half of the duplication §DX-02kn names. The two travel together: asking
+      // for neither drops both, asking for `monsters` restores both. `out.terrain` is a live
+      // `worldDb` reference, so this replaces it with a copy and never mutates the parse.
+      if (!withSet.has('monsters') && out.terrain && 'monsters' in out.terrain) {
+        const { monsters: _roster, ...thin } = out.terrain;
+        out.terrain = thin;
+      }
+      if (omitted.length) out._with = `Inline them: GET /api/location/${rawId}?with=${omitted.join(',')} (or ?with=all). ` +
+        `\`monsters\` also restores terrain.monsters; quest bodies are GET /api/list/quest?node=${rawId}, a tenth of the size.`;
       logRow('location', `${rawId}  ·  ${node.label||rawId}  ·  Act ${node.act||'?'}`);
       logRow('connections', `${out.counts.monsters} monsters  ·  ${out.counts.quests} quests  ·  ${out.counts.npcs} NPCs  ·  ${out.counts.linkedNodes} links`);
       logResponse(method, url.pathname, 200, `location/${rawId}`);

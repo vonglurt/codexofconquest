@@ -19,6 +19,9 @@
 //   [export/collections] every collection the `export` topic documents exports 200.
 //   [nonce/types]        every documented `type` value issues a nonce, and a value the
 //                        help does not document is refused.
+//   [location/depth]     `location` stays under its byte budget at EVERY node with the
+//                        entity collections opt-in, `?with=all` restores them, `counts`
+//                        is the same in both, and an unknown depth is refused (§DX-02kn).
 //
 // The two instruments are not nested — each sees defects the other cannot, measured over
 // six mutations of the real source. (a) alone catches a TTL five times short and a value
@@ -195,6 +198,41 @@ export async function runChecks({ topics, liveTopicKeys, probe }) {
     if (r.status < 400) findings.push(`[nonce/types] POST /api/nonce accepts \`${bogus}\`, which no help topic documents — the documented list is not the accepted list`);
   }
 
+  // [location/depth] — §DX-02kn. `location` is the orientation call and its four entity
+  // collections are opt-in. A regression here is silent: the response is still correct,
+  // it is just 147× larger, and nothing but a byte count can see that. Measured over
+  // EVERY node rather than a sample, because the defect was one busy node in 416.
+  const LOC_BUDGET = 4000;
+  const ids = (await probe('GET', '/api/list/ids/node')).json;
+  const codes = (ids && ids.ids) || [];
+  if (!codes.length) findings.push('[location/depth] GET /api/list/ids/node returned no codes — the budget check asserted nothing');
+  else {
+    let worst = { code: null, bytes: 0 };
+    for (const code of codes) {
+      const r = await probe('GET', `/api/location/${code}`);
+      const bytes = Buffer.byteLength(JSON.stringify(r.json || {}));
+      if (bytes > worst.bytes) worst = { code, bytes };
+    }
+    if (worst.bytes > LOC_BUDGET)
+      findings.push(`[location/depth] GET /api/location/${worst.code} is ${worst.bytes} B by default, over the ${LOC_BUDGET} B budget — an entity collection is being inlined again`);
+    // The other direction, without which the budget alone is satisfied by returning nothing:
+    // the opt-in must actually opt in, and the counts must not move between the two shapes.
+    const busiest = (await probe('GET', '/api/location?has_quests=true&ids=true')).json;
+    const probeCode = (busiest && busiest.ids && busiest.ids[0]) || codes[0];
+    const thin = (await probe('GET', `/api/location/${probeCode}`)).json || {};
+    const fat  = (await probe('GET', `/api/location/${probeCode}?with=all`)).json || {};
+    for (const k of ['monsters', 'quests', 'waypointQuests', 'npcs']) {
+      if (k in thin) findings.push(`[location/depth] GET /api/location/${probeCode} inlines \`${k}\` by default`);
+      if (!(k in fat)) findings.push(`[location/depth] GET /api/location/${probeCode}?with=all omits \`${k}\` — the escape does not restore the old shape`);
+    }
+    if (thin.terrain && 'monsters' in thin.terrain)
+      findings.push(`[location/depth] the default still carries terrain.monsters, the duplicate of the top-level roster`);
+    if (JSON.stringify(thin.counts) !== JSON.stringify(fat.counts))
+      findings.push('[location/depth] `counts` differs between the default and ?with=all — the flag changes what is reported, not only what is inlined');
+    const bogus = (await probe('GET', `/api/location/${probeCode}?with=nonsense`)).status;
+    if (bogus < 400) findings.push(`[location/depth] ?with=nonsense answers ${bogus} — an unknown depth is accepted silently`);
+  }
+
   return findings;
 }
 
@@ -230,19 +268,53 @@ async function selftest() {
         ? { status: 200, json: { topic: t, title: INDEX_TITLE, topics: routes.topics } }
         : { status: 404, json: { ok: false, error: `unknown help topic '${t}'`, topic: t, topics: routes.topics } };
     }
+    // §DX-02kn — the location-depth class reads real payloads, so the stub models the two
+    // shapes rather than a status code: `loc.thin` is what the default returns and
+    // `loc.fat` what ?with=all does. A mutation test flips one of them.
+    if (clean === '/api/list/ids/node') return { status: 200, json: { ids: routes.loc.codes } };
+    if (clean === '/api/location') return { status: 200, json: { ids: routes.loc.codes } };
+    if (clean.startsWith('/api/location/')) {
+      if (/[?&]with=/.test(p) && !/[?&]with=(all|monsters|quests|npcs|waypointQuests)(,|$)/.test(p))
+        return { status: 422, json: { error: 'unknown with' } };
+      return { status: 200, json: /[?&]with=/.test(p) ? routes.loc.fat : routes.loc.thin };
+    }
     return routes.get.includes(clean) ? { status: 200, json: {} } : { status: 404, json: {} };
   };
+  const LOC_THIN = { node: { code: 'AA' }, terrain: { label: 'x' }, counts: { quests: 2 } };
+  const LOC_FAT = { ...LOC_THIN, terrain: { label: 'x', monsters: [] }, monsters: [], quests: [], waypointQuests: [], npcs: [] };
   const stubRoutes = (over = {}) => ({
     topics: ['nonce', 'export'],
     get: ['/api/ping', '/api/export/node_map', '/api/export/quest_db'],
     nonceTypes: ['node', 'quest'],
     helpFallback: false,
+    loc: { codes: ['AA', 'BB'], thin: LOC_THIN, fat: LOC_FAT },
     ...over,
   });
   const run = (t = {}, r = {}, keys = ['index', 'nonce', 'export']) =>
     runChecks({ topics: stubTopics(t), liveTopicKeys: keys, probe: stubProbe(stubRoutes(r)) });
 
   ok((await run()).length === 0, 'a help whose every claim answers produces no findings');
+
+  // §DX-02kn — the location-depth class, each direction planted once.
+  ok((await run({}, { loc: { codes: ['AA'], thin: { ...LOC_THIN, quests: [] }, fat: LOC_FAT } }))
+    .some((f) => f.includes('inlines `quests` by default')),
+    'a default that inlines an entity collection is caught');
+  const FAT_MINUS_NPCS = (() => { const f = { ...LOC_FAT }; delete f.npcs; return f; })();
+  ok((await run({}, { loc: { codes: ['AA'], thin: LOC_THIN, fat: FAT_MINUS_NPCS } }))
+    .some((f) => f.includes('omits `npcs`')),
+    'a ?with=all that does not restore the old shape is caught');
+  ok((await run({}, { loc: { codes: ['AA'], thin: { ...LOC_THIN, terrain: { label: 'x', monsters: [] } }, fat: LOC_FAT } }))
+    .some((f) => f.includes('terrain.monsters')),
+    'a default still carrying the duplicated terrain roster is caught');
+  ok((await run({}, { loc: { codes: ['AA'], thin: { ...LOC_THIN, counts: { quests: 9 } }, fat: LOC_FAT } }))
+    .some((f) => f.includes('`counts` differs')),
+    'counts moving between the two shapes is caught');
+  ok((await run({}, { loc: { codes: [], thin: LOC_THIN, fat: LOC_FAT } }))
+    .some((f) => f.includes('asserted nothing')),
+    'an empty node list is a finding, not a vacuous pass');
+  ok((await run({}, { loc: { codes: ['AA'], thin: { ...LOC_THIN, big: 'x'.repeat(5000) }, fat: LOC_FAT } }))
+    .some((f) => f.includes('over the 4000 B budget')),
+    'a default over the byte budget is caught');
 
   ok((await run({ index: stubTopics().index.replace('/api/help/export', '/api/help/exports') }))
     .some((f) => f.includes('no such topic') && f.includes('exports') && f.includes('404')),
@@ -345,7 +417,7 @@ async function main() {
     console.log('  wbapi-server.js\'s HELP object, or the route it names, so calling it works (§DX-02jg).');
     done(1);
   }
-  console.log('✓ §DX-02jg help behaviour: every topic the index names resolves to itself, every documented GET path answers, every documented collection exports, and every documented nonce `type` issues a nonce while an undocumented one is refused.');
+  console.log('✓ §DX-02jg help behaviour: every topic the index names resolves to itself, every documented GET path answers, every documented collection exports, every documented nonce `type` issues a nonce while an undocumented one is refused, and `location` stays under its byte budget at every node with the entity collections opt-in (§DX-02kn).');
   done(0);
 }
 

@@ -85,7 +85,8 @@ Never guess an ID. Always search first.
 # Nodes
 ./api.sh list node --q "birka"
 ./api.sh list node --terrain crypt --act 1
-./api.sh location LHR                  # composite: node + quests + NPCs + monsters
+./api.sh location LHR                  # composite: node + terrain + coords + links + counts
+./api.sh location LHR --with all       # …and the quest/monster/npc bodies (§DX-02kn)
 ./api.sh get node LHR
 ./api.sh put node LHR label="New Label"
 
@@ -140,7 +141,7 @@ Never guess an ID. Always search first.
 ./api.sh list ids node                 # IDs only (fast)
 ./api.sh list ids quest
 
-./api.sh location LHR                  # composite node view
+./api.sh location LHR                  # composite node view (bodies are --with, §DX-02kn)
 ./api.sh chain quest_anath             # upstream/downstream quest chain
 ```
 
@@ -198,6 +199,28 @@ The monster must exist first; a second `drop` without `--update` is refused with
 ./api.sh export node_map --format js   # as JS constant
 ./api.sh import book.json             # bulk import nodes + quest cycles
 ```
+
+### `location` depth (§DX-02kn)
+
+`location` is the orientation call — *where am I, what is here, what connects to it* —
+and it used to inline every related entity in full. At `NUE` that was **327,226 bytes**,
+81 % of it 177 complete quest bodies, to learn a two-number coordinate.
+
+The four entity collections — `quests`, `waypointQuests`, `monsters`, `npcs` — are
+**opt-in**, and `terrain.monsters` (the same roster resolved through the `P.<key>` proxy
+into full statblocks) travels with `monsters`:
+
+```bash
+./bin/api location NUE                 # 2,233 B — node, terrain, coords, links, counts, pointers
+./bin/api location NUE --with quests   # + the quest bodies
+./bin/api location NUE --with all      # the old shape, byte for byte
+./bin/api list quest --node NUE        # quest summaries — a tenth of --with quests
+```
+
+Measured over **all 416 nodes**: worst case **327,226 → 3,781 B**, median **1,069 B**,
+and **0 nodes over 4,000 B** where 282 were. `counts` is identical in both shapes, and an
+unrecognised `?with=` value is a 422 rather than a silent full response. `tests/help-behaviour.mjs`
+asserts all of that against a throwaway server on every run.
 
 ### The node Talk registry (§DX-02km)
 

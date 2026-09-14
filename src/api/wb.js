@@ -261,6 +261,7 @@ The game is a D&D world stored in a single HTML file. The API manages: nodes (ma
   ./bin/api batch-npc <updates.json>             §AUDIT-03b: bulk quest.npc re-anchor, one save ([{id,npc},…])
   ./bin/api export <collection>                  dump JSON (node_map quest_db monster_pool world_db all)
   ./bin/api location [code]                      composite view (no code = list all)
+  ./bin/api location <code> --with all           inline quests/monsters/npcs bodies (default: counts + pointers)
   ./bin/api speak <npc> "<prompt>" --state neutral|friendly|dearFriend
   ./bin/api import <file.json>                   bulk import nodes + quest cycles  [--out file]
   ./bin/api roads [pins]                         road net summary / pins file (§NAV-01h)
@@ -830,7 +831,10 @@ const CMD = {
       printResult(r.body, flags);
       return;
     }
-    const r = await request('GET', `/api/location/${encodeURIComponent(code)}`);
+    // §DX-02kn — `--with quests,monsters,npcs,waypointQuests` (or `--with all`) inlines the
+    // bodies the default replaces with counts and a pointer.
+    const wq = flags.with ? '?with=' + encodeURIComponent(String(flags.with)) : '';
+    const r = await request('GET', `/api/location/${encodeURIComponent(code)}${wq}`);
     if (r.status !== 200) { printError(r); process.exit(1); }
     printResult(r.body, flags);
   },
