@@ -19,6 +19,26 @@
 
 ---
 
+## Archived 2026-09-14 — §DX-02kv (the self-description that described something else)
+
+### §DX-02kv — the API's field schema is rotten in both directions, and the export cannot be used to measure it (NEW 2026-09-14 during §DX-02gy, 🟡 one design call: correct the schema, or retire it as a description) — [x] ✅ SHIPPED 2026-09-14 `8d1c19a`
+
+- [x] ✅ SHIPPED 2026-09-14 `8d1c19a` — **§DX-02kv — the row's numbers held to the field, its trap was real, and the instrument it warned about turned out to have a sound alternative in the repo already.**
+
+  **The trap first, because the row put it first.** The census that filed this row came from `GET /api/export/<collection>?format=json`, which **erases a function value and drops its key** — so its declared-but-absent list (`hook`, `rewardText`, `checkDC`, `checkStat`, `checkSkill`, `completeFn`) was not evidence. **`wbapi-core`'s parser is the instrument that answers it**: `parseSanitized` nulls a function value and **keeps the key**, which is checkable in the same run — `activateCond` reads as **30** live quests through it and 0 through the export. Re-censused that way, all six really are dead **at the quest root**, and `grep` seconds it: `hook` and `rewardText` have **0 occurrences anywhere** in `play.html`, and `checkDC`/`checkStat`/`checkSkill`/`completeFn` survive only inside comments recording their own retirement (§ARCH-01 W7d/W8a). Retired, not classified.
+
+  **Re-derived at HEAD `aa3c0ae`, both directions, 33 findings.** **monster** — `voidTainted` (3) undeclared. **node** — `isEpicBattleground` (20), `bossKey` (20), `desc` (6), `textVariants` (2), `board`, `finalBattle`, `isFishingLake` undeclared, and `N`/`S`/`E`/`W` declared and carried by **0 of 416**. The row named six undeclared node fields; there are **seven** — it missed `isEpicBattleground`, the most-carried of them. **quest** — `id` (**2,853**), `desc` (**2,806**), `retryable` (121), `vignetteText` (94), `itemChain` (27), `rumor` (25), `retryGateDays` (21), `onActivate` (20), `targetMonsterKeys` (12), `killGoals` (11), `killCounter` (6), `boardExempt` (3), `questComplete`, `vignetteTextAlt` undeclared — **14**, matching the row's 23-vs-31 exactly. **fish** — `isNight` declared and stored nowhere. **terrain, npc, lake_magic** — exact, as the row said of terrain.
+
+  **`N`/`S`/`E`/`W` are classified, not retired, as recommended — and the reason is a live write path, not sentiment.** `editField('node', …, <dir>, …)` is called by `connect`, `spawn-junction` and `cluster-bridge` at **seven sites** in `wbapi-server.js`. Removing the declaration would hide that; `classified:'written-not-carried'` states it, with the §CELL-01 history and the pointer in the note. `fish.isNight` is `classified:'derived'`.
+
+  **The gate is the durable half — `check-schema.js`, gate #31.** Every declared field is carried by ≥1 entry **or** carries `classified:` with a reason the gate knows; every live field is declared. **Classification, not exemption** (the #13/#14 rule): an invented reason fails, and **a classification on a field the corpus DOES carry fails as stale** — the quieter direction, and the one that would otherwise let a field quietly come back to life behind an excuse. `SCHEMAS` is brace-matched out of the source and evaluated rather than regexed, because a regex over field names cannot see `classified:`. A type with no collection to census is a **finding**, not a vacuous pass, and an empty `SCHEMAS` fails. **33 findings against the pre-fix schema**, 0 after; selftest **15 checks**.
+
+  **Before → after:** declared fields **monster 9 → 10 · node 15 → 22 · quest 23 → 31 · fish 5 → 5** (one reclassified) · terrain/npc/lake_magic unchanged; `check:walk` **30 → 31 gates**. `./bin/api put quest quest_wm_01 hook=x` is now **400** — *"No quest in the corpus carries that name and the field schema does not declare it"* — where it was accepted before, and `put … id=…` / `desc=…` still round-trip, which is the over-narrowing direction `npm run test:write` guards.
+
+  **Found en route and filed as §DX-02lb:** `node.desc` is carried by **6 of 416** nodes — `OBH`, `GLA`, `ABF`, `GLN`, `LLM`, `EDI`, the Rob Roy set entire — and read by **nothing**; arrival renders `text`, which all six also carry. It is the §DX-02kt class on the node side. Declared now, with *"read by nothing"* in its note, so the schema tells the truth about it while the row decides what to do with the prose.
+
+  **Verified:** `./bin/api audit` **0 errors** · `npm run check:walk --prefix src` **31/31 gates, 15.9 s** · `npm run test:write --prefix src` green · `npm test --prefix src` **1239 passed / 7 failed**, the host baseline (§DX-02ke) · `play.html` byte-unchanged — the whole increment is the server's description of it. `docs/design/index.md` gains the gate's row in the same commit.
+
 ## Archived 2026-09-14 — §DX-02kw (the one write route nothing could persist)
 
 ### §DX-02kw — `PUT /api/npc/:key/dialogue` merges into memory only, and a reload drops it (NEW 2026-09-14 during §DX-02gz, 🟡 one design call: patch the source, or refuse the route) — [x] ✅ SHIPPED 2026-09-14 `aa3c0ae`
