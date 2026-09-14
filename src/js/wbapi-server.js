@@ -11230,11 +11230,51 @@ async function route(req, res) {
         return saveAndRestart(res, 200, { ok:true, key, field:dlgField, count: lines.length, value: dlg[dlgField] });
       }
 
-      // PUT /api/npc/:key/dialogue — merge full object (session-only convenience)
-      Object.assign(dlg, body);
-      logRow('updated', `dialogue › ${key}  (in-memory only)`);
-      logResponse(method, url.pathname, 200, `dialogue/${key} updated`);
-      return json(res, 200, { ok:true, key, dialogue: dlg, note:'Whole-object merge is in-memory only — it never patches the source, so POST /api/save cannot persist it either and a reload drops it. Use the field sub-routes (PUT /dialogue/quote etc.) for a persistent edit.' });
+      // PUT /api/npc/:key/dialogue — merge full object
+      {
+        const DLG_ARRAYS = ['impartial','questActive','friendly','dearFriend'];
+        const DLG_META   = ['name','occupation','worldTruth','missionBit','enemy','node'];
+        const vocab = new Set([...DLG_ARRAYS, 'quote', 'meta']);
+        for (const e of Object.values(WBAPI.npcDialogues)) for (const f of Object.keys(e)) vocab.add(f);
+        const accepted = [...vocab].sort();
+
+        const fields = Object.keys(body);
+        if (!fields.length) {
+          logResponse(method, url.pathname, 400, 'empty body');
+          return json(res, 400, { ok:false, error:'Body must carry at least one field', accepted });
+        }
+        const unknownFields = fields.filter((f) => !vocab.has(f));
+        if (unknownFields.length) {
+          logResponse(method, url.pathname, 400, `unknown field(s): ${unknownFields.join(', ')}`);
+          return json(res, 400, { ok:false, error:`Unknown field(s) for NPC_DIALOGUES: ${unknownFields.join(', ')}`, unknownFields, accepted });
+        }
+        for (const f of DLG_ARRAYS) {
+          if (body[f] === undefined) continue;
+          if (!Array.isArray(body[f]))
+            return json(res, 400, { ok:false, error:`"${f}" must be an array of strings` });
+        }
+        if (body.quote !== undefined && typeof body.quote === 'object')
+          return json(res, 400, { ok:false, error:'"quote" must be a string' });
+        if (body.meta !== undefined) {
+          if (typeof body.meta !== 'object' || body.meta === null || Array.isArray(body.meta))
+            return json(res, 400, { ok:false, error:'"meta" must be an object', accepted: DLG_META });
+          const badMeta = Object.keys(body.meta).filter((f) => !DLG_META.includes(f));
+          if (badMeta.length)
+            return json(res, 400, { ok:false, error:`Unknown meta field(s): ${badMeta.join(', ')}`, unknownFields: badMeta, accepted: DLG_META });
+        }
+
+        for (const [f, v] of Object.entries(body)) {
+          if (f === 'meta')                  { dlg.meta = { ...(dlg.meta || {}) }; for (const [mk, mv] of Object.entries(v)) dlg.meta[mk] = String(mv); }
+          else if (DLG_ARRAYS.includes(f))   dlg[f] = v.map(String);
+          else if (f === 'quote')            dlg.quote = String(v);
+          else                               dlg[f] = v;
+        }
+        const r = replaceSection('NPC_DIALOGUES', serializeNpcDialoguesSection());
+        if (!r.ok) { logResponse(method, url.pathname, 500, r.error); return json(res, 500, r); }
+        logRow('updated', `dialogue › ${key}  (${fields.join(', ')})`);
+        logResponse(method, url.pathname, 200, `dialogue/${key} updated`);
+        return saveAndRestart(res, 200, { ok:true, key, fields, dialogue: dlg });
+      }
     }
 
     const col = { node:WBAPI.nodeMap, quest:WBAPI.questDb, monster:WBAPI.monsterPool, npc:WBAPI.birkaNpcs }[type];
@@ -11875,6 +11915,7 @@ server.listen(PORT, BIND_ADDR, () => {
     ['GET',    '/api/loot-drop[?terrain=&monster=&fishing=&bonus=&name=] → unified drop query (monster+fishing)'],
     ['GET',    '/api/npc/{id}/dialogue[/{field}[/{index}]]  → whole entry, one field, or one line'],
     ['POST',   '/api/npc/{id}/dialogue              body: {quote, meta?, impartial?, ...}  (create)'],
+    ['PUT',    '/api/npc/{id}/dialogue              body: {quote?,meta?,impartial?,...}  (merge whole entry)'],
     ['POST',   '/api/npc/{id}/dialogue/{array}      body: {text}  (append line)'],
     ['PUT',    '/api/npc/{id}/dialogue/quote        body: {text}'],
     ['PUT',    '/api/npc/{id}/dialogue/meta         body: {worldTruth?,missionBit?,...}'],

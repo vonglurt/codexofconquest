@@ -103,6 +103,17 @@ export async function runChecks({ probe, poolRow, dropRow, onDisk }) {
   // says "You do NOT need to run save after a put/post/del." Both shipped; one was wrong.
   // The CLI hid four of them by issuing POST /api/save itself, so only a client calling the
   // route directly lost the write.
+  // §DX-02kw — a whole-object merge that persists must refuse a name nothing reads, or it is
+  // §DX-02gy's lying success with a write behind it. Asserted both ways: an unknown field is
+  // 400 naming itself and the accepted set, and the accepted set still carries every live one.
+  const dlg = await probe('PUT', '/api/npc/yael/dialogue', { quote: 'probe', nosuchfield: 1 });
+  add(dlg.status === 400 ? null
+    : `[accepted] an unknown NPC_DIALOGUES field answered ${dlg.status}, not 400`);
+  const dlgMissing = dlg.status === 400
+    ? DIALOGUE_VOCAB.filter((f) => !(dlg.json?.accepted || []).includes(f)) : [];
+  add(dlgMissing.length === 0 ? null
+    : `[over-strict] the NPC_DIALOGUES vocabulary has lost ${dlgMissing.join(', ')}`);
+
   for (const w of PERSIST_ROUTES) {
     const r = await probe(w.method, w.path, w.body);
     if (r.status >= 400) { add(`[red] ${w.method} ${w.path} answered ${r.status}: ${JSON.stringify(r.json).slice(0, 160)}`); continue; }
@@ -122,7 +133,15 @@ export async function runChecks({ probe, poolRow, dropRow, onDisk }) {
 const PERSIST_ROUTES = [
   { method:'POST', path:`/api/monster/${KEY2}/drop`, body:{ name:'Persist Tooth', icon:'🦷', sell:5 }, marker:'Persist Tooth' },
   { method:'POST', path:'/api/fish', body:{ key:'zz_probe_fish', name:'Probe Fish', rank:99 }, marker:'zz_probe_fish' },
+  // §DX-02kw — the whole-object merge, which is a different branch from the field
+  // sub-paths below it and is not covered by probing one of those.
+  { method:'PUT', path:'/api/npc/yael/dialogue', body:{ quote:'Persist Probe Quote' }, marker:'Persist Probe Quote' },
 ];
+
+// §DX-02kw — the merge writes the whole entry, so it needs the §DX-02gy refusal the field
+// sub-routes get for free from their own field lists. `accepted` is derived from the live
+// corpus, never from a hand-kept list, which is the half a schema-read whitelist loses.
+const DIALOGUE_VOCAB = ['dearFriend', 'friendly', 'impartial', 'meta', 'questActive', 'quote'];
 
 // ── selftest — the check functions against a stub probe ─────────────────────
 if (process.argv.includes('--selftest')) {
@@ -133,6 +152,7 @@ if (process.argv.includes('--selftest')) {
   const healthy = {
     probe: async (method, p, body) => {
       if (p.startsWith('/api/quest/')) return { status: 400, json: { accepted: [...SCHEMA_BLIND_SPOTS, 'title'], unknownFields: ['nosuchfield'] } };
+      if (p.endsWith('/dialogue') && 'nosuchfield' in body) return { status: 400, json: { accepted: DIALOGUE_VOCAB, unknownFields: ['nosuchfield'] } };
       if (body.drop) return { status: 200, json: { ok: true, routed: [{ field: 'drop', section: 'MONSTER_DROPS' }] } };
       if (Object.keys(body).some((k) => k in TYPOS)) return { status: 400, json: { unknownFields: Object.keys(TYPOS), accepted: ['hp', 'tier'] } };
       return { status: 200, json: { ok: true, autoSaved: true } };
@@ -159,6 +179,18 @@ if (process.argv.includes('--selftest')) {
 
   ok((await runChecks(bend({ poolRow: async () => goodRow.replace('tier:"trivial"', 'drop:{name:"x"}, tier:"trivial"') })))
     .some((f) => f.startsWith('[misrouted]')), 'a drop appended to the pool row is caught as [misrouted]');
+
+  ok((await runChecks(bend({ probe: async (m, p, b) =>
+      p.endsWith('/dialogue') && 'nosuchfield' in b
+        ? { status: 200, json: { ok: true, autoSaved: true } }
+        : healthy.probe(m, p, b) })))
+    .some((f) => f.startsWith('[accepted]')), '§DX-02kw: a merge that accepts an unknown field is caught as [accepted]');
+
+  ok((await runChecks(bend({ probe: async (m, p, b) =>
+      p.endsWith('/dialogue') && 'nosuchfield' in b
+        ? { status: 400, json: { accepted: ['quote'], unknownFields: ['nosuchfield'] } }
+        : healthy.probe(m, p, b) })))
+    .some((f) => f.startsWith('[over-strict]')), '§DX-02kw: a vocabulary narrowed to one field is caught as [over-strict]');
 
   // The regression the row's own prescription would have caused.
   ok((await runChecks(bend({ probe: async (m, p, b) => {
