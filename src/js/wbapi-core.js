@@ -1473,14 +1473,6 @@ const WBAPI = {
     if (type === 'terrain' && field === 'monsters')
       return { ok:false, error:'terrain rosters hold P.<key> identifiers — use editTerrainRoster(key, monsterKeys)' };
 
-    // §DX-02km — a quoteFn is a closure, and fourteen of them write S_story. patchStringField
-    // finds no quoted value on it, so insertStringField adds a SECOND `quoteFn:` that wins by
-    // last-key and silently retires the flag write, reporting ok:true, inserted:true. Refused
-    // here rather than in the HTTP handler so every caller is covered. The general form of
-    // this hazard — editField over ANY expression-valued field — is §DX-02kp.
-    if (type === 'npcdialogue' && field === 'quoteFn')
-      return { ok:false, error:'quoteFn holds a closure — a string write would insert a second quoteFn that wins by last-key. Edit NPC_DIALOGUE by hand with the server stopped, or remove it first with quoteFn=null' };
-
     // §AUDIT-03k — normalize a quest anchor onto the canonical key ON WRITE, so the split
     // cannot re-form one quest at a time. Scoped to (quest, npc) deliberately: NODE_MAP's
     // own inline `npc` is a DISPLAY NAME and normalizing it would be the §AUDIT-03h bug.
@@ -1513,7 +1505,24 @@ const WBAPI = {
       return { ok:true, key, field, value:null, removed:true };
     }
 
+    // §DX-02kp — `patchStringField` matches only a QUOTED value, and treating its miss as
+    // "the field is absent" is what made every write over an unquoted one insert a SECOND
+    // copy that wins by last-key, under `ok:true, inserted:true`. The entry is already
+    // parsed, so presence is answerable exactly rather than inferred from the patcher:
+    // `parseSanitized` erases a function value to null and KEEPS the key, and a number or
+    // boolean parses to itself, so `hasOwnProperty` separates absent from unquoted.
+    // An unquoted field belongs to the structured writer, which serializes a real JS
+    // literal and refuses a patch that would drop a closure (§DX-02iv).
+    // STATED LIMIT: a field holding a bare identifier rather than a function or a scalar
+    // is re-serialized as whatever `value` is, so a string written over one becomes a
+    // quoted string. The function counter catches the case that loses code.
     let patched = patchStringField(sectionSrc, key, field, String(value));
+    const present = col[key] && Object.prototype.hasOwnProperty.call(col[key], field);
+    if (!patched && present) {
+      if (!ENTRY_SECTION[type])
+        return { ok:false, error:`field "${field}" on "${key}" holds an unquoted value and ${type} has no structured writer — edit ${section} by hand with the server stopped` };
+      return this.editStructuredField(type, key, field, value);
+    }
     const isNew = !patched;
     if (isNew) {
       patched = insertStringField(sectionSrc, key, field, String(value));

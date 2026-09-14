@@ -238,11 +238,12 @@ comment beside the plural says so.
 
 **`quoteFn` is readable and not writable.** 41 of the 74 entries render through a closure
 instead of a string, and fourteen distinct `S_story` flags are written from inside them.
-`editField` patches string literals, so a string write over `quoteFn` finds no quoted value
-and *inserts a second `quoteFn:`* that wins by last-key — silently retiring the flag write
-while reporting `ok:true`. Both the verb and `editField` refuse it by name; edit a closure
-by hand with the server stopped, the way engine JS is edited. The general form of that
-hazard — `editField` over any expression-valued field — is **§DX-02kp**.
+`editField` patches string literals, so a write over `quoteFn` has no quoted value to
+replace. Since **§DX-02kp** that is routed to the structured writer, which counts the
+entry's closures either side of the patch and refuses one that would drop any — so the
+write is rejected rather than appending a second `quoteFn:` that wins by last-key. The
+verb does not offer `quoteFn` at all; edit a closure by hand with the server stopped, the
+way engine JS is edited.
 
 ### Audit
 

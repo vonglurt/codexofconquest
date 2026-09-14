@@ -294,5 +294,49 @@ r = WBAPI.editField('npcdialogue', ndFn, 'quoteFn', '() => "plain"');
 ok(!r.ok, 'writing a raw function source over quoteFn is refused');
 ok(WBAPI._rawSrc === rawBefore, 'the refused write left the source alone');
 
+// ── §DX-02kp — editField over an UNQUOTED field ───────────────────────────────
+// patchStringField matches only a quoted value, and treating its miss as "the field is
+// absent" made every such write insert a SECOND key that wins by last-key, under
+// ok:true/inserted:true. The census is 10,339 (entry,field) pairs across six sections —
+// every monster's ac/hp/atk, every node's num/act, every quest's gate/bits.
+WBAPI.load(GAME);
+const mKey = Object.keys(WBAPI.monsterPool).find(k => typeof WBAPI.monsterPool[k].hp === 'number');
+ok(!!mKey, 'a monster with a numeric hp exists to exercise the unquoted path');
+r = WBAPI.editField('monster', mKey, 'hp', 9);
+ok(r.ok && r.inserted === false, 'a numeric field is UPDATED, not inserted: ' + (r.error || ''));
+ok(r.strategy === 'editStructuredField', 'and it is routed to the structured writer');
+WBAPI.load(WBAPI._rawSrc);
+ok(WBAPI.monsterPool[mKey].hp === 9 && typeof WBAPI.monsterPool[mKey].hp === 'number',
+   'the number round-trips AS A NUMBER — the old insert wrote a quoted "9"');
+
+// A field the entry genuinely does not have is still inserted; that is the case the
+// fall-through was written for, and the fix must not take it away.
+WBAPI.load(GAME);
+r = WBAPI.editField('monster', mKey, 'aFieldNoMonsterHas', 'x');
+ok(r.ok && r.inserted === true, 'an absent field is still inserted');
+
+// Presence is read off the parsed entry, and parseSanitized keeps a function key with a
+// null value — so a closure field is "present" and never reaches the inserter.
+WBAPI.load(GAME);
+const ndFnKey = Object.keys(WBAPI.npcDialogue).find(k => 'quoteFn' in WBAPI.npcDialogue[k]);
+const rawBeforeKp = WBAPI._rawSrc;
+r = WBAPI.editField('npcdialogue', ndFnKey, 'quoteFn', '() => "plain"');
+ok(!r.ok, 'a closure field is refused rather than duplicated');
+ok(/function value/.test(r.error || ''), 'and the refusal is the one that counts the closures');
+ok(WBAPI._rawSrc === rawBeforeKp, 'the refused write left the source alone');
+WBAPI.load(GAME);
+r = WBAPI.editField('quest', 'blq_05_act1', 'activateCond', 'ALWAYS');
+ok(!r.ok, 'the same holds for a quest activateCond');
+
+// terrain has no entry-level structured writer, so it refuses by name instead of routing
+// into `unknown type` — the failure mode the single ENTRY_SECTION map exists to prevent.
+WBAPI.load(GAME);
+const tKey = Object.keys(WBAPI.worldDb).find(k => typeof WBAPI.worldDb[k].isEpicBattleground === 'boolean');
+if (tKey) {
+  r = WBAPI.editField('terrain', tKey, 'isEpicBattleground', false);
+  ok(!r.ok && /no structured writer/.test(r.error || ''),
+     'an unquoted terrain field refuses by name, never "unknown type": ' + (r.error || ''));
+}
+
 if (fail) { console.log(`\n✗ check-array-patch: ${fail} FAILED, ${pass} passed`); process.exit(1); }
-console.log(`✓ §WBAPI-01 ph3 structured-field PATCH: all ${pass} checks pass (array/object/number round-trip + insert + fn-reject + {__fn:…} closure round-trip + drop refusal + comment-loss refusal across the corpus + substitution round-trip and its three refusals + duplicate-free quest indexes + expression-field removal + NPC_DIALOGUE round-trip and closure survival)`);
+console.log(`✓ §WBAPI-01 ph3 structured-field PATCH: all ${pass} checks pass (array/object/number round-trip + insert + fn-reject + {__fn:…} closure round-trip + drop refusal + comment-loss refusal across the corpus + substitution round-trip and its three refusals + duplicate-free quest indexes + expression-field removal + NPC_DIALOGUE round-trip and closure survival + unquoted-field routing)`);
