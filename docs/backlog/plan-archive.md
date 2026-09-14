@@ -21,6 +21,22 @@
 
 ## Archived 2026-09-14 — §DX-02kp (10,339 fields the sanctioned write path would have corrupted, reporting success)
 
+### §DX-02gh — the file `resume.md` calls "the write path" documents a CLI that does not exist, 483 times (NEW 2026-08-24 during the §DX-02gd read-list audit, 🟢 no design call) — [x] ✅ SHIPPED 2026-09-14 `bbe041d`
+
+- [x] ✅ SHIPPED 2026-09-14 `bbe041d` — **§DX-02gh — 494 dead invocations renamed, the class gated, and the row's third clause disproved at the command line.**
+
+  **Re-derived at HEAD.** `ls api.sh wbapi-toggle.sh` → *No such file or directory*, still. `./api.sh` by file: `api-user-guide.md` **195** · `API-README.md` **167** · `wbapi-help.md` **74** · `api-faq.md` **32** · `CONTRIBUTING.md` **20** = **488**, against the **483** this row measured at `539749d`. It grows because nothing stops it. The `wbapi-toggle` leg is still **0**, as §DX-02ie left it.
+
+  **All 488 are `./bin/api`,** plus **six** prose mentions the `./api.sh` token grep does not see (*"request an api.sh wrapper"*, *"Supporting api.sh command"*, *"before any api.sh WRITE session"*, …) and **three in `src/api/wb.js`'s own help banner** — `PREFERRED TOOL — USE api.sh, NOT curl`, *"api.sh handles automatically"*, *"If a feature is missing from api.sh"*. **The CLI was telling you to use a tool by a name it no longer answers to**, which is the same defect one surface closer to the reader than the row noticed.
+
+  **The gate is the durable half, and it is what the row was for.** `src/scripts/check-doc-commands.js`, **`check:walk` gate #30**: the first token of every line inside a ```` ```bash ```` fence in a **binding** document is resolved — a `./path` against the filesystem, `make <t>` against the Makefile's targets, `./run.sh <verb>` against run.sh's own case arms. Shell it does not own (`curl`, `grep`, `cd`) is skipped **by name** in `NOT_OURS`, because a gate that guesses at shell is a gate nobody trusts. **SWEPT vs HISTORY is §AUDIT-03m's rule for §AUDIT-03m's reason:** a lab report records what was run when it was written and renaming its commands would falsify the record, so only documents that say what to run **now** are swept — **8** of them against **8** HISTORY prefixes, each naming its reason, and both classifications fail when they go stale (gate #17's rule).
+
+  **It paid for itself twice on its first run.** **Three more dead `./api.sh` in `README.md`**, a file this row never counted (now 0). And its own `[stale-history]` check **fired on its author**, catching `docs/world/` — classified HISTORY, does not exist.
+
+  **The row's third clause does not survive contact, and the disproof is the increment's best product.** It says the `fix-diagonal` / `fix-all-broken` / `highway` blocks republish tools **§DX-02bf records as deprecated and refused**. **They are not refused.** Run at HEAD: `./bin/api fix-diagonal LHR S` → `✓ LHR.S → null: status=unset` then `✓ No auto-fix available`; `./bin/api highway LHR CON` → a full dry-run plan. And the sharp one, two commands documented **ten lines apart** in the same *Validation* block: **`./bin/api broken` → 93 isolated cells · `./bin/api fix-all-broken` → `✓ 0 broken edges found`.** `broken` was migrated to the cell model and the `fix-*` family still reads the `N`/`S`/`E`/`W` pointers §CELL-01 stripped, so it issues a **clean bill of health over a world with 93 isolated cells** — in the tool `API-README.md` tells you to run at the start and end of every session. **Deleting the blocks on the row's premise would have buried that**, so both carry the measurement and a warning instead, and **§DX-02kx** is filed to decide migrate-or-retire.
+
+  **Verified.** `check:walk` **30/30 green, 14.5 s** — the new gate resolves **1,241 invocations in 236 fenced blocks** across the 8 swept documents. **Non-vacuous:** a planted `./api.sh`, `make nosuchtarget` and `./run.sh nosuchverb` each produce exactly one finding, green on restore; selftest **18** checks. `./bin/api audit` 0 errors · `test:help` and `test:write` green · `npm test` **1239 passed / 7 failed**, the baseline.
+
 ### §DX-02gz — the drop routes are the only writes that do not persist, and the CLI help says persistence is automatic (NEW 2026-08-25 during §DX-02fy, 🟢 no design call) — [x] ✅ SHIPPED 2026-09-14 `1d4b1e9`
 
 - [x] ✅ SHIPPED 2026-09-14 `1d4b1e9` — **§DX-02gz — the defect is real, one of the three named routes has it, and the family is four times wider than the row.**
