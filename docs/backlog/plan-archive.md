@@ -19,6 +19,28 @@
 
 ---
 
+## Archived 2026-09-14 — §DX-02kt (two inert fields, and the verb the write path did not have)
+
+### §DX-02kt — two quest fields are written by the data and read by nothing (NEW 2026-09-14 during §DX-02gy, 🟡 one design call: remove them, or wire them up) — [x] ✅ SHIPPED 2026-09-14 `267635d`
+
+- [x] ✅ SHIPPED 2026-09-14 `267635d` — **§DX-02kt — both counts held, the recommendation held, and the mechanism the row prescribed does not exist.**
+
+  **Re-derived at HEAD `aa3c0ae`, before touching anything.** `targetMonsterKeys`: **12 occurrences, all 12 declarations**, 0 reads by property access, bracket access or destructuring. `questComplete`: **8 occurrences — one field** (`cid_c7a5`, the fifth and last beat of the `cid_c7a*` chain, `questComplete:true`) and seven inside authored prose, which is §DX-02ku.
+
+  **The ground disproved the plan's mechanism, not its conclusion.** The row says remove them with `./bin/api put <type> <id> <field>=null`. `null` **clears a scalar and leaves the key**, and §DX-02ee **refuses it outright on an array** — brace matching is `editStructuredField`'s job. The verify clause asks for `12 → 0` re-derived from source, which no `put` can produce. **The write path had no key-deleting operation at all**, so this increment added one first — the documented path when the API cannot express the operation (`resume.md` §2.5), not a detour around the row.
+
+  **`WBAPI.removeField(type, id, field)` · `DELETE /api/{type}/{id}/field/{field}` · `./bin/api unset <type> <id> <field>`.** Nonce-gated like every other DELETE that removes authored data; the CLI fetches the nonce. **Verified the way `deleteEntrySource` verifies an entry delete, one level down:** the entry's field literals are read before and after **through the same token walk the excision uses** — the `fieldsWithComments` lesson, that a census and a write must not be able to disagree — and the write is refused unless **exactly** the named key disappeared and **every other field's source text is byte-identical**. A removal that reflows a neighbour is a defect, not a formatting choice, and nothing downstream would ever see it. A comment inside the value is refused with §DX-02ix's message unless `dropComments`.
+
+  **Eleven of the twelve are an exact duplicate of their own `killGoals` keys**, as the row says. **The twelfth is not:** `quest_la_riva_02` carries **no `killGoals`** — it completes on `countMin: frCatKillCount >= 5` with `Vincenzo's Net` at `AMS`, and its monster key is **hardcoded in the Layer 78 kill hook** (`S.enemy.key === 'corrupted_cat'`@25455), so the field was redundant with the *engine* rather than with data. Removing it loses nothing either way, but the row's *"`killGoals` already carries the keys"* is true of 11 of 12, not 12.
+
+  **`check:schema` went red the moment the last carrier left** — *"quest.targetMonsterKeys is declared and carried by 0 entries"* — naming both fields. That is §DX-02kv's gate, from the increment before this one, catching this one. Both declarations removed with them, and the `fieldVocabulary` stated-limit note that named them as the accepted-but-dead pair.
+
+  **`check:arraypatch` rode `targetMonsterKeys` as its string-array fixture — the second field it has had to ride.** Its own comment records the first (`completeItems`, swept by §ARCH-01 W7d). Measured here: **QUEST_DB now carries no top-level array of strings at all** (`onComplete` 106, `itemChain` 27, `bits` 2,635, `killGoals` 11 are all object arrays), so a third repoint had nowhere to go. The cases ride a **synthetic key** on the in-memory copy instead — what is under test is the serializer, not a corpus field — and the treadmill stops. **78 → 90 checks**, the nine new ones covering `removeField`: the excision, the byte-identical neighbours, the re-parse, the two refusals, that a refused removal leaves the source alone, and the comment guard in both directions. **The anchor gate then caught the lab report naming the comment that was rewritten** — `lab-report-wbapi01-ph3-array-patch.md`, repointed to the new literal, which is the anchor budget `resume.md` tells you to spend inside the increment rather than meet at the gate.
+
+  **Before → after:** `grep -c targetMonsterKeys play.html` **12 → 0** · `grep -c questComplete` **8 → 7** (the seven are §DX-02ku's prose) · declared quest fields **31 → 29** · `play.html` **−7 lines**, and the diff is exactly thirteen field removals. Round-tripped from disk through a restarted server.
+
+  **Verified:** `./bin/api audit` **0 errors** · `npm run check:walk --prefix src` **31/31 gates, 16.4 s** · `npm run check:questgraph --prefix src` green, as the row asks · `npm test --prefix src` **1239 passed / 7 failed**, the same seven specs as the host baseline (§DX-02ke).
+
 ## Archived 2026-09-14 — §DX-02kv (the self-description that described something else)
 
 ### §DX-02kv — the API's field schema is rotten in both directions, and the export cannot be used to measure it (NEW 2026-09-14 during §DX-02gy, 🟡 one design call: correct the schema, or retire it as a description) — [x] ✅ SHIPPED 2026-09-14 `8d1c19a`
