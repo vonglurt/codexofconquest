@@ -21,6 +21,22 @@
 
 ## Archived 2026-09-14 — §DX-02kp (10,339 fields the sanctioned write path would have corrupted, reporting success)
 
+### §DX-02cf — the arc-grouping regex strips a suffix that no quest id has, and merges ten arcs into one bucket doing it (NEW 2026-08-17 during §DOC-02bq, 🟢 no design call) — [x] ✅ SHIPPED 2026-09-14 `b450046`
+
+- [x] ✅ SHIPPED 2026-09-14 `b450046` — **§DX-02cf — every number in the row held, and the copy count did not: six, not two.**
+
+  **Re-derived at HEAD through `wbapi-core`'s parser, before touching anything.** The derivation was `id.replace(/_\d+$/, '').replace(/_[a-z]{2}$/, '')`, and **the second strip runs on the first's output**, so `quest_kg_01` → `quest_kg` → **`quest`**. Bucket `quest` held **35** quests across **10** real arcs — `_kg` 11 · `_wm` 5 · `_va` 4 · `_ng` 3 · `_tl` 3 · `_vs` 3 · `_df` 2 · `_sk` 2 · `_ca` 1 · `_sb` 1 — the row's breakdown to the quest. **0 of 2,853** ids end in `_xx` directly, so **every firing of the strip was the false merge and none was the case it was written for.** The editor's arcs panel sorts descending, so it presented a 35-member non-arc as the largest arc in the world.
+
+  **The row says two copies. There are six, and fixing two would have been worse than the defect.** The two it names are the builders — `wbapi-core.js` and `edit.html`. Three more in `edit.html` **read `_questArcs` back** with the same expression (the sibling-quest graph, `arcName`/`arcSize`, the shared-flag list) and one in **`wbapi-server.js`** serves it as `connections.arc`. Had only the builders moved, the builder would key on `quest_kg` while three readers looked up `quest`, and those panels would have gone **empty** — a hand-maintained pair that is really a hand-maintained six.
+
+  **Measured before → after:** `WBAPI._questArcs['quest']` **35 quests → undefined** · largest arc **`quest:35` → `quest_kg:11`** · `GET /api/quest/quest_kg_01` → `connections.arc` **`quest` → `quest_kg`**, round-tripped through the running server.
+
+  **The one number the row got wrong is its own prediction.** It says the multi-step arc count rises **35 → 44**; measured, it is **35 → 42** — eight of the ten split out with two or more steps and `_ca`/`_sb` are singletons. An arithmetic claim written before anyone ran it, which is §2.6's rule about numbers in documents landing on the row that wrote one.
+
+  **Four doc anchors named the deleted expression** — the anchor gate caught them, which is it working. Two were this row's and go with it; two in `lab-report-editor02-mission-builder.md` are **annotated, not rewritten** (§AUDIT-03m: a report records what the code said), with the `@N` moved **outside** the code span so they read as quotations and the note saying when the strip went and how many copies it had. The pointers here are quoted the same way: `src/js/wbapi-core.js:.replace(/_[a-z]{2}$/, '')`@820 and `edit.html:.replace(/_[a-z]{2}$/, '')`@1742.
+
+  **Verified.** `./bin/api audit` 0 errors · `check:walk` **30/30 green** · `npm test` **1239 passed / 7 failed**, the baseline, with the `mission-builder`, `quest-editor` and `chain-editor` specs unregressed. **Authoring tool only** — the engine never reads `_questArcs`, so no player-facing behaviour changed.
+
 ### §DX-02gh — the file `resume.md` calls "the write path" documents a CLI that does not exist, 483 times (NEW 2026-08-24 during the §DX-02gd read-list audit, 🟢 no design call) — [x] ✅ SHIPPED 2026-09-14 `bbe041d`
 
 - [x] ✅ SHIPPED 2026-09-14 `bbe041d` — **§DX-02gh — 494 dead invocations renamed, the class gated, and the row's third clause disproved at the command line.**
