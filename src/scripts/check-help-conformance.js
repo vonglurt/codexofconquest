@@ -96,7 +96,7 @@ function docCollections(lines) {
   const out = [];
   for (const l of lines.slice(start + 1)) {
     if (!l.trim()) break;
-    const m = /^ {2}([a-z_]+)\s+—/.exec(l);
+    const m = /^ {2}([a-z0-9_]+)\s+—/.exec(l);
     if (m) out.push(m[1]);
   }
   return out.length ? out : null;
@@ -195,6 +195,8 @@ if (process.argv.includes('--selftest')) {
     'a collection exportMap serves and the help omits is caught');
   ok(scan(stub({ cols: ['node_map', 'quest_db'] })).some(f => f.includes('404')),
     'a collection the help documents and exportMap has dropped is caught');
+  ok(scan(stub({ cols: ['d100_table'], docCols: ['d100_table'] })).length === 0,
+    'a collection name carrying a digit is read on both sides, not reported as undocumented');
 
   ok(scan(stub({ docTtl: 'Nonces go stale eventually.' })).some(f => f.includes('no longer states an expiry')),
     'prose that no longer states an expiry goes RED, not silently green');
