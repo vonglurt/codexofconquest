@@ -37,7 +37,7 @@ const GATES = [
   'check:battlepools', 'check:arraypatch',
   'check:spdx', 'check:backlogcounts', 'check:linewidth', 'check:condprices',
   'check:docpointers', 'check:helpconformance', 'check:duelparity', 'check:itemchain',
-  'check:laddermigration', 'check:worlddiff',
+  'check:laddermigration', 'check:worlddiff', 'check:bearings',
 ];
 
 // A gate named here is deliberately outside the chain; the value is the reason it is.
