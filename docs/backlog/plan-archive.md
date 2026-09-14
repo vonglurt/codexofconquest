@@ -19,6 +19,28 @@
 
 ---
 
+## Archived 2026-09-14 — §DX-02kw (the one write route nothing could persist)
+
+### §DX-02kw — `PUT /api/npc/:key/dialogue` merges into memory only, and a reload drops it (NEW 2026-09-14 during §DX-02gz, 🟡 one design call: patch the source, or refuse the route) — [x] ✅ SHIPPED 2026-09-14 `aa3c0ae`
+
+- [x] ✅ SHIPPED 2026-09-14 `aa3c0ae` — **§DX-02kw — the row's premise held exactly, and its *three lines from correct* was three lines plus the refusal those three lines make necessary.**
+
+  **Re-derived at HEAD `0a57566`, before touching anything.** The whole-object branch was `Object.assign(dlg, body)` followed by a plain `json()` — no `replaceSection`, no `saveAndRestart` — against four sibling branches (`/quote`, `/meta`, `/:array`, `/:array/:index`) that each serialize and save. Its note was the honest one §DX-02gz rewrote, and the route was **the only mutating route in the file that patches no section**.
+
+  **(a) make it a real write, as recommended — with the correction the ground forced.** `serializeNpcDialoguesSection()` + `replaceSection` + `saveAndRestart` is indeed three lines. But `Object.assign` accepts **any key at all**, so shipping only those three lines would have turned a route that lost every write into a route that **persists an arbitrary field name into `NPC_DIALOGUES`** — §DX-02gy's class, introduced by the fix for it. The four sub-routes never had this problem because each one's own field list is its vocabulary.
+
+  **The corpus settles the vocabulary with no judgement call.** Censused over all **214** entries: top-level keys are `meta` 214 · `impartial` 214 · `questActive` 201 · `friendly` 212 · `dearFriend` 209 · `quote` 214 — **exactly** the union of the sub-routes' `ARRAY_FIELDS` + `quote` + `meta`, and nothing else. `meta` carries `worldTruth` 214 · `missionBit` 209 · `enemy` 203 · `name` 22 · `occupation` 22 · `node` 13 — **exactly** `META_FIELDS`, all six. So the accepted set is **derived from the loaded corpus and unioned with the sub-routes' lists** (§DX-02gy's shape), never a hand-kept whitelist, and an unknown field is **400** naming itself and the accepted set. Type guards match the sub-routes: an array field must be an array, `meta` an object of the six, `quote` not an object.
+
+  **Who could reach it: nobody in this repo.** `./bin/api dialogue` builds a field sub-path for every edit it makes (`wb.js`@502–528), so the route was reachable only by a client calling it directly — and it was **the one PUT missing from the server's own route list** (`wbapi-server.js`@11916–11923 lists the GET, the POST create and all four sub-paths). It is listed now, which is the half that would have made this visible.
+
+  **Round-tripped off disk, not from the response:** `PUT /api/npc/yael/dialogue {"quote":"…","meta":{…}}` → `ok:true`, `fields:["quote","meta"]`, `autoSaved:true`, **no note**, and `grep -c` on the probe string in `play.html` **0 → 1**. Unknown field → **400** with `unknownFields:["nosuchfield"]` and `accepted:[dearFriend, friendly, impartial, meta, questActive, quote]`.
+
+  **`npm run test:write` gains the route and the vocabulary, asserted in both directions** — `PERSIST_ROUTES` **2 → 3** (`autoSaved` plus the marker read back off the scratch copy), plus `[accepted]` for a merge that takes an unknown field and `[over-strict]` for a vocabulary that narrows below the live corpus, the same pair the quest checks carry. **3 findings against the pre-fix server** — `[accepted]`, `[unsaved]`, `[lost]` — green on restore; selftest **10 → 12**.
+
+  **Found en route and filed as §DX-02la:** the first round trip's diff carried **two** deleted lines, not one — `serializeNpcDialoguesSection()` rebuilds the section without the comment above `const NPC_DIALOGUES`, the only line in the file distinguishing it from `NPC_DIALOGUE`, one character away. **Not this change's doing:** it reproduces through `PUT /dialogue/quote` at the commit before, so every write to the section has always deleted it. It is §DX-02ix's class at section scope, where that row refused a write that would delete a comment *inside* a value.
+
+  **Verified:** `./bin/api audit` **0 errors** · `npm run check:walk --prefix src` **30/30 gates, 15.2 s** · `npm run test:write --prefix src` green, selftest 12 · `npm run test:help --prefix src` green (26 selftest checks, 83 documented GET calls) · `npm test --prefix src` **1239 passed / 7 failed**, the host baseline (§DX-02ke).
+
 ## Archived 2026-09-14 — §DX-02kx (three repair commands that could not fail, retired)
 
 ### §DX-02kx — the `fix-*` repair family reports a clean world over 93 isolated cells (NEW 2026-09-14 during §DX-02gh, 🟡 one design call: migrate the family, or retire it) — [x] ✅ SHIPPED 2026-09-14 `0a57566`
