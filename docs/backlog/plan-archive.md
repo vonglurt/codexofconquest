@@ -19,6 +19,18 @@
 
 ---
 
+## Archived 2026-09-13 — §DX-02by (MoveResult.via, the ferry's last trace, is gone)
+
+### §DX-02by — `MoveResult.via` is the deleted ferry mechanism's last surviving trace: written on every step, read nowhere (NEW 2026-08-14 during §DOC-02bk, 🟢 no design call)
+
+- [x] ✅ SHIPPED 2026-09-13 `a37a15b` **§DX-02by — `via` dropped from both `MoveResult` shapes, in `src/js/mover.js` and its byte-identical twin in `play.html`.**
+> **The row as filed.** The §WALK spec's `MoveResult` had `via: null | 'step' | 'ferry'` to tell a walked step from a ferry-edge crossing. `95c4143` (§WALK-5-FU) deleted the ferry branch, since §WALK-1.5 carries water crossings as `SEA_LANES` cells, and `via` survived as `null` when blocked and `'step'` when moving: a restatement of `ok`, written on every step and read by nothing.
+> **Disproof attempted first and failed, and the census went wider than the row's.** The row counted 2 writers and 0 readers across four files. Re-derived at HEAD: **4 writes** (2 per copy) and **0 reads** of `.via`, `via:` or a destructured `via` across `play.html`, `mover.js`, `wbapi-server.js`, `wbapi-core.js`, `edit.html`, `src/tests`, `src/scripts` and `src/api`. A grep for `moverMove(` finds no callers at all, because both reach the kernel as `Mover.move`. So the two real call sites were read in full: `play.html` reads `ok`, `to` and `destCodes`; the server's `POST /api/session/move` reads `ok`, `reason`, `to`, `destCodes`, `encounter` and `terrain`, and never passes the object or a spread of it into a response, so no API client could have been reading `via` either. Nor does the change reach mesh identity: `worldHash` hashes eight data sections and `ENGINE_VER`, not engine code.
+> **Shipped.** The two properties removed from both copies, between the `MOVER:CORE` sentinels, in one scripted edit that asserted each occurred exactly once per file. No inliner exists; the parity gate is the fence. **Measured, HEAD → fix:** `via` writes **4 → 0**; `check:parity` **1,847 → 1,823 bytes, identical**; `check:behaviour` **0** content mismatches before and after. `mover.js`'s header already said the kernel has no ferry mechanism, so no comment had to change, and no maintained doc named the field.
+> **Verified:** `node --check src/js/mover.js` · `check:walk` **27/27** · `npm test` 152 passed / 1084 failed across three foreground shards, identical to baseline — 1082 browser-launch, the 2 real ones are §DX-02js’s.
+
+---
+
 ## Archived 2026-09-13 — §DX-02fl (ITEM_DB and the item endpoints are retired)
 
 ### §DX-02fl — `ITEM_DB` is anchored, parsed, and exported with zero entries (NEW 2026-08-23 during §DOC-02da, 🟢 seed or retire)

@@ -197,6 +197,8 @@ here it is the strongest section.
   `` `terrain was removed here@6403` ``; the encounter-rate key two hundred lines below was missed.
   Unreachable: no node carries `name:'junction'`, so `_inferTerrain` can never return it.
 
+> **✅ SHIPPED 2026-09-13 (§DX-02by) `a37a15b`.** `via` is gone from both `MoveResult` shapes in `mover.js` and its `play.html` twin: 4 writes → 0, parity 1,847 → 1,823 bytes identical, behaviour gate 0 mismatches. No reader existed at either `Mover.move` call site, and the server never sends the result object.
+
 ---
 
 ## VIII. Verification Record
