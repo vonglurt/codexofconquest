@@ -3659,6 +3659,7 @@ async function route(req, res) {
     const nameQ    = (url.searchParams.get('name') || '').toLowerCase();
     const bonusN   = bonusQ !== null ? Number(bonusQ) : null;
 
+    const WEAPON_DROP_RULE = 'Base weapon ≤ monster dmgDie, quality 1d6: 1→-4(Wrecked), 2→-3(Rusted), 3→-2(Chipped), 4→-1(Worn), 5-6→0(base)';
     const QUALITY_TABLE = [
       { roll:'1',   bonus:-4, prefix:'Wrecked', probability:'1-in-6 (16.7%)' },
       { roll:'2',   bonus:-3, prefix:'Rusted',  probability:'1-in-6 (16.7%)' },
@@ -3671,6 +3672,14 @@ async function route(req, res) {
     const showFishing  = fishingQ !== 'false';
     const results = [];
 
+    // §DX-02ab — a pool fish is genuinely both: a MONSTER_POOL statline with a
+    // MONSTER_DROPS trophy, and a FISH_POOL entry with a rank. The trophy loop below runs
+    // only unfiltered, so only then can the same key reach both sections; there it is
+    // emitted once, by the trophy loop, carrying the monster fields too. Membership, not
+    // the key prefix — `night_owl` and `night_hag` are land monsters.
+    const fishKeys = new Set([...WBAPI.fishPool, ...WBAPI.nightFishPool].map(f => f.key));
+    const trophyLoopRuns = showFishing && !terrainQ && !monsterQ && bonusN === null;
+
     if (showMonsters) {
       let monsterKeys;
       if (terrainQ)       monsterKeys = WBAPI._terrainToMonsters[terrainQ] || [];
@@ -3681,6 +3690,7 @@ async function route(req, res) {
         const monster = WBAPI.monsterPool[key];
         const rawDrop = WBAPI.monsterDrops[key];
         if (!rawDrop && !monster) continue;
+        if (trophyLoopRuns && fishKeys.has(key)) continue;
         // bonus filter for monster entries: only applies to negative/zero
         if (bonusN !== null && bonusN > 0) continue;
         // name filter
@@ -3695,7 +3705,7 @@ async function route(req, res) {
           dmgDie:      monster ? (monster.dmgDie || 4) : null,
           trophy:      rawDrop || null,
           weaponDrop:  {
-            rule:         'Base weapon ≤ monster dmgDie, quality 1d6: 1→-4(Wrecked), 2→-3(Rusted), 3→-2(Chipped), 4→-1(Worn), 5-6→0(base)',
+            rule:         WEAPON_DROP_RULE,
             qualityTable: bonusN !== null
               ? QUALITY_TABLE.filter(q => q.bonus === bonusN)
               : QUALITY_TABLE,
@@ -3728,13 +3738,14 @@ async function route(req, res) {
         });
       }
       // Fish trophies (only when no terrain/monster filter)
-      if (!terrainQ && !monsterQ && bonusN === null) {
+      if (trophyLoopRuns) {
         const allFish = [...WBAPI.fishPool, ...WBAPI.nightFishPool];
         for (const fish of allFish) {
           const drop = WBAPI.monsterDrops[fish.key];
-          if (!drop) continue;
+          const monster = WBAPI.monsterPool[fish.key];
+          if (!drop && !monster) continue;
           const isNight = WBAPI.nightFishPool.some(f => f.key === fish.key);
-          if (nameQ && !(fish.name||'').toLowerCase().includes(nameQ) && !(drop.name||'').toLowerCase().includes(nameQ)) continue;
+          if (nameQ && !(fish.name||'').toLowerCase().includes(nameQ) && !((drop && drop.name)||'').toLowerCase().includes(nameQ)) continue;
           results.push({
             source:   'fishing',
             subtype:  'fish_trophy',
@@ -3742,7 +3753,13 @@ async function route(req, res) {
             name:     fish.name,
             fishRank: fish.rank,
             isNight,
-            trophy:   drop,
+            trophy:   drop || null,
+            // the monster half, so this single entry carries both aspects of the fish
+            monsterKey:  fish.key,
+            monsterName: monster ? monster.name : fish.name,
+            terrains:    WBAPI._monsterToTerrains[fish.key] || [],
+            dmgDie:      monster ? (monster.dmgDie || 4) : null,
+            weaponDrop:  { rule: WEAPON_DROP_RULE, qualityTable: QUALITY_TABLE },
             fishing:  true,
           });
         }

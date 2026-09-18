@@ -412,6 +412,37 @@ to inspect the grid without scanning NODE_MAP manually.
 
 ---
 
+## Loot Drop System (§DX-02ab)
+
+One read endpoint over every drop table: monster trophies, the weapon-quality
+rule, lake-magic items, and fish trophies. Read-only — it writes nothing.
+
+```bash
+./bin/api loot-drop                        # everything: 407 entries
+./bin/api loot-drop --fishing              # fishing only: lake magic + fish trophies
+./bin/api loot-drop --terrain forest       # trophies for one terrain's monsters
+./bin/api loot-drop --monster wolf         # one monster
+./bin/api loot-drop --bonus -2             # one weapon-quality band
+./bin/api loot-drop --name minnow          # substring, monster or drop name
+./bin/api loot-drop --json                 # full rows rather than the summary
+```
+
+**A pool fish is both a monster and a catch, and appears once.** The 20 `FISH_POOL`
+and 5 `NIGHT_FISH_POOL` species each carry a `MONSTER_POOL` statline *and* a
+`MONSTER_DROPS` trophy, so an unfiltered call used to list all 25 twice — once as
+`source:"monster"`, once as `source:"fishing"` (**432 rows, 25 duplicated**). They are
+now emitted once, by the fishing section, carrying the monster fields too
+(`monsterKey`, `monsterName`, `terrains`, `dmgDie`, `weaponDrop`) alongside
+`fishRank` and `isNight`, so nothing is lost: **407 rows, 0 duplicates**.
+
+`--fishing` (33) and `--fishing=false` (399) are unchanged — a fish belongs to both
+views, and only the combined call could double-count it.
+
+**Membership, not the key prefix.** `night_owl` and `night_hag` are land monsters;
+the de-duplication tests `FISH_POOL`/`NIGHT_FISH_POOL` membership, never `night_*`.
+
+---
+
 ## Need a feature curl can do but `./bin/api` can't?
 
 Describe the operation and request an API refactor. It will be added as a named

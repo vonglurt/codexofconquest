@@ -260,6 +260,7 @@ The game is a D&D world stored in a single HTML file. The API manages: nodes (ma
   ./bin/api advise <quest-id>                    §ARCH-02 Ph5: quest fields + chain + advisory in one call
   ./bin/api batch-npc <updates.json>             §AUDIT-03b: bulk quest.npc re-anchor, one save ([{id,npc},…])
   ./bin/api export <collection>                  dump JSON (node_map quest_db monster_pool world_db all)
+  ./bin/api loot-drop [--terrain --monster --fishing --bonus --name]  drop tables (§DX-02ab)
   ./bin/api location [code]                      composite view (no code = list all)
   ./bin/api location <code> --with all           inline quests/monsters/npcs bodies (default: counts + pointers)
   ./bin/api speak <npc> "<prompt>" --state neutral|friendly|dearFriend
@@ -597,6 +598,29 @@ const CMD = {
     const r = await request('GET', `/api/quest/${encodeURIComponent(id)}/chain`);
     if (r.status !== 200) { printError(r); process.exit(1); }
     printResult(r.body, flags);
+  },
+
+  // §DX-02ab — GET /api/loot-drop, read-only. --fishing with no value means true, so
+  // `--fishing` and `--fishing=false` both reach the endpoint's tri-state.
+  async 'loot-drop'(pos, flags) {
+    await requireServer();
+    const qs = new URLSearchParams();
+    if (flags.terrain) qs.set('terrain', flags.terrain);
+    if (flags.monster) qs.set('monster', flags.monster);
+    if (flags.name)    qs.set('name',    flags.name);
+    if (flags.bonus !== undefined) qs.set('bonus', String(flags.bonus));
+    if (flags.fishing !== undefined) qs.set('fishing', String(flags.fishing !== false));
+    const r = await request('GET', '/api/loot-drop' + (qs.toString() ? `?${qs}` : ''));
+    if (r.status !== 200) { printError(r); process.exit(1); }
+    if (flags.json || flags.raw) { printResult(r.body, flags); return; }
+    const rows = r.body.drops || [];
+    const bySrc = {};
+    for (const d of rows) {
+      const k = d.subtype || d.source;
+      bySrc[k] = (bySrc[k] || 0) + 1;
+    }
+    ok(`loot-drop: ${rows.length} entries · ${Object.entries(bySrc).map(([k, n]) => `${k} ${n}`).join(' · ')}`);
+    info('full rows: ./bin/api loot-drop --json   filters: --terrain --monster --fishing --bonus --name');
   },
 
   // §NAV-01h — road net: GET /api/roads (overlay data) / pins subcommand

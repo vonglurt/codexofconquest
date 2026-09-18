@@ -143,7 +143,19 @@ Never guess an ID. Always search first.
 
 ./bin/api location LHR                  # composite node view (bodies are --with, §DX-02kn)
 ./bin/api chain quest_anath             # upstream/downstream quest chain
+
+./bin/api loot-drop                     # every drop table (§DX-02ab)
+./bin/api loot-drop --fishing           # lake magic + fish trophies only
+./bin/api loot-drop --terrain forest    # one terrain's monsters
+./bin/api loot-drop --monster wolf
+./bin/api loot-drop --bonus -2          # one weapon-quality band
+./bin/api loot-drop --name minnow       # substring, monster or drop name
 ```
+
+A pool fish carries both a `MONSTER_POOL` statline and a `MONSTER_DROPS` trophy, so
+all 25 used to appear twice in an unfiltered call. They are emitted once now, by the
+fishing section, carrying the monster fields too — 432 rows → **407**, 0 duplicates.
+`--fishing` (33) and `--fishing=false` (399) are unchanged.
 
 ### Write — Nodes
 
