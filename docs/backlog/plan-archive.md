@@ -19,6 +19,24 @@
 
 ---
 
+## Archived 2026-09-18 — §DX-02ab (loot-drop lists each fish once, and gets a CLI and a doc section)
+
+### §DX-02ab — `GET /api/loot-drop` double-counts the day fish, drops the night fish, and has no `./api.sh` wrapper (NEW 2026-08-12 during §DOC-02v, 🟢 no design call)
+
+- [x] ✅ SHIPPED 2026-09-18 `60cc16c` **§DX-02ab — two of the three defects hold, the third is disproved, and both of the row's fixes for the first one were lossy.**
+> **(a) holds, and is larger than filed.** A pool fish is genuinely both — a `MONSTER_POOL` statline with a `MONSTER_DROPS` trophy, and a `FISH_POOL` entry with a rank — so the monster loop emitted it as `source:"monster"` and the trophy loop emitted it again as `source:"fishing"`. **The row says the 20 day fish; it is all 25**, the 5 night fish included. Measured unfiltered at `6f35a73`: **432 rows, 25 keys appearing twice** (399 monster + 8 lake magic + 25 fish trophies). The row's own total was 426.
+> **(b) does not hold.** The row says *"no `nfish_*` key exists in `MONSTER_DROPS`, so all 5 night fish are silently dropped from every response"*. **The prefix is `night_`, not `nfish_`**, all 5 night fish have `MONSTER_DROPS` entries (5/5, as do 20/20 day fish), and the 25 `fish_trophy` rows already present are 20 day + 5 night. Nothing was being dropped. The row's mechanism was a wrong guess at a key prefix.
+> **(c) holds.** **0** `loot-drop` references in `src/api/wb.js`, **0** in `docs/api/wbapi-help.md`, **0** in `docs/api/API-README.md` — while `wbapi-help.md`'s opening directive is *"Always use `./bin/api`. Never use raw curl."* and the report's §V-C smoke criteria are five raw `curl` lines.
+> **Both of the row's fixes for (a) are lossy, which the two row shapes show.** The monster row carries `terrains`, `dmgDie`, `weaponDrop`; the trophy row carries `fishRank`, `isNight`; only `trophy` is common. *Skip fish keys in the monster loop* loses the combat half for every fish; *drop the separate trophy loop* loses the fishing half. Neither is a de-duplication — both are a deletion.
+> **And unconditional de-duplication would have broken a filter.** `fishing=true` returns the 33 fishing rows; `fishing=false` returns the 399 monster rows **including** the fish. Both are coherent views in which a fish legitimately belongs, and **only the combined call can double-count**. So the collapse happens exactly when both sections are shown — which is exactly when the trophy loop runs — and the surviving row carries the **union** of both field sets. Every filtered response is byte-unchanged.
+> **Membership, not the key prefix, and the corpus says why.** `night_owl` and `night_hag` are land monsters in `MONSTER_POOL`. A `night_*` rule would have removed them from the monster section; the de-duplication tests `FISH_POOL`/`NIGHT_FISH_POOL` membership instead.
+> **Measured, HEAD → fix:** unfiltered **432 → 407**, duplicate keys **25 → 0** (374 monster + 8 lake magic + 25 fish carrying both halves); `fishing=true` **33 → 33**; `fishing=false` **399 → 399**; `terrain=forest` 31, `monster=fish_01` 9, `bonus=-2` 399, `name=minnow` 1 — all unchanged; `night_owl` still a monster row. `WEAPON_DROP_RULE` hoisted so the two emit sites share one copy instead of two string literals.
+> **(c) shipped:** `./bin/api loot-drop [--terrain --monster --fishing --bonus --name] [--json]`, its line in the command index, a **Loot Drop System** section in `wbapi-help.md` and six lines in `API-README.md`'s read block. All five of the report's smoke criteria now run through the tool the directive mandates.
+> **Found on the way:** the row's own anchor named `if (!drop) continue;` — the line this change edits — so `check:anchors` went red closing it. Rewritten in the resolver's history form, *`if (!drop) continue;`@3584*, with the number outside the code span.
+> **Verified:** `./bin/api audit` **0 errors** · `check:walk` **31/31** · `test:write` · `test:help` · `test:mud` green · `npm test` **160 passed / 1086 failed** across three foreground shards on this host, exactly **2** real, both pre-existing per §DX-02ke. `play.html` byte-unchanged.
+
+---
+
 ## Archived 2026-09-18 — §DX-02aa (a write from a stale server is refused, not silently applied)
 
 ### §DX-02aa — a WBAPI write from a stale server silently reverts hand-edited engine JS, and nothing can see it (NEW 2026-08-12 during §DOC-02v, 🟢 no design call)
