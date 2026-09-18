@@ -31,6 +31,21 @@
 
 ---
 
+## Archived 2026-09-18 — §DX-02fo (`export all` is every collection `load()` fills)
+
+### §DX-02fo — `export/all` is 7 of 14 collections (NEW 2026-08-23 during §DOC-02da, 🟢 complete or rename)
+
+- [x] ✅ SHIPPED 2026-09-18 `669956a` **§DX-02fo — completed, not renamed: `GET /api/export/all` now returns every collection `WBAPI.load()` fills, and the `export` help topic enumerates them.**
+> **The row as filed.** `all` covered `NODE_MAP` · `QUEST_DB` · `MONSTER_POOL` · `WORLD_DB` · `FISH_POOL` · `NIGHT_FISH_POOL` · `LAKE_MAGIC_DB` and omitted `BIRKA_NPC` (204 profiles), `NODE_COORDS` (416), `NPC_DIALOGUES` (213), `MONSTER_DROPS` and `ITEM_DB`. A caller exporting `all` to seed a test environment got a world with no NPCs and no coordinates. Seed or rename. `lab-report-wbapi-architecture.md` §7.7, §DOC-02da finding F7.
+> **The ground, re-derived at HEAD.** `` `src/js/wbapi-core.js:load(filePathOrText)@892` `` fills **fourteen** collections, so the row's headline count is right — but **one of its five named omissions no longer exists**: `ITEM_DB` was retired by §DX-02fl (`767027a`) six days ago, endpoints and all. The count survives the loss of its own example because the row never enumerated the other two it was silent about, `EB_NPC_DIALOGUE` and `_D100_TABLE`. Measured through `wbapi-core` against `play.html`, the seven that were missing are `NODE_COORDS` **416**, `MONSTER_DROPS` **399**, `BIRKA_NPC_PROFILES` **204**, `NPC_DIALOGUES` **214** (the row said 213), `EB_NPC_DIALOGUE` **20**, `_D100_TABLE` **7** and `CONDITION_ITEMS` **12** — the last of which only became non-empty at §DX-02fk (`27f2223`), three rows earlier in the same loop. **All fourteen are non-empty at HEAD**, so completing it strands nothing.
+> **Complete rather than rename, and why the cheap option was the wrong one.** Renaming would have to propagate to the CLI's command index, both help surfaces, `check:help-conformance`'s COLLECTIONS comparison and every `./bin/api export all` example in `src/api/wb.js` — more surface than the fix, to make a documented seeding path permanently useless. Completing it costs one object literal.
+> **Shipped.** `src/js/wbapi-server.js`: the `all` getter names all fourteen, keyed by the game's own const names, with `monster_drops`'s `|| {}` and `condition_items`'s `|| []` guards carried through so the shape a caller sees does not depend on whether a section parsed; the `export` help topic enumerates the fourteen in place of the old seven-plus-a-caveat about naming `monster_drops` and `condition_items` explicitly — that caveat is now false, and they are in `all`.
+> **Measured on a scratch server (`PORT=1383`, scratch `MESH_ACL_FILE`/`PEERS_CACHE_FILE`, started and killed inside one foreground command):** keys **7 → 14**, bytes **3,475,565 → 4,039,245**, and **the original seven keys are byte-identical** — the addition is purely additive, so an existing consumer of `all` cannot break. Re-derived offline through `wbapi-core` at close time: 14/14 non-empty.
+> **`exportMap`'s own key set is unchanged**, so the eight individually named collections are as they were and `check:walk` gate #23 (§DX-02jg) — which compares `Object.keys(exportMap)` against the help's COLLECTIONS block in **both** directions — still holds. The `Export collections:` line in `src/api/wb.js` lists those same key names and needed no edit; neither `wb.js` help surface claims what `all` contains.
+> **Verified:** `check:walk` **27/27** · `npm test` **152 passed / 1084 failed** across three foreground shards (140/272 · 0/412 · 12/400), identical to baseline — 1082 browser-launch, the 2 real ones are §DX-02js's.
+
+---
+
 ## Archived 2026-09-13 — §DX-02fl (ITEM_DB and the item endpoints are retired)
 
 ### §DX-02fl — `ITEM_DB` is anchored, parsed, and exported with zero entries (NEW 2026-08-23 during §DOC-02da, 🟢 seed or retire)

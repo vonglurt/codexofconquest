@@ -317,6 +317,8 @@ Extend `batchEditNode`'s grouping to quests.
 `ITEM_DB`, `NPC_DIALOGUES`, and `MONSTER_DROPS`. `all` is 7 of 14 collections. Either complete it
 or rename it.
 
+> **✅ SHIPPED 2026-09-18 (§DX-02fo) `669956a`.** Completed, not renamed. The getter now names every collection `load()` fills, keyed by the game's own const names; the seven that were missing are `NODE_COORDS` 416, `MONSTER_DROPS` 399, `BIRKA_NPC_PROFILES` 204, `NPC_DIALOGUES` 214, `EB_NPC_DIALOGUE` 20, `_D100_TABLE` 7 and `CONDITION_ITEMS` 12, all non-empty at HEAD. `ITEM_DB`, named above, is not among them — §DX-02fl retired it — so the 7-of-14 count survives the loss of its own example. Live: 7 → 14 keys, 3,475,565 → 4,039,245 bytes, the original seven byte-identical.
+
 **7.8–7.11 — §DX-02fp/fq/fr/fs ✅ SHIPPED 2026-09-07** (with §DX-02bb, which had rediscovered
 7.8 independently in another phase file). All four were the same help text, so they were one
 commit, and each was verified against the running server rather than against the source:
