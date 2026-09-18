@@ -928,6 +928,27 @@ function sample(arr, n = 4) {
 }
 
 // ── Load ────────────────────────────────────────────────────────────────────
+// §DX-02aa — CONTRIBUTING Hazard #1, enforced rather than taught. The server holds the
+// whole file text from the moment it loaded it and rewrites all of it on every data write,
+// so a write issued from a server that predates a hand-edit restores the pre-edit bytes
+// with no error. The fs.watch auto-reload narrows the window to its 200 ms debounce; it
+// does not close it, and a missed watch event reopens it entirely.
+//
+// The digest is taken of WBAPI._rawSrc at the moments it is known to equal the file:
+// straight after a load, and straight after a save, since WBAPI.save() writes _rawSrc
+// verbatim. Hashing the held text rather than re-reading the file costs no I/O on those
+// paths — which matters, because the MUD harness starts 44 servers in one run — and is
+// the stricter question: it compares disk against what the server actually parsed.
+// Refreshed by reload(), which is also what the fs.watch auto-reload calls, so an edit
+// the server has already caught up with is not a conflict.
+let _sourceDigest = null;
+const sha1 = (buf) => crypto.createHash('sha1').update(buf).digest('hex');
+function digestOnDisk() {
+  try { return sha1(fs.readFileSync(GAME_FILE)); }
+  catch { return null; }
+}
+function refreshSourceDigest() { _sourceDigest = WBAPI._rawSrc ? sha1(WBAPI._rawSrc) : null; }
+
 function reload() {
   if (!fs.existsSync(GAME_FILE))
     throw new Error(`Game file not found: ${GAME_FILE}`);
@@ -939,6 +960,7 @@ function reload() {
     npcs:     Object.keys(WBAPI.birkaNpcs).length,
     terrains: Object.keys(WBAPI.worldDb).length,
   };
+  refreshSourceDigest();
   log('LOAD', `Loaded ${path.basename(GAME_FILE)}`, stats);
 }
 reload();
@@ -1515,11 +1537,16 @@ function json(res, status, body) {
 // archive-snapshots.sh / monitor-snapshots.py consume.
 // On failure the temp is KEPT and its path returned, so the write is recoverable.
 function saveGameFile() {
+  const onDisk = digestOnDisk();
+  if (_sourceDigest && onDisk && onDisk !== _sourceDigest)
+    return { ok:false, stale:true,
+      error:`server source is stale — ${path.basename(GAME_FILE)} changed on disk since this server loaded it, and writing would revert that change. Restart the server (./run.sh restart) or POST /api/reload, then reissue.` };
   const tmp = `${GAME_FILE}.tmp-${process.pid}`;
   const r = WBAPI.save(tmp);
   if (!r.ok) return r;
   try { fs.renameSync(r.path, GAME_FILE); }
   catch (e) { return { ok:false, error:`overwrite failed: ${e.message}`, savePath: r.path, overwrite:true }; }
+  refreshSourceDigest();
   return { ok:true, path: GAME_FILE };
 }
 
@@ -1572,6 +1599,7 @@ function saveAndRestart(res, status, payload) {
   const r = saveGameFile();
   if (!r.ok) {
     logRow('autoSave', `${C.red}ERROR: ${r.error}${C.reset}`);
+    if (r.stale) return json(res, 409, { ok:false, stale:true, error: r.error });
     return json(res, 500, { ok:false, error: r.overwrite ? r.error : `save failed: ${r.error}`, ...(r.savePath ? { savePath:r.savePath } : {}) });
   }
   logRow('autoSave', r.path);
@@ -1601,6 +1629,7 @@ function saveAndVerify(res, status, payload, expectedFields, connectType, connec
   const r = saveGameFile();
   if (!r.ok) {
     logRow('autoSave', `${C.red}ERROR: ${r.error}${C.reset}`);
+    if (r.stale) return json(res, 409, { ok:false, stale:true, error: r.error });
     return json(res, 500, { ok:false, error: r.overwrite ? r.error : `save failed: ${r.error}`, ...(r.savePath ? { savePath:r.savePath } : {}) });
   }
   logRow('autoSave', r.path);
@@ -10080,7 +10109,9 @@ async function route(req, res) {
 
     // 4. Single save (§DX-02k — temp + rename, no dated snapshot left behind)
     const saveR = saveGameFile();
-    if (!saveR.ok) return json(res, 500, { ok:false, error: saveR.overwrite ? saveR.error : `save failed: ${saveR.error}`, results });
+    if (!saveR.ok) return saveR.stale
+      ? json(res, 409, { ok:false, stale:true, error: saveR.error, results })
+      : json(res, 500, { ok:false, error: saveR.overwrite ? saveR.error : `save failed: ${saveR.error}`, results });
     try { WBAPI.load(GAME_FILE); } catch(e) {
       return json(res, 500, { ok:false, error:`reload failed: ${e.message}`, results });
     }
@@ -10110,7 +10141,9 @@ async function route(req, res) {
     }
     WBAPI._buildIndexes();
     const saveR = saveGameFile();   // §DX-02k — temp + rename, no dated snapshot
-    if (!saveR.ok) return json(res, 500, { ok:false, error: saveR.overwrite ? saveR.error : `save failed: ${saveR.error}` });
+    if (!saveR.ok) return saveR.stale
+      ? json(res, 409, { ok:false, stale:true, error: saveR.error })
+      : json(res, 500, { ok:false, error: saveR.overwrite ? saveR.error : `save failed: ${saveR.error}` });
     try { WBAPI.load(GAME_FILE); } catch(e) {
       return json(res, 500, { ok:false, error:`reload failed: ${e.message}` });
     }
