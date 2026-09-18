@@ -1754,18 +1754,41 @@ function insertAfterLastParsedNode(entry) {
   return { ok:true };
 }
 
+// §DX-02ch — fields serializeQuestLiteral can write that SCHEMAS.quest does not declare.
+// POST has no field vocabulary the way PUT does, so anything here lands in QUEST_DB and
+// check:schema then reports it as carried-and-undeclared. Each entry states why it stays;
+// check:schema rejects a reason it does not know and a classification on a declared field.
+//   'legacy-passthrough' — retired at runtime (UQF W7d/W8a), still passed through for old
+//                          callers; the validate/advise layer flags it at authoring time.
+//   'derived'            — computed from the id, never authored as stored data.
+//   'authored-not-declared' — an authoring surface still emits it although the corpus
+//                          carries none; posting one turns check:schema red (§DX-02ld).
+const QUEST_POST_UNDECLARED = {
+  arc:               'derived',
+  checkAbility:      'legacy-passthrough',
+  checkDC:           'legacy-passthrough',
+  checkLabel:        'legacy-passthrough',
+  checkPassFlag:     'legacy-passthrough',
+  checkSkill:        'legacy-passthrough',
+  checkStat:         'legacy-passthrough',
+  completeFn:        'legacy-passthrough',
+  onPass:            'legacy-passthrough',
+  onFail:            'legacy-passthrough',
+  targetMonsterKeys: 'authored-not-declared',
+};
+
 function serializeQuestLiteral(id, body) {
   // §EDITOR-03 (UQF W8b): UQF quests carry schema/gate/bits/completion/onComplete —
   // pure-JSON structures serialized verbatim. The legacy check*/completeFn root
   // fields are RETIRED at runtime (W7d/W8a) but the writer still passes the check*
   // strings through untouched for old callers; they author dead fields and the
   // validate/advise layer flags them.
-  const STR  = ['schema','type','title','arc','desc','hint','hook','passText','failText','rewardText',
+  const STR  = ['schema','type','title','arc','desc','hint','passText','failText',
     'disposition','npc','activateNode','waypointNode','checkAbility','checkLabel',
-    'checkStat','checkSkill','checkPassFlag','vignetteText'];
+    'checkStat','checkSkill','checkPassFlag','vignetteText','vignetteTextAlt','rumor','killCounter'];
   const NUM  = ['xpAward','reward','checkDC','retryGateDays'];
-  const BOOL = ['retryable'];
-  const JSONF = ['gate','bits','completion','itemChain','targetMonsterKeys','killGoals'];
+  const BOOL = ['retryable','boardExempt'];
+  const JSONF = ['gate','bits','completion','itemChain','targetMonsterKeys','killGoals','onActivate'];
   const FN   = ['activateCond','completeFn','onPass','onFail'];
   const parts = [`  ${id}: { id:${JSON.stringify(id)}`];
   for (const f of STR)  if (body[f] !== undefined) parts.push(`${f}:${JSON.stringify(body[f])}`);
