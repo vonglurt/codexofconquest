@@ -2506,9 +2506,10 @@ async function route(req, res) {
           '  lake_magic      — LAKE_MAGIC_DB object',
           '  monster_drops   — MONSTER_DROPS object',
           '  condition_items — CONDITION_ITEMS array',
-          '  all             — NODE_MAP, QUEST_DB, MONSTER_POOL, WORLD_DB, FISH_POOL,',
-          '                    NIGHT_FISH_POOL and LAKE_MAGIC_DB. monster_drops and',
-          '                    condition_items are exported only by naming them.',
+          '  all             — every loaded collection: NODE_MAP, NODE_COORDS, QUEST_DB,',
+          '                    MONSTER_POOL, MONSTER_DROPS, WORLD_DB, BIRKA_NPC_PROFILES,',
+          '                    NPC_DIALOGUES, EB_NPC_DIALOGUE, FISH_POOL, NIGHT_FISH_POOL,',
+          '                    LAKE_MAGIC_DB, _D100_TABLE and CONDITION_ITEMS.',
           '',
           'FORMATS',
           '  json    (default) — standard JSON',
@@ -9822,11 +9823,13 @@ async function route(req, res) {
       lake_magic:      () => WBAPI.lakeMagicDb,
       monster_drops:   () => WBAPI.monsterDrops || {},
       condition_items: () => WBAPI.conditionItems || [],
+      // §DX-02fo: every collection WBAPI.load() fills, keyed by the game's own const names.
       all:             () => ({
-        NODE_MAP: WBAPI.nodeMap, QUEST_DB: WBAPI.questDb,
-        MONSTER_POOL: WBAPI.monsterPool, WORLD_DB: WBAPI.worldDb,
-        FISH_POOL: WBAPI.fishPool, NIGHT_FISH_POOL: WBAPI.nightFishPool,
-        LAKE_MAGIC_DB: WBAPI.lakeMagicDb,
+        NODE_MAP: WBAPI.nodeMap, NODE_COORDS: WBAPI.nodeCoords, QUEST_DB: WBAPI.questDb,
+        MONSTER_POOL: WBAPI.monsterPool, MONSTER_DROPS: WBAPI.monsterDrops || {}, WORLD_DB: WBAPI.worldDb,
+        BIRKA_NPC_PROFILES: WBAPI.birkaNpcs, NPC_DIALOGUES: WBAPI.npcDialogues, EB_NPC_DIALOGUE: WBAPI.ebNpcDialogue,
+        FISH_POOL: WBAPI.fishPool, NIGHT_FISH_POOL: WBAPI.nightFishPool, LAKE_MAGIC_DB: WBAPI.lakeMagicDb,
+        _D100_TABLE: WBAPI.d100Table, CONDITION_ITEMS: WBAPI.conditionItems || [],
       }),
     };
     const getter = exportMap[col];
