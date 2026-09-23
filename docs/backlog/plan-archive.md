@@ -19,6 +19,19 @@
 
 ---
 
+## Archived 2026-09-23 — §DX-02le (gate #32 keeps cache_control above its model's floor)
+
+### §DX-02le — nothing stops `cache_control` coming back below the model's minimum cacheable prefix (NEW 2026-09-23 during §DX-02ak, 🟢 no design call)
+
+- [x] ✅ SHIPPED 2026-09-23 `7e71553` **§DX-02le — §DX-02ak's own *Verify* asked for a fence and closed without one.** `05bb436` deleted the only `cache_control` in `src/js/wbapi-server.js` and left a comment recording the floor, but no gate reads it: a later edit can re-add `cache_control: { type: 'ephemeral' }` to the NPC-speak system block, answer `ok`, and cache nothing, which is exactly how it went unseen from June to August. A plain "no `cache_control` in the file" check is wrong as written, because the comment that records the floor contains the word.
+> **Fix (🟢):** a `check:walk` phase that fails on a `cache_control` **property** (not a comment) in `wbapi-server.js` unless the same block names a model and a prefix measured above that model's minimum (4096 tokens for Haiku 4.5). **Verify:** it goes red on `05bb436^` and green at HEAD. The NPC-speak endpoint needs an API key to call, so this is a static fence, not a round trip.
+> **Shipped as `check:walk` gate #32, `check:promptcache` (`7e71553`).** Every `cache_control` **property** in server-side source (`js/`, `api/`, `server/`, `tools/`, `importers/`, `bin/`, 14 files) must have a `// prompt-cache: <model> prefix >= <N> tokens` declaration within eight lines above it. The model must be in the gate's `FLOORS` table and N must reach that model's minimum. Comments are stripped before the property is looked for, so §DX-02ak's comment, which contains the word, passes.
+> **The row assumed one floor, and there is one per model.** The endpoint takes `?model=`, so Haiku 4.5 is only the default. Minimums from the prompt-caching API reference: **4096** for Haiku 4.5, Opus 4.6 and 4.5 · **2048** Opus 4.7 · **1024** Opus 4.8, Sonnet 5, Sonnet 4.6/4.5 · **512** Opus 5, Opus 5.5, Fable 5/5.1. The largest NPC block (~694 tokens) would clear 512, so §DX-02ak's *"0 of 204 within 5×"* is true of the default model only. A declaration therefore names one model, and an unknown model fails rather than passing. Nothing ships for the non-default models: 20 calls in two days never share a prefix within the 5-minute TTL, whichever model is named.
+> **Measured:** `cache_control` properties without a declaration: **1 at `05bb436^` (red, `js/wbapi-server.js:10928`) → 0 at HEAD (green)**. Selftest **10/10**: undeclared fails · a comment passes · a block comment passes · declared above the floor passes · 694 against Haiku 4.5 fails · 694 against Opus 5 passes · an unknown model fails · a declaration past the lookback does not count · a URL on the line does not hide the property · a finding names file and line.
+> **Verified:** `check:walk` **32/32** · `docs/design/index.md` gains the gate #32 row. `play.html` byte-unchanged.
+
+---
+
 ## Archived 2026-09-23 — §DX-02ak (the NPC-speak cache_control that could never fire is deleted)
 
 ### §DX-02ak — the NPC-speak prompt cache has never written a token, on any call, ever (NEW 2026-08-12 during §DOC-02ac, 🟢 no design call)
