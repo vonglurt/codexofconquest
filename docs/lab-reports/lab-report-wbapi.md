@@ -366,7 +366,7 @@ with `src/js/wbapi-server.js:SEED FALLBACK — set ANTHROPIC_API_KEY@10635` when
 | *"Repeat calls (cache hit): ~0.002¢"* | That is 250 input tokens × 0.1, i.e. **the input only**. It drops the 60-token reply the same paragraph specifies — which at Haiku's output rate is ~0.03¢, an order of magnitude larger than the whole figure. |
 | *"10,000 NPC greetings ≈ $0.20"* | ~**$3** at the report's own token counts, and the cache discount it assumes never applies. |
 
-> **✅ SHIPPED 2026-09-18 (§DX-02ak) `05bb436`.** The `cache_control` this appendix priced against is deleted. The three rows above stand: across all 204 `BIRKA_NPC` profiles the system block is ~116 tokens at the median and ~694 at the largest, so **none** of them reaches Haiku 4.5's 4096-token minimum, and the saving this appendix sells has never once occurred. Haiku 4.5 is $1.00/$5.00 per MTok, which is what makes the dropped 60-token reply the dominant term.
+> **✅ SHIPPED 2026-09-23 (§DX-02ak) `05bb436`.** The `cache_control` this appendix priced against is deleted. The three rows above stand: across all 204 `BIRKA_NPC` profiles the system block is ~116 tokens at the median and ~694 at the largest, so **none** of them reaches Haiku 4.5's 4096-token minimum, and the saving this appendix sells has never once occurred. Haiku 4.5 is $1.00/$5.00 per MTok, which is what makes the dropped 60-token reply the dominant term.
 
 *Message Batches at 50 %, the 5-minute default TTL, and the ~0.1× cache-read multiplier are each
 correct in isolation.* The failure is compositional: three true facts, one impossible precondition,
