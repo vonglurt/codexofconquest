@@ -10925,7 +10925,10 @@ async function route(req, res) {
         const msg = await client.messages.create({
           model,
           max_tokens: 256,
-          system: [{ type: 'text', text: systemText, cache_control: { type: 'ephemeral' } }],
+          // No cache_control: Haiku 4.5's minimum cacheable prefix is 4096 tokens and the
+          // largest of the 204 NPC system blocks is ~700; below the floor the API caches
+          // nothing and reports nothing. Padding to reach it would cost more than it saves.
+          system: [{ type: 'text', text: systemText }],
           messages: [{ role: 'user', content: prompt }],
         });
 
