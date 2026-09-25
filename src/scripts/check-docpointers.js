@@ -23,7 +23,9 @@
 const fs = require('fs');
 const path = require('path');
 const ROOT = path.join(__dirname, '..', '..');
-const SOURCE = path.join(ROOT, 'play.html');
+// wbapi-server.js holds the pointers its serializers write into play.html; a generator's pointer
+// is otherwise seen only after the first write through it.
+const SOURCES = ['play.html', 'src/js/wbapi-server.js'];
 const DOCS = path.join(ROOT, 'docs');
 
 const POINTER = /→ doc:\s*([^\s]+\.md)(?:\s+§\s*(.*?))?\s*$/;
@@ -45,14 +47,17 @@ function stripTrailingParenthetical(s) {
   return s;
 }
 
-function parse(text) {
+// A template literal's `\n` escape ends an emitted line as surely as a newline does.
+function parse(text, src = 'play.html') {
   const out = [];
   text.split('\n').forEach((line, i) => {
-    const m = POINTER.exec(line.replace(/\*\/\s*$/, ''));
-    if (!m) return;
-    let section = m[2] || null;
-    if (section) section = stripTrailingParenthetical(section) || null;
-    out.push({ line: i + 1, file: m[1], section });
+    for (const seg of line.split('\\n')) {
+      const m = POINTER.exec(seg.replace(/\*\/\s*$/, ''));
+      if (!m) continue;
+      let section = m[2] || null;
+      if (section) section = stripTrailingParenthetical(section) || null;
+      out.push({ src, line: i + 1, file: m[1], section });
+    }
   });
   return out;
 }
@@ -91,7 +96,7 @@ function sections(text) {
 function scan(pointers, index, readFile) {
   const findings = [];
   for (const p of pointers) {
-    const at = `play.html:${p.line}`;
+    const at = `${p.src}:${p.line}`;
     let file = index.byPath.get(p.file) || index.byPath.get('docs/' + p.file);
     if (!file && !p.file.includes('/')) {
       const hits = index.byBase.get(p.file) || [];
@@ -126,6 +131,9 @@ if (process.argv.includes('--selftest')) {
   ok(parse('// → doc: m.md §Act (I) Beats')[0].section === 'Act (I) Beats',
     'a parenthetical that is not trailing stays part of the section name');
   ok(parse('const X = 1; // nothing here').length === 0, 'a line with no pointer yields nothing');
+  const gen = parse('  let s = `\\nconst X = { // → doc: m.md §NODE_COORDS\\n`;', 'src/js/g.js')[0];
+  ok(gen && gen.section === 'NODE_COORDS', 'a pointer inside a template literal stops at its `\\n` escape');
+  ok(gen && gen.src === 'src/js/g.js', 'a pointer carries the file it was found in');
 
   const index = {
     byPath: new Map([['docs/mechanics/m.md', '/m.md'], ['docs/design/world.md', '/design/world.md'], ['docs/other/world.md', '/other/world.md']]),
@@ -147,13 +155,15 @@ if (process.argv.includes('--selftest')) {
     'a path written relative to docs/ resolves — the corpus uses that form too');
   ok(scan(parse('// → doc: m.md §Anything'), index, read).length === 1,
     'a repo-relative file that exists is still section-checked');
+  ok(scan(parse('// → doc: docs/nope/gone.md', 'src/js/g.js'), index, read)[0].startsWith('src/js/g.js:1 '),
+    'a finding names the source file it came from');
 
   if (fail) { console.log(`\n✗ check-docpointers selftest: ${fail} FAILED, ${pass} passed`); process.exit(1); }
   console.log(`✓ check-docpointers selftest: all ${pass} checks pass`);
   return;
 }
 
-const pointers = parse(fs.readFileSync(SOURCE, 'utf8'));
+const pointers = SOURCES.flatMap(src => parse(fs.readFileSync(path.join(ROOT, src), 'utf8'), src));
 const findings = scan(pointers, docIndex(DOCS), f => fs.readFileSync(f, 'utf8'));
 if (findings.length) {
   findings.forEach(f => console.log('  ✗ ' + f));
@@ -162,4 +172,4 @@ if (findings.length) {
   console.log('  code→doc link that table has.');
   process.exit(1);
 }
-console.log(`✓ §DOCPTR-01 doc pointers: all ${pointers.length} \`→ doc:\` pointers resolve to a live file and heading`);
+console.log(`✓ §DOCPTR-01 doc pointers: all ${pointers.length} \`→ doc:\` pointers in ${SOURCES.join(' + ')} resolve to a live file and heading`);
