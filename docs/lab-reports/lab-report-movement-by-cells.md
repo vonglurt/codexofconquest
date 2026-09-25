@@ -274,6 +274,11 @@ Three corrections to §3.4, all new:
    Birka's cell holds `BK` (the shore) and the client, the mover and the server's own
    module-level grid all say `LHR` (City Streets, the canonical Act I root). Filed as
    **§DX-02bq**.
+   > **Corrected 2026-09-25, §DX-02bq.** The two grids did disagree at the 66 cells, but the
+   > handler's copy was declared and **never called**, so the audit never read `BK` at
+   > `10,197`. The copy is deleted, and `buildCellGrid` is now the first-wins module
+   > function alone. The same row found **nine** of the twelve checks walking the stripped
+   > link fields, not five. The payload now lists them as `structurallySatisfied`.
 
 ---
 
@@ -406,7 +411,8 @@ Two new invariants the locale model requires, neither yet enforced:
 - **I7 (Band containment):** every `NODE_COORDS` entry satisfies `0 ≤ r < 90`. True at HEAD
   (rows 2–73); no write path checks it (§DX-02bo).
 - **I8 (Primary agreement):** every server-side reader of the cell grid resolves the same
-  primary as the client. False at 66 cells today (§DX-02bq).
+  primary as the client. ~~False at 66 cells today~~ **Holds since 2026-09-25 (§DX-02bq):** one
+  `buildCellGrid`, first-wins; the last-wins copy was never called and is deleted.
 
 ---
 
@@ -416,7 +422,7 @@ Two new invariants the locale model requires, neither yet enforced:
 |---|---|---|
 | **§DX-02bo** | 🟠 | `src/tools/worldmap.js --seed` still projects into the retired 500×500 space; `PUT /api/coords` has no bounds guard |
 | **§DX-02bp** | 🟡 | `POST /api/node` returns 201 and silently drops colliding coords, minting a ghost; `PUT /api/coords` 409s the locale model the client requires |
-| **§DX-02bq** | 🟢 | `/api/audit/map` shadows the promoted `buildCellGrid` last-wins, disagreeing with the client's primary at all 66 shared cells; 5 of its 12 checks are permanently silent |
+| **§DX-02bq** ✅ 2026-09-25 | 🟢 | `/api/audit/map` shadows the promoted `buildCellGrid` last-wins, disagreeing with the client's primary at all 66 shared cells; 5 of its 12 checks are permanently silent |
 | **§DX-02br** | 🟢 | `navigation.test.js` suppresses encounters by stubbing `Math.random`, which the roll no longer draws |
 
 Corroborated from prior passes: **§DX-02bm** (`junction:0` unreachable in

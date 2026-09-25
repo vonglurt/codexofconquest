@@ -993,6 +993,18 @@ function getCellGrid() {
   return _cgCache;
 }
 
+// /api/audit/map checks that walk a node's N/S/E/W or diagonal link fields. §CELL-01
+// stripped those fields, so while the map carries none these checks cannot fire, and
+// the report says so rather than counting their silence as a pass.
+const LINK_FIELD_CHECKS = ['diagonal_exit','max_connections','bidirectional','dangling_link',
+  'direction_sign','long_link','alignment','axis_distance','corner_misalign'];
+function linkFieldCount(nm) {
+  let n = 0;
+  for (const node of Object.values(nm || {}))
+    for (const d of ['N','S','E','W','NW','NE','SW','SE']) if (node && node[d] != null) n++;
+  return n;
+}
+
 // ── §WALK-2 — server geo-grid for the shared mover kernel (mover.js) ──────────
 // The kernel needs a locale-list grid (first-wins primary, matching the client's
 // CELL_GRID) and the IMPASSABLE set. Both are cached and rebuild on reload.
@@ -3921,17 +3933,6 @@ async function route(req, res) {
       return Math.sqrt(dr*dr + dc*dc);
     }
 
-    // §CELL-02: Reverse grid lookup — "r,c" → node code (server-side mirror of CELL_GRID)
-    function buildCellGrid(nm, coords) {
-      const g = {};
-      for (const code of Object.keys(nm)) {
-        const coord = coords[code] || { r: nm[code].r, c: nm[code].c };
-        if (coord && coord.r != null && coord.c != null)
-          g[`${coord.r},${coord.c}`] = code;
-      }
-      return g;
-    }
-
     // Terrain category helper
     function terrainCat(code) {
       const terrKey = nodeMap[code]?.name || '';
@@ -4303,12 +4304,15 @@ async function route(req, res) {
       });
     }
 
+    const linkFields = linkFieldCount(nodeMap);
+    const structurallySatisfied = linkFields === 0 ? LINK_FIELD_CHECKS : [];
     const summary = { errors: errors.length, warnings: warnings.length, suggestions: suggestions.length,
       nodesChecked: nodeCodesWithCoords.length, totalNodes: allNodeCodes.length,
-      blockedEdges: blockedEdges.length };
+      blockedEdges: blockedEdges.length, linkFields, structurallySatisfied };
 
     // ── verbose audit log ────────────────────────────────────────────────────
     logRow('nodes checked', `${nodeCodesWithCoords.length}/${allNodeCodes.length} have coords`);
+    if (structurallySatisfied.length) logRow('not measured', `${structurallySatisfied.length} link-field checks — the map has 0 N/S/E/W links`);
     // tally by check type
     const errTally = {}, warnTally = {}, suggTally = {};
     for (const e of errors)   errTally[e.check]  = (errTally[e.check]  || 0) + 1;
@@ -4435,10 +4439,21 @@ async function route(req, res) {
         }
       }
 
+      if (structurallySatisfied.length) {
+        lines.push(HR);
+        lines.push(`  NOT MEASURED (${structurallySatisfied.length})  — these checks read N/S/E/W link fields, and the map has ${linkFields}`);
+        lines.push(HR);
+        lines.push(`  ${structurallySatisfied.join(' · ')}`);
+        lines.push('  Their silence is an empty field, not a clean map: movement is by cell (§CELL-01).');
+        lines.push('');
+      }
+
       lines.push(HR);
       const clean = errors.length === 0 && warnings.length === 0;
       lines.push(`  SUMMARY  ${errors.length} errors  ·  ${warnings.length} warnings  ·  ${suggestions.length} suggestions  ·  ${blockedEdges.length} blocked edges  ·  ${nodeCodesWithCoords.length}/${allNodeCodes.length} nodes positioned`);
-      if (clean) lines.push('  MAP GRAPH OK — no structural errors or warnings.');
+      if (clean) lines.push(structurallySatisfied.length
+        ? '  No errors or warnings from the checks that can fire on this map.'
+        : '  MAP GRAPH OK — no structural errors or warnings.');
       lines.push(HR);
       lines.push('');
       cors(res);
