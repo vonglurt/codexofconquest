@@ -124,6 +124,18 @@ function resolve(inv, world) {
       const verb = args.find((a) => !a.startsWith('-'));
       if (verb && !world.runVerbs.includes(verb)) return `\`./run.sh ${verb}\` — run.sh has no such verb`;
     }
+    if (rel === 'bin/api') {
+      // wb.js's parseArgs: `--flag value` consumes the value unless it is itself a flag.
+      const toks = args.join(' ').match(/"[^"]*"?|'[^']*'?|\S+/g) || [];
+      let verb = null;
+      for (let i = 0; i < toks.length && verb === null; i++) {
+        if (toks[i].startsWith('--')) { if (toks[i + 1] !== undefined && !toks[i + 1].startsWith('--')) i++; }
+        else verb = toks[i];
+      }
+      if (!verb || /^[<[$"'{]/.test(verb)) return null;
+      if (world.apiRetired[verb]) return `\`./bin/api ${verb}\` — retired: ${world.apiRetired[verb]}`;
+      if (!world.apiVerbs.includes(verb)) return `\`./bin/api ${verb}\` — wb.js has no such command`;
+    }
     return null;
   }
   if (NOT_OURS.has(head)) return null;
@@ -146,13 +158,25 @@ function readWorld() {
   const runSh = fs.readFileSync(path.join(ROOT, 'run.sh'), 'utf8');
   const caseBody = runSh.slice(runSh.indexOf('case "${1:-help}"'));
   const runVerbs = [...caseBody.matchAll(/^\s{2}([a-z|]+)\)/gm)].flatMap((m) => m[1].split('|'));
-  return { files, makeTargets, runVerbs };
+  return { files, makeTargets, runVerbs, ...apiWorld(fs.readFileSync(path.join(ROOT, 'src', 'api', 'wb.js'), 'utf8')) };
+}
+
+// The CLI's verbs are the top-level keys of its one `const CMD = {` literal; a retired
+// verb is a key of `const RETIRED = {` and carries the reason the CLI itself prints.
+function apiWorld(src) {
+  const body = (name) => { const a = src.indexOf(`const ${name} = {`); return a < 0 ? '' : src.slice(a, src.indexOf('\n};', a)); };
+  const key = /^  (?:async\s+)?(?:'([^']+)'|"([^"]+)"|([A-Za-z_$][\w$-]*))\s*(?:\(|:)/gm;
+  const apiVerbs = [...body('CMD').matchAll(key)].map((m) => m[1] || m[2] || m[3]);
+  const apiRetired = {};
+  for (const m of body('RETIRED').matchAll(/^\s+'([^']+)':\s*'([^']*)'/gm)) apiRetired[m[1]] = m[2];
+  return { apiVerbs, apiRetired };
 }
 
 if (process.argv.includes('--selftest')) {
   let pass = 0, fail = 0;
   const ok = (c, m) => { if (c) pass++; else { fail++; console.log('  ✗ FAIL:', m); } };
-  const world = { files: new Set(['bin/api', 'run.sh', 'play.html']), makeTargets: ['wbapi', 'stop'], runVerbs: ['server', 'stop', 'procs'] };
+  const world = { files: new Set(['bin/api', 'run.sh', 'play.html']), makeTargets: ['wbapi', 'stop'], runVerbs: ['server', 'stop', 'procs'],
+    ...apiWorld("const CMD = {\n  async ping(pos) {},\n  'loot-drop'(pos) {},\n  help: () => {},\n};\nconst RETIRED = {\n  'fix-diagonal':      'read node.N/S/E/W',\n};") };
 
   ok(fencedLines('a\n```bash\nrun me\n```\nb').map((l) => l.text).join() === 'run me', 'a bash fence yields its lines');
   ok(fencedLines('```js\nnotshell\n```').length === 0, 'a js fence is not shell');
@@ -176,6 +200,16 @@ if (process.argv.includes('--selftest')) {
   ok((resolve({ head: './run.sh', args: ['nosuchverb'] }, world) || '').includes('no such verb'),
     'a run.sh verb that does not exist is caught');
   ok(resolve({ head: './run.sh', args: ['procs'] }, world) === null, 'a real run.sh verb resolves');
+  // §DX-02kz — the verb after ./bin/api, which the file check alone could not see.
+  ok((resolve({ head: './bin/api', args: ['nosuchverb'] }, world) || '').includes('no such command'),
+    '§DX-02kz: a ./bin/api verb that does not exist is caught');
+  ok((resolve({ head: './bin/api', args: ['fix-diagonal', 'LHR'] }, world) || '').includes('retired: read node.N/S/E/W'),
+    '§DX-02kz: a retired ./bin/api verb fails with its retirement reason');
+  ok(resolve({ head: './bin/api', args: ['loot-drop', '--fishing'] }, world) === null, 'a quoted-key verb resolves');
+  ok(resolve({ head: './bin/api', args: ['--server', 'x'] }, world) === null, 'flags alone are not a verb');
+  ok(resolve({ head: './bin/api', args: ['<verb>'] }, world) === null, 'a placeholder is not a verb');
+  ok(resolve({ head: './bin/api', args: ['--ai', '"how', 'do', 'I', 'wire', 'it?"'] }, world) === null,
+    'a quoted flag value is one argument, as the shell passes it');
   ok(resolve({ head: 'curl', args: [] }, world) === null, 'curl is not this gate\'s business');
   ok(resolve({ head: 'grep', args: [] }, world) === null, 'grep is not this gate\'s business');
 
