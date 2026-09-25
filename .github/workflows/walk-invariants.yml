@@ -17,52 +17,12 @@ name: WALK invariants
 
 on:
   workflow_dispatch:
+  # No `paths:` filter. The gates read far more than code: docs/** (anchors,
+  # docpointers, backlog counts, gate rows, the node index), the root docs,
+  # Makefile, run.sh, edit.html and bin/. A filter narrower than the whole tree
+  # leaves some gate blind to the edit most likely to break it (§DX-02ja).
   push:
-    paths:
-      - 'src/js/mover.js'
-      - 'play.html'
-      - 'src/js/wbapi-server.js'
-      - 'src/js/wbapi-core.js'
-      - 'src/scripts/run-gates.js'
-      - 'src/scripts/check-invariants.js'
-      - 'src/scripts/check-mover-parity.js'
-      - 'src/scripts/check-mover-behaviour.js'
-      - 'src/scripts/check-terrain-parity.js'
-      - 'src/scripts/check-noderegs.js'
-      - 'src/scripts/check-array-patch.js'
-      - 'src/js/duel.js'
-      - 'src/scripts/check-duel-parity.js'
-      - 'src/scripts/check-itemchain.js'
-      - 'src/scripts/check-ladder-migration.js'
-      - 'src/scripts/world-diff.js'
-      - 'src/tests/mud-harness.mjs'
-      - 'src/tests/help-behaviour.mjs'
-      - 'src/api/wb.js'
-      - 'src/package.json'
-      - '.github/workflows/walk-invariants.yml'
   pull_request:
-    paths:
-      - 'src/js/mover.js'
-      - 'play.html'
-      - 'src/js/wbapi-server.js'
-      - 'src/js/wbapi-core.js'
-      - 'src/scripts/run-gates.js'
-      - 'src/scripts/check-invariants.js'
-      - 'src/scripts/check-mover-parity.js'
-      - 'src/scripts/check-mover-behaviour.js'
-      - 'src/scripts/check-terrain-parity.js'
-      - 'src/scripts/check-noderegs.js'
-      - 'src/scripts/check-array-patch.js'
-      - 'src/js/duel.js'
-      - 'src/scripts/check-duel-parity.js'
-      - 'src/scripts/check-itemchain.js'
-      - 'src/scripts/check-ladder-migration.js'
-      - 'src/scripts/world-diff.js'
-      - 'src/tests/mud-harness.mjs'
-      - 'src/tests/help-behaviour.mjs'
-      - 'src/api/wb.js'
-      - 'src/package.json'
-      - '.github/workflows/walk-invariants.yml'
 
 jobs:
   invariants:
