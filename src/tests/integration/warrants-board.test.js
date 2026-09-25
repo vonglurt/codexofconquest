@@ -5,7 +5,6 @@
 const { test, expect } = require('@playwright/test');
 
 const NEWGAME = { str: 10, dex: 8, con: 8, int: 8, wis: 8, cha: 8 };
-const ALLOWED = ['side', 'skill_check', 'craft', 'combat', 'delivery', 'escort', 'dialogue'];
 
 test.describe('§BOARD-01 — The Warrant\'s Board', () => {
   test('host gating + deterministic slate per (node, gameDay)', async ({ page }) => {
@@ -63,7 +62,7 @@ test.describe('§BOARD-01 — The Warrant\'s Board', () => {
 
   test('every posted bounty is legal: UQF, allowlisted type, real distant dest, gate-satisfied, not started', async ({ page }) => {
     await page.goto('/play.html');
-    const r = await page.evaluate((allowed) => {
+    const r = await page.evaluate(() => {
       storyNewGame({ str: 10, dex: 8, con: 8, int: 8, wis: 8, cha: 8 });
       const inn = NODE_MAP.TLL;
       const bounties = _boardBounties(inn, 20);   // grab a wide slate
@@ -72,7 +71,7 @@ test.describe('§BOARD-01 — The Warrant\'s Board', () => {
         return {
           id: b.id,
           uqf: q.schema === 'UQF-1.0',
-          typeOk: allowed.includes(q.type),
+          typeOk: BOUNTY_TYPES.has(q.type),
           notEpicMain: q.type !== 'epic' && q.type !== 'main',
           destExists: !!NODE_MAP[b.destCode],
           destElsewhere: b.destCode !== 'TLL',
@@ -81,7 +80,7 @@ test.describe('§BOARD-01 — The Warrant\'s Board', () => {
           activateCondOk: !q.activateCond || q.activateCond() === true,
         };
       });
-    }, ALLOWED);
+    });
     expect(r.length).toBeGreaterThan(0);
     for (const b of r) {
       expect(b.uqf, b.id).toBe(true);

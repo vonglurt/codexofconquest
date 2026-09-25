@@ -1395,8 +1395,8 @@ const SCHEMAS = {
     fields: {
       title:       { type:'string',  required:true,  editable:true,  note:'Display title shown in quest log.' },
       type:        { type:'string',  required:true,  editable:true,
-                     values:['side','main','skill_check','hunt','epic','combat','escort','dialogue','hybrid','mission_bit'],
-                     note:'Quest type. main: gated by story flags. skill_check: DC roll. hunt: targets specific monsters. epic: dungeon boss chain. combat: direct battle. escort: move NPC. dialogue: NPC conversation. hybrid: mixed mechanic. mission_bit: token-gated.' },
+                     values:['skill_check','side','combat','delivery','epic','escort','hybrid','main','dialogue'],
+                     note:'Quest type. main: gated by story flags. skill_check: DC roll. epic: dungeon boss chain. combat: direct battle. delivery: a hand-over beat, resolved by its bits. escort: move NPC. dialogue: NPC conversation. hybrid: mixed mechanic. Every type the corpus carries; the audits read this list. mission_bit is a bit kind, never a quest type.' },
       id:          { type:'string',  required:true,  editable:false, note:'Quest id — matches the QUEST_DB property name. Carried by all 2,853.' },
       desc:        { type:'string',  required:false, editable:true,  note:'Mission description shown in the quest log. Carried by 2,806.' },
       hint:        { type:'string',  required:false, editable:true,  note:'Intro/hook text shown when quest becomes available.' },
@@ -4674,7 +4674,7 @@ async function route(req, res) {
     // ─────────────── QUEST_DB ────────────────────────────────────────────────
     if (sectionFilter === 'all' || sectionFilter === 'quest') {
       const nodeKeys = new Set(Object.keys(WBAPI.nodeMap));
-      const VALID_QUEST_TYPES = new Set(['main','side','combat','fetch','escort','dialogue','skill_check','mission_bit']);
+      const VALID_QUEST_TYPES = new Set(SCHEMAS.quest.fields.type.values);
       for (const [id, q] of Object.entries(WBAPI.questDb)) {
         if (!q.title)        push('warning', 'missing_field', id, 'title', 'missing title');
         if (!q.desc)         push('warning', 'missing_field', id, 'desc',  'missing desc');
@@ -5082,7 +5082,7 @@ async function route(req, res) {
       if (!neMKeys.has(f.key)) neAdd('error','FISH_DB',f.key,'key',`fish "${f.name}" has no MONSTER_POOL entry`);
 
     // WARNINGS
-    const NE_VALID_TYPES = new Set(['side','main','skill_check','hunt','epic','combat','escort','dialogue','hybrid','mission_bit']);
+    const NE_VALID_TYPES = new Set(SCHEMAS.quest.fields.type.values);
     for (const mk of neMKeys)
       if (!neDKeys.has(mk)) neAdd('warning','MONSTER_POOL',mk,'drops',`no MONSTER_DROPS entry — creature drops nothing`);
     for (const f of neAllFish)
