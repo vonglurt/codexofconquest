@@ -39,7 +39,7 @@ Split by **subsystem**, not by track prefix (121 of the 175 sections were `§DX-
 | **3** | [Content & Narrative](BACKLOG-3-content-narrative.md) | 9 | 69 | Authored strings and the people who say them: NPC dialogue and relationships, favor scales, arc beats, epilogue and ending prose, lines with no lookup path. |
 | **4** | [World & Navigation](BACKLOG-4-world-navigation.md) | 7 | 23 | The map and moving on it: node registration and labels, terrain tables and encounter rates, GEO anchors and projection bounds, road nets, movement results. |
 | **5** | [Platform & Tooling](BACKLOG-5-platform-tooling.md) | 23 | 63 | Everything outside the game loop: the WBAPI server and its endpoints, the worldbuilder and editors, the HTML parse/export layer, multiplayer mesh, the NPC-speak service. |
-| **6** | [Verification & Documentation](BACKLOG-6-verification-docs.md) | 58 | 63 | What proves the rest is true: CI gates and parity fences, Playwright and MUD suites, the anchor resolver, engine comments, maintained-doc rot, and the §DOC-02 lab-report verification program. |
+| **6** | [Verification & Documentation](BACKLOG-6-verification-docs.md) | 59 | 63 | What proves the rest is true: CI gates and parity fences, Playwright and MUD suites, the anchor resolver, engine comments, maintained-doc rot, and the §DOC-02 lab-report verification program. |
 
 > **`Closed (archived)` is the row count of that phase's table in [`../archive/backlog-resume-history.md`](../archive/backlog-resume-history.md)**, and gate #20 asserts it, together with the table's own label and each phase file's *closed increments* line. Every close in the chronology below must have its line there too (§DX-02jh, §DX-02ih).
 
