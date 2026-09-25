@@ -893,34 +893,30 @@ function respliceSection(rawSrc, sectionName, newContent) {
 
 // ═══════════════════════════════════════════════════════════════════════════
 // §ARCH-02 / §EDITOR-03 (UQF W8b): Operand Registry — the LIVE runtime bit
-// vocabulary, mirroring the game's BIT_CONTRACTS (QuestRuntime registry). The
-// pre-Phase-1 design vocabulary (talk_at / navigate / kill_at / …) is retired —
-// those kinds never had runtime handlers.
+// vocabulary, derived from the kernel's BIT_CONTRACTS (src/js/quest.js); only the
+// prose columns are kept here. The pre-Phase-1 design vocabulary (talk_at /
+// navigate / kill_at / …) is retired — those kinds never had runtime handlers.
 // ═══════════════════════════════════════════════════════════════════════════
-const OPERAND_CONTRACTS = {
-  skill_check: { required:['stat','dc'],       optional:['skill','adv','onPass','onFail'],
-                 gate:'resolved via the quest roll card', complete:'pass → status done + onPass bits; fail → onFail bits' },
-  flag_write:  { required:[],                  optional:['set','clear'],
-                 gate:'—', complete:'sets/clears the listed S_story flags' },
-  reward:      { required:[],                  optional:['xp','gold','items','knowledge'],
-                 gate:'—', complete:'grants xp / gold / items / knowledge' },
-  narrative:   { required:[],                  optional:['msg'],
-                 gate:'—', complete:'prints msg into the story stream' },
-  mission_bit: { required:['flag'],            optional:['label'],
-                 gate:'—', complete:'sets flag + grants a mission-bit inventory token' },
-  item_remove: { required:['name'],            optional:[],
-                 gate:'—', complete:'removes the first exact-name inventory item' },
-  item_check:  { required:['name'],            optional:['count'],
-                 gate:'—', complete:'records exact-name inventory count ≥ count in ctx' },
-  favor:       { required:['npc'],             optional:['set','add','cap'],
-                 gate:'—', complete:'sets or increments NPC favorability (cap default 3)' },
-  unlock:      { required:[],                  optional:['quests'],
-                 gate:'—', complete:'activates the listed quest ids' },
-  combat:      { required:['key','label'],     optional:['count','nodeCode'],
-                 gate:'—', complete:'launches storyPreBattle with this battle spec' },
-  choice:      { required:['prompt','options'],optional:[],
-                 gate:'—', complete:'one option chosen; its bits execute' },
+const { BIT_CONTRACTS } = require('./quest');
+const NOT_AUTHORABLE = ['_legacy_fn'];
+const OPERAND_PROSE = {
+  skill_check: { gate:'resolved via the quest roll card', complete:'pass → status done + onPass bits; fail → onFail bits' },
+  flag_write:  { gate:'—', complete:'sets/clears the listed S_story flags' },
+  reward:      { gate:'—', complete:'grants xp / gold / items / knowledge' },
+  cost:        { gate:'—', complete:'debits gold and/or count of a resource; short → prints refuse and halts the chain' },
+  narrative:   { gate:'—', complete:'prints msg into the story stream' },
+  mission_bit: { gate:'—', complete:'sets flag + grants a mission-bit inventory token' },
+  item_remove: { gate:'—', complete:'removes the first exact-name inventory item' },
+  item_check:  { gate:'—', complete:'records exact-name inventory count ≥ count in ctx' },
+  favor:       { gate:'—', complete:'sets or increments NPC favorability (cap default 3)' },
+  unlock:      { gate:'—', complete:'activates the listed quest ids' },
+  combat:      { gate:'—', complete:'launches storyPreBattle with this battle spec' },
+  choice:      { gate:'—', complete:'one option chosen; its bits execute' },
 };
+const OPERAND_CONTRACTS = Object.fromEntries(Object.entries(BIT_CONTRACTS)
+  .filter(([kind]) => !NOT_AUTHORABLE.includes(kind))
+  .map(([kind, c]) => [kind, { required: c.required, optional: c.optional,
+    ...(OPERAND_PROSE[kind] || { gate:'—', complete:'(no description — add one to OPERAND_PROSE)' }) }]));
 
 // ── §WORLDBUILDER-02 Phase 2: operational-class classifier ──────────────────
 // Maps a quest object → one of 11 operational classes (§WORLDBUILDER-02-B).

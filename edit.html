@@ -1406,7 +1406,8 @@ select.fi{appearance:none;}
 <script>
 // ═══════════════════════════════════════════════════════════════════════════
 // §ARCH-02 / §EDITOR-03 (UQF W8b): Operand Registry — the LIVE runtime bit
-// vocabulary. This mirrors the game's BIT_CONTRACTS (QuestRuntime registry);
+// vocabulary. This mirrors the kernel's BIT_CONTRACTS (src/js/quest.js), minus
+// the non-authorable _legacy_fn; dx02at-operand-mirror.test.js holds it equal;
 // the pre-Phase-1 design vocabulary (talk_at / navigate / kill_at / …) is
 // retired — those kinds never had runtime handlers and authored dead bits.
 // ═══════════════════════════════════════════════════════════════════════════
@@ -1417,6 +1418,8 @@ const OPERAND_CONTRACTS = {
                  gate:'—', complete:'sets/clears the listed S_story flags' },
   reward:      { required:[],                  optional:['xp','gold','items','knowledge'],
                  gate:'—', complete:'grants xp / gold / items / knowledge' },
+  cost:        { required:[],                  optional:['gold','resource','count','refuse'],
+                 gate:'—', complete:'debits gold and/or count of a resource; short → prints refuse and halts the chain' },
   narrative:   { required:[],                  optional:['msg'],
                  gate:'—', complete:'prints msg into the story stream' },
   mission_bit: { required:['flag'],            optional:['label'],
@@ -1443,6 +1446,7 @@ const UQF_BIT_FIELDS = {
   skill_check: [['stat','str'],['skill','str'],['dc','num']],
   flag_write:  [['set','csv'],['clear','csv']],
   reward:      [['xp','num'],['gold','num'],['knowledge','str']],
+  cost:        [['gold','num'],['resource','str'],['count','num'],['refuse','str']],
   narrative:   [['msg','str']],
   mission_bit: [['flag','str'],['label','str']],
   item_remove: [['name','str']],
