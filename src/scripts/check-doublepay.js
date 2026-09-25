@@ -26,9 +26,7 @@ const ROOT = path.resolve(__dirname, '..', '..');
 const WBAPI = require(path.join(ROOT, 'src', 'js', 'wbapi-core.js'));
 
 // Each surviving double payment, named with the row that owns its repair.
-const KNOWN_DOUBLE_PAY = {
-  'pipMet→quest_spark_02': '§DX-02lh',
-};
+const KNOWN_DOUBLE_PAY = {};
 
 // Comments and string/template bodies blanked to spaces, so braces and patterns see code.
 function mask(src) {

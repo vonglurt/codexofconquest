@@ -170,9 +170,9 @@ test.describe('§VM-01-G-FU-d — §SPARK-01/§WHODUNIT-01 at LCY/SEN behave as 
       xp: S_story.xp, pip: !!S_story.pipMet, noticed: !!S_story.wrenpemburyInconsistencyNoticed,
       inv: (S_story.inventory || []).map(i => i.name),
     }));
-    // 150 from the block + 150 from quest_spark_02 (The Overture), which completes on pipMet
-    // in the same render — measured at HEAD, byte-identical in the golden.
-    expect(r.xp).toBe(300);
+    // quest_spark_02 (The Overture) completes on pipMet in the same render and is the single
+    // payer; the button writes the flag only (§DX-02lh).
+    expect(r.xp).toBe(150);
     expect(r.pip).toBe(true);
     expect(r.noticed).toBe(true);
     expect(r.inv).toContain("Pip's Friendship Bead");

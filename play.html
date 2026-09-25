@@ -33872,7 +33872,6 @@ function _nodeHookSparkLcyHarmony(node) {
           // Add Pip's Friendship Bead
           inv.push({ name:"Pip's Friendship Bead", icon:'🪵', type:'misc', desc:"A gnawed wooden bead from a merchant's abacus. Pip's token of alliance. Smalt gave it to Pip; Pip gives it to you.", sell:1 });
           storyMsg('🐈 At the south end of the dock wall: a mouse, sitting. Smalt walks to the mouse and sits beside it. The mouse does not move.\n\nThe Inspector catches up. "My father — the late Admiral Pembury — we are a naval family, always have been." He seems pleased with this. He does not notice that the Eastern Reach has no coastline.\n\nPip looks at you. It places a small gnawed bead — a merchant\'s abacus bead — near your foot. A gift.\n\nSmalt eats the dried salt fish from your pack. An endorsement.\n\nSmalt\'s Trust consumed. Pip\'s Friendship Bead added to inventory. The inconsistency is noted. Quest: The Overture complete. Quest: Clot\'s Revelation activates — find Pip on the Tilbury Star. +150 XP.');
-          S_story.xp = (S_story.xp||0) + 150;
           storyRender(node);
         });
         _spkDiv.appendChild(_pipBtn);
