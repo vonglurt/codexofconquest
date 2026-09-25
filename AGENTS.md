@@ -50,7 +50,7 @@ The server holds the file text from when it started. A write after a hand-edit s
                                        # a field holding a closure is refused, not silently emptied (§DX-02iv)
 ./bin/api put <type> <id> --drop-comments  # a comment inside a field's value has no escape through JSON, so a
                                        # write that would delete one is refused; this accepts the loss (§DX-02ix)
-npm run check:walk --prefix src        # 27 gates in parallel, ~21s; the final ✓ N/N line is the verdict
+npm run check:walk --prefix src        # every gate in parallel, ~30s; the final ✓ N/N line is the verdict
 ./run.sh stop && npm test --prefix src # 1023 tests, server stopped
 npm run check:restart --prefix src     # the restart itself — outside check:walk, it binds :1367
 npm run test:write --prefix src        # what the write path REFUSES, on a throwaway copy
