@@ -212,7 +212,7 @@ surface that persists until the fight it names.
 `const _cyRoll = Math.ceil(Math.random()@32749` and both Codex Core rolls draw the **unseeded**
 stream and write persisted state: `cyMadnessRoll`, `cyMadnessTable`, `codexCoreChosen`,
 `defeatedBattles['TLS']`, `curseScore`. The UQF `skill_check` path used by all eight chains draws
-the seeded one — `const d20  = Math.ceil(E.rng() * 20)@22276`.
+the seeded one — `const d20a = Math.ceil(E.rng() * 20)@22280`.
 
 So within one feature the quest-authored rolls obey invariant #6 and the two hand-authored hooks do
 not, because §VM-01-B moved the d20 in `_resolveQuestUQF` and never reached surfaces that rolled

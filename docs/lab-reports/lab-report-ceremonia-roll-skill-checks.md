@@ -61,7 +61,7 @@ quests):
 
 | Claim | Status at HEAD | Anchor |
 |---|---|---|
-| The Ceremonia Roll formula: `d20 + ⌊(score−10)/2⌋ + 2+⌊(level−1)/4⌋ ≥ DC` | **exact, all three terms** | `_rollSkill(stat)@22270` |
+| The Ceremonia Roll formula: `d20 + ⌊(score−10)/2⌋ + 2+⌊(level−1)/4⌋ ≥ DC` | **exact, all three terms** | `_rollSkill(stat, adv)@22274` |
 | `_rollCeremonia(questId)` | **live as a name** — now a 4-line dispatcher; see delta 2 | `function _rollCeremonia@7036` |
 | `_appendStoryHcard(entry)` — a story-only hcard channel that never touches `#hcard-container` | **shipped**, four line-level details inverted (delta 5) | `function _appendStoryHcard@6807` |
 | `#story-hcard-container` + `buildCard(entry)` reuse | **exact** — the container exists and `buildCard` is unchanged | `<div id="story-hcard-container">@4811` |

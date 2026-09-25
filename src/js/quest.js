@@ -35,7 +35,8 @@ const SCHEMA_VERSION = 'UQF-1.0';
    Used by validateQuest() (and, later, the worldbuilder's Quest Editor). */
 const BIT_CONTRACTS = {
   skill_check: { required:['stat','dc'],        optional:['skill','adv','onPass','onFail'],
-    validate: b => ['STR','DEX','CON','INT','WIS','CHA'].includes(String(b.stat).toUpperCase()) && typeof b.dc === 'number' && (b.onPass || b.onFail) },
+    validate: b => ['STR','DEX','CON','INT','WIS','CHA'].includes(String(b.stat).toUpperCase()) && typeof b.dc === 'number' && (b.onPass || b.onFail)
+      && (b.adv == null || ['adv','dis','norm'].includes(b.adv)) },
   flag_write:  { required:[],                    optional:['set','clear'],
     validate: b => ((b.set||[]).length + (b.clear||[]).length) > 0 },
   reward:      { required:[],                    optional:['xp','gold','items','knowledge'],
@@ -48,8 +49,8 @@ const BIT_CONTRACTS = {
     validate: b => (typeof b.gold === 'number' && b.gold > 0) || (typeof b.resource === 'string' && b.resource.length > 0) },
   combat:      { required:['key','label'],       optional:['count','nodeCode'],
     validate: b => typeof b.key === 'string' && typeof b.label === 'string' },
-  narrative:   { required:[],                    optional:['msg','template'],
-    validate: b => !!(b.msg || b.template) },
+  narrative:   { required:[],                    optional:['msg'],
+    validate: b => !!b.msg },
   item_remove: { required:['name'],              optional:[],
     validate: b => typeof b.name === 'string' && b.name.length > 0 },
   item_check:  { required:['name'],              optional:['count'],   // lab Open-Q #3
@@ -58,8 +59,8 @@ const BIT_CONTRACTS = {
     validate: b => typeof b.flag === 'string' && b.flag.length > 0 },
   favor:       { required:['npc'],               optional:['set','add','cap'],   // §ARCH-01 W7c — NPC favorability
     validate: b => typeof b.npc === 'string' && b.npc.length > 0 && (typeof b.set === 'number' || typeof b.add === 'number') },
-  unlock:      { required:[],                    optional:['quests','npcs'],
-    validate: b => ((b.quests||[]).length + (b.npcs||[]).length) > 0 },
+  unlock:      { required:[],                    optional:['quests'],
+    validate: b => (b.quests||[]).length > 0 },
   choice:      { required:['prompt','options'],  optional:[],
     validate: b => Array.isArray(b.options) && b.options.length >= 2 && b.options.every(o => o.label && Array.isArray(o.bits)) },
   _legacy_fn:  { required:['fn'],                optional:[],          // adapter escape hatch
@@ -86,8 +87,8 @@ function validateQuest(q) {
 
 /* §ARCH-01 W7d — NO-OP. The legacy→UQF wrapping shim is retired with the legacy
    execution paths: Phase 3 is type-complete, so there is nothing left to adapt
-   (the surviving non-UQF entries — quest_math_01–05 §MATH-01 gap + the 30 dead
-   blq_05–10 book-stubs — are activate-only and never execute). Kept as an
+   (the surviving non-UQF entries — the 30 dead blq_05–10 book-stubs — are
+   activate-only and never execute). Kept as an
    identity passthrough because it is exported on QuestRuntime + window. */
 function adaptLegacyQuest(id, q) {
   return q;
@@ -318,23 +319,27 @@ function createQuestRuntime(host) {
        the lake-magic all-ability bonus. Returns every component for display.
        §VM-01-B: the d20 draws the injected seeded stream (effects.rng), so the roll
        is reproducible from a save. §VM-01-D: the sheet + buff ride the live state
-       via getState (host-fence, §4.3) — the roll reads/consumes the real sheet. */
-    _rollSkill(stat) {
+       via getState (host-fence, §4.3) — the roll reads/consumes the real sheet.
+       adv 'adv'/'dis' draws a second d20 and keeps the higher/lower; any other
+       value draws one, so a plain check consumes the stream exactly as before. */
+    _rollSkill(stat, adv) {
       const st = S();
       const ability    = String(stat || '').toLowerCase();
       const abilityVal = ((st.abilityScores || {})[ability] || 10);
       const mod  = Math.floor((abilityVal - 10) / 2);
       const prof = 2 + Math.floor(((st.level || 1) - 1) / 4);
-      const d20  = Math.ceil(E.rng() * 20);
+      const d20a = Math.ceil(E.rng() * 20);
+      const d20b = (adv === 'adv' || adv === 'dis') ? Math.ceil(E.rng() * 20) : null;
+      const d20  = d20b == null ? d20a : (adv === 'adv' ? Math.max(d20a, d20b) : Math.min(d20a, d20b));
       const iodineBonus = st.iodineBuffActive ? (st.iodineBuffBonus || 3) : 0;
       if (st.iodineBuffActive) { st.iodineBuffActive = false; st.iodineBuffBonus = 0; }
       const lmAll = E.lakeMagic ? ((E.lakeMagic() || {}).allAbility || 0) : 0;
-      return { d20, mod, prof, iodineBonus, lmAll, total: d20 + mod + prof + iodineBonus + lmAll };
+      return { d20, rolls: d20b == null ? [d20a] : [d20a, d20b], mod, prof, iodineBonus, lmAll, total: d20 + mod + prof + iodineBonus + lmAll };
     },
 
     /* Resolve a skill_check bit: roll, then route into onPass / onFail. */
     resolveSkillCheck(bit, ctx) {
-      const r = rt._rollSkill(bit.stat);
+      const r = rt._rollSkill(bit.stat, bit.adv);
       const pass = r.total >= bit.dc;
       _questRunToCompletion(rt.execBits(pass ? (bit.onPass || []) : (bit.onFail || []), ctx));   // §VM-01-A/D (skill_check stays synchronous — a choice in onPass/onFail throws, by scope-fence)
       return { d20: r.d20, total: r.total, pass };
@@ -378,7 +383,7 @@ function createQuestRuntime(host) {
         if (bit.resource) st[bit.resource] = (st[bit.resource] || 0) - need;
       },
       combat(bit) { if (E.preBattle) E.preBattle({ ...(E.getNode ? E.getNode(S().currentCode) : null), code: bit.nodeCode || bit.key, battle: { label: bit.label, key: bit.key, count: bit.count || 1 } }); },
-      narrative(bit, ctx) { if (!bit.msg) return; if (ctx && ctx.pushMsg) ctx.pushMsg(bit.msg); else if (E.msg) E.msg(bit.msg); /* template path: Phase 2 renderNamedTemplate */ },
+      narrative(bit, ctx) { if (!bit.msg) return; if (ctx && ctx.pushMsg) ctx.pushMsg(bit.msg); else if (E.msg) E.msg(bit.msg); },
       item_remove(bit, ctx) { const inv = ctx.state.inventory || []; const i = inv.findIndex(x => x.name === bit.name); if (i > -1) inv.splice(i, 1); },   // §VM-01-C: env inventory
       mission_bit(bit, ctx) { if (E.grantMissionBit) E.grantMissionBit(bit.flag, bit.label, ctx.state); else ctx.state[bit.flag] = true; },   // §VM-01-C/D: host grant, else env fallback
       // §ARCH-01 W7c — NPC favorability: `set` writes an absolute level; `add`

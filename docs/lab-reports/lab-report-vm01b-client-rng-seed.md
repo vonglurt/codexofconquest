@@ -100,7 +100,7 @@ Exit 0 iff all hold; exit 1 with the first divergence's seed and draw index.
 | 2 | `_seededNext` byte-identical to the server | **exact** — four arithmetic lines identical; only the state cell differs | `function _seededNext()@6436` vs `src/js/wbapi-server.js:function seededNext(s)@1150` |
 | 3 | Lazy `Date.now()` bootstrap, never `Math.random()` | **exact** | `if (!S_story.rngState) S_story.rngState = (Date.now() >>> 0) || 1;@6442` |
 | 4 | 9 one-line substitutions | **9 of 9 live** — 8 direct, 1 now injected (row 5) | `@24546` `@24556` `@24569` `@24590` `@24591` `@28441` `@38245` `@38255` |
-| 5 | `_rollSkill` d20 draws the seeded stream | **contract exact, form changed** — §VM-01-D moved `_rollSkill` inside `QUEST:CORE` and the d20 now draws an injected effect | `const d20  = Math.ceil(E.rng() * 20)@22276`, wired at `rng:       () => _seededNext()@22374` in `const QuestRuntime = createQuestRuntime({@22369` |
+| 5 | `_rollSkill` d20 draws the seeded stream | **contract exact, form changed** — §VM-01-D moved `_rollSkill` inside `QUEST:CORE` and the d20 now draws an injected effect | `const d20a = Math.ceil(E.rng() * 20)@22280`, wired at `rng:       () => _seededNext()@22374` in `const QuestRuntime = createQuestRuntime({@22369` |
 | 6 | "Pure roll" comment becomes honest | **exact and extended** — the header now names both §VM-01-B and §VM-01-D | `Pure roll@22263` |
 | 7 | `check:rng` wired into `check:walk` | **exact** — gate 10 of 16 | `package.json` `check:rng` |
 | 8 | P1 6,000 draws / 12 seeds; P2; P3; P4 | **all four green, figures exact** | run this session: `P1 = 6000`, `P3 = 6000`, P2/P4 true |

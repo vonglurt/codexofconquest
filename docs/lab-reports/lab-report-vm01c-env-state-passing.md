@@ -135,7 +135,7 @@ An enumerable flag namespace where a typo throws is the natural companion, but i
 - **Parity kernels** — **0 kernel sentinels in the `c22f4f0` diff**, measured, not asserted.
 - **§STATE-INIT** — `_S_DEFAULTS()` unchanged; still true at HEAD (§7.2).
 - **§VM-01-A coroutine contract** — `execBits` stays a generator; `ctx.state` is set before the loop, so a suspending `choice` resumes against the same env.
-- **§VM-01-B seeded rng** — `_seededNext` untouched. (The roll has since moved to the injected `const d20  = Math.ceil(E.rng() * 20)@22276` under §VM-01-D — still a host concern, new plumbing.)
+- **§VM-01-B seeded rng** — `_seededNext` untouched. (The roll has since moved to the injected `const d20a = Math.ceil(E.rng() * 20)@22280` under §VM-01-D — still a host concern, new plumbing.)
 - **No new bit kind.** The `HANDLERS` key-set was pinned at **12** by `src/tests/integration/quest-runtime-uqf.test.js:28` and stayed exactly 12. *(At HEAD it is 13 — `cost`, added by §VM-01-G4a. Growth after the fence, not through it.)*
 
 ## 9. Test plan and result

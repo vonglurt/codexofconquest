@@ -105,7 +105,7 @@ This is the entire literal blocker cited by the BACKLOG and CONTRIBUTING §VM-01
 (*"Roll CON DC 13 or gain plague_exposed"*) and the `_S_DEFAULTS` declaration at `plague_exposed: false,@23322`
 (*"Set on failed CON DC 13 save"*). The code rolls a modifier-free coin instead. `skill_check` already nests
 through `src/js/quest.js:resolveSkillCheck(bit, ctx)@327` into `execBits`, synchronously, drawing the injected
-seeded stream at `src/js/quest.js:const d20  = Math.ceil(E.rng() * 20)@319`. A one-line change with an outsized
+seeded stream at `src/js/quest.js:const d20a = Math.ceil(E.rng() * 20)@331`. A one-line change with an outsized
 payoff: it is the whole reachability blocker.
 
 **Finding 1 — a `counter` opcode (the biggest lever).** `{ kind:'counter', field, add, min, max }` absorbs the
@@ -297,7 +297,7 @@ performed. §AUDIT-03bj puts the true blast radius at **138 quests** — the hea
 
 **Cited, deliberately not re-filed** (instrument 7): §AUDIT-03bj (the content triage and the 138-quest
 closure) · §DX-02u (`voidFluxCleared`) · §DX-02bs (the `once:` blind spot) · §DX-02cz (the detector covers
-flags only) · §DX-02dx (D6, the dead require) · §DX-02dw (`const d20  = Math.ceil(E.rng() * 20)@22276` is the
+flags only) · §DX-02dx (D6, the dead require) · §DX-02dw (`const d20a = Math.ceil(E.rng() * 20)@22280` is the
 one unguarded effect call in the kernel this report's port routes through).
 
 ---
@@ -307,12 +307,12 @@ one unguarded effect call in the kernel this report's port routes through).
 `const QUEST_DB = {@10630` · `WORLDBUILDER:QUEST_DB:END@21974` · `quest_1367_f_plague: {@13992` ·
 `quest_1367_d_hansa: {@13988` · `quest_scar_03: {@14042` · `plague_exposed: false,@23322` ·
 `_legacy_fn(bit, ctx)@22355` · `_legacy_fn:  { required:@22022` ·
-`const d20  = Math.ceil(E.rng() * 20)@22276` · `function _innKindness(n)@23551` ·
+`const d20a = Math.ceil(E.rng() * 20)@22280` · `function _innKindness(n)@23551` ·
 `function _addCroneMark()@23561` · `function _setNpcFavor(key, level, say)@23527` ·
 `function _checkDearFriendUpgrade(key, say)@23538` · `const WM_ARCHIVE_DOCS = [@27928` ·
 `seaStrangenessNoticed@12498` · `is not expressible in canActivate@14001` · `S_story[ngEbKey] = true;@35516`
 (the eleventh computed-key writer, omitted from the original §9-FU list of ten) ·
-`src/js/quest.js:resolveSkillCheck(bit, ctx)@327` · `src/js/quest.js:const d20  = Math.ceil(E.rng() * 20)@319` ·
+`src/js/quest.js:resolveSkillCheck(bit, ctx)@327` · `src/js/quest.js:const d20a = Math.ceil(E.rng() * 20)@331` ·
 `src/scripts/check-questgraph.js:function matchBrace@64` ·
 `src/scripts/check-questgraph.js:function gateSat@271` · `src/scripts/check-questgraph.js:function scanFlagWrites@300` ·
 `src/scripts/check-quest-parity.js:quest parity: QUEST:CORE identical@25` ·

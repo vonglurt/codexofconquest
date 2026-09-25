@@ -94,7 +94,7 @@ byte-identical to `src/js/quest.js` and asserted by `check:questparity` (gate #8
 | Activation gate | compiled boolean tree | `canActivate(questId) {@22221` |
 | Completion gate | **not in the spec** | `canComplete(questId) {@22233` |
 | Bit-chain executor | **a generator** (§VM-01-A) | `*execBits(bits, ctx) {@22251` |
-| Roll | seeded stream, not `Math.random` | `_rollSkill(stat) {@22270` |
+| Roll | seeded stream, not `Math.random` | `_rollSkill(stat, adv) {@22274` |
 | Skill-check resolver | name exact | `resolveSkillCheck(bit, ctx) {@22284` |
 | Opcode table | 13 handlers (spec: 8) | `HANDLERS: {@22292` |
 | Live binding | 12 injected effects | `const QuestRuntime = createQuestRuntime({@22369` |
@@ -133,7 +133,7 @@ declined or outgrew the spec), **✅** = shipped as specified.
 | 6 | `gate.expr` string language (Open-Q #5) | **0 commits ever** — shipped as `{all}/{any}/{not}` object composition | ES — better answer, same problem |
 | 7 | `QuestRuntime.canActivate/execBits/resolveSkillCheck/HANDLERS` | all four ✅ under their exact names | ✅ |
 | 8 | `SCHEMA_VERSION`, `BIT_CONTRACTS`, `validateQuest`, `adaptLegacyQuest` | all four ✅ | ✅ |
-| 9 | `rollD20Stat(bit.stat)` (§6) | **0 commits ever** → `_rollSkill(stat) {@22270` | RS — invented name |
+| 9 | `rollD20Stat(bit.stat)` (§6) | **0 commits ever** → `_rollSkill(stat, adv) {@22274` | RS — invented name |
 | 10 | `pushKnowledge(bit.knowledge)` (§6) | **0 commits ever** → inline `st.knowledge.push` | RS — invented name |
 | 11 | `renderNamedTemplate(bit.template)` (§6) | **never a function** — survives only in a comment; `template:` has **0** authored uses | ES — NOT SHIPPED |
 | 12 | `renderChoiceBlock(prompt, options, ctx)` (§6) | never existed; the host end shipped 2026-08-04 as `_uqfRunVerb` (§VM-01-G4a) | ES — 71 days inert |
@@ -272,7 +272,7 @@ accept a field or a kind that no code path consumes:
 
 | Surface | Contract says | Reality |
 |---|---|---|
-| `skill_check.adv` | optional | `_rollSkill(stat)@22270` never reads `bit.adv`; **0** authored uses. Advantage is unreachable through UQF. |
+| `skill_check.adv` | optional | `_rollSkill` (then `(stat)`, now `_rollSkill(stat, adv)@22274`) never read `bit.adv`; **0** authored uses. Advantage is unreachable through UQF. |
 | `narrative.template` | optional | `narrative(bit, ctx) { if (!bit.msg) return;@22329` — a `template`-only bit is a **silent no-op**; `renderNamedTemplate` never shipped; **0** authored uses |
 | `unlock.npcs` | optional, and it *satisfies* the validator on its own | `unlock(bit, ctx) { (bit.quests@22340` ignores it entirely — `{kind:'unlock', npcs:['x']}` validates ✅ and does nothing |
 | `item_check` (whole kind) | required `name` | `item_check(bit, ctx) {@22339` writes `ctx._itemCheck`, which **nothing reads**; **0** authored uses — the job went to the completion gate's `items` term |
@@ -280,6 +280,14 @@ accept a field or a kind that no code path consumes:
 None is live-broken today, because nothing authors them. All four are **traps for the next author**,
 and `unlock.npcs` is the sharpest: it is the one case where the invalid thing passes validation
 *because of* the dead field.
+
+> **Resolved 2026-09-25, §DX-02as.** `skill_check.adv` is **implemented**: `'adv'`/`'dis'` draws a second
+> seeded d20 and keeps the higher/lower, and a plain check draws once, exactly as before. `narrative.template`
+> and `unlock.npcs` are **removed** from the contract, so both refuse to validate. **`item_check` stays.** The
+> finding's *"nothing reads"* was overtaken by §VM-01's coroutine work, which made `ctx._itemCheck` the predicate a
+> host reads to resume a `choice` (`uqf-coroutine.test.js` test 5). `dx02as-bit-contract-surfaces.test.js` now
+> asserts that every contract key is read by its handler or its host, and is authored or reserved with its
+> reader named.
 
 ### Finding 6 — an engine comment miscounts the population it describes (→ §DX-02as (e))
 
@@ -379,7 +387,7 @@ harness and the test suite. `execBits` also became a **generator**, which is wha
 | Row | Severity | Summary |
 |---|---|---|
 | **§DX-02ar** | 🟡 | `WBAPI.quests.chain()` derives dependencies from an `S_story.` regex; 1,624 declaratively-gated quests are invisible, 96.4 % of the corpus returns an empty chain, and the quest **delete guard** passes vacuously as a result |
-| **§DX-02as** | 🟢 | Four contract surfaces validate green and do nothing — `skill_check.adv`, `narrative.template`, `unlock.npcs`, the whole `item_check` kind — plus (e) the `adaptLegacyQuest` comment's 35-vs-**50** miscount of the un-migrated set |
+| **§DX-02as** ✅ 2026-09-25 | 🟢 | Four contract surfaces validate green and do nothing — `skill_check.adv`, `narrative.template`, `unlock.npcs`, the whole `item_check` kind — plus (e) the `adaptLegacyQuest` comment's 35-vs-**50** miscount of the un-migrated set |
 | **§DX-02at** | 🟢 | `edit.html:OPERAND_CONTRACTS` mirrors `BIT_CONTRACTS` by hand and has drifted: **`cost` and `_legacy_fn` missing** |
 
 ---

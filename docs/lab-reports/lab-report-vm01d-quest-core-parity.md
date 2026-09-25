@@ -90,7 +90,7 @@ Five instruments, in order:
 
 ### D5 — the guard that was promised and never written
 
-§4 states the kernel keeps *"a `Math.random()` fallback … only for a server that injects no rng."* There is no such fallback, at ship or at HEAD. The kernel contains **zero** occurrences of `Math.random()` — which is *better* than advertised for reproducibility — but `const d20  = Math.ceil(E.rng() * 20)@22276` calls the injected effect **bare**, and it is the **only** unguarded effect call among **13**. Every sibling is defended: `E.getQuest ? …`, `if (E.checkLevelUp)`, `if (E.mint)`, `if (E.preBattle)`, `mission_bit(bit, ctx)@22331` even carries an explicit env fallback.
+§4 states the kernel keeps *"a `Math.random()` fallback … only for a server that injects no rng."* There is no such fallback, at ship or at HEAD. The kernel contains **zero** occurrences of `Math.random()` — which is *better* than advertised for reproducibility — but `const d20a = Math.ceil(E.rng() * 20)@22280` calls the injected effect **bare**, and it is the **only** unguarded effect call among **13**. Every sibling is defended: `E.getQuest ? …`, `if (E.checkLevelUp)`, `if (E.mint)`, `if (E.preBattle)`, `mission_bit(bit, ctx)@22331` even carries an explicit env fallback.
 
 This is not hypothetical. `src/scripts/check-gate-parity.js:const rt = Q.createQuestRuntime@32` — a **shipped, green, in-`check:walk` consumer** — builds a runtime with `effects: { getQuest }` and no `rng`. It survives only because gate evaluation never reaches `_rollSkill`. It is one `skill_check` walk away from a `TypeError`. Filed **§DX-02dw**.
 
@@ -150,7 +150,7 @@ The engine runs headless in Node. That is the thing that was structurally imposs
 
 ## VIII. Defects filed
 
-- **§DX-02dw** 🟢 — `const d20  = Math.ceil(E.rng() * 20)@22276` is the only unguarded effect call in a guards-in-the-host kernel, and `src/scripts/check-gate-parity.js:const rt = Q.createQuestRuntime@32` already injects no `rng`. Guard it, or document `rng` as the one required effect. §4 of this report promised a fallback that was never written.
+- **§DX-02dw** 🟢 — `const d20a = Math.ceil(E.rng() * 20)@22280` is the only unguarded effect call in a guards-in-the-host kernel, and `src/scripts/check-gate-parity.js:const rt = Q.createQuestRuntime@32` already injects no `rng`. Guard it, or document `rng` as the one required effect. §4 of this report promised a fallback that was never written.
 - **§DX-02dx** ✅ SHIPPED 2026-09-03 — the walker's `require` of the kernel was never used (`Q` occurred once, on its own line); the import and the header claim are removed, and the questgraph report is byte-identical before and after.
 - **§DX-02dv** (already open) — resolved above: the ship record dropped the 17, the report did not.
 
