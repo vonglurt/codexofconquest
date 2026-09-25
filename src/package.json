@@ -74,6 +74,7 @@
     "check:cssclasses": "node scripts/check-css-classes.js --selftest && node scripts/check-css-classes.js",
     "check:badge": "node scripts/check-badge.js --selftest && node scripts/check-badge.js",
     "check:labindex": "node scripts/check-labindex.js --selftest && node scripts/check-labindex.js",
+    "check:commentcodes": "node scripts/check-comment-codes.js --selftest && node scripts/check-comment-codes.js",
     "check:doccommands": "node scripts/check-doc-commands.js --selftest && node scripts/check-doc-commands.js",
     "check:battlepools": "node scripts/check-battlepools.js --selftest && node scripts/check-battlepools.js",
     "check:condprices": "node scripts/check-condition-prices.js --selftest && node scripts/check-condition-prices.js",
@@ -84,7 +85,7 @@
     "test:help": "node tests/help-behaviour.mjs --selftest && node tests/help-behaviour.mjs",
     "test:write": "node tests/write-acceptance.mjs --selftest && node tests/write-acceptance.mjs",
     "check:walk": "node scripts/run-gates.js --selftest",
-    "check:walk:serial": "npm run check:invariants && npm run check:dupkeys && npm run check:parity && npm run check:behaviour && npm run check:terrain && npm run check:roads && npm run check:roomsparity && npm run check:questparity && npm run check:gateast && npm run check:rng && npm run check:questgraph && npm run check:nodeindex && npm run check:noderegs && npm run check:npcregs && npm run check:anchors && npm run check:legacycodes && npm run check:battlepools && npm run check:arraypatch && npm run check:spdx && npm run check:backlogcounts && npm run check:linewidth && npm run check:condprices && npm run check:docpointers && npm run check:helpconformance && npm run check:duelparity && npm run check:itemchain && npm run check:laddermigration && npm run check:worlddiff && npm run check:bearings && npm run check:doccommands && npm run check:schema && npm run check:promptcache && npm run check:prosecodes && npm run check:gaterows && npm run check:doublepay && npm run check:cssclasses && npm run check:badge && npm run check:labindex",
+    "check:walk:serial": "npm run check:invariants && npm run check:dupkeys && npm run check:parity && npm run check:behaviour && npm run check:terrain && npm run check:roads && npm run check:roomsparity && npm run check:questparity && npm run check:gateast && npm run check:rng && npm run check:questgraph && npm run check:nodeindex && npm run check:noderegs && npm run check:npcregs && npm run check:anchors && npm run check:legacycodes && npm run check:battlepools && npm run check:arraypatch && npm run check:spdx && npm run check:backlogcounts && npm run check:linewidth && npm run check:condprices && npm run check:docpointers && npm run check:helpconformance && npm run check:duelparity && npm run check:itemchain && npm run check:laddermigration && npm run check:worlddiff && npm run check:bearings && npm run check:doccommands && npm run check:schema && npm run check:promptcache && npm run check:prosecodes && npm run check:gaterows && npm run check:doublepay && npm run check:cssclasses && npm run check:badge && npm run check:labindex && npm run check:commentcodes",
     "cleantree:selftest": "node scripts/cleantree.js --selftest"
   },
   "dependencies": {

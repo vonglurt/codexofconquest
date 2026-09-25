@@ -23770,8 +23770,8 @@ function _renderNpcCard(key, container) {
   const dlg = _getNPCDialogue(key);
   if (!dlg) return;
   // §NPC-01-SF2: NPCs wired into `birkaNpcs` (or the derived map) but with NO BIRKA_NPC_PROFILES entry
-  // — 9 dialogue-only NPCs (jimmy/sandy_cat/kenickie at CQ, isolde_voss/benedikt_rasp at SQ, and
-  // rennau/vonn/solvak/yva at STN/TL/VS/GC) — used to hit `if(!p) return` and render nothing at all.
+  // — 9 dialogue-only NPCs (jimmy/sandy_cat/kenickie at CDG, isolde_voss/benedikt_rasp at NUE, and
+  // rennau/vonn/solvak/yva at STN/TL/VS/TRD) — used to hit `if(!p) return` and render nothing at all.
   // Synthesize a lean profile from the dialogue meta so they show name+occupation+quote (+ the ⚔/✦
   // footers); with no per-tier greeting object, §NPC-01-A's greeting-omit path applies unchanged.
   if (!p) {
@@ -24258,7 +24258,7 @@ function storyRenderVendor() {
   _renderVendorShields();
   const whs = document.getElementById('vendor-whiskey-section');
   if (whs) whs.style.display = (S_story.currentCode === 'LLA') ? '' : 'none';
-  // S46: Pachelbel's inventory as character — fav-gated items at BA
+  // S46: Pachelbel's inventory as character — fav-gated items at LLA
   _renderPachelbelSpecials();
 }
 
@@ -27157,7 +27157,7 @@ function _addVoidPressure(n) {
 }
 
 // ── Layer 68b: Pachelbel Ledger ──
-const PACHELBEL_LEDGER = { // → doc: world.md §Raison's Tools (entries 2+3 readable at BA; Dear Friend gated)
+const PACHELBEL_LEDGER = { // → doc: world.md §Raison's Tools (entries 2+3 readable at LLA; Dear Friend gated)
   2: `Raison was taken at the north gate.
 
 Someone told the Circle about the seals he'd been breaking. I need it on record that it wasn't me, even if the only record is this.
@@ -27257,7 +27257,7 @@ They turn when you arrive. Brynn gives you the look she reserves for people she'
 They're both right.`;
 
 // ── Layer 65: Entry 41 Echo scenes ──
-const S49_BRYNN_SCENE = // → doc: world.md §S49 — Entry 41 delivery (fires at IN after frobergerLastEntryRead; s49BrynnDelivered)
+const S49_BRYNN_SCENE = // → doc: world.md §S49 — Entry 41 delivery (fires at TLL after frobergerLastEntryRead; s49BrynnDelivered)
 `You find Brynn at the bar. Before you say anything, she looks at the journal.
 
 "The last one?"
@@ -27276,7 +27276,7 @@ A pause.
 
 "Glad you're not done yet."`;
 
-const S49_SWEELINCK_SCENE_BASE = // → doc: world.md §S49 — Entry 41 delivery (fires at SQ; s49SweelinckDelivered)
+const S49_SWEELINCK_SCENE_BASE = // → doc: world.md §S49 — Entry 41 delivery (fires at NUE; s49SweelinckDelivered)
 `Sweelinck is at the desk. They look up when you enter.
 
 "May I see it?"
@@ -27549,7 +27549,7 @@ const COVENANT_STANDING_LABELS = [ // → doc: docs/design/story.md §Covenant S
   { maxScore: Infinity, label: "Wanderer",         desc: "The Void will open again. Not your fault. Not entirely." }
 ];
 
-const ROUGH_WHISKEY_REACTIONS = { // → doc: world.md §Rough Whiskey (BA vendor item; one-time drunk pit fight event at HKG)
+const ROUGH_WHISKEY_REACTIONS = { // → doc: world.md §Rough Whiskey (LLA vendor item; one-time drunk pit fight event at HKG)
   yael: {
     impartial: "You've been drinking. Come back when you haven't.",
     friendly:  "I'm going to pretend I don't smell that. Walk with me — the cold'll fix it by second check.",
@@ -27706,7 +27706,7 @@ const BRYNN_MAINTENANCE_TASKS = [ // → doc: world.md §Brynn's Maintenance Tas
   }
 ];
 
-const QUIET_RETURN_RECEIPTS = { // → doc: story.md §FL3 — Epic Battleground Quest Chain (per-node one-time text on return from CO endgame corridor)
+const QUIET_RETURN_RECEIPTS = { // → doc: story.md §FL3 — Epic Battleground Quest Chain (per-node one-time text on return from TLS endgame corridor)
   RKV: "The ranger takes the report without looking at it. Then looks at it. 'You actually went in.'",
   PRN: "The forester marks something on her map. 'That\'s been undocumented for six years.'",
   INV: "The shepherd doesn't look at the water again. She looks up the hill, toward the churchyard. 'I have somewhere to go now.'",
@@ -27734,7 +27734,7 @@ const QUIET_RETURN_RECEIPTS = { // → doc: story.md §FL3 — Epic Battleground
   auros_depths: "Auros saves the data without looking up. Then: 'That\'s what I needed.'"
 };
 
-const DEACON_CODE_TEXT = // → doc: world.md §Deacon's Code (4 rules; readable at BA; Pachelbel Dear Friend)
+const DEACON_CODE_TEXT = // → doc: world.md §Deacon's Code (4 rules; readable at LLA; Pachelbel Dear Friend)
 `Pachelbel's Code — posted on the back wall of the salvage front
 
 One. No goods taken by force from people who couldn't refuse.
@@ -28282,13 +28282,13 @@ const YAEL_NAMED_REPORT_SCENE = { // → doc: world.md §Yael's Named Report Sce
 };
 
 // ── Layer 73: §XXXVIII Brynn Heartwood Letter ──
-const BRYNN_HEARTWOOD_SCENE = { // → doc: world.md §The Heartwood Letter (Layer 73; IN Act IV+; s2DaughterDelivered)
+const BRYNN_HEARTWOOD_SCENE = { // → doc: world.md §The Heartwood Letter (Layer 73; TLL Act IV+; s2DaughterDelivered)
   friendly: '"She wrote. First letter in three months."\n\nShe slides it off the counter, folds it back into the envelope.\n\n"She\'s working with a surveyor in the Heartwood district. Measuring things. She says she\'s good at it." A pause. "She wrote \'expedition\' in the letter. She said she learned that word from a traveler who stayed here years ago."\n\nShe puts the envelope away. "The good room\'s still yours."',
   dearFriend: '"She wrote."\n\nShe sets the letter on the counter between you, then picks it back up.\n\n"She\'s with a surveyor in the Heartwood district. Learning to measure property lines, well depth — things you can\'t see the end of. She says she has patience for it."\n\nShe reads the last line aloud:\n\n"\'I don\'t know if it\'s patience or stubbornness. I signed this expedition because I couldn\'t decide.\'"\n\nBrynn folds the letter. Her daughter pressed hard when she wrote it — the impressions are visible through the back of the envelope.\n\n"She found a word for what she\'s doing."\n\nShe doesn\'t say anything else for a moment. Then: "The good room has a window that faces east."',
 };
 
-// ── Layer 72: §XXXVII Commander Bruhns CO Scene ──
-const BRUHNS_CO_SCENE = { // → doc: story.md §The Final Confrontation: Commander Bruhns's CO Scene (Layer 68a; CO node; dearFriendWithTheory cross-ref s29LineDelivered)
+// ── Layer 72: §XXXVII Commander Bruhns TLS Scene ──
+const BRUHNS_CO_SCENE = { // → doc: story.md §The Final Confrontation: Commander Bruhns's CO Scene (Layer 68a; TLS node; dearFriendWithTheory cross-ref s29LineDelivered)
   friendly: '"You got this far. Froberger made it this far too, more than once."\n\nA pause. The cordon behind her is steady.\n\n"He didn\'t finish. I need you to finish. So does the city."',
   dearFriend: '"You know what I\'ve been doing here."\n\nIt isn\'t a question. She looks at the Codex Cradle, then at you.\n\n"The Circle classified every report I submitted for eleven years. I\'ve been buying time the only way the Circle\'s rules allow — holding command. As long as I hold this platform, no Circle delegate can lock that Cradle without going through me. And they won\'t move against a standing Commander without cause."\n\nShe meets your eyes.\n\n"You beating me is cause. Documented, witnessed, legitimate. After that, I don\'t hold command and I don\'t hold the Codex. You do. And the Circle can\'t classify that — you\'d be the one who opened it."\n\nA beat.\n\n"I\'m going to do everything I can to stop you. That\'s not negotiable. The Circle is watching and I need this to look like I meant it."\n\nShe doesn\'t wait for a response.',
   dearFriendWithTheory: '"You understood the tactical model. That meant you understood what getting this wrong would cost. Anyone who understood that and still came here — I can trust them to open it."',
@@ -28523,7 +28523,7 @@ function storyCheckVictory(node) {
     qEl.textContent = sweelinckQ;
     qEl.style.display = '';
   }
-  // Layer 52: §XVII — CO outro addendum
+  // Layer 52: §XVII — TLS outro addendum
   if (S_story.vaArchitectureKnown && S_story.entry42Written && (S_story.ngPlusRun || 0) >= 1) {
     const _vaEndDiv = document.getElementById('victory-architecture-addendum');
     if (!_vaEndDiv) {
@@ -31691,7 +31691,7 @@ const NODE_PANELS = [
         : '\n\nThe islanders showed unusual kindness.';
       return 'The fire is built on the shore. Two hundred and seventy-six people, cold and wet and alive on the beach before dawn.\n\nA viper comes out of the brush when the wood is gathered — the heat, the disturbance. It fastens to his hand. The islanders see this. They reach a conclusion: he is a murderer; he survived the sea but judgment found him at the fire.\n\nHe shakes it into the fire.\n\nThey wait for his hand to swell. His hand does not swell. They wait for him to fall. He does not fall. He goes back to building the fire.\n\nThe islanders change their minds. They say: he is a god.\n\nHe does not correct them. He has been counting people all night. The count is correct. He builds the fire.' + _mlHarmony;
     } },
-  // L40-H/I: Sweelinck dialogue variant at SQ and CO (Layer 41: Birka variant overrides curse score
+  // L40-H/I: Sweelinck dialogue variant at NUE and TLS (Layer 41: Birka variant overrides curse score
   // if player has 3+ friends). The NUE-only age/map/S49 sub-blocks stay inline in storyRender.
   { id:'story-sweelinck-variant', nodes:['NUE','TLS'],
     text:st => {
@@ -32004,7 +32004,7 @@ function _nodeHookVoidArchaeology(node) {
       if (S_story.vaLogFound && !_qs['quest_va_03']) S_story.quests['quest_va_03'] = 'active';
       if (S_story.vaLastWardVisited && !_qs['quest_va_04']) S_story.quests['quest_va_04'] = 'active';
     }
-    // Q-VA-04: Benedikt delivers message at SQ
+    // Q-VA-04: Benedikt delivers message at NUE
     if (node.code === 'NUE' && S_story.vaLastWardVisited && S_story.entry42Written && !S_story.vaArchitectureKnown) {
       setTimeout(() => storyMsg(
         'Benedikt: "She built it. You closed it. Froberger found the mechanism. You followed him. Entry 42 is the fourth link. Four links is a chain. A chain holds. That is the only kind of answer this work produces — not a solution, a chain."'
@@ -32131,7 +32131,7 @@ function _nodeHookCorelliMerchant(node) {
   }
 }
 function _nodeHookCodexCoreChamber(node) {
-  // ── §D01-10: Codex Core Chamber — pre-boss choice room at CO ──
+  // ── §D01-10: Codex Core Chamber — pre-boss choice room at TLS ──
   if (node.code === 'TLS' && (S_story.shards || 0) >= 6 && !S_story.defeatedBattles['TLS']
       && !S_story.codexCoreEntered) {
     S_story.codexCoreEntered = true;
@@ -32273,7 +32273,7 @@ function _nodeHookScholarWorkshop(node) {
   }
 }
 function _nodeHookMimicMeadows(node) {
-  // ── Layer 81: Mimic Meadows (MM) render ──
+  // ── Layer 81: Mimic Meadows (LIM) render ──
   if (node.code === 'LIM') {
     const _mmOld = document.getElementById('mm-panel');
     if (_mmOld) _mmOld.remove();
@@ -32327,7 +32327,7 @@ function _nodeHookMimicMeadows(node) {
 // registry because their SOURCE POSITION is load-bearing, which is the same reason dispatch is
 // in place: LIFO stacking is preserved by construction (G2 ship record).
 function _nodeHookBirkaVargaWatch(node, { npcRowDiv }) {
-      // ── S8: Varga's presence at BA — observation mechanic ──
+      // ── S8: Varga's presence at LLA — observation mechanic ──
       if (node.code === 'LLA') {
         const vargaWatches = S_story.s8VargaWatches || 0;
         if (!S_story.s8VargaClueUnlocked) {
@@ -32376,7 +32376,7 @@ function _nodeHookBirkaVargaWatch(node, { npcRowDiv }) {
       }
 }
 function _nodeHookBirkaPachelbelLedger(node, { npcRowDiv }) {
-      // ── Layer 68b: Pachelbel Ledger at BA (Dear Friend) ──
+      // ── Layer 68b: Pachelbel Ledger at LLA (Dear Friend) ──
       if (node.code === 'LLA' && _npcFavor('pachelbel') >= 2) {
         const _plWrap = document.createElement('div');
         _plWrap.style.cssText = 'display:flex;flex-direction:column;gap:0;';
@@ -32407,7 +32407,7 @@ function _nodeHookBirkaPachelbelLedger(node, { npcRowDiv }) {
       }
 }
 function _nodeHookBirkaQuillCouperinFarewell(node) {
-      // ── Layer 69 §XXXIV — Act VIII: Quill visits BA to close the Couperin estate ledger ──
+      // ── Layer 69 §XXXIV — Act VIII: Quill visits LLA to close the Couperin estate ledger ──
       if (node.code === 'LLA' && (S_story.actNumber || 1) === 8
           && _npcFavor('quill') >= 1 && !S_story.act8FarewellQuill) {
         S_story.act8FarewellQuill = true;
@@ -32419,7 +32419,7 @@ function _nodeHookBirkaQuillCouperinFarewell(node) {
       }
 }
 function _nodeHookBirkaGigaultStall(node, { npcRowDiv }) {
-      // ── L44-A: Gigault stall at BA ──
+      // ── L44-A: Gigault stall at LLA ──
       if (node.code === 'LLA') {
         const gig = document.createElement('div');
         gig.style.cssText = 'margin-top:6px;';
@@ -32428,7 +32428,7 @@ function _nodeHookBirkaGigaultStall(node, { npcRowDiv }) {
       }
 }
 function _nodeHookBirkaDeaconCode(node, { npcRowDiv }) {
-      // ── L44-Q: Deacon Code click target at BA ──
+      // ── L44-Q: Deacon Code click target at LLA ──
       if (node.code === 'LLA') {
         const _dcWrap = document.createElement('div');
         _dcWrap.style.cssText = 'display:flex;flex-direction:column;gap:0;';
@@ -32456,7 +32456,7 @@ function _nodeHookBirkaDeaconCode(node, { npcRowDiv }) {
       }
 }
 function _nodeHookBirkaBrynnMaintenance(node, { npcRowDiv }) {
-      // ── L44-L/N: Brynn maintenance + ledger at IN ──
+      // ── L44-L/N: Brynn maintenance + ledger at TLL ──
       if (node.code === 'TLL') {
         const bmDiv = document.createElement('div');
         bmDiv.style.cssText = 'margin-top:6px;display:flex;flex-direction:column;gap:4px;';
@@ -33025,7 +33025,7 @@ function _nodeHookBirkaWeckmannLog(node, { npcRowDiv }) {
       }
 }
 function _nodeHookBirkaBrynnHeartwoodLetter(node) {
-      // ── S2 / Layer 73 §XXXVIII: Brynn Heartwood Letter — fav-gated, at IN Act IV+, Entry 7 read ──
+      // ── S2 / Layer 73 §XXXVIII: Brynn Heartwood Letter — fav-gated, at TLL Act IV+, Entry 7 read ──
       if (node.code === 'TLL' && (S_story.actNumber || 1) >= 4
           && !S_story.s2DaughterDelivered
           && (S_story.journalEntriesRead || []).includes(7)) {
@@ -33040,7 +33040,7 @@ function _nodeHookBirkaBrynnHeartwoodLetter(node) {
       }
 }
 function _nodeHookBirkaBrynnRegulars(node, { npcRowDiv }) {
-      // ── S58: Brynn's Regulars — ambient guests at IN ──
+      // ── S58: Brynn's Regulars — ambient guests at TLL ──
       if (node.code === 'TLL') {
         const regularsDiv = document.createElement('div');
         regularsDiv.style.cssText = 'margin-top:8px;';
@@ -33064,7 +33064,7 @@ function _nodeHookBirkaBrynnRegulars(node, { npcRowDiv }) {
       }
 }
 function _nodeHookBirkaS49Entry41(node, { npcRowDiv }) {
-      // ── Layer 65: S49 Froberger Entry 41 — Brynn at IN (full scene) ──
+      // ── Layer 65: S49 Froberger Entry 41 — Brynn at TLL (full scene) ──
       if (node.code === 'TLL' && S_story.frobergerLastEntryRead && !S_story.s49BrynnDelivered) {
         const s49Btn = document.createElement('button');
         s49Btn.className = 'inv-use-btn';
@@ -33079,7 +33079,7 @@ function _nodeHookBirkaS49Entry41(node, { npcRowDiv }) {
       }
 }
 function _nodeHookBirkaRoom6(node, { npcRowDiv }) {
-      // ── L45-I: Room 6 at IN (Brynn Dear Friend) ──
+      // ── L45-I: Room 6 at TLL (Brynn Dear Friend) ──
       if (node.code === 'TLL' && _npcFavor('brynn') >= 3) {
         const _r6Wrap = document.createElement('div');
         _r6Wrap.style.cssText = 'display:flex;flex-direction:column;gap:0;';
@@ -33114,7 +33114,7 @@ function _nodeHookBirkaRoom6(node, { npcRowDiv }) {
       }
 }
 function _nodeHookBirkaLampInquiry(node, { npcRowDiv }) {
-      // ── Layer 70 §XXXV — Beat 1: Lamp Inquiry at IN ──
+      // ── Layer 70 §XXXV — Beat 1: Lamp Inquiry at TLL ──
       if (node.code === 'TLL' && _npcFavor('brynn') >= 1
           && (S_story.actNumber || 1) >= 2 && !S_story.brynnKeeperStoryTold) {
         const lampBtn = document.createElement('button');
@@ -33139,7 +33139,7 @@ function _nodeHookBirkaLampInquiry(node, { npcRowDiv }) {
       }
 }
 function _nodeHookBirkaLampChoice(node, { npcRowDiv }) {
-      // ── Layer 70 §XXXV — Beat 2: Lamp Choice at IN (Dear Friend only) ──
+      // ── Layer 70 §XXXV — Beat 2: Lamp Choice at TLL (Dear Friend only) ──
       if (node.code === 'TLL' && _npcFavor('brynn') >= 2
           && S_story.brynnKeeperStoryTold && !S_story.brynnLightChoiceMade) {
         const choiceDiv = document.createElement('div');
@@ -33172,7 +33172,7 @@ function _nodeHookBirkaLampChoice(node, { npcRowDiv }) {
       }
 }
 function _nodeHookBirkaQuillBrynnSong(node) {
-      // ── S54b: Quill plays Brynn's song at TV — both Dear Friend, once per run ──
+      // ── S54b: Quill plays Brynn's song at MHQ — both Dear Friend, once per run ──
       if (node.code === 'MHQ' && _npcFavor('quill') >= 2 && _npcFavor('brynn') >= 2
           && !S_story.s54QuillBrynnDelivered) {
         S_story.s54QuillBrynnDelivered = true;
@@ -34645,7 +34645,7 @@ const NODE_VERBS = [
   // ── §VM-01-G4c: the D1 button verbs — one button, no alternative offered, panel gone on use.
   // Every bit below but `cost` was already a shipped opcode, which is the measured claim the G4
   // design pass made for this class (lab report §9.1) and it held.
-  // ── Layer 65: S49 Froberger Entry 41 — Sweelinck at SQ (full scene) ──
+  // ── Layer 65: S49 Froberger Entry 41 — Sweelinck at NUE (full scene) ──
   { id:'nue-s49-sweelinck', group:'nue-sweelinck-s49', nodes:['NUE'],
     when: st => st.frobergerLastEntryRead && !st.s49SweelinckDelivered,
     label:'📔 You read the last entry.', btnStyle:'margin-top:8px;',
@@ -35005,11 +35005,11 @@ function storyRender(node, prefix) {
   // (§VM-01-G3: the Layer-50 NG+ activation block moved into quest_ng_01/02/03's own
   //  gate (ngPlusRun countMin + priorQuestMinusOne) + activateNode:'LHR' — storyCheckQuests
   //  activates them declaratively, silently (onActivate:null), as this block always did.)
-  // ── L40-H/I: Sweelinck at SQ and CO (the dialogue-variant panel itself moved to NODE_PANELS;
+  // ── L40-H/I: Sweelinck at NUE and TLS (the dialogue-variant panel itself moved to NODE_PANELS;
   //    the NUE-only age/map/S49 sub-blocks stay here) ──
   {
     if (node.code === 'NUE' || node.code === 'TLS') {
-      // S28: Sweelinck age line — shown on 2nd+ visit to SQ, once per run
+      // S28: Sweelinck age line — shown on 2nd+ visit to NUE, once per run
       if (node.code === 'NUE' && !S_story.sweelinckAgeLineSeen) {
         const sqVisits = (S_story.npcVisitCounts && S_story.npcVisitCounts['sq_revisit']) || 0;
         S_story.npcVisitCounts = S_story.npcVisitCounts || {};
@@ -35023,7 +35023,7 @@ function storyRender(node, prefix) {
           document.getElementById('story-text-box').insertAdjacentElement('afterend', ageDiv);
         }
       }
-      // S55b: The Map Before the City — Sweelinck at SQ revisit after Act III, once
+      // S55b: The Map Before the City — Sweelinck at NUE revisit after Act III, once
       if (node.code === 'NUE' && (S_story.actNumber || 1) >= 3 && !S_story.s55SqMapLineDelivered) {
         const sqAllVisits = (S_story.npcVisitCounts && S_story.npcVisitCounts['sq_revisit']) || 0;
         if (sqAllVisits >= 1) {
@@ -35035,11 +35035,11 @@ function storyRender(node, prefix) {
           document.getElementById('story-text-box').insertAdjacentElement('afterend', mapLineDiv);
         }
       }
-      // ── Layer 65: S49 Froberger Entry 41 — Sweelinck at SQ (full scene) ── → NODE_VERBS (§VM-01-G4c)
+      // ── Layer 65: S49 Froberger Entry 41 — Sweelinck at NUE (full scene) ── → NODE_VERBS (§VM-01-G4c)
       _renderNodeVerbs(node, S_story, 'nue-sweelinck-s49');
     }
   }
-  // ── Layer 51: §XVI Weimar Scholar Gate — SQ node ──
+  // ── Layer 51: §XVI Weimar Scholar Gate — NUE node ──
   // (§VM-01-G3: the four Q-WM activation stanzas moved into quest_wm_01–04's own gates
   //  (wm_01 gate:{} + onActivate Isolde line; wm_02 questsDone wm_01; wm_03 wmArchiveComplete;
   //  wm_04 wmBenediktCircleComplete) + activateNode:'NUE'.)
@@ -35130,7 +35130,7 @@ function storyRender(node, prefix) {
       storyAutoSave();
     });
   }
-  // ── Layer 54: §XIX Tilbury Harbor Arc — SF and TL nodes ──
+  // ── Layer 54: §XIX Tilbury Harbor Arc — STN and TL nodes ──
   if (node.code === 'STN') {
     // (§VM-01-G3: Q-TL-01/02/03 activation moved into the quests' own gates + activateNode:'STN'
     //  — tl_01 unconditional; tl_02 tlLedgerRead; tl_03 questsDone tl_02 (the old act≥4 leg was
@@ -35163,7 +35163,7 @@ function storyRender(node, prefix) {
     // → NODE_VERBS (§DX-02fv)
     _renderNodeVerbs(node, S_story, 'tl-vonn');
   }
-  // ── Layer 55: §XX Visby Underground — VS and GC nodes ──
+  // ── Layer 55: §XX Visby Underground — VS and TRD nodes ──
   if (node.code === 'VS') {
     const _vqs = S_story.quests || {};
     // (§VM-01-G3: Q-VS-01 activation moved into the quest's own gate + activateNode:'VS'.
@@ -35216,7 +35216,7 @@ function storyRender(node, prefix) {
   _renderNodeVerbs(node, S_story, 'trd-yva');
   _runNodeHook('void-shaman-warden', node); // ── Layer 56: §XXI Void Shaman — MT tunnel Warden — extracted verbatim to NODE_HOOKS (§VM-01-G2) ──
   _runNodeHook('corelli-merchant', node); // ── Layer 61: §XXVI Corelli the Wandering Merchant — extracted verbatim to NODE_HOOKS (§VM-01-G2) ──
-  // Benedikt callback at SQ when vsShamanPersuaded
+  // Benedikt callback at NUE when vsShamanPersuaded
   if (node.code === 'NUE' && S_story.vsShamanPersuaded && _npcFavor('benedikt_rasp') >= 2 && !S_story.vsShamanBenediktDelivered) {
     S_story.vsShamanBenediktDelivered = true;
     setTimeout(() => storyMsg(
@@ -35225,7 +35225,7 @@ function storyRender(node, prefix) {
     storyAutoSave();
   }
   // (§VM-01-G1: the Layer 49 §XIV Quest -1 "Open Door" panel moved to NODE_PANELS above.)
-  // ── Layer 50: §XV Froberger's sealed letter at CO in NG+ ──
+  // ── Layer 50: §XV Froberger's sealed letter at TLS in NG+ ──
   if (node.code === 'TLS' && (S_story.ngPlusRun || 0) >= 1 && !S_story.frobergerLetterFound) {
     const _letterDiv = document.createElement('div');
     _letterDiv.className = 'sweelinck-variant';
@@ -35246,7 +35246,7 @@ function storyRender(node, prefix) {
       storyAutoSave();
     });
   }
-  // ── §D01-04/D02-04: Memory Gate — CO catacombs approach ──
+  // ── §D01-04/D02-04: Memory Gate — TLS catacombs approach ──
   if (node.code === 'TLS' && !S_story.memorGatePassedEntry && !S_story.defeatedBattles['TLS']) {
     const _mgDiv = document.createElement('div');
     _mgDiv.className = 'sweelinck-variant';
@@ -35278,7 +35278,7 @@ function storyRender(node, prefix) {
       storyAutoSave();
     });
   }
-  // ── Layer 72: §XXXVII Bruhns CO fav-gated scene ──
+  // ── Layer 72: §XXXVII Bruhns TLS fav-gated scene ──
   if (node.code === 'TLS' && !S_story.defeatedBattles['TLS'] && !S_story.bruhnsCoSceneDelivered) {
     const fav = _npcFavor('auros');
     let coSceneText = null;
@@ -35376,7 +35376,7 @@ function storyRender(node, prefix) {
       + '</div>';
     document.getElementById('story-text-box').insertAdjacentElement('afterend', _bkMazeDiv);
   }
-  // ── Layer 44: §IX Ally Cat Arc — CQ node render ──
+  // ── Layer 44: §IX Ally Cat Arc — CDG node render ──
   if (node.code === 'CDG') {
     const _oldCqDiv = document.getElementById('cq-boss-buttons');
     if (_oldCqDiv) _oldCqDiv.remove();
@@ -35400,7 +35400,7 @@ function storyRender(node, prefix) {
     cqDiv.style.cssText = 'margin-top:8px;display:flex;flex-direction:column;gap:6px;';
     _renderNodeVerbs(node, S_story, 'cdg-boss-menu', cqDiv);
     _runNodeHook('cdg-kenickie-market', node, { cqDiv }); // ── Layer 75: §XL Kenickie's Black Market ── → NODE_HOOKS (§VM-01-G4d)
-    _renderNodeVerbs(node, S_story, 'cdg-la-riva', cqDiv); // ── Layer 78: La Riva — la_riva_03 Kenickie delivery at CQ ──
+    _renderNodeVerbs(node, S_story, 'cdg-la-riva', cqDiv); // ── Layer 78: La Riva — la_riva_03 Kenickie delivery at CDG ──
     if (cqDiv.children.length > 0) {
       document.getElementById('story-text-box').insertAdjacentElement('afterend', cqDiv);
     }
@@ -35408,7 +35408,7 @@ function storyRender(node, prefix) {
   _runNodeHook('la-riva-row', node); // ── Layer 78: La Riva — FR node render — extracted verbatim to NODE_HOOKS (§VM-01-G2) ──
   _runNodeHook('scholar-workshop', node); // ── Layer 81: Scholar King's Workshop (WK) — extracted verbatim to NODE_HOOKS (§VM-01-G2) ──
 
-  _runNodeHook('mimic-meadows', node); // ── Layer 81: Mimic Meadows (MM) — extracted verbatim to NODE_HOOKS (§VM-01-G2) ──
+  _runNodeHook('mimic-meadows', node); // ── Layer 81: Mimic Meadows (LIM) — extracted verbatim to NODE_HOOKS (§VM-01-G2) ──
 
   // ── Layer 41: Birka NPC cards ──
   {
@@ -35476,12 +35476,12 @@ function storyRender(node, prefix) {
       // (the apparent `n`/`row` hits were \n escapes and a comment), so the anchor element
       // is the whole contract. Nothing else from this scope crosses the boundary.
       const _npcHookCtx = { npcRowDiv };
-      _runNodeHook('birka-varga-watch', node, _npcHookCtx); // ── S8: Varga's presence at BA — observation mechanic ── → NODE_HOOKS (§VM-01-G2b)
-      _runNodeHook('birka-pachelbel-ledger', node, _npcHookCtx); // ── Layer 68b: Pachelbel Ledger at BA (Dear Friend) ── → NODE_HOOKS (§VM-01-G2b)
-      _runNodeHook('birka-quill-couperin-farewell', node, _npcHookCtx); // ── Layer 69 §XXXIV — Act VIII: Quill visits BA to close the Couperin estate ledger ── → NODE_HOOKS (§VM-01-G2b)
-      _runNodeHook('birka-gigault-stall', node, _npcHookCtx); // ── L44-A: Gigault stall at BA ── → NODE_HOOKS (§VM-01-G2b)
-      _runNodeHook('birka-deacon-code', node, _npcHookCtx); // ── L44-Q: Deacon Code click target at BA ── → NODE_HOOKS (§VM-01-G2b)
-      _runNodeHook('birka-brynn-maintenance', node, _npcHookCtx); // ── L44-L/N: Brynn maintenance + ledger at IN ── → NODE_HOOKS (§VM-01-G2b)
+      _runNodeHook('birka-varga-watch', node, _npcHookCtx); // ── S8: Varga's presence at LLA — observation mechanic ── → NODE_HOOKS (§VM-01-G2b)
+      _runNodeHook('birka-pachelbel-ledger', node, _npcHookCtx); // ── Layer 68b: Pachelbel Ledger at LLA (Dear Friend) ── → NODE_HOOKS (§VM-01-G2b)
+      _runNodeHook('birka-quill-couperin-farewell', node, _npcHookCtx); // ── Layer 69 §XXXIV — Act VIII: Quill visits LLA to close the Couperin estate ledger ── → NODE_HOOKS (§VM-01-G2b)
+      _runNodeHook('birka-gigault-stall', node, _npcHookCtx); // ── L44-A: Gigault stall at LLA ── → NODE_HOOKS (§VM-01-G2b)
+      _runNodeHook('birka-deacon-code', node, _npcHookCtx); // ── L44-Q: Deacon Code click target at LLA ── → NODE_HOOKS (§VM-01-G2b)
+      _runNodeHook('birka-brynn-maintenance', node, _npcHookCtx); // ── L44-L/N: Brynn maintenance + ledger at TLL ── → NODE_HOOKS (§VM-01-G2b)
       _runNodeHook('birka-night-ambient', node, _npcHookCtx); // ── S52: Night-mode ambient text ── → NODE_HOOKS (§VM-01-G2b)
       _runNodeHook('birka-nivers-passes', node, _npcHookCtx); // ── L45-D/E: Nivers at LHR ── → NODE_HOOKS (§VM-01-G2b)
       _runNodeHook('birka-blue-shutters', node, _npcHookCtx); // ── S7: Blue Shutters Archive at LHR ── → NODE_HOOKS (§VM-01-G2b)
@@ -35495,13 +35495,13 @@ function storyRender(node, prefix) {
       _runNodeHook('birka-cy-ngplus-line', node, _npcHookCtx); // ── §D01-07: HKG NG+ remembered line (no save, just flavor) ── → NODE_HOOKS (§VM-01-G2b)
       _runNodeHook('birka-s6-joint-conversation', node, _npcHookCtx); // ── S6: Weckmann/Auros joint conversation at HKG when both Friendly ── → NODE_HOOKS (§VM-01-G2b)
       _runNodeHook('birka-weckmann-log', node, _npcHookCtx); // ── L45-H: Weckmann training log at HKG ── → NODE_HOOKS (§VM-01-G2b)
-      _runNodeHook('birka-brynn-heartwood-letter', node, _npcHookCtx); // ── S2 / Layer 73 §XXXVIII: Brynn Heartwood Letter — fav-gated, at IN Act IV+, Entry 7 read ── → NODE_HOOKS (§VM-01-G2b)
-      _runNodeHook('birka-brynn-regulars', node, _npcHookCtx); // ── S58: Brynn's Regulars — ambient guests at IN ── → NODE_HOOKS (§VM-01-G2b)
-      _runNodeHook('birka-s49-entry41', node, _npcHookCtx); // ── Layer 65: S49 Froberger Entry 41 — Brynn at IN (full scene) ── → NODE_HOOKS (§VM-01-G2b)
-      _runNodeHook('birka-room6', node, _npcHookCtx); // ── L45-I: Room 6 at IN (Brynn Dear Friend) ── → NODE_HOOKS (§VM-01-G2b)
-      _runNodeHook('birka-lamp-inquiry', node, _npcHookCtx); // ── Layer 70 §XXXV — Beat 1: Lamp Inquiry at IN ── → NODE_HOOKS (§VM-01-G2b)
-      _runNodeHook('birka-lamp-choice', node, _npcHookCtx); // ── Layer 70 §XXXV — Beat 2: Lamp Choice at IN (Dear Friend only) ── → NODE_HOOKS (§VM-01-G2b)
-      _runNodeHook('birka-quill-brynn-song', node, _npcHookCtx); // ── S54b: Quill plays Brynn's song at TV — both Dear Friend, once per run ── → NODE_HOOKS (§VM-01-G2b)
+      _runNodeHook('birka-brynn-heartwood-letter', node, _npcHookCtx); // ── S2 / Layer 73 §XXXVIII: Brynn Heartwood Letter — fav-gated, at TLL Act IV+, Entry 7 read ── → NODE_HOOKS (§VM-01-G2b)
+      _runNodeHook('birka-brynn-regulars', node, _npcHookCtx); // ── S58: Brynn's Regulars — ambient guests at TLL ── → NODE_HOOKS (§VM-01-G2b)
+      _runNodeHook('birka-s49-entry41', node, _npcHookCtx); // ── Layer 65: S49 Froberger Entry 41 — Brynn at TLL (full scene) ── → NODE_HOOKS (§VM-01-G2b)
+      _runNodeHook('birka-room6', node, _npcHookCtx); // ── L45-I: Room 6 at TLL (Brynn Dear Friend) ── → NODE_HOOKS (§VM-01-G2b)
+      _runNodeHook('birka-lamp-inquiry', node, _npcHookCtx); // ── Layer 70 §XXXV — Beat 1: Lamp Inquiry at TLL ── → NODE_HOOKS (§VM-01-G2b)
+      _runNodeHook('birka-lamp-choice', node, _npcHookCtx); // ── Layer 70 §XXXV — Beat 2: Lamp Choice at TLL (Dear Friend only) ── → NODE_HOOKS (§VM-01-G2b)
+      _runNodeHook('birka-quill-brynn-song', node, _npcHookCtx); // ── S54b: Quill plays Brynn's song at MHQ — both Dear Friend, once per run ── → NODE_HOOKS (§VM-01-G2b)
       _runNodeHook('birka-quill-ngplus-song', node, _npcHookCtx); // ── S32: Quill's second song on NG+ (Dear Friend or higher) ── → NODE_HOOKS (§VM-01-G2b)
       _runNodeHook('birka-rod-shop', node, _npcHookCtx); // ── Rod Shop at YC ── → NODE_HOOKS (§VM-01-G2b)
       _runNodeHook('birka-quill-ambient-song', node, _npcHookCtx); // ── S45: Quill plays without prompting (unfinished song ambient, odd game days) ── → NODE_HOOKS (§VM-01-G2b)
@@ -35578,7 +35578,7 @@ function storyRender(node, prefix) {
       S_story.roughWhiskeyBrynLineDelivered = true;
       setTimeout(() => storyMsg("Brynn: \"Pachelbel's selling that now? He used to turn it away — said the margin didn't justify the trouble it causes. Must have changed his policy. Things do.\""), 400);
     }
-    // ── §DESIGN-03: quest_brynn_firewood — woodpile at IN ── → NODE_VERBS (§VM-01-G4c; the
+    // ── §DESIGN-03: quest_brynn_firewood — woodpile at TLL ── → NODE_VERBS (§VM-01-G4c; the
     //    handler's storyCheckQuests/storyUpdateStatus/storyAutoSave tail is the re-render the
     //    verb driver ends with — storyRender does all three, in that order, at its own tail.)
     _renderNodeVerbs(node, S_story, 'tll-brynn-firewood');
@@ -35587,7 +35587,7 @@ function storyRender(node, prefix) {
       S_story.couperiDebtReleased = true;
       setTimeout(() => storyMsg(S34_QUILL_BEAT3 + '\n\n── The Couperin debt has done its work. ──'), 600);
     }
-    // Layer 69 §XXXIV — Quill Beat 2: Couperin's Song (fires first TV visit after lute returned)
+    // Layer 69 §XXXIV — Quill Beat 2: Couperin's Song (fires first MHQ visit after lute returned)
     if (node.code === 'MHQ' && !S_story.couperiSongReceived
         && S_story.quests['quest_couperin_lute'] === 'complete') {
       S_story.couperiSongReceived = true;
