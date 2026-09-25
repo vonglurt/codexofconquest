@@ -1,8 +1,9 @@
 #!/usr/bin/env node
 // SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson
 // §DX-02hz — the Doc Health Badge in `docs/design/index.md` carries two cells that are a
-// command's output: *HTML line count* (`wc -l play.html`) and *Lab reports on disk*
-// (`ls docs/lab-reports/*.md | wc -l`). Each is derived here and the cell held to it.
+// command's output: *HTML line count* (`wc -l play.html`), *Lab reports on disk*
+// (`ls docs/lab-reports/*.md | wc -l`) and *Lab reports in index* (distinct reports the
+// Lab Report Index cites). Each is derived here and the cell held to it.
 // Asserts only, never rewrites (§DX-02fx).
 // Run: node scripts/check-badge.js [--selftest]
 'use strict';
@@ -15,6 +16,11 @@ const DERIVED = {
   'HTML line count': (root) => (fs.readFileSync(path.join(root, 'play.html'), 'utf8').match(/\n/g) || []).length,
   'Lab reports on disk': (root) => fs.readdirSync(path.join(root, 'docs', 'lab-reports'))
     .filter((f) => f.endsWith('.md') && fs.statSync(path.join(root, 'docs', 'lab-reports', f)).isFile()).length,
+  'Lab reports in index': (root) => {
+    const md = fs.readFileSync(path.join(root, 'docs', 'design', 'index.md'), 'utf8');
+    const sec = md.slice(md.search(/^## Lab Report Index\b/m)).split(/\n## /)[0];
+    return new Set([...sec.matchAll(/docs\/lab-reports\/([A-Za-z0-9._-]+\.md)/g)].map((m) => m[1])).size;
+  },
 };
 
 function badgeCells(text) {
@@ -53,6 +59,7 @@ if (process.argv.includes('--selftest')) {
     `| HTML line count | ${lines} | ✅ note |`, `| Lab reports on disk | ${reports} | ✅ |`, '',
     '### Next', '| HTML line count | 1 | outside the badge |'].join('\n');
   const derive = { 'HTML line count': () => 39053, 'Lab reports on disk': () => 116 };
+  ok(Number.isInteger(DERIVED['Lab reports in index'](ROOT)), 'the index count reads the real Lab Report Index');
   ok(scan(doc('39,053', '116'), derive).length === 0, 'cells that match the tree are clean, thousands separator and all');
   ok(scan(doc('39,006', '116'), derive).some((f) => f.includes('reads LOW by 47')), 'a line count behind the file is caught and named LOW');
   ok(scan(doc('39,053', '117'), derive).some((f) => f.includes('reads HIGH by 1')), 'a report count ahead of the disk is caught and named HIGH');
