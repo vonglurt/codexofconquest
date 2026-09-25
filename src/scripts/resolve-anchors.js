@@ -88,7 +88,9 @@ function docFiles(scope) {
 // ── resolution ────────────────────────────────────────────────────────────────
 // An anchor may name another repo file: `src/js/wbapi-server.js:seededNext@1147`. Default
 // target is the game file. Returns {lines, target, sym} or null if the file is missing.
-const FILE_QUALIFIED = /^([\w./-]+\.(?:js|mjs|html|md)):(.+)$/;
+// An allowlist, not "any dotted token": `NODE_MAP.TLS` and `_S_DEFAULTS.hp` are symbols.
+const QUALIFIED_EXT = 'js|mjs|cjs|html|md|py|sh|json|yml';
+const FILE_QUALIFIED = new RegExp(`^([\\w./-]+\\.(?:${QUALIFIED_EXT})):(.+)$`);
 function targetFor(sym, defaultLines, cache) {
   const m = FILE_QUALIFIED.exec(sym);
   if (!m) return { lines: defaultLines, sym };
@@ -100,7 +102,7 @@ function targetFor(sym, defaultLines, cache) {
   return { lines: cache.get(file), sym: rest, file };
 }
 
-const FILE_QUALIFIED_NAME = /^[\w./-]+\.(?:js|mjs|html|md)$/;
+const FILE_QUALIFIED_NAME = new RegExp(`^[\\w./-]+\\.(?:${QUALIFIED_EXT})$`);
 const PLACEHOLDER = /^(?:symbol|sym|path\/to\/file\.js:symbol)$/;
 const isPlaceholder = sym => PLACEHOLDER.test(sym);
 
@@ -250,6 +252,26 @@ function selftest() {
   r = audit([mk('target2.md', 'see `src/js/wbapi-server.js:function seededNext@99`')], target);
   check('target', r.stale.length === 1 && r.stale[0].target === 'src/js/wbapi-server.js',
     'a file-qualified anchor carries the file it resolved in, not the game file');
+
+  // 8b. every tracked tooling extension qualifies; a dotted SYMBOL still does not (§DX-02id)
+  const perExt = [
+    ['src/bin/monitor-snapshots.py:_TOGGLE', 'src/bin/monitor-snapshots.py'],
+    ['src/bin/say.sh:QUEUE_DIR', 'src/bin/say.sh'],
+    ['src/package.json:check:docpointers', 'src/package.json'],
+    ['.github/workflows/walk-invariants.yml:check:walk', '.github/workflows/walk-invariants.yml'],
+  ];
+  for (const [sym, file] of perExt) {
+    r = audit([mk('ext.md', '`' + sym + '@10`')], target);
+    const got = [...r.stale, ...r.fresh];
+    check('extensions', !r.dead.length && got.length === 1 && got[0].target === file,
+      `${file.split('.').pop()} — resolves in ${file}, not the game file`);
+  }
+  r = audit([mk('cjs.md', '`src/js/no-such.cjs:x@10`')], target);
+  check('extensions', r.dead.length === 1 && r.dead[0].target === 'src/js/no-such.cjs',
+    'cjs — a missing .cjs is DEAD in its own file, not searched in the game file');
+  r = audit([mk('dotted.md', 'a `NODE_MAP.TLS@12` and a `_S_DEFAULTS.hp@12`')], target);
+  check('extensions', r.dead.length === 2 && r.dead.every(a => a.target === rel(HTML)),
+    'a dotted symbol is not a path — it is searched in the game file');
 
   // 9. quoting escape — a ship record must be able to NAME the anchor it retired without
   // creating one. Keeping the `@N` outside the code span is invisible to ANCHOR_RE, which
