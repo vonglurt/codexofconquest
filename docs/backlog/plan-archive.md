@@ -19,6 +19,16 @@
 
 ---
 
+## Archived 2026-09-25 — §DX-02lf (the speak route's header stops promising prompt caching)
+
+### §DX-02lf — the NPC-speak route still announces prompt caching, which §DX-02ak deleted (NEW 2026-09-25 during §DX-02al, 🟢 one comment line)
+
+- [x] ✅ SHIPPED 2026-09-25 `6a25d06` **§DX-02lf — `// Claude SDK — prompt caching on system block, one call per greeting.` sits above `action === 'speak'` in `src/js/wbapi-server.js`, and there is no caching.** §DX-02ak (`05bb436`) deleted the only `cache_control` and wrote the floor into a comment eight lines further down, so the route's header and its body now disagree. Gate #32 cannot see this: it looks for the `cache_control` **property**, and this line only makes a claim in prose. Found while §DX-02al moved the system block out of the route.
+> **Fix (🟢):** reword the header to what the route does: one uncached call per request, with the system block from `WBAPI.npcSpeakSystem`. **Verify:** `grep -ci 'prompt caching' src/js/wbapi-server.js` goes **1 → 0**, and `check:walk` stays green.
+> **Shipped (`6a25d06`).** The header line now reads *"Claude SDK — one uncached call per request; the system block is WBAPI.npcSpeakSystem."* `grep -ci 'prompt caching' src/js/wbapi-server.js` goes **1 → 0**. `check:walk` is **32/32**. The change is one comment line, so the suite was not re-run: it cannot change what any test observes. §DX-02al had just run it at `0d19f91` (164/1086 on this host, where Chromium does not launch; the two known real failures only).
+
+---
+
 ## Archived 2026-09-25 — §DX-02al (the NPC-speak prompt carries worldTruth and enemy)
 
 ### §DX-02al — `worldTruth` and `enemy` live in the registry the speak endpoint does not read (NEW 2026-08-12 during §DOC-02ac, 🟢 no design call)
