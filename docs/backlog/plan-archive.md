@@ -19,6 +19,18 @@
 
 ---
 
+## Archived 2026-09-25 — §DX-01j (the Lab Report Index is complete; gate #38, check:labindex)
+
+### §DX-01j — the master Lab Report Index lists 80 of the 115 reports on disk, and the landing page is the only complete list (NEW 2026-08-23 during §RELEASE-01, 🟢 no design call)
+
+- [x] ✅ SHIPPED 2026-09-25 `2d482d4` **`docs/design/index.md` §"Lab Report Index" carries 86 rows — 80 reports in `docs/lab-reports/`, 6 moved to `docs/archive/` — against 115 files on disk. 35 are unlisted.** The header claimed *"All 78 Reports"* while the table already held 79; the Doc Health Badge claimed *"on disk 85 / in index 85"* while `ls docs/lab-reports/*.md | wc -l` returns **115**. Both were corrected to the measured numbers 2026-08-23, and the gap is now stated in the header rather than hidden by it.
+> **The complete list already exists, in the one place a doc-health pass never looks.** `index.html` links **all 115** in eight counted sections (Architecture & Engine 15 · Quest VM 9 · Combat/Economy 18 · World/Map 21 · Narrative 35 · Mesh 3 · Tooling 7 · Other 7 = 115), and its section counts sum correctly. The landing page is therefore the census; `index.md` is an annotated subset that stopped being told about new reports.
+> **Fix (mechanical):** for each of the 35, add a one-line row under the category it belongs to, sourced from the report's own abstract. **Detector wanted, and it is cheap:** a gate that diffs `ls docs/lab-reports/*.md` against the filenames cited in `docs/design/index.md` and `index.html` and fails on either gap — the same shape as `check:nodeindex`. Without it this row reopens on the next report written.
+> **Grep to disprove:** `comm -13 <(sed -n '/^## Lab Report Index/,/^## Reverse Lookup/p' docs/design/index.md | grep -oiE 'docs/lab-reports/lab-report-[a-z0-9._-]+\.md' | sort -u) <(ls docs/lab-reports/*.md | sort)`.
+> **Shipped (`2d482d4`), with `check:walk` gate #38 `check:labindex`.** **Re-measured at `80a2b87`:** the index cited **81** of **116** reports on disk, so **35** were unlisted, the same 35 as when the row was filed; `index.html` linked all 116. Each of the 35 now has a row, with its topic taken from the report's own title and abstract (`index.html` has names, not blurbs). Seventeen went into existing sections: 2 Architecture, 5 World & Navigation, 2 NPC & Narrative. Four new sections hold the rest: **The Quest VM** (9), **Play Review — §PLAY-01** (7, including §DEATH-01 as face F), **The Warrant's Board** (3), and **World Builder & Mesh Tooling**, marked historical because the directional-link model it describes is gone (7, including `plan-world-connectivity.md`, marked *"a plan, not a lab report"*, filed as §DX-02lj). The section header no longer states a count. **Unlisted 35 → 0.** **The gate** fails on a report missing from either page, on a citation of a report that is not on disk (archive citations included), and on any count the landing page prints that disagrees with what it counts: the *N write-ups* heading, the watermark, each group badge, and a report listed in two groups. **It found one more thing:** the #labs watermark still read **114**, now 116. At `80a2b87` it reports **36** findings (35 + the watermark); after the fix, 0. `check:badge` now derives *Lab reports in index* too (**81 → 116**). 11 selftests. `check:walk` **38/38**; `npm test` 183/1086 on this host (no browser), the same two real failures.
+
+---
+
 ## Archived 2026-09-25 — §DX-02hz (gate #37, check:badge)
 
 ### §DX-02hz — the Doc Health Badge's line count is maintained by hand and had drifted 9 lines with nothing to say who moved them (NEW 2026-08-25 during §DX-02en, 🟢 no design call)

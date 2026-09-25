@@ -43,6 +43,12 @@
 ---
 ## §BACKLOG — Open Items (Phase 6)
 
+### §DX-02lj — a plan is filed among the lab reports, so every count of "lab reports" is one high (NEW 2026-09-25 during §DX-01j, 🟡 move it or keep it)
+
+- [ ] **`docs/lab-reports/plan-world-connectivity.md` is a plan (2026-06-09, *"PLANNED — ready to execute"*, N/E/S/W era), not a lab report.** It is the only file in that folder without the `lab-report-` prefix, so `ls docs/lab-reports/*.md` says **116** and `ls docs/lab-reports/lab-report-*.md` says **115**; the badge and `index.html`'s *"116 write-ups"* both count it. §DX-01j indexed it as-is, marked *"a plan, not a lab report"*, rather than move a file two pages link.
+> **The call:** (a) `git mv` it to `docs/archive/` beside the six historical reports already there, then drop its `index.html` link and lower the Other badge, the heading and the watermark to 115. Gates #37 and #38 will name every number that has to move. (b) Keep it where it is, and let the folder mean "write-ups". **Recommendation:** (a), because the folder's name is a claim about what it holds. Check `git grep plan-world-connectivity` for inbound links first.
+> **Provenance:** §DX-02hz, which found the 115/116 split between the badge note's glob and the cell's; §DX-01j, which listed the file.
+
 ### §CSS-CENSUS-FU — 53 dead class selectors and 3 unstyled classes in `play.html`, each named by gate #36 (NEW 2026-09-25 during §CSS-CENSUS, 🟢 delete or style, no design call)
 
 - [ ] **§CSS-CENSUS-FU — empty `check-css-classes.js`'s two ratchet tables.** **`KNOWN_DEAD`, 53 selectors** declared in `<style>` whose names appear nowhere else in `play.html`, including whole families: the retired quest card (`quest-card`, `qc-title`, `qc-obj`, `qc-status-*`), the old minimap (`mmc-*`, `wmc-empty-visited`, `map-cell`, `current-pos`, `path-active`), `sleep-field*`, `rest-chip*`, and the vendor/loot/inn/npc/fish chips. Spot-checked by hand at `8ed4d77`: `quest-card`, `map-cell`, `ds-die` and `npc-chip` occur only inside `<style>` (the one test hit for `map-cell` is `.final-map-cell`). **`KNOWN_UNDECLARED`, 3 classes** applied and never styled: `mc-junction` (minimap junction cells), `norm` (the adv badge's markup default, while the stylesheet keys on `show-norm`), `shield-item` (inventory). **Fix:** delete the dead rules from both the dark and light theme blocks. Watch compound selectors, since `.map-cell.visited` goes with `map-cell`. For each undeclared class, either give it the style its name promises or remove the application. The gate turns each table entry into a stale-known failure as it is fixed, so the tables shrink with the work. **Verify:** both tables empty, gate #36 green, and a screenshot pass on a host with Chromium, because deleting CSS is the one change here a gate cannot see render. **Provenance:** §CSS-CENSUS, whose census found them.
@@ -132,13 +138,6 @@
 - [ ] **One history blob is 52,789,636 bytes (50.34 MB)** — an old bloated revision of the game file from before the spike fix. Over GitHub's 50 MB **warning** line, well under the 100 MB hard block, so the push succeeds with a warning. It is a revision of the one file the author asked to preserve completely, so removing it means accepting a hole in that history. **Decision deferred deliberately.**
 - [ ] **701 bare `CodexOfConquest` mentions remain in HISTORY docs** (`docs/lab-reports/`, `docs/archive/`, `docs/backlog/plan-archive.md`). Left as written under annotate-don't-rewrite (§DX-02c/§AUDIT-03m); README's *A note on names* explains it to anyone who greps. **Open question:** is that the right call for a public repo, where the first reader has no context? 🟡 ONE DESIGN CALL.
 - [ ] **`make run` has never been executed end-to-end.** `make status`, `./bin/api help`, the server launcher and `run.sh` syntax are verified, but the full `run` target — two Terminal windows plus a browser open — has not been run in this environment. **Verify on a real desktop session before relying on it.**
-
-### §DX-01j — the master Lab Report Index lists 80 of the 115 reports on disk, and the landing page is the only complete list (NEW 2026-08-23 during §RELEASE-01, 🟢 no design call)
-
-- [ ] **`docs/design/index.md` §"Lab Report Index" carries 86 rows — 80 reports in `docs/lab-reports/`, 6 moved to `docs/archive/` — against 115 files on disk. 35 are unlisted.** The header claimed *"All 78 Reports"* while the table already held 79; the Doc Health Badge claimed *"on disk 85 / in index 85"* while `ls docs/lab-reports/*.md | wc -l` returns **115**. Both were corrected to the measured numbers 2026-08-23, and the gap is now stated in the header rather than hidden by it.
-> **The complete list already exists, in the one place a doc-health pass never looks.** `index.html` links **all 115** in eight counted sections (Architecture & Engine 15 · Quest VM 9 · Combat/Economy 18 · World/Map 21 · Narrative 35 · Mesh 3 · Tooling 7 · Other 7 = 115), and its section counts sum correctly. The landing page is therefore the census; `index.md` is an annotated subset that stopped being told about new reports.
-> **Fix (mechanical):** for each of the 35, add a one-line row under the category it belongs to, sourced from the report's own abstract. **Detector wanted, and it is cheap:** a gate that diffs `ls docs/lab-reports/*.md` against the filenames cited in `docs/design/index.md` and `index.html` and fails on either gap — the same shape as `check:nodeindex`. Without it this row reopens on the next report written.
-> **Grep to disprove:** `comm -13 <(sed -n '/^## Lab Report Index/,/^## Reverse Lookup/p' docs/design/index.md | grep -oiE 'docs/lab-reports/lab-report-[a-z0-9._-]+\.md' | sort -u) <(ls docs/lab-reports/*.md | sort)`.
 
 ### §DX-02fx — the anchor-convention suite repairs the docs it is auditing, so its own verdict depends on run order (NEW 2026-08-23 during §DX-01g, 🟡 ONE DESIGN CALL: assert or repair, not both)
 
@@ -777,6 +776,6 @@
 
 ## §RESUME — Phase 6 history
 
-> **Completed work is not carried here.** The 65 closed increments for this phase are condensed in **[`../archive/backlog-resume-history.md`](../archive/backlog-resume-history.md)**; full prose for recent closes is in [`plan-archive.md`](plan-archive.md). This file carries open rows only.
+> **Completed work is not carried here.** The 66 closed increments for this phase are condensed in **[`../archive/backlog-resume-history.md`](../archive/backlog-resume-history.md)**; full prose for recent closes is in [`plan-archive.md`](plan-archive.md). This file carries open rows only.
 
 > When an increment ships: write the full entry into `plan-archive.md`, add its one-line row to `../archive/backlog-resume-history.md` and to the cross-phase table in [`BACKLOG.md`](BACKLOG.md), and delete the row from this file.
