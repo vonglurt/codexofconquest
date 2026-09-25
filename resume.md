@@ -506,7 +506,15 @@ before the older rows.
 
 A "mission" is a **quest** in `QUEST_DB`, executed by `QuestRuntime` through the
 `BIT_CONTRACTS` opcode table. 2,853 of them exist; the ratio of data to engine is
-43:1. The six types are `main | side | combat | skill_check | mission_bit | hunt`.
+43:1. Nine `type` values carry them — `skill_check` 2,485 · `side` 141 · `combat` 81 ·
+`delivery` 57 · `epic` 40 · `escort` 22 · `hybrid` 13 · `main` 7 · `dialogue` 7 (census
+2026-09-25). `mission_bit` is a bit `kind` inside a quest, not a quest `type`. Re-derive
+before trusting the numbers:
+
+```bash
+node -e "const W=require('./src/js/wbapi-core');W.load('play.html');const c={};
+for(const q of Object.values(W.questDb))c[q.type]=(c[q.type]||0)+1;console.log(c)"
+```
 
 ```bash
 # 1. never guess an id — search first

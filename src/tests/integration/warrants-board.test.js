@@ -5,7 +5,7 @@
 const { test, expect } = require('@playwright/test');
 
 const NEWGAME = { str: 10, dex: 8, con: 8, int: 8, wis: 8, cha: 8 };
-const ALLOWED = ['side', 'skill_check', 'craft', 'combat', 'hunt', 'delivery', 'escort', 'dialogue'];
+const ALLOWED = ['side', 'skill_check', 'craft', 'combat', 'delivery', 'escort', 'dialogue'];
 
 test.describe('§BOARD-01 — The Warrant\'s Board', () => {
   test('host gating + deterministic slate per (node, gameDay)', async ({ page }) => {
@@ -58,7 +58,7 @@ test.describe('§BOARD-01 — The Warrant\'s Board', () => {
     expect(r.perType.hybrid).toBe(13);
     expect(r.eligible).toBe(2776);
     const empty = Object.entries(r.perType).filter(([, n]) => n === 0).map(([type]) => type);
-    expect(empty).toEqual(['hunt']);             // a declared type with no quest yet — §DX-02if
+    expect(empty).toEqual([]);                   // every allowlisted type carries a quest — §DX-02if
   });
 
   test('every posted bounty is legal: UQF, allowlisted type, real distant dest, gate-satisfied, not started', async ({ page }) => {

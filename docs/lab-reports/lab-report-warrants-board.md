@@ -162,6 +162,10 @@ Shipped **byte-identical** as `const BOUNTY_TYPES@37239`, and byte-identical at 
    > Board-eligible at HEAD **2,763 → 2,776** (of 2,823 UQF). `hunt` stays, with 0 quests: a declared type, not an
    > item descriptor. Pinned in `warrants-board.test.js`.
 
+   > **Closed 2026-09-25 (§DX-02if):** `hunt` is out as well, which leaves seven types. Still 0 quests at HEAD. The Void
+   > hunts shipped as `combat`, and "hunt" survives only as `_classifyQuest`'s operational class for `combat`.
+   > Board-eligible stays **2,776**. The test's empty-type pin is now `[]`.
+
 > ⚠ **AND THE COUNTEREXAMPLE IS ON THE CITED LINE.** §4 dismisses the four types with *"the `_flav`
 > map at 33178 is defensive for types that could exist but don't."* Line 33178 is
 > `const _flav = ({ combat:@35787` — `combat: FIGHT · delivery: DELIVER · escort: ESCORT · dialogue:

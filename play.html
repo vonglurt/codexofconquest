@@ -37328,7 +37328,7 @@ function _questsByNodeUnchecked(nodeCode) {
 // but-working `unlock` opcode (this is the file's first live use of it). Pure,
 // read-only selection; no movement gate; no jump travel; no new Math.random.
 // Design locked in lab-reports/lab-report-warrants-board.md.
-const BOUNTY_TYPES = new Set(['side','skill_check','hybrid','combat','hunt','delivery','escort','dialogue']);
+const BOUNTY_TYPES = new Set(['side','skill_check','hybrid','combat','delivery','escort','dialogue']);
 // host(node): opt-in `board:true`, else default = any rest node, unless `board:false` suppresses it.
 function _boardHost(node) { return !!node && (node.board === true || (node.board !== false && node.sleep === true)); }
 // FNV-1a hash — pure/replayable rotation seed (never Math.random; §VM-01-B-safe).
