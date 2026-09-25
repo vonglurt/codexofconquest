@@ -412,6 +412,26 @@ to inspect the grid without scanning NODE_MAP manually.
 
 ---
 
+## Questline Context (§EDITOR-04)
+
+One read endpoint for the neighbourhood a mission is authored into: the quests
+at a node (activate or waypoint) or in an arc, the NPCs anchored there, every
+flag they read through the gate grammar and every flag they write, and the three
+relational traps. Read-only.
+
+```bash
+./bin/api context LHR                      # GET /api/context/LHR
+./bin/api context --arc quest_kg           # GET /api/context?arc=quest_kg
+./bin/api context ATH --json               # the full response
+```
+
+**The traps it names.** `traps.unstandable` — the node is not its cell's primary,
+so `currentCode` can never hold it (§DX-02w; 172 of 416 nodes). `flags.unwritten`
+— a flag a gate or completion reads that nothing in the file writes, from
+`check:questgraph`'s own scanners, so the two cannot disagree. `deadlocks` — an
+`onComplete` writing the flag its own `completion` waits on (fatal, or inert when
+someone else writes it too). `node.cell.primary` names the node that hides it.
+
 ## Loot Drop System (§DX-02ab)
 
 One read endpoint over every drop table: monster trophies, the weapon-quality

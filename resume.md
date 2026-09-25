@@ -513,6 +513,7 @@ A "mission" is a **quest** in `QUEST_DB`, executed by `QuestRuntime` through the
 ./bin/api list quest --q "keyword"
 ./bin/api list quest --arc shk --node BK --type skill_check
 ./bin/api get quest shk6_act1
+./bin/api context TLL        # the node's whole questline, and the traps below, in one call
 
 # 2. the node must exist and be stood-on-able before the quest points at it
 ./bin/api location TLL

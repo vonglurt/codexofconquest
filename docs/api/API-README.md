@@ -143,6 +143,8 @@ Never guess an ID. Always search first.
 
 ./bin/api location LHR                  # composite node view (bodies are --with, §DX-02kn)
 ./bin/api chain quest_anath             # upstream/downstream quest chain
+./bin/api context LHR                   # a node's questline + traps in one call (§EDITOR-04)
+./bin/api context --arc quest_kg        # the same for an arc
 
 ./bin/api loot-drop                     # every drop table (§DX-02ab)
 ./bin/api loot-drop --fishing           # lake magic + fish trophies only

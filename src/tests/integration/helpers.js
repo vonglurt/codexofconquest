@@ -213,6 +213,7 @@ const PORT_BLOCKS = {
   ledger: 14100,
   duel: 14200,
   snapshots: 14300,
+  context: 14400,
 };
 
 // Returns `count` consecutive ports reserved for this worker inside `block`'s

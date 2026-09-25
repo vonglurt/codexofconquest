@@ -261,6 +261,7 @@ The game is a D&D world stored in a single HTML file. The API manages: nodes (ma
   ./bin/api batch-npc <updates.json>             §AUDIT-03b: bulk quest.npc re-anchor, one save ([{id,npc},…])
   ./bin/api export <collection>                  dump JSON (node_map quest_db monster_pool world_db all)
   ./bin/api loot-drop [--terrain --monster --fishing --bonus --name]  drop tables (§DX-02ab)
+  ./bin/api context <code> | --arc <arc>        questline neighbourhood + authoring traps (§EDITOR-04)
   ./bin/api location [code]                      composite view (no code = list all)
   ./bin/api location <code> --with all           inline quests/monsters/npcs bodies (default: counts + pointers)
   ./bin/api speak <npc> "<prompt>" --state neutral|friendly|dearFriend
@@ -621,6 +622,28 @@ const CMD = {
     }
     ok(`loot-drop: ${rows.length} entries · ${Object.entries(bySrc).map(([k, n]) => `${k} ${n}`).join(' · ')}`);
     info('full rows: ./bin/api loot-drop --json   filters: --terrain --monster --fishing --bonus --name');
+  },
+
+  // §EDITOR-04 — GET /api/context: a node's or an arc's questline and its live traps.
+  async context(pos, flags) {
+    await requireServer();
+    const arc = typeof flags.arc === 'string' ? flags.arc : null;
+    if (!pos[1] && !arc) { console.error('usage: ./bin/api context <code> | --arc <arc>'); process.exit(1); }
+    const r = await request('GET', arc ? `/api/context?arc=${encodeURIComponent(arc)}` : `/api/context/${encodeURIComponent(pos[1])}`);
+    if (r.status !== 200) { printError(r); process.exit(1); }
+    if (flags.json || flags.raw) { printResult(r.body, flags); return; }
+    const b = r.body;
+    const where = b.node ? `${b.node.code} ${b.node.label || ''}`.trim() : `arc ${b.scope.arc}`;
+    ok(`context ${where}: ${b.quests.length} quests · ${b.npcs.length} npcs · ${Object.keys(b.flags.reads).length} flags read · ${Object.keys(b.flags.writes).length} written`);
+    if (b.node && b.node.cell) {
+      const c = b.node.cell;
+      info(`cell ${c.r},${c.c} — ${c.isPrimary ? 'primary' : `NOT primary (${c.primary} is): cannot be stood on`}${c.sharedWith.length ? ` · shared with ${c.sharedWith.join(', ')}` : ''}`);
+    }
+    for (const q of b.quests) info(`  ${q.id}  ${q.type || '?'}  ${q.title || ''}${q.gateFlags.length ? `  gate:${q.gateFlags.join(',')}` : ''}${q.writes.length ? `  writes:${q.writes.join(',')}` : ''}`);
+    for (const u of b.flags.unwritten) console.log(`${C.yellow}⚠ unwritten flag ${u.flag}${C.reset} — read by ${u.readBy.join(', ')}${u.knownAs ? ` (known: ${u.knownAs})` : ''}`);
+    for (const d of b.deadlocks) console.log(`${d.fatal ? C.red + '✗ self-deadlock' : C.dim + '· inert self-write'}${C.reset} ${d.quest} on ${d.flag}${d.knownAs ? ` (known: ${d.knownAs})` : ''}`);
+    const t = b.traps;
+    (t.unstandable + t.unwrittenFlags + t.fatalDeadlocks ? console.log : ok)(`traps: unstandable ${t.unstandable} · unwritten flags ${t.unwrittenFlags} · fatal deadlocks ${t.fatalDeadlocks}`);
   },
 
   // §NAV-01h — road net: GET /api/roads (overlay data) / pins subcommand

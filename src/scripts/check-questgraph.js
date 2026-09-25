@@ -655,4 +655,5 @@ function main() {
   console.log('\ncheck:questgraph OK — no residual nondeterminism in quest data (the §VM-01-E blocker is cleared).');
 }
 
-main();
+if (require.main === module) main();
+module.exports = { gateReads, scanFlagWrites, selfDeadlocks, startFlagsFromDefaults, KNOWN_UNWRITTEN_FLAG, KNOWN_SELF_DEADLOCK };

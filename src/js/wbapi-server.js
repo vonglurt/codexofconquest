@@ -36,7 +36,8 @@ const crypto    = require('crypto');
 const WBAPI     = require('./wbapi-core');
 const Mover     = require('./mover');   // §WALK-2 shared movement kernel (also inlined in play.html)
 const Rooms     = require('./rooms');   // §NAV-01f shared room-description kernel (also inlined in play.html)
-const Duel      = require('./duel');    // §MESH-01j shared duel-resolution kernel (also inlined in play.html)
+const Duel      = require('./duel');
+const { questContext } = require('./quest-context');   // §EDITOR-04 questline neighbourhood    // §MESH-01j shared duel-resolution kernel (also inlined in play.html)
 const Anthropic = require('@anthropic-ai/sdk');
 
 // ── Repo layout (this file lives in js/; assets/data are one level up) ────────
@@ -3660,6 +3661,21 @@ async function route(req, res) {
       logResponse(method, url.pathname, 200, `loot table replaced  ·  ${entries.length} entries  ·  ${totalWeight}/100`);
       return saveAndRestart(res, 200, { ok:true, entries:lootAnnotate(WBAPI.d100Table), totalWeight, gap, suggestions:lootSuggestions(gap) });
     }
+  }
+
+  // ── Quest context — a node's or an arc's questline in one answer (§EDITOR-04) ──
+  // GET /api/context/{NODE}  ·  GET /api/context?arc=<arc>
+  if (parts[0] === 'context' && method === 'GET') {
+    const arc = url.searchParams.get('arc');
+    const r = questContext(WBAPI, parts[1] ? { node: decodeURIComponent(parts[1]) } : { arc });
+    if (!r.ok) {
+      logResponse(method, url.pathname, r.error.includes('required') ? 400 : 404, r.error);
+      return json(res, r.error.includes('required') ? 400 : 404, { error: r.error, usage: 'GET /api/context/{NODE} or GET /api/context?arc=<arc>' });
+    }
+    logRow('scope', JSON.stringify(r.scope));
+    logRow('traps', `unstandable:${r.traps.unstandable}  unwrittenFlags:${r.traps.unwrittenFlags}  fatalDeadlocks:${r.traps.fatalDeadlocks}`);
+    logResponse(method, url.pathname, 200, `${r.quests.length} quests · ${r.npcs.length} npcs · ${Object.keys(r.flags.reads).length} flags read`);
+    return json(res, 200, r);
   }
 
   // ── Loot-Drop unified query ───────────────────────────────────────────────
@@ -12023,6 +12039,7 @@ server.listen(PORT, BIND_ADDR, () => {
     ['PUT',    '/api/loot                           body: {entries:[{weight,_type},...]}  (consumables only — no magic weapons)'],
     ['PUT',    '/api/loot/{index}                   body: {weight?,_type?}'],
     ['GET',    '/api/loot-drop[?terrain=&monster=&fishing=&bonus=&name=] → unified drop query (monster+fishing)'],
+    ['GET',    '/api/context/{NODE} | /api/context?arc=<arc> → questline neighbourhood: quests, npcs, flags read/written, unwritten flags, deadlocks, cell primacy'],
     ['GET',    '/api/npc/{id}/dialogue[/{field}[/{index}]]  → whole entry, one field, or one line'],
     ['POST',   '/api/npc/{id}/dialogue              body: {quote, meta?, impartial?, ...}  (create)'],
     ['PUT',    '/api/npc/{id}/dialogue              body: {quote?,meta?,impartial?,...}  (merge whole entry)'],
