@@ -19,6 +19,18 @@
 
 ---
 
+## Archived 2026-09-25 — §DOCPTR-02 (doc pointers outside play.html)
+
+### §DOCPTR-02 — the `→ doc:` convention is not confined to `play.html`, and gate #21 only walks the game file (NEW 2026-08-26 during §DOCPTR-01, 🟢 no design call)
+
+- [x] ✅ SHIPPED 2026-09-25 `ce687ce` **§DOCPTR-02 — count the pointer corpus outside `play.html`, then widen gate #21 to it.** §DOCPTR-01 measured **92 pointers in `play.html`** and guarded exactly those. `edit.html`, `index.html` and `src/js/*.js` carry the same `// → doc: <file> §<Section>` convention and **were never counted**, so whatever fraction of them is dead is dead unobserved — the state `play.html` was in yesterday.
+> **The work is small and the gate is already shaped for it:** `src/scripts/check-docpointers.js` takes `SOURCE` as a single path; widening it is a source list plus a per-file finding prefix. **The measurement comes first** — if the corpus outside the game file is two pointers, say so and close the row at two rather than generalising a scanner for it.
+> **The resolution rules are the reusable part and must not be re-derived:** three path forms (repo-relative, `docs/`-relative, bare basename resolved against the doc tree) and two section-marker forms (markdown heading, line-leading bold run). Both were wrong on the first pass — literal-paths-only reported **50** false dead files, headings-only reported **26** false dead sections. A second scanner that re-invents either rule will report the same false positives.
+> **Provenance:** §DOCPTR-01, and item (ii) of the §NEXT-2026-08-26 hand-off, which named this before the gate existed.
+> **Shipped (`ce687ce`). Measured first, as the row asked:** outside `play.html` the tracked tree carries **5** `→ doc:` pointers, all in `src/js/wbapi-server.js` and all inside the serializer templates that emit `play.html` section headers (3 distinct: `maps.md §NODE_COORDS` ×3, `mechanics-combat.md §Loot Table`, `story-arc-npc-dialogues.md`). `edit.html`, `index.html` and the other `src/js` files carry **0**. The gate script's own 18 are its documentation and fixtures. Five is more than the row's "close at two" threshold, and one of them (the NPC-dialogues header) appears nowhere in `play.html` because that section has never been re-serialized, so only a write would have exposed it if it went dead. **Widened** with the row's resolution rules reused unchanged: `SOURCES` is a list, a template literal's `\n` escape ends a line so the section stops before it, and findings name their source. **Before 90 → after 95** pointers checked, all live. A planted `§GHOST_SECTION` at `wbapi-server.js:6501` goes red and is named, then was reverted. Selftest 15 → 18. `index.md`'s gate row names both sources. **En route:** the gate is chain position 23, `index.md` says #22 and this row said #21. That was added to §DX-02jb as evidence, not filed separately. check:walk 35/35. npm test 183/1086 (no Chromium on this host) = baseline.
+
+---
+
 ## Archived 2026-09-25 — §DX-02li (one quest-type list in the server)
 
 ### §DX-02li — three hand-kept copies of the quest-type vocabulary disagree with the corpus and each other (NEW 2026-09-25 during §DX-02if, 🟢 derive or correct, no design call)
