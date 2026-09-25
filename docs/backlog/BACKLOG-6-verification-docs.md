@@ -91,16 +91,6 @@
 > **Fix — three options, and the call is which of them the repo wants.** (a) **Declare it**: one paragraph in `AGENTS.md`/`CONTRIBUTING.md` saying the suite requires a glibc host or a distro chromium, and what a session should do when it has neither — cheapest, and it stops the next session rediscovering this. (b) **Accept a system browser**: `use.launchOptions.executablePath` read from an env var in `src/playwright.config.js`, so `CHROMIUM_PATH=/usr/bin/chromium npm test` works where a distro chromium exists; default behaviour unchanged. (c) **Both.** **Recommendation: (c)** — (a) is the honest documentation of a real constraint and costs nothing, and (b) is four lines that make the constraint removable wherever a package manager can supply a browser.
 > **Provenance:** §DX-02ex, on trying to run the third verification leg.
 
-### §CSS-CENSUS — every dead-symbol gate in the repo scans JS identifiers, and a CSS class selector is invisible to all of them (NEW 2026-08-26 during §DX-02dc, 🟢 no design call)
-
-- [ ] **§CSS-CENSUS — extend the dead-symbol census to class selectors declared in the `<style>` block and applied by nothing.** `check:deadconsts` and every sibling census walk JS identifiers, so a rule like `.info-chip.corpse-chip` — four of them, in both the dark and light theme blocks — sat unreferenced with **no gate able to say so**, and the two ID-vs-class near-twins ten lines apart in one stylesheet are exactly the shape a future reader mis-reads. §DX-02dc deleted that member by hand and pinned it with a per-selector Playwright assertion, which is an interim measure and does not generalise.
-> **Shape of the check:** collect every class selector declared inside `<style>`; collect every application — a literal `class="…"`, a `className =` / `className +=` assignment, a `classList.add/remove/toggle/contains` argument, and template-literal interpolation into a `class=` attribute; report the difference in both directions. **The applications side is the hard half and the whole value:** a scanner that under-collects applications produces false positives on live CSS, which is worse than no gate, so it needs a `--selftest` with a planted live-but-unusual application (a `classList.toggle` behind a ternary, a class assembled by string concatenation) as well as a planted dead one.
-> **Both directions, per the §DX-02z pattern:** a declared-and-unapplied selector is the §DX-02dc case; an **applied-and-undeclared** class is the sharper one — it is a style that silently does nothing, and no test would catch it either.
-> **Known exemptions to expect:** classes applied only from `edit.html` or another file, and classes that exist for a third-party or user-agent hook. Those want the named-exemption table `check:battlepools` uses, so an exemption that becomes live is a stale exemption and fails.
-> **Provenance:** §DX-02dc, whose own row argues for exactly this and correctly places it outside its own fix.
-
-
-
 ### §DX-02hz — the Doc Health Badge's line count is maintained by hand and had drifted 9 lines with nothing to say who moved them (NEW 2026-08-25 during §DX-02en, 🟢 no design call)
 
 - [ ] **§DX-02hz — `docs/design/index.md`'s *HTML line count* row is the one number in the badge that no gate checks, and it silently fell 9 behind.** **Measured at `000ebb3`:** the badge read **38,693**, stamped 2026-08-24 with a per-increment attribution chain going back through §DX-02gk / §AUDIT-03bk / §DX-02gb; `wc -l play.html` returned **38,702**. §DX-02en's own +1 took it to 38,703 and the badge was corrected to that in the same commit, but **the 9 belong to increments that shipped without touching it** and cannot now be attributed without walking `git log -p -- play.html` back to 2026-08-24. §2.3a is explicit — *"update the index in the same increment that invalidates it"* — so this is the rule being followed by habit rather than by a witness, which is the exact shape §DX-02gs found in the backlog's own *Open rows* column and fixed with gate #19.
@@ -794,6 +784,6 @@
 
 ## §RESUME — Phase 6 history
 
-> **Completed work is not carried here.** The 63 closed increments for this phase are condensed in **[`../archive/backlog-resume-history.md`](../archive/backlog-resume-history.md)**; full prose for recent closes is in [`plan-archive.md`](plan-archive.md). This file carries open rows only.
+> **Completed work is not carried here.** The 64 closed increments for this phase are condensed in **[`../archive/backlog-resume-history.md`](../archive/backlog-resume-history.md)**; full prose for recent closes is in [`plan-archive.md`](plan-archive.md). This file carries open rows only.
 
 > When an increment ships: write the full entry into `plan-archive.md`, add its one-line row to `../archive/backlog-resume-history.md` and to the cross-phase table in [`BACKLOG.md`](BACKLOG.md), and delete the row from this file.
