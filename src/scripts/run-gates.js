@@ -39,6 +39,7 @@ const GATES = [
   'check:docpointers', 'check:helpconformance', 'check:duelparity', 'check:itemchain',
   'check:laddermigration', 'check:worlddiff', 'check:bearings', 'check:doccommands',
   'check:schema', 'check:promptcache', 'check:prosecodes', 'check:gaterows', 'check:doublepay', 'check:cssclasses',
+  'check:badge',
 ];
 
 // A gate named here is deliberately outside the chain; the value is the reason it is.
