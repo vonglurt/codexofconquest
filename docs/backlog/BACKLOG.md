@@ -41,6 +41,8 @@ Split by **subsystem**, not by track prefix (121 of the 175 sections were `§DX-
 | **5** | [Platform & Tooling](BACKLOG-5-platform-tooling.md) | 23 | 57 | Everything outside the game loop: the WBAPI server and its endpoints, the worldbuilder and editors, the HTML parse/export layer, multiplayer mesh, the NPC-speak service. |
 | **6** | [Verification & Documentation](BACKLOG-6-verification-docs.md) | 65 | 32 | What proves the rest is true: CI gates and parity fences, Playwright and MUD suites, the anchor resolver, engine comments, maintained-doc rot, and the §DOC-02 lab-report verification program. |
 
+> **What `Closed (archived)` counts, and why no gate reads it yet (§DX-02jh).** It is a hand-kept tally of closed increments per phase. When it was created (`6726358`, 2026-08-25) it equalled that phase's rows in `../archive/backlog-resume-history.md` in all six phases. It has since run both **ahead** of that table (Phase 2 by 27: closes counted without a history line, §DX-02ih's defect) and **behind** it. The history section's own *completed entries* label and each phase file's *closed increments* line **are** asserted against the table (gate #20). This cell is asserted once §DX-02ih's backfill makes the table complete; until then, trust the table.
+
 > **Phase order is a suggested work order, not a dependency chain.** Phase 1 is content the player cannot reach — the defects that make shipped work invisible — so it pays first. Phase 6 is what proves the other five stayed true. Any phase can be picked up on its own.
 
 ---

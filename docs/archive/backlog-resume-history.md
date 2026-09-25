@@ -37,7 +37,7 @@
 | 22 | 2026-08-24 | §DX-02cm | `d117b2f` | the exception that outlived the deferral, and the difference between debt and an unexercised bug |
 | 23 | 2026-08-23 | §DX-02cy | `724682c` | the counter that had been monotone at zero for ninety days, and the gate that refused to let the docs stay wrong |
 
-**14 completed entries.**
+**23 completed entries.**
 
 ---
 
@@ -124,7 +124,7 @@
 | 81 | 2026-08-06 | §SPARK-01-FU | `3338def` | The Aldous confrontation double-pays |
 | 82 | 2026-08-06 | §LXX-01-FU | `3338def` | All three §LXX-family button/quest pairs double-pay |
 
-**74 completed entries.**
+**78 completed entries.**
 
 ---
 
@@ -202,7 +202,7 @@
 | 72 | 2026-07-28 | §NPC-01-SF4 + §NPC-01 | — | each cluster's arc has exactly ONE render-gate node in the live file — **CQ→CDG** (Layer 44 Ally Cat Arc gates on `node.code==='CDG'`; Jimmy is CDG's own NODE_MAP… |
 | 73 | 2026-07-28 | §NPC-01 | `76ad683` | The Derivable NPC Card Map (fully closed; promoted §POT-R…) |
 
-**53 completed entries.**
+**69 completed entries.**
 
 ---
 
@@ -234,7 +234,7 @@
 | 26 | 2026-07-29 | §DX-02e + §KG | `8fc9a2e` | auto-travel routes with `_roadGridPathCore` (§NAV-01d road-weighted Dijkstra, road/sea-lane cost 1, everything else 2), and all six legs `TLL→SPB→KMS→ZVD→FBR→TVR→SVO`… |
 | 27 | 2026-07-29 | §AUDIT-03e + §KG | `2da7fbb` | one normalisation line after `NODE_MAP:END` (the data section keeps its 129 authored `code:` fields — not 287 new ones) + the `NODE_CODE_BACKFILLED` set captured just… |
 
-**19 completed entries.**
+**23 completed entries.**
 
 ---
 
@@ -296,7 +296,7 @@
 | 54 | 2026-07-30 | §DX-01c + §AUDIT-03d | `44b67d8` | `WBAPI._sectionCloseIdx` (stops at the first nested START; `insertBeforeSectionClose` delegates, so all 12 create call-sites are covered and the class cannot recur);… |
 | 55 | 2026-07-28 | §AUDIT-03f + §ARCH-01 | `6a69087` | it processed comments as code — the §ARCH-01 Wave-1m/1n migration comments' arrow-fn examples (`activateCond:()=>true`, `completeFn:()=>…`) triggered the fn-stripper,… |
 
-**28 completed entries.**
+**53 completed entries.**
 
 ---
 
@@ -334,7 +334,7 @@
 | 33 | 2026-07-28 | §DX-01a + §JUNK-01 | `7f75c54` | J14/J15 deleted (hand-edit per Hazard #4, server confirmed stopped; zero other live refs by repo grep), then `build-roads.js --apply` (the canonical do-not-hand-edit… |
 | 34 | 2026-07-28 | §DX-01f + §RESUME-tail | `c9f3946` | 276 lines of closed content moved **verbatim** (scripted line-range surgery — no paraphrase, boundaries asserted before cutting) to plan-archive.md §"Archived 2026-07-28… |
 
-**25 completed entries.**
+**29 completed entries.**
 
 ---
 

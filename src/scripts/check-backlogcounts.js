@@ -53,6 +53,43 @@ function resumeCounts(index) {
   return { claimed: m ? Number(m[1]) : null, actual };
 }
 
+// §DX-02jh — backlog-resume-history.md: under each `## Phase N` heading, a table of one
+// row per closed increment and a `**N completed entries.**` label; and each phase file's
+// footer says "The N closed increments for this phase". All three claim the same count,
+// taken over the rows between that heading and the next `## ` — the range again.
+function historySections(text) {
+  const out = [];
+  const lines = text.split('\n');
+  let cur = null;
+  for (const line of lines) {
+    const h = /^## Phase (\d)\b/.exec(line);
+    if (h) { cur = { phase: Number(h[1]), rows: 0, label: null }; out.push(cur); continue; }
+    if (/^## /.test(line)) { cur = null; continue; }
+    if (!cur) continue;
+    if (/^\| \d+ \| 20\d\d-/.test(line)) cur.rows++;
+    const m = /^\*\*(\d+) completed entries\.\*\*/.exec(line);
+    if (m) cur.label = Number(m[1]);
+  }
+  return out;
+}
+const PHASE_LINE = /The (\d+) closed increments for this phase/;
+
+function scanHistory(history, cells, read) {
+  const findings = [];
+  const secs = historySections(history);
+  for (const c of cells) {
+    const sec = secs.find(x => x.phase === c.phase);
+    if (!sec) { findings.push(`[history] backlog-resume-history.md has no "## Phase ${c.phase}" section`); continue; }
+    const dir = (n) => (sec.rows > n ? `reads LOW by ${sec.rows - n}` : `reads HIGH by ${n - sec.rows}`);
+    if (sec.label === null) findings.push(`[history] Phase ${c.phase} has no "**N completed entries.**" label`);
+    else if (sec.label !== sec.rows) findings.push(`[history] Phase ${c.phase} label says ${sec.label}, its table has ${sec.rows} (${dir(sec.label)})`);
+    const text = read(c.file);
+    const m = text && PHASE_LINE.exec(text);
+    if (m && Number(m[1]) !== sec.rows) findings.push(`[history] ${c.file} says "${m[0]}", the history table has ${sec.rows} (${dir(Number(m[1]))})`);
+  }
+  return findings;
+}
+
 function scan(index, read, expectPhases = 6) {
   const findings = [];
   const cells = tableCells(index);
@@ -98,13 +135,28 @@ if (process.argv.includes('--selftest')) {
   ok(scan(idx(2), () => null, 1).some(f => f.includes('does not exist')), 'a table row naming a missing file is caught');
   ok(scan(idx(2), read).some(f => f.includes('expected 6')),
     'a table that has lost a phase row is caught, not silently counted short');
+
+  const hist = (n, label) => ['# h', '## Phase 1 — a', '| # | Date |', '|---|---|',
+    ...Array.from({ length: n }, (_, i) => `| ${i + 1} | 2026-09-0${i + 1} | §X | \`sha\` | h |`),
+    `**${label} completed entries.**`, '', '## Phase 2 — b', '| 1 | 2026-09-01 | §Y | \`s\` | h |'].join('\n');
+  const cell1 = [{ phase: 1, file: 'BACKLOG-1-a.md' }];
+  const pf = n => () => `x\nThe ${n} closed increments for this phase are condensed`;
+  ok(scanHistory(hist(3, 3), cell1, pf(3)).length === 0, 'a history label and phase line that match the table are clean');
+  ok(scanHistory(hist(3, 2), cell1, pf(3)).some(f => f.includes('reads LOW by 1')), 'a label one short is caught and named LOW');
+  ok(scanHistory(hist(2, 3), cell1, pf(2)).some(f => f.includes('its table has 2')), 'a table that lost a row is caught against its label');
+  ok(scanHistory(hist(3, 3), cell1, pf(9)).some(f => f.includes('BACKLOG-1-a.md')), 'a phase-file line that disagrees is caught');
+  ok(historySections(hist(3, 3))[0].rows === 3, "a row in the NEXT phase's table is not counted into this one");
+  ok(scanHistory(hist(3, 3).replace('## Phase 1', '## Intro'), cell1, pf(3)).some(f => f.includes('no "## Phase 1"')),
+    'a missing phase section is named, not skipped');
   if (fail) { console.log(`\n✗ check-backlogcounts selftest: ${fail} FAILED, ${pass} passed`); process.exit(1); }
   console.log(`✓ check-backlogcounts selftest: all ${pass} checks pass`);
   return;
 }
 
 const read = f => { const p = path.join(DIR, f); return fs.existsSync(p) ? fs.readFileSync(p, 'utf8') : null; };
-const findings = scan(fs.readFileSync(INDEX, 'utf8'), read);
+const indexText = fs.readFileSync(INDEX, 'utf8');
+const findings = [...scan(indexText, read),
+  ...scanHistory(fs.readFileSync(path.join(ROOT, 'docs', 'archive', 'backlog-resume-history.md'), 'utf8'), tableCells(indexText), read)];
 if (findings.length) {
   findings.forEach(f => console.log('  ✗ ' + f));
   console.log(`\n✗ check-backlogcounts: ${findings.length} finding(s)`);
@@ -112,4 +164,5 @@ if (findings.length) {
   console.log('  what the phase file actually holds. Six hand corrections drifted again (§DX-02gs).');
   process.exit(1);
 }
-console.log('✓ §DX-02gs backlog counts: all 6 "Open rows" cells and the §RESUME header match their source');
+console.log('✓ §DX-02gs backlog counts: all 6 "Open rows" cells and the §RESUME header match their source; '
+  + 'every history section\'s "completed entries" label and phase-file line match its table (§DX-02jh)');
