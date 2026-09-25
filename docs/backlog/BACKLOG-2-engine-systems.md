@@ -55,10 +55,6 @@
 ---
 ## §BACKLOG — Open Items (Phase 2)
 
-### §DX-02lh — following Smalt to Pip pays 300 XP and says 150 (NEW 2026-09-25 during §DX-02ig, 🟢 the §DX-02ai fix, one line)
-
-- [ ] **§DX-02lh — the Pip button credits `S_story.xp = (S_story.xp||0) + 150;` inline, and `quest_spark_02` completes on the `pipMet` flag the same click sets and pays `{ kind:'reward', xp:150 }` with a narrative ending *"+150 XP."*** Found by `check:doublepay` (gate #35) on its first run, and present already on the tree §DX-02ai was fixed on (`19afc7a^`), where the hand census missed it. **It fires on every path.** The quest's gate is `smaltBefriended`, the same flag that shows the button, and it activates at `LCY`. So whenever the player reaches `LCY`, before or after the click, the quest completes on `pipMet` and pays again. **Fix (🟢, the §DX-02ai precedent):** delete the button's inline XP credit and let the quest pay. The quest's narrative already announces the one +150, so no string changes. **Verify:** drop `pipMet→quest_spark_02` from `KNOWN_DOUBLE_PAY` in `src/scripts/check-doublepay.js`, and the gate is green with **0** at both; a Playwright pin on the `S_story.xp` delta across the click plus the `LCY` completion reads **+150**, run on the host that launches Chromium.
-
 ### §DROP-02-FU2 — §DROP-02 said fishing loot rarity is the only place luck belongs, and §DROP-03 gave luck an AC and an attack bonus three weeks later (NEW 2026-09-07 during §DROP-02-FU, 🟠 ASK — one design call, and it is a balance change either way)
 
 - [ ] **§DROP-02-FU2 — `luckScale` is a seventh Luck application that no §DROP-02 census ever counted, and it reaches combat.** §DROP-02's commit body enumerated six removals and ended *"That is the only place luck belongs."* §DROP-02-FU re-applied all five surviving removals on 2026-09-07 and found, while counting the sites, that **`_lakeMagicBonuses()` scales every lake-magic item's effect by `_luckMod()`** — `const lm = _luckMod();` → `` `bonus = Math.floor((item.base || 0) + lv * (item.levelScale || 0) + lm * (item.luckScale || 0))` ``. **Measured at HEAD: `luckScale` is non-zero on 7 of the 8 `LAKE_MAGIC_DB` entries** — `lake_mag_01` Scale of Forgotten Depth **0.5** (`ac_bonus`) · `lake_mag_02` Poison Extract Flask **1** (`first_strike`) · `lake_mag_03` Yugurt's Eye **1** (`fishing_dc` → `catchBonus`) · `lake_mag_05` Bioluminescent Gland **0.5** (`night_type`) · `lake_mag_06` Leviathan Scale Plate **0.5** (`ac_bonus`) · `lake_mag_07` Spine King Coronet **1** (`atk_bonus`) · `lake_mag_08` Yugurt's Dream Scale **0.3** (`all_ability`); only `lake_mag_04` Void-Touched Fin is **0**. **So Luck buys AC, attack, first strike and every ability score** — through an item, but with no other gate on it — which is precisely the *"luck is not a survival stat"* / *"luck doesn't improve monster loot"* reasoning §DROP-02 wrote down, arriving by a different door.
@@ -416,6 +412,6 @@
 
 ## §RESUME — Phase 2 history
 
-> **Completed work is not carried here.** The 116 closed increments for this phase are condensed in **[`../archive/backlog-resume-history.md`](../archive/backlog-resume-history.md)**; full prose for recent closes is in [`plan-archive.md`](plan-archive.md). This file carries open rows only.
+> **Completed work is not carried here.** The 117 closed increments for this phase are condensed in **[`../archive/backlog-resume-history.md`](../archive/backlog-resume-history.md)**; full prose for recent closes is in [`plan-archive.md`](plan-archive.md). This file carries open rows only.
 
 > When an increment ships: write the full entry into `plan-archive.md`, add its one-line row to `../archive/backlog-resume-history.md` and to the cross-phase table in [`BACKLOG.md`](BACKLOG.md), and delete the row from this file.

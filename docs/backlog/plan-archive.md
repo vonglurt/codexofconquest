@@ -19,6 +19,18 @@
 
 ---
 
+## Archived 2026-09-25 — §DX-02lh (following Smalt to Pip pays 150 XP once)
+
+### §DX-02lh — following Smalt to Pip pays 300 XP and says 150 (NEW 2026-09-25 during §DX-02ig, 🟢 the §DX-02ai fix, one line)
+
+- [x] ✅ SHIPPED 2026-09-25 `858aef6` **§DX-02lh — the Pip button credits `S_story.xp = (S_story.xp||0) + 150;` inline, and `quest_spark_02` completes on the `pipMet` flag the same click sets and pays `{ kind:'reward', xp:150 }` with a narrative ending *"+150 XP."*** Found by `check:doublepay` (gate #35) on its first run, and present already on the tree §DX-02ai was fixed on (`19afc7a^`), where the hand census missed it. **It fires on every path.** The quest's gate is `smaltBefriended`, the same flag that shows the button, and it activates at `LCY`. So whenever the player reaches `LCY`, before or after the click, the quest completes on `pipMet` and pays again. **Fix (🟢, the §DX-02ai precedent):** delete the button's inline XP credit and let the quest pay. The quest's narrative already announces the one +150, so no string changes. **Verify:** drop `pipMet→quest_spark_02` from `KNOWN_DOUBLE_PAY` in `src/scripts/check-doublepay.js`, and the gate is green with **0** at both; a Playwright pin on the `S_story.xp` delta across the click plus the `LCY` completion reads **+150**, run on the host that launches Chromium.
+> **Shipped (`858aef6`), as filed.** The button's inline `S_story.xp = (S_story.xp||0) + 150;` is deleted, and The Overture (`quest_spark_02`) is the single payer. That is the §DX-02ai precedent and the shape the neighbouring Aldous button already carries. Checked before editing: The Overture is the quest the button's message names (*"Quest: The Overture complete … +150 XP"*), so the message describes the quest's one payment and needed no edit.
+> **Measured:** `check:doublepay` goes from **1 → 0** pairs paying at both, over the same 58 (button payers 17 → 16). `KNOWN_DOUBLE_PAY` is emptied, so a regression fails the gate by name.
+> **Found en route, and fixed with the row because it pinned the defect:** `uqf-node-harbor.test.js` *"LCY Pip beat: +150 XP once …"* **asserted `r.xp` = 300**, calling the second 150 *"measured at HEAD, byte-identical in the golden"*. A regression test had recorded the double pay as intended behaviour. It now asserts **150**, and it is the Playwright pin the row asked for. It launches a browser, so it runs only on the other host, and this entry does not claim it green there. The confrontation test's **550** (400 from its button + 150 from The Overture completing on `pipMet`) is unaffected.
+> **Verified here:** `check:walk` **35/35**. `npm test` in three shards: **183 passed / 1086 failed**, identical to the baseline, with the known two non-launch failures only.
+
+---
+
 ## Archived 2026-09-25 — §DX-02ig (gate #35, check:doublepay)
 
 ### §DX-02ig — no gate pairs a `storyRender` flag write with the quest that completes on it and asks whether both sides pay (NEW 2026-09-03 during §DX-02ai, 🟢 a static scan over two registries the repo already parses, no design call)
