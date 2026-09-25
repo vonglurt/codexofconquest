@@ -35,12 +35,12 @@ function openRows(text) {
 }
 
 // | **1** | [Playable Truth](BACKLOG-1-playable-truth.md) | 6 | 12 | … |
-const TABLE_ROW = /^\|\s*\*\*(\d)\*\*\s*\|\s*\[[^\]]*\]\((BACKLOG-\d-[\w-]+\.md)\)\s*\|\s*(\d+)\s*\|/;
+const TABLE_ROW = /^\|\s*\*\*(\d)\*\*\s*\|\s*\[[^\]]*\]\((BACKLOG-\d-[\w-]+\.md)\)\s*\|\s*(\d+)\s*\|\s*(\d+)\s*\|/;
 function tableCells(index) {
   const out = [];
   for (const line of index.split('\n')) {
     const m = TABLE_ROW.exec(line);
-    if (m) out.push({ phase: Number(m[1]), file: m[2], claimed: Number(m[3]) });
+    if (m) out.push({ phase: Number(m[1]), file: m[2], claimed: Number(m[3]), closed: Number(m[4]) });
   }
   return out;
 }
@@ -63,10 +63,11 @@ function historySections(text) {
   let cur = null;
   for (const line of lines) {
     const h = /^## Phase (\d)\b/.exec(line);
-    if (h) { cur = { phase: Number(h[1]), rows: 0, label: null }; out.push(cur); continue; }
+    if (h) { cur = { phase: Number(h[1]), rows: 0, label: null, ids: [] }; out.push(cur); continue; }
     if (/^## /.test(line)) { cur = null; continue; }
     if (!cur) continue;
-    if (/^\| \d+ \| 20\d\d-/.test(line)) cur.rows++;
+    const row = /^\| \d+ \| 20\d\d-\d\d-\d\d \| ([^|]+?) \|/.exec(line);
+    if (row) { cur.rows++; cur.ids.push(row[1].trim().split(/\s/)[0]); }
     const m = /^\*\*(\d+) completed entries\.\*\*/.exec(line);
     if (m) cur.label = Number(m[1]);
   }
@@ -83,9 +84,26 @@ function scanHistory(history, cells, read) {
     const dir = (n) => (sec.rows > n ? `reads LOW by ${sec.rows - n}` : `reads HIGH by ${n - sec.rows}`);
     if (sec.label === null) findings.push(`[history] Phase ${c.phase} has no "**N completed entries.**" label`);
     else if (sec.label !== sec.rows) findings.push(`[history] Phase ${c.phase} label says ${sec.label}, its table has ${sec.rows} (${dir(sec.label)})`);
+    if (c.closed !== undefined && c.closed !== sec.rows)
+      findings.push(`[history] BACKLOG.md's Phase ${c.phase} "Closed" cell says ${c.closed}, its history table has ${sec.rows} (${dir(c.closed)})`);
     const text = read(c.file);
     const m = text && PHASE_LINE.exec(text);
     if (m && Number(m[1]) !== sec.rows) findings.push(`[history] ${c.file} says "${m[0]}", the history table has ${sec.rows} (${dir(Number(m[1]))})`);
+  }
+  return findings;
+}
+
+// §DX-02ih — every closed increment in BACKLOG.md's chronology that links a phase file
+// has its one line in the history file, matched on the increment's first token.
+const CHRON_ROW = /^\| \d+ \| (20\d\d-\d\d-\d\d) \| ([^|]+?) \| .* \| ([^|]*BACKLOG-\d-[^|]*) \|$/;
+function scanSiblings(index, history) {
+  const have = new Set(historySections(history).flatMap(s => s.ids));
+  const findings = [];
+  for (const line of index.split('\n')) {
+    const m = CHRON_ROW.exec(line);
+    if (!m) continue;
+    const id = m[2].replace(/\s*✅.*$/, '').trim().split(/\s/)[0];
+    if (!have.has(id)) findings.push(`[sibling] ${m[1]} ${id} is closed in BACKLOG.md's chronology and has no line in backlog-resume-history.md`);
   }
   return findings;
 }
@@ -148,6 +166,11 @@ if (process.argv.includes('--selftest')) {
   ok(historySections(hist(3, 3))[0].rows === 3, "a row in the NEXT phase's table is not counted into this one");
   ok(scanHistory(hist(3, 3).replace('## Phase 1', '## Intro'), cell1, pf(3)).some(f => f.includes('no "## Phase 1"')),
     'a missing phase section is named, not skipped');
+  ok(scanHistory(hist(3, 3), [{ ...cell1[0], closed: 5 }], pf(3)).some(f => f.includes('"Closed" cell says 5')), 'a Closed cell that disagrees with the table is caught');
+  const chron = id => `| 1 | 2026-09-01 | ${id} ✅ | **h** | [P1](BACKLOG-1-a.md) → [archive](plan-archive.md) |`;
+  ok(scanSiblings(chron('§X'), hist(3, 3)).length === 0, 'a chronology close with a history line is clean');
+  ok(scanSiblings(chron('§NEW'), hist(3, 3)).some(f => f.includes('§NEW')), 'a chronology close with no history line is caught');
+  ok(scanSiblings(chron('§X + §Z'), hist(3, 3)).length === 0, 'a combined close matches on its first increment');
   if (fail) { console.log(`\n✗ check-backlogcounts selftest: ${fail} FAILED, ${pass} passed`); process.exit(1); }
   console.log(`✓ check-backlogcounts selftest: all ${pass} checks pass`);
   return;
@@ -156,7 +179,8 @@ if (process.argv.includes('--selftest')) {
 const read = f => { const p = path.join(DIR, f); return fs.existsSync(p) ? fs.readFileSync(p, 'utf8') : null; };
 const indexText = fs.readFileSync(INDEX, 'utf8');
 const findings = [...scan(indexText, read),
-  ...scanHistory(fs.readFileSync(path.join(ROOT, 'docs', 'archive', 'backlog-resume-history.md'), 'utf8'), tableCells(indexText), read)];
+  ...scanHistory(fs.readFileSync(path.join(ROOT, 'docs', 'archive', 'backlog-resume-history.md'), 'utf8'), tableCells(indexText), read),
+  ...scanSiblings(indexText, fs.readFileSync(path.join(ROOT, 'docs', 'archive', 'backlog-resume-history.md'), 'utf8'))];
 if (findings.length) {
   findings.forEach(f => console.log('  ✗ ' + f));
   console.log(`\n✗ check-backlogcounts: ${findings.length} finding(s)`);
@@ -165,4 +189,5 @@ if (findings.length) {
   process.exit(1);
 }
 console.log('✓ §DX-02gs backlog counts: all 6 "Open rows" cells and the §RESUME header match their source; '
-  + 'every history section\'s "completed entries" label and phase-file line match its table (§DX-02jh)');
+  + 'every history section\'s "completed entries" label, phase-file line and "Closed" cell match its table (§DX-02jh, §DX-02ih), '
+  + 'and every closed increment in the chronology has its history line');
