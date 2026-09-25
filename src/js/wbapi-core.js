@@ -1321,6 +1321,38 @@ const WBAPI = {
   // The key this character is indexed under. Identity for everything else.
   npcCanonicalKey(key) { return (key && WBAPI.NPC_ALIASES[key]) || key; },
 
+  // The NPC-speak system prompt. Voice comes from BIRKA_NPC_PROFILES; belief and enmity
+  // live only in NPC_DIALOGUES[key].meta, and each is emitted only where it is authored.
+  npcSpeakSystem(key, state) {
+    const npc = WBAPI.birkaNpcs[key];
+    if (!npc) return null;
+    const meta = ((WBAPI.npcDialogues || {})[key] || {}).meta || {};
+    const nodeData  = WBAPI.nodeMap[npc.node] || {};
+    const nodeLabel = nodeData.label || npc.node || 'unknown location';
+    const nodeDesc  = nodeData.text  || '';
+    const stateLines = ['neutral','friendly','dearFriend']
+      .filter(s => npc[s])
+      .map(s => {
+        const d = npc[s];
+        const lines = [];
+        if (d.greeting) lines.push(`  ${s} greeting: ${d.greeting}`);
+        if (d.dialogue) lines.push(`  ${s} dialogue: ${d.dialogue}`);
+        return lines.join('\n');
+      }).join('\n');
+    const held = [];
+    if (typeof meta.worldTruth === 'string' && meta.worldTruth.trim()) held.push(`What you believe about the world: ${meta.worldTruth.trim()}`);
+    if (typeof meta.enemy === 'string' && meta.enemy.trim())           held.push(`Who you set yourself against: ${meta.enemy.trim()}`);
+    const text =
+      `You are ${npc.name}, ${npc.occupation || 'a character'} at ${nodeLabel}.\n\n` +
+      (nodeDesc ? `Location — ${nodeLabel}:\n${nodeDesc}\n\n` : '') +
+      (held.length ? held.join('\n') + '\n\n' : '') +
+      `Voice examples across relationship states:\n${stateLines}\n\n` +
+      `Current relationship state with this player: ${state}.\n` +
+      `Respond in one short paragraph or less. Match the register of the ${state} examples exactly — ` +
+      `same rhythm, same level of disclosure, same vocabulary. No stage directions. No asterisks.`;
+    return { text, nodeLabel };
+  },
+
   // ── Quests ──
   // §AUDIT-03b — the single source of truth for "is this a real NPC key?".
   // Four registries hold real, rendered speakers, and a quest may legitimately be

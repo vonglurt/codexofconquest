@@ -50,6 +50,9 @@
 //                       still takes the run's message sink (§DX-02gc)
 //  10. writers        — `S_story.npcFavorability` is written only by the setter and the
 //                       two functions declared beside it here (§DX-02x)
+//  11. speak          — every profile the NPC-speak endpoint voices has an NPC_DIALOGUES
+//                       twin whose meta carries `worldTruth`, so no prompt is silently
+//                       thinner than its character (§DX-02al)
 //
 // NOT covered here on purpose: whether an npc-VALUED string field RESOLVES. Quest anchors
 // are pinned by tests/integration/audit03h-npc-normalize.test.js, and NODE_MAP's inline
@@ -527,6 +530,16 @@ function audit(src, vocab, model) {
     if (!seenWriters.has(fn)) findings.push(`[writers] FAVOR_WRITERS lists '${fn}' (${why}) and it no longer writes the ledger — drop the exemption`);
   }
 
+  // 11. speak — §DX-02al. The endpoint voices BIRKA_NPC_PROFILES and reads belief from
+  //     NPC_DIALOGUES[key].meta; a profile without that twin still speaks, knowing less.
+  for (const k of Object.keys(model.profiles || {}).sort()) {
+    const d = (model.dialogues || {})[k];
+    if (!d) findings.push(`[speak] BIRKA_NPC_PROFILES '${k}' has no NPC_DIALOGUES twin — /api/npc/${k}/speak `
+      + 'would voice them with no worldTruth or enemy line');
+    else if (!(d.meta && typeof d.meta.worldTruth === 'string' && d.meta.worldTruth.trim())) findings.push(
+      `[speak] NPC_DIALOGUES '${k}' carries no meta.worldTruth — /api/npc/${k}/speak would voice them believing nothing`);
+  }
+
   return findings;
 }
 
@@ -561,6 +574,9 @@ function selftest(src, vocab, model) {
     // §DX-02x — the raw `+ 1` this row was filed against, replanted, and a stale exemption.
     ['writers', src.replace('function _lubeckFriends() {', "function _plantedHook() { S_story.npcFavorability['aldo_sardino'] = (S_story.npcFavorability['aldo_sardino'] || 0) + 1; }\nfunction _lubeckFriends() {"), model],
     ['writers', src.replace('  S_story.npcFavorability   = savedFavorability;', '  /* moved */'), model],
+    // §DX-02al — a profile whose dialogue twin is gone, and one whose twin believes nothing.
+    ['speak', src, { ...model, dialogues: Object.fromEntries(Object.entries(model.dialogues).filter(([k]) => k !== 'emmer')) }],
+    ['speak', src, { ...model, dialogues: { ...model.dialogues, emmer: { ...model.dialogues.emmer, meta: {} } } }],
   ];
   // Findings are compared against the UNPLANTED baseline, so a plant is only "caught" if
   // it produced a finding that was not already there — otherwise a corpus that is already
@@ -580,7 +596,8 @@ function selftest(src, vocab, model) {
 const src = fs.readFileSync(HTML, 'utf8');
 WBAPI.load(HTML);
 const vocab = WBAPI.npcKeyVocab();
-const model = { identities: npcIdentities(), inline: inlineNpcSlugs() };
+const model = { identities: npcIdentities(), inline: inlineNpcSlugs(),
+                profiles: WBAPI.birkaNpcs || {}, dialogues: WBAPI.npcDialogues || {} };
 
 if (process.argv.includes('--selftest')) {
   process.exit(selftest(src, vocab, model) ? 0 : 1);
@@ -605,4 +622,5 @@ console.log(`✓ check:npcregs — ${NPC_KEYED.length} npc-keyed registries, ${N
   + 'and no favor threshold in the file is above the favor its NPC can be written to, '
   + 'and every favor bit writes the tier its own entry announces to the player, and every favor write '
   + 'names someone the game can put a display name to, through the one resolver, into the run\'s message stream, '
-  + `and all ${Object.keys(FAVOR_WRITERS).length} writers of the favor ledger are the ones declared here`);
+  + `and all ${Object.keys(FAVOR_WRITERS).length} writers of the favor ledger are the ones declared here, `
+  + `and all ${Object.keys(model.profiles).length} speaking profiles carry an NPC_DIALOGUES worldTruth`);

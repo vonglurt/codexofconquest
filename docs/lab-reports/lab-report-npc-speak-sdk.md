@@ -58,13 +58,16 @@ Response fields: `npc`, `name`, `state`, `prompt`, `reply`, `model`, `location`,
 
 ### B. System prompt
 
-Assembled at request time from live game data at `src/js/wbapi-server.js:const systemText =@10655`:
+Assembled at request time from live game data at `src/js/wbapi-core.js:npcSpeakSystem(key, state)@1326` (moved out of the route by §DX-02al 2026-09-25, which also added the two meta lines shown):
 
 ```
 You are {name}, {occupation} at {nodeLabel}.
 
 Location — {nodeLabel}:
 {nodeText}
+
+What you believe about the world: {NPC_DIALOGUES[key].meta.worldTruth}   ← only if authored
+Who you set yourself against: {NPC_DIALOGUES[key].meta.enemy}             ← only if authored
 
 Voice examples across relationship states:
   neutral greeting: {neutral.greeting}
@@ -186,7 +189,7 @@ Claude Sonnet 4.6 is $3/$15 per MTok; Claude Haiku 4.5 is $1/$5. That is exactly
 | 1 | `GET /api/npc/{id}/speak` endpoint | **SHIPPED** | `src/js/wbapi-server.js:action === 'speak'@10610`, born `ea02faf` 2026-06-05 14:27 |
 | 2 | Four query params, four defaults | **SHIPPED** | all four verbatim, incl. `'Good afternoon.'` |
 | 3 | Eight response fields | **SHIPPED** | `npc`·`name`·`state`·`prompt`·`reply`·`model`·`location`·`usage` |
-| 4 | System prompt template (§III-B) | **SHIPPED, byte-exact** | `src/js/wbapi-server.js:const systemText =@10655`, unchanged since `2ebe8a6` 15:09 |
+| 4 | System prompt template (§III-B) | **SHIPPED, byte-exact** | byte-exact from `2ebe8a6` 15:09 until §DX-02al 2026-09-25 moved it to `src/js/wbapi-core.js:npcSpeakSystem(key, state)@1326` and added the two meta lines |
 | 5 | Haiku 4.5 as default model | **SHIPPED** | `src/js/wbapi-server.js:claude-haiku-4-5-20251001@10619` |
 | 6 | Seed fallback + status flag | **SHIPPED** | `src/js/wbapi-server.js:SEED FALLBACK@10635`, landed `109d4b3` 14:59 (birth returned 503) |
 | 7 | Append-only verbose log | **SHIPPED** | `src/js/wbapi-server.js:const SPEAK_LOG_FILE@815`; 20 entries survive |
@@ -195,7 +198,7 @@ Claude Sonnet 4.6 is $3/$15 per MTok; Claude Haiku 4.5 is $1/$5. That is exactly
 | 10 | "Cache hit rates will be high in production" | **NOT SHIPPED — unreachable as built** | impossible at ~500-token prefix on this model |
 | 11 | "System prompt is the expensive part" | **NOT SHIPPED — measured 1.40:1** | $0.000500 in vs $0.000356 out per call |
 | 12 | "5× cost" for Sonnet | **NOT SHIPPED — measured 3.00×** | $3/$15 vs $1/$5 per MTok |
-| 13 | Rec 1: worldTruth + enemy in prompt | **NOT SHIPPED** | fields exist in the *other* registry (Finding 3) |
+| 13 | Rec 1: worldTruth + enemy in prompt | **✅ SHIPPED 2026-09-25 §DX-02al** | the cross-registry join Finding 3 called for, in `src/js/wbapi-core.js:npcSpeakSystem(key, state)@1326`; 204/204 profiles gain `worldTruth`, 199 `enemy` |
 | 14 | Rec 2: `?questId=&questStatus=` | **NOT SHIPPED** | 0 occurrences repo-wide |
 | 15 | Rec 3: `the_fisherman` profile | **SHIPPED same day** | `the_fisherman: { key:"the_fisherman"@22979`, `240ae1a` 19:29 |
 | 16 | Rec 4: pre-render cache, `STANDARD_PROMPTS` | **NOT SHIPPED** | 0 occurrences repo-wide |
@@ -249,7 +252,7 @@ A further 10 calls on 2026-06-06 carry the same all-zero cache columns. Corpus t
 
 | # | Recommendation | Effort claimed | Outcome |
 |---|---|---|---|
-| 1 | Add `worldTruth` + `enemy` to system prompt | Small | **NOT SHIPPED** — and mis-sized; cross-registry (Finding 3) |
+| 1 | Add `worldTruth` + `enemy` to system prompt | Small | **✅ SHIPPED 2026-09-25 §DX-02al** — mis-sized as filed; a cross-registry join (Finding 3), gated by `check:npcregs` phase 11 |
 | 2 | Add `?questId=&questStatus=` parameter | Small | **NOT SHIPPED** — 0 occurrences |
 | 3 | Create BIRKA_NPC profile: `the_fisherman`/SSJ | Small | **✅ SHIPPED 2026-06-05 19:29**, `240ae1a` |
 | 4 | Pre-render cache for `STANDARD_PROMPTS` | Medium | **NOT SHIPPED** — 0 occurrences |

@@ -10895,27 +10895,7 @@ async function route(req, res) {
       }
 
       // ── Claude voiced response ──────────────────────────────────────────────
-      const nodeData   = WBAPI.nodeMap[npc.node] || {};
-      const nodeLabel  = nodeData.label || npc.node || 'unknown location';
-      const nodeDesc   = nodeData.text  || '';
-
-      const stateLines = ['neutral','friendly','dearFriend']
-        .filter(s => npc[s])
-        .map(s => {
-          const d = npc[s];
-          const lines = [];
-          if (d.greeting) lines.push(`  ${s} greeting: ${d.greeting}`);
-          if (d.dialogue) lines.push(`  ${s} dialogue: ${d.dialogue}`);
-          return lines.join('\n');
-        }).join('\n');
-
-      const systemText =
-        `You are ${npc.name}, ${npc.occupation || 'a character'} at ${nodeLabel}.\n\n` +
-        (nodeDesc ? `Location — ${nodeLabel}:\n${nodeDesc}\n\n` : '') +
-        `Voice examples across relationship states:\n${stateLines}\n\n` +
-        `Current relationship state with this player: ${state}.\n` +
-        `Respond in one short paragraph or less. Match the register of the ${state} examples exactly — ` +
-        `same rhythm, same level of disclosure, same vocabulary. No stage directions. No asterisks.`;
+      const { text: systemText, nodeLabel } = WBAPI.npcSpeakSystem(key, state);
 
       logRow('npc',    `${npc.name}  ·  state: ${state}  ·  node: ${nodeLabel}  ·  model: ${model}`);
       logRow('prompt', prompt);
