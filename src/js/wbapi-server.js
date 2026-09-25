@@ -10862,7 +10862,7 @@ async function route(req, res) {
   if (method === 'GET') {
 
     // GET /api/npc/{id}/speak?prompt=...&state=neutral|friendly|dearFriend
-    // Claude SDK — prompt caching on system block, one call per greeting.
+    // Claude SDK — one uncached call per request; the system block is WBAPI.npcSpeakSystem.
     // Falls back to seed replay if ANTHROPIC_API_KEY not set.
     if (type === 'npc' && action === 'speak') {
       const npc = WBAPI.birkaNpcs[key];
