@@ -23685,7 +23685,7 @@ function _getNPCDialogue(npcKey) {
     S_story.isoldeGurtAckDelivered = true;
     return { quote: '"The shore smells like cold stone and fish oil in the morning. He had a fire going when I arrived. He looked at me the way he looks at the water — checking whether something had changed. I filed the note when I got back. That is the only part that was protocol."', meta: d.meta, fav };
   }
-  // S29: Auros theory — handled via CY node render (Layer 67b); s29LineDelivered set there
+  // S29: Auros theory — handled via HKG node render (Layer 67b); s29LineDelivered set there
   // Layer 59: void pressure line — Dear Friends at pressure ≥ 6
   if (fav >= 2 && (S_story.voidPressure || 0) >= 6 && NPC_VOID_PRESSURE_LINES[npcKey]) {
     const vpKey = 'voidPressureLine_' + npcKey;
@@ -24769,7 +24769,7 @@ function _showBattleOverlay() {
   _syncStoryCharInto();
   refreshLeftPanel();
   _updateBattleOverlay();
-  // ── Layer 41: Drunk Pit Fight (CY only) ──
+  // ── Layer 41: Drunk Pit Fight (HKG only) ──
   const _pb41 = S_story.pendingBattle;
   if (_pb41 && _pb41.nodeCode === 'HKG' && !S_story.roughWhiskeyUsed
       && (S_story.inventory||[]).some(i => i.name === 'Rough Whiskey')) {
@@ -27215,7 +27215,7 @@ const BRYNN_KEEPER_STORY = { // → doc: world.md §The First Inn Light / Brynn'
 };
 
 // ── Layer 67b: S29 Auros Theory scene ──
-const S29_AUROS_THEORY = // → doc: world.md §S29 — Auros/Froberger theory (fires at CY when frobergerLastEntryRead && fav_auros >= 2)
+const S29_AUROS_THEORY = // → doc: world.md §S29 — Auros/Froberger theory (fires at HKG when frobergerLastEntryRead && fav_auros >= 2)
 `Auros is at her desk when you arrive. She looks up, then at the journal.
 
 "Entry 41?"
@@ -27549,7 +27549,7 @@ const COVENANT_STANDING_LABELS = [ // → doc: docs/design/story.md §Covenant S
   { maxScore: Infinity, label: "Wanderer",         desc: "The Void will open again. Not your fault. Not entirely." }
 ];
 
-const ROUGH_WHISKEY_REACTIONS = { // → doc: world.md §Rough Whiskey (BA vendor item; one-time drunk pit fight event at CY)
+const ROUGH_WHISKEY_REACTIONS = { // → doc: world.md §Rough Whiskey (BA vendor item; one-time drunk pit fight event at HKG)
   yael: {
     impartial: "You've been drinking. Come back when you haven't.",
     friendly:  "I'm going to pretend I don't smell that. Walk with me — the cold'll fix it by second check.",
@@ -32830,7 +32830,7 @@ function _nodeHookBirkaYaelPatrolLine(node, { npcRowDiv }) {
       }
 }
 function _nodeHookBirkaCyMadnessGate(node) {
-      // ── §D01-07: CY Madness Gate — first visit WIS save ──
+      // ── §D01-07: HKG Madness Gate — first visit WIS save ──
       if (node.code === 'HKG' && !S_story.cyMadnessRoll) {
         const _wisMod = Math.floor(((S_story.abilityScores || {}).wis || 12) - 10) / 2 | 0;
         const _profB  = Math.floor(((S_story.level || 1) - 1) / 4) + 2;
@@ -32865,7 +32865,7 @@ function _nodeHookBirkaCyMadnessGate(node) {
       }
 }
 function _nodeHookBirkaCyMaintenancePlate(node) {
-      // ── §D01-07: CY Maintenance Plate — live state indicator ──
+      // ── §D01-07: HKG Maintenance Plate — live state indicator ──
       { const _platOld = document.getElementById('story-cy-plate'); if (_platOld) _platOld.remove();
         if (node.code === 'HKG' && S_story.cyMadnessRoll) {
           const _platDiv = document.createElement('div');
@@ -32889,14 +32889,14 @@ function _nodeHookBirkaCyMaintenancePlate(node) {
       }
 }
 function _nodeHookBirkaCyNgPlusLine(node) {
-      // ── §D01-07: CY NG+ remembered line (no save, just flavor) ──
+      // ── §D01-07: HKG NG+ remembered line (no save, just flavor) ──
       if (node.code === 'HKG' && (S_story.ngPlusRun || 0) >= 1 && !S_story.cyNgPlusLineDelivered) {
         S_story.cyNgPlusLineDelivered = true;
         setTimeout(() => storyMsg('The Neon Undercity looks exactly as you remember it. Which is the problem — you should not remember it at all.'), 300);
       }
 }
 function _nodeHookBirkaS6JointConversation(node) {
-      // ── S6: Weckmann/Auros joint conversation at CY when both Friendly ──
+      // ── S6: Weckmann/Auros joint conversation at HKG when both Friendly ──
       if (node.code === 'HKG' && _npcFavor('crov') >= 1 && _npcFavor('auros') >= 1
           && !S_story.s6JointDelivered) {
         S_story.s6JointDelivered = true;
@@ -32908,7 +32908,7 @@ function _nodeHookBirkaS6JointConversation(node) {
       }
 }
 function _nodeHookBirkaWeckmannLog(node, { npcRowDiv }) {
-      // ── L45-H: Weckmann training log at CY ──
+      // ── L45-H: Weckmann training log at HKG ──
       if (node.code === 'HKG') {
         const _logWrap = document.createElement('div');
         _logWrap.style.cssText = 'display:flex;flex-direction:column;gap:0;';
@@ -32933,7 +32933,7 @@ function _nodeHookBirkaWeckmannLog(node, { npcRowDiv }) {
         });
         _logWrap.appendChild(logBtn);
         npcRowDiv.appendChild(_logWrap);
-        // ── Layer 64: Pit Championship trigger at CY ──
+        // ── Layer 64: Pit Championship trigger at HKG ──
         if ((S_story.pitTrainingWins || 0) >= 5 && !S_story.pitChampionOffered) {
           S_story.pitChampionOffered = true;
           const _pcSub = document.createElement('div');
@@ -32968,12 +32968,12 @@ function _nodeHookBirkaWeckmannLog(node, { npcRowDiv }) {
           chalBtn.addEventListener('click', _startPitChampionBattle);
           npcRowDiv.appendChild(chalBtn);
         }
-        // ── Layer 67b: S29 Auros tactical theory at CY ──
+        // ── Layer 67b: S29 Auros tactical theory at HKG ──
         if (S_story.frobergerLastEntryRead && _npcFavor('auros') >= 2 && !S_story.s29LineDelivered) {
           S_story.s29LineDelivered = true;
           setTimeout(() => storyMsg(S29_AUROS_THEORY), 600);
         }
-        // ── S7b: Undercity Survey delivery to Auros at CY ──
+        // ── S7b: Undercity Survey delivery to Auros at HKG ──
       if (node.code === 'HKG' && _npcFavor('auros') >= 2
           && (S_story.inventory||[]).some(i => i.name === 'Undercity Survey (Partial)')
           && !S_story.undercitySurveyDelivered) {
@@ -35491,11 +35491,11 @@ function storyRender(node, prefix) {
       _runNodeHook('birka-s54-joint-witness', node, _npcHookCtx); // ── Layer 66a: S54 Yael + Brynn joint witness at LHR (Act VIII) ── → NODE_HOOKS (§VM-01-G2b)
       _runNodeHook('birka-yael-named-report', node, _npcHookCtx); // ── Layer 74 §XXXIX — Yael Named Report at LHR ── → NODE_HOOKS (§VM-01-G2b)
       _runNodeHook('birka-yael-patrol-line', node, _npcHookCtx); // ── L45-G: Yael patrol field line ── → NODE_HOOKS (§VM-01-G2b)
-      _runNodeHook('birka-cy-madness-gate', node, _npcHookCtx); // ── §D01-07: CY Madness Gate — first visit WIS save ── → NODE_HOOKS (§VM-01-G2b)
-      _runNodeHook('birka-cy-maintenance-plate', node, _npcHookCtx); // ── §D01-07: CY Maintenance Plate — live state indicator ── → NODE_HOOKS (§VM-01-G2b)
-      _runNodeHook('birka-cy-ngplus-line', node, _npcHookCtx); // ── §D01-07: CY NG+ remembered line (no save, just flavor) ── → NODE_HOOKS (§VM-01-G2b)
-      _runNodeHook('birka-s6-joint-conversation', node, _npcHookCtx); // ── S6: Weckmann/Auros joint conversation at CY when both Friendly ── → NODE_HOOKS (§VM-01-G2b)
-      _runNodeHook('birka-weckmann-log', node, _npcHookCtx); // ── L45-H: Weckmann training log at CY ── → NODE_HOOKS (§VM-01-G2b)
+      _runNodeHook('birka-cy-madness-gate', node, _npcHookCtx); // ── §D01-07: HKG Madness Gate — first visit WIS save ── → NODE_HOOKS (§VM-01-G2b)
+      _runNodeHook('birka-cy-maintenance-plate', node, _npcHookCtx); // ── §D01-07: HKG Maintenance Plate — live state indicator ── → NODE_HOOKS (§VM-01-G2b)
+      _runNodeHook('birka-cy-ngplus-line', node, _npcHookCtx); // ── §D01-07: HKG NG+ remembered line (no save, just flavor) ── → NODE_HOOKS (§VM-01-G2b)
+      _runNodeHook('birka-s6-joint-conversation', node, _npcHookCtx); // ── S6: Weckmann/Auros joint conversation at HKG when both Friendly ── → NODE_HOOKS (§VM-01-G2b)
+      _runNodeHook('birka-weckmann-log', node, _npcHookCtx); // ── L45-H: Weckmann training log at HKG ── → NODE_HOOKS (§VM-01-G2b)
       _runNodeHook('birka-brynn-heartwood-letter', node, _npcHookCtx); // ── S2 / Layer 73 §XXXVIII: Brynn Heartwood Letter — fav-gated, at IN Act IV+, Entry 7 read ── → NODE_HOOKS (§VM-01-G2b)
       _runNodeHook('birka-brynn-regulars', node, _npcHookCtx); // ── S58: Brynn's Regulars — ambient guests at IN ── → NODE_HOOKS (§VM-01-G2b)
       _runNodeHook('birka-s49-entry41', node, _npcHookCtx); // ── Layer 65: S49 Froberger Entry 41 — Brynn at IN (full scene) ── → NODE_HOOKS (§VM-01-G2b)
@@ -36200,7 +36200,7 @@ function storyRender(node, prefix) {
     }
     row.appendChild(c);
   }
-  _runNodeHook('hkg-void-below', node, { row });   // ── Layer 41: CY — Void Below descend chip ── → NODE_HOOKS (§DX-02fu)
+  _runNodeHook('hkg-void-below', node, { row });   // ── Layer 41: HKG — Void Below descend chip ── → NODE_HOOKS (§DX-02fu)
   // D-pad directions — disabled state set by _updateExitLinks() below
   // D-pad corner buttons
   document.getElementById('btn-dpad-npc').disabled  = !(node.npc && NPC_DIALOGUE[node.code]);
