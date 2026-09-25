@@ -502,6 +502,7 @@ All 54 source books are marked `[x]` in `books.md` — all have been processed t
 | **Antecedent / cage** | `docs/story/story-arc-investigation.md` | `docs/lab-reports/lab-report-void-archaeology.md` · `docs/lab-reports/lab-report-void-shaman.md` |
 | **Archive modal (Weimar)** | `docs/story/story-arc-investigation.md` | `docs/lab-reports/lab-report-weimar-scholar-gate.md` |
 | **Benedikt Rasp** | `docs/story/story-arc-investigation.md` | `docs/lab-reports/lab-report-weimar-scholar-gate.md` · `docs/lab-reports/lab-report-void-archaeology.md` |
+| **Bit contract keys (UQF)** — which `BIT_CONTRACTS` fields are live | `src/js/quest.js` `BIT_CONTRACTS` (inlined into `play.html`) | `src/tests/integration/dx02as-bit-contract-surfaces.test.js` asserts every key is read and is authored or `RESERVED` (§DX-02as) · `docs/lab-reports/lab-report-quest-api-architecture.md` Finding 5 |
 | **Betrayal mechanic (thought/word/deed)** | `story.md Layer 104b` | `docs/lab-reports/lab-report-littoral-courts.md` · `world.md §SIREN-01` |
 | **Battle Mode engine** | `docs/spec/combat.md` | `docs/lab-reports/lab-report-architecture-full.md` · `docs/spec/spec-combat.md` |
 | **BFS pathfinding** | `maps.md` | `docs/lab-reports/lab-report-circuit-map-theory.md` · `docs/lab-reports/lab-report-battleground-circuit-path-quest.md` |
