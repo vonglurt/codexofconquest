@@ -19,6 +19,15 @@
 
 ---
 
+## Archived 2026-09-25 — §DX-02if (the quest-type census in resume.md §5)
+
+### §DX-02if — `resume.md` §5 names six quest types, two of which have no quest, and misses five that do (NEW 2026-09-03 during §DX-02ej, 🟢 one sentence from the census, no design call)
+
+- [x] ✅ SHIPPED 2026-09-25 `4403a86` **§DX-02if — the mission-authoring recipe's type list is `main | side | combat | skill_check | mission_bit | hunt`; the corpus at HEAD has nine types and that list gets four of them.** Measured through `wbapi-core` (`W.load`, 2,853 quests, `node -e` over `questDb` grouped by `type`): `skill_check` 2,485 · `side` 141 · `combat` 81 · `delivery` 57 · `epic` 40 · `escort` 22 · `hybrid` 13 · `main` 7 · `dialogue` 7 · **`hunt` 0**. `mission_bit` is a **bit `kind`** (2,450 occurrences of `kind:'mission_bit'`), never a quest `type` (0 occurrences of `type:'mission_bit'`). A reader following §5 to author a mission has a menu that offers two types nothing uses and withholds five that carry 139 quests. `hunt` is also allowlisted in `` `const BOUNTY_TYPES@37239` `` with the same zero (§DX-02ej kept it as a declared type; §BOARD-01-FU8's Void hunts shipped under other types). **Fix:** rewrite the §5 sentence from the census with the command beside it; decide whether `hunt` is a type at all — if not, retire it from the allowlist and from `warrants-board.test.js`'s `['hunt']` pin in the same commit. **Verify:** the sentence carries the census, and every type it names has ≥ 1 quest at HEAD.
+> **Shipped (`4403a86`).** Re-derived at HEAD through `wbapi-core`, and it matches the row exactly: **2,853** quests, **9** types, `hunt` **0**, `type:'mission_bit'` **0** in `QUEST_DB` (the one hit in `play.html` is an inventory item in `_grantMissionBit`). **Before:** §5 named **6** types, **2** of them with no quest, and left out **5** that carry **139**. **After:** §5 names the **9** with their counts and the `node -e` that re-derives them. Every named type has at least 1 quest. **`hunt` decided: not a type.** It had 0 quests, §BOARD-01-FU8's Void hunts shipped as `combat`, and "hunt" lives on only as `_classifyQuest`'s operational class for `combat`. It is out of `const BOUNTY_TYPES@37331`, and board-eligible stays **2,776**. `warrants-board.test.js`'s empty-type pin went `['hunt']` → `[]` in the same commit. That is a browser test, so it did not run on this host. `index.md`'s `BOUNTY_TYPES` row and the warrants-board lab report are annotated. **Found on the path → §DX-02li:** the audit's `NE_VALID_TYPES` and the schema's type enum omit `delivery` (57 quests) and accept `hunt`/`mission_bit`, and the test's `ALLOWED` copy predates §DX-02ej. check:walk 35/35. npm test 183/1086 (no Chromium on this host) = baseline.
+
+---
+
 ## Archived 2026-09-25 — §DX-02lh (following Smalt to Pip pays 150 XP once)
 
 ### §DX-02lh — following Smalt to Pip pays 300 XP and says 150 (NEW 2026-09-25 during §DX-02ig, 🟢 the §DX-02ai fix, one line)

@@ -91,10 +91,6 @@
 > **Fix — three options, and the call is which of them the repo wants.** (a) **Declare it**: one paragraph in `AGENTS.md`/`CONTRIBUTING.md` saying the suite requires a glibc host or a distro chromium, and what a session should do when it has neither — cheapest, and it stops the next session rediscovering this. (b) **Accept a system browser**: `use.launchOptions.executablePath` read from an env var in `src/playwright.config.js`, so `CHROMIUM_PATH=/usr/bin/chromium npm test` works where a distro chromium exists; default behaviour unchanged. (c) **Both.** **Recommendation: (c)** — (a) is the honest documentation of a real constraint and costs nothing, and (b) is four lines that make the constraint removable wherever a package manager can supply a browser.
 > **Provenance:** §DX-02ex, on trying to run the third verification leg.
 
-### §DX-02if — `resume.md` §5 names six quest types, two of which have no quest, and misses five that do (NEW 2026-09-03 during §DX-02ej, 🟢 one sentence from the census, no design call)
-
-- [ ] **§DX-02if — the mission-authoring recipe's type list is `main | side | combat | skill_check | mission_bit | hunt`; the corpus at HEAD has nine types and that list gets four of them.** Measured through `wbapi-core` (`W.load`, 2,853 quests, `node -e` over `questDb` grouped by `type`): `skill_check` 2,485 · `side` 141 · `combat` 81 · `delivery` 57 · `epic` 40 · `escort` 22 · `hybrid` 13 · `main` 7 · `dialogue` 7 · **`hunt` 0**. `mission_bit` is a **bit `kind`** (2,450 occurrences of `kind:'mission_bit'`), never a quest `type` (0 occurrences of `type:'mission_bit'`). A reader following §5 to author a mission has a menu that offers two types nothing uses and withholds five that carry 139 quests. `hunt` is also allowlisted in `` `const BOUNTY_TYPES@37239` `` with the same zero (§DX-02ej kept it as a declared type; §BOARD-01-FU8's Void hunts shipped under other types). **Fix:** rewrite the §5 sentence from the census with the command beside it; decide whether `hunt` is a type at all — if not, retire it from the allowlist and from `warrants-board.test.js`'s `['hunt']` pin in the same commit. **Verify:** the sentence carries the census, and every type it names has ≥ 1 quest at HEAD.
-
 ### §DOCPTR-02 — the `→ doc:` convention is not confined to `play.html`, and gate #21 only walks the game file (NEW 2026-08-26 during §DOCPTR-01, 🟢 no design call)
 
 - [ ] **§DOCPTR-02 — count the pointer corpus outside `play.html`, then widen gate #21 to it.** §DOCPTR-01 measured **92 pointers in `play.html`** and guarded exactly those. `edit.html`, `index.html` and `src/js/*.js` carry the same `// → doc: <file> §<Section>` convention and **were never counted**, so whatever fraction of them is dead is dead unobserved — the state `play.html` was in yesterday.
@@ -813,6 +809,6 @@
 
 ## §RESUME — Phase 6 history
 
-> **Completed work is not carried here.** The 59 closed increments for this phase are condensed in **[`../archive/backlog-resume-history.md`](../archive/backlog-resume-history.md)**; full prose for recent closes is in [`plan-archive.md`](plan-archive.md). This file carries open rows only.
+> **Completed work is not carried here.** The 60 closed increments for this phase are condensed in **[`../archive/backlog-resume-history.md`](../archive/backlog-resume-history.md)**; full prose for recent closes is in [`plan-archive.md`](plan-archive.md). This file carries open rows only.
 
 > When an increment ships: write the full entry into `plan-archive.md`, add its one-line row to `../archive/backlog-resume-history.md` and to the cross-phase table in [`BACKLOG.md`](BACKLOG.md), and delete the row from this file.
