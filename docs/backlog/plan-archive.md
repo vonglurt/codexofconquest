@@ -19,6 +19,15 @@
 
 ---
 
+## Archived 2026-09-25 — §DX-02ll (VENDOR_NODES BK → VBY)
+
+### §DX-02ll — `VENDOR_NODES` still holds `'BK'`, and since `BK` became Birka Shore the Visby vendor it named opens on a beach in Birka (NEW 2026-09-25 during §DX-02cw, 🟢 one literal, once the evidence below is re-read at HEAD)
+
+- [x] ✅ SHIPPED 2026-09-25 `414e7a9` **§DX-02ll — `const VENDOR_NODES@6273` is `new Set(['LLA','LGW','STN','PDL','BK'])`.** Four of the five are the remaps of the list `mechanics-economy.md` §Vendor System still gives: *"BA (City Fence), MQ (Vendor Mira), SF (Proprietor Dusk), IS (Oracle's Apprentice), BK (Warlord Mordus)"*, and BA→`LLA`, MQ→`LGW`, SF→`STN`, IS→`PDL` are all in `node-index.md`'s LEGACY CODE MAP. The fifth was not remapped. The same map gives `BK` → **`VBY`** (Broken Tooth Tavern) and warns that *"`BK` is ALSO a live key — a **different** node (Birka Shore — Northern Longship Landing)"*. Warlord Mordus is Visby's epic NPC in `index.md`'s Town Cross-Reference. So `VENDOR_NODES.has(node.code)` in `storyRender` (`if (VENDOR_NODES.has(node.code))`) opens a vendor on Birka's beach, and Mordus's own node has none. **Fix:** `'BK'` → `'VBY'` in the engine literal (engine JS, not a data section, so a direct edit with the server stopped), and the economy doc's list to live codes. **Verify first:** that no quest or test relies on a vendor at `BK` (`grep -rn "'BK'" src/tests play.html`), and what `VBY` renders today. **Provenance:** §DX-02cw, whose annotator rewrote `index.md`'s `VENDOR_NODES` row to `VBY`. That claimed the engine said something it does not, so the row now quotes the literal and points here.
+> **Shipped (`414e7a9`).** **Re-read at `676c65a`:** the literal still held `'BK'`. The card is `'🛒 Vendor: ' + (node.npc || 'Merchant')`. The five nodes' `npc` fields read `LLA` City Fence, `LGW` Vendor Mira, `STN` Proprietor Dusk, `PDL` Oracle, and **`BK` none** (Birka Shore, a beach). `VBY` carries **"Warlord Kael Mordus"** and had no shop. Nothing pinned a vendor at `BK`: `BK`'s test and quest references are its Birka Shore role (activation, an EB stop), not the shop. **Fix:** `'BK'` → `'VBY'` in the engine literal (engine JS after `MONSTER_POOL:END`, no server running). The economy doc's list moves to live codes, and `index.md`'s `VENDOR_NODES` row records the move. **Vendor nodes that name their vendor: 4/5 → 5/5.** `dx02ll-vendor-nodes.test.js` is browser-free: two tests, **red on the old literal with *"BK has no npc"*, green after**. My first draft of the test went red for the wrong reason (its node-line regex missed the `LLA:{` spacing), which the stash-and-rerun caught. `check:walk` 39/39. Suite on this host, no browser: **185 / 1086** (+2 passed, the new file), the two known real failures.
+
+---
+
 ## Archived 2026-09-25 — §DX-02cw (index.md swept by gate #16)
 
 ### §DX-02cw — `index.md` is classified HISTORY, so the constant table `prompt.md` sends you to is outside gate #16 (NEW 2026-08-17 during §DOC-02bz, 🟢)
