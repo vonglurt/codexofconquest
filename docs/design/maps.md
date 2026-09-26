@@ -578,12 +578,12 @@ const CELL_GRID = (() => {
 
 ### ROAD_RUNS — the fungal road net
 
-`ROAD_RUNS` (game file, after `SEA_LANES`) is an RLE block `{row:[[c0,c1],…]}` exactly like `SEA_RUNS`; it builds the `ROAD_CELLS` Set at load. Shipped net: **400 road cells (1.4% of passable), 88 intersections/T-junctions**, connecting all 235 settlement cells in one component (verified by `check:roads` R1–R4 inside `npm run check:walk`).
+`ROAD_RUNS` (game file, after `SEA_LANES`) is an RLE block `{row:[[c0,c1],…]}` exactly like `SEA_RUNS`; it builds the `ROAD_CELLS` Set at load. Shipped net: **410 road cells (1.5% of passable), 89 intersections/T-junctions**, connecting all 244 settlement cells in one component (verified by `check:roads` R1–R4 inside `npm run check:walk`).
 
 - **Roads are terrain, not permissions** (Free-Movement, CONTRIBUTING.md): a road cell resolves to terrain `'road'` with **encounter rate 0** — a safe, legible highway. The open field stays fully walkable; roads are sugar, never required.
 - Terrain precedence (client `_inferTerrain` + server `terrainAt`, parity-checked): `SEA_LANES → 'ocean'` ▸ `ROAD_CELLS → 'road'` ▸ majority-of-named-neighbors ▸ `'midlands'`. Sea-lanes stay `ocean` — crossings keep their 0.10 encounter risk as texture.
 - Generated deterministically by `src/scripts/build-roads.js` (k-nearest ≤3 + MST + local loops ≤8; trunk-reuse Dijkstra costs settlement 2 / road 4 / virgin 10 / lane 14). **Never hand-edit ROAD_RUNS** — regenerate via ♻ Reweave (`PUT /api/roads` or `./api.sh reweave`); a red `check:roads` rolls the game file back automatically.
-- User-authored net edits live in `roads-pins.json` `{pins, links, locked}` — pins are mandatory road vertices; `locked` city codes are never moved by geo-seed. Edited visually in edit.html (§NAV-01g/h): drag-&-lock cities, vertex drag → pin, ✚/┬ junction palette, 🔗 link toggle, 🗑 delete, ♻ Reweave Net.
+- User-authored net edits live in `src/config/roads-pins.json` `{pins, links, locked}` — pins are mandatory road vertices; `locked` city codes are never moved by geo-seed. Edited visually in edit.html (§NAV-01g/h): drag-&-lock cities, vertex drag → pin, ✚/┬ junction palette, 🔗 link toggle, 🗑 delete, ♻ Reweave Net.
 
 ### Room layer — every cell is a room
 
@@ -751,7 +751,7 @@ MILEPOINT E  Journal + Navigate button show "(n steps, NE)"; ★ clears on arriv
 | `NODE_MAP` | plain object | `{code: {num,name,label,act,text,npc,battle,loot,sleep,...}}` | 416 named nodes; all N/S/E/W/portal/spire fields stripped (§CELL-01 + §CELL-13) — exits derived from CELL_GRID adjacency only. **The key IS the code** — see the §AUDIT-03e note below |
 | `NODE_COORDS` | plain object | `{code: {r,c}}` | Grid position for each node; drives CELL_GRID and map render. **Grid rules:** adjacent nodes should share the same row or column and be ≤ 4 cells apart. Junction intermediaries no longer needed. |
 | `CELL_GRID` | plain object (computed) | `{"r,c": code}` | Reverse lookup: grid coordinate → node code; built at startup from NODE_COORDS |
-| `ROAD_RUNS` / `ROAD_CELLS` | RLE object / computed Set | `{row:[[c0,c1],…]}` / `"r,c"` keys | §NAV-01b fungal road net (400 cells, 88 junctions) — terrain `'road'`, encounter rate 0. Regenerate via ♻ Reweave only |
+| `ROAD_RUNS` / `ROAD_CELLS` | RLE object / computed Set | `{row:[[c0,c1],…]}` / `"r,c"` keys | §NAV-01b fungal road net (410 cells, 89 junctions) — terrain `'road'`, encounter rate 0. Regenerate via ♻ Reweave only |
 | `SEA_RUNS` → `IMPASSABLE_CELLS` / `SEA_LANES` | RLE / Sets | same RLE shape | §WALK-1.5 sea mask + land-bridge lanes (lanes render as `ocean`, passable) |
 
 *(`GATE_LOCKS` removed — no item-gated passages exist; movement refusals are exactly `'oob'`/`'sea'` per the Free-Movement Policy.)*

@@ -465,14 +465,14 @@ The game's Map sheet carries the multiplayer UI as sub-tabs (🗺 Map · 🌐 Co
 | **L0 GEOMETRY** | `GEO_PROJ` 90×360 equirect 1°, `mover.js` kernel | **FROZEN** — untouched by §NAV-01 |
 | **L1 PASSABILITY** | `SEA_RUNS`→`IMPASSABLE_CELLS` · `SEA_LANES` land bridges | **FROZEN** |
 | **L2 TERRAIN FIELD** | `_inferTerrain` / server `terrainAt` / `WORLD_DB` / encounter rates; precedence `SEA_LANES→ocean` ▸ `ROAD_CELLS→road` ▸ neighbors ▸ `midlands` | extended (road override) |
-| **L3 ROAD GRAPH** | `ROAD_RUNS` RLE fungal net — 400 cells (1.4% of passable), 88 junctions, built by `src/scripts/build-roads.js` (MST + trunk-reuse Dijkstra), pins in `roads-pins.json`, verified by `check:roads` R1–R4 | NEW (§NAV-01b/h) |
-| **L4 ROOMS** | `describeCell(world,pos)` → `{icon,title,sub,prose,exits,signposts}` — ROOMS:CORE in `rooms.js`, inlined byte-identically into the HTML (`check:roomsparity`), `require()`d by the server | NEW (§NAV-01c) |
+| **L3 ROAD GRAPH** | `ROAD_RUNS` RLE fungal net — 410 cells (1.5% of passable), 89 junctions, built by `src/scripts/build-roads.js` (MST + trunk-reuse Dijkstra), pins in `src/config/roads-pins.json`, verified by `check:roads` R1–R4 | NEW (§NAV-01b/h) |
+| **L4 ROOMS** | `describeCell(world,pos)` → `{icon,title,sub,prose,exits,signposts}` — ROOMS:CORE in `src/js/rooms.js`, inlined byte-identically into the HTML (`check:roomsparity`), `require()`d by the server | NEW (§NAV-01c) |
 | **L5 ROUTING & TRAVEL** | pos-origin geo-BFS (wrap + band clamp) · road-weighted `_roadGridPath` · `_travelTick` auto-travel loop with 4 interrupt classes | NEW (§NAV-01a/d) |
 | **L6 QUEST WAYFINDING** | Navigate → waypoint, `(n steps, NE)` readouts, arrival detection | NEW (§NAV-01d/e) |
 | **L7 PRESENTATION** | exits signage, minimap roads + waypoint ★, map tab 15×21 + amenities, WORLD/GLOBE canvases | NEW (§NAV-01e + map suite) |
 | **L8 MUD SERVER** | `session/start\|move\|look\|pos` all carry the same L4 `room` via shared `buildLook` — byte-equal to the SP client (mud-harness [M]) | NEW (§NAV-01f) |
 
-**Authoring (edit.html):** §NAV-01g drag-&-lock cities (marker drag / lat-lon → `PUT /api/coords`; 🔒 lock persists into `roads-pins.json.locked`, geo-seed never moves locked cities) · §NAV-01h road-net editor (ROAD_RUNS chain-link overlay; vertex drag → pin; ✚ intersection / ┬ T-junction palette; 🔗 link toggle; 🗑 delete; **♻ Reweave Net** = `PUT /api/roads` → `build-roads.js --apply` → `check:roads`, red check rolls the game file back). CLI: `./api.sh roads | reweave`.
+**Authoring (edit.html):** §NAV-01g drag-&-lock cities (marker drag / lat-lon → `PUT /api/coords`; 🔒 lock persists into `src/config/roads-pins.json`'s `locked`, geo-seed never moves locked cities) · §NAV-01h road-net editor (ROAD_RUNS chain-link overlay; vertex drag → pin; ✚ intersection / ┬ T-junction palette; 🔗 link toggle; 🗑 delete; **♻ Reweave Net** = `PUT /api/roads` → `build-roads.js --apply` → `check:roads`, red check rolls the game file back). CLI: `./api.sh roads | reweave`.
 
 **Guard-rails:** mover.js untouched (refusals stay exactly `'oob'`/`'sea'`) · roads are terrain, never permissions · no stored node-to-node edge lists · never hand-edit `ROAD_RUNS` — always ♻ Reweave.
 
