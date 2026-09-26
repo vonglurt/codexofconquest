@@ -4,7 +4,7 @@
 
 **Project:** `play.html` — a single-file, quest-driven MUD-style fighter RPG
 **Live counts:** `npm run stats --prefix src` — nodes, monsters, terrains, quests, NPC profiles, acts, lines and size, parsed from the data sections (§DX-01g)
-**Last updated:** 2026-09-26 — §DX-02em gave the §KG corridor's five nodes their `maps.md` section and a Reverse Lookup row; earlier today §DX-02ey and §DX-02lo (gate #40 `check:hashes`)
+**Last updated:** 2026-09-26 — §DX-02ed made `_gateFlagSet` descend `all`/`any`/`not` (badge 39,056); earlier §DX-02em gave the §KG corridor's five nodes their `maps.md` section and a Reverse Lookup row; earlier today §DX-02ey and §DX-02lo (gate #40 `check:hashes`)
 
 > **📁 Repository restructured 2026-08-23 for the first public release.** The
 > game was renamed *Roll2Hit* → **Codex of Conquest**; `roll2hit-v3.html` →
