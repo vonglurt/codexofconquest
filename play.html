@@ -6832,7 +6832,7 @@ function _ceremoRetryBlocked(questId) {
    never a parity-fenced kernel; see lab-report-vm01a-execbits-coroutine.md §6.2).
    The in-flight generator lives ONLY here, never in S_story — a coroutine is not
    JSON-serializable, and by design a choice resolves within one interaction turn,
-   so no autosave (storyAutoSave, 23237) ever captures a suspension (§6.3). */
+   so no autosave (storyAutoSave) ever captures a suspension (§6.3). */
 let _uqfPending = null;
 /* Resume a suspended generator with `answer`; run until it next suspends or ends.
    Returns the `ask` envelope when it parks on a choice, else null when done. */
