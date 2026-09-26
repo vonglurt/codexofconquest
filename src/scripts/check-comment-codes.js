@@ -7,8 +7,8 @@
 //
 // A token counts only in a place context: `at XX`, `XX node(s)`, `Node XX`, `(XX —`,
 // `(XX)`, `visit(s) XX`, `XX and YY nodes`. A token that resolves in no NODE_MAP key must be
-// in NOT_A_NODE (a word or class, with the reason) or in PENDING (a dead code whose live
-// node is not yet settled, with its exact count and the row that owns it). Both tables are
+// in NOT_A_NODE (a word or class, with the reason) or in PENDING (a dead code not yet
+// rewritten, with its exact count and the row that owns it). Both tables are
 // ratchets: an entry whose count no longer matches the file fails, so it is lowered as the
 // comments are fixed and cannot outlive them.
 // Asserts only, never rewrites (§DX-02fx).
@@ -31,16 +31,12 @@ const NOT_A_NODE = {
 };
 
 const PENDING = {
-  CO: { n: 1, row: '§AUDIT-03ba-FU', note: 'QUEST_DB comment (→ TLS); needs ./bin/api sub' },
-  MM: { n: 1, row: '§AUDIT-03ba-FU', note: 'QUEST_DB comment (→ LIM); needs ./bin/api sub' },
-  AT: { n: 1, row: '§AUDIT-03ba-FU', note: 'QUEST_DB §D02-01 comment; live node unsettled' },
-  WK: { n: 3, row: '§AUDIT-03ba-FU', note: "Scholar King's Workshop; live node unsettled" },
-  YC: { n: 3, row: '§AUDIT-03ba-FU', note: 'Yugurt Tournament / Rod Shop; live node unsettled' },
-  FR: { n: 2, row: '§AUDIT-03ba-FU', note: 'La Riva; live node unsettled' },
-  CR: { n: 2, row: '§AUDIT-03ba-FU', note: 'Pit Championship / Scholar Box; live node unsettled' },
-  HL: { n: 2, row: '§AUDIT-03ba-FU', note: 'Dunfall kelpie; live node unsettled' },
-  LT: { n: 1, row: '§AUDIT-03ba-FU', note: 'stoning event; live node unsettled' },
-  SL: { n: 1, row: '§AUDIT-03ba-FU', note: 'Worn Ledger Book drop; live node unsettled' },
+  CO: { n: 1, row: '§AUDIT-03ba-FU', note: '→ TLS, QUEST_DB §D02-10 banner; needs ./bin/api sub' },
+  MM: { n: 1, row: '§AUDIT-03ba-FU', note: '→ LIM, QUEST_DB §D02-08 banner; needs ./bin/api sub' },
+  AT: { n: 1, row: '§AUDIT-03ba-FU', note: '→ RAI, QUEST_DB §D02-01 banner; needs ./bin/api sub' },
+  WK: { n: 1, row: '§AUDIT-03ba-FU', note: '→ SZG, QUEST_DB §D02-06 banner; needs ./bin/api sub' },
+  YC: { n: 1, row: '§AUDIT-03ba-FU', note: '→ SSJ, QUEST_DB §XLV comment; needs ./bin/api sub' },
+  LT: { n: 1, row: '§AUDIT-03ba-FU', note: '→ KYA, QUEST_DB quest_stoning_lystra comment; needs ./bin/api sub' },
 };
 
 const CONTEXTS = [

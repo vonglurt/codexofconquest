@@ -25419,7 +25419,7 @@ function _storyBattleVictory() {
   if (pb && pb.nodeCode === 'BMA') {
     S_story.slStalksWon = (S_story.slStalksWon || 0) + 1;
   }
-  // Layer 41: Worn Ledger Book drop at SL when quest active
+  // Layer 41: Worn Ledger Book drop at BMA when quest active
   if (pb && pb.nodeCode === 'BMA' && S_story.quests['quest_brynn_ledger'] === 'active'
       && !(S_story.inventory||[]).some(i => i.name === 'Worn Ledger Book')
       && _combatRng() < 0.6) {
@@ -26866,7 +26866,7 @@ const FISHING_RODS = [
 ];
 
 // ── §XLV: Yugurt Tournament — Six Fishermen ──
-const NPC_TOUR_OPPONENTS = [ // → doc: docs/archive/plan-archive-verbatim-2026-06-12.md §XLV — Yugurt Tournament + Six Fishermen (YC tournament; competence bonus drives NPC cast roll)
+const NPC_TOUR_OPPONENTS = [ // → doc: docs/archive/plan-archive-verbatim-2026-06-12.md §XLV — Yugurt Tournament + Six Fishermen (SSJ tournament; competence bonus drives NPC cast roll)
   { key:'pip',    name:'Pip',             title:'The Kid',            competence:'Novice',   bonus:-1, stake:50,   order:1, xp:100,
     quote:'"I have been practicing. Every day. Well. Most days. Some days I forgot my string."' },
   { key:'renard', name:'Renard Castwell', title:'Accounting Dept.',   competence:'Terrible', bonus:-3, stake:75,   order:2, xp:150,
@@ -27985,7 +27985,7 @@ Roberday worked the corner all week for nothing. Writing that down.
 {PLAYER_ENTRIES}{CHAMP_ENTRY}`;
 
 // ── Layer 64: Pit Championship ──
-const PIT_CHAMPION_OGUNDIMU = { // → doc: world.md §Pit Championship (non-dialogue NPC; appears once at CR; pitChampionWon)
+const PIT_CHAMPION_OGUNDIMU = { // → doc: world.md §Pit Championship (non-dialogue NPC; appears once at HKG; pitChampionWon)
   name: 'Ogundimu, the Iron Standard',
   icon: '🏆',
   ac: 16,
@@ -32208,7 +32208,7 @@ function _nodeHookCodexCoreChamber(node) {
   }
 }
 function _nodeHookLaRivaRow(node) {
-  // ── Layer 78: La Riva — FR node render ──
+  // ── Layer 78: La Riva — AMS node render ──
   if (node.code === 'AMS') {
     const _oldFrDiv = document.getElementById('fr-quest-div');
     if (_oldFrDiv) _oldFrDiv.remove();
@@ -32238,7 +32238,7 @@ function _nodeHookLaRivaRow(node) {
   }
 }
 function _nodeHookScholarWorkshop(node) {
-  // ── Layer 81: Scholar King's Workshop (WK) render ──
+  // ── Layer 81: Scholar King's Workshop (SZG) render ──
   if (node.code === 'SZG') {
     const _wkOld = document.getElementById('wk-panel');
     if (_wkOld) _wkOld.remove();
@@ -33194,7 +33194,7 @@ function _nodeHookBirkaQuillNgPlusSong(node, { npcRowDiv }) {
       }
 }
 function _nodeHookBirkaRodShop(node, { npcRowDiv }) {
-      // ── Rod Shop at YC ──
+      // ── Rod Shop at SSJ ──
       if (node.code === 'SSJ') {
         const _rodShopWrap = document.createElement('div');
         _rodShopWrap.style.cssText = 'display:flex;flex-direction:column;gap:0;margin-top:4px;';
@@ -34033,7 +34033,7 @@ function _nodeHookPortDnfAccess(node) {
   // §PORT-02: DF — Dunfall access at DNF (§VM-01-G-FU-d). Four states, one embedded button,
   // moved verbatim. The KIR defeatedBattles guard is a REAL node code (the kelpie ford), not
   // a synthetic — gate #13 phase 6 resolves it in NODE_MAP.
-  // §PORT-02: DF — Dunfall access (kelpie must be defeated at HL)
+  // §PORT-02: DF — Dunfall access (kelpie must be defeated at KIR)
   { const _dfOld = document.getElementById('story-df-access'); if (_dfOld) _dfOld.remove();
     if (node.code === 'DNF') {
       const _dfDiv = document.createElement('div');
@@ -34357,7 +34357,7 @@ function _nodeHookLxxDsjEels(node) {
   }
 }
 function _nodeHookSsjTournament(node, { row, _mkSection, _mkCard }) {
-  // ── §XLV TOURNAMENT section (YC only, requires Fishing Rod) ────
+  // ── §XLV TOURNAMENT section (SSJ only, requires Fishing Rod) ────
   if (node.code === 'SSJ') {
     const hasRod = (S_story.inventory||[]).some(i => (i.name||'').toLowerCase().includes('fishing rod'));
     if (hasRod) {
@@ -35405,8 +35405,8 @@ function storyRender(node, prefix) {
       document.getElementById('story-text-box').insertAdjacentElement('afterend', cqDiv);
     }
   }
-  _runNodeHook('la-riva-row', node); // ── Layer 78: La Riva — FR node render — extracted verbatim to NODE_HOOKS (§VM-01-G2) ──
-  _runNodeHook('scholar-workshop', node); // ── Layer 81: Scholar King's Workshop (WK) — extracted verbatim to NODE_HOOKS (§VM-01-G2) ──
+  _runNodeHook('la-riva-row', node); // ── Layer 78: La Riva — AMS node render — extracted verbatim to NODE_HOOKS (§VM-01-G2) ──
+  _runNodeHook('scholar-workshop', node); // ── Layer 81: Scholar King's Workshop (SZG) — extracted verbatim to NODE_HOOKS (§VM-01-G2) ──
 
   _runNodeHook('mimic-meadows', node); // ── Layer 81: Mimic Meadows (LIM) — extracted verbatim to NODE_HOOKS (§VM-01-G2) ──
 
@@ -35503,7 +35503,7 @@ function storyRender(node, prefix) {
       _runNodeHook('birka-lamp-choice', node, _npcHookCtx); // ── Layer 70 §XXXV — Beat 2: Lamp Choice at TLL (Dear Friend only) ── → NODE_HOOKS (§VM-01-G2b)
       _runNodeHook('birka-quill-brynn-song', node, _npcHookCtx); // ── S54b: Quill plays Brynn's song at MHQ — both Dear Friend, once per run ── → NODE_HOOKS (§VM-01-G2b)
       _runNodeHook('birka-quill-ngplus-song', node, _npcHookCtx); // ── S32: Quill's second song on NG+ (Dear Friend or higher) ── → NODE_HOOKS (§VM-01-G2b)
-      _runNodeHook('birka-rod-shop', node, _npcHookCtx); // ── Rod Shop at YC ── → NODE_HOOKS (§VM-01-G2b)
+      _runNodeHook('birka-rod-shop', node, _npcHookCtx); // ── Rod Shop at SSJ ── → NODE_HOOKS (§VM-01-G2b)
       _runNodeHook('birka-quill-ambient-song', node, _npcHookCtx); // ── S45: Quill plays without prompting (unfinished song ambient, odd game days) ── → NODE_HOOKS (§VM-01-G2b)
       document.getElementById('story-text-box').insertAdjacentElement('afterend', npcRowDiv);
     }
@@ -35603,7 +35603,7 @@ function storyRender(node, prefix) {
         setTimeout(() => storyMsg(EB_NG_PLUS_LINES[node.code]), 600);
       }
     }
-    // Sealed Scholar Box auto-spawn at CR when quest active
+    // Sealed Scholar Box auto-spawn at KRN when quest active
     if (node.code === 'KRN' && S_story.quests['quest_pachelbel_shipment'] === 'active'
         && !(S_story.inventory||[]).some(i => i.name === 'Sealed Scholar Box')) {
       S_story.inventory.push({name:'Sealed Scholar Box',icon:'📦',type:'quest_item',sell:0,questId:'quest_pachelbel_shipment'});
@@ -36102,7 +36102,7 @@ function storyRender(node, prefix) {
     row.appendChild(sec);
   }
 
-  _runNodeHook('ssj-tournament', node, { row, _mkSection, _mkCard }); // ── §XLV TOURNAMENT section (YC only, requires Fishing Rod) ── → NODE_HOOKS (§VM-01-G-FU-f)
+  _runNodeHook('ssj-tournament', node, { row, _mkSection, _mkCard }); // ── §XLV TOURNAMENT section (SSJ only, requires Fishing Rod) ── → NODE_HOOKS (§VM-01-G-FU-f)
 
   // ── WORLD section (NPC, vendor, portal, misc) ──────
   {
@@ -36273,7 +36273,7 @@ function storyRender(node, prefix) {
   // §SPARK-01: MS — Clot + Brannick + Warmth mystery (3-state pure panel) → NODE_PANELS (§VM-01-G-FU-d)
   _runNodeHook('whodunit-sen-bilge', node);  // §WHODUNIT-01: MS — The Bilge Mystery
   _runNodeHook('naval-gci-intercept', node); // §NAVAL-01: SB — The Intercept (D3-shaped; two roles write a STRING enum — see hook header)
-  _runNodeHook('port-dnf-access', node);     // §PORT-02: DF — Dunfall access (kelpie must be defeated at HL)
+  _runNodeHook('port-dnf-access', node);     // §PORT-02: DF — Dunfall access (kelpie must be defeated at KIR)
   _runNodeHook('spark-dnf-harmony', node);   // §SPARK-02: DF — Fehn/Bram/Oat Dunfall Harmony Chain
   _runNodeHook('port-mme-saltwick', node);   // §PORT-01: SK — Saltwick credential check + hull repair (hull price → `cost`, §VM-01-G-FU-d)
   _runNodeHook('hunt-wro-relay', node);           // §HUNT-02: J1 — Tessie's relay road warning (+ done panel — see hook header for why it stays here)
