@@ -6426,10 +6426,11 @@ function rollN(sides, count) {
 }
 
 // §VM-01-B — client-side seeded PRNG stream (mulberry32), byte-identical to the
-// server's seededNext (js/wbapi-server.js:1147). rngState lives in S_story, so a
+// server's seededNext in js/wbapi-server.js. rngState lives in S_story, so a
 // save fully determines the future stream: bug-repro from a save file, replayable
 // traces, server-verifiable rolls. Closes the SP/MP divergence the server documents
-// against itself ("a known SP/MP divergence", wbapi-server.js:1155). Feeds the four
+// against itself ("a known SP/MP divergence", above BASE_TIER_WEIGHTS in
+// wbapi-server.js). Feeds the four
 // game-state roll pipelines only (encounter · _rollSkill · loot/drop ·
 // _weightedMonsterPick); fishing and cosmetic rolls stay on Math.random() (§6.3),
 // and the fight draws it only under `_combatRng`'s replay flag.

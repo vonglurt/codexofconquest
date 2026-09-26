@@ -98,7 +98,7 @@ test.describe('§VM-01-B — the seeded client RNG', () => {
       for (let i = 0; i < 5000; i++) {
         const v = _seededNext();
         if (v < minR) minR = v; if (v > maxR) maxR = v;
-        const d20 = Math.ceil(_seededNext() * 20);              // as in _rollSkill (21902)
+        const d20 = Math.ceil(_seededNext() * 20);              // as _rollSkill's d20a
         if (d20 < 1 || d20 > 20) badD20++;
         const d100 = Math.min(99, Math.floor(_seededNext() * 100)); // as in _rollD100Loot (24033)
         if (d100 < 0 || d100 > 99) badD100++;
