@@ -193,7 +193,7 @@ Content is expressed *in the game's own mechanics*, so know the vocabulary (deta
 - **XP / leveling:** Fighter Champion, cap L20. **All effort earns XP, you never lose XP** — successes full, misses/failed-checks a small fraction (§XP-01). Battle XP ≈ `AC·maxHP`.
 - **Mission bit tokens:** permanent *receipts* granted by `mission_bit` bits (`_grantMissionBit`) — a witnessed-event record with a `day` stamp and a gate-referenceable flag. They are postconditions (kept), the inverse of KEY_EVENTS (preconditions consumed).
 - **NPC favorability:** `favor` bits raise a relationship; dialogue has `impartial`/`questActive`/`friendly`/`dearFriend` tiers; the ending notices what you *shared*, not just what you killed.
-- **The doom clock:** the world ends Day 49 (7 Codex Shards to seal the Void). Time is a real resource — `Wait`/rest and travel cost days. Some content is day-windowed (e.g. §BOARD-01 Void-tide bounties).
+- **The doom clock:** the world ends Day 49 (7 Codex Shards to seal the Void). Time is a real resource, and only sleep spends it: `storyConfirmSleep` is the one place `S_story.day` advances, and travel costs no days. Some content is day-windowed (e.g. §BOARD-01 Void-tide bounties).
 - **Save state:** `S_story` in `localStorage`. New persistent fields are declared once in `_S_DEFAULTS()` (single source of truth — see State Fields quick reference in `index.md`). Randomness that affects game state must come from the **seeded stream** (`S_story.rngState`, mulberry32), never `Math.random()`.
 
 ---

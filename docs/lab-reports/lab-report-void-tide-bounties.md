@@ -303,7 +303,7 @@ lethal, and the report should not have used the word.
   §DX-02dz "bytes-that-are-characters" hazard's **earliest** known instance and the first found in a
   commit message rather than a report. `node --check` at 0 errors reproduces exactly.
 - **The engine comment this increment shipped carries a line number that was wrong the day it was
-  written.** `beats at 21821@37301` points at `VOID_TIDE_EVENTS`, which sits at **21822** in the very
+  written.** *`beats at 21821`*@37301 (removed by §DX-02ef, 2026-09-26) pointed at `VOID_TIDE_EVENTS`, which sits at **21822** in the very
   build that comment shipped in, and at **22368** today. Nothing can catch it: the anchor gate walks
   `*.md` only (`src/scripts/resolve-anchors.js:65`). Filed as **§DX-02ef**.
 - **Three parity fences, not four.** §9's *"0 kernel sentinels (`MOVER`/`ROOMS`/`DUEL:CORE`
