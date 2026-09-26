@@ -43,10 +43,6 @@
 ---
 ## §BACKLOG — Open Items (Phase 6)
 
-### §DX-02lm — `index.md`'s header line hard-codes four live counts, and three are stale (NEW 2026-09-25 during §DX-02cw, 🟢 same fix as §DX-02co)
-
-- [ ] **§DX-02lm — line 6 of `docs/design/index.md` reads *"**Live counts:** 416 nodes · 398 monsters · 111 terrains · 2,853 quests · 204 NPC profiles · 8 acts · 38,859 lines · 5.51 MB"*.** `npm run stats` at `c0bef0c` prints **399** monsters, **39,053** lines and **5.53 MB**. The same file's Doc Health Badge row *Live entity counts* already says *"Run `npm run stats` for live totals"* (§DX-01g), and gate #37 holds the badge's line count, but no gate reads line 6. **Fix:** the §DX-02co move. Replace the figures with the pointer, or have gate #37 assert them too. **Provenance:** §DX-02cw, promoting this file to SWEEP.
-
 ### §DX-02lk — 104 prose mentions of `./api.sh` in maintained docs name a root path that has not existed since the rename to `./bin/api`, and gate #30 exempts both folders they live in (NEW 2026-09-25 during §DX-02ct, 🟡 one classification call, then a sweep)
 
 - [ ] **§DX-02lk — `grep -rcn '\./api\.sh' --include='*.md' docs/design docs/notes docs/api docs/spec *.md` finds 104 lines outside lab reports, the archive and the backlog (summed per file; a filter on the line text drops lines that mention "archive" and reads 98):** `prompt.md` **37**, `docs-dev-environment.md` **21**, `cell-resume-prompts.md` 11, `monsters.md` 8, `data-code-migration-into-cells.md` 5, `maps.md` 5, `index.md` 4, `docs-node-network.md` 4, `restart-prompt.md` 3, `quest.md` 3, and one each in `world.md`, `potential.md` and `mechanics.md`. The script lives at `src/bin/api.sh` and is reached through `./bin/api`; a reader who types `./api.sh` at the root gets *"no such file"*. **Why no gate saw it:** `check-doc-commands.js`'s `HISTORY` table exempts all of `docs/design/` (*"illustrative rather than a procedure"*) and `docs/notes/` (*"records of past runs"*), and the gate reads fenced blocks only. That holds for most of both folders, but not for `prompt.md`, which `index.md` calls one of the three governing files, or for `docs-dev-environment.md`, the onboarding note. Those two carry 58 of the 104. **The call:** (a) move those two files from HISTORY to SWEPT, sweep their fenced blocks, and fix their prose by hand; (b) also add a prose scan for the literal `./api.sh` across both folders, since that string is dead in every tense; (c) leave the classification, and fix only `index.md`'s `api.sh` rows as the one doc the loop reads each row. **Recommendation:** (b). A literal whose only meaning is a dead path has no illustrative reading, and the gate already knows it is dead (`§DX-02gh: ./api.sh is caught as a dead file`). **Provenance:** §DX-02ct, rewriting `index.md`'s §MESH-02 cell, which named `./api.sh mesh`; that one is now `./bin/api mesh`.
@@ -752,6 +748,6 @@
 
 ## §RESUME — Phase 6 history
 
-> **Completed work is not carried here.** The 73 closed increments for this phase are condensed in **[`../archive/backlog-resume-history.md`](../archive/backlog-resume-history.md)**; full prose for recent closes is in [`plan-archive.md`](plan-archive.md). This file carries open rows only.
+> **Completed work is not carried here.** The 74 closed increments for this phase are condensed in **[`../archive/backlog-resume-history.md`](../archive/backlog-resume-history.md)**; full prose for recent closes is in [`plan-archive.md`](plan-archive.md). This file carries open rows only.
 
 > When an increment ships: write the full entry into `plan-archive.md`, add its one-line row to `../archive/backlog-resume-history.md` and to the cross-phase table in [`BACKLOG.md`](BACKLOG.md), and delete the row from this file.

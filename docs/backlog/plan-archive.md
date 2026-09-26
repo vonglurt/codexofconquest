@@ -19,6 +19,15 @@
 
 ---
 
+## Archived 2026-09-25 — §DX-02lm (index.md header counts point at npm run stats)
+
+### §DX-02lm — `index.md`'s header line hard-codes four live counts, and three are stale (NEW 2026-09-25 during §DX-02cw, 🟢 same fix as §DX-02co)
+
+- [x] ✅ SHIPPED 2026-09-25 `fe62295` **§DX-02lm — line 6 of `docs/design/index.md` reads *"**Live counts:** 416 nodes · 398 monsters · 111 terrains · 2,853 quests · 204 NPC profiles · 8 acts · 38,859 lines · 5.51 MB"*.** `npm run stats` at `c0bef0c` prints **399** monsters, **39,053** lines and **5.53 MB**. The same file's Doc Health Badge row *Live entity counts* already says *"Run `npm run stats` for live totals"* (§DX-01g), and gate #37 holds the badge's line count, but no gate reads line 6. **Fix:** the §DX-02co move. Replace the figures with the pointer, or have gate #37 assert them too. **Provenance:** §DX-02cw, promoting this file to SWEEP.
+> **Shipped (`fe62295`), the pointer rather than a gate.** **Re-measured at `2617b82`:** `npm run stats` prints 416 / **399** / 111 / 2,853 / 204 / 8 / **39,053** / **5.53 MB**, and line 6 read 398, 38,859 and 5.51 MB. That is three stale of eight. Asserting eight numbers in gate #37 would add upkeep to every row that moves one. The badge row *Live entity counts* already sends readers to the command, so line 6 now does too. The *Last updated* line under it still read 2026-09-14 after six loops of edits to this file; it now reads today, with this row. **After:** 0 hand-kept counts in the header. `check:walk` 39/39. Suite on this host, no browser: **185 / 1086**, the two known real failures.
+
+---
+
 ## Archived 2026-09-25 — §DX-02ll (VENDOR_NODES BK → VBY)
 
 ### §DX-02ll — `VENDOR_NODES` still holds `'BK'`, and since `BK` became Birka Shore the Visby vendor it named opens on a beach in Birka (NEW 2026-09-25 during §DX-02cw, 🟢 one literal, once the evidence below is re-read at HEAD)
