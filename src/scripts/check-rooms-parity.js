@@ -20,7 +20,7 @@ function core(file) {
 const a = core('src/js/rooms.js');
 const b = core('play.html');
 if (a === b) {
-  console.log(`✓ rooms parity: ROOMS:CORE identical in rooms.js and play.html (${a.length} bytes)`);
+  console.log(`✓ rooms parity: ROOMS:CORE identical in rooms.js and play.html (${Buffer.byteLength(a, 'utf8')} bytes)`);
   return;
 }
 console.error('✗ rooms parity FAILED: the inlined ROOMS:CORE block differs from rooms.js');

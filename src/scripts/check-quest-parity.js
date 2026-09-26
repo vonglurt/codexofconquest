@@ -22,7 +22,7 @@ function core(file) {
 const a = core('src/js/quest.js');
 const b = core('play.html');
 if (a === b) {
-  console.log(`✓ quest parity: QUEST:CORE identical in quest.js and play.html (${a.length} bytes)`);
+  console.log(`✓ quest parity: QUEST:CORE identical in quest.js and play.html (${Buffer.byteLength(a, 'utf8')} bytes)`);
   return;
 }
 console.error('✗ quest parity FAILED: the inlined QUEST:CORE block differs from quest.js');

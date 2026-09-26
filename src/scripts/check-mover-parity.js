@@ -20,7 +20,7 @@ function core(file) {
 const a = core('src/js/mover.js');
 const b = core('play.html');
 if (a === b) {
-  console.log(`✓ mover parity: MOVER:CORE identical in mover.js and play.html (${a.length} bytes)`);
+  console.log(`✓ mover parity: MOVER:CORE identical in mover.js and play.html (${Buffer.byteLength(a, 'utf8')} bytes)`);
   return;
 }
 console.error('✗ mover parity FAILED: the inlined MOVER:CORE block differs from mover.js');
