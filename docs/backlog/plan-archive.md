@@ -19,6 +19,19 @@
 
 ---
 
+## Archived 2026-09-26 — §DX-02em (the §KG corridor reaches maps.md)
+
+### §DX-02em — five nodes have been live for 45 days and have never appeared in their own home doc (NEW 2026-08-22 during §DOC-02cw, 🟢 one maps.md section, NO DESIGN CALL)
+
+- [x] ✅ SHIPPED 2026-09-26 `1541797` **§DX-02em — `maps.md` contains zero occurrences of SPB, KMS, ZVD, FBR or TVR.** 🟢 **write the section the two-way-sync rule already requires.** `NODE_MAP` and `NODE_COORDS` both carry `// → doc: maps.md` in their own declarations, and the §KG Increment 2 build order (§7 step 6) named *"world.md/maps.md (terrains + corridor)"*. `monsters.md`, `world.md` and `quest.md` were all synced correctly and are still accurate at HEAD — the `monsters.md` §Soviet-Cyberpunk Training Tier table reproduces every stat and mLevel exactly. **`maps.md` was skipped, the ship commit's own doc list omits it, and nothing has noticed for 45 days.**
+> **Why it is worth a row rather than a shrug.** `maps.md` is where a reader goes to find out what is at `12,213`. The corridor is a six-leg, fifteen-step, all-road run from TLL to SVO carrying eleven authored road cells, and it is invisible in the document that owns node geography. This is also the *silent* half of the sync rule: `check:anchors` proves every doc line points at real code, and no gate proves every real node reaches a doc.
+> **Fix:** add a `maps.md` §"St. Petersburg → Moscow Corridor" block — the five codes, cells, terrain keys, NPC anchors, and the road-run rows — sourced from `docs/lab-reports/lab-report-kg-russia-kindergarten-zones.md` §III, which is now re-verified against HEAD. Note in it that `ROAD_RUNS` is **generated** (`src/scripts/build-roads.js`), so the cells are the current lay and not a promise.
+> **Detector wanted (cheap, general):** extend `src/scripts/node-index.js --check` to flag any `NODE_MAP` key that appears in no `.md` under the doc roots. It already walks every node; the sweep is one set difference, and it would have caught this on 2026-07-08.
+> **Provenance:** §DOC-02cw, finding F8.
+> **Shipped (`1541797`). The section, not the detector, which is filed as §DX-02lq.** **Before, at `571dee3`:** `grep -cw` in `maps.md` gave 0 for each of `SPB` `KMS` `ZVD` `FBR` `TVR`. **Re-derived at HEAD, not copied:** `node-index.js --json` gives the report's §III cells, terrains, NPCs and labels exactly. Sleep is true on `TLL` and `TVR` only. `battle` is set on `ZVD` (`gladiator_bot` ×1) and `FBR` (`trainer_bot_prime` ×1). `ROAD_RUNS` over rows 8–14, cols 204–217 gives exactly F5's legs: 8,204–210 through `TUO` at 8,207, then 9,210 · 10,211 · 11,212–213 · 12,214–215 · 13,217. **Shipped:** `maps.md` §ST. PETERSBURG → MOSCOW CORRIDOR, with a node table, a leg-by-leg road table, and the warning that `ROAD_RUNS` is generated. It says that the property, not the lay, is held by `kg-zones.test.js`, a browser test, which corrects the draft's claim that a gate held it. Also a Reverse Lookup row in `index.md`. **After:** 3 occurrences of each code in `maps.md`. **The detector, measured first:** as worded it cannot fire, because the generated `docs/maps/node-index.md` lists every node. Without that file, **80** of 416 live codes appear in no tracked doc, and **271** appear in none of design, world, story and mechanics. That needs a decision about which roots count, and a ratchet, so it is §DX-02lq. `check:walk` 40/40. `npm test` 185/1086, the baseline on this host, with the same two known failures.
+
+---
+
 ## Archived 2026-09-26 — §DX-02ey (the last two wrong pointers of Layer 44; (b) already shipped as gate check:docpointers)
 
 ### §DX-02ey — five `→ doc:` pointers wrong in one layer, and the gate that cannot see them (NEW 2026-08-23 during §DOC-02cy, 🟢 four comments + a gate)
