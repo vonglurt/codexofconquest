@@ -43,7 +43,7 @@ Prior to migration, `play.html` comprised approximately 3,500 lines implementing
 - **Initiative tracker** — drag-reorderable combatant list with HP bars, condition chips, and death save pips
 - **Attack roller** — configurable ATK bonus, damage dice, crit threshold, and modifiers (ADV/DIS, half cover, flanking)
 - **Monster preset loader** — `loadEnemyPreset(preset)` ingests a `MONSTER_POOL` entry and populates the opponent zone
-- **Terrain filter** — `WORLD_DB` maps 40 terrain types to valid monster subsets for random encounter generation
+- **Terrain filter** — `WORLD_DB` maps terrain types (40 in the pre-migration tracker; `npm run stats --prefix src` gives today's count) to valid monster subsets for random encounter generation
 - **Statistics panel** — roll history, hit/miss rates, damage histograms
 
 The critical integration surface for the migration is `loadEnemyPreset(mp)`. This function is the boundary between Story Mode and Battle Mode. Any monster in `MONSTER_POOL` can be loaded into the combat tracker by passing its key. This function was not modified during the migration.

@@ -51,12 +51,12 @@ The developer environment described here is built around three ideas:
 
 The game file embeds structured data as JavaScript object literals inside
 `<script>` tags, parsed at runtime by the browser and at edit-time by
-`wbapi-core.js`. Key data blocks:
+`wbapi-core.js`. Key data blocks (for how many of each, run `npm run stats --prefix src`):
 
-- `MONSTER_POOL` — 216+ monsters with stats, loot tables, terrain affinities
-- `WORLD_DB` — 40+ terrain types with encounter tables
-- `NODE_MAP` — 20 000+ geographic nodes with connections
-- `QUEST_DB` — 2 200+ quests with dependency chains and flag logic
+- `MONSTER_POOL` — monsters with stats, loot tables, terrain affinities
+- `WORLD_DB` — terrain types with encounter tables
+- `NODE_MAP` — geographic nodes
+- `QUEST_DB` — quests with dependency chains and flag logic
 - `BIRKA_NPC` / `NPC_DIALOGUES` — named characters with dialogue trees
 - `FISH_DB`, `LAKE_MAGIC`, `D100_TABLE` — supplementary tables
 
