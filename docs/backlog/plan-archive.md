@@ -19,6 +19,16 @@
 
 ---
 
+## Archived 2026-09-25 — §DX-02fw (the favor comment tells the truth)
+
+### §DX-02fw — the shipped comment explaining `set:1` gives a reason that is the opposite of the code (NEW 2026-08-23 during §DOC-02dc, 🟢 no design call)
+
+- [x] ✅ SHIPPED 2026-09-25 `ffd4cbf` **§DX-02fw — `play.html` l. 34361 carries the comment *"`set:1`, not `add:1` — `_setNpcFavor` takes an ABSOLUTE level and only ever raises it"* and `lab-report-vm01g4-per-verb.md` §12⅞ stated the same rationale as *"`add:1` would have **lowered** a favor already at 2."* Both halves are wrong, and they were wrong when written.** 🟢 `function _setNpcFavor(key, level, say)@23527` opens `if (level <= prev) return;` — **it cannot lower anything, ever**; that is the whole point of the guard. And the kernel's `favor` handler does not pass `add` through as an absolute: `E.setFavor(bit.npc, Math.min(bit.cap == null ? 3 : bit.cap, (E.getFavor ? E.getFavor(bit.npc) : 0) + bit.add))` reads the **live** level first, and `getFavor` has been bound in the host env since `9f10bfe` (**2026-07-22, twelve days before §VM-01-G4c**). So `add:1` on a favor already at 2 **raises Yva to 3 — Dear Friend** — an unearned promotion, not a demotion. **The shipped bit `set:1` is still correct** (it reproduces the inline handler byte-for-byte and is pinned by a test in `uqf-node-verbs-d1.test.js`); only the stated reason is inverted. **Fix:** rewrite the comment to say what it actually avoids. **Why it matters beyond one line:** the comment is the only in-file documentation of `favor`'s two modes, and the next author who reaches for `add` will read it and conclude the opcode is unsafe when it is merely absolute-vs-relative.
+> **Provenance:** §DOC-02dc, finding N4.
+> **Shipped (`ffd4cbf`).** **Re-read at `b9991da`:** the comment is at `play.html` 34696 (the row said 34361). It sits in engine JS after `LAKE_MAGIC:END`, outside every WORLDBUILDER section, so it is a direct edit with no server running. `function _setNpcFavor@23537` opens `if (level <= prev) return;`, and the kernel's `add` path reads `E.getFavor`, bound at `play.html` 22391, then clamps at 3. The row holds: `set:1` means *at least 1*, and `add:1` at 2 promotes Yva to 3. The comment now says so. The bit is untouched, so `uqf-node-verbs-d1.test.js`'s pin (a browser test, not run on this host) still describes it. `lab-report-vm01g4-per-verb.md` already corrected itself in N4, and gains a dated line saying the shipped comment is fixed. **Inverted-rationale sites: 1 → 0** in shipped code. `play.html` stays at 39,053 lines. `check:walk` 39/39. Suite on this host, no browser: **185 / 1086**, the two known real failures.
+
+---
+
 ## Archived 2026-09-25 — §DX-02db (the non-revert recorded; corridor walkability measured)
 
 ### §DX-02db — commit `3c86055` announces four game-file edits and contains none of them, so `git log` reports a revert that never happened (NEW 2026-08-18 during §DOC-02cb, 🟢 one note, plus one open question)
