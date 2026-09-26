@@ -19,6 +19,17 @@
 
 ---
 
+## Archived 2026-09-25 — §DX-02lj (the plan leaves the lab-reports folder)
+
+### §DX-02lj — a plan is filed among the lab reports, so every count of "lab reports" is one high (NEW 2026-09-25 during §DX-01j, 🟡 move it or keep it)
+
+- [x] ✅ SHIPPED 2026-09-25 `cd7de96` **`docs/lab-reports/plan-world-connectivity.md` is a plan (2026-06-09, *"PLANNED — ready to execute"*, N/E/S/W era), not a lab report.** It is the only file in that folder without the `lab-report-` prefix, so `ls docs/lab-reports/*.md` says **116** and `ls docs/lab-reports/lab-report-*.md` says **115**; the badge and `index.html`'s *"116 write-ups"* both count it. §DX-01j indexed it as-is, marked *"a plan, not a lab report"*, rather than move a file two pages link.
+> **The call:** (a) `git mv` it to `docs/archive/` beside the six historical reports already there, then drop its `index.html` link and lower the Other badge, the heading and the watermark to 115. Gates #37 and #38 will name every number that has to move. (b) Keep it where it is, and let the folder mean "write-ups". **Recommendation:** (a), because the folder's name is a claim about what it holds. Check `git grep plan-world-connectivity` for inbound links first.
+> **Provenance:** §DX-02hz, which found the 115/116 split between the badge note's glob and the cell's; §DX-01j, which listed the file.
+> **Shipped (`cd7de96`), option (a).** **Measured at `712601c`:** `ls docs/lab-reports/*.md` **116**, `lab-report-*.md` **115**. `git grep plan-world-connectivity` found three live citations: the index row, the `index.html` link, and the badge note. The fourth, in `lab-report-api-redesign-summary.md`, is a June tree listing (`maps/plan-world-connectivity.md`) and stays as history. The file moved with `git mv` to `docs/archive/`. The index row now cites the archive path, as the six archived reports there already do. The landing page drops the link: Other **7 → 6**, heading and watermark **116 → 115**. The badge cells read **115** and **115**. **After:** the two globs agree at **115**. `check:walk` 39/39; `check-labindex` fails on a planted *"116 write-ups"*. Suite on this host, no browser: **183 passed / 1086 failed**, the two known real failures, unchanged.
+
+---
+
 ## Archived 2026-09-25 — §DX-02ck (road net figures and paths in the maintained docs)
 
 ### §DX-02ck — the road net grew on 2026-07-28 and five maintained documents still describe the one it replaced (NEW 2026-08-17 during §DOC-02bt, 🟢 no design call)
