@@ -19,6 +19,15 @@
 
 ---
 
+## Archived 2026-09-26 — §DX-02ds (the coroutine driver's autosave pointer names storyAutoSave, not a line)
+
+### §DX-02ds — §VM-01-A's own safety comment cites a line number that was wrong the moment it was written, by exactly the increment's own line delta (NEW 2026-08-21 during §DOC-02cm, 🟢 one comment line, NO DESIGN CALL)
+
+- [x] ✅ SHIPPED 2026-09-26 `408e427` **§DX-02ds — the coroutine driver's header says *"no autosave (storyAutoSave, 23237) ever captures a suspension (§6.3)"*. At the commit that wrote that sentence, `storyAutoSave` was at 23313.** 🟢 **comment-only correction, no behaviour, no test change.** The claim is TRUE — `_uqfPending` appears 7 times in the file and not once in `_S_DEFAULTS`, `function storyAutoSave() {@23842`, or any `setItem` path — but its pointer is dead wrong, and the arithmetic says why. `docs/lab-reports/lab-report-vm01a-execbits-coroutine.md` §7 cites the autosave line as 23238 and **is correct for its parent build** `7f2f45d`. The ship commit `c22f4f0` inserted a net **+76** lines above that point (numstat +106/−30, A+B+C landed together), moving `storyAutoSave` to 23313. The author transcribed the report's pre-change anchor into a comment living in the post-change file and never re-resolved it: **23313 − 23237 = 76**, the increment's own delta. Today it has drifted to 23805 and the cited line resolves to `sbPapersRead: false` inside `_S_DEFAULTS` — a real-but-wrong line, which reads as authoritative and sends the next reader into the wrong object. **Same laundering class as §DX-02dr** (a HISTORY doc's figure copied into an engine comment, where it reads as a measurement) with a new and mechanically checkable vector: **an anchor measured on the PARENT build is stale in the CHILD by the change's own net insertion, and that number is knowable before you paste it.** **Fix:** rewrite the pointer as the `symbol@line` form the repo already gates — `` `function storyAutoSave() {@23842` `` — so `npm run check:anchors` can keep it honest instead of nobody. **Verify:** `npm run check:anchors` resolves it; the §6.3 claim itself needs no change.
+> **SHIPPED at `408e427`, replanned on the ground.** **Grounded at `8f077dd`:** the claim still holds. `_uqfPending` has 7 occurrences in `play.html` and **0** inside `storyAutoSave`. The pointer, *"storyAutoSave, 23237"*, still resolved to a line in `_S_DEFAULTS`. The row proposed the `symbol@line` form, but the ninth loop's handoff recorded that §DX-02du's own number fix had drifted within a day, so this pointer **names the function and carries no line**: *"no autosave (storyAutoSave) ever captures a suspension"*. **Before:** 1 line pointer in the §VM-01-A header, wrong since `c22f4f0`. **After:** 0 line pointers there, so it has nothing left to drift. `check:walk` 40/40. No behaviour change and no test change.
+
+---
+
 ## Archived 2026-09-26 — §DX-02dt (ALREADY SHIPPED by §VM-01-G4b, seventeen days before the row was filed)
 
 ### §DX-02dt — the game's only two authored `choice` bits have no test that names them (NEW 2026-08-21 during §DOC-02cm, 🟢 one test, NO DESIGN CALL)
