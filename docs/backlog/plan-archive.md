@@ -19,6 +19,16 @@
 
 ---
 
+## Archived 2026-09-26 — §DX-02dz (the four parity fences print UTF-8 bytes)
+
+### §DX-02dz — the parity gate says "bytes" and measures characters, and every ship record quoting it inherits the mislabel (NEW 2026-08-22 during §DOC-02cq, 🟢 one word, NO DESIGN CALL)
+
+- [x] ✅ SHIPPED 2026-09-26 `3829634` **§DX-02dz — `src/scripts/check-quest-parity.js:quest parity: QUEST:CORE identical@25` prints `${a.length}` and calls the result "bytes".** 🟢 **one word in one template literal.** `a` is a JS string, so `.length` counts **UTF-16 code units**; the `QUEST:CORE` fence is dense with non-ASCII (the `◆◆◆` sentinels, em-dashes, `·`), and the two figures diverge measurably. At the §VM-01-E ship build the gate printed **21,909** and the region is **22,135** UTF-8 bytes; at HEAD it prints **25,030** against **25,283**. The comparison the gate performs is a string `===`, which is correct and unaffected — **only the label is wrong.**
+> **Why it is worth a word.** The figure is quoted as a byte count in ship records and lab reports as the evidence that a change was data-only (§VM-01-E §7 does exactly this, and its underlying claim is true — parent and ship both measure 21,909). Anyone who re-derives it with `wc -c` gets a different number and has to work out which witness is lying. **Measured this session, the defect is four-wide, not one:** `src/scripts/check-mover-parity.js`, `check-rooms-parity.js` and `check-duel-parity.js` all print the identical `${a.length} bytes`; `check-terrain-parity.js`, `check-gate-parity.js` and `check-rng-parity.js` do not use that shape and are clean. **Fix:** say "chars", or print `Buffer.byteLength(a, 'utf8')` and keep the word — same one-word edit in all four. **Verify:** `npm run check:questparity` green with a label that matches `wc -c` on the extracted region.
+> **SHIPPED at `3829634`.** **Grounded at `e3cf443`:** the row held and was already four-wide as its own measurement said: `check-quest-parity.js`, `check-mover-parity.js`, `check-rooms-parity.js` and `check-duel-parity.js` each printed `${a.length} bytes`. **Before (UTF-16 units labelled bytes):** QUEST 26,764 · MOVER 1,823 · ROOMS 10,836 · DUEL 7,987. **Change:** of the row's two fixes, the one that keeps the word: each prints `Buffer.byteLength(a, 'utf8')`, so the figure the ship records call bytes becomes bytes. **After:** QUEST **27,025** · MOVER **1,853** · ROOMS **10,899** · DUEL **8,040**, each equal to `wc -c` on the sentinel-delimited region extracted from `play.html`. `index.md`'s gate #24 row quoted *7,987 bytes*; it now names `npm run check:duelparity` instead of a count. Ship records and lab reports that quote the old figures are records and keep them. **Verified:** `check:walk` 40/40 printing the four new figures. The suite was not re-run: the change is four log lines in gate scripts, and no test reads their output (`grep 'bytes)' src/tests` finds none).
+
+---
+
 ## Archived 2026-09-26 — §DX-02ed (the gate-flag walker descends all / any / not)
 
 ### §DX-02ed — the gate-flag walker cannot see into the gate grammar the same increment introduced (NEW 2026-08-22 during §DOC-02cs, 🟢 recurse three keys, NO DESIGN CALL)
