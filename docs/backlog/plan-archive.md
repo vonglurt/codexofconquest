@@ -19,6 +19,15 @@
 
 ---
 
+## Archived 2026-09-26 — §DX-02du (the _seededNext header names server symbols, not lines)
+
+### §DX-02du — the third comment in the engine citing a line number that was wrong the day it was written (NEW 2026-08-21 during §DOC-02cn, 🟢 three comment lines, NO DESIGN CALL)
+
+- [x] ✅ SHIPPED 2026-09-26 `2d56a62` **§DX-02du — `function _seededNext()@6436`'s header quotes the server against itself — *"a known SP/MP divergence", wbapi-server.js:1155"* — and the phrase it quotes is at 1156.** Line 1155 is the preceding sentence about notoriety scaling; the quoted text spans `src/js/wbapi-server.js:divergence logged in lab-report-walk5-mud-harness.md@1160` and the line above it. **It was wrong when written**, not drifted: the parent build `c22f4f0^` has it at 1156 too. Its neighbour on `play.html:6428` (`:1147`) is exact, so this is one bad pointer, not a rotted convention — and `check:anchors` scans `*.md` only, so nothing gates a cross-file pointer written inside the engine. **Third instance of the §DX-02ds / §DX-02dr family** (a lab report's figure copied into an engine comment, where it then reads as a measurement). **Fix — three comment lines, no code:** (a) `play.html:6431` `:1155` → `:1156`; (b) **§AUDIT-03bg contains the same error as a positive claim** — it says of the drifted `:8784` pointer that *"its two neighbours at lines 6428 and 6431 (`:1147`, `:1155`) are still exact"*; `:1147` is exact and `:1155` never was, so that clause needs correcting when 03bg is worked; (c) `src/tests/integration/rng-seed.test.js:100` carries `// as in _rollSkill (21902)` — that figure came from the §VM-01-B ship record, is itself 5 short of the real `21904` at `c22f4f0`, and the d20 now lives at `const d20a = Math.ceil(E.rng() * 20)@22280`. **Verify:** `npm run check:rng` still green; no behaviour touched.
+> **SHIPPED at `2d56a62`, replanned on the ground.** **Grounded at `18025b6`:** the row's fix (a), `:1155` → `:1156`, was stale. The server had moved, so *both* pointers in the header were wrong: `seededNext` is at 1185, not 1147, and the quoted *"a known SP/MP divergence"* sits in the comment above `BASE_TIER_WEIGHTS`, at 1194. Swapping one line number for another would re-arm the same defect, so each pointer now **names its symbol**: *"the server's seededNext in js/wbapi-server.js"* and *"above BASE_TIER_WEIGHTS in wbapi-server.js"*. **Before:** 2 line pointers into the server in the header, 2 wrong. **After:** 0 (`grep -n 'wbapi-server.js:[0-9]' play.html` leaves only the `:8784` at the encounter roll, which §AUDIT-03bg owns). +1 line (badge 39,056 → 39,057). (b) §AUDIT-03bg's *"still exact"* clause is annotated in place in Phase 4. (c) `rng-seed.test.js` drops *(21902)* and says *"as _rollSkill's d20a"*. **Verified:** `check:walk` 40/40, `check:rng` among them. Comments only, so the suite was not re-run.
+
+---
+
 ## Archived 2026-09-26 — §DX-02dv (the §VM-01-D ship record: 286/0 → 286/17)
 
 ### §DX-02dv — the §VM-01-D ship record reports a test figure that cannot be true (NEW 2026-08-21 during §DOC-02co, 🟢 one sentence in a HISTORY doc, NO DESIGN CALL)
