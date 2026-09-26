@@ -43,7 +43,7 @@ The developer environment described here is built around three ideas:
                              │  HTTP
           ┌──────────────────┼──────────────────┐
           │                  │                  │
-   ./api.sh CLI        edit.html    monitor-snapshots.py
+   ./bin/api CLI        edit.html    monitor-snapshots.py
    (src/api/wb.js)         (browser GUI)        (TUI + keepalive)
 ```
 
@@ -102,9 +102,9 @@ When you save the game file, copy it with a timestamp:
 ```bash
 cp play.html play-$(date +%Y%m%d-%H%M%S).html
 # …or ask the server for one:
-./api.sh save                  # dated backup beside the game file, then overwrite + reload
-./api.sh snapshots             # what is sitting there right now (they are gitignored)
-./api.sh snapshots --sweep     # delete the ones this patch chain already holds
+./bin/api save                  # dated backup beside the game file, then overwrite + reload
+./bin/api snapshots             # what is sitting there right now (they are gitignored)
+./bin/api snapshots --sweep     # delete the ones this patch chain already holds
 ```
 
 > **§DX-02k (2026-08-03) — snapshots are produced on request, not as a side effect.**
@@ -115,8 +115,8 @@ cp play.html play-$(date +%Y%m%d-%H%M%S).html
 > ~32 MB were in the repo root when it was found — invisible, since the pattern is
 > gitignored). The per-write persist now writes a temp beside the game file and
 > renames it into place; `POST /api/save` remains the on-demand snapshot surface.
-> **§DX-02l (2026-08-03)** gave that surface its `./api.sh` wrapper (it had none —
-> verifying it needed raw `curl`), plus `./api.sh snapshots` to *see* the dated
+> **§DX-02l (2026-08-03)** gave that surface its `./bin/api` wrapper (it had none —
+> verifying it needed raw `curl`), plus `./bin/api snapshots` to *see* the dated
 > files at all. The sweep there deliberately refuses a snapshot this chain has
 > never patched: `archive-snapshots.sh` records a delta before it removes a file,
 > so an unarchived snapshot is the only copy of that state (`--force` discards it).
@@ -266,10 +266,10 @@ The server's verbosity is controlled by a persistent config file,
 `milepoints/wbapi-config.json`, changeable at runtime without restarting:
 
 ```bash
-./api.sh mode           # show current mode
-./api.sh mode fast      # quiet — minimal output
-./api.sh mode debug     # verbose — request/response bodies
-./api.sh mode trace     # verbose + full algorithm trace (default)
+./bin/api mode           # show current mode
+./bin/api mode fast      # quiet — minimal output
+./bin/api mode debug     # verbose — request/response bodies
+./bin/api mode trace     # verbose + full algorithm trace (default)
 ```
 
 | Mode | VERBOSE | TRACE | Console = Log file |
@@ -293,15 +293,15 @@ startup, useful for one-off testing without changing the persistent setting.
 retry/backoff, and pipe-safe JSON output. Common commands:
 
 ```bash
-./api.sh ping                          # health check
-./api.sh mode trace                    # set logging mode
-./api.sh get node HKG                  # fetch a node (HKG = Neon Undercity; the old `CY` code is dead — §AUDIT-03l)
-./api.sh put quest quest_wis_01 hp=12  # patch a field
-./api.sh list npc --q egil             # search by name
-./api.sh audit                         # integrity scan
-./api.sh reachability                  # read-only connectivity check (reweave retired §WALK-3)
-./api.sh save                          # flush memory to disk
-./api.sh restart                       # graceful restart
+./bin/api ping                          # health check
+./bin/api mode trace                    # set logging mode
+./bin/api get node HKG                  # fetch a node (HKG = Neon Undercity; the old `CY` code is dead — §AUDIT-03l)
+./bin/api put quest quest_wis_01 hp=12  # patch a field
+./bin/api list npc --q egil             # search by name
+./bin/api audit                         # integrity scan
+./bin/api reachability                  # read-only connectivity check (reweave retired §WALK-3)
+./bin/api save                          # flush memory to disk
+./bin/wbapi restart                     # graceful restart
 ```
 
 ---
@@ -345,7 +345,7 @@ developer can start the server manually in a separate tab
 | `milepoints/wbapi-server.log` | All server events (requests, loads, errors) |
 | `milepoints/wbapi-server.error` | Last startup failure (deleted on clean start) |
 | `milepoints/say.log` | Text-to-speech utterances |
-| `milepoints/npc-speak.log` | NPC dialogue spoken via `./api.sh speak` |
+| `milepoints/npc-speak.log` | NPC dialogue spoken via `./bin/api speak` |
 | `milepoints/patches/` | Snapshot diffs (change sets) |
 
 ---
@@ -368,7 +368,7 @@ restart to the server so state is preserved.
 
 **Verbose by default.** The default mode is `trace`. New developers (and Claude)
 should see everything the server is doing. Speed can be traded for silence with
-`./api.sh mode fast` when the trace output becomes noise.
+`./bin/api mode fast` when the trace output becomes noise.
 
 **Fail loudly, recover quietly.** Startup failures write an error file and log
 to stderr. Runtime crashes exit with code 67 and the toggle script relaunches

@@ -47,7 +47,7 @@ The Void breaks through completely on the **seventh new moon** from the story's 
 > §DX-01a; where one names a place that survived, the annotation points at the surviving node,
 > not at a live junction. The `R03,C16`-style grid cells are the retired **26×16** projection
 > (live `NODE_COORDS` runs r 2–73 / c 154–249). Movement is cell-based: the authority on what
-> adjoins what is `./api.sh location <CODE>` and `./api.sh reachability`. The *content* below —
+> adjoins what is `./bin/api location <CODE>` and `./bin/api reachability`. The *content* below —
 > who is there, what fights you, what drops — is current.
 
 ### Act I — Birka Starting Area (Nodes `LHR`, `TLL`, `MHQ`, `LLA`, `KRN`, `HKG`, `BMA`, `ZRH`, `DUS`, `MUC`)  *(historical: `CI`=`LHR` · `IN`=`TLL` · `TV`=`MHQ` · `BA`=`LLA` · `CR`=`KRN` · `CY`=`HKG` · `SL`=`BMA` · `DF`=`ZRH` · `HM`=`DUS` · `GL`=`MUC`)*

@@ -69,6 +69,20 @@ const NOT_OURS = new Set([
   'playwright', 'osascript', 'say', 'perl', 'basename', 'dirname', 'date', 'seq', 'env',
 ]);
 
+// §DX-02lk — a literal whose only meaning is a retired path is dead in prose too, where
+// the fenced-block pass above cannot see it. Checked in every document except the records
+// below, and except on a line that names the replacement or the rename, which is a line
+// about the literal rather than an instruction to type it.
+const DEAD_LITERALS = { './api.sh': './bin/api', './wbapi-toggle.sh': './bin/wbapi' };
+const PROSE_RECORDS = {
+  'docs/lab-reports/': HISTORY['docs/lab-reports/'],
+  'docs/archive/': HISTORY['docs/archive/'],
+  'docs/backlog/': HISTORY['docs/backlog/'],
+  'docs/notes/cell-resume-prompts.md': 'headed "Historical archive (do not act on verbatim)"',
+  'docs/notes/restart-prompt.md': 'the record of one 2026-06 reweave session',
+  'docs/notes/data-code-migration-into-cells.md': 'a dated June 2026 writeup',
+};
+
 // ── extractors (pure — the selftest drives these) ────────────────────────────
 
 // Every non-blank line inside a ```bash / ```sh fence, with its 1-based line number and
@@ -105,6 +119,19 @@ function invocations(line) {
     if (/^[A-Za-z_][A-Za-z0-9_]*=/.test(head)) continue;
     out.push({ head, args: parts.slice(1) });
   }
+  return out;
+}
+
+// Every dead literal on a line that is not explaining it, as { n, literal }.
+function deadLiterals(src) {
+  const out = [];
+  src.split('\n').forEach((line, i) => {
+    for (const [lit, now] of Object.entries(DEAD_LITERALS)) {
+      if (line.includes(now) || /renam/i.test(line)) continue;
+      const re = new RegExp(`(^|[^A-Za-z0-9_/.])${lit.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}(?![A-Za-z0-9_-])`);
+      if (re.test(line)) out.push({ n: i + 1, literal: lit });
+    }
+  });
   return out;
 }
 
@@ -213,6 +240,11 @@ if (process.argv.includes('--selftest')) {
   ok(resolve({ head: 'curl', args: [] }, world) === null, 'curl is not this gate\'s business');
   ok(resolve({ head: 'grep', args: [] }, world) === null, 'grep is not this gate\'s business');
 
+  ok(deadLiterals('run `./api.sh ping` first').length === 1, '§DX-02lk: ./api.sh in prose is caught');
+  ok(deadLiterals('./wbapi-toggle.sh on').length === 1, '§DX-02lk: ./wbapi-toggle.sh at line start is caught');
+  ok(deadLiterals('`./api.sh` was renamed to `./bin/api`').length === 0, '§DX-02lk: a line stating the rename is exempt');
+  ok(deadLiterals('see src/bin/api.sh and ./src/bin/api.sh').length === 0, '§DX-02lk: the live script path is not the dead literal');
+  ok(deadLiterals('./api.shx').length === 0, '§DX-02lk: a longer name is not the literal');
   if (fail) { console.log(`\n✗ check-doc-commands selftest: ${fail} FAILED, ${pass} passed`); process.exit(1); }
   console.log(`✓ check-doc-commands selftest: all ${pass} checks pass`);
   return;
@@ -236,6 +268,18 @@ for (const rel of SWEPT) {
   }
 }
 
+let proseDocs = 0;
+for (const rel of [...world.files].filter((f) => f.endsWith('.md')).sort()) {
+  if (Object.keys(PROSE_RECORDS).some((r) => rel.startsWith(r))) continue;
+  proseDocs++;
+  for (const { n, literal } of deadLiterals(fs.readFileSync(path.join(ROOT, rel), 'utf8'))) {
+    findings.push(`[dead-literal] ${rel}:${n} — \`${literal}\` no longer exists; it is \`${DEAD_LITERALS[literal]}\``);
+  }
+}
+for (const r of Object.keys(PROSE_RECORDS)) {
+  if (![...world.files].some((f) => f.startsWith(r))) findings.push(`[stale-record] ${r} is exempt from the literal scan and no longer exists — retire it`);
+}
+
 // A HISTORY prefix that no longer holds any document is an exemption nothing needs.
 for (const [prefix, why] of Object.entries(HISTORY)) {
   const any = [...world.files].some((f) => f.startsWith(prefix) && f.endsWith('.md'));
@@ -249,5 +293,5 @@ if (findings.length) {
   console.log('  wrong thing (§DX-02gh). Fix the document, or add the entry point it names.');
   process.exitCode = 1;
 } else {
-  console.log(`✓ §DX-02gh doc commands: ${calls} invocations in ${blocks} fenced blocks across ${SWEPT.length} swept documents all resolve · ${Object.keys(HISTORY).length} HISTORY prefixes classified by name`);
+  console.log(`✓ §DX-02gh doc commands: ${calls} invocations in ${blocks} fenced blocks across ${SWEPT.length} swept documents all resolve · no dead path literal in ${proseDocs} documents' prose (§DX-02lk) · ${Object.keys(HISTORY).length} HISTORY prefixes classified by name`);
 }

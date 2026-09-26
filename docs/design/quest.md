@@ -168,7 +168,7 @@ not list until §AUDIT-03d lands.
 `quest.npc` **anchors a quest to an NPC for authoring purposes only.** The game client
 (`play.html`) has **zero** quest-level `.npc` reads — nothing a player sees depends
 on it. Its consumers are the worldbuilder display, the server's `_questsByNpc` index,
-`./api.sh advise` (an unresolvable key is a *warning*), `./api.sh audit` (a **missing**
+`./bin/api advise` (an unresolvable key is a *warning*), `./bin/api audit` (a **missing**
 field is an *error* — every quest must be anchored), and the NPC delete-guards.
 
 **The accepted vocabulary is four registries** (`WBAPI.npcKeyOk`, `src/js/wbapi-core.js`):
@@ -185,11 +185,11 @@ field is an *error* — every quest must be anchored), and the NPC delete-guards
 Do **not** leave it unset (that is an audit error), and do **not** bulk-default it — the
 `ea02faf` sweep did exactly that and mis-stamped 203 quests as Long John Silver's.
 
-**Bulk re-anchoring:** `./api.sh batch-npc updates.json` (`[{id, npc}, …]`) — one parse and
+**Bulk re-anchoring:** `./bin/api batch-npc updates.json` (`[{id, npc}, …]`) — one parse and
 one save for the whole batch instead of N full-file rewrites.
 
 **Coverage is now total (§AUDIT-03g, 2026-07-29): all 2,853 quests carry an `npc`, so
-`./api.sh audit` reports `errors: 0`** — the standing error that provoked the `ea02faf`
+`./bin/api audit` reports `errors: 0`** — the standing error that provoked the `ea02faf`
 bulk-default is gone. The last 68 unanchored quests were derived one family at a time:
 
 | Family | Key | Why |

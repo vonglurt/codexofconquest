@@ -12,9 +12,9 @@
 >
 > | Question | Live source |
 > |----------|-------------|
-> | What is this node's code / cell / act / terrain? | **[`docs/maps/node-index.md`](../maps/node-index.md)** · `npm run nodes` · `./api.sh get node <CODE>` |
+> | What is this node's code / cell / act / terrain? | **[`docs/maps/node-index.md`](../maps/node-index.md)** · `npm run nodes` · `./bin/api get node <CODE>` |
 > | What does the grid actually look like here? | `node src/scripts/render-region.js <r0> <r1> <c0> <c1>` |
-> | Is the world connected? | `./api.sh reachability` (100% from LHR) · `./api.sh broken` (0) |
+> | Is the world connected? | `./bin/api reachability` (100% from LHR) · `./bin/api broken` (0) |
 > | What does a legacy code (`SF`, `CQ`, `CI`…) mean? | the **LEGACY CODE MAP** at the bottom of `docs/maps/node-index.md` |
 >
 > Taking a node code from a hand-maintained table is what put `activateNode:"SF"` on eight quests
@@ -83,7 +83,7 @@ R16: WW  WW  WW  WW  WW  WW  WW  WW  WW  WW  WW  WW  WW  WW  WW  WW  WW  WW  WW 
 
 ```bash
 npm run nodes                 # regenerate docs/maps/node-index.md from play.html
-./api.sh get node CDG         # the other live answer
+./bin/api get node CDG         # the other live answer
 ```
 
 `docs/maps/node-index.md` lists **all 416 nodes** — code · `Node #` · terrain · act · live
@@ -244,7 +244,7 @@ game, so it cannot go stale the way the historical legend below did.
 > `Node #` is the recovery key; resolve it in [`docs/maps/node-index.md`](../maps/node-index.md)'s
 > LEGACY CODE MAP. The *statement* this section makes — that connections are derived from grid
 > adjacency and no stored edge data exists — is still true and is why the codes were never updated.
-> Live reachability: `./api.sh reachability` (100% from LHR) and `./api.sh broken` (0).
+> Live reachability: `./bin/api reachability` (100% from LHR) and `./bin/api broken` (0).
 
 *Connections are derived at runtime from `CELL_GRID` grid adjacency — not stored as edge fields. This table documents the canonical story connections for reference. Directions reflect geographic movement on the cell grid.*
 
@@ -582,7 +582,7 @@ const CELL_GRID = (() => {
 
 - **Roads are terrain, not permissions** (Free-Movement, CONTRIBUTING.md): a road cell resolves to terrain `'road'` with **encounter rate 0** — a safe, legible highway. The open field stays fully walkable; roads are sugar, never required.
 - Terrain precedence (client `_inferTerrain` + server `terrainAt`, parity-checked): `SEA_LANES → 'ocean'` ▸ `ROAD_CELLS → 'road'` ▸ majority-of-named-neighbors ▸ `'midlands'`. Sea-lanes stay `ocean` — crossings keep their 0.10 encounter risk as texture.
-- Generated deterministically by `src/scripts/build-roads.js` (k-nearest ≤3 + MST + local loops ≤8; trunk-reuse Dijkstra costs settlement 2 / road 4 / virgin 10 / lane 14). **Never hand-edit ROAD_RUNS** — regenerate via ♻ Reweave (`PUT /api/roads` or `./api.sh reweave`); a red `check:roads` rolls the game file back automatically.
+- Generated deterministically by `src/scripts/build-roads.js` (k-nearest ≤3 + MST + local loops ≤8; trunk-reuse Dijkstra costs settlement 2 / road 4 / virgin 10 / lane 14). **Never hand-edit ROAD_RUNS** — regenerate via ♻ Reweave (`PUT /api/roads` or `./bin/api reweave`); a red `check:roads` rolls the game file back automatically.
 - User-authored net edits live in `src/config/roads-pins.json` `{pins, links, locked}` — pins are mandatory road vertices; `locked` city codes are never moved by geo-seed. Edited visually in edit.html (§NAV-01g/h): drag-&-lock cities, vertex drag → pin, ✚/┬ junction palette, 🔗 link toggle, 🗑 delete, ♻ Reweave Net.
 
 ### Room layer — every cell is a room
