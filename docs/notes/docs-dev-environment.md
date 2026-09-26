@@ -296,7 +296,7 @@ retry/backoff, and pipe-safe JSON output. Common commands:
 ./bin/api ping                          # health check
 ./bin/api mode trace                    # set logging mode
 ./bin/api get node HKG                  # fetch a node (HKG = Neon Undercity; the old `CY` code is dead — §AUDIT-03l)
-./bin/api put quest quest_wis_01 hp=12  # patch a field
+./bin/api put quest quest_wis_01 hint="…"  # patch a field
 ./bin/api list npc --q egil             # search by name
 ./bin/api audit                         # integrity scan
 ./bin/api reachability                  # read-only connectivity check (reweave retired §WALK-3)

@@ -135,6 +135,24 @@ function deadLiterals(src) {
   return out;
 }
 
+// §DX-02ln — the keys of an example `./bin/api put <type> <id> k=v …`, checked against the
+// vocabulary the write path itself refuses by (fieldVocabulary in wbapi-server.js: the
+// type's SCHEMAS fields and related sections, unioned with every key its corpus carries).
+// A path and a verb can both be live while the write still answers 400. `vocabOf` returns
+// null for a type the write path does not vocabulary-check, and that type is skipped.
+function putKeyFindings(line, vocabOf) {
+  const out = [];
+  for (const m of line.matchAll(/\.\/bin\/api\s+put\s+([a-z_]+)\s+\S+((?:\s+[A-Za-z_]\w*=\S*)+)/g)) {
+    const vocab = vocabOf(m[1]);
+    if (!vocab) continue;
+    for (const kv of m[2].trim().split(/\s+/)) {
+      const key = kv.slice(0, kv.indexOf('='));
+      if (!vocab.has(key)) out.push({ type: m[1], key });
+    }
+  }
+  return out;
+}
+
 // Returns a finding string, or null.
 function resolve(inv, world) {
   const { head, args } = inv;
@@ -245,6 +263,12 @@ if (process.argv.includes('--selftest')) {
   ok(deadLiterals('`./api.sh` was renamed to `./bin/api`').length === 0, '§DX-02lk: a line stating the rename is exempt');
   ok(deadLiterals('see src/bin/api.sh and ./src/bin/api.sh').length === 0, '§DX-02lk: the live script path is not the dead literal');
   ok(deadLiterals('./api.shx').length === 0, '§DX-02lk: a longer name is not the literal');
+  const vocabOf = (t) => (t === 'quest' ? new Set(['id', 'title', 'hint']) : null);
+  ok(putKeyFindings('./bin/api put quest q1 hp=12', vocabOf).map((f) => f.key).join() === 'hp',
+    '§DX-02ln: a put key no quest carries is caught');
+  ok(putKeyFindings('`./bin/api put quest q1 hint="x" title=y`', vocabOf).length === 0, '§DX-02ln: carried keys pass');
+  ok(putKeyFindings('./bin/api put fish f1 anything=1', vocabOf).length === 0, '§DX-02ln: an unchecked type is skipped');
+  ok(putKeyFindings('./bin/api put quest <id> <field>=<value>', vocabOf).length === 0, '§DX-02ln: a placeholder is not a key');
   if (fail) { console.log(`\n✗ check-doc-commands selftest: ${fail} FAILED, ${pass} passed`); process.exit(1); }
   console.log(`✓ check-doc-commands selftest: all ${pass} checks pass`);
   return;
@@ -268,13 +292,44 @@ for (const rel of SWEPT) {
   }
 }
 
-let proseDocs = 0;
+let proseDocs = 0, putExamples = 0;
+const VOCAB_COLLECTION = { node: 'nodeMap', quest: 'questDb', monster: 'monsterPool', npc: 'birkaNpcs', terrain: 'worldDb' };
+const vocabCache = {};
+let corpus = null, schemas = null;
+function vocabOf(type) {
+  if (!VOCAB_COLLECTION[type]) return null;
+  if (vocabCache[type]) return vocabCache[type];
+  if (!corpus) {
+    const core = require(path.join(ROOT, 'src', 'js', 'wbapi-core.js'));
+    core.load(path.join(ROOT, 'play.html'));
+    corpus = core.WBAPI || core;
+    const src = fs.readFileSync(path.join(ROOT, 'src', 'js', 'wbapi-server.js'), 'utf8');
+    const i = src.indexOf('const SCHEMAS = {');
+    let j = src.indexOf('{', i), d = 0, k = j;
+    for (; k < src.length; k++) { if (src[k] === '{') d++; else if (src[k] === '}' && --d === 0) break; }
+    schemas = (0, eval)('(' + src.slice(j, k + 1) + ')');
+  }
+  const sc = schemas[type] || {};
+  const out = new Set([...Object.keys(sc.fields || {}), ...Object.keys(sc.related || {}), 'autoJunction']);
+  const entries = Object.values(corpus[VOCAB_COLLECTION[type]] || {});
+  if (!entries.length) throw new Error(`${VOCAB_COLLECTION[type]} loaded empty — a vocabulary of the schema alone would refuse fields every entry carries`);
+  for (const e of entries) if (e && typeof e === 'object') for (const f of Object.keys(e)) out.add(f);
+  return (vocabCache[type] = out);
+}
 for (const rel of [...world.files].filter((f) => f.endsWith('.md')).sort()) {
   if (Object.keys(PROSE_RECORDS).some((r) => rel.startsWith(r))) continue;
   proseDocs++;
-  for (const { n, literal } of deadLiterals(fs.readFileSync(path.join(ROOT, rel), 'utf8'))) {
+  const text = fs.readFileSync(path.join(ROOT, rel), 'utf8');
+  for (const { n, literal } of deadLiterals(text)) {
     findings.push(`[dead-literal] ${rel}:${n} — \`${literal}\` no longer exists; it is \`${DEAD_LITERALS[literal]}\``);
   }
+  text.split('\n').forEach((line, i) => {
+    if (!line.includes('./bin/api put ')) return;
+    for (const { type, key } of putKeyFindings(line, vocabOf)) {
+      findings.push(`[refused-key] ${rel}:${i + 1} — \`put ${type} … ${key}=\` names a field no ${type} carries and SCHEMAS does not declare; the write path answers 400`);
+    }
+    putExamples += (line.match(/\.\/bin\/api\s+put\s+/g) || []).length;
+  });
 }
 for (const r of Object.keys(PROSE_RECORDS)) {
   if (![...world.files].some((f) => f.startsWith(r))) findings.push(`[stale-record] ${r} is exempt from the literal scan and no longer exists — retire it`);
@@ -293,5 +348,5 @@ if (findings.length) {
   console.log('  wrong thing (§DX-02gh). Fix the document, or add the entry point it names.');
   process.exitCode = 1;
 } else {
-  console.log(`✓ §DX-02gh doc commands: ${calls} invocations in ${blocks} fenced blocks across ${SWEPT.length} swept documents all resolve · no dead path literal in ${proseDocs} documents' prose (§DX-02lk) · ${Object.keys(HISTORY).length} HISTORY prefixes classified by name`);
+  console.log(`✓ §DX-02gh doc commands: ${calls} invocations in ${blocks} fenced blocks across ${SWEPT.length} swept documents all resolve · no dead path literal in ${proseDocs} documents' prose (§DX-02lk) · ${putExamples} example puts name only fields the write path accepts (§DX-02ln) · ${Object.keys(HISTORY).length} HISTORY prefixes classified by name`);
 }
