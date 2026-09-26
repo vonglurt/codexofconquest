@@ -608,6 +608,35 @@ const CELL_GRID = (() => {
 | WORLD canvas | full world, gold viewport traces | ✅ | ✅ |
 | GLOBE panel | entire world, story bottom bar | ✅ | — |
 
+## ST. PETERSBURG → MOSCOW CORRIDOR (§KG Increment 2, ✅ 2026-07-08)
+
+> Design and verification: `docs/lab-reports/lab-report-kg-russia-kindergarten-zones.md` §III (the locked design) and §V F5 (the route). Monsters and terrain pools: `monsters.md` §Soviet-Cyberpunk Training Tier.
+
+A second beginner ramp: five low-level "kindergarten" training nodes strung between two pre-existing nodes, Tallinn's First Inn and Moscow's Station 7. Placement uses the world projection `col = 180 + °lon`, `row ≈ 69.75 − °lat`.
+
+| Code | Label | Cell (r,c) | Analogue | Terrain key | NPC | Battle | Sleep |
+|---|---|---|---|---|---|---|---|
+| `TLL` | The First Inn *(pre-existing)* | 10,204 | Tallinn | `inn` | Innkeeper Brynn | — | ✅ |
+| `SPB` | Nevsky Checkpoint | 10,210 | St. Petersburg | `soviet_checkpoint` | Recruiter Volkov | — | — |
+| `KMS` | Komsomol School | 11,211 | Veliky Novgorod | `komsomol_school` | Commissar-Instructor Roshkova | — | — |
+| `ZVD` | Gulag Gladiator Zavod | 12,213 | (steppe) | `gladiator_zavod` | Pit-Master Grimka | Honor Duel — `gladiator_bot` ×1 | — |
+| `FBR` | The Skill Fabrika | 13,215 | (steppe) | `skill_fabrika` | Technician Iosif | Sim Overload — `trainer_bot_prime` ×1 | — |
+| `TVR` | Rzhev Transit Waystation | 13,216 | Tver | `soviet_transit` | Quartermaster Lena | — | ✅ |
+| `SVO` | Station 7 (Dark) *(pre-existing)* | 14,217 | Moscow | `station_7` | — | — | — |
+
+**The road.** Every intermediate cell between consecutive corridor nodes is a `ROAD_RUNS` cell, so the run from `TLL` to `SVO` has no encounter rolls:
+
+| Leg | Road cells |
+|---|---|
+| `TLL` → `SPB` | 8,204–206 · `TUO` (8,207) · 8,208–210 · 9,210, the detour north around the sea cells |
+| `SPB` → `KMS` | 10,211 |
+| `KMS` → `ZVD` | 11,212 · 11,213 |
+| `ZVD` → `FBR` | 12,214 · 12,215 |
+| `FBR` → `TVR` | none, the nodes are adjacent |
+| `TVR` → `SVO` | 13,217 |
+
+`ROAD_RUNS` is **generated** by `src/scripts/build-roads.js`, so these cells are the current lay, not a promise. A reweave may move them. `src/tests/integration/kg-zones.test.js` holds the property instead: it routes each leg with the auto-travel router and asserts every intermediate cell is road or a settlement. It is a browser test.
+
 ## CIRCUIT CORRIDORS (Layer 9) — ⚠️ SUPERSEDED for navigation
 
 > The corridor travel system (`storyCorridorTravel`, Manhattan-distance gating, Hunt/Warp overlay) is **no longer the active navigation path**. `cellMove` replaced it in §CELL-03. The corridor infrastructure (`storyMove_LEGACY`, `buildCorridorMap`, `_buildNodeExits`, `CORRIDOR_CELLS`, `CORRIDOR_TERRAIN`, overlay HTML/CSS) was **fully removed in §CELL-05/§CELL-11A**.

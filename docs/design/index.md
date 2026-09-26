@@ -4,7 +4,7 @@
 
 **Project:** `play.html` — a single-file, quest-driven MUD-style fighter RPG
 **Live counts:** `npm run stats --prefix src` — nodes, monsters, terrains, quests, NPC profiles, acts, lines and size, parsed from the data sections (§DX-01g)
-**Last updated:** 2026-09-26 — §DX-02ey repointed the Gigault stall and Deacon's Code comments; before it, §DX-02lo declared the pre-rewrite commit hashes historical and added gate #40 `check:hashes`
+**Last updated:** 2026-09-26 — §DX-02em gave the §KG corridor's five nodes their `maps.md` section and a Reverse Lookup row; earlier today §DX-02ey and §DX-02lo (gate #40 `check:hashes`)
 
 > **📁 Repository restructured 2026-08-23 for the first public release.** The
 > game was renamed *Roll2Hit* → **Codex of Conquest**; `roll2hit-v3.html` →
@@ -662,6 +662,7 @@ All 54 source books are marked `[x]` in `books.md` — all have been processed t
 | **Shields (6 tiers)** | `docs/mechanics/mechanics-combat.md` | `index.md (SHIELD_ITEMS)` |
 | **Specification gravity** | `docs/lab-reports/lab-report-prompt-migration-arena-to-prototype.md` | `docs/lab-reports/lab-report-documentation-system-design.md` |
 | **State fields (193)** | `index.md` | `docs/lab-reports/lab-report-architecture-full.md` |
+| **St. Petersburg → Moscow corridor (§KG; `SPB` `KMS` `ZVD` `FBR` `TVR`)** | `maps.md §ST. PETERSBURG → MOSCOW CORRIDOR` | `docs/lab-reports/lab-report-kg-russia-kindergarten-zones.md` · `docs/lab-reports/lab-report-kg-corridor-quest-chain.md` · `monsters.md §Soviet-Cyberpunk Training Tier` |
 | **Story arc split** | `docs/story/story-flowchart.md` | All `story-arc-*.md` files |
 | **Sweelinck / endings** | `story.md` | `docs/lab-reports/lab-report-endings-and-echoes.md` · `docs/lab-reports/lab-report-npc-dialogue-system.md` |
 | **Tattoos** | `docs/lab-reports/lab-report-tattoo-progression-system.md` | `index.md (S_story.tattoos)` |
