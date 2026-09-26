@@ -76,6 +76,7 @@ const SWEEP = [
   'docs/story/story-flowchart.md',
   'docs/notes/docs-node-network.md',
   'resume.md',
+  'docs/design/index.md',
 ];
 
 /**
@@ -93,7 +94,7 @@ const HISTORY_DIRS = ['docs/lab-reports/', 'docs/archive/', 'docs/spec/', 'docs/
 const HISTORY_FILES = [
   'docs/backlog/plan-archive.md', 'docs/backlog/BACKLOG.md', 'docs/design/maps.md', 'docs/maps/node-index.md',
   'docs/notes/backlog-cleanup-plan.html', 'docs/design/potential.md', 'CONTRIBUTING.md', 'docs/design/prompt.md',
-  'docs/design/index.md', 'docs/design/quest.md', 'docs/design/mechanics.md', 'docs/design/monsters.md', 'README.md',
+  'docs/design/quest.md', 'docs/design/mechanics.md', 'docs/design/monsters.md', 'README.md',
   'docs/mechanics/mechanics-combat.md', 'docs/mechanics/mechanics-economy.md',
   'docs/api/api-faq.md', 'docs/api/api-user-guide.md', 'docs/api/API-README.md',
   'docs/api/wbapi-help.md', 'docs/README.md', 'docs/notes/brainstorm-one-liners.md',
@@ -366,10 +367,19 @@ const BORN_DEAD = new Map([
 /**
  * Tokens that merely LOOK like a 26×16 code in a node-ish sentence. Explicit, with a
  * reason each — the #13/#14/#16 house style, for the third time and for the same reason:
- * a percentage heuristic is blind to a token that is *always* jargon. 23 tokens fire in
- * the swept corpus; 20 of them are these.
+ * a percentage heuristic is blind to a token that is *always* jargon. `--check` prints how
+ * many tokens fire in the swept corpus and how many of them are these.
  */
 const NOT_A_NODE_CODE = new Map([
+  ['JS', 'JavaScript'],
+  ['FU', 'follow-up, the suffix on a backlog row id (§EDITOR-01-FU)'],
+  ['MB', 'megabytes'],
+  ['KB', 'kilobytes'],
+  ['UX', 'user experience'],
+  ['XX', 'the placeholder in a `node.code === \'XX\'` example'],
+  ['NW', 'north-west, a compass bearing'],
+  ['CS', 'computer science ("CS theory")'],
+  ['AP', 'action points ("1.5 AP economy")'],
   ['NG', 'New Game Plus — always written `NG+`'],
   ['HP', 'hit points'],
   ['AC', 'armor class'],
