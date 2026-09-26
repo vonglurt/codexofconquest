@@ -19,6 +19,15 @@
 
 ---
 
+## Archived 2026-09-25 — §DX-02ln (example put keys checked; the onboarding write fixed)
+
+### §DX-02ln — the onboarding note's example write, `put quest quest_wis_01 hp=12`, names a field no quest carries, so the write path refuses it (NEW 2026-09-25 during §DX-02lk, 🟢 one example line; the class wants a check)
+
+- [x] ✅ SHIPPED 2026-09-25 `b5bd616` **§DX-02ln — `docs/notes/docs-dev-environment.md`'s API cheat sheet shows `./bin/api put quest quest_wis_01 hp=12  # patch a field`.** **0** of the quests in `QUEST_DB` carry `hp`, and since §DX-02gy `put` answers a key absent from both the corpus and the schema with 400 and the accepted set. So the first write a newcomer copies from the onboarding note fails. Gate #30 resolves the path and the verb, and nothing reads the field names in an example `put`. **Fix:** pick a field quests do carry (for example `title=`), checked against the corpus. **Wanted:** a gate #30 phase that resolves `put <type> <id> k=v` keys against the vocabulary `put` itself uses, since the server's refusal list is already derived from the corpus. **Provenance:** §DX-02lk, whose verb check on the re-pathed lines passed this one, because `put` is a live verb.
+> **Shipped (`b5bd616`), the fix and the check the row wanted.** **Measured at `39e71fe`** with a scratch prototype before building the check: the non-record docs hold **51** `put` examples with `k=v` keys, and **1** names a refused field, this row's `quest.hp`. The prototype first confirmed the offline load: `wbapi-core` gave 2,853 quests, 416 nodes and 399 monsters, since a schema-only vocabulary would have passed everything vacuously. **Fix:** the example patches `hint`, one of the 14 keys `quest_wis_01` carries. **Check:** gate #30's third pass mirrors the server's `fieldVocabulary` (`SCHEMAS` fields + `related` + every corpus key, `autoJunction` exempt) for the five types the write path vocabulary-checks, and skips any other type. A collection that loads empty is an error, not a pass. My first guard was a field-count floor, and it tripped on `terrain`, whose entries carry 5 names. The pass line counts **61** puts (every `./bin/api put`, keyed or not). **Before:** 1 `[refused-key]` finding. **After:** 0. Selftest **29 → 33**. `check:walk` 39/39. Suite on this host, no browser: **185 / 1086**, the two known real failures.
+
+---
+
 ## Archived 2026-09-25 — §DX-02lk (gate #30 reads prose for dead path literals)
 
 ### §DX-02lk — 104 prose mentions of `./api.sh` in maintained docs name a root path that has not existed since the rename to `./bin/api`, and gate #30 exempts both folders they live in (NEW 2026-09-25 during §DX-02ct, 🟡 one classification call, then a sweep)

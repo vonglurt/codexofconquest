@@ -43,10 +43,6 @@
 ---
 ## §BACKLOG — Open Items (Phase 6)
 
-### §DX-02ln — the onboarding note's example write, `put quest quest_wis_01 hp=12`, names a field no quest carries, so the write path refuses it (NEW 2026-09-25 during §DX-02lk, 🟢 one example line; the class wants a check)
-
-- [ ] **§DX-02ln — `docs/notes/docs-dev-environment.md`'s API cheat sheet shows `./bin/api put quest quest_wis_01 hp=12  # patch a field`.** **0** of the quests in `QUEST_DB` carry `hp`, and since §DX-02gy `put` answers a key absent from both the corpus and the schema with 400 and the accepted set. So the first write a newcomer copies from the onboarding note fails. Gate #30 resolves the path and the verb, and nothing reads the field names in an example `put`. **Fix:** pick a field quests do carry (for example `title=`), checked against the corpus. **Wanted:** a gate #30 phase that resolves `put <type> <id> k=v` keys against the vocabulary `put` itself uses, since the server's refusal list is already derived from the corpus. **Provenance:** §DX-02lk, whose verb check on the re-pathed lines passed this one, because `put` is a live verb.
-
 ### §AUDIT-03ba-FU — six `QUEST_DB` comments still name a place by a code no node carries; every mapping is settled, and the write needs a server (NEW 2026-09-25 during §AUDIT-03ba · **engine half shipped 2026-09-25 `718c360`** · 🟢 one `./bin/api sub` session, needs the user's yes for a server)
 
 - [ ] **`check:commentcodes`' `PENDING` table is the list: 6 comments, 6 codes, all inside `QUEST_DB`, each with its live node.** `CO` → `TLS` (§D02-10 banner), `MM` → `LIM` (§D02-08 banner), `AT` → `RAI` (§D02-01 banner), `WK` → `SZG` (§D02-06 banner), `YC` → `SSJ` (§XLV comment above the Yugurt Tournament chain), `LT` → `KYA` (`quest_stoning_lystra`'s header). Each was read from its quest's `activateNode`, and for `LT` from the `story-lt-stoning` panel's `nodes:['KYA']`. A data section is written through `./bin/api sub` only, and that needs a server, which needs the user's yes for this row. The same session should take the non-context `CO catacombs` in the §D02-04 banner; `AT/CY` in §D02-09 belongs to §DX-02lg. Lower each `PENDING` count as it lands, and delete the table at zero.
@@ -748,6 +744,6 @@
 
 ## §RESUME — Phase 6 history
 
-> **Completed work is not carried here.** The 75 closed increments for this phase are condensed in **[`../archive/backlog-resume-history.md`](../archive/backlog-resume-history.md)**; full prose for recent closes is in [`plan-archive.md`](plan-archive.md). This file carries open rows only.
+> **Completed work is not carried here.** The 76 closed increments for this phase are condensed in **[`../archive/backlog-resume-history.md`](../archive/backlog-resume-history.md)**; full prose for recent closes is in [`plan-archive.md`](plan-archive.md). This file carries open rows only.
 
 > When an increment ships: write the full entry into `plan-archive.md`, add its one-line row to `../archive/backlog-resume-history.md` and to the cross-phase table in [`BACKLOG.md`](BACKLOG.md), and delete the row from this file.
