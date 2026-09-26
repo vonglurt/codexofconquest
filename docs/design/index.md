@@ -104,8 +104,8 @@ node server. To only play, open `play.html` — nothing else is required.
 | Metric | Value | Status |
 |--------|-------|--------|
 | HTML line count | 39,053 | ✅ 2026-09-25 (`wc -l play.html`, asserted by `check:walk` gate #37 `check:badge` since §DX-02hz) — **+47 over fifteen increments that shipped without restating it**, attributed by §DX-02hz from `git log --numstat -- play.html` since `ffcdbc2`: +22 §DX-02fg, +14 §DX-02gc, +6 §DX-02cv, +5 §DX-02fh, +5 §DX-02as, +3 §DX-02da, +3 §DX-02fd, +2 §DX-02km, +1 §AUDIT-03bk, +1 §DX-02ev(c), −1 §DX-02eu, −1 §DX-02dq, −1 §DX-02lh, −5 §DX-02fl, −7 §DX-02kt. Prior: **±0 from §AUDIT-03av** (four Nuremberg strings repointed to Weimar in place; the fourth needed a new write path, `./bin/api sub`, because `put` would have deleted five §BOARD-01-FU6 comments to reach it). Prior: **+11 from §AUDIT-03au** (the unredacted read of Document 3 writes `wmFirstResearcherKnown`, and NG+ carries it, with three lines saying why the second read exists). Prior: **+3 from §AUDIT-03ar** (Benedikt Rasp's Covenant Ceremony line, which `check:npcregs` phase 6 required the moment his favor bit was corrected to 2). Prior: **+12 from §GR-FU2** (Covenant Ceremony naming lines for `emmer`, `gret` and `rennau`, tier 2 only, plus the two lines saying why there is no tier 3). Prior: **+5 from §GR-FU** (Kenickie's naming line). Prior: **−1 from §DROP-02-FU** (the tournament tie-break's luck line, deleted outright; the UI's TIE branch was already there). Prior: **−1 from §DX-02bz** (the fishing card's `⏱ 1 hour` hint and its `1h` tag, a cost the game never charged). Prior: **−4 from §DX-02di**, **−4 from §DX-02dl increment 2**, **+7 from §DX-02dl increment 1** |
-| Lab reports on disk | 116 | ✅ 2026-09-25 (`ls docs/lab-reports/*.md \| wc -l`, asserted by gate #37 `check:badge`; the glob includes `plan-world-connectivity.md`, so `lab-report-*.md` counts one fewer) |
-| Lab reports in index | 116 | ✅ 2026-09-25 — every report on disk has a row (§DX-01j: 81 → 116). Asserted by gate #37 `check:badge`; gate #38 `check:labindex` holds the index and `index.html` to the disk |
+| Lab reports on disk | 115 | ✅ 2026-09-25 (`ls docs/lab-reports/*.md \| wc -l`, asserted by gate #37 `check:badge`; equal to the `lab-report-*.md` glob since §DX-02lj moved the one plan in the folder to `docs/archive/`) |
+| Lab reports in index | 115 | ✅ 2026-09-25 — every report on disk has a row (§DX-01j: 81 → 116; §DX-02lj: 116 → 115, the plan moved out). Asserted by gate #37 `check:badge`; gate #38 `check:labindex` holds the index and `index.html` to the disk |
 | Node text rewrites (noir register) | 121 / 121 | ✅ +33 nodes: Med arc (91–110) + Littoral Courts (111–120) Layer 104 |
 | FC items pending | 0 (FC01–FC08 all ✅) | ✅ 2026-05-26 |
 | Layers implemented | 0–104 | ✅ |
@@ -560,7 +560,7 @@ All 54 source books are marked `[x]` in `books.md` — all have been processed t
 | `docs/lab-reports/lab-report-world-mesh-construction.md` | World mesh construction — 240/597 → 435/597 nodes reachable, all 29 major GEO-referenced cities connected, using `./api.sh` alone |
 | `docs/lab-reports/lab-report-world-reset-procedure.md` | World reset → mesh unscramble → insertion cycle: coordinate system, grid resolution and the multi-pass reconnection algorithm |
 | `docs/lab-reports/lab-report-worldbuilder-grid-ui.md` | The Worldbuilder's `🔲 Grid` tab — nodes at their (r,c) positions, edges coloured by health, and the insert/fix action panel |
-| `docs/lab-reports/plan-world-connectivity.md` | *A plan, not a lab report, filed among them.* World connectivity fix, 2026-06-09: 240 of 549 nodes reachable from LHR, 196 diagonal broken edges |
+| `docs/archive/plan-world-connectivity.md` | *A plan, not a lab report; archived by §DX-02lj.* World connectivity fix, 2026-06-09: 240 of 549 nodes reachable from LHR, 196 diagonal broken edges |
 
 ---
 
