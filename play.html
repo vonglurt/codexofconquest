@@ -26298,12 +26298,15 @@ let _gateFlagCache = null;
 function _gateFlagSet() {
   if (!_gateFlagCache) {
     _gateFlagCache = new Set();
-    for (const q of Object.values(QUEST_DB)) {
-      const g = q && q.gate;
-      if (!g) continue;
+    const walk = g => {
+      if (!g) return;
+      if (g.all) return g.all.forEach(walk);
+      if (g.any) return g.any.forEach(walk);
+      if (g.not) return walk(g.not);
       for (const key of ['flags', 'flagsAny', 'notFlags'])
         if (Array.isArray(g[key])) for (const f of g[key]) _gateFlagCache.add(f);
-    }
+    };
+    for (const q of Object.values(QUEST_DB)) walk(q && q.gate);
   }
   return _gateFlagCache;
 }

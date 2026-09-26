@@ -312,7 +312,7 @@ The worldbuilder mirrors the registry so the editor can only author real, execut
 `function _takeMissionBit(@26286` is not the inverse of granting. The token always leaves inventory;
 the flag is cleared **only if no quest gate depends on it**, determined by
 `function _gateFlagSet() {@26266`, a lazily-cached scan of every `QUEST_DB` gate's
-`flags`/`flagsAny`/`notFlags`. The rationale (§MBIT-02-E) is that a witnessed event which unlocks a
+`flags`/`flagsAny`/`notFlags`, at every leaf under `all`/`any`/`not` (§DX-02ed). The rationale (§MBIT-02-E) is that a witnessed event which unlocks a
 downstream mission can never be *un*-witnessed, or spending a token could silently re-close an arc.
 
 The report's strongest observation, aged perfectly: **a safety invariant enforced in code rather

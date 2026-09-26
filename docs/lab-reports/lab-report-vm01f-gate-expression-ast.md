@@ -158,7 +158,7 @@ At HEAD the same symbols live at `function _matchActivationLeaf(g, st)@22071`, `
 - **§VM-01-B seeded rng** — untouched; `check:rng` green on the rebuilt tree. ✅
 - **§VM-01-C `_ENV` / §VM-01-D `getState()`** — the compiled predicate takes `st` as a parameter and both methods still call `S()` at evaluation time. ✅
 - **Free-Movement / Mission-Gating** — no movement code; gate *logic* is relocated, not changed. ✅
-- **Known latent (documented, not triggered).** `function _gateFlagSet()@26266` structurally walks `q.gate.flags/flagsAny/notFlags` and would not see flags nested under an AST *activation* gate. F introduces none, so it is not triggered; when activation gates adopt the AST, that walker must recurse.
+- **Known latent (documented, not triggered).** `function _gateFlagSet()@26266` structurally walks `q.gate.flags/flagsAny/notFlags` and would not see flags nested under an AST *activation* gate. F introduces none, so it is not triggered; when activation gates adopt the AST, that walker must recurse. **Resolved 2026-09-26 by §DX-02ed**, ahead of its trigger: the walker descends `all`/`any`/`not` in `_compileGate`'s order, and `dx02ed-gate-flag-walker.test.js` pins it.
   > **Verified 2026-08-22 and still latent — because nobody ever authored one.** AST activation gates: **0 at ship, 0 at HEAD**. `_gateFlagSet` is still non-recursive at HEAD. The report calls the fix *"tracked as a §VM-01-F follow-on"*; **no such row was ever filed**, in BACKLOG.md or plan-archive.md. Filed now as **§DX-02ed**. *A report can diagnose a latent defect perfectly, name the fix, and still be the only place it is written down.*
 
 ## 9. Test plan (as shipped) — and what re-running it found
