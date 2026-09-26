@@ -34693,7 +34693,7 @@ const NODE_VERBS = [
         + (st.tlMissingShipSolved ? 'Yva adds: "The Harrow. I heard about that ship. The Hollow Hands didn\'t touch it. Whatever got that ship wasn\'t them."\n\n' : '')
         + 'She gives you the mark — a seal used by the Hollow Hands to identify allied cargo.' },
       { kind:'flag_write', set:['vsWeaponsFound'] },
-      // `set:1`, not `add:1` — _setNpcFavor takes an ABSOLUTE level and only ever raises it.
+      // `set:1`, not `add:1`: `set` lifts Yva to at least 1 and leaves a higher level alone, while `add` counts up from her live level, so at 2 it would make her a Dear Friend.
       { kind:'favor', npc:'yva', set:1 },
       { kind:'reward', items:[{ name:'Hollow Hands Seal', icon:'🖤', type:'quest_item', sell:0,
         desc:'A goblin sub-clan mark. Void-tainted. The mark of a faction answering to a shaman Mordus doesn\'t know.' }] },

@@ -254,6 +254,7 @@ reads the live level through `E.getFavor` (bound `2026-07-22`, twelve days *befo
 at 3, so `add:1` on a favor of 2 **raises it to Dear Friend**. `set:1` is still the correct bit — it
 reproduces the inline handler exactly — but the behaviour it avoids is an unearned promotion, not a
 demotion. The wrong reason is **in the shipped file**, as the comment at l. 34361. → **§DX-02fw**.
+*(Fixed 2026-09-25 by §DX-02fw: the comment now names the promotion `add:1` would cause.)*
 
 **N5 — ask 3's bar was already met, inside this report's own census.** §VM-01-G4c-FU ask 3 asks
 whether to add a bit that *starts* a ceremonia check, recommending *"leave it until a second consumer
