@@ -49,6 +49,7 @@
 > **THE CALL.** (a) **The live cells are right** (recommended if the math arc was deliberately grouped with the endgame realms): change the four gazetteer entries to lat/lon inside their live cells, with a `why` naming the decision. (b) **The gazetteer is right:** move the four nodes with `POST /api/layout/geo-seed` applied, then check the road net and every quest that routes to them.
 > **Verify:** the offline replica of the resolver used by §DX-02cb (every node projects onto its live cell) reports **0** mismatches, and a geo-seed dry-run matches `NODE_COORDS` for all 416.
 > **Provenance:** §DX-02cb, measuring its own Verify step.
+> **DECIDED 2026-09-26 by the user — now 🟢.** **(a) The live cells are right.** Move the four gazetteer entries inside their live cells with a `why` naming this decision; no node moves.
 
 ### §DX-02kb — twenty-one nodes still say their name twice, and five of them anchor terrains other nodes share (NEW 2026-09-13 during §DX-02el, 🟡 per-node naming, NO ENGINE WORK)
 

@@ -66,10 +66,12 @@
 
 
 > **§DX-02gx answered the question this row is blocked on (2026-08-25).** The shared premise — *is an unplaced named monster a defect* — is settled **no** for anything below `deadly`: `check:battlepools` direction 2 walks `deadly` only, deliberately, because `deadly` means set-piece and the rest are a bestiary (`monsters.md`, now annotated). **So the remaining two members are a `retire or keep` call, not a `find a host` one** — the world is not obliged to place them. The census that scopes it: `node src/scripts/check-battlepools.js --census`.
+> **DECIDED 2026-09-26 by the user — now 🟢.** **Retire both** `dragon_of_fyresdal` and `slyzard_matriarch`: delete their `MONSTER_POOL` and `MONSTER_DROPS` rows, and delete `UNREACHABLE_DEADLY` from `check-battlepools.js`.
 
 ### §VM-01-G2b-FU — Five act-gated Birka beats that can never fire (NEW 2026-08-04, 🟡 ASK)
 
 - [ ] **§VM-01-G2b-FU — re-gate the five unreachable act-legged narrative beats.** **Measured at ship time of §VM-01-G2b:** `storyRender` assigns `S_story.actNumber = node.act || 1` on **every** render, before the npc-row region, and every Birka-region node is `act:1` — so an `actNumber >= N` (N ≥ 2) leg inside one of these blocks is permanently false. Dead: `birka-lamp-inquiry` (`>= 2`, `TLL`) · `birka-brynn-heartwood-letter` (`>= 4`, `TLL`) · `birka-yael-named-report` (`>= 6`, `LHR`) · `birka-s54-joint-witness` (`>= 7`, `LHR`) · `birka-quill-couperin-farewell` (`=== 8`, `LLA`). **The cascade:** `birka-lamp-choice` (Beat 2 of the §XXXV vigil arc) gates on `brynnKeeperStoryTold`, and the dead Beat 1 is that flag's **only writer** — so the choice, `brynnLightKept`, the §XXV farewell branch and the §XXVII Town Crier line are all unreachable too. **Why this is an ASK and not a fix:** §VM-01-G3 retired the identical dead legs from the quest stanzas by **dropping** them (the gate's other leaves already carried the staging), but these are narrative beats whose act leg IS the staging — something has to replace it, and the right signal (shards? a quest completion? a mission bit? a day threshold?) is a design decision. **And the docs disagree with the code on more than the act:** `world.md` §XXXIX designs the Yael Named Report for `LLA`/`HKG` at Act IV+, while the shipped block fires at `LHR` at Act VI+ — §AUDIT-03m-FU's lesson says do not annotate or "fix" an unverified claim into a confident-looking one, so neither number is to be trusted without corroboration. **Pinned:** `uqf-npc-row-hooks.test.js` asserts all five gates, both node acts and the cascade, so the fix must update the test. **Docs already annotated** (not rewritten) at all five sites in `world.md` and `story.md`.
+> **DECIDED 2026-09-26 by the user — now 🟢.** Settled through §DX-02ft's call: **(a) the campaign-progress counter `S_story.storyAct`.** Ships with §DX-02ft.
 
 ### §SIREN-01-FU — the Littoral Courts lost their entire combat layer to a worldbuilder commit, and the shape it used is now a CI failure (NEW 2026-08-12 during §DOC-02u, 🟠 design call)
 
@@ -77,6 +79,7 @@
 > **It cannot be restored as written.** The crossings were `junction:true`, which `check:invariants` **I2 fails outright** (*"junctions were bulk-deleted in §WALK-1/§CELL-05"*), so a verbatim revert is a red gate. **Three options, all needing the call:** (1) re-express the three crossings as `battle` fields on real coastal nodes between the courts; (2) fold the encounters onto the courts themselves as arrival battles, which breaks the court/sea contrast the arc is built on; (3) accept a court-only arc and **cut the "the ocean does" thesis from `world.md`/`story.md`** so the docs stop describing a structure that is gone.
 > ***The durable lesson, and it outranks the row: a deletion that is correct as TOOLING and catastrophic as CONTENT will not describe itself in the commit message. Read the diff, not the subject line.*** No gate could have caught it either — the nodes were removed cleanly, so `check:noderegs` and `check:questgraph` both stayed green.
 > **Blocked behind §AUDIT-03x** for playtesting: all six surviving nodes are non-primary, so nothing here is verifiable in-game until cell primacy is resolved. **§AUDIT-03af (b) is downstream of whichever option is chosen.**
+> **DECIDED 2026-09-26 by the user — now 🟢.** **(1)** Put the three crossings back as `battle` fields on real coastal nodes between the courts; the 'the ocean does' thesis stays.
 
 ### §DX-02ft — The Homecoming cannot happen: eleven act-gated beats are unreachable, and `actNumber` is not what the content thinks it is (NEW 2026-08-23 during §DOC-02db, 🔴 ONE DESIGN CALL for all eleven)
 
@@ -87,6 +90,7 @@
 > **Provenance:** §DOC-02db, findings F1–F4. **Supersedes nothing** — §VM-01-G2b-FU stays open and should be closed by this row's call.
 
 ---
+> **DECIDED 2026-09-26 by the user — now 🟢.** **(a) A real campaign-progress counter**, `S_story.storyAct`, advanced by act-boundary quest completions; the eleven beats and the other act-gated sites move onto it, and the fix adds the missing Act VIII pin. Closes §VM-01-G2b-FU with it.
 
 ## Track records (Phase 1)
 

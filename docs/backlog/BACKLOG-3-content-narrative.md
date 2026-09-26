@@ -56,6 +56,7 @@
 > **Verify, whichever ships:** `check:npcregs` phase 6 gains its mirror — *every authored digit tier is at or below its key's ceiling* — which is red at HEAD with exactly these six and is one line beside the existing loop. The measurement is already written: `favorCeiling()` in `src/scripts/check-npcregs.js` returns the ceiling for every key the corpus touches.
 > **Found on the path → §AUDIT-03ar (Phase 1), which had already found it on 2026-08-13 and was rediscovered here by the sweep:** the 27th favor gate site, `_npcFavor('benedikt_rasp') >= 2`, guards an authored Benedikt callback at `NUE` and `benedikt_rasp`'s ceiling was **1**. Closed 2026-09-07; the ceiling sweep is now `check:npcregs` phase 7.
 > **Provenance:** §GR-FU2, whose ceiling census answered a question the row did not ask.
+> **DECIDED 2026-09-26 by the user — now 🟢.** **(b) `DEAR_FRIEND_PLUS_BITS`**: `auros ← undercitySurveyDelivered`, `pachelbel ← raisonToolsUsed`. Quill's beat is drafted and **shown to the user before it ships**, since no act exists for it yet.
 
 ### §AUDIT-03bk — the arrival-completes-the-quest closure is the game's best interaction and 16 of 161 waypoint quests use it (NEW 2026-08-18 during §DOC-02ca · **the navigability half shipped 2026-09-07 `800b5ae`; the conversion half retagged 🟢 → ASK the same day, because the fix as written is wrong for the commonest shape**)
 
