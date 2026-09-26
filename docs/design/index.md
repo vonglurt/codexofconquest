@@ -3,8 +3,8 @@
 # Codex of Conquest — The Shattered Codex: Document Index
 
 **Project:** `play.html` — a single-file, quest-driven MUD-style fighter RPG
-**Live counts:** 416 nodes · 398 monsters · 111 terrains · 2,853 quests · 204 NPC profiles · 8 acts · 38,859 lines · 5.51 MB
-**Last updated:** 2026-09-14 — §DX-02fo completed `export all` from 7 collections to 14 (`./bin/api export all` → 5,084 records)
+**Live counts:** `npm run stats --prefix src` — nodes, monsters, terrains, quests, NPC profiles, acts, lines and size, parsed from the data sections (§DX-01g)
+**Last updated:** 2026-09-25 — §DX-02lm replaced this line's hand-kept counts, three of them stale, with the command that derives them
 
 > **📁 Repository restructured 2026-08-23 for the first public release.** The
 > game was renamed *Roll2Hit* → **Codex of Conquest**; `roll2hit-v3.html` →
