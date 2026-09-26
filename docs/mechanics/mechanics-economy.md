@@ -12,7 +12,7 @@ This document covers Story Mode economy and narrative systems, plus the full sta
 
 ### Vendor System
 
-**Available at nodes**: BA (City Fence), MQ (Vendor Mira), SF (Proprietor Dusk), IS (Oracle's Apprentice), BK (Warlord Mordus)
+**Available at nodes**: `LLA` (City Fence), `LGW` (Vendor Mira), `STN` (Proprietor Dusk), `PDL` (Oracle's Apprentice), `VBY` (Warlord Mordus)
 
 Click the **🛒 VENDOR** chip at any of these nodes.
 
