@@ -23737,7 +23737,7 @@ function _missionComplete() {
 // the profile table into { nodeCode: [npcKey,...] } once and cache it. storyRender's Layer 41 uses the
 // hand-curated `birkaNpcs` literal where one exists (the 14 legacy / state-gated nodes stay byte-
 // identical — the parity anchor) and falls back to this derived map everywhere else, taking the
-// relationship surface from ~20 NPCs to ~203. Cache is safe: BIRKA_NPC_PROFILES is an immutable literal.
+// relationship surface from 11 rendered cards to 203. Cache is safe: BIRKA_NPC_PROFILES is an immutable literal.
 let _npcRenderMapCache = null;
 function _deriveNpcRenderMap() {
   if (_npcRenderMapCache) return _npcRenderMapCache;
@@ -23782,7 +23782,7 @@ function _renderNpcCard(key, container) {
   const fav = dlg.fav;
   const badgeTxt = fav >= 2 ? '💛 Dear Friend' : fav >= 1 ? '🤝 Friendly' : (dlg.tier !== 'impartial' && _hasActiveQuestFor(key) ? '📋 Quest Active' : '👤 Impartial');
   const staticProfile = fav >= 2 ? p.dearFriend : fav >= 1 ? p.friendly : p.neutral;
-  // §NPC-01-A: "lean" profiles (key/name/occupation/node only — the ~194 non-Birka NPCs) carry no
+  // §NPC-01-A: "lean" profiles (key/name/occupation/node only — the 191 non-Birka NPCs) carry no
   // per-tier greeting object, so staticProfile is undefined and staticProfile.greeting would throw.
   // Omit the greeting line when absent (name/occupation/quote/worldTruth still render); rich profiles
   // keep byte-identical HTML. This is the keystone that lets §NPC-01-B widen the render map safely.

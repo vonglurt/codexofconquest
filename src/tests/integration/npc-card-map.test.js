@@ -2,7 +2,7 @@
 // §NPC-01 — The Derivable NPC Card Map (promotes §POT-R2). See lab-reports/lab-report-npc-card-map.md.
 //
 // §NPC-01-A guards that _renderNpcCard renders a "lean" BIRKA_NPC_PROFILES entry — one that carries
-// only {key,name,occupation,node} and NO per-tier greeting object (the ~194 non-Birka NPCs) — WITHOUT
+// only {key,name,occupation,node} and NO per-tier greeting object (the 191 non-Birka NPCs) — WITHOUT
 // throwing. Before the fix, staticProfile was undefined for a lean profile and `staticProfile.greeting`
 // threw a TypeError, so widening the render map to any lean NPC would have crashed the card. The fix
 // omits the greeting line when absent; name/occupation/quote/worldTruth still render, and rich profiles
@@ -41,8 +41,8 @@ test.describe('§NPC-01-A — lean profiles render without the staticProfile.gre
       return out;
     });
 
-    expect(r.leanCount, 'there are many lean profiles to guard').toBeGreaterThan(100);
-    expect(r.richCount, 'the Birka rich profiles still exist').toBeGreaterThan(0);
+    expect(r.leanCount, 'lean profiles: the count _renderNpcCard\'s header cites').toBe(191);
+    expect(r.richCount, 'rich profiles: the count _renderNpcCard\'s header cites').toBe(13);
     expect(r.sampleSize, 'sampled lean profiles that have a dialogue').toBeGreaterThan(0);
     expect(r.threw, 'no lean profile throws in _renderNpcCard').toEqual([]);
     expect(r.nameMissing, 'every lean card shows its NPC name').toEqual([]);
