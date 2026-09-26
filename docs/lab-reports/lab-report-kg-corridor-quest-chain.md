@@ -280,6 +280,8 @@ finished.
 | **§DX-02da** 🟢 | `quest_kg_04`/`quest_kg_11` ship `onFail:[]` — a failed corridor skill check is silent. Roshkova's whole lesson is *"a cadet who cannot lose cleanly cannot win cleanly"*, and the arc's thematic centre has no failure text wired to it |
 | **§DX-02db** 🟢 | Commit `3c86055` ("§KG Inc 3 follow-up") announces four game-file edits — road junctions J16–J21, a `monsterKills` revert, dropping SPB's stray loot — and **does not touch `play.html` at all**; the file is byte-identical to `d6aeefd`. Only a milepoints *snapshot* carries the reverted text. J16–J21 do not exist at HEAD, so corridor walkability from TLL is an open question, and a `git log` search for `monsterKills` reports a revert that never happened |
 
+> **Note added 2026-09-25 (§DX-02db).** In this clone the commit is **`fcebbd3`**; `3c86055` is the hash as §DOC-02cb recorded it, from before the history this repository now carries. `git show --stat fcebbd3` lists one file, a 292-line markdown report, and no `play.html`. So its subject, *"…revert generic monsterKills counter"*, describes no change. **The counter was never reverted**, and it is live at HEAD with its writer since §DX-02cy. SPB still carries `loot:"Sealed Recruit Manifest"`. **The walkability question is answered: the corridor is walkable.** The mover kernel (`src/js/mover.js`, impassable = `SEA_RUNS`, on client and server alike) reaches every leg by breadth-first search: TLL→SPB 8 steps, SPB→KMS 2, KMS→ZVD 3, ZVD→FBR 3, FBR→TVR 1, TVR→SVO 2, so TLL→SVO is **17**. Only one of those cells is road. The missing J16–J21 cost road terrain (encounter rate 0), not access, because roads are terrain, never permissions (§NAV-01). No §NAV row follows.
+
 ---
 
 ## IX. VERDICT
