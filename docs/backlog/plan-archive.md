@@ -19,6 +19,15 @@
 
 ---
 
+## Archived 2026-09-27 — §DX-02ft-FU2 (the story-arc docs restate the live gates; no actNumber left in docs/story)
+
+### §DX-02ft-FU2 — two story-arc docs describe nine `actNumber >= N` quest gates that §VM-01-G3 retired and a field that no longer exists (NEW 2026-09-26 during §DX-02ft, 🟢 prose, NO DESIGN CALL)
+
+- [x] ✅ SHIPPED 2026-09-27 `767005c` **§DX-02ft-FU2 — `docs/story/story-arc-coastal.md` (6) and `docs/story/story-arc-investigation.md` (3) still state quest activation as `actNumber >= N`.** §VM-01-G3 dropped those act legs from the quest stanzas (`quest_tl_03`, `quest_vs_01`, `quest_wm_01` and the §XX / §XVI arc tables), because `actNumber` was the act of the node underfoot, constant per node. §DX-02ft then retired `actNumber` itself for `storyAct` (1 + shards held). So these nine lines describe a gate the quest no longer has, in terms of a field the engine no longer has. **Fix:** restate each line from the quest's live `gate` and `activateNode` (`./bin/api get quest <id>`), not by renaming it to `storyAct`, because none of these quests reads the act. **Verify:** `git grep -c actNumber -- docs/story` = 0, and each restated gate matches the API. **Provenance:** §DX-02ft's doc sweep.
+> **SHIPPED 2026-09-27 `767005c`.** **Before, at `c33ca09`:** `git grep -c actNumber -- docs/story` gave **9** (coastal 6, investigation 3). Each line is restated from the live quest, read offline through `wbapi-core` rather than `./bin/api get quest`, which reads the same parse without a server. `quest_vs_01`: `gate:{}` at `VS`. `quest_wm_01`: `gate:{}` at `NUE`. `quest_tl_03`: `gate:{questsDone:['quest_tl_02'], notFlags:['tlMissingShipSolved']}` at `STN`. So the two *"Act gate"* headers for §XX and §XVI now say *none in code*, and the two summary-table cells say what does activate the quest. The Ori paragraph had a second stale claim: it credited the button with the item, the favor and the gold. The `stn-ori` node verb only narrates and sets `tlMissingShipSolved`, and `quest_tl_03`'s own `onComplete` pays once. It now says so. **After:** **0**. **Found on the path → §DX-02ft-FU4** (Phase 3): `quest_tl_03`'s player-facing hint still says *"(Act IV+)"*, the only such tag in `play.html`, for a quest with no act gate.
+
+---
+
 ## Archived 2026-09-27 — §AUDIO-01 (the organ extracted into the game behind a 🎵 toggle; §DX-02am and §DX-02an fixed in both copies)
 
 ### §AUDIO-01 — the game has no sound, and the finished organ beside it has two defects of its own (§AUDIO-01 🟡 design call · §DX-02am / §DX-02an 🟢, sequenced after it)
