@@ -13,7 +13,7 @@
 
 | Section | Prerequisites | Key Flag Output |
 |---------|--------------|-----------------|
-| §XVI | `actNumber >= 6` | `wmFirstResearcherKnown` |
+| §XVI | None: `quest_wm_01` has `gate:{}` and activates on arrival at `NUE` | `wmFirstResearcherKnown` |
 | §XVII | `ngPlusRun >= 1` + `wmFirstResearcherKnown` (§XVI) + `entry42Written` (§XV) | `vaLastWardVisited`, `vaArchitectureKnown` |
 | §XXI | `vsShamanKnown` (§XX) + `vaLastWardVisited` (§XVII) | `wardensLegacyKnown` |
 
@@ -25,7 +25,7 @@ The chain is strictly sequential at the flag level. §XVII cannot begin without 
 
 **Layer:** 51  
 **Node:** `NUE` (historical `SQ`) (Scholar's Quarter, Weimar)  
-**Act gate:** `actNumber >= 6`
+**Act gate:** none in code; `quest_wm_01` has `gate:{}` and activates on arrival at `NUE`
 
 ### Summary
 
@@ -98,7 +98,7 @@ Note: `wmDoc3Unredacted` is a separate flag from `wmDoc3Read`. Document 3 can be
 **Activation sequence:**
 
 ```
-quest_wm_01 activates when: actNumber >= 6, not yet active
+quest_wm_01 activates when: arriving at NUE, not yet active (gate:{})
 quest_wm_02 activates when: quest_wm_01 complete
 quest_wm_03 activates when: wmArchiveComplete (all 3 docs read)
 quest_wm_04 activates when: wmBenediktCircleComplete

@@ -24,7 +24,7 @@ Shared thematic argument: the Merchant's Conclave is competent at paperwork and 
 | Section | Prerequisite | Earliest Act |
 |---------|-------------|--------------|
 | §XIX — Tilbury Harbor Arc | None (beyond Act II) | Act II |
-| §XX — Visby Underground | `actNumber >= 5` | Act V |
+| §XX — Visby Underground | None: `quest_vs_01` has `gate:{}` and activates on arrival at `VS` | Act V (by route) |
 | §XXI — The Warden (downstream) | `vsShamanKnown` (from §XX) + `vaLastWardVisited` (from §XVII) | NG+ |
 
 §XIX has no quest prerequisites and is available from the moment the player reaches Tilbury in Act II. §XX is Act V-gated and the Solvak quest activates automatically on VS node arrival. Neither arc has a prerequisite on the other — the cross-references are conditional dialogue additions, not gates.
@@ -36,7 +36,7 @@ Shared thematic argument: the Merchant's Conclave is competent at paperwork and 
 **Layer:** 54  
 **Subtitle:** "The Conclave's Weight"  
 **Nodes:** `STN` (historical `SF`) (Storefront/docks) + TL (Tilbury)  
-**Act gate:** Act II+ (no explicit actNumber check; node access governed by route)
+**Act gate:** none in code; node access is governed by route
 
 ### Summary
 
@@ -92,7 +92,7 @@ Vonn is not a villain. He holds the Conclave position because it is his job. The
 **Activation sequence:**
 - `quest_tl_01` activates immediately on `STN` (historical `SF`) node arrival
 - `quest_tl_02` activates when `tlLedgerRead` (after board read)
-- `quest_tl_03` activates when `tlLedgerRead` AND `actNumber >= 4` (Ori arrives in Act IV)
+- `quest_tl_03` activates at `STN` when `quest_tl_02` is done and `tlMissingShipSolved` is not set (`gate:{questsDone:['quest_tl_02'], notFlags:['tlMissingShipSolved']}`)
 
 ### Harbor Board Mechanic
 
@@ -114,7 +114,7 @@ Both complete quest_tl_02. Neither changes Vonn's behavior or Rennau's dialogue.
 
 ### Ori Encounter (quest_tl_03)
 
-Fires at `STN` (historical `SF`) when `tlLedgerRead && actNumber >= 4 && !tlMissingShipSolved`. Button: "📜 Speak with Ori." Clicking delivers Ori's account as storyMsg and immediately sets `tlMissingShipSolved = true`, adds Ori's Account to inventory, advances Rennau to Dear Friend, grants +300gp.
+Fires at `STN` (historical `SF`) while `quest_tl_03` is active and `tlMissingShipSolved` is unset (the `stn-ori` node verb). Button: "📜 Speak with Ori." Clicking delivers Ori's account and sets `tlMissingShipSolved`. The quest's own `onComplete` then pays once: Ori's Account, Rennau to Dear Friend, +300gp.
 
 Ori is the sole survivor of the Harrow. She walks into Tilbury three weeks after the sinking. Her account is delivered through testimony, not investigation — the player learns what happened to the Harrow through what the person who survived decided to say.
 
@@ -139,7 +139,7 @@ If `wmFirstResearcherKnown` is true when quest_tl_01 completes, the Harrow Manif
 **Layer:** 55  
 **Subtitle:** "What Mordus Owes"  
 **Nodes:** VS (Visby) + `TRD` (historical `GC`) (Goblin Caves) + `VBY` (historical `BK`) (Broken Tooth Tavern)  
-**Act gate:** `actNumber >= 5`
+**Act gate:** none in code; `quest_vs_01` has `gate:{}` and activates on arrival at `VS`
 
 ### Summary
 
@@ -204,7 +204,7 @@ Note: collecting the Hollow Hands Seal via monster drop has no direct quest effe
 | `quest_vs_03` | Mordus Pays | `vsDebtSettled` | +400gp; Solvak satisfied; `vsShamanKnown = true` |
 
 **Activation sequence:**
-- `quest_vs_01` activates at VS when `actNumber >= 5`
+- `quest_vs_01` activates on arrival at VS (`gate:{}`)
 - `quest_vs_02` activates after `vsDebtProbed` (Mordus dialogue complete)
 - `quest_vs_03` activates after `vsWeaponsFound` (Yva paid)
 
