@@ -519,7 +519,7 @@ If you find yourself reaching for curl to hit one of these, request a `./bin/api
 | `PUT /api/{type}/{id}` | `./bin/api put <type> <id> [fields]` |
 | `DELETE /api/{type}/{id}` | `./bin/api del <type> <id>` — source-level, saved + re-parsed, returns `deleteVerified` (§DX-01d/i) |
 | `GET /api/coords` | `./bin/api count coords` |
-| `GET /api/graph/broken` | `./bin/api broken` *(needs wrapper — request refactor)* |
+| `GET /api/graph/broken` | `./bin/api broken` (both read the heatmap's `heat: 0` cells, §DX-02ky) |
 | `GET /api/graph/reachability` | `./bin/api reachability` *(needs wrapper — request refactor)* |
 | `POST /api/graph/spawn-junction` | `./bin/api junction <from> <dir>` |
 | `POST /api/graph/move` | `./bin/api move <code> <r> <c>` |

@@ -214,6 +214,7 @@ const PORT_BLOCKS = {
   duel: 14200,
   snapshots: 14300,
   context: 14400,
+  graph: 14500,
 };
 
 // Returns `count` consecutive ports reserved for this worker inside `block`'s

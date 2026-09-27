@@ -1246,13 +1246,14 @@ curl -s 'http://localhost:1367/api/graph/validate/KRN?maxGap=4' | jq '.diagnosis
 
 Returns per-direction status: `ok`, `gap_too_large`, `off_axis`, `unset`, `missing_coords`.
 
-### 17.4 All broken edges from a root
+### 17.4 Isolated cells
 
 ```bash
-curl -s 'http://localhost:1367/api/graph/broken?maxGap=4&root=BK' | jq '{broken, categories}'
-curl -s 'http://localhost:1367/api/graph/broken?maxGap=4&root=LHR' \
-  | jq '[.edges[] | {from, dir, to, type}]'
+curl -s 'http://localhost:1367/api/graph/broken' | jq .broken
+curl -s 'http://localhost:1367/api/graph/broken' | jq -r '.cells[] | "\(.code) \(.r),\(.c)"'
 ```
+
+A node whose grid cell touches no occupied neighbour cell: the same census as `./bin/api broken` and `GET /api/grid/heatmap`'s `heat: 0`. `maxGap` and `root` read the retired `N`/`S`/`E`/`W` fields and are ignored (§DX-02ky).
 
 ### 17.5 Walkable path between two nodes
 
@@ -1491,7 +1492,7 @@ all                 Full combined export
 GET  /api/coords                              All coordinates
 GET  /api/coords/near/{code}?radius=N         Nearby search
 GET  /api/graph/validate/{code}?maxGap=4      Connection check
-GET  /api/graph/broken?maxGap=4&root=BK       All broken edges
+GET  /api/graph/broken                        Isolated cells (./bin/api broken)
 GET  /api/graph/path/{from}/{to}?maxGap=4     Walkable path
 
 PUT  /api/coords/{code}  {"r":N,"c":N}        Set absolute position
@@ -1592,8 +1593,8 @@ curl -s http://localhost:1367/api/coords | \
 # Can BK reach TRD (walkable path)?
 curl -s 'http://localhost:1367/api/graph/path/BK/TRD?maxGap=4' | jq '{reachable,fix}'
 
-# How many broken edges from BK?
-curl -s 'http://localhost:1367/api/graph/broken?maxGap=4&root=BK' | jq '{broken,categories}'
+# How many isolated cells?
+curl -s 'http://localhost:1367/api/graph/broken' | jq .broken
 
 # Export node IDs to a shell array
 NODES=($(curl -s 'http://localhost:1367/api/list/ids/node' | jq -r '.ids[]'))

@@ -79,12 +79,11 @@ curl "http://localhost:1367/api/graph/validate/BK"
 # Returns: for each direction, gap distance, alignment status, fix suggestion
 ```
 
-### 1.9 Find all broken walkability edges
+### 1.9 Find every isolated cell
 
 ```bash
-curl "http://localhost:1367/api/graph/broken?maxGap=4"
-# NEW ENDPOINT (see Part 3)
-# Returns: all connected pairs where gap > maxGap or off-axis
+curl "http://localhost:1367/api/graph/broken"
+# Returns: every node whose grid cell touches no occupied neighbour cell (see §3.2)
 ```
 
 ### 1.10 Trace a walkable path between two nodes
@@ -276,99 +275,25 @@ curl -s "http://localhost:1367/api/graph/validate/SHW?maxGap=4" | jq '
 
 ---
 
-### 3.2 `GET /api/graph/broken?maxGap=4` — All Broken Edges
+### 3.2 `GET /api/graph/broken` — Isolated Cells
 
-Returns every connected pair that violates walkability rules. Each edge includes a `moveSuggestion` with ranked candidates for where to move the off-axis or unpositioned node.
+Returns every node whose grid cell has no occupied cell among its four neighbours: the census `./bin/api broken` prints, read from the same cells `GET /api/grid/heatmap` serves (`heat: 0`). Until §DX-02ky it walked the `N`/`S`/`E`/`W` fields §CELL-01 stripped from every node, and answered `broken: 0`.
 
 **Request:**
 ```bash
-curl "http://localhost:1367/api/graph/broken?maxGap=4&root=BK"
+curl "http://localhost:1367/api/graph/broken"
 ```
 
-**Query params:**
-
-| Param | Default | Description |
-|---|---|---|
-| `maxGap` | 4 | Maximum allowed distance between connected nodes |
-| `root` | (all) | Only report edges reachable from this node |
-
-**Edge types:**
-
-| Type | Fix strategy |
-|---|---|
-| `diagonal` | Move destination onto source's row or column — use `moveSuggestion` |
-| `diagonal_and_gap` | Move destination closer AND onto axis — use `moveSuggestion` |
-| `gap_too_large` | Insert junction(s) between them — use `moveSuggestion` |
-| `missing_coords` | One node has no position — use `moveSuggestion` to place it |
+The edge-model parameters `maxGap`, `root` and `fast` are ignored. A request that passes one gets them back in `retiredParams`, with a `note`.
 
 **Response:**
 ```json
 {
   "ok": true,
-  "maxGap": 4,
-  "totalChecked": 401,
-  "broken": 13,
-  "categories": {"diagonal": 2, "gap_too_large": 9, "missing_coords": 2},
-  "edges": [
-    {
-      "from": "NRG", "fromCoords": {"r":112,"c":136},
-      "dir": "N",
-      "to": "SHW", "toCoords": {"r":104,"c":144},
-      "gap": 8, "axisOffset": 8, "type": "diagonal",
-      "fix": "corner_junction",
-      "moveSuggestion": {
-        "node": "SHW",
-        "note": "\"SHW\" is off-axis — move it onto the correct axis of \"NRG\"",
-        "recommended": {"r":104,"c":136,"reason":"midpoint between source and destination","free":true,
-          "moveCmd":"curl -s -XPUT http://localhost:1367/api/coords/SHW -H 'Content-Type: application/json' -d '{\"r\":104,\"c\":136}'"},
-        "candidates": [
-          {"r":104,"c":136,"reason":"midpoint between source and destination","free":true},
-          {"r":112,"c":140,"reason":"source row, mid-column",                  "free":true},
-          {"r":108,"c":136,"reason":"source column, mid-row",                  "free":true},
-          {"r":104,"c":140,"reason":"destination row, mid-column",             "free":true},
-          {"r":108,"c":144,"reason":"destination column, mid-row",             "free":false,"occupiedBy":"J88"},
-          {"r":112,"c":144,"reason":"source row, destination column",          "free":true},
-          {"r":104,"c":136,"reason":"destination row, source column",          "free":true}
-        ]
-      }
-    },
-    {
-      "from": "ROT", "fromCoords": {"r":104,"c":132},
-      "dir": "E",
-      "to": "SHW", "toCoords": {"r":104,"c":144},
-      "gap": 12, "axisOffset": 0, "type": "gap_too_large",
-      "junctionsNeeded": 2,
-      "fix": "fill_gap",
-      "moveSuggestion": {
-        "node": "(new junction)",
-        "note": "Gap=12 between \"ROT\" and \"SHW\" — insert 2 junction(s) between them",
-        "recommended": {"r":104,"c":136,"reason":"midpoint between source and destination","free":true,
-          "moveCmd":"curl -s -XPOST http://localhost:1367/api/node ... && curl -s -XPUT http://localhost:1367/api/coords/J_new ..."},
-        "candidates": [
-          {"r":104,"c":136,"reason":"midpoint between source and destination","free":true},
-          {"r":104,"c":132,"reason":"source column, mid-row",                  "free":false,"occupiedBy":"ROT"},
-          {"r":104,"c":140,"reason":"destination column, mid-row",             "free":true},
-          {"r":104,"c":136,"reason":"source row, destination column",          "free":true},
-          {"r":104,"c":132,"reason":"destination row, source column",          "free":false,"occupiedBy":"ROT"}
-        ]
-      }
-    },
-    {
-      "from": "YRK", "dir": "S", "to": "ZRH",
-      "type": "missing_coords",
-      "missingCoords": "ZRH",
-      "moveSuggestion": {
-        "node": "ZRH",
-        "note": "\"ZRH\" has no coordinates — place it between the connected nodes",
-        "recommended": {"r":116,"c":136,"reason":"3 steps S from neighbor \"YRK\"","free":true,
-          "moveCmd":"curl -s -XPUT http://localhost:1367/api/coords/ZRH -H 'Content-Type: application/json' -d '{\"r\":116,\"c\":136}'"},
-        "candidates": [
-          {"r":116,"c":136,"reason":"3 steps S from neighbor \"YRK\"",        "free":true},
-          {"r":112,"c":136,"reason":"midpoint 1.5 steps S from \"YRK\"",      "free":true},
-          {"r":116,"c":136,"reason":"2 steps S from \"YRK\"",                 "free":true}
-        ]
-      }
-    }
+  "broken": 93,
+  "cells": [
+    { "r": 2, "c": 194, "code": "LYR", "terrain": "arctic", "heat": 0 },
+    …
   ]
 }
 ```
@@ -376,26 +301,14 @@ curl "http://localhost:1367/api/graph/broken?maxGap=4&root=BK"
 **Practical usage:**
 
 ```bash
-# Count broken edges from the main hub
-curl -s 'http://localhost:1367/api/graph/broken?maxGap=4&root=BK' | jq '{broken, categories}'
+# How many isolated cells
+curl -s 'http://localhost:1367/api/graph/broken' | jq .broken
 
-# Get the recommended moveCmd for every broken edge
-curl -s 'http://localhost:1367/api/graph/broken?maxGap=4&root=BK' | jq \
-  '[.edges[] | {from, dir, to, type, cmd: .moveSuggestion.recommended.moveCmd}]'
-
-# Get only edges where the recommended slot is free
-curl -s 'http://localhost:1367/api/graph/broken?maxGap=4' | jq \
-  '[.edges[] | select(.moveSuggestion.recommended.free == true)
-    | {from, to, type, r:.moveSuggestion.recommended.r, c:.moveSuggestion.recommended.c}]'
-
-# Triage by type
-curl -s 'http://localhost:1367/api/graph/broken?maxGap=4' | jq \
-  '[.edges[] | select(.type=="diagonal") | {from, dir, to, cmd:.moveSuggestion.recommended.moveCmd}]'
-
-# Find all nodes with missing coordinates and where to put them
-curl -s 'http://localhost:1367/api/graph/broken?maxGap=4' | jq \
-  '[.edges[] | select(.type=="missing_coords") | {missing:.missingCoords, place:.moveSuggestion.recommended | {r,c,reason,free}}]'
+# Their codes and cells
+curl -s 'http://localhost:1367/api/graph/broken' | jq -r '.cells[] | "\(.code) \(.r),\(.c)"'
 ```
+
+A fix is a re-anchored lat/lon or a carved sea-lane (§WALK-1.5); confirm it with `./bin/api reachability`.
 
 ---
 
@@ -647,6 +560,8 @@ GET /api/graph/path/BK/TL?maxGap=4
 ---
 
 ## Part 4 — The Walk-the-Loop Procedure
+
+> ⚠️ **Retired workflow (§DX-02ky, 2026-09-27).** Every step below repairs `N`/`S`/`E`/`W` edges, which §CELL-01 stripped from `NODE_MAP`. `GET /api/graph/broken` no longer returns `edges` or `moveSuggestion`, so these scripts find nothing. Kept as history. The live census is §3.2, and the rest of this document's edge model is §DX-02ky-FU.
 
 **Goal:** Starting from BK, traverse every N/E/S/W connection, verify it is walkable, fix it if not.
 
@@ -1000,7 +915,7 @@ GET  /api/list/node?terrain=X            — filter by terrain
 GET  /api/coords                         — all coordinates
 GET  /api/coords/near/{code}?radius=N    — proximity search
 GET  /api/graph/validate/{code}?maxGap=N — connection check (NEW)
-GET  /api/graph/broken?maxGap=N&root=X  — all broken edges (NEW)
+GET  /api/graph/broken                  — isolated cells (the ./bin/api broken census)
 GET  /api/graph/path/{from}/{to}         — walkable path (NEW)
 GET  /api/audit/map                      — bidirectional audit
 
@@ -1064,6 +979,8 @@ curl -XPUT http://localhost:1367/api/coords/SHW -d '{"r":104,"c":140}'
 ```
 
 ### "Find all nodes that need a junction to reach their N/S/E/W neighbor"
+
+> ⚠️ Retired with the `N`/`S`/`E`/`W` fields (§CELL-01); `GET /api/graph/broken` has no `edges` now (§DX-02ky). Use §3.2.
 ```bash
 curl "http://localhost:1367/api/graph/broken?maxGap=4&root=BK" | \
   python3 -c "import json,sys; d=json.load(sys.stdin);

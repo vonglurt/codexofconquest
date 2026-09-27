@@ -983,6 +983,18 @@ function buildCellGrid(nm, coords) {
   return g;
 }
 
+// Each occupied cell with its heat: how many of its four neighbour cells are occupied.
+function gridHeatCells(nm, cg) {
+  const cells = [];
+  for (const [key, code] of Object.entries(cg)) {
+    const [r, c] = key.split(',').map(Number);
+    let heat = 0;
+    for (const [dr, dc] of MOVES4) if (cg[`${r+dr},${c+dc}`]) heat++;
+    cells.push({ r, c, code, terrain: nm[code]?.name || null, heat });
+  }
+  return cells.sort((a, b) => a.r - b.r || a.c - b.c);
+}
+
 // Cached wrapper — rebuilds only when WBAPI.nodeMap or nodeCoords reference changes (i.e. after reload)
 let _cgCacheNm = null, _cgCacheCoords = null, _cgCache = null;
 function getCellGrid() {
@@ -6292,89 +6304,14 @@ async function route(req, res) {
     }
 
     // ── GET /api/graph/broken ─────────────────────────────────────────────────
-    // Find all connected pairs that violate walkability rules
+    // §DX-02ky: a node whose grid cell touches no occupied cell — the census `./bin/api broken`
+    // prints, read from the same cells GET /api/grid/heatmap serves, so the two cannot disagree.
     if (parts[1] === 'broken' && method === 'GET') {
-      const maxGap = Math.max(1, parseInt(url.searchParams.get('maxGap') || '4', 10));
-      const root   = url.searchParams.get('root') || null;
-      const fast   = url.searchParams.get('fast') === 'true'; // skip suggestions, count only
-      const DIRS4 = ['N','E','S','W'];
-      const allCoords = WBAPI.nodeCoords;
-      const edges = [], seen = new Set();
-      let totalChecked = 0;
-
-      // Build occupied map once — shared across all suggestBetween calls (O(N) amortised vs O(N) per call)
-      const occupiedMap = fast ? null : new Map(Object.entries(allCoords).map(([c,p]) => [`${p.r},${p.c}`, c]));
-
-      for (const [code, dirs] of Object.entries(nm)) {
-        const cc = WBAPI.nodeCoords[code];
-        for (const d of DIRS4) {
-          const tgt = dirs[d]; if (!tgt) continue;
-          const key = [code,tgt].sort().join(':');
-          if (seen.has(key)) continue; seen.add(key); totalChecked++;
-          const tc = WBAPI.nodeCoords[tgt];
-          if (!cc || !tc) {
-            if (fast) { edges.push({ from:code, dir:d, to:tgt, type:'missing_coords' }); continue; }
-            // At least one node is unpositioned — suggest where to put it
-            const missingCode = !cc ? code : tgt;
-            const knownCoords = !cc ? tc : cc;
-            const candidates = knownCoords
-              ? suggestBetween(knownCoords, null, d, allCoords, missingCode, undefined, occupiedMap)
-              : null;
-            const best = candidates ? (candidates.find(c => c.free) || candidates[0]) : null;
-            edges.push({
-              from:code, dir:d, to:tgt, type:'missing_coords',
-              missingCoords: missingCode,
-              moveSuggestion: candidates ? {
-                node: missingCode,
-                note: `"${missingCode}" has no coordinates — place it between the connected nodes`,
-                recommended: best,
-                candidates,
-              } : null,
-            });
-            continue;
-          }
-          const dr = tc.r-cc.r, dc = tc.c-cc.c;
-          const gap = d in {N:1,S:1} ? Math.abs(dr) : Math.abs(dc);
-          const off = d in {N:1,S:1} ? Math.abs(dc) : Math.abs(dr);
-          let type = null;
-          if (off>0 && gap>maxGap) type = 'diagonal_and_gap';
-          else if (off>0)          type = 'diagonal';
-          else if (gap>maxGap)     type = 'gap_too_large';
-          if (type) {
-            if (fast) { edges.push({ from:code, dir:d, to:tgt, type, gap, axisOffset:off }); continue; }
-            const juncsNeeded = type==='gap_too_large' ? Math.ceil(gap/maxGap)-1 : null;
-            // For diagonal/off-axis: suggest moving the destination to be between source and itself snapped to axis
-            // For gap: suggest placing intermediate junction(s) between the two
-            const moveTarget = type === 'gap_too_large' ? null : tgt;  // null = new junction
-            const axisSnapped = (type !== 'gap_too_large')
-              ? ((d==='N'||d==='S') ? { r: tc.r, c: cc.c } : { r: cc.r, c: tc.c })
-              : tc;
-            const candidates = suggestBetween(cc, axisSnapped, d, allCoords, moveTarget, undefined, occupiedMap);
-            const best = candidates.find(c => c.free) || candidates[0];
-            const noteMap = {
-              diagonal:        `"${tgt}" is off-axis — move it onto the correct axis of "${code}"`,
-              diagonal_and_gap:`"${tgt}" is diagonal AND too far — move it between "${code}" and its axis-snapped position`,
-              gap_too_large:   `Gap=${gap} between "${code}" and "${tgt}" — insert ${juncsNeeded||1} junction(s) between them`,
-            };
-            edges.push({
-              from:code, fromCoords:cc, dir:d, to:tgt, toCoords:tc,
-              gap, axisOffset:off, type,
-              junctionsNeeded: juncsNeeded,
-              fix: type==='diagonal' ? 'corner_junction' : type==='gap_too_large' ? 'fill_gap' : 'both',
-              moveSuggestion: {
-                node: moveTarget || '(new junction)',
-                note: noteMap[type],
-                recommended: best,
-                candidates,
-              },
-            });
-          }
-        }
-      }
-      const categories = {};
-      for (const e of edges) categories[e.type] = (categories[e.type]||0)+1;
-      logResponse('GET', url.pathname, 200, `${edges.length} broken edges`);
-      return json(res, 200, { ok:true, maxGap, totalChecked, broken:edges.length, categories, edges });
+      const cells = gridHeatCells(nm, cellGrid).filter(c => c.heat === 0);
+      const retiredParams = ['maxGap', 'root', 'fast'].filter(p => url.searchParams.has(p));
+      logResponse('GET', url.pathname, 200, `graph/broken  ${cells.length} isolated cell(s)`);
+      return json(res, 200, { ok:true, broken: cells.length, cells,
+        ...(retiredParams.length ? { retiredParams, note: 'These parameters read the N/S/E/W fields §CELL-01 stripped; they are ignored.' } : {}) });
     }
 
     // ── POST /api/graph/fill-gap — DEPRECATED (§WALK-3 Inc 2) ─────────────────
@@ -8765,15 +8702,7 @@ async function route(req, res) {
     }
 
     if (sub === 'heatmap') {
-      const cells = [];
-      for (const [key, code2] of Object.entries(cg)) {
-        const [rStr, cStr] = key.split(',');
-        const r = +rStr, c = +cStr;
-        let heat = 0;
-        for (const [dr, dc] of MOVES4) if (cg[`${r+dr},${c+dc}`]) heat++;
-        cells.push({ r, c, code: code2, terrain: nm[code2]?.name || null, heat });
-      }
-      cells.sort((a, b) => a.r - b.r || a.c - b.c);
+      const cells = gridHeatCells(nm, cg);
       logResponse(method, url.pathname, 200, `grid/heatmap  ${cells.length} cells`);
       return json(res, 200, { count: cells.length, cells });
     }
