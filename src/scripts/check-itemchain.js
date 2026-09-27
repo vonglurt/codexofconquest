@@ -143,5 +143,47 @@ ok(r.ok, 'itemChain editStructuredField succeeds: ' + (r.error || ''));
 WBAPI.load(WBAPI._rawSrc);
 ok(JSON.stringify(WBAPI.questDb[anyQ].itemChain) === JSON.stringify(chain), 'itemChain object array round-trips through the source patch');
 
+// ── grant field set: edit.html's CHAIN_KINDS.grant ∪ GRANT_RICH vs _applyItemChain (§DX-02cj) ──
+function editorGrantFields(editSrc) {
+  const kinds = editSrc.match(/const CHAIN_KINDS = \{[\s\S]*?\n\s*grant:\s*\[([^\]]*)\]/);
+  const rich = editSrc.match(/const GRANT_RICH = \[([^\]]*)\]/);
+  if (!kinds || !rich) throw new Error('edit.html: CHAIN_KINDS.grant or GRANT_RICH not found');
+  const scalar = [...kinds[1].matchAll(/\bf:'(\w+)'/g)].map(m => m[1]);
+  const extra = [...rich[1].matchAll(/'(\w+)'/g)].map(m => m[1]);
+  return { scalar, rich: extra };
+}
+function runtimeGrantFields(fnSrc) {
+  const body = fnSrc.slice(fnSrc.indexOf("case 'grant':"), fnSrc.indexOf("case 'take':"));
+  const allow = body.match(/for \(const f of \[([^\]]*)\]\)/);
+  const item = body.match(/const item = \{([^}]*)\}/);
+  if (!allow || !item) throw new Error("_applyItemChain: grant allow-list or item literal not found");
+  const fields = new Set([...allow[1].matchAll(/'(\w+)'/g)].map(m => m[1]));
+  for (const m of item[1].matchAll(/(\w+):/g)) fields.add(m[1]);
+  for (const m of body.matchAll(/\bs\.(\w+)/g)) fields.add(m[1]);
+  fields.delete('action');
+  return fields;
+}
+function grantFieldDrift(fnSrc, editSrc) {
+  const ed = editorGrantFields(editSrc), rt = runtimeGrantFields(fnSrc);
+  const edAll = new Set([...ed.scalar, ...ed.rich]);
+  return {
+    editorOnly: [...edAll].filter(f => !rt.has(f)).sort(),
+    runtimeOnly: [...rt].filter(f => !edAll.has(f)).sort(),
+    twoSources: ed.rich.filter(f => ed.scalar.includes(f)).sort(),
+  };
+}
+const EDIT = fs.readFileSync(path.join(__dirname, '..', '..', 'edit.html'), 'utf8');
+const applySrc = extractFn('_applyItemChain');
+const drift = grantFieldDrift(applySrc, EDIT);
+ok(!drift.editorOnly.length, 'edit.html authors grant fields _applyItemChain drops: ' + drift.editorOnly.join(', '));
+ok(!drift.runtimeOnly.length, '_applyItemChain copies grant fields edit.html cannot author: ' + drift.runtimeOnly.join(', '));
+ok(!drift.twoSources.length, 'GRANT_RICH repeats a CHAIN_KINDS.grant scalar: ' + drift.twoSources.join(', '));
+const plantEd = grantFieldDrift(applySrc, EDIT.replace(/const GRANT_RICH = \[([^\]]*)'heal'/, "const GRANT_RICH = [$1'zzPlanted'"));
+ok(plantEd.editorOnly.join() === 'zzPlanted' && plantEd.runtimeOnly.join() === 'heal', 'planted: GRANT_RICH swapping heal for zzPlanted is caught on both sides');
+const plantRt = grantFieldDrift(applySrc.replace("'heal']", "'heal', 'zzRuntime']"), EDIT);
+ok(plantRt.runtimeOnly.join() === 'zzRuntime' && !plantRt.editorOnly.length, 'planted: a runtime-only allow-list field is caught');
+const plantTwo = grantFieldDrift(applySrc, EDIT.replace("const GRANT_RICH = ['readText'", "const GRANT_RICH = ['desc','readText'"));
+ok(plantTwo.twoSources.join() === 'desc', 'planted: desc in both GRANT_RICH and the scalar inputs is caught');
+
 if (fail) { console.log(`\n✗ check-itemchain: ${fail} FAILED, ${pass} passed`); process.exit(1); }
-console.log(`✓ §EDITOR-01-D itemChain: all ${pass} checks pass (grant/take/grantBit/takeBit semantics + once + source round-trip)`);
+console.log(`✓ §EDITOR-01-D itemChain: all ${pass} checks pass (grant/take/grantBit/takeBit semantics + once + source round-trip + edit.html grant fields = runtime)`);
