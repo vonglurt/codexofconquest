@@ -22,20 +22,14 @@ const GAME = path.join(__dirname, '..', '..', 'play.html');
 
 // A deadly monster is REACHABLE when a node battle names it, an encounter pool lists it
 // (`P.<key>` inside a `WORLD_DB` terrain row), a node's `bossKey` selects it, or engine code mentions
-// the key anywhere outside its own MONSTER_POOL row and MONSTER_DROPS row.
-// Entries here are known-unreachable and owned by an open row; an entry that becomes
-// reachable is a stale exemption and fails, the same rule as SYNTHETIC_BATTLE_CODES.
+// the key anywhere outside its own MONSTER_POOL row and MONSTER_DROPS row. There is no
+// exemption list: an unplaced set-piece is either given a fight or retired from the pool.
 // §DX-02di — which roster each of `_isVoidEnemy`'s regex vocabularies is tested against.
 // A vocabulary the function reads and this table does not name is a finding, and so is a
 // name here the function no longer reads: the gate can only intersect alternatives with a
 // roster if it is told which roster.
 const CLASSIFICATION_CORPUS = {
   _VOID_ENEMY_RE: 'monsters',
-};
-
-const UNREACHABLE_DEADLY = {
-  dragon_of_fyresdal: '§DX-02gw',
-  slyzard_matriarch: '§DX-02gw',
 };
 
 // A battle key with no monster behind it. `_bruhns` is by design — the final battle is
@@ -99,18 +93,8 @@ function scan(src) {
   // Other tiers are a bestiary and are NOT walked — see the header, and `--census`.
   for (const [key, tier] of tiers) {
     if (tier !== 'deadly') continue;
-    const reachable = isReachable(src, idx, key);
-    const owned = UNREACHABLE_DEADLY[key];
-    if (!reachable && !owned) {
+    if (!isReachable(src, idx, key)) {
       findings.push(`[deadly] deadly-tier monster '${key}' is named by no battle, no encounter pool and no bossKey — it is statted, priced and unfightable`);
-    }
-    if (reachable && owned) {
-      findings.push(`[deadly] '${key}' is exempted as unreachable (${owned}) but is now reachable — retire the exemption`);
-    }
-  }
-  for (const key of Object.keys(UNREACHABLE_DEADLY)) {
-    if (!tiers.has(key)) {
-      findings.push(`[deadly] '${key}' is exempted as an unreachable deadly monster (${UNREACHABLE_DEADLY[key]}) but is not a deadly-tier pool entry — retire the exemption`);
     }
   }
 
@@ -184,7 +168,7 @@ function section(src, name) {
 // Two kinds of exemption, and they are different promises: a row-owned one names the
 // open row that will retire it (`§…`), a by-design one never retires.
 function exemptionSummary() {
-  const values = [...Object.values(UNREACHABLE_DEADLY), ...Object.values(UNRESOLVED_BATTLE_KEYS)];
+  const values = Object.values(UNRESOLVED_BATTLE_KEYS);
   const owned = values.filter(v => /^§/.test(v)).length;
   const design = values.length - owned;
   const parts = [];
@@ -225,7 +209,7 @@ if (process.argv.includes('--selftest')) {
   const orphan = base.replace("  reachable_x:", "  orphan_x:").replace("key:'reachable_x'", "key:'orphan_x'")
     .replace('P.reachable_x', 'P.void_walker');
   ok(scan(orphan).some(f => f.startsWith('[deadly]')), 'a deadly monster no battle or pool names is caught');
-  ok(scan(base).filter(f => f.includes('retire the exemption')).length === Object.keys(UNREACHABLE_DEADLY).length + Object.keys(UNRESOLVED_BATTLE_KEYS).length,
+  ok(scan(base).filter(f => f.includes('retire the exemption')).length === Object.keys(UNRESOLVED_BATTLE_KEYS).length,
     'every exemption absent from the source is reported stale');
   const apiWritten = [
     "const MONSTER_POOL = {",
@@ -291,9 +275,8 @@ if (process.argv.includes('--selftest')) {
     'a declared roster for a vocabulary the classifier no longer reads is caught');
 
   const summary = exemptionSummary();
-  const owned = [...Object.values(UNREACHABLE_DEADLY), ...Object.values(UNRESOLVED_BATTLE_KEYS)]
-    .filter(v => /^§/.test(v)).length;
-  const design = Object.keys(UNREACHABLE_DEADLY).length + Object.keys(UNRESOLVED_BATTLE_KEYS).length - owned;
+  const owned = Object.values(UNRESOLVED_BATTLE_KEYS).filter(v => /^§/.test(v)).length;
+  const design = Object.keys(UNRESOLVED_BATTLE_KEYS).length - owned;
   ok(!design || /\d+ by design/.test(summary),
     'a by-design exemption is not counted as owned by an open row');
   ok(!owned || summary.includes(`${owned} exemption${owned === 1 ? '' : 's'} owned by an open row`),
