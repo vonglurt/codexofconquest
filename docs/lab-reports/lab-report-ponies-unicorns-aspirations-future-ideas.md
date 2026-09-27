@@ -100,7 +100,7 @@ Two program instruments carried this pass in particular:
 | 18 | The Fisherman: *"no quest, no connection to the main arc"* | §II.5 | ⚠️ **REVERSED** | he gives the rod, keeps a free-sleep cabin, and is named in Yael's Level-1 tutorial monologue |
 | 19 | Organ: 12 voices × 6 harmonics = 72 oscillators | §VI.B/H | ✅ **exact** | `src/sources/5thOrgan.html:const N_HARM   = 6;@142` · `src/sources/5thOrgan.html:const MAX_VOX  = 12;@143` |
 | 20 | Organ: `f = 440 × 2^((n−69)/12)` | §VI.C | ✅ **byte-exact** | `src/sources/5thOrgan.html:function midiHz(m)@185` |
-| 21 | Organ: stop mixer `1.000 … 0.167` | §VI.C | ✅ **byte-exact** | `src/sources/5thOrgan.html:drawbars:  [1.000, 0.500@161` |
+| 21 | Organ: stop mixer `1.000 … 0.167` | §VI.C | ✅ **byte-exact** at verification; re-based to flat by §DX-02am (2026-09-27), because the later 6 dB/oct falloff already supplies the 1/n | *`src/sources/5thOrgan.html:drawbars:  [1.000, 0.500`*@161 |
 | 22 | Organ: stop analogies 8′/4′/2⅔′/2′/1⅗′/1⅓′ | §VI.B | ✅ **became the UI** | `src/sources/5thOrgan.html:const DBAR_LABELS = [@359` |
 | 23 | Organ: 10 ms attack, 200 ms release | §VI.G | ✅ **byte-exact** | `src/sources/5thOrgan.html:attackMs:  10,@163` · `src/sources/5thOrgan.html:releaseMs: 200,@164` |
 | 24 | Organ: Beethoven demo, 8 events | §VI.E | ✅ **byte-exact**, 4 of 5 fields | `src/sources/5thOrgan.html:const MOTIF = [@147` — every beat, note, duration and velocity identical; only `ch` dropped |
@@ -200,7 +200,7 @@ This is instrument 12 in a form worth keeping, because it defeats the older inst
 
 - `src/sources/5thOrgan.html:const N_HARM   = 6;@142` and `src/sources/5thOrgan.html:const MAX_VOX  = 12;@143` → **72 oscillators**, exactly §VI.H's budget.
 - `src/sources/5thOrgan.html:function midiHz(m)@185` is `440 * Math.pow(2, (m - 69) / 12)` — §VI.C byte-for-byte.
-- `src/sources/5thOrgan.html:drawbars:  [1.000, 0.500@161` — all six values are §VI.C's `stopMixer` literally.
+- *`src/sources/5thOrgan.html:drawbars:  [1.000, 0.500`*@161 — all six values were §VI.C's `stopMixer` literally, until §DX-02am (2026-09-27) re-based them to flat under the falloff slider that multiplied them into 1/n².
 - `src/sources/5thOrgan.html:const DBAR_LABELS = [@359` — `H1 8′ · H2 4′ · H3 2⅔′ · H4 2′ · H5 1⅗′ · H6 1⅓′`, which is §VI.B's *"Pipe organ stop analogy"* column promoted into the user interface.
 - `src/sources/5thOrgan.html:attackMs:  10,@163` / `src/sources/5thOrgan.html:releaseMs: 200,@164` — §VI.G's envelope, to the millisecond.
 - `src/sources/5thOrgan.html:const MOTIF = [@147` — all eight Beethoven events identical to §VI.E's JSON in beat, note, duration and velocity; only `ch` was dropped, the manual assignment having no consumer in a single-manual instrument.

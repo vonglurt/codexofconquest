@@ -11,6 +11,8 @@
 
 ## Abstract
 
+> **Since 2026-09-27 (§AUDIO-01) the game plays this organ.** Its voice pool and sequencer are extracted into `play.html` behind the sidebar's 🎵 toggle, without the panel, and three stops follow the run (void pressure, story act, the Day-49 clock). Findings 2–4 below are fixed in both copies.
+
 `src/sources/5thOrgan.html` is a self-contained, single-file polyphonic pipe organ synthesizer running in the browser on the Web Audio API. It uses additive synthesis to reconstruct organ timbre from six harmonic partials per note over a 12-voice pool — a **capacity** of 72 simultaneous sine oscillators. A lookahead sequencer plays the opening motif of Beethoven's Symphony No. 5, Op. 67 as a two-voice canon, the second voice entering 14 sixteenth notes after the first. Ten synthesis parameters are exposed as live controls. This report documents the mathematical foundations, records the as-built implementation against the specification, and reports seven measured findings.
 
 The 2026-08-12 verification pass found the transcribable material **exact** — the motif array, the envelope algebra, the voice-stealing expression, the architecture diagram and all ten rows of the parameter table are faithful to the file — and every error in composed passages: a timbre claim off by one power of *n*, a collision proof that proves the wrong proposition, a "Results" section listing outcomes the same document later admits were never heard, and a numerical accuracy bound three orders of magnitude optimistic.
@@ -64,7 +66,7 @@ and for an organ the phases `φ_n` are approximately zero — all partials speak
 
 Every anchor below resolves literally and line-exact in the live file.
 
-**Constants and registration.** `src/sources/5thOrgan.html:const N_HARM@142` = 6 and `src/sources/5thOrgan.html:const MAX_VOX@143` = 12, both as specified. The motif at `src/sources/5thOrgan.html:const MOTIF = [@147` is byte-exact to the listing the report reproduces in its future-directions section, and `src/sources/5thOrgan.html:const MOTIF_LEN@157` = 28 sixteenths. Drawbar defaults `src/sources/5thOrgan.html:drawbars:  [1.000@161` are 1/*n* across all six, and `src/sources/5thOrgan.html:falloffDB: 6,@162` is 6 dB/oct — both exactly as documented, and together the cause of Finding 2.
+**Constants and registration.** `src/sources/5thOrgan.html:const N_HARM@142` = 6 and `src/sources/5thOrgan.html:const MAX_VOX@143` = 12, both as specified. The motif at `src/sources/5thOrgan.html:const MOTIF = [@147` is byte-exact to the listing the report reproduces in its future-directions section, and `src/sources/5thOrgan.html:const MOTIF_LEN@157` = 28 sixteenths. Drawbar defaults *`src/sources/5thOrgan.html:drawbars:  [1.000`*@161 are 1/*n* across all six, and `src/sources/5thOrgan.html:falloffDB: 6,@162` is 6 dB/oct — both exactly as documented, and together the cause of Finding 2.
 
 **Tuning and amplitude.** `src/sources/5thOrgan.html:function midiHz@185` and `src/sources/5thOrgan.html:function harmAmp@188` implement the two published formulas without deviation; the falloff term is visible at `src/sources/5thOrgan.html:P.falloffDB * Math.log2(h)@189`.
 
@@ -72,7 +74,7 @@ Every anchor below resolves literally and line-exact in the live file.
 
 **Filter.** `src/sources/5thOrgan.html:flt.type = 'lowpass'@214` is the native `BiquadFilterNode`, and both live controls update sounding voices as claimed: `src/sources/5thOrgan.html:vv.filter.frequency.value=v@414` and `src/sources/5thOrgan.html:vv.filter.Q.value=v@415`. Drawbars likewise, at `src/sources/5thOrgan.html:harmAmp(hi+1)@384`.
 
-**Sequencer.** `src/sources/5thOrgan.html:function buildSeq@277` computes `src/sources/5thOrgan.html:const s16 = (60 / bpm) / 4@278` and is called at exactly one site, `src/sources/5thOrgan.html:seqEvents = buildSeq(@323`. The lookahead horizon is `src/sources/5thOrgan.html:const horizon = now + 0.15@300` and the tick is `src/sources/5thOrgan.html:setTimeout(sched, 50)@317` — the documented 150 ms / 50 ms, shipped as inline literals rather than named constants. Two behaviours the original does not mention: note-offs fire at 92 % of nominal duration (`src/sources/5thOrgan.html:dur * s16 * 0.92@285`, a deliberate articulation gap), and a late event is clamped forward rather than dropped (`src/sources/5thOrgan.html:Math.max(t, now + 0.001)@306`). The loop advance at `src/sources/5thOrgan.html:seqStart += (gRO()@314` is Finding 3. Autoplay policy is handled before scheduling at `src/sources/5thOrgan.html:actx.state === 'suspended'@322`, as claimed.
+**Sequencer.** `src/sources/5thOrgan.html:function buildSeq@277` computes `src/sources/5thOrgan.html:const s16 = (60 / bpm) / 4@278` and is called at exactly one site, *`src/sources/5thOrgan.html:seqEvents = buildSeq(`*@323. The lookahead horizon is `src/sources/5thOrgan.html:const horizon = now + 0.15@300` and the tick is `src/sources/5thOrgan.html:setTimeout(sched, 50)@317` — the documented 150 ms / 50 ms, shipped as inline literals rather than named constants. Two behaviours the original does not mention: note-offs fire at 92 % of nominal duration (`src/sources/5thOrgan.html:dur * s16 * 0.92@285`, a deliberate articulation gap), and a late event is clamped forward rather than dropped (`src/sources/5thOrgan.html:Math.max(t, now + 0.001)@306`). The loop advance at *`src/sources/5thOrgan.html:seqStart += (gRO()`*@314 is Finding 3. Autoplay policy is handled before scheduling at `src/sources/5thOrgan.html:actx.state === 'suspended'@322`, as claimed.
 
 **Output graph and scope.** `src/sources/5thOrgan.html:masterGain.connect(analyser)@180` then `src/sources/5thOrgan.html:analyser.connect(actx.destination)@181` — the published diagram, exactly. `src/sources/5thOrgan.html:analyser.fftSize@179` = 2048 and `src/sources/5thOrgan.html:getFloatTimeDomainData(scBuf)@429` fills a `Float32Array` of that length, so *"length = fftSize"* holds; the trace margin is `src/sources/5thOrgan.html:H * 0.44@440`, the specified 0.44.
 
@@ -101,6 +103,8 @@ shipped without deviation at `src/sources/5thOrgan.html:function harmAmp@188`. T
 | 12 | 1.000 0.251 0.112 0.063 0.040 0.028 | 1/n^1.99 |
 
 ### B. ⛔ The composition error (Finding 2)
+
+> ✅ **Fixed 2026-09-27 (§DX-02am).** The drawbars default to flat `[1, 1, 1, 1, 1, 1]`, so the 6 dB/oct slider alone gives the 1/n Principal, in this file and in the game's copy (§AUDIO-01).
 
 The original states that at `falloffDB = 6` the engine *"reproduces the 1/n amplitude law at the default drawbar position,"* and its preset table calls the default **Principal**. Both are wrong by one power of *n*, because **the default drawbars are already 1/n** and the falloff multiplies on top of them:
 
@@ -229,6 +233,8 @@ Each tick advances through `seqEvents[]` while `seqStart + event.t ≤ now + LOO
 
 ### C. ⛔ The collision claim proves the wrong proposition (Finding 4)
 
+> ✅ **Fixed 2026-09-27 (§DX-02an b).** The proof is still wrong, but the collisions no longer deform the canon: every event carries its track, and `noteOff` releases the newest voice with that pitch **and** track. The game's test drives all 56 offsets and checks that every voice sounds for its own note's length. With the pitch-only release planted back, it fails at 28 of 56 (4 repetitions).
+
 The original asserts, twice, that the two tracks never share a MIDI note. Its §XIII "proof" reads:
 
 > *"Track 1 MIDI notes {67, 63}; Track 2 MIDI notes {65, 62} at any time offset."*
@@ -250,6 +256,8 @@ The conclusion is nonetheless true **at the default offset of 14**, where Track 
 The original's own test script then instructs: *"5. Set Round Offset to 1 → near-unison canon (phasing effect)."* Offset 1 is the **worst** entry in the table at 192 overlaps. Step 6, *"Set Round Offset to 0,"* cannot be performed at all: the input carries `min="1"` and `gRO()` clamps with `Math.max(1, …)`. The parameter table one section earlier states the range as 1–56 correctly — *the copied table is right and the composed procedure contradicts it.*
 
 ### D. ⛔ Live parameter changes desync the loop (Finding 3)
+
+> ✅ **Fixed 2026-09-27 (§DX-02an a).** `buildSeq` returns its own span, and the loop advances by the span of the pass just played, then rebuilds from the live controls. A BPM change now lands on the seam, as the original claimed.
 
 The original states: *"BPM changes take effect on the next loop iteration."* **The opposite is true.**
 

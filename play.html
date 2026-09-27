@@ -4193,6 +4193,7 @@ body.act-three .npc-card-chip { filter: saturate(0.85); }
         <div class="stat-row" id="s-dis-row" style="display:none"><span class="stat-lbl">😴 DIS</span><span class="stat-val danger" id="s-dis-count"></span></div>
         <div class="stat-row"><span class="stat-lbl">⚠ Notoriety</span><span class="stat-val" id="s-notoriety">3</span></div>
         <div class="stat-row"><span class="stat-lbl">🏁 CP</span><span class="stat-val" id="s-checkpoint">Start</span></div>
+        <div class="stat-row"><span class="stat-lbl">🎵 Organ</span><button class="stat-val" id="s-organ" onclick="_organToggle()" style="background:none;border:0;padding:0;font:inherit;color:inherit;cursor:pointer" title="Play the organ under the story">off</button></div>
       </div>
     </div>
 
@@ -34932,6 +34933,7 @@ function storyRender(node, prefix) {
   }
   _questsByNodeRevalidate();   // §DX-02ea — one size guard per arrival; both activation passes below get indexFresh
   const lootMsg  = storyCollectLoot(node);
+  _organSetStops();
   // §VM-01-G3 — activate this node's declaratively-gated quests BEFORE the render body, so
   // per-node UI (Solvak's button, the CDG boss buttons) keyed on 'active' status renders in
   // the SAME arrival — exactly as the retired inline activation stanzas did. The end-of-render
@@ -36339,6 +36341,171 @@ function storyRender(node, prefix) {
   _updateWaypointBtn();
   _updateHuntBtn();   // §KG-01: reflect Hunt Mode state on the d-pad toggle (also after a save loads)
 }
+
+// ── The organ (§AUDIO-01) ────────────────────────────────────────────────────
+// The additive pipe organ of src/sources/5thOrgan.html without its control panel: a pool of
+// twelve voices, each six sine harmonics through a lowpass, looping a two-voice canon on the
+// Op.67 motif. Silent until 🎵 is pressed, because a page may only start audio from a click.
+// storyRender sets three stops from the run: void pressure deepens the harmonic falloff, the
+// story act opens the upper harmonics, and the doom clock closes the lowpass toward Day 49.
+const ORGAN_MOTIF = [   // [16th-note beat, MIDI note, length in 16ths, velocity]
+  [0, 67, 2, 0.85], [2, 67, 2, 0.85], [4, 67, 2, 0.85], [6, 63, 8, 1.00],
+  [14, 65, 2, 0.85], [16, 65, 2, 0.85], [18, 65, 2, 0.85], [20, 62, 8, 1.00],
+];
+const ORGAN_MOTIF_LEN = 28;
+const ORGAN_HARMONICS = 6;
+// Flat drawbars under a 6 dB/octave falloff give the 1/n spectrum of a Principal. The source
+// organ shipped 1/n drawbars AND the falloff, which multiply to 1/n², a Flute (§DX-02am).
+const ORGAN = {
+  bpm: 72, roundOff: 14, reps: 4,
+  drawbars: [1, 1, 1, 1, 1, 1], falloffDB: 6, attackMs: 10, releaseMs: 200,
+  masterVol: 0.3, cutHz: 5000, filterQ: 0.707,
+};
+let _organCtx = null, _organOut = null, _organTimer = null;
+let _organPlaying = false, _organEvents = [], _organSpan = 0, _organStart = 0, _organIdx = 0;
+const _organPool = Array.from({ length: 12 }, () => ({ active: false, midi: -1, track: -1, vel: 0, startTime: 0, gen: 0, gain: null, filter: null, oscs: [] }));
+
+function _organHarmAmp(h) {
+  return ORGAN.drawbars[h - 1] * Math.pow(10, -(ORGAN.falloffDB * Math.log2(h)) / 20);
+}
+
+function _organNoteOn(midi, vel, track, when) {
+  let slot = _organPool.find(v => !v.active);
+  if (!slot) { slot = _organPool.reduce((a, b) => a.startTime < b.startTime ? a : b); _organShut(slot, when); }
+  const ctx = _organCtx, f0 = 440 * Math.pow(2, (midi - 69) / 12);
+  const g = ctx.createGain();
+  g.gain.setValueAtTime(0, when);
+  g.gain.linearRampToValueAtTime(vel * 0.065, when + ORGAN.attackMs / 1000);
+  const flt = ctx.createBiquadFilter();
+  flt.type = 'lowpass'; flt.frequency.value = ORGAN.cutHz; flt.Q.value = ORGAN.filterQ;
+  g.connect(flt); flt.connect(_organOut);
+  const oscs = [];
+  for (let h = 1; h <= ORGAN_HARMONICS; h++) {
+    const osc = ctx.createOscillator(), hg = ctx.createGain();
+    osc.type = 'sine'; osc.frequency.value = f0 * h; hg.gain.value = _organHarmAmp(h);
+    osc.connect(hg); hg.connect(g); osc.start(when);
+    oscs.push({ osc, hg });
+  }
+  Object.assign(slot, { active: true, midi, track, vel, startTime: when, gain: g, filter: flt, oscs, gen: slot.gen + 1 });
+}
+
+function _organShut(slot, when) {
+  if (!slot.active) return;
+  slot.active = false;
+  const gen = slot.gen, g = slot.gain, flt = slot.filter, oscs = slot.oscs;
+  const relStart = Math.max(when, slot.startTime + ORGAN.attackMs / 1000);
+  const stopAt = relStart + ORGAN.releaseMs / 1000;
+  g.gain.setValueAtTime(slot.vel * 0.065, relStart);
+  g.gain.linearRampToValueAtTime(0, stopAt);
+  oscs.forEach(({ osc }) => { try { osc.stop(stopAt + 0.02); } catch (e) {} });
+  setTimeout(() => {
+    if (slot.gen !== gen) return;
+    try { oscs.forEach(({ osc, hg }) => { osc.disconnect(); hg.disconnect(); }); g.disconnect(); flt.disconnect(); } catch (e) {}
+  }, Math.max(50, (stopAt - _organCtx.currentTime) * 1000 + 150));
+}
+
+// The two canon voices play the same motif, so a pitch alone does not say whose note ends:
+// the release matches the track as well, or the voices trade durations (§DX-02an b).
+function _organNoteOff(midi, track, when) {
+  let best = null;
+  for (const v of _organPool) if (v.active && v.midi === midi && v.track === track && (!best || v.startTime > best.startTime)) best = v;
+  if (best) _organShut(best, when);
+}
+
+function _organBuildSeq() {
+  const s16 = 60 / ORGAN.bpm / 4, events = [];
+  [0, ORGAN.roundOff].forEach((startBeat, track) => {
+    for (let rep = 0; rep < ORGAN.reps; rep++) {
+      const base = (startBeat + rep * ORGAN_MOTIF_LEN) * s16;
+      for (const [beat, midi, dur, vel] of ORGAN_MOTIF) {
+        const on = base + beat * s16;
+        events.push({ t: on, on: true, midi, vel, track });
+        events.push({ t: on + dur * s16 * 0.92, on: false, midi, track });
+      }
+    }
+  });
+  events.sort((a, b) => a.t - b.t);
+  return { events, span: (ORGAN.roundOff + ORGAN.reps * ORGAN_MOTIF_LEN) * s16 };
+}
+
+// A pass advances by the span of the events it just played, and the next pass is rebuilt from
+// the settings as they are now, so a tempo change lands on the loop seam instead of pushing
+// half a pass into the past (§DX-02an a).
+function _organNextPass() {
+  _organStart += _organSpan;
+  ({ events: _organEvents, span: _organSpan } = _organBuildSeq());
+  _organIdx = 0;
+}
+
+function _organTick() {
+  if (!_organPlaying) return;
+  const now = _organCtx.currentTime, horizon = now + 0.15;
+  while (_organIdx < _organEvents.length) {
+    const ev = _organEvents[_organIdx], t = _organStart + ev.t;
+    if (t > horizon) break;
+    const at = Math.max(t, now + 0.001);
+    if (ev.on) _organNoteOn(ev.midi, ev.vel, ev.track, at); else _organNoteOff(ev.midi, ev.track, at);
+    _organIdx++;
+  }
+  if (_organIdx >= _organEvents.length) _organNextPass();
+  _organTimer = setTimeout(_organTick, 50);
+}
+
+function _organSetStops() {
+  const act = Math.min(8, Math.max(1, S_story.storyAct || 1));
+  ORGAN.falloffDB = 6 + 6 * Math.min(1, (S_story.voidPressure || 0) / 10);
+  const upper = 0.25 + 0.75 * (act - 1) / 7;
+  ORGAN.drawbars = [1, 1, 1, upper, upper, upper];
+  ORGAN.cutHz = 800 + 4200 * Math.max(0, Math.min(1, (49 - (S_story.day || 1)) / 48));
+  if (!_organCtx) return;
+  const now = _organCtx.currentTime;
+  for (const v of _organPool) {
+    if (!v.active) continue;
+    v.filter.frequency.setTargetAtTime(ORGAN.cutHz, now, 0.5);
+    v.oscs.forEach(({ hg }, i) => hg.gain.setTargetAtTime(_organHarmAmp(i + 1), now, 0.5));
+  }
+}
+
+function _organStartPlay() {
+  if (!_organCtx) {
+    const AC = window.AudioContext || window.webkitAudioContext;
+    if (!AC) return false;
+    _organCtx = new AC();
+    _organOut = _organCtx.createGain();
+    _organOut.gain.value = ORGAN.masterVol;
+    _organOut.connect(_organCtx.destination);
+  }
+  if (_organCtx.state === 'suspended') _organCtx.resume();
+  _organSetStops();
+  ({ events: _organEvents, span: _organSpan } = _organBuildSeq());
+  _organStart = _organCtx.currentTime + 0.08;
+  _organIdx = 0;
+  _organPlaying = true;
+  _organTick();
+  return true;
+}
+
+function _organStopPlay() {
+  _organPlaying = false;
+  if (_organTimer) clearTimeout(_organTimer);
+  if (_organCtx) for (const v of _organPool) _organShut(v, _organCtx.currentTime);
+}
+
+function _organToggle() {
+  const on = _organPlaying ? (_organStopPlay(), false) : _organStartPlay();
+  try { localStorage.setItem('coc_organ', on ? '1' : '0'); } catch (e) {}
+  const btn = document.getElementById('s-organ');
+  if (btn) btn.textContent = on ? 'on' : 'off';
+}
+
+// A player who left the organ on hears it again from their first click, which is the earliest
+// moment a page is allowed to start audio.
+document.addEventListener('pointerdown', function _organResume() {
+  document.removeEventListener('pointerdown', _organResume);
+  let wanted = false;
+  try { wanted = localStorage.getItem('coc_organ') === '1'; } catch (e) {}
+  if (wanted && !_organPlaying) setTimeout(() => { if (!_organPlaying) _organToggle(); }, 0);
+});
 
 function storyUpdateStatus() {
   const hpEl = document.getElementById('s-hp');
