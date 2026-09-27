@@ -192,7 +192,7 @@ check:anchors           3,162 anchors / 76 docs, 0 dead (117 stale hints = stand
 ## 8. Defects found → BACKLOG
 
 - **§DX-02ci** 🟢 — the parity guard's check (c) is **vacuous**. `LADDER` has been empty since
-  `a79c76a`, so `src/scripts/check-ladder-migration.js:// (c) no double-grant@245` iterates nothing and
+  `a79c76a`, so check (c), *`// (c) no double-grant`*@245 (retired by §DX-02ci on 2026-09-26, which re-pointed (c) at every `itemChain` quest's completion bits), iterates nothing and
   cannot fail. The risk it guarded is real and *moved*: a double-grant would now come from an
   `onComplete` chain, not a ladder branch. No live double-grant exists today (checked: 0 of the 22
   manifest quests push inventory in their own block), so this is coverage, not a red. The same file's

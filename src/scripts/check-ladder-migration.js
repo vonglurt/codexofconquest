@@ -3,29 +3,25 @@
 'use strict';
 // §EDITOR-01-D-FU(b) — reward-ladder → itemChain migration parity guard.
 //
-// The 61-branch `if (id === 'quest_…')` reward ladder in storyCheckQuests is being
-// migrated, branch by branch, so the *inventory* effect (push/filter) moves into the
-// quest's declarative `itemChain` while gold/favor/XP/flag/narrative-msg stay as code
-// (lab-reports/lab-report-editor01d-fu-b-ladder-migration.md, §3–4).
+// The per-id `if (id === 'quest_…')` reward ladder in storyCheckQuests is gone: waves
+// b2a/b2b moved each branch's inventory effect into the quest's declarative `itemChain`,
+// and §ARCH-01 W7c (`a79c76a`) moved the rest into `onComplete` bit chains and deleted
+// the ladder (lab-reports/lab-report-editor01d-fu-b-ladder-migration.md, §3–4).
 //
-// This guard is the safety net (lab report §3.6). It is MANIFEST-DRIVEN: each migrated
-// quest gets one MIGRATION_MANIFEST entry recording the item(s) its ladder branch USED
-// to push/remove. For every entry the guard asserts, against the LIVE game file:
+// MIGRATION_MANIFEST records, per migrated quest, the item(s) its ladder branch used to
+// push/remove. Against the LIVE game file the guard asserts:
 //   (a) inventory parity — running _applyItemChain on the quest's real itemChain from
 //       an empty inventory reproduces exactly the recorded grant(s) (field-by-field over
-//       the allow-list) and applies the recorded take(s);
+//       _applyItemChain's own grant fields) and applies the recorded take(s);
 //   (b) silent grants — each migrated grant step carries silent:true, so the auto
-//       "<item> obtained." line cannot double up with the ladder's verbatim narrative msg;
-//   (c) no double-grant — that quest's surviving ladder branch no longer pushes the
-//       migrated item name (catches a half-finished migration that grants twice);
+//       "<item> obtained." line cannot double up with the quest's narrative msg;
+//   (c) no double-grant — for every quest whose itemChain grants an item, no other
+//       completion path (a `reward` bit's items, a `_legacy_fn` bit's pushes, the
+//       quest's `items`) grants the same name;
 //   (d) name preservation — a migrated item name referenced by KEY_EVENTS[].item or any
 //       quest's completeItems still appears in the quest's itemChain (those references
-//       match by string; a rename silently breaks a key event / completion).
-//
-// At Inc 2 the manifest is EMPTY: the guard ships green as a baseline harness, proving
-// the extractor reads the ladder + KEY_EVENTS + QUEST_DB correctly. Waves b2a (Inc 3)
-// and b2b (Inc 5) add entries; this file does not change shape. Pure/read-only — never
-// writes the game file.
+//       match by string; a rename silently breaks a key event / completion);
+//   and that the ladder stays deleted. Pure/read-only — never writes the game file.
 
 const fs = require('fs');
 const path = require('path');
@@ -91,9 +87,9 @@ const LADDER = new Map();
     LADDER.set(m[1], ladderFn.slice(m.index, i));
   }
 }
-// Names a branch still pushes (any `name:'…'` inside the branch body — push objects only;
-// `take` filters compare `i.name !== 'X'`, which is not a `name:` key, so they're excluded).
-function branchPushNames(body) {
+// Names a code body pushes (any `name:'…'` key — push objects only; `take` filters
+// compare `i.name !== 'X'`, which is not a `name:` key, so they're excluded).
+function pushNames(body) {
   const out = new Set();
   const re = /name:\s*(['"])([^'"]+)\1/g;
   let m; while ((m = re.exec(body))) out.add(m[2]);
@@ -128,8 +124,7 @@ for (const q of Object.values(WBAPI.questDb)) {
 }
 
 // ── (4) THE MIGRATION MANIFEST ───────────────────────────────────────────────────────
-// One entry per migrated quest. EMPTY at Inc 2 (baseline). Wave b2a (Inc 3) and b2b
-// (Inc 5) populate it. Shape:
+// One entry per migrated quest (waves b2a and b2b). Shape:
 //   { quest:'quest_x',
 //     grants:[{ name, icon, type, sell, desc?, /* + b1 allow-list fields */ }],
 //     takes:['Item Name', …] }            // names removed by the old branch
@@ -182,10 +177,16 @@ const MIGRATION_MANIFEST = [
     { name: 'Antecedent Seal', icon: '🏛️', type: 'relic', sell: 0 } ] },
 ];
 
-// Field allow-list a migrated grant may carry (lab report §3.1). `silent` is authoring-only.
-const GRANT_FIELDS = ['name', 'icon', 'type', 'sell', 'desc', 'readText',
-  'passive', 'bonus', 'uses', 'minLevel',
-  'atkBonus', 'dmgDie', 'dmgCount', 'dmgFlat'];
+// The grant fields _applyItemChain copies onto an item: its allow-list plus the keys of its
+// `item` literal. `once`/`silent` steer the grant and never reach the item.
+const GRANT_FIELDS = (() => {
+  const fn = extractFn('_applyItemChain');
+  const body = fn.slice(fn.indexOf("case 'grant':"), fn.indexOf("case 'take':"));
+  const allow = body.match(/for \(const f of \[([^\]]*)\]\)/);
+  const item = body.match(/const item = \{([^}]*)\}/);
+  if (!allow || !item) throw new Error('_applyItemChain: grant allow-list or item literal not found');
+  return [...item[1].matchAll(/(\w+):/g), ...allow[1].matchAll(/'(\w+)'/g)].map(m => m[1]);
+})();
 
 function fieldsEqual(got, want) {
   for (const f of GRANT_FIELDS) {
@@ -242,13 +243,6 @@ for (const entry of MIGRATION_MANIFEST) {
     ok(step && step.silent === true, `[${tag}] grant "${g.name}" is silent:true`);
   }
 
-  // (c) no double-grant — the surviving ladder branch must not still push the migrated name.
-  const body = LADDER.get(entry.quest) || '';
-  const stillPushes = branchPushNames(body);
-  for (const g of (entry.grants || [])) {
-    ok(!stillPushes.has(g.name), `[${tag}] ladder branch no longer pushes "${g.name}"`);
-  }
-
   // (d) name preservation — load-bearing names referenced elsewhere must persist in the chain.
   const chainGrantNames = new Set(chain.filter(s => s && s.action === 'grant').map(s => s.name));
   for (const g of (entry.grants || [])) {
@@ -259,7 +253,42 @@ for (const entry of MIGRATION_MANIFEST) {
   }
 }
 
+// ── (7) No double-grant: an itemChain grant must be the item's only completion grant ─
+function completionGrantNames(q) {
+  const out = new Set();
+  for (const it of (Array.isArray(q.items) ? q.items : [])) if (it && it.name) out.add(it.name);
+  for (const b of (Array.isArray(q.onComplete) ? q.onComplete : [])) {
+    if (!b) continue;
+    if (b.kind === 'reward') for (const it of (b.items || [])) if (it && it.name) out.add(it.name);
+    if (b.kind === '_legacy_fn' && b.fn && b.fn.__fn) for (const nm of pushNames(b.fn.__fn)) out.add(nm);
+  }
+  return out;
+}
+function doubleGrants(q) {
+  const other = completionGrantNames(q);
+  return (q.itemChain || []).filter(s => s && s.action === 'grant' && other.has(s.name)).map(s => s.name);
+}
+let chainQuests = 0;
+for (const id of Object.keys(WBAPI.questDb)) {
+  const chain = WBAPI.questDb[id].itemChain;
+  if (!Array.isArray(chain) || !chain.some(s => s && s.action === 'grant')) continue;
+  const r = WBAPI.entryWithFns('quest', id);
+  ok(r.ok, `[${id}] re-parses with its function bodies: ${r.error || ''}`);
+  if (!r.ok) continue;
+  chainQuests++;
+  const dup = doubleGrants(r.entry);
+  ok(!dup.length, `[${id}] itemChain and another completion path both grant: ${dup.join(', ')}`);
+}
+ok(chainQuests >= MIGRATION_MANIFEST.length, `(c) walked ${chainQuests} itemChain quests, at least the ${MIGRATION_MANIFEST.length} migrated`);
+{ const plant = (extra) => doubleGrants({ itemChain: [{ action: 'grant', name: 'Planted Relic' }], ...extra }).join();
+  ok(plant({ onComplete: [{ kind: 'reward', items: [{ name: 'Planted Relic' }] }] }) === 'Planted Relic', 'planted: a reward bit granting the chain item is caught');
+  ok(plant({ onComplete: [{ kind: '_legacy_fn', fn: { __fn: "() => { S_story.inventory.push({ name:'Planted Relic' }); }" } }] }) === 'Planted Relic', 'planted: a _legacy_fn push of the chain item is caught');
+  ok(plant({ items: [{ name: 'Planted Relic' }] }) === 'Planted Relic', "planted: the quest's own items granting the chain item is caught");
+  ok(plant({ onComplete: [{ kind: 'reward', items: [{ name: 'Other' }] }] }) === '', 'planted: a different item is not a double-grant'); }
+ok(GRANT_FIELDS.includes('heal') && GRANT_FIELDS.includes('name') && !GRANT_FIELDS.includes('silent'), `GRANT_FIELDS derived from _applyItemChain (${GRANT_FIELDS.length})`);
+
 const n = MIGRATION_MANIFEST.length;
 if (fail) { console.log(`\n✗ check-ladder-migration: ${fail} FAILED, ${pass} passed`); process.exit(1); }
 console.log(`✓ §EDITOR-01-D-FU(b) ladder migration: all ${pass} checks pass ` +
-  `(${n} quest${n === 1 ? '' : 's'} migrated; ${LADDER.size} ladder branches, ${KEY_EVENT_ITEMS.size} key-event items indexed)`);
+  `(${n} quest${n === 1 ? '' : 's'} migrated; ${chainQuests} itemChain quests free of double-grants; ` +
+  `${LADDER.size} ladder branches, ${KEY_EVENT_ITEMS.size} key-event items indexed)`);
