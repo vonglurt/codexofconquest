@@ -128,7 +128,7 @@ not get updated, so the collision is silent and permanent.*
 1. **§AUDIT-03t — 36 nodes carry `act:NaN`, and two render `undefined` to the player.** Traced
    directly from this report's `NodeEntry` typedef claim *"`act` — story act (1–8)"*. Verified:
    36 `NODE_MAP` entries have `act:NaN` (`num` 181–443, incl. `CI`/`DNG`/`BOR`/`RON`). The three
-   readers fail in three different ways — `S_story.actNumber = node.act || 1@34822` silently
+   readers fail in three different ways — *`S_story.actNumber = node.act || 1`*@34822 silently
    coerces to Act 1 (NaN is falsy); `ACT_NAMES[node.act]@34852` yields `undefined`, so the act
    badge renders **"— undefined —"** and `#s-node-act` renders **"undefined"**; the map panel
    renders **"Act NaN"**. `const ACT_NAMES@9430` is a 9-element array with no NaN slot. Player-visible

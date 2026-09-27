@@ -22,7 +22,7 @@ test.describe('§DX-02ex — the debt left alone and the debt released are two s
     await seedAndLoad(page);
     const r = await page.evaluate(() => {
       storyNewGame({ str: 10, dex: 8, con: 8, int: 8, wis: 8, cha: 8 });
-      S_story.actNumber = 4;
+      S_story.storyAct = 4;
       S_story.quillQuestComplete = false;
       _checkWorldProgressionEvents();
       // the injection lands at the tail of a cycling array — read a whole cycle
@@ -70,7 +70,7 @@ test.describe('§DX-02ex — the debt left alone and the debt released are two s
     await seedAndLoad(page);
     const r = await page.evaluate(() => {
       storyNewGame({ str: 10, dex: 8, con: 8, int: 8, wis: 8, cha: 8 });
-      S_story.actNumber = 4;
+      S_story.storyAct = 4;
       _checkWorldProgressionEvents();
       S_story.quillQuestComplete = true;
       return {

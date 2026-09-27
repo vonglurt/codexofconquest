@@ -18,12 +18,12 @@ test.describe('Layer 44 — Living World', () => {
   test('world-progression notes land in S_story.worldLog, and the panel renders them', async ({ page }) => {
     await seedAndLoad(page, {
       currentCode: 'LHR', visited: { LHR: true },
-      actNumber: 3, bruhnsDepthsReported: true, worldEventsFired: [], log: ['TLL', 'MHQ'],
+      storyAct: 3, bruhnsDepthsReported: true, worldEventsFired: [], log: ['TLL', 'MHQ'],
     });
     await dismissContinue(page);
 
     const out = await page.evaluate(() => {
-      S_story.actNumber = 3;
+      S_story.storyAct = 3;
       S_story.bruhnsDepthsReported = true;
       S_story.worldEventsFired = [];
       S_story.log = ['TLL', 'MHQ'];
@@ -237,10 +237,10 @@ test.describe('Layer 44 — Living World', () => {
 
   // ── F8: the Act III weight is live ──
   test('Act III adds body.act-three, which desaturates NPC cards', async ({ page }) => {
-    await seedAndLoad(page, { currentCode: 'LHR', visited: { LHR: true }, actNumber: 3 });
+    await seedAndLoad(page, { currentCode: 'LHR', visited: { LHR: true }, storyAct: 3 });
     await dismissContinue(page);
     const out = await page.evaluate(() => {
-      S_story.actNumber = 3;
+      S_story.storyAct = 3;
       S_story.actThreeWeightApplied = false;
       _applyActThreeWeight();
       return { cls: document.body.className.includes('act-three'),

@@ -128,7 +128,7 @@ between three slices. Recorded so neither is quietly dropped a fourth time.
 **F6 — the act-leg thread closes for this region.** One act comparison remains, `node.code === 'NUE'
 && (S_story.actNumber || 1) >= 3`. **`NUE` is `act:6`**, so the leg is not dead — it is **vacuously
 true**, and has been since it shipped. Nothing to fix; recorded so the next reader need not
-re-derive it. *(§DOC-02db later proved the general case: `S_story.actNumber = node.act || 1@34822` is
+re-derive it. *(§DOC-02db later proved the general case: *`S_story.actNumber = node.act || 1`*@34822 is
 the field's only writer, so every such test asks "am I standing on an act-N tile." → §DX-02ft.)*
 
 **The ASK — one open knob.** *When a verb is unaffordable, show-and-refuse or hide/disable?*

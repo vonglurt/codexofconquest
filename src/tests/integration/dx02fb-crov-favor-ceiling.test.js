@@ -26,7 +26,7 @@ const PIT_SEED = {
   pitTrainingWins: 0,
   npcFavorability: {},
   npcVisitCounts: { crov: 2 },
-  actNumber: 8,
+  storyAct: 8,
 };
 
 // Run the real completion driver at HKG after setting the shared win counter.
@@ -117,7 +117,7 @@ test.describe('§DX-02fb — crov reaches Dear-Friend+3, and both readers above 
       S_story.quests = { quest_pit_debut: 'active', quest_pit_training: 'active' };
       S_story.pitTrainingWins = 0;
       S_story.npcVisitCounts = { crov: 2 };
-      S_story.actNumber = 8;
+      S_story.storyAct = 8;
       const ev = WORLD_PROGRESSION_EVENTS.find(e => e.id === 'weckmann_class');
       const traceBefore = _checkFrobergerTrace('crov');
       const eventBefore = ev.condition();

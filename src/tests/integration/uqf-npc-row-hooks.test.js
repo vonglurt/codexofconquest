@@ -95,10 +95,10 @@ test.describe('§VM-01-G2b — npc-row hooks', () => {
     await expect(page.locator('#story-npc-cards-row')).toContainText('📋 The code on the wall.');
     await expect(page.locator('#story-npc-cards-row')).toContainText('📒 Read the ledger.');
 
-    await renderAt(page, 'TLL', { gameDay: 2, actNumber: 4, npcFavorability: { brynn: 1 } });
+    await renderAt(page, 'TLL', { gameDay: 2, storyAct: 4, npcFavorability: { brynn: 1 } });
     await expect(page.locator('#story-npc-cards-row')).toContainText('📒 The ledger.');
 
-    await renderAt(page, 'TLL', { gameDay: 3, actNumber: 6, npcFavorability: { brynn: 3 },
+    await renderAt(page, 'TLL', { gameDay: 3, storyAct: 6, npcFavorability: { brynn: 3 },
       brynnKeeperStoryTold: true, frobergerLastEntryRead: true });
     await expect(page.locator('#story-npc-cards-row')).toContainText('🕯 Let it keep burning.');
 
@@ -140,49 +140,40 @@ test.describe('§VM-01-G2b — npc-row hooks', () => {
     expect(r.iDeacon).toBeGreaterThan(r.iGigault);     // deacon-code block follows the stall
   });
 
-  // ── the finding this migration surfaced (§VM-01-G2b-FU) ──
-  // storyRender does `S_story.actNumber = node.act || 1` on EVERY render, before this region.
-  // Every node in the Birka region is act:1, so an `actNumber >= N` (N ≥ 2) leg inside one of
-  // these blocks can never be true — the same structurally-dead act leg §VM-01-G3 found in the
-  // quest stanzas, here in five narrative beats. This test PINS the defect so the follow-up row
-  // that re-gates them (a design call: which real signal means "Act VIII"?) has to update it.
-  test('FINDING §VM-01-G2b-FU: five act-gated beats are unreachable — actNumber is node.act, and every Birka node is act 1', async ({ page }) => {
+  // §VM-01-G2b-FU / §DX-02ft — these five beats once read `actNumber`, the act of the tile under
+  // the player, and every Birka node is act 1, so none could fire. They now read `storyAct`,
+  // campaign progress derived from the shards held, which no render overwrites.
+  test('§DX-02ft: the five act-gated Birka beats read campaign progress, not the act of the tile', async ({ page }) => {
     await page.goto('/play.html');
     const r = await page.evaluate(() => {
-      const gates = {
-        'birka-lamp-inquiry': 2, 'birka-brynn-heartwood-letter': 4,
-        'birka-yael-named-report': 6, 'birka-s54-joint-witness': 7,
-        'birka-quill-couperin-farewell': 8,
-      };
+      const ids = ['birka-lamp-inquiry', 'birka-brynn-heartwood-letter', 'birka-yael-named-report',
+        'birka-s54-joint-witness', 'birka-quill-couperin-farewell'];
       const out = {};
-      for (const id of Object.keys(gates)) {
-        const h = NODE_HOOKS.find(x => x.id === id);
-        const src = h.fn.toString();
-        const code = (src.match(/node\.code === '([A-Z0-9]+)'/) || [])[1];
-        out[id] = {
-          declaredAct: gates[id],
-          nodeAct: (NODE_MAP[code] || {}).act,
-          hasActLeg: /\(S_story\.actNumber \|\| 1\) *(===|>=)/.test(src),
-        };
+      for (const id of ids) {
+        const src = NODE_HOOKS.find(x => x.id === id).fn.toString();
+        out[id] = { storyAct: /\(S_story\.storyAct \|\| 1\) *(===|>=)/.test(src), actNumber: /actNumber/.test(src) };
       }
-      // and the cascade: Beat 2 of the lamp arc waits on a flag only the dead Beat 1 writes
-      out._cascade = {
-        beat2WaitsOn: /brynnKeeperStoryTold/.test(NODE_HOOKS.find(x => x.id === 'birka-lamp-choice').fn.toString()),
-        onlyWriterIsBeat1: NODE_HOOKS.filter(x => /S_story\.brynnKeeperStoryTold = true/.test(x.fn.toString())).map(x => x.id),
-      };
-      // the mechanism itself, asserted rather than described
-      out._mechanism = /S_story\.actNumber = node\.act \|\| 1;/.test(storyRender.toString());
+      out._renderWritesAct = /S_story\.(actNumber|storyAct) *=[^=]/.test(storyRender.toString());
       return out;
     });
-    expect(r._mechanism, 'storyRender overwrites actNumber from node.act each render').toBe(true);
+    expect(r._renderWritesAct, 'storyRender no longer assigns the act on arrival').toBe(false);
     for (const id of Object.keys(r).filter(k => k[0] !== '_')) {
-      expect(r[id].hasActLeg, id + ' still carries its act leg').toBe(true);
-      expect(r[id].nodeAct, id + ' sits on an act-1 node').toBe(1);
-      expect(r[id].declaredAct, id + ' demands an act its node can never report').toBeGreaterThan(r[id].nodeAct);
+      expect(r[id].storyAct, id + ' gates on storyAct').toBe(true);
+      expect(r[id].actNumber, id + ' no longer reads actNumber').toBe(false);
     }
-    expect(r._cascade.beat2WaitsOn, 'lamp Beat 2 gates on brynnKeeperStoryTold').toBe(true);
-    expect(r._cascade.onlyWriterIsBeat1, 'and the dead Beat 1 is its only writer — the whole §XXXV lamp arc is unreachable')
-      .toEqual(['birka-lamp-inquiry']);
+  });
+
+  test('§DX-02ft: Act VIII opens with the seventh shard, and Brynn\'s farewell fires at TLL', async ({ page }) => {
+    await renderAt(page, 'TLL', { shards: 6, npcFavorability: { brynn: 1 } });
+    const before = await page.evaluate(() => ({ act: S_story.storyAct, fired: !!S_story.act8FarewellBrynn }));
+    expect(before).toEqual({ act: 7, fired: false });
+
+    await renderAt(page, 'TLL', { shards: 7, npcFavorability: { brynn: 1 } });
+    const after = await page.evaluate(() => ({
+      act: S_story.storyAct, fired: !!S_story.act8FarewellBrynn,
+      loaf: S_story.inventory.filter(i => i.name === "Brynn's Loaf").length,
+    }));
+    expect(after).toEqual({ act: 8, fired: true, loaf: 1 });
   });
 
   test('source guard: the 29 bodies are gone from storyRender; every dispatch call sits in its place', async ({ page }) => {

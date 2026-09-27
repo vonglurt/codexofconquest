@@ -23141,7 +23141,7 @@ const _S_DEFAULTS = () => ({
   brynThirdStepFixed: false, brynFirewoodBrought: false, brynPantryRestocked: false,
   brynLedgerBalance: -8,
   brynnsJournalRead: false, pachelbelPaidBack: false, quillQuestComplete: false,
-  actNumber: 1, actThreeWeightApplied: false, romanceQuotesDelivered: [], npcRomanceVignetteDelivered: {},
+  storyAct: 1, actThreeWeightApplied: false, romanceQuotesDelivered: [], npcRomanceVignetteDelivered: {},
   s29LineDelivered: false, s49BrynnDelivered: false, s49SweelinckDelivered: false,
   raisonToolsUsed: false, s54JointMomentDelivered: false, s55MapLineDelivered: false,
   s51NorthRoadBought: false, s51ManifoldBought: false, s51LastStockBought: false,
@@ -23493,7 +23493,7 @@ function _luckMod() { return Math.floor((_calcLuck() - 10) / 2); }
 
 /* ── Layer 61: Corelli appearance helper ── */
 function _checkCorelliAppearance(nodeCode) {
-  const act = S_story.actNumber || 1;
+  const act = S_story.storyAct || 1;
   const count = S_story.corelli_encounter_count || 0;
   return CORELLI_APPEARANCES.find(a => a.nodeCode === nodeCode && act >= a.actMin && count < a.index) || null;
 }
@@ -23643,7 +23643,7 @@ function _getNPCDialogue(npcKey) {
     pool = [...pool, _trace.text];
   }
   // L44-J: Act III weight injection — one-time per NPC at Friendly+
-  if (fav >= 1 && (S_story.actNumber || 1) >= 3
+  if (fav >= 1 && (S_story.storyAct || 1) >= 3
       && NPC_ACT_THREE_LINES[npcKey]
       && !S_story['actThreeLine_' + npcKey]) {
     S_story['actThreeLine_' + npcKey] = true;
@@ -23750,7 +23750,7 @@ function _renderNpcCard(key, container) {
   // Layer 60: Act VIII farewell beat
   { const flagKey = 'act8Farewell' + key[0].toUpperCase() + key.slice(1);
     const beat = ACT8_FAREWELL_BEATS[key];
-    if (beat && (S_story.actNumber || 1) === 8
+    if (beat && (S_story.storyAct || 1) === 8
         && _npcFavor(key) >= 1 && !S_story[flagKey]) {
       S_story[flagKey] = true;
       const beatText = typeof beat.text === 'function' ? beat.text() : beat.text;
@@ -23889,6 +23889,12 @@ function _splitWorldNotesFromTrail() {
   S_story.worldLog = [...notes.map(e => ({ text: e.text, day: e.day || 1 })), ...(S_story.worldLog || [])];
 }
 
+// The act is campaign progress: each shard held opens the next act, and the seventh opens Act VIII, the eve of the Convergence.
+// It never falls, so a save from before the field existed derives it from the shards it holds.
+function _advanceStoryAct() {
+  S_story.storyAct = Math.max(S_story.storyAct || 1, Math.min(8, (S_story.shards || 0) + 1));
+}
+
 // Old saves carry both meanings in `couperiDebtDegraded`; only Layer 69's writer could set it while `quillQuestComplete` was true.
 function _splitCouperiDebtMeaning() {
   if (S_story.couperiDebtReleased) return;
@@ -23907,6 +23913,7 @@ function storyLoadSave(key) {
     Object.assign(S_story, _S_DEFAULTS(), JSON.parse(raw));
     _splitWorldNotesFromTrail();
     _splitCouperiDebtMeaning();
+    _advanceStoryAct();
     return true;
   } catch(e) { return false; }
 }
@@ -23925,6 +23932,7 @@ function storyCheckContinue() {
       Object.assign(S_story, _S_DEFAULTS(), save);
       _splitWorldNotesFromTrail();
       _splitCouperiDebtMeaning();
+      _advanceStoryAct();
       const cpNode = NODE_MAP[S_story.checkpointNode] || NODE_MAP['LHR'];
       document.getElementById('gameover-cp').textContent = 'Last checkpoint: ' + (cpNode.label.split(' — ')[0]);
       _populateGameoverChronicle();
@@ -24264,7 +24272,7 @@ function _renderPachelbelSpecials() {
   if (prev) prev.remove();
   if (S_story.currentCode !== 'LLA') return;
   const fav = _npcFavor('pachelbel');
-  const act = S_story.actNumber || 1;
+  const act = S_story.storyAct || 1;
   const section = document.createElement('div');
   section.id = 'pachelbel-specials';
   section.style.cssText = 'margin-top:10px;border-top:1px solid #3a2010;padding-top:8px;';
@@ -27035,7 +27043,7 @@ function _getTownCrierLine() {
   for (const npc of npcOrder) {
     if (_npcFavor(npc) >= 2 && TOWN_CRIER_LINES.npcs[npc]) return TOWN_CRIER_LINES.npcs[npc];
   }
-  const act = S_story.actNumber || 1;
+  const act = S_story.storyAct || 1;
   const actLines = TOWN_CRIER_LINES.acts[act] || TOWN_CRIER_LINES.acts[1];
   return actLines[(S_story.gameDay || 0) % actLines.length];
 }
@@ -27590,12 +27598,12 @@ const PETRA_STALL_STATES = [ // → doc: lab-reports/lab-report-living-world.md 
 ];
 
 const WORLD_PROGRESSION_EVENTS = [ // → doc: world.md §FL4 — Rest & Void Tide (condition-gated journal notes; run per node visit)
-  { id:'auros_report',   condition: () => S_story.actNumber >= 3 && S_story.bruhnsDepthsReported,        journalNote: "Structural assessment submitted — Auros's name on the cover page.", action: ()=>{} },
-  { id:'raison_family',  condition: () => S_story.actNumber >= 4 && S_story.pachelbelPaidBack,           journalNote: "A courier delivered something to BA. Pachelbel signed for it.", action: ()=>{} },
-  { id:'brynn_letter',   condition: () => S_story.actNumber >= 3 && S_story.brynnsJournalRead,           journalNote: "A letter arrived for Brynn at the inn. The seal is from the Heartwood district.", action: ()=>{} },
-  { id:'yael_report',    condition: () => S_story.actNumber >= 5 && S_story.yaelEscortUsed,              journalNote: "City records show a new internal affairs submission. Source: anonymous. It wasn't anonymous.", action: ()=>{} },
-  { id:'weckmann_class', condition: () => S_story.actNumber >= 6 && _npcFavor('crov') >= 3,             journalNote: "Weckmann added a second training session. Thursdays, younger fighters.", action: ()=>{} },
-  { id:'quill_debt',     condition: () => S_story.actNumber >= 4 && !S_story.quillQuestComplete,        journalNote: null, action: () => { S_story.couperiDebtDegraded = true; } }
+  { id:'auros_report',   condition: () => S_story.storyAct >= 3 && S_story.bruhnsDepthsReported,        journalNote: "Structural assessment submitted — Auros's name on the cover page.", action: ()=>{} },
+  { id:'raison_family',  condition: () => S_story.storyAct >= 4 && S_story.pachelbelPaidBack,           journalNote: "A courier delivered something to BA. Pachelbel signed for it.", action: ()=>{} },
+  { id:'brynn_letter',   condition: () => S_story.storyAct >= 3 && S_story.brynnsJournalRead,           journalNote: "A letter arrived for Brynn at the inn. The seal is from the Heartwood district.", action: ()=>{} },
+  { id:'yael_report',    condition: () => S_story.storyAct >= 5 && S_story.yaelEscortUsed,              journalNote: "City records show a new internal affairs submission. Source: anonymous. It wasn't anonymous.", action: ()=>{} },
+  { id:'weckmann_class', condition: () => S_story.storyAct >= 6 && _npcFavor('crov') >= 3,             journalNote: "Weckmann added a second training session. Thursdays, younger fighters.", action: ()=>{} },
+  { id:'quill_debt',     condition: () => S_story.storyAct >= 4 && !S_story.quillQuestComplete,        journalNote: null, action: () => { S_story.couperiDebtDegraded = true; } }
 ];
 
 const NODE_NPC_KEYS = { // → doc: world.md §PART FOUR — ALL NAMED NPCs (node code → primary NPC key; read by _getNodeMapColor() + _getFarewell())
@@ -27793,7 +27801,7 @@ function _checkWorldProgressionEvents() {
 
 function _applyActThreeWeight() {
   if (S_story.actThreeWeightApplied) return;
-  if ((S_story.actNumber || 1) < 3) return;
+  if ((S_story.storyAct || 1) < 3) return;
   S_story.actThreeWeightApplied = true;
   document.body.classList.add('act-three');
 }
@@ -27925,7 +27933,7 @@ const NIVERS_DIALOGUE = "Evening.";
 // would ever see. Ordering them newest-first makes the line advance with the story.
 const YAEL_PATROL_NODES = [ // → doc: world.md §Yael's Patrol Arc
   { condition: () => !!(S_story.yaelNamedReportDelivered), nodeSlug:'MSY', line:"The second report is filed. I'm not watching to see if it disappears." },
-  { condition: () => _npcFavor('yael') >= 3 && (S_story.actNumber || 1) >= 3, nodeSlug:'MHQ', line:"Checking on Quill. Don't tell him." },
+  { condition: () => _npcFavor('yael') >= 3 && (S_story.storyAct || 1) >= 3, nodeSlug:'MHQ', line:"Checking on Quill. Don't tell him." },
   { condition: () => !!(S_story.yaelEscortUsed), nodeSlug:'TLL', line:"I walk this route now. It adds six minutes. Worth it." },
   { condition: () => !!(S_story.quests && S_story.quests['quest_slums_cleanup'] === 'complete'), nodeSlug:'BMA', line:"Showing my face. They should see someone who isn't making a report." },
   { condition: () => (S_story.gameDay || 0) % 2 === 1, nodeSlug:'MSY', line:"Eastern check. You're traveling late." }
@@ -30348,6 +30356,7 @@ function storyCollectLoot(node) {
     added.push(name);
     if (type === 'shard') {
       S_story.shards = Math.min(7, S_story.shards + 1);
+      _advanceStoryAct();
       // Layer 57: auto-add shard origin note
       const shardM = name.match(/#(\d)/);
       if (shardM) {
@@ -32408,7 +32417,7 @@ function _nodeHookBirkaPachelbelLedger(node, { npcRowDiv }) {
 }
 function _nodeHookBirkaQuillCouperinFarewell(node) {
       // ── Layer 69 §XXXIV — Act VIII: Quill visits LLA to close the Couperin estate ledger ──
-      if (node.code === 'LLA' && (S_story.actNumber || 1) === 8
+      if (node.code === 'LLA' && (S_story.storyAct || 1) === 8
           && _npcFavor('quill') >= 1 && !S_story.act8FarewellQuill) {
         S_story.act8FarewellQuill = true;
         const beatText = typeof ACT8_FAREWELL_BEATS.quill.text === 'function'
@@ -32780,7 +32789,7 @@ function _nodeHookBirkaNoFishingSign(node, { npcRowDiv }) {
 }
 function _nodeHookBirkaS54JointWitness(node) {
       // ── Layer 66a: S54 Yael + Brynn joint witness at LHR (Act VIII) ──
-      if (node.code === 'LHR' && (S_story.actNumber || 1) >= 7
+      if (node.code === 'LHR' && (S_story.storyAct || 1) >= 7
           && _npcFavor('yael') >= 1 && _npcFavor('brynn') >= 1
           && !S_story.s54JointMomentDelivered) {
         S_story.s54JointMomentDelivered = true;
@@ -32790,7 +32799,7 @@ function _nodeHookBirkaS54JointWitness(node) {
 function _nodeHookBirkaYaelNamedReport(node, { npcRowDiv }) {
       // ── Layer 74 §XXXIX — Yael Named Report at LHR ──
       if (node.code === 'LHR' && _npcFavor('yael') >= 2
-          && (S_story.actNumber || 1) >= 6 && S_story.yaelEscortUsed
+          && (S_story.storyAct || 1) >= 6 && S_story.yaelEscortUsed
           && !S_story.yaelNamedReportDelivered) {
         setTimeout(() => {
           storyMsg(YAEL_NAMED_REPORT_SCENE.setup + '\n\n' + YAEL_NAMED_REPORT_SCENE.decision);
@@ -33026,7 +33035,7 @@ function _nodeHookBirkaWeckmannLog(node, { npcRowDiv }) {
 }
 function _nodeHookBirkaBrynnHeartwoodLetter(node) {
       // ── S2 / Layer 73 §XXXVIII: Brynn Heartwood Letter — fav-gated, at TLL Act IV+, Entry 7 read ──
-      if (node.code === 'TLL' && (S_story.actNumber || 1) >= 4
+      if (node.code === 'TLL' && (S_story.storyAct || 1) >= 4
           && !S_story.s2DaughterDelivered
           && (S_story.journalEntriesRead || []).includes(7)) {
         const fav = _npcFavor('brynn');
@@ -33044,7 +33053,7 @@ function _nodeHookBirkaBrynnRegulars(node, { npcRowDiv }) {
       if (node.code === 'TLL') {
         const regularsDiv = document.createElement('div');
         regularsDiv.style.cssText = 'margin-top:8px;';
-        const act = S_story.actNumber || 1;
+        const act = S_story.storyAct || 1;
         const ledgerOk = (S_story.brynLedgerBalance || -8) >= 0;
         let reg1 = 'The merchant in room 3 — same table, same meal, every visit.';
         let reg2 = 'An elderly woman by the fire who doesn\'t look up. She\'s been here longer than you have.';
@@ -33116,7 +33125,7 @@ function _nodeHookBirkaRoom6(node, { npcRowDiv }) {
 function _nodeHookBirkaLampInquiry(node, { npcRowDiv }) {
       // ── Layer 70 §XXXV — Beat 1: Lamp Inquiry at TLL ──
       if (node.code === 'TLL' && _npcFavor('brynn') >= 1
-          && (S_story.actNumber || 1) >= 2 && !S_story.brynnKeeperStoryTold) {
+          && (S_story.storyAct || 1) >= 2 && !S_story.brynnKeeperStoryTold) {
         const lampBtn = document.createElement('button');
         lampBtn.className = 'inv-use-btn';
         lampBtn.textContent = '🕯 Ask Brynn about the lamp in the corner.';
@@ -34905,7 +34914,6 @@ function storyRender(node, prefix) {
     S_story.playerR = NODE_COORDS[node.code].r;
     S_story.playerC = NODE_COORDS[node.code].c;
   }
-  S_story.actNumber = node.act || 1;
   _questsByNodeRevalidate();   // §DX-02ea — one size guard per arrival; both activation passes below get indexFresh
   const lootMsg  = storyCollectLoot(node);
   // §VM-01-G3 — activate this node's declaratively-gated quests BEFORE the render body, so
@@ -35024,7 +35032,7 @@ function storyRender(node, prefix) {
         }
       }
       // S55b: The Map Before the City — Sweelinck at NUE revisit after Act III, once
-      if (node.code === 'NUE' && (S_story.actNumber || 1) >= 3 && !S_story.s55SqMapLineDelivered) {
+      if (node.code === 'NUE' && (S_story.storyAct || 1) >= 3 && !S_story.s55SqMapLineDelivered) {
         const sqAllVisits = (S_story.npcVisitCounts && S_story.npcVisitCounts['sq_revisit']) || 0;
         if (sqAllVisits >= 1) {
           S_story.s55SqMapLineDelivered = true;
@@ -35513,7 +35521,7 @@ function storyRender(node, prefix) {
     // ── Layer 53: Junction Vignettes ──
     if (JUNCTION_VIGNETTES[node.code]) {
       const vig = JUNCTION_VIGNETTES[node.code];
-      const act = S_story.actNumber || 1;
+      const act = S_story.storyAct || 1;
       if (vig.actMin && act < vig.actMin) { /* not yet */ }
       else {
         const jDiv = document.createElement('div');
@@ -36602,7 +36610,7 @@ function storyConfirmSleep() {
     }
   }
   // ROMANCE_QUOTES: 15% per sleep, Act III+, no repeat
-  if ((S_story.actNumber || 1) >= 3 && ROMANCE_QUOTES.length > 0) {
+  if ((S_story.storyAct || 1) >= 3 && ROMANCE_QUOTES.length > 0) {
     const _rqDelivered = S_story.romanceQuotesDelivered || [];
     const _rqAvail = ROMANCE_QUOTES.map((_, i) => i).filter(i => !_rqDelivered.includes(i));
     if (_rqAvail.length > 0 && Math.random() < 0.15) {

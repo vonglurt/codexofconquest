@@ -145,7 +145,7 @@ test.describe('Layer 45 — Web of Connections', () => {
         S_story.yaelEscortUsed = false;
         S_story.yaelNamedReportDelivered = false;
         S_story.npcFavorability = {};
-        S_story.actNumber = 1;
+        S_story.storyAct = 1;
       };
 
       reset();
@@ -164,7 +164,7 @@ test.describe('Layer 45 — Web of Connections', () => {
       S_story.quests = Object.assign({}, S_story.quests, { quest_slums_cleanup: 'complete' });
       S_story.yaelEscortUsed = true;
       S_story.npcFavorability = { yael: 3 };
-      S_story.actNumber = 5;
+      S_story.storyAct = 5;
       const quill = look(1);
 
       reset();
@@ -172,7 +172,7 @@ test.describe('Layer 45 — Web of Connections', () => {
       S_story.yaelEscortUsed = true;
       S_story.yaelNamedReportDelivered = true;
       S_story.npcFavorability = { yael: 3 };
-      S_story.actNumber = 5;
+      S_story.storyAct = 5;
       const allOdd = look(1), allEven = look(2);
 
       return { bareOdd, bareEven, slumsOdd, slumsEven, escort, quill, allOdd, allEven,
@@ -316,7 +316,7 @@ test.describe('Layer 45 — Web of Connections', () => {
       S_story.npcFavorability = {}; S_story.pitTrainingWins = 5;
       _setNpcFavor('crov', 1);
       const ceiling = _npcFavor('crov');
-      S_story.actNumber = 8;
+      S_story.storyAct = 8;
       S_story.worldEventsFired = [];
       const ev = WORLD_PROGRESSION_EVENTS.find(e => e.id === 'weckmann_class');
       const atCeiling = ev.condition();

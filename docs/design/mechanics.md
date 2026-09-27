@@ -734,7 +734,7 @@ Click the **🛒 VENDOR** chip at any of these nodes.
 
 The BA vendor has fav-gated and act-gated items rendered by `_renderPachelbelSpecials()` (separate from the standard vendor overlay). These only appear at the BA node.
 
-**S51 — Act-gated stock** (available regardless of favorability, based on `S_story.actNumber`):
+**S51 — Act-gated stock** (available regardless of favorability, based on `S_story.storyAct`):
 
 | Item | Cost | Sell | Unlocks | Flag | Description |
 |------|------|------|---------|------|-------------|
@@ -1037,7 +1037,7 @@ Two servers sync only if their `(proto, engineVer, worldHash)` match exactly. `w
 | `S_story.frobergerLastEntryRead` | boolean | true after player finds Journal Entry 41 |
 | `S_story.journalEntriesRead` | array | entryNums of FROBERGER_JOURNAL collectible entries found |
 | `S_story.ebNegotiatedPayments` | object | ebCode → gold accepted during payment negotiation |
-| `S_story.actNumber` | number | Current act (1–8); derived from current node's `act` field |
+| `S_story.storyAct` | number | Current act (1–8), campaign progress: `1 + shards held`, never falls; advanced by `_advanceStoryAct()` on a shard pickup and on load (§DX-02ft). Not the node's `act` field |
 | `S_story.currentCode` | string | Current node code; set on each navigation event |
 | `S_story.roughWhiskeyUsed` | boolean | true after Rough Whiskey drunk-pit-fight scene fires |
 | `S_story.pitTrainingWins` | number | CY battle wins while quest_pit_training active |
@@ -1198,7 +1198,7 @@ MILEPOINT E  _magicTierAllowed(magic) — single line: level >= magic * 5
 | `storyVendorToggle()` | 8268 | Opens/closes vendor overlay; closes other overlays | DOM state | DOM story-vendor-overlay |
 | `storyRenderVendor()` | 8283 | Renders full vendor panel: sell list, shields, specials, whiskey | `S_story.inventory`, `currentCode`, `npcFavorability` | DOM vendor-* elements |
 | `_renderVendorShields()` | 8498 | Renders purchasable shield tiers; _magicTierAllowed() gate | `SHIELD_ITEMS`, `S_story.level`, `equippedShield` | DOM vendor shield list |
-| `_renderPachelbelSpecials()` | 8321 | Renders fav-gated/act-gated Pachelbel special items at BA | `npcFavorability['pachelbel']`, `actNumber`, `S_story.inventory` | DOM pachelbel-specials element |
+| `_renderPachelbelSpecials()` | 8321 | Renders fav-gated/act-gated Pachelbel special items at BA | `npcFavorability['pachelbel']`, `storyAct`, `S_story.inventory` | DOM pachelbel-specials element |
 | `storySellAll()` | 8430 | Removes all sell>0 items from inventory; credits gold | `S_story.inventory` | `S_story.inventory`, `S_story.gold` |
 | `storySellEquipment()` | 8441 | Sells unequipped weapons/shields from inventory | `S_story.inventory`, equipped tiers | `S_story.inventory`, `S_story.gold` |
 | `storyBuyPotion(tier)` | 8470 | Purchases potion of given tier; gold check | `POTION_TIERS[tier]`, `S_story.gold` | `S_story.gold`, `S_story.inventory` push |

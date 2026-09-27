@@ -294,7 +294,7 @@ vocabulary holds. The thesis gets its real test on the next content arc.
 of authored prose are unreachable, and the reason is the mechanism §VM-01-G3 already named.**
 `` `const ACT8_FAREWELL_BEATS = {@27017` `` fires from
 `` `function _renderNpcCard(key, container) {@23718` `` when `` `const beat = ACT8_FAREWELL_BEATS[key];@23721` ``
-and `(S_story.actNumber || 1) === 8`. But `` `  S_story.actNumber = node.act || 1;@34822` `` is the
+and `(S_story.actNumber || 1) === 8`. But *`S_story.actNumber = node.act || 1`*@34822 is the
 **only** writer of that field, it runs at the top of `storyRender`, and `_renderNpcCard` is called
 from exactly one place — `` `      keys.forEach(k => _renderNpcCard(k, npcRowDiv));@35387` `` —
 downstream of it. The six NPCs are pinned to their profile nodes: yael `LHR`, brynn `TLL`, quill

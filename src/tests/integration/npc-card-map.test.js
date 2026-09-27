@@ -138,7 +138,7 @@ test.describe('§NPC-01-C — meta.enemy footer at Friendly (folds in §POT-C2)'
 
       const render = fav => {
         S_story.npcFavorability = { [key]: fav };
-        S_story.actNumber = 1;            // avoid Act-III / Act-8 one-time injections (meta preserved either way)
+        S_story.storyAct = 1;            // avoid Act-III / Act-8 one-time injections (meta preserved either way)
         S_story.yaelOnboardingSeen = true; // take the normal tier pool, not the onboarding early-return
         const box = document.createElement('div');
         _renderNpcCard(key, box);
@@ -189,7 +189,7 @@ test.describe('§NPC-01-C — meta.enemy footer at Friendly (folds in §POT-C2)'
       const missing = [], threw = [];
       for (const k of keys) {
         S_story.npcFavorability = { [k]: 1 };
-        S_story.actNumber = 1;
+        S_story.storyAct = 1;
         const box = document.createElement('div');
         try { _renderNpcCard(k, box); } catch (e) { threw.push(k + ': ' + String(e)); continue; }
         if (!box.textContent.includes('⚔ ' + NPC_DIALOGUES[k].meta.enemy)) missing.push(k);
@@ -223,7 +223,7 @@ test.describe('§NPC-01-SF2 — profile-less, dialogue-only NPCs render from dlg
       for (const k of orphans) {
         const meta = NPC_DIALOGUES[k].meta;
         S_story.npcFavorability = { [k]: 0 };
-        S_story.actNumber = 1;
+        S_story.storyAct = 1;
         const box = document.createElement('div');
         try { _renderNpcCard(k, box); } catch (e) { threw.push(k + ': ' + String(e)); continue; }
         if (!box.textContent.trim()) { empty.push(k); continue; }      // the pre-fix bug: nothing rendered
@@ -237,7 +237,7 @@ test.describe('§NPC-01-SF2 — profile-less, dialogue-only NPCs render from dlg
       const jm = NPC_DIALOGUES['jimmy'];
       if (jm && !BIRKA_NPC_PROFILES['jimmy'] && jm.meta && jm.meta.enemy) {
         S_story.npcFavorability = { jimmy: 1 };
-        S_story.actNumber = 1;
+        S_story.storyAct = 1;
         const box = document.createElement('div');
         _renderNpcCard('jimmy', box);
         jimmyFriendlyEnemy = box.textContent.includes('⚔ ' + jm.meta.enemy);
@@ -405,7 +405,7 @@ test.describe('§NPC-01-D — talk verb: reach Friendly (⚔) by talking, Dear F
       const TTF = TALK_TO_FRIENDLY;
 
       // fresh relationship state
-      S_story.npcFavorability = {}; S_story.npcTalk = {}; S_story.day = 1; S_story.actNumber = 1;
+      S_story.npcFavorability = {}; S_story.npcTalk = {}; S_story.day = 1; S_story.storyAct = 1;
       const render = () => { const b = document.createElement('div'); _renderNpcCard(key, b); return b; };
 
       // Impartial: Talk button present, ⚔ hidden
@@ -474,7 +474,7 @@ test.describe('§NPC-01-D — talk verb: reach Friendly (⚔) by talking, Dear F
 
     const r = await page.evaluate(() => {
       const visits = k => (S_story.npcVisitCounts || {})[k] || 0;
-      S_story.npcFavorability = {}; S_story.npcTalk = {}; S_story.npcVisitCounts = {}; S_story.day = 1; S_story.actNumber = 1;
+      S_story.npcFavorability = {}; S_story.npcTalk = {}; S_story.npcVisitCounts = {}; S_story.day = 1; S_story.storyAct = 1;
 
       _talkToNpc('brynn');                         // counts toward Friendly
       _talkToNpc('brynn');                         // same day, refused

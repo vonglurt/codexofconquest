@@ -25,7 +25,7 @@ test.describe('§DX-02ae — the farewell accessor is pure, the delivery site wr
   test('reading Brynn\'s farewell text twice returns the same branch and moves no flag', async ({ page }) => {
     await atBirkaInn(page);
     const r = await page.evaluate(() => {
-      S_story.actNumber = 8;
+      S_story.storyAct = 8;
       const first = ACT8_FAREWELL_BEATS.brynn.text();
       const second = ACT8_FAREWELL_BEATS.brynn.text();
       const lamp = BRYNN_KEEPER_STORY.farewellNoStory;
@@ -39,7 +39,7 @@ test.describe('§DX-02ae — the farewell accessor is pure, the delivery site wr
   test('delivering the beat sets the latch and the story flag once, and a second render is silent', async ({ page }) => {
     await atBirkaInn(page);
     const r = await page.evaluate(() => {
-      S_story.actNumber = 8;
+      S_story.storyAct = 8;
       const loaves = () => S_story.inventory.filter(i => i.name === "Brynn's Loaf").length;
       const div = document.createElement('div');
       _renderNpcCard('brynn', div);

@@ -88,7 +88,7 @@ test.describe('§VM-01-G2 — NODE_HOOKS registry + in-place dispatch', () => {
       connieMet: true, frCatKillCount: 2 });
     await expect(page.locator('#fr-quest-div')).toContainText('Clear Corrupted Cats (2/5)');
 
-    await renderAt(page, 'LCY', { actNumber: 2 });
+    await renderAt(page, 'LCY', { storyAct: 2 });
     await expect(page.locator('#corelli-encounter-btn')).toContainText('Traveling Merchant');
 
     await renderAt(page, 'TLS', { shards: 6 });

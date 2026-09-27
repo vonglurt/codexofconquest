@@ -763,7 +763,7 @@ MILEPOINT E  Journal + Navigate button show "(n steps, NE)"; ★ clears on arriv
 | `storyMapToggle()` | Opens/closes map overlay panel | DOM state | DOM only |
 | `_renderMapGrid()` | Renders 11×11 node grid in map overlay; click handler uses actual `playerR/C` for adjacency check | `NODE_MAP`, `NODE_COORDS`, `CELL_GRID`, `S_story.playerR/playerC` | DOM only |
 | `_renderMiniMap()` | Renders compact inline minimap in node panel | `NODE_MAP`, `NODE_COORDS` | DOM only |
-| `_renderWorldMiniMap()` | Renders world-level minimap with warmth tint | `NODE_MAP`, `S_story.actNumber` | DOM only |
+| `_renderWorldMiniMap()` | Renders world-level minimap with warmth tint | `NODE_MAP` | DOM only |
 | `_renderFinalMap()` | End-game map render at CO victory sequence | `NODE_MAP`, full S_story | DOM only |
 | `_mapIcon(code)` | Returns glyph character for a node code | `NODE_MAP[code].name` | none (pure function) |
 | `_mapAddExits(cell,code,overrideR?,overrideC?)` | Adds directional exit arrows to a map cell; uses `overrideR/C` when player is on empty cell, else `NODE_COORDS[code]` | `CELL_GRID`, `NODE_COORDS` | DOM only |

@@ -28,7 +28,7 @@ const BIRKA_SEED = {
   npcVisitCounts: {},
   journalEntriesRead: [],
   pitTrainingWins: 0,
-  actNumber: 1,
+  storyAct: 1,
   day: 1,
 };
 

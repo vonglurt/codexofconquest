@@ -43,6 +43,10 @@
 ---
 ## §BACKLOG — Open Items (Phase 6)
 
+### §DX-02ft-FU2 — two story-arc docs describe nine `actNumber >= N` quest gates that §VM-01-G3 retired and a field that no longer exists (NEW 2026-09-26 during §DX-02ft, 🟢 prose, NO DESIGN CALL)
+
+- [ ] **§DX-02ft-FU2 — `docs/story/story-arc-coastal.md` (6) and `docs/story/story-arc-investigation.md` (3) still state quest activation as `actNumber >= N`.** §VM-01-G3 dropped those act legs from the quest stanzas (`quest_tl_03`, `quest_vs_01`, `quest_wm_01` and the §XX / §XVI arc tables), because `actNumber` was the act of the node underfoot, constant per node. §DX-02ft then retired `actNumber` itself for `storyAct` (1 + shards held). So these nine lines describe a gate the quest no longer has, in terms of a field the engine no longer has. **Fix:** restate each line from the quest's live `gate` and `activateNode` (`./bin/api get quest <id>`), not by renaming it to `storyAct`, because none of these quests reads the act. **Verify:** `git grep -c actNumber -- docs/story` = 0, and each restated gate matches the API. **Provenance:** §DX-02ft's doc sweep.
+
 ### §DX-02lr — `prompt.md` §7 *"Verify — tests and the known baseline"* describes one host's baseline from August (NEW 2026-09-26 during §DX-02ec, 🟡 rewrite or point away)
 
 - [ ] **§DX-02lr — the section an author reads before verifying content still lists "known pre-existing baseline reds" from 2026-07/08, and the suite now has two baselines.** §DX-02ec took the gate count out of it (16 against 40 real). What remains: a list of named reds and retirements (`worldbuilder-crud-arrays.test.js` **4/6**, `quest-runtime-uqf.test.js` *"fully green, no known red"*), each true for one host on one day. §DX-02ke records that the host that runs Chromium reports **7** reds, and the host that cannot run it reports 2 real reds under 1,086 launch failures. A reader following §7 on either host would misread its own run. **The call:** rewrite §7 to name commands and the per-host rule (as `AGENTS.md` does), or cut the baseline list and point at §DX-02ke. **Recommendation:** the second: one sentence, which cannot go stale. **Provenance:** §DX-02ec, 2026-09-26.

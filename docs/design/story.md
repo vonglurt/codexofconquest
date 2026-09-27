@@ -1771,17 +1771,13 @@ Collecting all 7 fires journal reward: *"Seven people carried the pieces. Five o
 
 ---
 
-#### ⚠️ SHIPPED BUT UNREACHABLE — The Homecoming: Act VIII Farewell Beats (plan-archive.md §XXV, Layer 60)
+#### ✅ Implemented — The Homecoming: Act VIII Farewell Beats (plan-archive.md §XXV, Layer 60)
 
-`ACT8_FAREWELL_BEATS` const (6 keys). Fires via `_renderNpcCard()` when `actNumber === 8 + fav ≥ 1 + flag unset`. Renders via `storyMsg()` with 🌅 prefix. Gift items auto-pushed to inventory.
+`ACT8_FAREWELL_BEATS` const (6 keys). Fires via `_renderNpcCard()` when `storyAct === 8 + fav ≥ 1 + flag unset` (`storyAct` is 1 + shards held, so 8 means all seven). Renders via `storyMsg()` with 🌅 prefix. Gift items auto-pushed to inventory.
 
-> **🔴 MEASURED UNREACHABLE 2026-08-23 (§DOC-02db → §DX-02ft).** `actNumber` is the **act of the
-> node you stand on**, not campaign progress — `storyRender` assigns `S_story.actNumber = node.act
-> || 1` before `_renderNpcCard()` runs, and every one of the six home nodes (`LHR` `TLL` `MHQ`
-> `LLA` `HKG` ×2) is `act:1`. The game's only `act:8` node is `TLS`. So `actNumber === 8` is false
-> at every node where these NPCs stand, and the three gift items have never entered a save. Same
-> root cause as §VM-01-G2b-FU's five dead Birka beats — eleven beats, one design call. Annotated,
-> not rewritten (§AUDIT-03m-FU).
+> **✅ Reachable since §DX-02ft (2026-09-26).** Measured unreachable 2026-08-23 (§DOC-02db): the
+> gate read `actNumber`, the act of the node underfoot, and every home node is `act:1`. It now reads
+> `storyAct`, campaign progress, which reaches 8 when the seventh shard is taken.
 
 > ⚠️ The `Node` column below is in retired 26×16 codes: `CI`=`LHR` · `IN`=`TLL` · `TV`=`MHQ` · `BA`=`LLA` · `CY`=`HKG`. Look codes up in `docs/maps/node-index.md`, never in a hand-maintained table (§AUDIT-03l).
 >
@@ -2575,7 +2571,7 @@ MILEPOINT B  _getNPCDialogue(npcKey) — reads NPC_DIALOGUES[key]; increments np
              Priority: fav≥2 → dearFriend pool | hasActiveQuest → questActive pool
                        fav≥1 → friendly pool | else → impartial pool
 
-MILEPOINT C  Act III weight injection (one-time, fav≥1, actNumber≥3)
+MILEPOINT C  Act III weight injection (one-time, fav≥1, storyAct≥3)
              Injects NPC_ACT_THREE_LINES[key]; sets actThreeLine_[key] = true to prevent repeat
 
 MILEPOINT D  Froberger trace check — _checkFrobergerTrace(npcKey)
@@ -2755,9 +2751,9 @@ Two parallel one-time scenes triggered by `frobergerLastEntryRead === true`. Eac
 
 ## ✅ Implemented — The Joint Witness and the Map Caption (plan-archive.md §XXXI, Layers 66a+66b)
 
-> ⚠️ **Unreachable at HEAD — §VM-01-G2b (2026-08-04).** The S54 half (`actNumber >= 7` at `LHR`, `act:1`) never fires; the Layer-66b map caption is unaffected. `storyRender` assigns `S_story.actNumber = node.act || 1` on **every** render, and every Birka-region node is `act:1`, so the act leg above can never be satisfied where the block lives. The block itself is intact and now extracted verbatim as `_nodeHookBirkaS54JointWitness`; re-gating it on a real progression signal is **§VM-01-G2b-FU** (design call), pinned by `uqf-npc-row-hooks.test.js`.
+> ✅ **Reachable since §DX-02ft (2026-09-26).** The S54 half gated on `actNumber`, the act of the node underfoot (`LHR` is `act:1`); `_nodeHookBirkaS54JointWitness` now reads `storyAct`, campaign progress.
 
-**S54 — Yael and Brynn at `LHR` (Layer 66a):** Fires on first `LHR` visit where `actNumber >= 7` AND `_npcFavor('yael') >= 1` AND `_npcFavor('brynn') >= 1` AND `!s54JointMomentDelivered`. `storyMsg(S54_JOINT_MOMENT)` via `setTimeout(400)`. Full scene: Brynn with delivery basket, Yael already at `LHR`, *"Still the same light?" / "Still the same light."*, then both address the player. Sets `s54JointMomentDelivered = true`.  *(historical: `CI`=`LHR`)*
+**S54 — Yael and Brynn at `LHR` (Layer 66a):** Fires on first `LHR` visit where `storyAct >= 7` AND `_npcFavor('yael') >= 1` AND `_npcFavor('brynn') >= 1` AND `!s54JointMomentDelivered`. `storyMsg(S54_JOINT_MOMENT)` via `setTimeout(400)`. Full scene: Brynn with delivery basket, Yael already at `LHR`, *"Still the same light?" / "Still the same light."*, then both address the player. Sets `s54JointMomentDelivered = true`.  *(historical: `CI`=`LHR`)*
 
 **Flag split:** Pre-existing TV stub (Quill plays Brynn's song) was using `s54JointMomentDelivered`. Renamed to `s54QuillBrynnDelivered` (new flag in `_S_DEFAULTS()`). NUE "map on the wall" stub was using `s55MapLineDelivered`. Renamed to `s55SqMapLineDelivered` (new flag in `_S_DEFAULTS()`). Both pre-existing stubs now have their own flags; canonical §XXXI flags restored to their intended roles.
 
@@ -2791,9 +2787,9 @@ Two S-suggestion systems. Pre-existing flags: `archiveVisited`, `archiveLetterOb
 
 ## ✅ Implemented — Yael's Record: The Named Report Scene (plan-archive.md §XXXIX, Layer 74)
 
-> ⚠️ **Unreachable at HEAD — §VM-01-G2b (2026-08-04).** The `actNumber >= 6` leg at `LHR` (`act:1`) never fires — and note `world.md` designs this scene for `LLA`/`HKG` at Act IV+, so the node disagrees too. `storyRender` assigns `S_story.actNumber = node.act || 1` on **every** render, and every Birka-region node is `act:1`, so the act leg above can never be satisfied where the block lives. The block itself is intact and now extracted verbatim as `_nodeHookBirkaYaelNamedReport`; re-gating it on a real progression signal is **§VM-01-G2b-FU** (design call), pinned by `uqf-npc-row-hooks.test.js`.
+> ⚠️ **Reachable since §DX-02ft (2026-09-26); the node still disagrees with `world.md`.** `_nodeHookBirkaYaelNamedReport` now reads `storyAct >= 6`, campaign progress, so it can fire at `LHR`. `world.md` designs the scene for `LLA`/`HKG` at Act IV+, which is §DX-02ft-FU.
 
-**Trigger:** `LHR` (historical `CI`) node, `_npcFavor('yael') >= 2`, `actNumber >= 6`, `yaelEscortUsed`, `!yaelNamedReportDelivered`. Const: `YAEL_NAMED_REPORT_SCENE` (setup, decision, choiceHold, choiceThree). `yaelNamedReportDelivered: false` added to `_S_DEFAULTS()`.
+**Trigger:** `LHR` (historical `CI`) node, `_npcFavor('yael') >= 2`, `storyAct >= 6`, `yaelEscortUsed`, `!yaelNamedReportDelivered`. Const: `YAEL_NAMED_REPORT_SCENE` (setup, decision, choiceHold, choiceThree). `yaelNamedReportDelivered: false` added to `_S_DEFAULTS()`.
 
 **Scene (via `setTimeout(600ms)`):** `YAEL_NAMED_REPORT_SCENE.setup` + decision text fire as a storyMsg. Two inline choice buttons appear in npcRowDiv: `📋 I'll hold it.` → *"Good. Then it's in four places now."* / `🗂 Three copies is enough.` → *"Three is enough. I just wanted someone outside the system to know."* Both set `yaelNamedReportDelivered = true` and remove the choice div.
 
@@ -2805,9 +2801,9 @@ Two S-suggestion systems. Pre-existing flags: `archiveVisited`, `archiveLetterOb
 
 ## ✅ Implemented — The Heartwood Letter: Brynn's Daughter Scene (plan-archive.md §XXXVIII, Layer 73)
 
-> ⚠️ **Unreachable at HEAD — §VM-01-G2b (2026-08-04).** The `actNumber >= 4` leg at `TLL` (`act:1`) never fires. `storyRender` assigns `S_story.actNumber = node.act || 1` on **every** render, and every Birka-region node is `act:1`, so the act leg above can never be satisfied where the block lives. The block itself is intact and now extracted verbatim as `_nodeHookBirkaBrynnHeartwoodLetter`; re-gating it on a real progression signal is **§VM-01-G2b-FU** (design call), pinned by `uqf-npc-row-hooks.test.js`.
+> ✅ **Reachable since §DX-02ft (2026-09-26).** The Act IV leg read `actNumber` (`TLL` is `act:1`); `_nodeHookBirkaBrynnHeartwoodLetter` now reads `storyAct`, campaign progress.
 
-**Trigger:** `TLL` (historical `IN`) node, `actNumber >= 4 && !s2DaughterDelivered && journalEntriesRead.includes(7)`. Patches the pre-existing S2 block. Per §XXXVIII reconciliation note: uses `s2DaughterDelivered` (pre-existing) not `brynnLetterSceneDelivered` (spec name). Const: `BRYNN_HEARTWOOD_SCENE` (keys: friendly, dearFriend).
+**Trigger:** `TLL` (historical `IN`) node, `storyAct >= 4 && !s2DaughterDelivered && journalEntriesRead.includes(7)`. Patches the pre-existing S2 block. Per §XXXVIII reconciliation note: uses `s2DaughterDelivered` (pre-existing) not `brynnLetterSceneDelivered` (spec name). Const: `BRYNN_HEARTWOOD_SCENE` (keys: friendly, dearFriend).
 
 **fav 0:** No scene — `s2DaughterDelivered` not set, remains available when fav increases.
 
@@ -2853,7 +2849,7 @@ Two S-suggestion systems. Pre-existing flags: `archiveVisited`, `archiveLetterOb
 
 ## ✅ Implemented — The First Inn Light: Brynn's Vigil Arc (plan-archive.md §XXXV, Layer 70)
 
-> ⚠️ **Unreachable at HEAD — §VM-01-G2b (2026-08-04).** Beat 1's `actNumber >= 2` leg at `TLL` (`act:1`) never fires, and Beat 2 gates on `brynnKeeperStoryTold` — which the dead Beat 1 is the ONLY writer of, so the whole arc past the ambient line is unreachable. `storyRender` assigns `S_story.actNumber = node.act || 1` on **every** render, and every Birka-region node is `act:1`, so the act leg above can never be satisfied where the block lives. The block itself is intact and now extracted verbatim as `_nodeHookBirkaLampInquiry`; re-gating it on a real progression signal is **§VM-01-G2b-FU** (design call), pinned by `uqf-npc-row-hooks.test.js`.
+> ✅ **Reachable since §DX-02ft (2026-09-26).** Beat 1 read `actNumber` (`TLL` is `act:1`), and Beat 2 waits on the flag Beat 1 writes; `_nodeHookBirkaLampInquiry` now reads `storyAct`, so the arc opens with the first shard.
 
 **Ambient:** `TLL` (historical `IN`) node S58 regulars block prepends *"A lamp burns in the corner. It has been lit since your first night here."* as the first line — no flag, no condition. `BRYNN_KEEPER_STORY` const holds all scene strings.
 
@@ -2871,7 +2867,7 @@ Two S-suggestion systems. Pre-existing flags: `archiveVisited`, `archiveLetterOb
 
 ## ✅ Implemented — The Couperin Ledger: Quill's Three-Beat Arc (plan-archive.md §XXXIV, Layer 69)
 
-> ⚠️ **Unreachable at HEAD — §VM-01-G2b (2026-08-04).** Beats 1–3 are live; only the Act VIII `LLA` farewell branch (`actNumber === 8`, `LLA` is `act:1`) never fires. `storyRender` assigns `S_story.actNumber = node.act || 1` on **every** render, and every Birka-region node is `act:1`, so the act leg above can never be satisfied where the block lives. The block itself is intact and now extracted verbatim as `_nodeHookBirkaQuillCouperinFarewell`; re-gating it on a real progression signal is **§VM-01-G2b-FU** (design call), pinned by `uqf-npc-row-hooks.test.js`.
+> ✅ **Reachable since §DX-02ft (2026-09-26).** The Act VIII `LLA` branch read `actNumber === 8` (`LLA` is `act:1`); `_nodeHookBirkaQuillCouperinFarewell` now reads `storyAct`, which is 8 with all seven shards.
 
 **Trigger chain:** `quills_lute` item in inventory → Quill at `MHQ` (historical `TV`) → `LLA` (historical `BA`) Act VIII farewell branch. Three of the four state flags (`couperiSongReceived`, `couperiDebtDegraded`, `quillQuestComplete`) pre-existed in `_S_DEFAULTS()`; `couperiDebtReleased` was split out of `couperiDebtDegraded` by §DX-02ex, which Layer 44's `quill_debt` event also writes with the opposite meaning.
 
@@ -2883,7 +2879,7 @@ Two S-suggestion systems. Pre-existing flags: `archiveVisited`, `archiveLetterOb
 
 **L44-E:** `_getNPCDialogue` appends one line to Quill's selected pool, and which line is the state: `couperiDebtReleased` → *"Elder Couperin wrote 'just a number' on the original debt notice. Not minimizing. Describing. A debt that has done its work becomes just a number. That's when you can release it."*; `couperiDebtDegraded` → S30's *"The number is a number now. I don't look at it anymore."* (§DX-02ex).
 
-**Act VIII `LLA` farewell:** `ACT8_FAREWELL_BEATS.quill.text` converted to function. If `quillQuestComplete`: appends *"Pachelbel sent a note. 'Account closed, no remainder.' I keep it in the case."* `LLA` Act VIII block added (before L44-A Gigault stall): fires when `actNumber === 8 && fav_quill >= 1 && !act8FarewellQuill`, showing Quill at the archive desk. `act8FarewellQuill` flag prevents double-fire at `MHQ`.  *(historical: `BA`=`LLA` · `TV`=`MHQ`)*
+**Act VIII `LLA` farewell:** `ACT8_FAREWELL_BEATS.quill.text` converted to function. If `quillQuestComplete`: appends *"Pachelbel sent a note. 'Account closed, no remainder.' I keep it in the case."* `LLA` Act VIII block added (before L44-A Gigault stall): fires when `storyAct === 8 && fav_quill >= 1 && !act8FarewellQuill`, showing Quill at the archive desk. `act8FarewellQuill` flag prevents double-fire at `MHQ`.  *(historical: `BA`=`LLA` · `TV`=`MHQ`)*
 
 ---
 
