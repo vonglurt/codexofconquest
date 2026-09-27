@@ -1803,6 +1803,9 @@ function insertAfterLastParsedNode(entry) {
 //   'legacy-passthrough' — retired at runtime (UQF W7d/W8a), still passed through for old
 //                          callers; the validate/advise layer flags it at authoring time.
 //   'derived'            — computed from the id, never authored as stored data.
+// Keys a POST body carries that are the request's, not the quest's (§DX-02lc).
+const QUEST_POST_ENVELOPE = ['nonce', 'id'];
+
 const QUEST_POST_UNDECLARED = {
   arc:               'derived',
   checkAbility:      'legacy-passthrough',
@@ -10207,6 +10210,22 @@ async function route(req, res) {
     }
     if (type === 'quest') {
       const { id } = body;
+      // §DX-02lc — serializeQuestLiteral omits a name it does not list, so an unknown field
+      // would vanish under a 201. Refuse it in PUT's shape (§DX-02gy).
+      {
+        const vocab = new Set([...fieldVocabulary('quest'), ...Object.keys(QUEST_POST_UNDECLARED), ...QUEST_POST_ENVELOPE]);
+        const unknown = Object.keys(body).filter((f) => !vocab.has(f));
+        if (unknown.length) {
+          logResponse(method, url.pathname, 400, `unknown quest field(s): ${unknown.join(', ')}`);
+          return json(res, 400, { ok:false,
+            error: `Unknown quest field(s): ${unknown.join(', ')}. No quest in the corpus carries `
+                 + `${unknown.length === 1 ? 'that name' : 'those names'} and the field schema does not declare `
+                 + `${unknown.length === 1 ? 'it' : 'them'}, so the create would drop it and answer 201.`,
+            unknownFields: unknown,
+            accepted: [...vocab].sort(),
+            hint: 'GET /api/schema/quest for what each field means.' });
+        }
+      }
       // Hard required fields
       let aliasedNpc = null;   // §AUDIT-03k — set below if a display-name anchor was collapsed
       const hardMissing = ['id','type','title','activateNode'].filter(f => !body[f]);
