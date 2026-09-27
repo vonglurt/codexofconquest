@@ -5,8 +5,8 @@ const { openEditor } = require('./helpers');
 
 // ── §WBAPI-01 ph4-FU — CRUD tab array-field editing ───────────────────────────
 //
-// The CRUD tab edited scalar fields only. ph4-FU adds completeItems /
-// targetMonsterKeys / killGoals to the quest form so existing quests' array
+// The CRUD tab edited scalar fields only. ph4-FU adds the array fields
+// (killGoals, itemChain) to the quest form so existing quests' array
 // fields are editable. On save these go out as real arrays in the PUT body,
 // where the server's ph3 dispatch routes them to editStructuredField (a
 // source-level patch that persists through save()).
@@ -86,7 +86,8 @@ test.describe('CRUD array fields (§WBAPI-01 ph4-FU)', () => {
     // §EDITOR-03 W8b: the completeItems row is GONE — the field is retired (W8a
     // sweep); item completion is authored as completion:{items} via the editors.
     await expect(page.locator('#crud-field-completeItems')).toHaveCount(0);
-    await expect(page.locator('#crud-field-targetMonsterKeys')).toHaveCount(1);
+    // §DX-02ld: targetMonsterKeys is retired, declared by nothing, and no longer authored.
+    await expect(page.locator('#crud-field-targetMonsterKeys')).toHaveCount(0);
     expect(await page.locator('#crud-field-killGoals').evaluate(el => el.tagName)).toBe('TEXTAREA');
     // §EDITOR-01-D-FU(a) Inc 4: the itemChain textarea is gone — a buildChainEditor host stands in.
     await expect(page.locator('#crud-field-itemChain')).toHaveCount(0);
@@ -95,7 +96,6 @@ test.describe('CRUD array fields (§WBAPI-01 ph4-FU)', () => {
     // Fill scalar + text-array fields, seed the chain widget, then collect — arrays must come out parsed.
     await page.fill('#crud-field-id', 'quest_test_crud_hunt');
     await page.fill('#crud-field-title', 'CRUD Hunt');
-    await page.fill('#crud-field-targetMonsterKeys', 'stray_alley_cat, fluffy_cat');
     await page.fill('#crud-field-killGoals', 'stray_alley_cat:5:Stray\nfluffy_cat:3:Fluffy');
     await page.evaluate(() => {
       document.querySelector('[data-chain-field="itemChain"]')._chainEd.setSteps([
@@ -106,7 +106,7 @@ test.describe('CRUD array fields (§WBAPI-01 ph4-FU)', () => {
 
     const body = await page.evaluate(() => window.__crudTest.collectFormData());
     expect('completeItems' in body).toBe(false);   // retired field never emitted
-    expect(body.targetMonsterKeys).toEqual(['stray_alley_cat', 'fluffy_cat']);
+    expect('targetMonsterKeys' in body).toBe(false);
     expect(body.killGoals).toEqual([
       { key: 'stray_alley_cat', need: 5, label: 'Stray' },
       { key: 'fluffy_cat', need: 3, label: 'Fluffy' },

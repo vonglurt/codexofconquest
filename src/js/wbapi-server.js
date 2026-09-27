@@ -1803,8 +1803,6 @@ function insertAfterLastParsedNode(entry) {
 //   'legacy-passthrough' — retired at runtime (UQF W7d/W8a), still passed through for old
 //                          callers; the validate/advise layer flags it at authoring time.
 //   'derived'            — computed from the id, never authored as stored data.
-//   'authored-not-declared' — an authoring surface still emits it although the corpus
-//                          carries none; posting one turns check:schema red (§DX-02ld).
 const QUEST_POST_UNDECLARED = {
   arc:               'derived',
   checkAbility:      'legacy-passthrough',
@@ -1816,7 +1814,6 @@ const QUEST_POST_UNDECLARED = {
   completeFn:        'legacy-passthrough',
   onPass:            'legacy-passthrough',
   onFail:            'legacy-passthrough',
-  targetMonsterKeys: 'authored-not-declared',
 };
 
 function serializeQuestLiteral(id, body) {
@@ -1830,7 +1827,7 @@ function serializeQuestLiteral(id, body) {
     'checkStat','checkSkill','checkPassFlag','vignetteText','vignetteTextAlt','rumor','killCounter'];
   const NUM  = ['xpAward','reward','checkDC','retryGateDays'];
   const BOOL = ['retryable','boardExempt'];
-  const JSONF = ['gate','bits','completion','itemChain','targetMonsterKeys','killGoals','onActivate'];
+  const JSONF = ['gate','bits','completion','itemChain','killGoals','onActivate'];
   const FN   = ['activateCond','completeFn','onPass','onFail'];
   const parts = [`  ${id}: { id:${JSON.stringify(id)}`];
   for (const f of STR)  if (body[f] !== undefined) parts.push(`${f}:${JSON.stringify(body[f])}`);

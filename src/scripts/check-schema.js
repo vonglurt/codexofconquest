@@ -76,7 +76,7 @@ function censusFields(entries) {
 // field can be authorable and postable long before it is persistable, and the loss is
 // silent at both ends: serializeQuestLiteral drops an unlisted key and answers 201.
 // Comparing its lists against SCHEMAS.quest is what makes the two agree on purpose.
-const POST_REASONS = new Set(['legacy-passthrough', 'derived', 'authored-not-declared']);
+const POST_REASONS = new Set(['legacy-passthrough', 'derived']);
 
 // The five typed lists inside serializeQuestLiteral, plus the two keys it writes
 // unconditionally. Bracket-matched out of the function body so a name added to a list

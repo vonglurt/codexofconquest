@@ -32,7 +32,6 @@ test.describe('Quest Creator — UQF emit (§EDITOR-03 W8b)', () => {
       document.getElementById('ed-type').dispatchEvent(new Event('change'));
       set('ed-title', 'Test Hunt');
       set('ed-completeItems', 'Trophy Pelt, Bounty Token');
-      set('ed-targetMonsterKeys', 'stray_alley_cat, fluffy_cat');
       set('ed-killGoals', 'stray_alley_cat:5:Stray\nfluffy_cat:3:Fluffy');
     });
     await page.click('#ed-btn-export');
@@ -41,7 +40,7 @@ test.describe('Quest Creator — UQF emit (§EDITOR-03 W8b)', () => {
     expect(out).toContain("schema:'UQF-1.0'");
     expect(out).toContain('gate:{}');
     expect(out).toContain('completion:{"items":["Trophy Pelt","Bounty Token"],"countMin":[{"path":"catKills.stray_alley_cat","min":5},{"path":"catKills.fluffy_cat","min":3}]}');
-    expect(out).toContain('targetMonsterKeys:["stray_alley_cat","fluffy_cat"]');
+    expect(out).not.toContain('targetMonsterKeys');
     expect(out).toContain('killGoals:[{key:"stray_alley_cat",need:5,label:"Stray"},{key:"fluffy_cat",need:3,label:"Fluffy"}]');
     expect(out).not.toContain('completeItems:');
     expect(out).not.toContain('completeFn:');

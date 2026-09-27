@@ -6148,7 +6148,6 @@ window._onServerActivated = () => {
         { key:'hint',         label:'Hint',         ta:true },
         { key:'passText',     label:'Pass text',    ta:true },
         { key:'failText',     label:'Fail text',    ta:true },
-        { key:'targetMonsterKeys', label:'Target monsters', arr:'csv',     note:'Comma-separated monster keys (hunt quests)' },
         { key:'killGoals',         label:'Kill goals',      arr:'objlines',ta:true, note:'One per line — key:need:label (need→1, label→key by default)' },
         { key:'itemChain',         label:'Item chain',      arr:'itemchain',ta:true, note:'On completion — add steps (grant / take / grantBit / takeBit), fill each kind’s fields, reorder with ▲/▼ or drag. takeBit spends the token; a flag that gates a later mission is preserved (the event stands, §MBIT-02-E), a non-gating flag is cleared.' },
       ],
@@ -8342,10 +8341,6 @@ EG('tab-wizard').insertAdjacentHTML('afterend', (function(){
           <input class="fi" id="ed-completionFlags" name="completionFlags" placeholder="catKingDefeated, rowRestored…">
         </div>
         <div class="fg" style="margin-top:6px">
-          <div class="fl">Target Monster Keys (comma-separated) — §HUNT / kill quests</div>
-          <input class="fi" id="ed-targetMonsterKeys" name="targetMonsterKeys" placeholder="stray_alley_cat, fluffy_cat">
-        </div>
-        <div class="fg" style="margin-top:6px">
           <div class="fl">Kill Goals (one per line: <code>key:need:label</code>) → journal progress + <code>completion:{countMin}</code></div>
           <textarea class="fi" id="ed-killGoals" name="killGoals" rows="2" placeholder="stray_alley_cat:5:Stray&#10;fluffy_cat:3:Fluffy"></textarea>
         </div>
@@ -8842,7 +8837,6 @@ function buildArcQuests(arcDraft) {
           const [key, need, label] = l.split(':').map(x => x.trim());
           return { key, need: +need || 1, label: label || key };
         });
-        q.targetMonsterKeys = q.killGoals.map(g => g.key);   // journal progress display
         completion.countMin = q.killGoals.map(g => ({ path: `catKills.${g.key}`, min: g.need }));
       }
       if (sval(step.passText))   q.passText   = sval(step.passText);
@@ -8908,8 +8902,6 @@ function edBuildQuestObj() {
     if (items) completion.items = items.split(',').map(s=>s.trim()).filter(Boolean);
     const cflags = edVal('ed-completionFlags');
     if (cflags) completion.flags = cflags.split(',').map(s=>s.trim()).filter(Boolean);
-    const tmk = edVal('ed-targetMonsterKeys');
-    if (tmk) q.targetMonsterKeys = tmk.split(',').map(s=>s.trim()).filter(Boolean);
     const kg = edVal('ed-killGoals');
     if (kg) {
       q.killGoals = kg.split('\n').map(l=>l.trim()).filter(Boolean).map(l=>{
@@ -9090,7 +9082,6 @@ function edGenerateExport() {
     const ocJson = JSON.stringify(q.onComplete, null, 4);
     out += `    onComplete:${ocJson.replace(/\n/g,'\n    ')},\n`;
   }
-  if (q.targetMonsterKeys?.length) out += `    targetMonsterKeys:[${q.targetMonsterKeys.map(s).join(',')}],\n`;
   if (q.killGoals?.length) out += `    killGoals:[${q.killGoals.map(g=>`{key:${s(g.key)},need:${g.need},label:${s(g.label)}}`).join(',')}],\n`;
   if (q.passText)     out += `    passText:${s(q.passText)},\n`;
   if (q.itemChain?.length) out += `    itemChain:[${q.itemChain.map(st =>
@@ -9121,7 +9112,7 @@ function edApplyPreset(key) {
   for (const [k,v] of Object.entries(PRESET_BLANK)) edSet(`ed-${k}`, v);
   for (const id of ['ed-id','ed-title','ed-arc','ed-activateCond','ed-hint','ed-reward',
                      'ed-disposition','ed-desc','ed-checkPassFlag',
-                     'ed-completeItems','ed-completionFlags','ed-targetMonsterKeys','ed-killGoals','ed-passText','ed-xpAward']) {
+                     'ed-completeItems','ed-completionFlags','ed-killGoals','ed-passText','ed-xpAward']) {
     edSet(id, '');
   }
   edSet('ed-retryable', false);
@@ -9192,7 +9183,7 @@ for (const [btnId, key] of Object.entries(presetMap)) {
 // Live update on form change
 const liveIds = ['ed-id','ed-title','ed-activateCond','ed-hint','ed-disposition','ed-desc',
                  'ed-checkPassFlag','ed-reward',
-                 'ed-checkDC','ed-xpAward','ed-completeItems','ed-completionFlags','ed-targetMonsterKeys','ed-killGoals','ed-passText'];
+                 'ed-checkDC','ed-xpAward','ed-completeItems','ed-completionFlags','ed-killGoals','ed-passText'];
 for (const id of liveIds) {
   const el = EG(id); if (el) el.addEventListener('input', edSchedule);
 }

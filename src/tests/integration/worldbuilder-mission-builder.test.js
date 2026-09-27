@@ -24,8 +24,7 @@ const { openEditor } = require('./helpers');
 //  - non-skill producer flag = grantBit|<arcId>_<n>_done, appended ONLY when a
 //    downstream auto step consumes it (no stray token on the last/unread step)
 //  - side steps get a declarative completion gate: items → completion.items,
-//    killGoals → completion.countMin over catKills.<key> (+ derived
-//    targetMonsterKeys for journal progress), neither → completion.atNode
+//    killGoals → completion.countMin over catKills.<key>, neither → completion.atNode
 //    (arrival beat) so the chain always advances
 //  - gateMode 'manual' passes activateCond through verbatim (author-owned JS);
 //    'none' emits gate:{}
@@ -140,7 +139,7 @@ test.describe('Mission Builder — buildArcQuests compiler (§EDITOR-02/-03)', (
       { key: 'beefy_tom', need: 3, label: 'Beefy Tom' },
       { key: 'stray_alley_cat', need: 5, label: 'stray_alley_cat' },
     ]);
-    expect(qs[1].targetMonsterKeys).toEqual(['beefy_tom', 'stray_alley_cat']);
+    expect('targetMonsterKeys' in qs[1]).toBe(false);
     expect(qs[1].completion).toEqual({ countMin: [
       { path: 'catKills.beefy_tom', min: 3 },
       { path: 'catKills.stray_alley_cat', min: 5 },
