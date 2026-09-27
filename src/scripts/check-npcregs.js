@@ -87,6 +87,7 @@ const NPC_KEYED = [
   'FROBERGER_TRACES',        // npc → "Froberger passed through" memory
   'NPC_CROSS_REFS',          // npc → cross-reference lines about other NPCs
   'DEAR_FRIEND_BITS',        // npc → the second personal act that grants the Dear-Friend step
+  'DEAR_FRIEND_PLUS_BITS',   // npc → the act that grants the Dear-Friend+ step
   'MISSION_ACT_BITS',        // npc → the ending-scorer label for that act's mission bit
 ];
 // Nested npc-keyed groups, addressed by path.
@@ -150,6 +151,12 @@ const FAVOR_WRITERS = {
 
 const CEREMONY_TABLE = 'SWEELINCK_NAMING_LINES';
 const CEREMONY_EXEMPT = {};
+// Authored tiers above their key's ceiling that an open row will make reachable. Each names
+// the row; a pending entry that becomes reachable is reported so the list cannot go stale.
+const TIER_PENDING = {
+  'SWEELINCK_NAMING_LINES.quill.3': '§GR-FU3 — Quill\'s Dear-Friend+ act is drafted, not shipped',
+  'NPC_EPILOGUES.quill.3':          '§GR-FU3 — Quill\'s Dear-Friend+ act is drafted, not shipped',
+};
 
 const LOWERKEY = /^[a-z][a-z0-9_'-]*$/;
 
@@ -191,6 +198,20 @@ function nestedObject(body, key) {
   return endRel < 0 ? null : tail.slice(0, endRel + 1);
 }
 
+// The numeric keys of an object literal at its own depth. The shared tokenizer reports
+// identifier keys only, and the favor-tier tables key by level.
+function digitKeys(obj) {
+  const toks = [...WBAPI._scanTokens(obj)].filter(t => t.open || t.close);
+  const out = [];
+  for (const m of obj.matchAll(/(^|[{,\n])\s*(\d+)\s*:/g)) {
+    const at = m.index + m[1].length;
+    let depth = 0;
+    for (const t of toks) { if (t.index >= at) break; depth += t.open ? 1 : -1; }
+    if (depth === 1) out.push(Number(m[2]));
+  }
+  return out;
+}
+
 function lineOf(src, idx) { return src.slice(0, idx).split('\n').length; }
 
 // §GR-FU2 — the ceremony's threshold, read out of the builder rather than restated here:
@@ -206,7 +227,8 @@ function ceremonyThreshold(src) {
 // The highest favor the corpus can put each NPC at. `set` is a level the ledger raises to,
 // `add` stacks on whatever a `set` already reached (bounded by the bit's own `cap`), a
 // literal _setNpcFavor(key, N) is a `set` written in code rather than in a bit, and a
-// DEAR_FRIEND_BITS entry is one further step on top of the result.
+// DEAR_FRIEND_BITS entry is one further step on top of the result, and a
+// DEAR_FRIEND_PLUS_BITS entry one more.
 function favorCeiling(src, objs) {
   const cap = Number((src.match(/const NPC_FAVOR_CAP = (\d+)/) || [])[1] || 3);
   const set = new Map(), add = new Map();
@@ -220,12 +242,13 @@ function favorCeiling(src, objs) {
   }
   const callRe = /_setNpcFavor\(\s*'([a-z][a-z0-9_]*)'\s*,\s*(\d+)\s*\)/g;
   while ((m = callRe.exec(src))) raise(set, m[1], Number(m[2]));
-  const dfb = objs.get('DEAR_FRIEND_BITS');
-  const step = new Set(dfb ? WBAPI._sectionTopKeys(dfb.body) : []);
+  const steps = ['DEAR_FRIEND_BITS', 'DEAR_FRIEND_PLUS_BITS']
+    .map(t => objs.get(t)).map(o => new Set(o ? WBAPI._sectionTopKeys(o.body) : []));
   const out = new Map();
   for (const k of new Set([...set.keys(), ...add.keys()])) {
-    const base = Math.min(cap, (set.get(k) || 0) + (add.get(k) || 0));
-    out.set(k, Math.min(cap, base >= 1 && step.has(k) ? base + 1 : base));
+    let v = Math.min(cap, (set.get(k) || 0) + (add.get(k) || 0));
+    for (const step of steps) if (v >= 1 && step.has(k)) v = Math.min(cap, v + 1);
+    out.set(k, v);
   }
   return out;
 }
@@ -422,6 +445,27 @@ function audit(src, vocab, model) {
     }
   }
 
+  //    The mirror (§GR-FU3): a tier authored above what the ledger can reach is prose with
+  //    no reader, in any npc-keyed registry that keys its entries by favor level.
+  for (const name of NPC_KEYED) {
+    const o = objs.get(name);
+    if (!o) continue;
+    for (const k of WBAPI._sectionTopKeys(o.body)) {
+      const span = WBAPI._entrySpan(o.body, k);
+      const entry = span && o.body.slice(span.start, span.end);
+      const open = entry ? entry.indexOf('{') : -1;
+      if (open < 0) continue;
+      const c = ceilings.get(k) || 0;
+      for (const t of digitKeys(entry.slice(open))) {
+        const id = `${name}.${k}.${t}`;
+        if (t > c && !TIER_PENDING[id]) findings.push(`[tiers] ${name} (line ${o.line}) authors '${k}' at favor ${t} `
+          + `and nothing in the corpus can raise them past ${c} — that tier can never be read`);
+        if (t <= c && TIER_PENDING[id]) findings.push(`[tiers] ${id} is reachable now (ceiling ${c}) — `
+          + `retire its TIER_PENDING entry (${TIER_PENDING[id]})`);
+      }
+    }
+  }
+
   // 7. gates — the other direction of the same arithmetic (§AUDIT-03ar). A threshold above
   //    what any writer can reach is not a strict gate; it is content with no door.
   const gate = (k, need, where) => {
@@ -564,6 +608,7 @@ function selftest(src, vocab, model) {
     ['gates',    src.replace(`_npcFavor('brynn') >= 3`, `_npcFavor('quill') >= 3`), model],
     ['gates',    src.replace('favorMin:{ yael:3 }', 'favorMin:{ yva:3 }'), model],
     ['gates',    src.replace('  crov:     { minFav:3,', '  quill:    { minFav:3,'), model],
+    ['tiers',    src.replace('const NPC_EPILOGUES = {', 'const NPC_EPILOGUES = {\n  rennau: { 0: "a", 3: "planted above the ceiling" },'), model],
     ['announced', src.replace(`{kind:'favor',npc:'benedikt_rasp',set:2}`, `{kind:'favor',npc:'benedikt_rasp',set:1}`), model],
     // §DX-02gc — the four ways the promotion line goes back to speaking a slug, or to a
     // channel that is cleared before it is painted.
@@ -619,7 +664,7 @@ console.log(`✓ check:npcregs — ${NPC_KEYED.length} npc-keyed registries, ${N
   + `plus every _npcFavor()/npcFavorability[] literal and npcOrder entry resolve against ${vocab.size} live NPC keys; `
   + `${Object.keys(WBAPI.NPC_ALIASES).length} display-name aliases collapse to their profile key and no npc: value is one; `
   + `every NPC the corpus raises to fav >= ${ceremonyThreshold(src)} has a line in ${CEREMONY_TABLE}, `
-  + 'and no favor threshold in the file is above the favor its NPC can be written to, '
+  + 'and no favor threshold or authored favor tier in the file is above the favor its NPC can be written to, '
   + 'and every favor bit writes the tier its own entry announces to the player, and every favor write '
   + 'names someone the game can put a display name to, through the one resolver, into the run\'s message stream, '
   + `and all ${Object.keys(FAVOR_WRITERS).length} writers of the favor ledger are the ones declared here, `

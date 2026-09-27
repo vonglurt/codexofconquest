@@ -853,7 +853,7 @@ Six named Birka NPCs each have a favorability state tracked in `S_story.npcFavor
 | Impartial | 0 | Default state; neutral dialogue pool |
 | Friendly | 1 | A quest `{kind:'favor'}` grant **or** the **Talk** action (§NPC-01-D); unlocks the ⚔ enemy card footer |
 | Dear Friend | 2 | A quest/personal-act grant (never Talk); unlocks the ✦ worldTruth card footer |
-| Dear Friend+ | 3 | Second-act content; post-NG+ or post-Act IV |
+| Dear Friend+ | 3 | Second-act content (the ceremony's and epilogue's third tier). Reached by quest favor for yael, brynn, crov and kenickie; by one further act in `DEAR_FRIEND_PLUS_BITS` for **auros** (`undercitySurveyDelivered`) and **pachelbel** (`raisonToolsUsed`), granted once (§GR-FU3). quill has no act yet |
 
 **Talk verb (§NPC-01-D).** Every card-bearing NPC (~203 after §NPC-01-B/SF6) carries a **💬 Talk** button on its card while Impartial. Talking accumulates `S_story.npcTalk[key] = {count, lastDay}`; **`TALK_TO_FRIENDLY` (=3) talks on distinct game-days** call `_setNpcFavor(key, 1)` → Friendly. It is rate-limited to **once per game-day per NPC** (no day is spent — cost model B; the cost is the days that pass as you travel/rest near them) and **never raises favor above 1**, so Friendly (and the ⚔ enemy footer) becomes talk-reachable at scale while **Dear Friend (the ✦ worldTruth footer) stays quest/personal-act earned** — preserving the §NPC-01-C reveal. Talking is a card action, not a movement step (Free-Movement untouched). *Intended ripple:* the two `favorMin:{brynn:1}` / `favorMin:{yael:1}` side quests (`quest_brynn_firewood`, `quest_city_watch_patrol`) become listable by befriending those NPCs, and talk-earned friends count toward `_lubeckFriends()`.
 

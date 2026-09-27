@@ -1581,7 +1581,7 @@ Appended to the victory modal. Variant determined by mission completion + curse 
 
 ### New Game+ (`storyNewGamePlus()`)
 
-**Preserved across reset:** `npcFavorability`, `dearFriendGranted`, `pitPerks`, `ngPlusRun` (incremented by 1), `entry42Written` + `entry42Text`, `wmFirstResearcherKnown`, `questMinusOne`, `playerKey`, `careerStats`  
+**Preserved across reset:** `npcFavorability`, `dearFriendGranted`, `dearFriendPlusGranted`, `pitPerks`, `ngPlusRun` (incremented by 1), `entry42Written` + `entry42Text`, `wmFirstResearcherKnown`, `questMinusOne`, `playerKey`, `careerStats`  
 **Reset:** everything else via `_S_DEFAULTS()` (including saves — `coc_autosave` and `coc_checkpoint` wiped from localStorage)  
 **Starting kit:** same as new game — Pointy Stick + Flint Dagger + 2× Minor Healing Potion  
 **`frobergerNoteNode`:** re-randomized from EB pool on NG+ start  
@@ -2605,6 +2605,9 @@ MILEPOINT G  _checkDearFriendUpgrade(key) — fires if fav >= 1, fav < 3 and the
              bruhnsDepthsReported stays one of the ending's twelve mission bits.
              On upgrade: a one-time +1 recorded in dearFriendGranted[key] (§DX-02gb);
              storyMsg fires "says your name" line
+             Then the Dear-Friend+ step, same rules (§GR-FU3): auros→undercitySurveyDelivered,
+             pachelbel→raisonToolsUsed; a one-time +1 in dearFriendPlusGranted[key] and a
+             "counts you among the few" line. quill's act is drafted, not shipped
 ```
 
 ---

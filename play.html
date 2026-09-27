@@ -23098,7 +23098,7 @@ let S_story = {
   pitTrainingWins: 0,
   slStalksWon: 0,
   npcVisitCounts: {}, couperiSongReceived: false, bruhnsDepthsReported: false, frobergerLastEntryRead: false,
-  dearFriendGranted: {},
+  dearFriendGranted: {}, dearFriendPlusGranted: {},
 };
 
 /* ── Layer 6: Save / Load ── */
@@ -23129,7 +23129,7 @@ const _S_DEFAULTS = () => ({
   ebNegotiatedPayments: {}, ebReturnDone: {},
   journalEntriesRead: [],
   npcFavorability: {}, roughWhiskeyUsed: false, roughWhiskeyActive: false, yaelEscortUsed: false, pitTrainingWins: 0, slStalksWon: 0, muffatBerthReached: false, muffatManifestRead: false, station7LogRead: false, suppressorLogRead: false, antecedentMet: false, solmFound: false, cycle4NoteRead: false, bogDefeated: false, // §LI–§LVIII + CO-001
-  dearFriendGranted: {},
+  dearFriendGranted: {}, dearFriendPlusGranted: {},
   npcTalk: {},   // §NPC-01-D — key → { count, lastDay }: deliberate-talk progress toward Friendly (fav 1). Never raises above 1; Dear Friend stays quest/personal-act-earned.
   npcVisitCounts: {}, couperiSongReceived: false, bruhnsDepthsReported: false, frobergerLastEntryRead: false,
   playerKey: '', pvpOff: false,
@@ -23517,6 +23517,12 @@ const DEAR_FRIEND_BITS = {
   pachelbel: () => S_story.quests['quest_pachelbel_shipment'] === 'complete',
   crov: () => (S_story.pitTrainingWins||0) >= 3,
 };
+// Dear Friend+ for the NPCs no quest raises to 3: one act already shipped behind their
+// fav >= 2, granted once, read wherever DEAR_FRIEND_BITS is.
+const DEAR_FRIEND_PLUS_BITS = {
+  auros: () => S_story.undercitySurveyDelivered,
+  pachelbel: () => S_story.raisonToolsUsed,
+};
 const NPC_FAVOR_CAP = 3;
 // A favor key is a profile key OR a dialogue-only key: §NPC-01-SF2's nine live at STN/TL/VS/
 // GC/CQ/SQ and carry their name in `NPC_DIALOGUES[key].meta.name` instead. Reads the raw
@@ -23543,15 +23549,21 @@ function _setNpcFavor(key, level, say) {
   _checkDearFriendUpgrade(key, say);
 }
 function _checkDearFriendUpgrade(key, say) {
-  const fav = _npcFavor(key);
-  if (fav < 1 || fav >= NPC_FAVOR_CAP) return;
-  const check = DEAR_FRIEND_BITS[key];
-  if (!check || !check()) return;
-  if (!S_story.dearFriendGranted) S_story.dearFriendGranted = {};
-  if (S_story.dearFriendGranted[key]) return;
-  S_story.dearFriendGranted[key] = true;
-  S_story.npcFavorability[key] = fav + 1;
-  (say || storyMsg)('💛 ' + _npcDisplayName(key) + ' says your name when you walk in.');
+  const steps = [
+    [DEAR_FRIEND_BITS, 'dearFriendGranted', ' says your name when you walk in.'],
+    [DEAR_FRIEND_PLUS_BITS, 'dearFriendPlusGranted', ' counts you among the few.'],
+  ];
+  for (const [bits, record, line] of steps) {
+    const fav = _npcFavor(key);
+    if (fav < 1 || fav >= NPC_FAVOR_CAP) return;
+    const check = bits[key];
+    if (!check || !check()) continue;
+    if (!S_story[record]) S_story[record] = {};
+    if (S_story[record][key]) continue;
+    S_story[record][key] = true;
+    S_story.npcFavorability[key] = fav + 1;
+    (say || storyMsg)('💛 ' + _npcDisplayName(key) + line);
+  }
 }
 // §NPC-01-D — a Talk action on the NPC card raises favor toward Friendly (fav 1) ONLY, making the
 // ⚔ enemy footer (fav≥1) reachable by talking while Dear Friend (fav 2, the ✦ worldTruth footer)
@@ -24118,6 +24130,7 @@ function storyNewGamePlus() {
   }
   const savedFavorability      = Object.assign({}, S_story.npcFavorability || {});
   const savedDearFriendGranted = Object.assign({}, S_story.dearFriendGranted || {});
+  const savedDearFriendPlus    = Object.assign({}, S_story.dearFriendPlusGranted || {});
   const savedPitPerks          = (S_story.pitPerks || []).slice();
   const savedNgRun             = (S_story.ngPlusRun || 0) + 1;
   const savedEntry42Written    = !!(S_story.entry42Written);
@@ -24130,6 +24143,7 @@ function storyNewGamePlus() {
   Object.assign(S_story, _S_DEFAULTS());
   S_story.npcFavorability   = savedFavorability;
   S_story.dearFriendGranted = savedDearFriendGranted;
+  S_story.dearFriendPlusGranted = savedDearFriendPlus;
   S_story.pitPerks          = savedPitPerks;
   S_story.ngPlusRun         = savedNgRun;
   S_story.entry42Written    = savedEntry42Written;
@@ -31431,6 +31445,7 @@ function storyRenderInventory() {
           useBtn.textContent = '🔧 Assess items';
           useBtn.addEventListener('click', () => {
             S_story.raisonToolsUsed = true;
+            _checkDearFriendUpgrade('pachelbel');
             const idx = (S_story.inventory || []).findIndex(i => i.name === "Raison's Tools");
             if (idx >= 0) S_story.inventory.splice(idx, 1);
             S_story.gold = (S_story.gold || 0) + 30;
@@ -32992,6 +33007,7 @@ function _nodeHookBirkaWeckmannLog(node, { npcRowDiv }) {
         delBtn.style.cssText = 'margin-top:4px;';
         delBtn.addEventListener('click', () => {
           S_story.undercitySurveyDelivered = true;
+          _checkDearFriendUpgrade('auros');
           const idx = (S_story.inventory||[]).findIndex(i => i.name === 'Undercity Survey (Partial)');
           if (idx >= 0) S_story.inventory.splice(idx, 1);
           S_story.gold = (S_story.gold || 0) + 40; storyUpdateStatus();

@@ -139,7 +139,7 @@ Six named Birka NPCs each have a favorability state tracked in `S_story.npcFavor
 | Impartial | 0 | Default state; neutral dialogue pool |
 | Friendly | 1 | Quest-gated; unlock via completing their intro quest |
 | Dear Friend | 2 | Time-gated after Friendly + enough visits |
-| Dear Friend+ | 3 | Second-act content; post-NG+ or post-Act IV |
+| Dear Friend+ | 3 | Second-act content. auros and pachelbel reach it by one further act in `DEAR_FRIEND_PLUS_BITS` (§GR-FU3); see `docs/design/mechanics.md` for the full rule |
 
 **The six NPCs:** Yael (CI), Brynn (IN), Quill/Couperin (TV), Pachelbel/Deacon (BA), Weckmann (CY), Auros/Bruhns (CY).
 
