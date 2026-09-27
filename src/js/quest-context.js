@@ -124,4 +124,46 @@ function questContext(W, scope) {
   };
 }
 
-module.exports = { questContext, bitWrites, cellOf };
+// §EDITOR-04 increment 3 — the Prove step of the mission wizard. A draft arc is checked
+// against the file plus itself, with the same scanners, for the three traps the wizard
+// refuses to post past: a node no one can stand on, a gate flag nothing writes, and a
+// completion that only its own completion can satisfy.
+function draftWrites(q) {
+  const out = bitWrites(q.bits, new Set());
+  bitWrites(Array.isArray(q.onComplete) ? q.onComplete : [], out);
+  for (const st of q.itemChain || []) if (st && st.action === 'grantBit' && st.flag) out.add(st.flag);
+  return out;
+}
+
+function proveDraft(W, drafts) {
+  if (!Array.isArray(drafts) || !drafts.length) return { ok: false, error: 'a non-empty array of draft quests is required' };
+  const facts = worldFacts(W);
+  const writes = drafts.map(draftWrites);
+  const traps = [];
+  drafts.forEach((q, i) => {
+    const id = q.id || `(step ${i + 1})`;
+    if (q.id && W.questDb[q.id]) traps.push({ quest: id, kind: 'exists', detail: `${q.id} is already in QUEST_DB` });
+    for (const field of ['activateNode', 'waypointNode']) {
+      const code = q[field];
+      if (!code) continue;
+      if (!W.nodeMap[code]) { traps.push({ quest: id, kind: 'unstandable', field, detail: `${field} ${code} is not a node` }); continue; }
+      const cell = cellOf(W, code);
+      if (cell && !cell.isPrimary) traps.push({ quest: id, kind: 'unstandable', field,
+        detail: `${field} ${code} shares cell ${cell.r},${cell.c} behind ${cell.primary}, so it can never be arrived at (§AUDIT-03x)` });
+    }
+    const others = new Set(facts.written);
+    writes.forEach((w, j) => { if (j !== i) w.forEach(f => others.add(f)); });
+    for (const f of QG.gateReads(q.gate, emptyReads()).flags) {
+      if (!others.has(f) && !writes[i].has(f)) traps.push({ quest: id, kind: 'unwritten-gate', flag: f, detail: `gate reads ${f} and nothing writes it` });
+      else if (!others.has(f)) traps.push({ quest: id, kind: 'unwritten-gate', flag: f, detail: `gate reads ${f} and only this quest writes it` });
+    }
+    const own = new Set();
+    for (const b of Array.isArray(q.onComplete) ? q.onComplete : []) if (b && b.kind === 'flag_write') (b.set || []).forEach(f => own.add(f));
+    for (const f of (q.completion && Array.isArray(q.completion.flags)) ? q.completion.flags : []) {
+      if (own.has(f) && !others.has(f)) traps.push({ quest: id, kind: 'self-deadlock', flag: f, detail: `completion needs ${f}, which only its own completion writes` });
+    }
+  });
+  return { ok: true, count: traps.length, traps };
+}
+
+module.exports = { questContext, proveDraft, bitWrites, cellOf };

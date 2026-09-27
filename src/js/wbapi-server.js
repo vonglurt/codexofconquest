@@ -37,7 +37,7 @@ const WBAPI     = require('./wbapi-core');
 const Mover     = require('./mover');   // §WALK-2 shared movement kernel (also inlined in play.html)
 const Rooms     = require('./rooms');   // §NAV-01f shared room-description kernel (also inlined in play.html)
 const Duel      = require('./duel');
-const { questContext } = require('./quest-context');   // §EDITOR-04 questline neighbourhood    // §MESH-01j shared duel-resolution kernel (also inlined in play.html)
+const { questContext, proveDraft } = require('./quest-context');   // §EDITOR-04 questline neighbourhood    // §MESH-01j shared duel-resolution kernel (also inlined in play.html)
 const Anthropic = require('@anthropic-ai/sdk');
 
 // ── Repo layout (this file lives in js/; assets/data are one level up) ────────
@@ -3687,6 +3687,16 @@ async function route(req, res) {
     logRow('scope', JSON.stringify(r.scope));
     logRow('traps', `unstandable:${r.traps.unstandable}  unwrittenFlags:${r.traps.unwrittenFlags}  fatalDeadlocks:${r.traps.fatalDeadlocks}`);
     logResponse(method, url.pathname, 200, `${r.quests.length} quests · ${r.npcs.length} npcs · ${Object.keys(r.flags.reads).length} flags read`);
+    return json(res, 200, r);
+  }
+
+  // POST /api/context/prove  {quests:[…]} — the wizard's Prove step: reads, never writes.
+  if (parts[0] === 'context' && parts[1] === 'prove' && method === 'POST') {
+    let body;
+    try { body = await readBody(req); } catch (e) { return json(res, 400, { error:'Invalid JSON' }); }
+    const r = proveDraft(WBAPI, body && body.quests);
+    if (!r.ok) { logResponse(method, url.pathname, 400, r.error); return json(res, 400, { error: r.error, usage: 'POST /api/context/prove {"quests":[…]}' }); }
+    logResponse(method, url.pathname, 200, `${body.quests.length} draft quest(s) · ${r.count} trap(s)`);
     return json(res, 200, r);
   }
 
@@ -11985,6 +11995,7 @@ server.listen(PORT, BIND_ADDR, () => {
     ['PUT',    '/api/loot/{index}                   body: {weight?,_type?}'],
     ['GET',    '/api/loot-drop[?terrain=&monster=&fishing=&bonus=&name=] → unified drop query (monster+fishing)'],
     ['GET',    '/api/context/{NODE} | /api/context?arc=<arc> → questline neighbourhood: quests, npcs, flags read/written, unwritten flags, deadlocks, cell primacy'],
+    ['POST',   '/api/context/prove  {quests:[…]}         → the mission wizard\'s Prove step: unstandable nodes, unwritten gate flags, self-deadlocks in a draft arc'],
     ['GET',    '/api/npc/{id}/dialogue[/{field}[/{index}]]  → whole entry, one field, or one line'],
     ['POST',   '/api/npc/{id}/dialogue              body: {quote, meta?, impartial?, ...}  (create)'],
     ['PUT',    '/api/npc/{id}/dialogue              body: {quote?,meta?,impartial?,...}  (merge whole entry)'],

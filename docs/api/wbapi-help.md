@@ -432,6 +432,18 @@ so `currentCode` can never hold it (§DX-02w; 172 of 416 nodes). `flags.unwritte
 `onComplete` writing the flag its own `completion` waits on (fatal, or inert when
 someone else writes it too). `node.cell.primary` names the node that hides it.
 
+**Proving a draft (increment 3).** `POST /api/context/prove {"quests":[…]}` runs the
+same scanners over a draft arc plus the file, and returns `{ok, count, traps}`. Each
+trap has a `quest`, a `kind` and a `detail`. The kinds: `exists` (the id is taken),
+`unstandable` (`activateNode`/`waypointNode` is not a node, or not its cell's
+primary), `unwritten-gate` (a gate flag no quest, draft or host code writes, or only
+the quest itself writes), and `self-deadlock` (a completion flag only its own
+`onComplete` writes). A draft's `itemChain` `grantBit` counts as a write, which is
+how the wizard chains one step to the next. Read-only. The worldbuilder's
+**⛓ Mission Wizard** tab (the former Mission Builder) calls it after ⛓ Build Chain
+and keeps POST All disabled while `count > 0`. Its 🔍 Locate button shows
+`GET /api/context` for the arc's default node.
+
 ## Loot Drop System (§DX-02ab)
 
 One read endpoint over every drop table: monster trophies, the weapon-quality

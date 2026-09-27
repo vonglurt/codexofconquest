@@ -145,6 +145,7 @@ Never guess an ID. Always search first.
 ./bin/api chain quest_anath             # upstream/downstream quest chain
 ./bin/api context LHR                   # a node's questline + traps in one call (§EDITOR-04)
 ./bin/api context --arc quest_kg        # the same for an arc
+# POST /api/context/prove {"quests":[…]} — a draft arc's traps before it is posted (§EDITOR-04 inc 3)
 
 ./bin/api loot-drop                     # every drop table (§DX-02ab)
 ./bin/api loot-drop --fishing           # lake magic + fish trophies only

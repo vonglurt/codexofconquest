@@ -111,3 +111,45 @@ test.describe('§EDITOR-04 — the questline context query', () => {
     expect(json.scope).toEqual({ arc: 'quest_kg' });
   });
 });
+
+test.describe('§EDITOR-04 increment 3 — the wizard\'s Prove step', () => {
+  const { proveDraft } = require(path.join(ROOT, 'src', 'js', 'quest-context.js'));
+  const arc = () => [
+    { id: 'quest_zzw_1', type: 'side', title: 'one', activateNode: 'LHR', gate: {}, completion: { atNode: 'LHR' },
+      itemChain: [{ action: 'grantBit', flag: 'quest_zzw_1_done', label: 'one' }] },
+    { id: 'quest_zzw_2', type: 'side', title: 'two', activateNode: 'LHR', gate: { flags: ['quest_zzw_1_done'] }, completion: { atNode: 'LHR' } },
+  ];
+
+  test('a chained draft whose first step writes the second\'s gate proves clean', () => {
+    expect(proveDraft(world(), arc())).toEqual({ ok: true, count: 0, traps: [] });
+  });
+
+  test('each trap is caught by kind: existing id, unstandable node, unwritten gate, self-deadlock', () => {
+    const W = world();
+    const kinds = (drafts) => proveDraft(W, drafts).traps.map(t => t.kind);
+    const [one, two] = arc();
+    expect(kinds([{ ...one, id: 'mq_1' }, two])).toEqual(['exists']);
+    expect(kinds([{ ...one, activateNode: 'ATH' }, two])).toEqual(['unstandable']);
+    expect(kinds([one, { ...two, gate: { flags: ['zzw_nothing_writes_this'] } }])).toEqual(['unwritten-gate']);
+    expect(kinds([one, { ...two, completion: { flags: ['zzw_self'] }, onComplete: [{ kind: 'flag_write', set: ['zzw_self'] }] }]))
+      .toEqual(['self-deadlock']);
+    expect(kinds([{ ...one, itemChain: [] }, two])).toEqual(['unwritten-gate']);
+  });
+
+  test('POST /api/context/prove answers what proveDraft answers, and refuses an empty body', async () => {
+    const post = (body) => fetch(`${BASE}/api/context/prove`, { method: 'POST',
+      headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+    const bad = [{ ...arc()[0], activateNode: 'ATH' }, arc()[1]];
+    expect(await (await post({ quests: bad })).json()).toEqual(proveDraft(world(), bad));
+    expect((await post({})).status).toBe(400);
+  });
+
+  test('the Mission tab is the wizard: Locate and Prove are wired, and a trap holds POST All', () => {
+    const html = fs.readFileSync(path.join(ROOT, 'edit.html'), 'utf8');
+    expect(html).toContain('⛓ Mission Wizard');
+    expect(html).toContain("MB('mb-locate-btn').addEventListener('click', mbLocate);");
+    expect(html).toContain('if (!anyError) mbProve(quests);');
+    expect(html).toMatch(/if \(mbTraps\)\s+\{ mbShowResult/);
+    expect(html).toContain("MB('mb-post').disabled = mbTraps > 0;");
+  });
+});

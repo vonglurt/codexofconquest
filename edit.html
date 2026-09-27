@@ -9206,10 +9206,11 @@ edUpdatePreview();
 })();
 
 /* ══════════════════════════════════════════════════════════════════════
-   §EDITOR-02 — Mission Builder Tab
-   Author a multi-quest arc in one form. Build Chain compiles the draft via
-   the pure window.buildArcQuests (auto-wiring the chain flags); Preview Chain
-   renders the resolved arc with per-step advise badges. POST All → Inc 4.
+   §EDITOR-02 — Mission Builder Tab, now the §EDITOR-04 mission wizard
+   Locate (GET /api/context for the arc's node) → Draft & wire (the step rows,
+   compiled by the pure window.buildArcQuests) → Prove (POST /api/context/prove,
+   check:questgraph's scanners over the draft plus the file) → Post. POST All
+   stays disabled while Prove reports a trap.
    ══════════════════════════════════════════════════════════════════════ */
 (function(){
   const MB = id => document.getElementById(id);
@@ -9218,7 +9219,8 @@ edUpdatePreview();
   MB('tab-editor').insertAdjacentHTML('afterend', `
 <div class="panel" id="tab-mission">
   <div style="display:flex;gap:6px;padding:7px 12px;border-bottom:1px solid var(--border);flex-shrink:0;align-items:center;background:var(--bg2)">
-    <span style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em">⛓ Mission Builder</span>
+    <span style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em">⛓ Mission Wizard</span>
+    <span style="font-size:10px;color:var(--muted)">1 Locate · 2 Draft &amp; wire · 3 Prove · 4 Post</span>
     <button class="btn sm" id="mb-add">+ Add Step</button>
     <div style="margin-left:auto;display:flex;gap:5px">
       <button class="btn primary sm" id="mb-build">⛓ Build Chain</button>
@@ -9233,7 +9235,9 @@ edUpdatePreview();
           <div class="fg" style="flex:0 0 170px"><div class="fl">Arc ID (id prefix)</div><input class="fi" id="mb-arcId" placeholder="quest_yael"></div>
           <div class="fg" style="flex:1 1 150px"><div class="fl">Arc label (q.arc)</div><input class="fi" id="mb-arcLabel" placeholder="Yael romance"></div>
           <div class="fg" style="flex:0 0 110px"><div class="fl">Default node</div><input class="fi" id="mb-node" placeholder="BRK"></div>
+          <button class="btn sm" id="mb-locate-btn" style="align-self:flex-end" title="What already lives at this node">🔍 Locate</button>
         </div>
+        <div id="mb-locate" style="font-size:11px;color:var(--muted);margin-top:6px"></div>
         <div style="font-size:10px;color:var(--muted);margin-top:4px">Steps become <code>&lt;arcId&gt;_1, _2, …</code>; each auto-step gates on the previous step's completion flag.</div>
       </div>
       <div id="mb-steps" style="display:flex;flex-direction:column;gap:8px"></div>
@@ -9241,6 +9245,7 @@ edUpdatePreview();
     <div style="flex:1;overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:8px">
       <div class="ed-shd">Preview Chain</div>
       <div id="mb-preview" style="font-size:11px;color:var(--muted)">Add steps, then ⛓ Build Chain to resolve the arc.</div>
+      <div id="mb-prove" style="font-size:11px"></div>
       <div id="mb-result" class="op-result" style="display:none"></div>
     </div>
   </div>
@@ -9382,7 +9387,57 @@ edUpdatePreview();
     MB('mb-preview').innerHTML = html;
     MB('mb-post').disabled = anyError || !WBAPI.loaded;
     MB('mb-post').title = anyError ? 'Fix the 🔴 errors first' : !WBAPI.loaded ? 'Load a game file first' : 'POST All — Inc 4';
+    if (!anyError) mbProve(quests);
     return quests;
+  }
+
+  const mbEsc = v => String(v ?? '').replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+
+  // ── 1 Locate: what already lives at the arc's node, from GET /api/context. ──
+  async function mbLocate() {
+    const code = MB('mb-node').value.trim();
+    const out = MB('mb-locate');
+    if (!code) { out.innerHTML = '<span style="color:var(--red)">Set the default node first.</span>'; return; }
+    if (!SERVER.active) { out.textContent = 'Locate reads GET /api/context, so it needs the server (./run.sh server).'; return; }
+    let r;
+    try { r = await (await fetch(`${SERVER.url}/api/context/${encodeURIComponent(code)}`)).json(); }
+    catch (e) { out.innerHTML = `<span style="color:var(--red)">${mbEsc(e.message)}</span>`; return; }
+    if (!r.ok) { out.innerHTML = `<span style="color:var(--red)">${mbEsc(r.error)}</span>`; return; }
+    const cell = r.node && r.node.cell;
+    const where = !cell ? '<span style="color:var(--red)">🔴 no coordinates</span>'
+      : cell.isPrimary ? `<span style="color:var(--green)">✓ primary of cell ${cell.r},${cell.c}</span>`
+      : `<span style="color:var(--red)">🔴 behind ${mbEsc(cell.primary)} in cell ${cell.r},${cell.c}: nobody can arrive here</span>`;
+    const list = r.quests.slice(0, 8).map(q => `<div>· <span style="color:var(--purple)">${mbEsc(q.id)}</span> — ${mbEsc(q.title || '')}</div>`).join('')
+      + (r.quests.length > 8 ? `<div>… and ${r.quests.length - 8} more</div>` : '');
+    const unwritten = r.flags.unwritten.length ? `<div style="color:var(--red)">🔴 read and never written: ${r.flags.unwritten.map(u => mbEsc(u.flag)).join(', ')}</div>` : '';
+    out.innerHTML = `<div><b>${mbEsc(r.node.code)}</b> ${mbEsc(r.node.label || '')} — ${where}</div>`
+      + `<div>${r.quests.length} quest(s) here · people: ${r.npcs.map(n => mbEsc(n.name || n.key)).join(', ') || 'none'}</div>` + list + unwritten;
+  }
+
+  // ── 3 Prove: the draft against the file, with check:questgraph's scanners. ──
+  let mbTraps = 0, mbProveRun = 0;
+  async function mbProve(quests) {
+    const out = MB('mb-prove'), run = ++mbProveRun;
+    mbTraps = 0;
+    if (!SERVER.active) { out.innerHTML = '<span style="color:var(--muted)">Not proven: Prove runs on the server. Traps it would catch are not checked offline.</span>'; return; }
+    out.innerHTML = '<span style="color:var(--muted)">Proving…</span>';
+    let r;
+    try {
+      r = await (await fetch(`${SERVER.url}/api/context/prove`, { method: 'POST',
+        headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ quests }) })).json();
+    } catch (e) { r = { ok: false, error: e.message }; }
+    if (run !== mbProveRun) return;
+    if (!r.ok) {
+      mbTraps = 1;
+      out.innerHTML = `<span style="color:var(--red)">🔴 Prove failed: ${mbEsc(r.error)}</span>`;
+    } else {
+      mbTraps = r.count;
+      out.innerHTML = r.count
+        ? `<div style="color:var(--red);font-weight:700">🔴 ${r.count} trap(s) — POST All stays off until they are fixed</div>`
+          + r.traps.map(t => `<div>· <span style="color:var(--purple)">${mbEsc(t.quest)}</span> ${mbEsc(t.kind)}: ${mbEsc(t.detail)}</div>`).join('')
+        : '<span style="color:var(--green)">✓ Proven: every node can be stood on, every gate flag has a writer, no completion waits on itself.</span>';
+    }
+    if (mbTraps) { MB('mb-post').disabled = true; MB('mb-post').title = `Prove found ${mbTraps} trap(s)`; }
   }
   window.__mbCompiled = () => mbCompiled;     // test hook
 
@@ -9400,6 +9455,7 @@ edUpdatePreview();
     if (mbPosting) return;
     if (!WBAPI.loaded)       { mbShowResult('<span style="color:var(--red)">Load a game file first.</span>'); return; }
     if (!mbCompiled.length)  { mbShowResult('<span style="color:var(--red)">⛓ Build Chain first.</span>'); return; }
+    if (mbTraps)             { mbShowResult(`<span style="color:var(--red)">Prove found ${mbTraps} trap(s); fix them and ⛓ Build Chain again.</span>`); return; }
     mbPosting = true;
     MB('mb-post').disabled = true;
     const lines = [];
@@ -9431,11 +9487,12 @@ edUpdatePreview();
       WBAPI._buildIndexes(); renderQuestList();
     }
     mbPosting = false;
-    MB('mb-post').disabled = false;
+    MB('mb-post').disabled = mbTraps > 0;
   }
   window.__mbPostAll = mbPostAll;             // test hook
 
   MB('mb-add').addEventListener('click', mbAddStep);
+  MB('mb-locate-btn').addEventListener('click', mbLocate);
   MB('mb-build').addEventListener('click', mbBuildAndPreview);
   MB('mb-post').addEventListener('click', mbPostAll);
 
