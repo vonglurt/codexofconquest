@@ -518,22 +518,11 @@ Every node that should appear on the map canvas must have an entry in `NODE_COOR
 
 ### Grid layout API
 
-Use the WBAPI layout tools to validate or recompute coordinates:
+Use the WBAPI layout tools to validate coordinates:
 
 ```bash
 # Audit current violations
-curl "http://localhost:1367/api/audit/map?format=text"
-
-# Solve a clean BFS layout (step=4 keeps all links ≤4 cells)
-curl "http://localhost:1367/api/layout/solve?step=4&root=TLS" > layout.json
-
-# Inspect: how many alignment/distance problems?
-cat layout.json | jq '.validation'
-
-# Apply the proposed layout
-cat layout.json | jq '{coords: .proposed}' | \
-  curl -XPOST http://localhost:1367/api/layout/apply \
-    -H 'Content-Type: application/json' -d @-
+./bin/api audit --map --text
 
 # Fix individual coordinate
 curl -XPUT http://localhost:1367/api/coords/BEL \
@@ -544,12 +533,11 @@ curl -XPUT http://localhost:1367/api/coords/BEL \
 
 | check | severity | description |
 |-------|----------|-------------|
-| `alignment` | warning | grid neighbors do not share a row or column |
-| `axis_distance` | warning | axis-aligned neighbors are >4 cells apart |
-| `long_link` | suggestion | Euclidean distance >4 — catches off-axis diagonal neighbors |
+| `density` | warning | more nodes within radius 3 than the terrain's threshold (road 3, market 8, other 6) |
+| `market_proximity` | suggestion | a market node with no other market within 1 cell |
 | `missing_coords` | suggestion | node exists in NODE_MAP but has no NODE_COORDS entry |
 
-Run `POST /api/audit/map/fix` to auto-fix diagonal exits and one-way links. Coordinate positioning (alignment, axis_distance) must be corrected manually or via the layout solver.
+The link checks (`alignment`, `axis_distance`, `long_link`, `bidirectional` and five more), `POST /api/audit/map/fix` and `GET /api/layout/solve` read N/S/E/W fields and were retired in §DX-02ky-FU3; `/fix` and `solve` answer 410. Move a node with `PUT /api/coords/{code}`.
 
 ---
 

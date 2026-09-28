@@ -1064,27 +1064,12 @@ select.fi{appearance:none;}
     <!-- Issue list -->
     <div id="audit-list" style="display:flex;flex-direction:column;gap:4px"></div>
 
-    <!-- Map connectivity audit -->
+    <!-- Map layout audit -->
     <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:4px;border-top:1px solid var(--border);padding-top:12px">
-      <div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;flex:1">Map Connectivity Audit</div>
+      <div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;flex:1">Map Layout Audit</div>
       <button class="btn" id="btn-map-audit" disabled style="font-size:11px">Map Audit</button>
-      <button class="btn danger" id="btn-map-fix-all" style="font-size:11px;display:none">Fix All</button>
     </div>
     <div id="map-audit-list" style="display:flex;flex-direction:column;gap:4px"></div>
-
-    <!-- Grid Layout Solver -->
-    <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:4px;border-top:1px solid var(--border);padding-top:12px">
-      <div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;flex:1">Grid Layout Solver</div>
-      <label style="font-size:11px;color:var(--muted)">step
-        <input id="layout-step" type="number" min="4" max="32" value="8" style="width:40px;font-size:11px;margin-left:4px;background:var(--bg2);border:1px solid var(--border);color:var(--text);border-radius:3px;padding:1px 3px">
-      </label>
-      <label style="font-size:11px;color:var(--muted)">root
-        <input id="layout-root" type="text" placeholder="TLS" style="width:52px;font-size:11px;margin-left:4px;background:var(--bg2);border:1px solid var(--border);color:var(--text);border-radius:3px;padding:1px 3px">
-      </label>
-      <button class="btn" id="btn-layout-solve" disabled style="font-size:11px">Solve</button>
-      <button class="btn primary" id="btn-layout-apply" style="font-size:11px;display:none">Apply Layout</button>
-    </div>
-    <div id="layout-result" style="display:flex;flex-direction:column;gap:4px"></div>
 
   </div>
 
@@ -4971,14 +4956,12 @@ document.querySelectorAll('.nav-tab').forEach(t=>t.addEventListener('click',()=>
   window._auditEnableServer = () => {
     $('btn-audit-server').disabled = false;
     $('btn-map-audit').disabled = false;
-    $('btn-layout-solve').disabled = false;
   };
 
-  // ── Map Connectivity Audit ──────────────────────────────────────────────────
+  // ── Map Layout Audit ──────────────────────────────────────────────────
   async function runMapAudit() {
     const list = $('map-audit-list');
     list.innerHTML = '<div style="color:var(--muted);font-size:12px">Running map audit…</div>';
-    $('btn-map-fix-all').style.display = 'none';
     try {
       const r = await fetch(`${SERVER.url}/api/audit/map`);
       const d = await r.json();
@@ -4988,11 +4971,9 @@ document.querySelectorAll('.nav-tab').forEach(t=>t.addEventListener('click',()=>
         ...d.warnings.map(w => ({ ...w, sev:'warning' })),
       ];
       if (!all.length) {
-        list.innerHTML = '<div style="color:var(--green);font-size:12px">✓ No errors or warnings — map graph is clean.</div>';
+        list.innerHTML = '<div style="color:var(--green);font-size:12px">✓ No errors or warnings — map layout is clean.</div>';
         return;
       }
-      const fixable = all.filter(i => i.fix);
-      if (fixable.length) $('btn-map-fix-all').style.display = '';
 
       const SEV_C = { error:'var(--red)', warning:'var(--yellow)' };
       for (const item of all) {
@@ -5000,7 +4981,7 @@ document.querySelectorAll('.nav-tab').forEach(t=>t.addEventListener('click',()=>
         row.style.cssText = `display:flex;align-items:flex-start;gap:8px;padding:5px 8px;border-left:3px solid ${SEV_C[item.sev]||'var(--border)'};background:var(--bg2);border-radius:0 4px 4px 0;font-size:11px;margin-bottom:2px;`;
         const badge = document.createElement('span');
         badge.style.cssText = 'color:var(--muted);white-space:nowrap;flex-shrink:0;font-family:monospace;font-size:10px;min-width:120px;';
-        badge.textContent = `${item.check}·${item.code}${item.dir?'.'+item.dir:''}`;
+        badge.textContent = `${item.check}·${item.code}`;
         const msg = document.createElement('span');
         msg.style.cssText = 'flex:1;color:var(--text);';
         msg.textContent = item.msg;
@@ -5034,86 +5015,6 @@ document.querySelectorAll('.nav-tab').forEach(t=>t.addEventListener('click',()=>
   }
 
   $('btn-map-audit').addEventListener('click', runMapAudit);
-
-  $('btn-map-fix-all').addEventListener('click', async () => {
-    $('btn-map-fix-all').disabled = true;
-    $('btn-map-fix-all').textContent = 'Fixing…';
-    try {
-      const r = await fetch(`${SERVER.url}/api/audit/map/fix`, { method:'POST', headers:{'Content-Type':'application/json'}, body:'{}' });
-      const d = await r.json();
-      $('btn-map-fix-all').textContent = `Fixed ${d.fixed?.length ?? 0}`;
-      await runMapAudit();
-    } catch(e) {
-      $('btn-map-fix-all').textContent = 'Fix All';
-      $('btn-map-fix-all').disabled = false;
-    }
-  });
-
-  // ── Grid Layout Solver ─────────────────────────────────────────────────────
-  let _layoutProposed = null;
-
-  async function runLayoutSolve() {
-    const result = $('layout-result');
-    const step   = parseInt($('layout-step').value, 10) || 8;
-    const root   = $('layout-root').value.trim() || '';
-    result.innerHTML = '<div style="color:var(--muted);font-size:12px">Solving…</div>';
-    $('btn-layout-apply').style.display = 'none';
-    _layoutProposed = null;
-    try {
-      const params = `step=${step}${root ? '&root='+encodeURIComponent(root) : ''}`;
-      const r = await fetch(`${SERVER.url}/api/layout/solve?${params}`);
-      const d = await r.json();
-      if (!d.ok) { result.innerHTML = `<div style="color:var(--red);font-size:12px">${d.error||'Solver error'}</div>`; return; }
-      _layoutProposed = d.proposed;
-      const v = d.validation;
-      const rows = [
-        ['Root', d.root], ['Step', d.step],
-        ['Nodes placed', d.placed + ' / ' + d.total],
-        ['Orphans (disconnected)', d.orphans],
-        ['Aligned pairs', `${v.alignOk} ok · ${v.alignBad} misaligned`],
-        ['Within 4-cell pairs', `${v.distOk} ok · ${v.distBad} over`],
-      ];
-      let html = '<div style="display:grid;grid-template-columns:auto 1fr;gap:2px 12px;font-size:11px;font-family:monospace;padding:6px 0">';
-      for (const [k, val] of rows)
-        html += `<span style="color:var(--muted)">${k}</span><span style="color:var(--text)">${val}</span>`;
-      html += '</div>';
-      if (d.orphans > 0)
-        html += `<div style="color:var(--yellow);font-size:11px">${d.orphans} disconnected nodes will be placed below the main grid.</div>`;
-      result.innerHTML = html;
-      $('btn-layout-apply').style.display = '';
-    } catch(e) {
-      result.innerHTML = `<div style="color:var(--red);font-size:12px">Solve failed: ${e.message}</div>`;
-    }
-  }
-
-  $('btn-layout-solve').addEventListener('click', runLayoutSolve);
-
-  $('btn-layout-apply').addEventListener('click', async () => {
-    if (!_layoutProposed) return;
-    $('btn-layout-apply').disabled = true;
-    $('btn-layout-apply').textContent = 'Applying…';
-    try {
-      const r = await fetch(`${SERVER.url}/api/layout/apply`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ coords: _layoutProposed }),
-      });
-      const d = await r.json();
-      if (d.ok) {
-        $('btn-layout-apply').textContent = `✓ Applied ${d.updated} coords`;
-        $('layout-result').insertAdjacentHTML('beforeend',
-          `<div style="color:var(--green);font-size:11px">Layout written — reload game file to see changes on canvas.</div>`);
-      } else {
-        $('btn-layout-apply').textContent = 'Apply Layout';
-        $('btn-layout-apply').disabled = false;
-        $('layout-result').insertAdjacentHTML('beforeend',
-          `<div style="color:var(--red);font-size:11px">${d.error||'Apply failed'}</div>`);
-      }
-    } catch(e) {
-      $('btn-layout-apply').textContent = 'Apply Layout';
-      $('btn-layout-apply').disabled = false;
-    }
-  });
 })();
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -5204,7 +5105,7 @@ document.querySelectorAll('.nav-tab').forEach(t=>t.addEventListener('click',()=>
     ],
     audit: [
       { label:'Full integrity audit',    url:'/api/audit' },
-      { label:'Map connectivity audit',  url:'/api/audit/map' },
+      { label:'Map layout audit',        url:'/api/audit/map' },
       { label:'Next error (first fix)',   url:'/api/next-error' },
       { label:'Next error — skip 1',     url:'/api/next-error?skip=1' },
       { label:'Errors only',             url:'/api/next-error?severity=error' },
@@ -6654,12 +6555,10 @@ window._onServerActivated = () => {
     { section:'Coords & Graph', method:'GET', path:'/api/graph/validate/:code', desc:'One node\'s cell: arrivable (primary), occupied neighbours, heat', params:[] },
     { section:'Coords & Graph', method:'GET', path:'/api/graph/broken', desc:'Nodes whose grid cell touches no occupied cell — the census ./bin/api broken prints', params:[] },
     // Layout
-    { section:'Layout', method:'GET', path:'/api/layout/solve', desc:'Propose grid layout from a root node', params:[{name:'root',type:'string',desc:'Root node code'},{name:'step',type:'number',desc:'Grid step size'}] },
     { section:'Layout', method:'POST', path:'/api/layout/apply', desc:'Apply a proposed coord map', params:[{name:'body',type:'json',desc:'{ coords: { CODE: {r,c}, … } }'}] },
     // Audit
     { section:'Audit', method:'GET', path:'/api/audit', desc:'Full integrity scan: broken refs, missing data', params:[] },
-    { section:'Audit', method:'GET', path:'/api/audit/map', desc:'Bidirectional map link audit', params:[] },
-    { section:'Audit', method:'POST', path:'/api/audit/map/fix', desc:'Auto-fix detected map link errors', params:[] },
+    { section:'Audit', method:'GET', path:'/api/audit/map', desc:'Map layout audit: density, market clustering, missing coords', params:[] },
     { section:'Audit', method:'GET', path:'/api/next-error', desc:'First failing validation item with fix suggestion', params:[{name:'skip',type:'number',desc:'Skip N errors'},{name:'severity',type:'string',desc:'error|warning|suggestion'}] },
     { section:'Audit', method:'GET', path:'/api/schema', desc:'Schema definitions for all entity types', params:[] },
     { section:'Audit', method:'GET', path:'/api/schema/:type', desc:'Schema for one type', params:[{name:':type',type:'path',desc:'node|quest|monster|npc|terrain'}] },

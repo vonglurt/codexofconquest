@@ -554,13 +554,13 @@ Sample output:
 
 Returns a structured list of errors, warnings, and suggestions across all quest and node data.
 
-### Map audit (bidirectional link check)
+### Map layout audit
 
 ```bash
 ./bin/api audit --map
 ```
 
-Checks every N/E/S/W link: if node A has `E=B`, then B must have `W=A`. Reports every mismatch with the exact fix command.
+Checks node spacing on the grid: clusters denser than their terrain allows, market nodes with no market neighbour, and nodes with no coordinates. Connectivity is cell adjacency (§CELL-01); `./bin/api reachability` answers whether a place can be walked to.
 
 ### Plain text output
 
@@ -1280,20 +1280,9 @@ curl -s -XPOST http://localhost:1367/api/coords/swap \
   -d '{"a":"J52","b":"LHR"}' | jq
 ```
 
-### 17.8 Layout solver
+### 17.8 Layout solver — retired
 
-```bash
-# Propose a layout from a root node outward
-curl -s 'http://localhost:1367/api/layout/solve?root=LHR&step=8' | jq '{placed: (.coords | keys | length), orphans}'
-
-# Apply the proposed layout
-LAYOUT=$(curl -s 'http://localhost:1367/api/layout/solve?root=LHR&step=8')
-echo $LAYOUT | jq '.coords' > /tmp/proposed-layout.json
-
-curl -s -XPOST http://localhost:1367/api/layout/apply \
-  -H 'Content-Type: application/json' \
-  -d "{\"coords\": $(cat /tmp/proposed-layout.json)}" | jq
-```
+`GET /api/layout/solve` answers 410 (§DX-02ky-FU3). It laid nodes out by walking N/S/E/W links, which no node carries since §CELL-01, so it placed one node and lined the other 415 up as orphans. Positions come from lat/lon (§WALK-1.5): `./bin/api geo-seed`, then `PUT /api/coords/{code}` for a single node.
 
 ### 17.9 Save to disk — the deliberate dated backup
 
@@ -1419,8 +1408,7 @@ POST /api/coords/swap {"a":"X","b":"Y"}        Swap two nodes
 
 Connectivity is cell adjacency (§CELL-01): the junction routes and fill-gap answer 410.
 
-GET  /api/layout/solve?root=LHR&step=8        Propose layout
-POST /api/layout/apply {"coords":{...}}        Apply layout
+POST /api/layout/apply {"coords":{...}}        Mass-update NODE_COORDS (the geo-seed path)
 
 POST /api/save                                 Dated snapshot + copy (writes already persist)  → ./bin/api save
 GET  /api/snapshots                            List the dated snapshots + total size          → ./bin/api snapshots

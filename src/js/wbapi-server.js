@@ -1013,11 +1013,8 @@ function cellNeighbours(code) {
   return out;
 }
 
-// /api/audit/map checks that walk a node's N/S/E/W or diagonal link fields. §CELL-01
-// stripped those fields, so while the map carries none these checks cannot fire, and
-// the report says so rather than counting their silence as a pass.
-const LINK_FIELD_CHECKS = ['diagonal_exit','max_connections','bidirectional','dangling_link',
-  'direction_sign','long_link','alignment','axis_distance','corner_misalign'];
+// N/S/E/W and diagonal link fields still on a node. §CELL-01 stripped them all, and
+// /api/audit/map reports the count so one that reappears is seen.
 function linkFieldCount(nm) {
   let n = 0;
   for (const node of Object.values(nm || {}))
@@ -3948,78 +3945,16 @@ async function route(req, res) {
     }
   }
 
-  // ── Audit: Map conformity (spatial + graph) ──────────────────────────────
-  // ── POST /api/audit/map/fix — apply diagonal + one-way fixes ────────────────
+  // ── POST /api/audit/map/fix — RETIRED (§DX-02ky-FU3) ─────────────────────────
   if (parts[0] === 'audit' && parts[1] === 'map' && parts[2] === 'fix' && method === 'POST') {
-    let body = {};
-    try { body = await readBody(req); } catch(_) {}
-
-    const DIAG2 = ['NW','NE','SW','SE'];
-    const nm    = WBAPI.nodeMap;
-    const fixed = [];
-    const errs  = [];
-
-    // helper: remove a diagonal exit from _rawSrc (nodes are single-line entries)
-    function stripDiag(code, dir) {
-      const S = '// ◆◆◆ WORLDBUILDER:NODE_MAP:START ◆◆◆';
-      const E = '// ◆◆◆ WORLDBUILDER:NODE_MAP:END ◆◆◆';
-      const a = WBAPI._rawSrc.indexOf(S) + S.length;
-      const e = WBAPI._rawSrc.indexOf(E);
-      if (a < S.length || e < 0) return false;
-      const sec  = WBAPI._rawSrc.slice(a, e);
-      const lineRe = new RegExp(`^([ \\t]*${code}\\s*:\\s*\\{[^\\n]+)$`, 'm');
-      const m = lineRe.exec(sec);
-      if (!m) return false;
-      const before = m[1];
-      const after  = before
-        .replace(new RegExp(`,\\s*${dir}\\s*:\\s*'[^']*'`), '')
-        .replace(new RegExp(`\\b${dir}\\s*:\\s*'[^']*',?\\s*`), '');
-      if (after === before) return false;
-      WBAPI._rawSrc = WBAPI._rawSrc.slice(0, a) + sec.replace(before, after) + WBAPI._rawSrc.slice(e);
-      delete nm[code][dir];
-      return true;
-    }
-
-    // which issues to fix
-    const specific = body.check && body.code;
-
-    if (!specific || body.check === 'diagonal_exit') {
-      const targets = specific
-        ? [{ code: body.code, dir: body.dir }]
-        : Object.entries(nm).flatMap(([code, n]) =>
-            DIAG2.filter(d => n[d] != null).map(d => ({ code, dir:d })));
-      for (const { code, dir } of targets) {
-        if (nm[code]?.[dir] == null) continue;
-        if (stripDiag(code, dir)) fixed.push({ check:'diagonal_exit', code, dir });
-        else errs.push({ check:'diagonal_exit', code, dir, error:'source patch failed' });
-      }
-    }
-
-    if (fixed.length) {
-      // §DX-02k — a bulk fix keeps its dated backup, but `saveStamped()` puts it
-      // beside the game file instead of wherever the process happened to start.
-      const sv = WBAPI.saveStamped();
-      if (!sv.ok) {
-        logResponse(method, url.pathname, 500, `fix ok but save failed: ${sv.error}`);
-        return json(res, 500, { ok:false, error:`fixes applied but save failed: ${sv.error}`, fixed });
-      }
-      fs.copyFileSync(sv.path, GAME_FILE);
-      await WBAPI.load(GAME_FILE);
-      logRow('fixed', fixed.length);
-      logRow('saved', sv.path);
-    }
-    logResponse(method, url.pathname, 200, `${fixed.length} fixed  ·  ${errs.length} failed`);
-    return json(res, 200, { ok:true, fixed, errors:errs, saved: fixed.length > 0,
-      note: fixed.length ? 'Changes saved and reloaded.' : 'Nothing to fix.' });
+    const error = 'Retired: it stripped diagonal N/S/E/W exits, and movement is by cell (§CELL-01), so no node carries one. Move a node with PUT /api/coords/{code}; check its neighbour cells with GET /api/graph/validate/{code}.';
+    logResponse(method, url.pathname, 410, 'audit/map/fix retired (§DX-02ky-FU3)');
+    return json(res, 410, { ok:false, error });
   }
 
+  // ── GET /api/audit/map — density, market proximity, missing coords ──────────
   if (parts[0] === 'audit' && parts[1] === 'map' && method === 'GET') {
-    const OPP   = { N:'S', S:'N', E:'W', W:'E' };
-    const DIRS  = ['N','S','E','W'];
-    // directional sign: moving in dir D from a node should change coords by (dr, dc)
-    const DIR_DELTA = { N:[-1,0], S:[1,0], E:[0,1], W:[0,-1] };
     const DENSITY_THRESH = { road:3, market:8, _default:6 };
-    const LONG_LINK_THRESHOLD = 4; // grid cells
     const DENSITY_RADIUS = 3;      // grid cells (Euclidean)
 
     const coords    = WBAPI.nodeCoords; // {code:{r,c}}
@@ -4049,121 +3984,7 @@ async function route(req, res) {
     const nodeCodesWithCoords = Object.keys(coords).filter(c => nodeMap[c]);
     const allNodeCodes = Object.keys(nodeMap);
 
-    // ── 0. Diagonal exits (NW/NE/SW/SE must be null) ─────────────────────────
-    const DIAG_DIRS = ['NW','NE','SW','SE'];
-    for (const code of allNodeCodes) {
-      const n = nodeMap[code];
-      for (const d of DIAG_DIRS) {
-        if (n[d] != null)
-          errors.push({ check:'diagonal_exit', code, dir:d, target:String(n[d]),
-            msg:`${code}.${d}="${n[d]}" — diagonal exits are not supported; use N/S/E/W only`,
-            fix:{ method:'POST', url:`/api/audit/map/fix`, body:{ check:'diagonal_exit', code, dir:d },
-                  curl:`curl -XPOST http://localhost:${PORT}/api/audit/map/fix -H 'Content-Type: application/json' -d '{"check":"diagonal_exit","code":"${code}","dir":"${d}"}'` } });
-      }
-    }
-
-    // ── 1. Max-4-connections: no node in more than one direction slot ─────────
-    for (const code of allNodeCodes) {
-      const n = nodeMap[code];
-      const targets = DIRS.map(d => n[d]).filter(Boolean);
-      const seen = new Set();
-      for (const t of targets) {
-        if (seen.has(t))
-          errors.push({ check:'max_connections', code, msg:`"${t}" appears in multiple direction slots — duplicate connection` });
-        seen.add(t);
-      }
-      if (targets.length > 4)
-        errors.push({ check:'max_connections', code, msg:`${targets.length} connections (max is 4: N/S/E/W)` });
-    }
-
-    // ── 2. Bidirectional consistency ─────────────────────────────────────────
-    for (const code of allNodeCodes) {
-      const n = nodeMap[code];
-      for (const dir of DIRS) {
-        const target = n[dir];
-        if (!target) continue;
-        if (!nodeMap[target]) {
-          errors.push({ check:'dangling_link', code, dir, target, msg:`${code}.${dir}="${target}" but "${target}" not in NODE_MAP` });
-          continue;
-        }
-        const back = nodeMap[target][OPP[dir]];
-        if (back !== code)
-          warnings.push({ check:'bidirectional', code, dir, target,
-            msg:`${code}.${dir}="${target}" but ${target}.${OPP[dir]}="${back||'(null)'}" — link is one-way`,
-            fix:{ method:'POST', url:`/api/audit/map/fix`, body:{ check:'bidirectional', code, dir, target },
-                  curl:`curl -XPOST http://localhost:${PORT}/api/audit/map/fix -H 'Content-Type: application/json' -d '{"check":"bidirectional","code":"${code}","dir":"${dir}","target":"${target}"}'` } });
-      }
-    }
-
-    // ── 3. Direction consistency (N=lower r, S=higher r, E=higher c, W=lower c) ──
-    for (const code of nodeCodesWithCoords) {
-      const n  = nodeMap[code];
-      const ca = coords[code];
-      for (const dir of DIRS) {
-        const target = n[dir];
-        if (!target || !coords[target]) continue;
-        const cb = coords[target];
-        const [dr, dc] = DIR_DELTA[dir]; // expected sign
-        const actualDr = cb.r - ca.r;
-        const actualDc = cb.c - ca.c;
-        // Check sign: if dr≠0, actualDr should be same sign; if dc≠0, actualDc same sign
-        const signOk = dr !== 0
-          ? (dr > 0 ? actualDr >= 0 : actualDr <= 0)
-          : (dc > 0 ? actualDc >= 0 : actualDc <= 0);
-        if (!signOk)
-          warnings.push({ check:'direction_sign', code, dir, target,
-            msg:`${code}(r=${ca.r},c=${ca.c}).${dir}="${target}"(r=${cb.r},c=${cb.c}) — ${dir} should move ${dr<0||dc<0?'lower':'higher'} ${dr!==0?'r':'c'} but moves opposite` });
-      }
-    }
-
-    // ── 4. Long-link detection (distance > LONG_LINK_THRESHOLD) + between suggestion ──
-    const longLinkSeen = new Set();
-    for (const code of nodeCodesWithCoords) {
-      const n  = nodeMap[code];
-      const ca = coords[code];
-      for (const dir of DIRS) {
-        const target = n[dir];
-        if (!target || !coords[target]) continue;
-        const pairKey = [code, target].sort().join(':');
-        if (longLinkSeen.has(pairKey)) continue;
-        longLinkSeen.add(pairKey);
-        const cb = coords[target];
-        const d  = dist(ca, cb);
-        if (d > LONG_LINK_THRESHOLD) {
-          // Build ranked between-placement candidates for an intermediate junction
-          const occupied = new Map();
-          for (const [c, p] of Object.entries(coords)) occupied.set(`${p.r},${p.c}`, c);
-          const snap = v => Math.round(v / 4) * 4;
-          const mr = snap((ca.r + cb.r) / 2), mc = snap((ca.c + cb.c) / 2);
-          const candidates = [];
-          const cSeen = new Set();
-          function tryC(r, c, reason) {
-            r = snap(r); c = snap(c);
-            const k = `${r},${c}`;
-            if (cSeen.has(k)) return; cSeen.add(k);
-            const occ = occupied.get(k) || null;
-            candidates.push({ r, c, reason, free: !occ, occupiedBy: occ,
-              moveCmd: `curl -s -XPOST http://localhost:${PORT}/api/node -H 'Content-Type: application/json' -d '{"code":"J??","name":"junction","label":"Junction"}'` +
-                       ` && curl -s -XPUT http://localhost:${PORT}/api/coords/J?? -H 'Content-Type: application/json' -d '{"r":${r},"c":${c}}'` });
-          }
-          tryC(mr, mc,   'midpoint between source and destination');
-          tryC(ca.r, mc, 'source row, mid-column');
-          tryC(mr, ca.c, 'source column, mid-row');
-          tryC(cb.r, mc, 'destination row, mid-column');
-          tryC(mr, cb.c, 'destination column, mid-row');
-          tryC(ca.r, cb.c,'source row, destination column');
-          tryC(cb.r, ca.c,'destination row, source column');
-          const best = candidates.find(c => c.free) || candidates[0];
-          suggestions.push({ check:'long_link', code, dir, target,
-            distance: Math.round(d * 10) / 10,
-            msg:`${code}↔${target} distance ${Math.round(d*10)/10} cells (threshold ${LONG_LINK_THRESHOLD}) — insert intermediate node between them`,
-            suggestedCoords: best,
-            moveSuggestion: { node:'(new junction)', note:`Place a junction between "${code}" and "${target}"`, recommended: best, candidates } });
-        }
-      }
-    }
-
-    // ── 5. Density check (radius 3) ───────────────────────────────────────────
+    // ── Density check (radius 3) ───────────────────────────────────────────
     // Uses a spatial grid (bucket size = DENSITY_RADIUS) for O(N) lookup
     // instead of O(N²) all-pairs comparison.
     {
@@ -4201,7 +4022,7 @@ async function route(req, res) {
       }
     }
 
-    // ── 6. Shop/vendor proximity (market terrain should be within 1 grid cell of another market) ──
+    // ── Shop/vendor proximity (market terrain should be within 1 grid cell of another market) ──
     const marketNodes = nodeCodesWithCoords.filter(c => terrainCat(c) === 'market');
     for (const code of marketNodes) {
       const ca = coords[code];
@@ -4211,206 +4032,19 @@ async function route(req, res) {
           msg:`${code} is a market/shop node but has no other market node within 1 grid cell — vendors should cluster` });
     }
 
-    // ── 7. Nodes with no coords — suggest placement between known neighbors ──────
+    // ── Nodes with no coords ─────────────────────────────────────────────────
     for (const code of allNodeCodes) {
       if (coords[code]) continue;
-      const n = nodeMap[code] || {};
-      // Find the first neighbor that does have coords, use it as the anchor
-      const knownNeighbors = DIRS.map(d => ({ dir:d, nb:n[d] }))
-        .filter(x => x.nb && coords[x.nb]);
-      const occupied = new Map();
-      for (const [c, p] of Object.entries(coords)) occupied.set(`${p.r},${p.c}`, c);
-      const snap = v => Math.round(v / 4) * 4;
-      let moveSuggestion = null;
-      if (knownNeighbors.length >= 2) {
-        // Two known neighbors — place between them
-        const ca = coords[knownNeighbors[0].nb], cb = coords[knownNeighbors[1].nb];
-        const mr = snap((ca.r + cb.r) / 2), mc = snap((ca.c + cb.c) / 2);
-        const cSeen = new Set(); const candidates = [];
-        function tryN(r, c, reason) {
-          r = snap(r); c = snap(c); const k = `${r},${c}`;
-          if (cSeen.has(k)) return; cSeen.add(k);
-          const occ = occupied.get(k) || null;
-          candidates.push({ r, c, reason, free: !occ, occupiedBy: occ,
-            moveCmd: `curl -s -XPUT http://localhost:${PORT}/api/coords/${code} -H 'Content-Type: application/json' -d '{"r":${r},"c":${c}}'` });
-        }
-        tryN(mr, mc,   'midpoint between neighbors');
-        tryN(ca.r, mc, `neighbor "${knownNeighbors[0].nb}" row, mid-column`);
-        tryN(mr, ca.c, `neighbor "${knownNeighbors[0].nb}" column, mid-row`);
-        tryN(cb.r, mc, `neighbor "${knownNeighbors[1].nb}" row, mid-column`);
-        tryN(mr, cb.c, `neighbor "${knownNeighbors[1].nb}" column, mid-row`);
-        tryN(ca.r, cb.c, `neighbor "${knownNeighbors[0].nb}" row, neighbor "${knownNeighbors[1].nb}" column`);
-        tryN(cb.r, ca.c, `neighbor "${knownNeighbors[1].nb}" row, neighbor "${knownNeighbors[0].nb}" column`);
-        const best = candidates.find(c => c.free) || candidates[0];
-        moveSuggestion = { note:`Place "${code}" between its known neighbors`, recommended: best, candidates };
-      } else if (knownNeighbors.length === 1) {
-        // One known neighbor — project in the connection direction
-        const { dir, nb } = knownNeighbors[0];
-        const ca = coords[nb];
-        const DR = { N:-4, S:4, E:0, W:0 }, DC = { N:0, S:0, E:4, W:-4 };
-        const pr = { r: ca.r + DR[dir]*3, c: ca.c + DC[dir]*3 }; // 3 steps out
-        const cSeen = new Set(); const candidates = [];
-        function tryN2(r, c, reason) {
-          r = snap(r); c = snap(c); const k = `${r},${c}`;
-          if (cSeen.has(k)) return; cSeen.add(k);
-          const occ = occupied.get(k) || null;
-          candidates.push({ r, c, reason, free: !occ, occupiedBy: occ,
-            moveCmd: `curl -s -XPUT http://localhost:${PORT}/api/coords/${code} -H 'Content-Type: application/json' -d '{"r":${r},"c":${c}}'` });
-        }
-        const mr = snap((ca.r + pr.r) / 2), mc = snap((ca.c + pr.c) / 2);
-        tryN2(pr.r, pr.c,  `3 steps ${dir} from neighbor "${nb}"`);
-        tryN2(mr, mc,      `midpoint 1.5 steps ${dir} from "${nb}"`);
-        tryN2(ca.r + DR[dir]*2, ca.c + DC[dir]*2, `2 steps ${dir} from "${nb}"`);
-        tryN2(ca.r, mc,    `neighbor row, projected mid-column`);
-        tryN2(mr, ca.c,    `neighbor column, projected mid-row`);
-        const best = candidates.find(c => c.free) || candidates[0];
-        moveSuggestion = { note:`Place "${code}" along the ${dir} axis from "${nb}"`, recommended: best, candidates };
-      }
       suggestions.push({ check:'missing_coords', code,
-        msg:`"${code}" has no entry in NODE_COORDS — won't appear on map canvas`,
-        moveSuggestion });
-    }
-
-    // ── 8. Alignment: connected pair not on same row or column (diagonal) ──────
-    const alignSeen = new Set();
-    for (const code of nodeCodesWithCoords) {
-      const n  = nodeMap[code];
-      const ca = coords[code];
-      for (const dir of DIRS) {
-        const target = n[dir];
-        if (!target || !coords[target]) continue;
-        const pairKey = [code, target].sort().join(':');
-        if (alignSeen.has(pairKey)) continue;
-        alignSeen.add(pairKey);
-        const cb = coords[target];
-        if (ca.r === cb.r || ca.c === cb.c) continue; // aligned — fine
-        // Diagonal: N/S edge means they should share column; E/W edge means they should share row
-        const isNS = dir === 'N' || dir === 'S';
-        const diagAxis    = isNS ? 'c' : 'r';
-        const diagSrcVal  = isNS ? ca.c : ca.r;
-        const diagTgtVal  = isNS ? cb.c : cb.r;
-        const diagDesc    = `${code} ${diagAxis}=${diagSrcVal}, ${target} ${diagAxis}=${diagTgtVal}`;
-        // Suggested fix: move target so it shares the correct axis with source
-        const fixCoords   = isNS ? { r: cb.r, c: ca.c } : { r: ca.r, c: cb.c };
-        const fixText     = `Move ${target} to (${fixCoords.r},${fixCoords.c})`;
-        warnings.push({ check:'alignment', code, dir, target,
-          diagDesc, fixCoords, fixText,
-          msg:`Diagonal (${diagDesc})`,
-          suggestedFix: fixText,
-          fix:{ method:'PUT', url:`/api/node/${target}`,
-                body:{ r: fixCoords.r, c: fixCoords.c },
-                curl:`curl -XPUT http://localhost:${PORT}/api/node/${target} -H 'Content-Type: application/json' -d '{"r":${fixCoords.r},"c":${fixCoords.c}}'` } });
-      }
-    }
-
-    // ── 9. Axis distance: aligned pair > 4 cells apart ───────────────────────
-    const axisSeen = new Set();
-    for (const code of nodeCodesWithCoords) {
-      const n  = nodeMap[code];
-      const ca = coords[code];
-      for (const dir of DIRS) {
-        const target = n[dir];
-        if (!target || !coords[target]) continue;
-        const pairKey = [code, target].sort().join(':');
-        if (axisSeen.has(pairKey)) continue;
-        axisSeen.add(pairKey);
-        const cb = coords[target];
-        if (ca.r !== cb.r && ca.c !== cb.c) continue; // diagonal handled above
-        const axisD = ca.r === cb.r ? Math.abs(ca.c - cb.c) : Math.abs(ca.r - cb.r);
-        if (axisD <= 4) continue;
-        // Compute intermediate junction positions spaced ≤4 cells apart
-        const junctionsNeeded = Math.ceil(axisD / 4) - 1;
-        const midpoints = [];
-        for (let i = 1; i <= junctionsNeeded; i++) {
-          const t = i / (junctionsNeeded + 1);
-          midpoints.push({
-            r: Math.round(ca.r + (cb.r - ca.r) * t),
-            c: Math.round(ca.c + (cb.c - ca.c) * t),
-          });
-        }
-        let fixText;
-        if (axisD > 24) {
-          fixText = `Gap=${axisD} — dense collision region, needs manual rearrangement`;
-        } else if (junctionsNeeded === 1) {
-          fixText = `Insert 1 junction at (${midpoints[0].r},${midpoints[0].c})`;
-        } else {
-          fixText = `Insert ${junctionsNeeded} junctions at ${midpoints.map(p=>`(${p.r},${p.c})`).join(', ')}`;
-        }
-        warnings.push({ check:'axis_distance', code, dir, target, distance: axisD,
-          junctionsNeeded, midpoints, fixText,
-          msg:`Gap=${axisD}`,
-          suggestedFix: fixText,
-          fix:{ method:'POST', url:`/api/node`,
-                note:`Create junction node at each: ${midpoints.map(p=>`r=${p.r},c=${p.c}`).join(' | ')}`,
-                curl: midpoints.map(p =>
-                  `curl -XPOST http://localhost:${PORT}/api/node -H 'Content-Type: application/json' -d '{"code":"J??","name":"junction","label":"Junction","r":${p.r},"c":${p.c}}'`
-                ).join('\n') } });
-      }
-    }
-
-    // ── 10. Corner-node consistency ───────────────────────────────────────────
-    // A node with both N/S and E/W connections is a corner/T/cross node.
-    // Its coords must sit at the intersection of its two connection axes:
-    //   • The N or S neighbour must share the same column as this node.
-    //   • The E or W neighbour must share the same row as this node.
-    // If either fails, report the misalignment and suggest the correct position.
-    for (const code of nodeCodesWithCoords) {
-      const n  = nodeMap[code];
-      const ca = coords[code];
-      const nsDir = ['N','S'].find(d => n[d] && coords[n[d]]);
-      const ewDir = ['E','W'].find(d => n[d] && coords[n[d]]);
-      if (!nsDir || !ewDir) continue; // not a corner/T node
-      const nsTarget = n[nsDir], ewTarget = n[ewDir];
-      const cns = coords[nsTarget], cew = coords[ewTarget];
-      const nsColOk = cns.c === ca.c;
-      const ewRowOk = cew.r === ca.r;
-      if (nsColOk && ewRowOk) continue;
-      // Compute what this node's correct position should be
-      // Correct r = E/W neighbour's row; correct c = N/S neighbour's column
-      const correctR = ewRowOk ? ca.r : cew.r;
-      const correctC = nsColOk ? ca.c : cns.c;
-      const problems = [];
-      if (!nsColOk) problems.push(`${nsDir}-neighbour ${nsTarget} at c=${cns.c} ≠ ${code} c=${ca.c} — column mismatch`);
-      if (!ewRowOk) problems.push(`${ewDir}-neighbour ${ewTarget} at r=${cew.r} ≠ ${code} r=${ca.r} — row mismatch`);
-      warnings.push({ check:'corner_misalign', code,
-        nsDir, nsTarget, ewDir, ewTarget,
-        currentCoords: { r: ca.r, c: ca.c },
-        correctCoords: { r: correctR, c: correctC },
-        problems,
-        msg:`Corner-node ${code}(${ca.r},${ca.c}): must sit at intersection of ${nsTarget}-column(${cns.c}) × ${ewTarget}-row(${cew.r}) = (${correctR},${correctC})`,
-        suggestedFix: `Move ${code} to (${correctR},${correctC})`,
-        fix:{ method:'PUT', url:`/api/node/${code}`,
-              body:{ r: correctR, c: correctC },
-              curl:`curl -XPUT http://localhost:${PORT}/api/node/${code} -H 'Content-Type: application/json' -d '{"r":${correctR},"c":${correctC}}'` } });
-    }
-
-    // ── Blocked-edges table ───────────────────────────────────────────────────
-    // Collect all edge-level problems into a single ordered list for the table.
-    const blockedEdges = [];
-    const edgeSeen = new Set();
-    for (const w of warnings) {
-      if (!['alignment','axis_distance','corner_misalign'].includes(w.check)) continue;
-      if (!w.code || !w.dir || !w.target) continue;
-      const edgeKey = `${w.code}-${w.dir}→${w.target}`;
-      if (edgeSeen.has(edgeKey)) continue;
-      edgeSeen.add(edgeKey);
-      blockedEdges.push({
-        edge:    edgeKey,
-        problem: w.msg,
-        fix:     w.suggestedFix || '—',
-        check:   w.check,
-      });
+        msg:`"${code}" has no entry in NODE_COORDS — won't appear on map canvas` });
     }
 
     const linkFields = linkFieldCount(nodeMap);
-    const structurallySatisfied = linkFields === 0 ? LINK_FIELD_CHECKS : [];
     const summary = { errors: errors.length, warnings: warnings.length, suggestions: suggestions.length,
-      nodesChecked: nodeCodesWithCoords.length, totalNodes: allNodeCodes.length,
-      blockedEdges: blockedEdges.length, linkFields, structurallySatisfied };
+      nodesChecked: nodeCodesWithCoords.length, totalNodes: allNodeCodes.length, linkFields };
 
     // ── verbose audit log ────────────────────────────────────────────────────
     logRow('nodes checked', `${nodeCodesWithCoords.length}/${allNodeCodes.length} have coords`);
-    if (structurallySatisfied.length) logRow('not measured', `${structurallySatisfied.length} link-field checks — the map has 0 N/S/E/W links`);
     // tally by check type
     const errTally = {}, warnTally = {}, suggTally = {};
     for (const e of errors)   errTally[e.check]  = (errTally[e.check]  || 0) + 1;
@@ -4421,16 +4055,15 @@ async function route(req, res) {
     logRow('suggestions', suggestions.length ? Object.entries(suggTally).map(([k,v])=>`${k}:${v}`).join('  ') : 'none');
     // per-item detail
     for (const e of errors)
-      log('AUDIT✗', `${e.check.padEnd(16)} ${(e.code||'').padEnd(10)} ${e.dir?e.dir+' ':''} ${e.target||''}`);
+      log('AUDIT✗', `${e.check.padEnd(16)} ${(e.code||'').padEnd(10)}`);
     for (const w of warnings)
-      log('AUDIT⚠', `${w.check.padEnd(16)} ${(w.code||'').padEnd(10)} ${w.dir?w.dir+' ':''} ${w.target||''}`);
+      log('AUDIT⚠', `${w.check.padEnd(16)} ${(w.code||'').padEnd(10)}`);
     for (const s of suggestions)
       log('AUDIT·', `${s.check.padEnd(16)} ${(s.code||'').padEnd(10)}`);
     logResponse(method, url.pathname, 200, `map audit  ${errors.length} errors  ·  ${warnings.length} warnings  ·  ${suggestions.length} suggestions`);
 
     const fmt = url.searchParams.get('format') || 'json';
     if (fmt === 'text') {
-      const b2 = `http://localhost:${PORT}`;
       const ts2 = new Date().toISOString().slice(0,19).replace('T',' ');
       const HR = '─'.repeat(64);
       const lines = [
@@ -4439,37 +4072,15 @@ async function route(req, res) {
         `Generated ${ts2}  ·  ${nodeCodesWithCoords.length}/${allNodeCodes.length} nodes have coords`,
         '',
       ];
-      const mapFixHint = (item) => {
-        const { check, code, dir, target } = item;
-        if (check === 'diagonal_exit')
-          return `   → curl -XPOST ${b2}/api/audit/map/fix -H 'Content-Type: application/json' -d '{"check":"diagonal_exit","code":"${code}","dir":"${dir}"}'  # fix now\n` +
-                 `     OR fix all: curl -XPOST ${b2}/api/audit/map/fix`;
-        if (check === 'dangling_link')
-          return `   → curl -XPUT ${b2}/api/node/${code} -H 'Content-Type: application/json' -d '{"${dir}":null}'  # remove broken link\n` +
-                 `     OR create the missing node: curl -XPOST ${b2}/api/node -d '{"code":"${target}",...}'`;
-        if (check === 'max_connections')
-          return `   → curl ${b2}/api/node/${code}  # inspect N/S/E/W links and remove duplicate`;
-        if (check === 'long_link' && item.suggestedCoords)
-          return `   → Suggested intermediate node: r=${item.suggestedCoords.r}, c=${item.suggestedCoords.c}`;
-        if (check === 'missing_coords')
-          return `   → Add coords in NODE_COORDS: ${code}: { r:<row>, c:<col> }`;
-        if (check === 'alignment' && item.fix?.curl)
-          return `   → ${item.fix.curl}`;
-        if (check === 'axis_distance' && item.fix?.curl)
-          return item.fix.curl.split('\n').map(l => `   → ${l}`).join('\n');
-        if (check === 'corner_misalign' && item.fix?.curl)
-          return `   → ${item.fix.curl}`;
-        if (check === 'alignment' || check === 'axis_distance' || check === 'corner_misalign')
-          return `   → curl ${b2}/api/layout/solve              # get proposed grid layout`;
-        return '';
-      };
+      const mapFixHint = ({ check, code }) => check === 'missing_coords'
+        ? `   → Add coords in NODE_COORDS: ${code}: { r:<row>, c:<col> }` : '';
 
       if (errors.length) {
         lines.push(HR);
         lines.push(`  ✗ ERRORS (${errors.length})  — graph is broken`);
         lines.push(HR);
         for (const e of errors) {
-          lines.push(`  [FIX]  ${e.check.toUpperCase().padEnd(20)}  ${e.code}${e.dir?'.'+e.dir:''}${e.target?'→'+e.target:''}`);
+          lines.push(`  [FIX]  ${e.check.toUpperCase().padEnd(20)}  ${e.code}`);
           lines.push(`         ${e.msg}`);
           const h = mapFixHint(e); if (h) lines.push(h);
           lines.push('');
@@ -4480,7 +4091,7 @@ async function route(req, res) {
         lines.push(`  ⚠ WARNINGS (${warnings.length})  — WARNING TODO FIX`);
         lines.push(HR);
         for (const w of warnings) {
-          lines.push(`  [WARN]  ${w.check.toUpperCase().padEnd(20)}  ${w.code}${w.dir?'.'+w.dir:''}${w.target?'→'+w.target:''}`);
+          lines.push(`  [WARN]  ${w.check.toUpperCase().padEnd(20)}  ${w.code}`);
           lines.push(`          ${w.msg}`);
           const h = mapFixHint(w); if (h) lines.push(h);
           lines.push('');
@@ -4491,67 +4102,16 @@ async function route(req, res) {
         lines.push(`  ℹ SUGGESTIONS (${suggestions.length})  — layout improvements`);
         lines.push(HR);
         for (const s of suggestions) {
-          lines.push(`  [INFO]  ${s.check.toUpperCase().padEnd(20)}  ${s.code}${s.dir?'.'+s.dir:''}${s.target?'→'+s.target:''}`);
+          lines.push(`  [INFO]  ${s.check.toUpperCase().padEnd(20)}  ${s.code}`);
           lines.push(`          ${s.msg}`);
           const h = mapFixHint(s); if (h) lines.push(h);
           lines.push('');
         }
       }
-      // ── Blocked-edges table ──────────────────────────────────────────────────
-      if (blockedEdges.length > 0) {
-        lines.push(HR);
-        lines.push(`  BLOCKED EDGES (${blockedEdges.length})`);
-        lines.push(HR);
-        // Column widths
-        const colEdge    = Math.max(6,  ...blockedEdges.map(e => e.edge.length));
-        const colProblem = Math.max(9,  ...blockedEdges.map(e => e.problem.length));
-        const colFix     = Math.max(11, ...blockedEdges.map(e => e.fix.length));
-        const pad = (s, w) => s.length >= w ? s : s + ' '.repeat(w - s.length);
-        const TL='┌', TR='┐', BL='└', BR='┘', H='─', V='│', TM='┬', BM='┴', LM='├', RM='┤', C='┼';
-        const rowSep = (l,m,r) =>
-          l + H.repeat(colEdge+2) + m + H.repeat(colProblem+2) + m + H.repeat(colFix+2) + r;
-        lines.push('  ' + rowSep(TL, TM, TR));
-        lines.push(`  ${V} ${pad('Edge', colEdge)} ${V} ${pad('Problem', colProblem)} ${V} ${pad('Fix needed', colFix)} ${V}`);
-        lines.push('  ' + rowSep(LM, C, RM));
-        for (const be of blockedEdges) {
-          lines.push(`  ${V} ${pad(be.edge, colEdge)} ${V} ${pad(be.problem, colProblem)} ${V} ${pad(be.fix, colFix)} ${V}`);
-        }
-        lines.push('  ' + rowSep(BL, BM, BR));
-        lines.push('');
-      }
-
-      // ── Corner-node narrative ─────────────────────────────────────────────
-      const cornerIssues = warnings.filter(w => w.check === 'corner_misalign');
-      if (cornerIssues.length > 0) {
-        lines.push(HR);
-        lines.push('  CORNER NODE ANALYSIS');
-        lines.push(HR);
-        for (const ci of cornerIssues) {
-          lines.push(`  ${ci.code} (${ci.currentCoords.r},${ci.currentCoords.c}) is a corner node`);
-          lines.push(`  Connects: ${ci.nsDir}→${ci.nsTarget}  ×  ${ci.ewDir}→${ci.ewTarget}`);
-          for (const p of ci.problems) lines.push(`    ⚠  ${p}`);
-          lines.push(`  Correct position: (${ci.correctCoords.r},${ci.correctCoords.c})`);
-          lines.push(`  ${ci.suggestedFix}`);
-          if (ci.fix?.curl) lines.push(`  → ${ci.fix.curl}`);
-          lines.push('');
-        }
-      }
-
-      if (structurallySatisfied.length) {
-        lines.push(HR);
-        lines.push(`  NOT MEASURED (${structurallySatisfied.length})  — these checks read N/S/E/W link fields, and the map has ${linkFields}`);
-        lines.push(HR);
-        lines.push(`  ${structurallySatisfied.join(' · ')}`);
-        lines.push('  Their silence is an empty field, not a clean map: movement is by cell (§CELL-01).');
-        lines.push('');
-      }
-
       lines.push(HR);
       const clean = errors.length === 0 && warnings.length === 0;
-      lines.push(`  SUMMARY  ${errors.length} errors  ·  ${warnings.length} warnings  ·  ${suggestions.length} suggestions  ·  ${blockedEdges.length} blocked edges  ·  ${nodeCodesWithCoords.length}/${allNodeCodes.length} nodes positioned`);
-      if (clean) lines.push(structurallySatisfied.length
-        ? '  No errors or warnings from the checks that can fire on this map.'
-        : '  MAP GRAPH OK — no structural errors or warnings.');
+      lines.push(`  SUMMARY  ${errors.length} errors  ·  ${warnings.length} warnings  ·  ${suggestions.length} suggestions  ·  ${nodeCodesWithCoords.length}/${allNodeCodes.length} nodes positioned`);
+      if (clean) lines.push('  MAP OK — no errors or warnings.');
       lines.push(HR);
       lines.push('');
       cors(res);
@@ -4559,13 +4119,13 @@ async function route(req, res) {
       return res.end(lines.join('\n'));
     }
 
-    return json(res, 200, { ok:true, errors, warnings, suggestions, blockedEdges, summary });
+    return json(res, 200, { ok:true, errors, warnings, suggestions, summary });
   }
 
   // ── Audit/Data/Clean — delete label-explosion J-nodes + orphan coords ───────
   // POST /api/audit/data/clean[?dryRun=true]
-  // Removes all J-nodes whose label contains ↔ (explosion artifacts), nulls out
-  // any surviving exits that pointed to them, and strips orphaned NODE_COORDS.
+  // Removes all J-nodes whose label contains ↔ (explosion artifacts) and strips
+  // orphaned NODE_COORDS.
   if (parts[0] === 'audit' && parts[1] === 'data' && parts[2] === 'clean' && method === 'POST') {
     let body = {};
     try { body = await readBody(req); } catch(_) {}
@@ -4581,16 +4141,7 @@ async function route(req, res) {
         toDelete.add(code);
     }
 
-    // 2. Find surviving-node exits that will dangle after deletion
-    let danglingCount = 0;
-    for (const [code, node] of Object.entries(WBAPI.nodeMap)) {
-      if (toDelete.has(code)) continue;
-      for (const d of ['N','S','E','W']) {
-        if (node[d] && toDelete.has(node[d])) danglingCount++;
-      }
-    }
-
-    // 3. Count orphaned NODE_COORDS (coord entry with no NODE_MAP match, or in toDelete)
+    // 2. Count orphaned NODE_COORDS (coord entry with no NODE_MAP match, or in toDelete)
     const survivingNodes = new Set(Object.keys(WBAPI.nodeMap).filter(c => !toDelete.has(c)));
     let orphanCoordCount = 0;
     for (const code of Object.keys(WBAPI.nodeCoords)) {
@@ -4598,13 +4149,13 @@ async function route(req, res) {
     }
 
     if (dryRun) {
-      logResponse(method, url.pathname, 200, `dry-run: ${toDelete.size} explosion nodes, ${danglingCount} dangling exits, ${orphanCoordCount} orphan coords`);
+      logResponse(method, url.pathname, 200, `dry-run: ${toDelete.size} explosion nodes, ${orphanCoordCount} orphan coords`);
       return json(res, 200, { ok:true, dryRun:true,
-        explosionNodes: toDelete.size, danglingExits: danglingCount, orphanCoords: orphanCoordCount,
+        explosionNodes: toDelete.size, orphanCoords: orphanCoordCount,
         sampleCodes: [...toDelete].slice(0, 10) });
     }
 
-    // 4. Patch NODE_MAP section in _rawSrc
+    // 3. Patch NODE_MAP section in _rawSrc
     const NM_S = '// ◆◆◆ WORLDBUILDER:NODE_MAP:START ◆◆◆';
     const NM_E = '// ◆◆◆ WORLDBUILDER:NODE_MAP:END ◆◆◆';
     const nmStart = WBAPI._rawSrc.indexOf(NM_S) + NM_S.length;
@@ -4630,7 +4181,7 @@ async function route(req, res) {
 
     WBAPI._rawSrc = WBAPI._rawSrc.slice(0, nmStart) + nmBlock + WBAPI._rawSrc.slice(nmEnd);
 
-    // 5. Patch NODE_COORDS section — remove deleted + orphaned entries
+    // 4. Patch NODE_COORDS section — remove deleted + orphaned entries
     const NC_S = '// ◆◆◆ WORLDBUILDER:NODE_COORDS:START ◆◆◆';
     const NC_E = '// ◆◆◆ WORLDBUILDER:NODE_COORDS:END ◆◆◆';
     const ncStart = WBAPI._rawSrc.indexOf(NC_S) + NC_S.length;
@@ -4647,26 +4198,20 @@ async function route(req, res) {
 
     WBAPI._rawSrc = WBAPI._rawSrc.slice(0, ncStart) + ncBlock + WBAPI._rawSrc.slice(ncEnd);
 
-    // 6. Update in-memory objects to match
+    // 5. Update in-memory objects to match
     for (const code of toDelete) {
       delete WBAPI.nodeMap[code];
       delete WBAPI.nodeCoords[code];
-    }
-    for (const [code, node] of Object.entries(WBAPI.nodeMap)) {
-      for (const d of ['N','S','E','W']) {
-        if (node[d] && toDelete.has(node[d])) node[d] = null;
-      }
     }
     for (const code of Object.keys(WBAPI.nodeCoords)) {
       if (!WBAPI.nodeMap[code]) delete WBAPI.nodeCoords[code];
     }
 
     logResponse(method, url.pathname, 200,
-      `clean: removed ${removedLines.n} explosion nodes, ${coordsRemoved} orphan coords, ${danglingCount} exits nulled`);
+      `clean: removed ${removedLines.n} explosion nodes, ${coordsRemoved} orphan coords`);
     return saveAndRestart(res, 200, {
       ok: true,
       explosionNodesRemoved: removedLines.n,
-      danglingExitsNulled: danglingCount,
       orphanCoordsRemoved: coordsRemoved,
     });
   }
@@ -6632,8 +6177,6 @@ async function route(req, res) {
     // See: lab-report-junction-reweave-overhaul.md §2, §5
     if (parts[1] === 'junction-audit' && method === 'GET') {
       const coords   = WBAPI.nodeCoords || {};
-      const DIRS4    = ['N','S','E','W'];
-      const OPP4     = {N:'S',S:'N',E:'W',W:'E'};
 
       // ── Quest and NPC ref sets ────────────────────────────────────────────
       const questRefNodes = new Set();
@@ -6654,9 +6197,8 @@ async function route(req, res) {
 
       // P_NUKE preview accumulators
       let nukeSafe = 0, nukeQuestBlocked = 0, nukeNpcBlocked = 0;
-      let straightStitch = 0, lShapedDeferred = 0, deadEndDelete = 0;
 
-      for (const [code, node] of Object.entries(nm)) {
+      for (const code of Object.keys(nm)) {
         const isJ = jCodeRe.test(code);
         const hasCoord = !!coords[code];
         const isReach  = reachable.has(code);
@@ -6679,14 +6221,6 @@ async function route(req, res) {
             continue;
           }
           nukeSafe++;
-          const liveDirs = DIRS4.filter(d => node[d] && nm[node[d]]);
-          if (liveDirs.length === 0 || liveDirs.length === 1) {
-            deadEndDelete++;
-          } else if (liveDirs.length === 2 && OPP4[liveDirs[0]] === liveDirs[1]) {
-            straightStitch++;
-          } else {
-            lShapedDeferred++;
-          }
         } else {
           namedTotal++;
           if (hasCoord)  namedWithCoords++;
@@ -6733,10 +6267,6 @@ async function route(req, res) {
           safeToDelete:     nukeSafe,
           blockedByQuest:   nukeQuestBlocked,
           blockedByNpc:     nukeNpcBlocked,
-          straightStitch:   straightStitch,
-          lShapedDeferred:  lShapedDeferred,
-          deadEndDelete:    deadEndDelete,
-          note: 'straightStitch = A-J-B chains that collapse to direct edges. lShapedDeferred = pairs handed to A* for path rebuild. deadEndDelete = degree≤1 safe to drop outright.',
         },
       });
     }
@@ -7040,111 +6570,11 @@ async function route(req, res) {
   if (parts[0] === 'layout') {
     const layoutAction = parts[1]; // 'solve' | 'apply'
 
-    // GET /api/layout/solve[?step=8&root=TLS] — BFS grid layout
+    // GET /api/layout/solve — RETIRED (§DX-02ky-FU3)
     if (method === 'GET' && layoutAction === 'solve') {
-      const step     = Math.max(4, Math.min(32, parseInt(url.searchParams.get('step') || '8', 10)));
-      const rootParam = url.searchParams.get('root') || null;
-      const nodeMap  = WBAPI.nodeMap;
-      const allCodes = Object.keys(nodeMap);
-      const DIRS4    = ['N','S','E','W'];
-      const DR4      = { N:-1, S:1, E:0, W:0 };
-      const DC4      = { N:0, S:0, E:1, W:-1 };
-
-      // Choose root: param > most-connected node
-      let root = (rootParam && nodeMap[rootParam]) ? rootParam : null;
-      if (!root) {
-        root = allCodes.reduce((best, code) => {
-          const ca = DIRS4.filter(d => nodeMap[code]?.[d]).length;
-          const cb = DIRS4.filter(d => nodeMap[best]?.[d]).length;
-          return ca > cb ? code : best;
-        }, allCodes[0]);
-      }
-
-      // Seed root at existing coord (rounded to step) or (100, 100)
-      const existing = WBAPI.nodeCoords;
-      const rootCoord = existing[root] || { r: 100, c: 100 };
-      const rootR = Math.round(rootCoord.r / step) * step;
-      const rootC = Math.round(rootCoord.c / step) * step;
-
-      const placed   = new Map(); // code → {r,c}
-      const occupied = new Set(); // 'r,c' strings
-
-      placed.set(root, { r: rootR, c: rootC });
-      occupied.add(`${rootR},${rootC}`);
-
-      const queue = [root];
-      while (queue.length) {
-        const code = queue.shift();
-        const ca   = placed.get(code);
-        const n    = nodeMap[code];
-        for (const dir of DIRS4) {
-          const target = n[dir];
-          if (!target || !nodeMap[target] || placed.has(target)) continue;
-          let r = ca.r + DR4[dir] * step;
-          let c = ca.c + DC4[dir] * step;
-          // Resolve collision by sliding further along the same axis
-          let attempts = 0;
-          while (occupied.has(`${r},${c}`) && attempts < 64) {
-            r += DR4[dir] * step;
-            c += DC4[dir] * step;
-            attempts++;
-          }
-          if (!occupied.has(`${r},${c}`)) {
-            placed.set(target, { r, c });
-            occupied.add(`${r},${c}`);
-            queue.push(target);
-          }
-        }
-      }
-
-      // Place orphan nodes (disconnected from root) in a row below the grid
-      const orphans = allCodes.filter(c => !placed.has(c));
-      const maxR    = Math.max(...[...placed.values()].map(p => p.r), rootR);
-      let oR = maxR + step * 3;
-      let oC = rootC;
-      for (const code of orphans) {
-        while (occupied.has(`${oR},${oC}`)) oC += step;
-        placed.set(code, { r: oR, c: oC });
-        occupied.add(`${oR},${oC}`);
-        oC += step;
-      }
-
-      // Build proposed object and validate alignment + axis distance
-      const proposed = {};
-      for (const [code, p] of placed) proposed[code] = p;
-
-      let alignOk = 0, alignBad = 0, distOk = 0, distBad = 0;
-      const seenV = new Set();
-      for (const code of allCodes) {
-        const n = nodeMap[code];
-        const ca = proposed[code];
-        for (const dir of DIRS4) {
-          const t = n[dir];
-          if (!t || !proposed[t]) continue;
-          const pk = [code, t].sort().join(':');
-          if (seenV.has(pk)) continue;
-          seenV.add(pk);
-          const cb = proposed[t];
-          if (ca.r === cb.r || ca.c === cb.c) {
-            alignOk++;
-            const d = ca.r === cb.r ? Math.abs(ca.c - cb.c) : Math.abs(ca.r - cb.r);
-            if (d <= 4) distOk++; else distBad++;
-          } else {
-            alignBad++;
-          }
-        }
-      }
-
-      logRow('layout solve', `root:${root}  step:${step}  placed:${placed.size}  orphans:${orphans.length}`);
-      logRow('validation', `alignOk:${alignOk}  alignBad:${alignBad}  distOk:${distOk}  distBad:${distBad}`);
-      logResponse(method, url.pathname, 200, `layout solved — ${placed.size} nodes, ${orphans.length} orphans`);
-      return json(res, 200, {
-        ok: true, root, step,
-        total: allCodes.length, placed: placed.size, orphans: orphans.length,
-        validation: { alignOk, alignBad, distOk, distBad },
-        proposed,
-        applyCmd: `curl -XPOST http://localhost:${PORT}/api/layout/apply -H 'Content-Type: application/json' -d '{"coords":<proposed>}'`,
-      });
+      const error = 'Retired: it laid nodes out by walking N/S/E/W links, and movement is by cell (§CELL-01), so it placed one node and lined up the rest as orphans. Positions come from lat/lon (§WALK-1.5); move one node with PUT /api/coords/{code}.';
+      logResponse(method, url.pathname, 410, 'layout/solve retired (§DX-02ky-FU3)');
+      return json(res, 410, { ok:false, error });
     }
 
     // POST /api/layout/apply — mass-update NODE_COORDS
@@ -7527,7 +6957,7 @@ async function route(req, res) {
       return saveAndRestart(res, 200, { ok:true, dryRun:false, seeded:seeded.length, skipped, lockedKept, coords });
     }
 
-    return json(res, 404, { error:'Unknown layout route. Available: GET /api/layout/solve  POST /api/layout/apply  GET /api/layout/worldmap  POST /api/layout/geo-seed' });
+    return json(res, 404, { error:'Unknown layout route. Available: POST /api/layout/apply  GET /api/layout/worldmap  POST /api/layout/geo-seed' });
   }
 
   // ── Flags (_S_DEFAULTS) ───────────────────────────────────────────────────
@@ -11405,10 +10835,8 @@ server.listen(PORT, BIND_ADDR, () => {
     ['GET',    '/api/source                         → raw HTML source (worldbuilder Load from Server)'],
     ['GET',    '/api/audit[?format=text]             → integrity scan (errors/warnings/suggestions/connectivity)'],
     ['GET',    '/api/audit/data[?format=text&section=node|quest|monster|terrain|coords]  → deep schema + bloat + explosion validator'],
-    ['POST',   '/api/audit/data/clean[?dryRun=true]   → remove explosion J-nodes + orphan coords, null dangling exits'],
-    ['GET',    '/api/audit/map[?format=text]         → map conformity: diagonal/bidirectional/alignment/axis-distance/long-links/market-proximity'],
-    ['POST',   '/api/audit/map/fix                   body: {} (all) or {check,code,dir,target} (one)'],
-    ['GET',    '/api/layout/solve[?step=8&root=TLS]  → BFS grid layout: proposed {r,c} for every node'],
+    ['POST',   '/api/audit/data/clean[?dryRun=true]   → remove explosion J-nodes + orphan coords'],
+    ['GET',    '/api/audit/map[?format=text]         → map layout: density / market-proximity / missing-coords'],
     ['POST',   '/api/layout/apply                    body: {coords:{code:{r,c},...}} → mass-update NODE_COORDS'],
     ['GET',    '/api/roads                           → road net for the overlay: ROAD_RUNS + cells/junctions + pins file (§NAV-01h)'],
     ['GET',    '/api/roads/pins                      → roads-pins.json: {pins, links, locked} (§NAV-01g worldbuilder)'],

@@ -968,11 +968,11 @@ const CMD = {
     if (r.status !== 200) { printError(r); process.exit(1); }
     const d = r.body;
     if (!execute) {
-      ok(`[DRY RUN] orphan coords: ${d.orphanCoords}  explosion nodes: ${d.explosionNodes}  dangling exits: ${d.danglingExits}`);
+      ok(`[DRY RUN] orphan coords: ${d.orphanCoords}  explosion nodes: ${d.explosionNodes}`);
       if (d.orphanCoords > 0 || d.explosionNodes > 0) ok(`Add --execute to remove`);
       else ok(`Nothing to clean ✓`);
     } else {
-      ok(`Removed ${d.orphanCoordsRemoved} orphan coords, ${d.explosionNodesRemoved} explosion nodes, ${d.danglingExitsNulled} dangling exits nulled`);
+      ok(`Removed ${d.orphanCoordsRemoved} orphan coords, ${d.explosionNodesRemoved} explosion nodes`);
     }
   },
 
@@ -1293,9 +1293,6 @@ const CMD = {
     ok(`── P_NUKE Dry-Run Preview ────────────────────────────────`);
     const nk = d.nukePreview;
     ok(`  Safe to delete:    ${nk.safeToDelete}`);
-    ok(`  Straight-stitch:   ${nk.straightStitch}  (A-J-B → A-B direct)`);
-    ok(`  L-shaped deferred: ${nk.lShapedDeferred}  (handed to A* for path rebuild)`);
-    ok(`  Dead-end delete:   ${nk.deadEndDelete}  (degree≤1, drop outright)`);
     ok(`  Blocked by quest:  ${nk.blockedByQuest}`);
     ok(`  Blocked by NPC:    ${nk.blockedByNpc}`);
   },
@@ -2266,7 +2263,7 @@ ${C.bold}═══════════════════════�
   ./bin/api audit [--map] [--text]
 
   No flags: full integrity scan (broken refs, missing data, dead flags).
-  --map:  bidirectional link audit (A.N→B but B.S≠A).
+  --map:  map layout audit (density, market clustering, missing coords).
   --text: plain text output instead of JSON.
 
   Severity levels: error | warning | suggestion | parse

@@ -215,6 +215,7 @@ const PORT_BLOCKS = {
   snapshots: 14300,
   context: 14400,
   graph: 14500,
+  compass: 14600,
 };
 
 // Returns `count` consecutive ports reserved for this worker inside `block`'s

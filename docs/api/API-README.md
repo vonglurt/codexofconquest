@@ -507,7 +507,7 @@ If you find yourself reaching for curl to hit one of these, request a `./bin/api
 | `POST /api/import/book` | `./bin/api import <file.json>` |
 | `GET /api/audit` | `./bin/api audit` |
 | `GET /api/audit/map` | `./bin/api audit --map` |
-| `POST /api/audit/map/fix` | *(no wrapper — `fix-bidirectional` retired §DX-02kx)* |
+| `POST /api/audit/map/fix` | *(retired → 410, §DX-02ky-FU3; `fix-bidirectional` retired §DX-02kx)* |
 | `POST /api/save` | `./bin/api save` — dated backup beside the game file, then overwrite + reload (§DX-02l) |
 | `GET /api/snapshots` | `./bin/api snapshots` — list those dated backups (gitignored; nothing else reports them) |
 | `DELETE /api/snapshots` | `./bin/api snapshots --sweep [--force]` — deletes only snapshots already in the `milepoints/patches` chain unless forced |
