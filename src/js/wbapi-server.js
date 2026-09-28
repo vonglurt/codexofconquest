@@ -3063,7 +3063,7 @@ async function route(req, res) {
     const nMonsters = Object.keys(WBAPI.monsterPool).length;
     const nTerrains = Object.keys(WBAPI.worldDb).length;
     const nFish = WBAPI.fishPool.length + WBAPI.nightFishPool.length;
-    const resp = { ok:true, loaded: WBAPI.loaded, file: path.basename(GAME_FILE),
+    const resp = { ok:true, pid: process.pid, loaded: WBAPI.loaded, file: path.basename(GAME_FILE),
       nodes:nNodes, quests:nQuests, monsters:nMonsters,
       fish:nFish, lakeMagic:Object.keys(WBAPI.lakeMagicDb).length };
     logRow(`${nNodes} nodes  ·  ${nQuests} quests  ·  ${nMonsters} monsters  ·  ${nTerrains} terrains  ·  ${nFish} fish`);

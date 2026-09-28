@@ -3,11 +3,13 @@
 #
 # run.sh — the one entry point. Every `make` target calls into here.
 #   ./run.sh server | monitor | play | landing | edit | status | procs
-#   ./run.sh stop [api|monitor] | restart      — restart is the API server alone
+#   ./run.sh stop [api|monitor|every] | restart — restart is the API server alone
 #
 # `server` and `restart` are one code path (`start_api`): both drain the old process
 # before launching, both bound the launch, and both exit non-zero when nothing answered.
-# WBAPI_PORT picks the port; it is exported as PORT, the name the server reads.
+# WBAPI_PORT picks the port; it is exported as PORT, the name the server reads. `stop`
+# stops the server answering on that port, by the pid its /api/ping reports, so a second
+# world on another port survives it. `stop every` stops every WBAPI server on the machine.
 # WBAPI_START_CMD overrides the launcher so the failed-start path is assertable
 # (src/scripts/check-restart.js); nothing else sets it.
 set -euo pipefail
@@ -42,15 +44,29 @@ server_up() { curl -sf "http://localhost:$PORT/api/ping" >/dev/null 2>&1; }
 api_count() { match_pids "$SERVER_PAT" | wc -l | tr -d ' '; }
 mon_count() { match_pids "$MONITOR_PAT" | wc -l | tr -d ' '; }
 
-stop_api()     { local p; p="$(match_pids "$SERVER_PAT")";  [ -n "$p" ] && { kill $p 2>/dev/null; echo "API stopped"; }     || echo "API not running"; }
+port_pid()     { curl -sf "http://localhost:$PORT/api/ping" 2>/dev/null | sed -n 's/.*"pid": *\([0-9][0-9]*\).*/\1/p'; }
+stop_every()   { local p; p="$(match_pids "$SERVER_PAT")";  [ -n "$p" ] && { kill $p 2>/dev/null; echo "API stopped ($(echo $p | wc -w | tr -d ' ') server(s), every port)"; } || echo "API not running"; }
+stop_api() {
+  server_up || {
+    local n; n="$(api_count)"
+    echo "API not running on :$PORT"
+    [ "$n" = "0" ] || echo "  $n wbapi-server process(es) on other ports; ./run.sh stop every stops them all"
+    return 0
+  }
+  local p; p="$(port_pid)"
+  [ -n "$p" ] || { echo "the server on :$PORT does not report its pid (started before §DX-02ks-FU); stopping every server"; stop_every; return 0; }
+  match_pids "$SERVER_PAT" | grep -qx "$p" || { echo "pid $p on :$PORT is not a wbapi-server; not killing it" >&2; return 1; }
+  kill "$p" 2>/dev/null
+  for _ in $(seq 1 $((SETTLE_TIMEOUT * 4))); do kill -0 "$p" 2>/dev/null || { echo "API stopped (:$PORT)"; return 0; }; sleep 0.25; done
+  echo "pid $p on :$PORT still alive after ${SETTLE_TIMEOUT}s" >&2; return 1
+}
 stop_monitor() { local p; p="$(match_pids "$MONITOR_PAT")"; [ -n "$p" ] && { kill $p 2>/dev/null; echo "monitor stopped"; } || true; }
 
-drain_api() { # wait for stopped server processes to actually leave, so no launch doubles up
-  local n
+drain_api() { # wait for the port to stop answering, so no launch doubles up on it
   for _ in $(seq 1 $((SETTLE_TIMEOUT * 4))); do
-    n="$(api_count)"; [ "$n" = "0" ] && return 0; sleep 0.25
+    server_up || return 0; sleep 0.25
   done
-  echo "$(api_count) wbapi-server process(es) still alive after ${SETTLE_TIMEOUT}s; not starting another" >&2
+  echo "a server still answers on :$PORT after ${SETTLE_TIMEOUT}s; not starting another" >&2
   return 1
 }
 
@@ -61,7 +77,7 @@ wait_for_server() {
 
 start_api() {
   drain_api      || return 1
-  in_term "$START_CMD" || return 1
+  in_term "WBAPI_PORT=$PORT $START_CMD" || return 1
   wait_for_server || return 1
 }
 
@@ -78,6 +94,7 @@ case "${1:-help}" in
     case "${2:-all}" in
       api)     stop_api ;;
       monitor) stop_monitor ;;
+      every)   stop_every ;;
       *)       stop_api ; stop_monitor ;;
     esac ;;
   restart)

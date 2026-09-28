@@ -121,10 +121,14 @@ try {
   // §DX-02ks — WBAPI_PORT must move where the server listens, not only the health check.
   check('start under WBAPI_PORT=1384', './run.sh stop >/dev/null && ./run.sh server',
     { code: 'zero', procs: 1, says: ':1384' }, { WBAPI_PORT: '1384' });
-  sh('./run.sh stop >/dev/null 2>&1 || true');
+  // §DX-02ks-FU — a stop on the default port leaves the :1384 world running.
+  check('stop on :1367 spares :1384', './run.sh stop api && curl -sf http://localhost:1384/api/ping >/dev/null && echo still-up:1384',
+    { code: 'zero', procs: 1, says: 'still-up:1384' });
+  check('stop under WBAPI_PORT=1384', './run.sh stop api',
+    { code: 'zero', procs: 0, says: 'API stopped (:1384)' }, { WBAPI_PORT: '1384' });
 } finally {
+  sh('./run.sh stop every >/dev/null 2>&1 || true');
   if (wasUp) sh('./run.sh server >/dev/null 2>&1 || true');
-  else sh('./run.sh stop >/dev/null 2>&1 || true');
 }
 
 if (findings.length) {
@@ -132,5 +136,5 @@ if (findings.length) {
   for (const f of findings) console.log(`  ${f}`);
   process.exitCode = 1;
 } else {
-  console.log(`✓ check-restart: 7 invocations — chained pair ×3, restart ×2, failed start ×1, WBAPI_PORT start ×1 — each returned inside ${DEADLINE_MS} ms with the process count asserted`);
+  console.log(`✓ check-restart: 9 invocations — chained pair ×3, restart ×2, failed start ×1, WBAPI_PORT start ×1, stop by port ×2 — each returned inside ${DEADLINE_MS} ms with the process count asserted`);
 }
