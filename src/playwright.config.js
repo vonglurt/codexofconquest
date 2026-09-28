@@ -1,6 +1,18 @@
 // SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson
 'use strict';
-const { defineConfig, devices } = require('@playwright/test');
+const fs = require('fs');
+const { defineConfig, devices, chromium } = require('@playwright/test');
+
+// §DX-02ir — Playwright's bundled Chromium is a glibc build, so on a musl host it
+// fails `spawn … ENOENT`. There, a distro chromium stands in: `CHROMIUM_PATH` names
+// one explicitly, and failing that `/usr/bin/chromium` is used only when the bundled
+// binary is absent. A host with the bundled browser behaves exactly as before.
+function systemChromium() {
+  if (process.env.CHROMIUM_PATH) return process.env.CHROMIUM_PATH;
+  if (fs.existsSync(chromium.executablePath())) return undefined;
+  return fs.existsSync('/usr/bin/chromium') ? '/usr/bin/chromium' : undefined;
+}
+const executablePath = systemChromium();
 
 module.exports = defineConfig({
   testDir: './tests/integration',
@@ -86,7 +98,7 @@ module.exports = defineConfig({
 
   // Single browser — Chromium matches what players actually use
   projects: [
-    { name: 'chromium', use: { ...devices['Desktop Chrome'] } },
+    { name: 'chromium', use: { ...devices['Desktop Chrome'], ...(executablePath && { launchOptions: { executablePath } }) } },
   ],
 
   // Per-test timeout: fishing smoke test can take several seconds of DOM interaction
