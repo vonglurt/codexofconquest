@@ -19,6 +19,15 @@
 
 ---
 
+## Archived 2026-09-27 — §DX-02ft-FU4 (quest_tl_03's hint drops its false act tag)
+
+### §DX-02ft-FU4 — `quest_tl_03`'s hint promises an act gate the quest does not have (NEW 2026-09-27 during §DX-02ft-FU2, 🟡 one string)
+
+- [x] ✅ SHIPPED 2026-09-27 `90600f0` **§DX-02ft-FU4 — *"Speak with Ori at the Storefront (Act IV+). Bring her account to Rennau."*** This is the only `(Act …+)` tag in any player-facing string in `play.html`. `quest_tl_03`'s gate is `{questsDone:['quest_tl_02'], notFlags:['tlMissingShipSolved']}`, so Ori is there as soon as Vonn's quest is done. §VM-01-G3 dropped the act leg because it read `actNumber`, and the hint kept the claim. **Options:** drop the tag (the quest's real condition is already implied by its place in the chain); or, if Ori should arrive later, give the gate a `storyAct` leg, which the gate grammar cannot express today. **Recommend** dropping it through `./bin/api sub quest quest_tl_03 hint …` with a server. **Verify:** `grep -c '(Act IV+)' play.html` = 0, and `story-arc-coastal.md` agrees. **Provenance:** §DX-02ft-FU2, restating the coastal arc's gates from the live quests.
+> **SHIPPED 2026-09-27 `90600f0` — the tag is dropped (🟡, decided here).** The gate grammar has no act leaf, so (b) would have needed an engine change for one quest. And nothing in the arc's design says Ori should wait: the coastal doc's own activation list is `quest_tl_02` then `quest_tl_03`. **The write:** `./bin/api put quest quest_tl_03 "hint=Speak with Ori at the Storefront. Bring her account to Rennau."` on a scratch server (`:1379`, approved, killed in-command, port free afterwards). **Round trip from disk:** the hint reads exactly that; `grep -c '(Act IV+)' play.html` **1 → 0**. **The docs that repeated the claim:** `story.md` Q-TL-03, `story-arc-coastal.md` (Q-TL-03 and the node table) and `story-flowchart.md` now say *after `quest_tl_02`*. Nothing else changed.
+
+---
+
 ## Archived 2026-09-27 — §DX-02lb (six nodes' desc folded into their blank text via the API; node.desc retired from corpus, schema and worldbuilder)
 
 ### §DX-02lb — six nodes carry a `desc` the game never renders (NEW 2026-09-14 during §DX-02kv, 🟡 one design call: render it, fold it into `text`, or delete it)
