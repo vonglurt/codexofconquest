@@ -404,9 +404,11 @@ A pack is a set of shareable quests plus the monsters they fight, signed with th
 ./bin/api pack index                            # what the trackers list, and which servers hold each pack
 ./bin/api pack fetch <id> [--from host:port]    # stored only if it re-hashes to <id>
 ./bin/api pack review <id>                      # diff against local content + shareable verdict; exit 1 = refuse
+./bin/api pack accept <id>                      # queue it; the next restart applies it through the write routes, whole or not at all
+./bin/api mesh acl allowAuthors=<pub>,<pub>      # packs by these authors are accepted on arrival (still reviewed)
 ```
 
-`POST /api/pack/create {quests:[…]}`, `GET /api/pack`, `GET /api/pack/<id>`, `POST /api/pack/publish {id}`, `GET /api/pack/index`, `POST /api/pack/fetch {id, from?}`, `GET /api/pack/<id>/review`; on a tracker, `GET /api/tracker/packs`. The format is `src/js/pack.js` (`makePack`, `verifyPack`, `packId`). A published pack rides this server's tracker announce, so the tracker's index is only as current as its live records. Accepting a pack and applying it at restart are still to come.
+`POST /api/pack/create {quests:[…]}`, `GET /api/pack`, `GET /api/pack/<id>`, `POST /api/pack/publish {id}`, `GET /api/pack/index`, `POST /api/pack/fetch {id, from?}`, `GET /api/pack/<id>/review`, `POST /api/pack/accept {id}`; on a tracker, `GET /api/tracker/packs`. The format is `src/js/pack.js` (`makePack`, `verifyPack`, `packId`). A published pack rides this server's tracker announce, so the tracker's index is only as current as its live records. An accepted pack waits in `PACKS_DIR/accepted.json`, and at boot it is applied through this server's own create, `PUT` and field-`DELETE` routes, so every write fence applies; any refusal restores the file and records the pack under `failed` (`GET /api/pack` → `accepted`).
 
 ---
 
