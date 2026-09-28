@@ -286,6 +286,7 @@ connection-center UI + ACL/blocklist design: `docs/lab-reports/lab-report-mesh02
 ./bin/wbapi start                  # game server :1367 (loads .env — TRACKER_URL etc.)
 src/bin/wbapi-toggle.sh tracker [port]         # tracker role :1368 — rendezvous ONLY, never a relay
 node wbapi-server.js --peer host:1367 --bind 0.0.0.0 --advertise <lan-ip>:1367 --name "Hub"
+node wbapi-server.js --tls-cert cert.pem --tls-key key.pem --advertise https://<host>:1367   # §MESH-03f
 # Bootstrap ladder: --peer → MESH_PEERS → peers-cache.json → peers.txt → TRACKER_URL/BOOTSTRAP_URLS
 cp mesh-acl.json.example mesh-acl.json   # private/blocklisted mesh — commented template, hot-reloaded
 
@@ -378,6 +379,15 @@ sustained, default 30; `0` disables) and `MESH_RATE_BURST` (bucket size,
 default 120); a healthy peer spends ~0.5 token/s, so the defaults leave ~60×
 headroom. Current config is surfaced in `GET /api/mesh/status → rate`, and
 the traffic ring logs one `rate` row per flood.
+
+**Transport (§MESH-03f):** with `--tls-cert`/`--tls-key` (or `TLS_CERT`/`TLS_KEY`)
+the server listens over https only. A peer address is `host:port` (dialed over
+http) or `https://host:port` (dialed over https), in `--peer`, `MESH_PEERS`,
+peers.txt, a tracker record or `./bin/api mesh connect`, so advertise the
+https form or peers will dial plain http. A self-signed certificate reaches
+peers through their `NODE_EXTRA_CA_CERTS`. Every request whose `Content-Length`
+exceeds `BODY_MAX_BYTES` (default 1 MiB) is refused with 413 before its body is
+read.
 
 **Test gate:** `npm run test:mud` — 270 checks incl. the [L] partition-heal harness, [P] rate limiting, the `./bin/api mesh` CLI wrappers, [Q] ACL template / tracker cache+bootstrap / chat backlog (§MESH-01-FU 11–13), and [R] the §MESH-02a ACL editor endpoints + blocklist share flip; client side: `src/tests/integration/mesh-connections-ui.test.js` (hermetic connection-center UI).
 
