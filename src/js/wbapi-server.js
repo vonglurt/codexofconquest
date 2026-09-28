@@ -1006,6 +1006,13 @@ function getCellGrid() {
   return _cgCache;
 }
 
+// The code in each of a node's four neighbour cells, or null — "what is next to this place".
+function cellNeighbours(code) {
+  const cell = cellOf(WBAPI, code), cg = getCellGrid(), out = {};
+  if (cell) for (const [d, dr, dc] of [['N',-1,0],['S',1,0],['E',0,1],['W',0,-1]]) out[d] = cg[`${cell.r+dr},${cell.c+dc}`] || null;
+  return out;
+}
+
 // /api/audit/map checks that walk a node's N/S/E/W or diagonal link fields. §CELL-01
 // stripped those fields, so while the map carries none these checks cannot fire, and
 // the report says so rather than counting their silence as a pass.
@@ -5403,11 +5410,9 @@ async function route(req, res) {
           ctx.lookups.push(`GET ${base}/list/quest?node=${key}`);
         }
         if (section === 'NODE_COORDS') {
-          const linked = ['N','S','E','W'].map(d=>n[d]).filter(Boolean).filter(c=>WBAPI.nodeCoords[c]);
-          if (linked.length) {
-            ctx.connectedNodesWithCoords = linked.map(c=>({ code:c, ...WBAPI.nodeCoords[c], label:WBAPI.nodeMap[c]?.label }));
-            ctx.lookups.push(`GET ${base}/coords/near/${key}?radius=8`);
-          }
+          const nb = Object.entries(cellNeighbours(key)).filter(([, c]) => c);
+          if (nb.length) ctx.neighbourCells = nb.map(([dir, c]) => ({ dir, code:c, label:WBAPI.nodeMap[c]?.label }));
+          ctx.lookups.push(`GET ${base}/graph/validate/${key}`, `GET ${base}/coords/near/${key}?radius=8`);
         }
       }
 
@@ -6072,8 +6077,7 @@ async function route(req, res) {
       const code = parts[2];
       if (!code || !nm[code]) return json(res, 404, { error:`Node "${code}" not found` });
       const cell = cellOf(WBAPI, code);
-      const neighbours = {};
-      if (cell) for (const [d, dr, dc] of [['N',-1,0],['S',1,0],['E',0,1],['W',0,-1]]) neighbours[d] = cellGrid[`${cell.r+dr},${cell.c+dc}`] || null;
+      const neighbours = cellNeighbours(code);
       const heat = Object.values(neighbours).filter(Boolean).length;
       const retiredParams = ['maxGap'].filter(p => url.searchParams.has(p));
       logResponse('GET', url.pathname, 200, `validate/${code}  heat ${heat}${cell && !cell.isPrimary ? '  (not primary)' : ''}`);
@@ -7674,7 +7678,6 @@ async function route(req, res) {
       const out = list.map(n => ({
         id: n.id, label: n.label, terrain: n.name, act: n.act,
         coords: WBAPI.nodeCoords[n.id] || null,
-        connections: ['N','E','S','W'].filter(d=>WBAPI.nodeMap[n.id]?.[d]).map(d=>({ dir:d, to:WBAPI.nodeMap[n.id][d] })),
         _meta: { quests: (WBAPI._questsByNode[n.id]||[]).length,
                  npcs:   WBAPI.npcs.byNode(n.id).length,
                  hasCoords: !!WBAPI.nodeCoords[n.id],
@@ -9791,7 +9794,7 @@ async function route(req, res) {
       WBAPI._buildIndexes();
       logRow('code', code);
       logRow('label', `${body.label}  ·  Act ${body.act}  ·  terrain: ${body.name||'—'}${coordNote}`);
-      logTrace('node create', `code=${code} terrain=${body.name} label="${(body.label||'').slice(0,40)}" act=${body.act} coords=${coordNote.trim()} connections=${['N','E','S','W'].filter(d=>body[d]).map(d=>d+'='+body[d]).join(' ')}`);
+      logTrace('node create', `code=${code} terrain=${body.name} label="${(body.label||'').slice(0,40)}" act=${body.act} coords=${coordNote.trim()}`);
       logResponse(method, url.pathname, 201, `created node/${code}`);
       return saveAndRestart(res, 201, { ok:true, code, coords: WBAPI.nodeCoords[code] || null, ...nodeConnections(code) });
     }
@@ -10066,16 +10069,13 @@ async function route(req, res) {
     if (prof) {
       const node = WBAPI.nodeMap[rawId] || {};
       const coords = WBAPI.nodeCoords[rawId] || null;
-      const links = ['N','E','S','W'].reduce((acc,d) => { if(node[d]) acc[d]=node[d]; return acc; }, {});
-      const linkedNodes = Object.entries(links).map(([d,code])=>({
-        dir:d, code, label:WBAPI.nodeMap[code]?.label||code, terrain:WBAPI.nodeMap[code]?.name||null,
-        coords: WBAPI.nodeCoords[code]||null
-      }));
+      const neighbours = Object.fromEntries(Object.entries(cellNeighbours(rawId)).map(([d, code]) => [d, code && {
+        code, label:WBAPI.nodeMap[code]?.label||code, terrain:WBAPI.nodeMap[code]?.name||null }]));
       const out = {
         ...prof,
         coords,
-        links: linkedNodes,
-        counts: { monsters:prof.monsters?.length||0, quests:prof.quests.length, waypointQuests:prof.waypointQuests.length, npcs:prof.npcs.length, linkedNodes:linkedNodes.length },
+        neighbours,
+        counts: { monsters:prof.monsters?.length||0, quests:prof.quests.length, waypointQuests:prof.waypointQuests.length, npcs:prof.npcs.length, neighbours:Object.values(neighbours).filter(Boolean).length },
         _detail: `Full entity: GET /api/node/${rawId}`,
         _nearby: `Nearby coords: GET /api/coords/near/${rawId}?radius=8`,
         _validate: `Walkability: GET /api/graph/validate/${rawId}`,
@@ -10530,15 +10530,7 @@ async function route(req, res) {
       if (type === 'node') {
         // Full coordinates
         r.entity.coords = WBAPI.nodeCoords[key] || null;
-        // Full linked-node details for each direction
-        const dirs = ['N','E','S','W'];
-        r.entity.links = {};
-        dirs.forEach(d => {
-          const tgt = ent[d];
-          if (tgt) r.entity.links[d] = { code:tgt, label:WBAPI.nodeMap[tgt]?.label||tgt,
-            terrain:WBAPI.nodeMap[tgt]?.name||null, act:WBAPI.nodeMap[tgt]?.act||null,
-            coords:WBAPI.nodeCoords[tgt]||null };
-        });
+        r.entity.neighbours = cellNeighbours(key);
         // Quest count + list on entity
         const qlist = (WBAPI._questsByNode[key]||[]);
         r.entity.questCount = qlist.length;
@@ -10553,7 +10545,7 @@ async function route(req, res) {
           `GET /api/list/quest?node=${key}`,
           `GET /api/list/npc?node=${key}`,
         ];
-        const exits = dirs.filter(d=>ent[d]).map(d=>`${d}:${ent[d]}`).join(' ');
+        const exits = Object.entries(r.entity.neighbours).filter(([, c]) => c).map(([d, c]) => `${d}:${c}`).join(' ');
         logRow('entity', `${ent.label||key}  ·  Act ${ent.act}  ·  terrain: ${ent.name||'—'}`);
         logRow('connections', `${qlist.length} quests  ·  ${r.entity.npcCount} NPCs  ·  ${(r.connections?.monsters||[]).length} monsters${exits?' ·  exits: '+exits:''}`);
 

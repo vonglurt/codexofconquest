@@ -121,3 +121,18 @@ test('§DX-02ky-FU3 — the audit\'s connectivity suggestions are the nodes reac
   const flagged = audit.suggestions.filter(s => s.field === 'connectivity').map(s => s.key).sort();
   expect(flagged).toEqual(reach.unreachable.map(u => u.code).sort());
 });
+
+test('§DX-02ky-FU3 — location and the node GET name the neighbour cells validate names, and no link field is served', async () => {
+  const v = await (await fetch(`${BASE}/api/graph/validate/BK`)).json();
+  const loc = await (await fetch(`${BASE}/api/location/BK`)).json();
+  const node = await (await fetch(`${BASE}/api/node/BK`)).json();
+  const codes = (o) => Object.fromEntries(Object.entries(o).map(([d, x]) => [d, x && (x.code || x)]));
+  expect(codes(loc.neighbours)).toEqual(v.neighbours);
+  expect(loc.counts.neighbours).toBe(v.heat);
+  expect(node.entity.neighbours).toEqual(v.neighbours);
+  expect('links' in loc || 'links' in node.entity).toBe(false);
+  const list = await (await fetch(`${BASE}/api/list/node?act=1`)).json();
+  const rows = Array.isArray(list) ? list : (list.results || list.nodes || []);
+  expect(rows.length).toBeGreaterThan(0);
+  expect(rows.some(r => 'connections' in r)).toBe(false);
+});
