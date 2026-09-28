@@ -7905,10 +7905,10 @@ window._onServerActivated = () => {
       const ter   = $w('wiz-node-terrain').value.trim();
       const desc  = $w('wiz-node-desc').value.trim();
       if (code) {
-        const body = JSON.stringify({ code, label, act:Number(act)||1, terrain:ter, desc });
+        const body = JSON.stringify({ code, label, act:Number(act)||1, terrain:ter, text:desc });
         sections.push({
           title: `2. New Node — ${code} ${label}`,
-          code: `POST /api/node\n${JSON.stringify({code,label,act:Number(act)||1,terrain:ter,desc},null,2)}`,
+          code: `POST /api/node\n${JSON.stringify({code,label,act:Number(act)||1,terrain:ter,text:desc},null,2)}`,
           note: 'Creates a new map node.',
         });
         curlLines.push(`curl -s -X POST ${FS_API}/node -H 'Content-Type: application/json' -d '${body}'`);
@@ -8008,7 +8008,7 @@ window._onServerActivated = () => {
         logLine('info', `POST /api/node  (${code})…`);
         try {
           const r = await fetch(`${FS_API}/node`, { method:'POST', headers:{'Content-Type':'application/json'},
-            body: JSON.stringify({code,label,act,terrain:ter,desc}) });
+            body: JSON.stringify({code,label,act,terrain:ter,text:desc}) });
           const rd = await r.json();
           if (r.ok) logLine('ok', `✓ Node ${code} created`);
           else { logLine('err', `✗ Node failed: ${rd.error||r.status}`); allOk=false; }
@@ -9668,7 +9668,7 @@ WK('tab-editor').insertAdjacentHTML('afterend', `
           </div>
           <div><div class="wk-flbl">NPC</div><input class="wk-fi" id="we-npc" placeholder="npc_merchant"></div>
           <div><div class="wk-flbl">Battle (monster key)</div><input class="wk-fi" id="we-battle" placeholder="goblin"></div>
-          <div><div class="wk-flbl">Desc (story text)</div><textarea class="wk-fi" id="we-desc" rows="4" placeholder="Node description shown to the player…"></textarea></div>
+          <div><div class="wk-flbl">Text (shown on arrival)</div><textarea class="wk-fi" id="we-text" rows="4" placeholder="What the player reads on arriving here…"></textarea></div>
           <button class="btn sm" id="wk-btn-put2" disabled style="width:100%">PUT Node</button>
           <pre id="wk-put-result" class="op-result" style="display:none"></pre>
         </div>
@@ -9861,7 +9861,7 @@ function wkRenderCenter() {
 
   // Story text
   let text = '';
-  if (node.desc) text = node.desc;
+  if (node.text && node.text.trim()) text = node.text;
   else {
     const lines = [];
     if (node.label) lines.push(`You are in ${node.label.toUpperCase()}.`);
@@ -9950,7 +9950,7 @@ function wkRenderEdit() {
   fi('we-terrain', node.terrain ?? node.name ?? '');
   fi('we-npc',     node.npc     ?? '');
   fi('we-battle',  node.battle  ?? '');
-  fi('we-desc',    node.desc    ?? '');
+  fi('we-text',    node.text    ?? '');
   WK('wk-put-result').style.display = 'none';
 
   // Quests
@@ -10017,7 +10017,7 @@ async function wkPutNode() {
   if (!wkCur) return;
   if (!SERVER.active) { wkPutMsg('Server not connected — start the WBAPI server first.', true); return; }
   const node = WBAPI.nodeMap[wkCur];
-  const FIELDS = ['label','name','act','npc','battle','desc'];
+  const FIELDS = ['label','name','act','npc','battle','text'];
   const update = {};
   for (const f of FIELDS) {
     const el = WK(`we-${f}`); if (!el) continue;
@@ -10084,7 +10084,7 @@ WK('wk-btn-new-quest').addEventListener('click', () => {
 });
 
 // Dirty tracking on edit fields
-for (const fid of ['we-label','we-name','we-act','we-terrain','we-npc','we-battle','we-desc']) {
+for (const fid of ['we-label','we-name','we-act','we-terrain','we-npc','we-battle','we-text']) {
   const el = WK(fid); if (el) el.addEventListener('input', () => el.classList.add('dirty'));
 }
 

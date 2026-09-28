@@ -12,7 +12,7 @@ const { openEditor } = require('./helpers');
 //      │
 //   D(11,10)
 //
-// A has: npc='merchant_hans', desc='A great city.', quests Q1+Q2
+// A has: npc='merchant_hans', text='A great city.', quests Q1+Q2
 // B has: battle='goblin', quest Q3
 // C has: no npc/battle/quests
 // D has: no npc/battle/quests
@@ -21,7 +21,7 @@ const { openEditor } = require('./helpers');
 // All tests inject data via page.evaluate (no game file or server required).
 
 const MOCK_NODE_MAP = {
-  A: { label: 'Alpha',  name: 'urban',  act: 1, npc: 'merchant_hans', desc: 'A great city.' },
+  A: { label: 'Alpha',  name: 'urban',  act: 1, npc: 'merchant_hans', text: 'A great city.' },
   B: { label: 'Beta',   name: 'forest', act: 1, battle: 'goblin' },
   C: { label: 'Gamma',  name: 'plains', act: 2 },
   D: { label: 'Delta',  name: 'coast',  act: 1 },
@@ -103,7 +103,7 @@ test.describe('§WALK-A — Load and initial position', () => {
     expect(act).toBe('ACT 1');
   });
 
-  test('wk-textbox shows node desc', async ({ page }) => {
+  test('wk-textbox shows node text', async ({ page }) => {
     const txt = await page.locator('#wk-textbox').textContent();
     expect(txt).toBe('A great city.');
   });
@@ -436,8 +436,8 @@ test.describe('§WALK-E — Edit panel', () => {
     expect(val).toBe('merchant_hans');
   });
 
-  test('we-desc shows desc field', async ({ page }) => {
-    const val = await page.locator('#we-desc').inputValue();
+  test('we-text shows the text field', async ({ page }) => {
+    const val = await page.locator('#we-text').inputValue();
     expect(val).toBe('A great city.');
   });
 
@@ -623,16 +623,16 @@ test.describe('§WALK-D — Story text box content', () => {
 
   test.beforeEach(async ({ page }) => { await loadWalkTab(page); });
 
-  test('shows node.desc when present', async ({ page }) => {
+  test('shows node.text when present', async ({ page }) => {
     const txt = await page.locator('#wk-textbox').textContent();
     expect(txt).toBe('A great city.');
   });
 
-  test('generates fallback text from label when no desc', async ({ page }) => {
+  test('generates fallback text from label when text is blank', async ({ page }) => {
     await page.evaluate(() => wkGo('B'));
     await page.waitForFunction(() => document.getElementById('wk-code').textContent === 'B');
     const txt = await page.locator('#wk-textbox').textContent();
-    // No desc on B — should generate "You are in BETA." or similar
+    // No text on B — should generate "You are in BETA." or similar
     expect(txt.toUpperCase()).toContain('BETA');
   });
 

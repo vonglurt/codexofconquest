@@ -1386,7 +1386,6 @@ const SCHEMAS = {
       loot:     { type:'string',  required:false, editable:true,  note:'Loot text shown on encounter completion.' },
       sleep:    { type:'boolean', required:false, editable:true,  note:'If true, player can rest here to restore HP.' },
       sleepCost:{ type:'number',  required:false, editable:true,  note:'Gold cost to sleep. Only present when sleep:true.' },
-      desc:     { type:'string',  required:false, editable:true,  note:'Carried by 6 nodes and read by nothing — arrival renders `text`. Filed §DX-02lb.' },
       textVariants:{type:'array', required:false, editable:true,  note:'[{flag,text}] — the first entry whose S_story flag is set replaces `text` on arrival.' },
       isEpicBattleground:{type:'boolean',required:false,editable:true, note:'Epic battleground: the encounter is EPIC_BOSS_POOL[bossKey], not the terrain roster.' },
       bossKey:  { type:'string',  required:false, editable:true,  note:'EPIC_BOSS_POOL key loaded when isEpicBattleground is true.' },
