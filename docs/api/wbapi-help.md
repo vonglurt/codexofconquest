@@ -381,6 +381,17 @@ the traffic ring logs one `rate` row per flood.
 
 **Test gate:** `npm run test:mud` — 270 checks incl. the [L] partition-heal harness, [P] rate limiting, the `./bin/api mesh` CLI wrappers, [Q] ACL template / tracker cache+bootstrap / chat backlog (§MESH-01-FU 11–13), and [R] the §MESH-02a ACL editor endpoints + blocklist share flip; client side: `src/tests/integration/mesh-connections-ui.test.js` (hermetic connection-center UI).
 
+### Shareable quests (§MESH-03b)
+
+A quest may cross servers only as pure data. That means no function value at any depth, every bit an authorable `BIT_CONTRACTS` kind that passes its contract, and every quest, node, monster and NPC key it names resolvable in the receiving universe or in the pack it arrived in. Flags, item names and battle ids are open vocabularies and are not resolved.
+
+```bash
+./bin/api shareable quest            # corpus count, then one reason per local-only quest
+./bin/api shareable quest quest_wm_01   # exit 1 and every reason when it is local-only
+```
+
+`GET /api/shareable/quest[/:id]` answers the same. The predicate is `WBAPI.questShareable(entry, WBAPI.shareUniverse(pack))`, and import (§MESH-03d) refuses what it rejects.
+
 ---
 
 ## Cell grid queries (§CELL-08)

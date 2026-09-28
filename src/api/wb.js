@@ -379,6 +379,26 @@ const CMD = {
     printResult(r.body, flags);
   },
 
+  // ── shareable (§MESH-03b): pure data that another server may accept ────────────
+  // Usage: ./bin/api shareable quest [id]   — exit 1 when the named quest is local-only
+  async shareable(pos, flags) {
+    await requireServer();
+    const [, type = 'quest', id] = pos;
+    const r = await request('GET', `/api/shareable/${encodeURIComponent(type)}${id ? '/' + encodeURIComponent(id) : ''}`);
+    if (r.status !== 200) { printError(r); process.exit(1); }
+    const d = r.body;
+    if (flags.json || flags.raw) { printResult(d, flags); if (id && !d.shareable) process.exit(1); return; }
+    if (!id) {
+      ok(`${d.shareable}/${d.total} quests shareable · ${d.localOnly.length} local-only`);
+      for (const q of d.localOnly) info(`${q.key}: ${q.reasons[0]}${q.reasons.length > 1 ? ` (+${q.reasons.length - 1})` : ''}`);
+      return;
+    }
+    if (d.shareable) return ok(`${d.key} is shareable`);
+    stderr(`${C.red}✗${C.reset} ${d.key} is local-only:\n`);
+    for (const why of d.reasons) stderr(`    ${why}\n`);
+    process.exit(1);
+  },
+
   // ── save / snapshots (§DX-02l) ──────────────────────────────────────────────
   // Every WRITE already reaches disk on its own (§DX-02k: temp + atomic rename).
   // `save` is the DELIBERATE dated backup — the one surface that stamps on
@@ -1608,6 +1628,7 @@ ${C.bold}═══════════════════════�
   ${C.green}drop${C.reset} <monster> name=…    Trophy drop (MONSTER_DROPS; --update to replace)
   ${C.green}dialogue${C.reset} <npc> […]      NPC_DIALOGUES entry (--create to add; meta/array edits)
   ${C.green}audit${C.reset} [--map]          Integrity scan
+  ${C.green}shareable${C.reset} quest [id]    Can this quest cross servers? (no id = corpus count)
   ${C.green}export${C.reset} <collection>    Export data as JSON / JS / ES module
   ${C.green}import${C.reset} <file.json>     Bulk import nodes + quest cycles
   ${C.green}speak${C.reset} <npc> "<prompt>" Claude-voiced NPC dialogue

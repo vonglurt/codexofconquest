@@ -918,6 +918,66 @@ const OPERAND_CONTRACTS = Object.fromEntries(Object.entries(BIT_CONTRACTS)
   .map(([kind, c]) => [kind, { required: c.required, optional: c.optional,
     ...(OPERAND_PROSE[kind] || { gate:'—', complete:'(no description — add one to OPERAND_PROSE)' }) }]));
 
+// §MESH-03b — a quest another server may send is pure data: no function value at any
+// depth, every bit an authorable kind that passes its contract, and every quest, node,
+// monster and NPC key it names resolvable through `has` (the receiving universe plus
+// the pack it arrived in). Flags, item names and battle ids are open vocabularies and
+// are not resolved. Returns the reasons it fails; an empty list means shareable.
+function _gateLeaves(g, out = []) {
+  if (!g || typeof g !== 'object') return out;
+  out.push(g);
+  for (const k of ['all', 'any']) if (Array.isArray(g[k])) g[k].forEach(x => _gateLeaves(x, out));
+  if (g.not) _gateLeaves(g.not, out);
+  return out;
+}
+function questShareable(q, has) {
+  const reasons = [];
+  (function walk(v, path) {
+    if (typeof v === 'function') { reasons.push(`function value at ${path}`); return; }
+    if (!v || typeof v !== 'object') return;
+    if (!Array.isArray(v) && typeof v.__fn === 'string') { reasons.push(`function value at ${path}`); return; }
+    for (const [k, x] of Object.entries(v)) walk(x, Array.isArray(v) ? `${path}[${k}]` : path ? `${path}.${k}` : k);
+  })(q, '');
+
+  const refs = [];
+  const ref = (kind, key, path) => { if (key != null && key !== '') refs.push([kind, key, path]); };
+  function walkBits(arr, path) {
+    if (!Array.isArray(arr)) return;
+    arr.forEach((b, i) => {
+      const p = `${path}[${i}]`;
+      if (!b || typeof b !== 'object') { reasons.push(`${p}: not a bit`); return; }
+      const c = BIT_CONTRACTS[b.kind];
+      if (!c || NOT_AUTHORABLE.includes(b.kind)) { reasons.push(`${p}: bit kind "${b.kind}" is not shareable`); return; }
+      for (const f of c.required) if (b[f] === undefined) reasons.push(`${p}: ${b.kind} is missing ${f}`);
+      let valid = false; try { valid = !!c.validate(b); } catch (_) {}
+      if (!valid) reasons.push(`${p}: ${b.kind} fails its contract`);
+      if (b.kind === 'combat') { ref('monster', b.key, `${p}.key`); ref('node', b.nodeCode, `${p}.nodeCode`); }
+      if (b.kind === 'unlock') (b.quests || []).forEach((u, j) => ref('quest', u, `${p}.quests[${j}]`));
+      if (b.kind === 'favor') ref('npc', b.npc, `${p}.npc`);
+      walkBits(b.onPass, `${p}.onPass`); walkBits(b.onFail, `${p}.onFail`);
+      if (Array.isArray(b.options)) b.options.forEach((o, j) => walkBits(o && o.bits, `${p}.options[${j}].bits`));
+    });
+  }
+  walkBits(q.bits, 'bits');
+  walkBits(q.onComplete, 'onComplete');
+
+  ref('node', q.activateNode, 'activateNode'); ref('node', q.waypointNode, 'waypointNode'); ref('npc', q.npc, 'npc');
+  (q.killGoals || []).forEach((k, i) => ref('monster', k && k.key, `killGoals[${i}].key`));
+  for (const g of _gateLeaves(q.gate)) {
+    for (const f of ['questsDone', 'questsAttempted']) (g[f] || []).forEach(u => ref('quest', u, `gate.${f}`));
+    (g.sleptAt || []).forEach(n => ref('node', n, 'gate.sleptAt'));
+    Object.keys(g.restedAtMin || {}).forEach(n => ref('node', n, 'gate.restedAtMin'));
+    Object.keys(g.favorMin || {}).forEach(n => ref('npc', n, 'gate.favorMin'));
+  }
+  for (const g of _gateLeaves(q.completion)) {
+    (g.questsComplete || []).forEach(u => ref('quest', u, 'completion.questsComplete'));
+    ref('node', g.atNode, 'completion.atNode');
+  }
+  for (const [kind, key, path] of refs)
+    if (!has[kind](key)) reasons.push(`${path}: unknown ${kind} "${key}"`);
+  return reasons;
+}
+
 // ── §WORLDBUILDER-02 Phase 2: operational-class classifier ──────────────────
 // Maps a quest object → one of 11 operational classes (§WORLDBUILDER-02-B).
 // Classification is deterministic from existing QUEST_DB fields.
@@ -1646,6 +1706,36 @@ const WBAPI = {
     try { entry = new Function('return (' + marked + ')')(); }
     catch (e) { return { ok:false, error:`entry "${key}" did not re-parse with function markers: ${e.message}` }; }
     return { ok:true, key, entry, fnCount: tally.length };
+  },
+
+  questShareable,
+
+  // A pack is {quests, nodes, monsters, npcs}, each keyed like the base collection.
+  shareUniverse(pack = {}) {
+    const own = (o, k) => !!o && Object.prototype.hasOwnProperty.call(o, k);
+    return {
+      quest:   k => own(this.questDb, k)     || own(pack.quests, k),
+      node:    k => own(this.nodeMap, k)     || own(pack.nodes, k),
+      monster: k => own(this.monsterPool, k) || own(pack.monsters, k),
+      npc:     k => this.npcKeyOk(k)         || own(pack.npcs, k),
+    };
+  },
+
+  shareable(type, idOrTitle, pack) {
+    if (type !== 'quest') return { ok:false, error:'shareable is defined for quests only' };
+    const r = this.entryWithFns('quest', idOrTitle); if (!r.ok) return r;
+    const reasons = questShareable(r.entry, this.shareUniverse(pack));
+    return { ok:true, key:r.key, shareable: reasons.length === 0, reasons };
+  },
+
+  shareableCensus() {
+    const has = this.shareUniverse(), keys = Object.keys(this.questDb), localOnly = [];
+    for (const k of keys) {
+      const r = this.entryWithFns('quest', k);
+      const reasons = r.ok ? questShareable(r.entry, has) : [r.error];
+      if (reasons.length) localOnly.push({ key:k, reasons });
+    }
+    return { ok:true, total: keys.length, shareable: keys.length - localOnly.length, localOnly };
   },
 
   // §WBAPI-01 ph3: edit a structured (array/object/number/boolean) field at SOURCE level,

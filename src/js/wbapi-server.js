@@ -5235,6 +5235,18 @@ async function route(req, res) {
   }
 
   // ── Mission Bits catalog ──────────────────────────────────────────────────
+  if (parts[0] === 'shareable' && method === 'GET') {
+    const type = parts[1] || 'quest';
+    if (parts[2]) {
+      const r = WBAPI.shareable(type, decodeURIComponent(parts[2]));
+      return json(res, r.ok ? 200 : (r.error === 'not found' ? 404 : 400), r);
+    }
+    if (type !== 'quest') return json(res, 400, { ok:false, error:'shareable is defined for quests only' });
+    const c = WBAPI.shareableCensus();
+    logResponse(method, url.pathname, 200, `${c.shareable}/${c.total} shareable`);
+    return json(res, 200, c);
+  }
+
   if (parts[0] === 'missionbits' && method === 'GET') {
     const bits = [];
     const flagRe = /checkPassFlag\s*:\s*'([^']+)'/g;
