@@ -29975,7 +29975,12 @@ async function mlAclSave() {
     const data = await r.json();
     if (!data.ok) { note.textContent = '🔴 server refused: ' + (data.error || r.status); return; }
     for (const k of _ML_ACL_LISTS) document.getElementById('ml-acl-' + k).value = (data.acl[k] || []).join('\n');
-    note.textContent = '✅ saved — mode ' + data.acl.mode + ', blocklist '
+    const isolated = data.acl.mode === 'allowlist'
+      && !['allowServerIds', 'allowIps', 'allowWorldHashes'].some(k => (data.acl[k] || []).length);
+    note.textContent = (isolated
+      ? '⚠ saved — allowlist mode with every allow list empty admits no peer, so this server is now isolated. '
+        + 'Add a server id, IP or world hash to let someone in. '
+      : '✅ saved — mode ' + data.acl.mode + ', ') + 'blocklist '
       + (data.acl.shareBlocklist ? 'shared' : 'private') + '; applies on the next mesh packet (hot-reload).';
   } catch { note.textContent = '🔴 could not reach ' + base + ' — is the server still up?'; }
 }
