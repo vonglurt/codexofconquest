@@ -30,6 +30,7 @@
 // ─────────────────────────────────────────────────────────────
 
 const http      = require('http');
+const https     = require('https');
 const fs        = require('fs');
 const path      = require('path');
 const crypto    = require('crypto');
@@ -208,6 +209,14 @@ const PORT      = parseInt(process.env.PORT || '1367');
 const BIND_ADDR = process.env.BIND_ADDR
   || process.argv.find((a, i) => process.argv[i-1] === '--bind')
   || '127.0.0.1';
+// §MESH-03f — TLS: both files, or plain http. A peer that advertises https://host:port is dialed over TLS.
+const argOf = (flag) => process.argv.find((a, i) => process.argv[i-1] === flag);
+const TLS_CERT = process.env.TLS_CERT || argOf('--tls-cert') || '';
+const TLS_KEY  = process.env.TLS_KEY  || argOf('--tls-key')  || '';
+if (!!TLS_CERT !== !!TLS_KEY) { console.error('TLS needs both --tls-cert and --tls-key (or TLS_CERT and TLS_KEY).'); process.exit(64); }
+const TLS = TLS_CERT ? { cert: fs.readFileSync(TLS_CERT), key: fs.readFileSync(TLS_KEY) } : null;
+// Every request body, mesh ingress included, is refused with 413 past this size before it is parsed.
+const BODY_MAX = parseInt(process.env.BODY_MAX_BYTES || '', 10) || 1024 * 1024;
 // §MESH-01-FU 2 — human-facing server name for tracker announces / the server
 // browser (the tracker already stores + returns a `name` per announce record).
 const SERVER_NAME = String(process.env.SERVER_NAME
@@ -574,7 +583,7 @@ async function ledgerSyncWith(addr, peerVV) {
   try {
     const m = getManifest();
     if (peerHasMore) {
-      const resp = await fetch(`http://${addr}/api/ledger/sync`, {
+      const resp = await fetch(`${meshUrl(addr)}/api/ledger/sync`, {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ serverId: getServerId(), proto: m.proto, engineVer: m.engineVer,
           worldHash: m.worldHash, addr: meshAdvertise(), vv: ours }),
@@ -586,7 +595,7 @@ async function ledgerSyncWith(addr, peerVV) {
       } else pushTraffic('in', 'ledger', addr, false, `pull refused: ${data.reason || resp.status}`);
     }
     if (missing.events.length) {
-      const resp = await fetch(`http://${addr}/api/ledger/ingest`, {
+      const resp = await fetch(`${meshUrl(addr)}/api/ledger/ingest`, {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ events: missing.events }),
       });
@@ -607,7 +616,7 @@ async function ledgerSyncWith(addr, peerVV) {
 // ownership verdict (the background channel would deliver them a round later).
 async function ledgerPullFrom(addr) {
   const m = getManifest();
-  const resp = await fetch(`http://${addr}/api/ledger/sync`, {
+  const resp = await fetch(`${meshUrl(addr)}/api/ledger/sync`, {
     method: 'POST', headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ serverId: getServerId(), proto: m.proto, engineVer: m.engineVer,
       worldHash: m.worldHash, addr: meshAdvertise(), vv: ledgerVVObj() }),
@@ -832,7 +841,7 @@ const {
   TRACKER_MODE, TRACKER_TTL, TRACKER_PERSIST_MS, TRACKER_MAX_RECORDS,
   TRACKER_URLS, MESH_TRACKER_URLS, TRACKER_PEER_URLS, ACL_FILE,
   getAcl, aclAllows, sameUniverse, meshRateAllows,
-  pushTraffic, meshAdvertise, meshConfigured, meshReachabilityWarnings,
+  pushTraffic, meshAdvertise, meshConfigured, meshReachabilityWarnings, MESH_ADDR, meshAddrNorm, meshUrl,
   emitMeshEvent, remotePlayersAt, meshAddrForOrigin8, meshIngest, meshGossipRound,
   addTrackerUrl, loadStaticPeers, persistPeerCache, fetchBootstrapUrls,
   trackerSweep, trackerPersist, trackerLoadCache, trackerMarkDirty,
@@ -844,6 +853,7 @@ const {
   ledgerVVObj, ledgerSyncWith,
   signEnvelope, verifyEnvelope, pinEnvelope,
   publishedPacks: () => packsPublished(),
+  TLS_ON: !!TLS,
 });
 
 // §MESH-03d — content packs, stored as PACKS_DIR/<id>.json.
@@ -930,7 +940,7 @@ async function packFetch(id, from) {
   if (!sources.length) return { status: 404, body: { ok: false, error: `no tracker lists a server holding pack ${id.slice(0, 12)}` } };
   const attempts = [];
   for (const src of sources) {
-    const base = /^https?:\/\//.test(src) ? src.replace(/\/+$/, '') : `http://${src}`;
+    const base = /^https?:\/\//.test(src) ? src.replace(/\/+$/, '') : meshUrl(src);
     try {
       const resp = await fetch(`${base}/api/pack/${id}`, { signal: AbortSignal.timeout(10000) });
       const text = await resp.text();
@@ -979,13 +989,21 @@ async function packApply(id) {
   const review = packReview(id).body;
   if (!pack || !review.acceptable) return { ok: false, error: review.error || 'no longer acceptable here' };
   const host = ['0.0.0.0', '::'].includes(BIND_ADDR) ? '127.0.0.1' : BIND_ADDR;
-  const call = async (method, p, body, headers = {}) => {
-    const resp = await fetch(`http://${host.includes(':') ? `[${host}]` : host}:${PORT}/api${p}`, { method,
-      headers: { 'Content-Type': 'application/json', ...headers }, ...(body ? { body: JSON.stringify(body) } : {}) });
-    const d = await resp.json().catch(() => ({}));
-    if (!resp.ok) throw new Error(`${method} /api${p} → ${resp.status}: ${d.error || JSON.stringify(d).slice(0, 200)}`);
-    return d;
-  };
+  // Loopback to this process: under TLS its certificate names a host, not 127.0.0.1.
+  const call = (method, p, body, headers = {}) => new Promise((resolve, reject) => {
+    const text = body ? JSON.stringify(body) : '';
+    const r = (TLS ? https : http).request({ host, port: PORT, path: `/api${p}`, method, rejectUnauthorized: false,
+      headers: { 'Content-Type': 'application/json', 'Content-Length': Buffer.byteLength(text), ...headers } }, (resp) => {
+      let raw = ''; resp.on('data', (c) => { raw += c; });
+      resp.on('end', () => {
+        let d = {}; try { d = JSON.parse(raw); } catch {}
+        if (resp.statusCode >= 400) reject(new Error(`${method} /api${p} → ${resp.statusCode}: ${d.error || raw.slice(0, 200)}`));
+        else resolve(d);
+      });
+    });
+    r.on('error', reject);
+    r.end(text);
+  });
   const prevText = fs.readFileSync(GAME_FILE, 'utf8');
   const steps = [];
   try {
@@ -2110,9 +2128,15 @@ function saveAndVerify(res, status, payload, expectedFields, connectType, connec
 
 function readBody(req) {
   return new Promise((resolve, reject) => {
-    let buf = '';
-    req.on('data', c => { buf += c; if (buf.length > 1e6) reject(new Error('Body too large')); });
+    let buf = '', bytes = 0, over = false;
+    req.on('data', c => {
+      if (over) return;
+      bytes += c.length;
+      if (bytes > BODY_MAX) { over = true; buf = ''; return reject(Object.assign(new Error('Body too large'), { status: 413 })); }
+      buf += c;
+    });
     req.on('end', () => {
+      if (over) return;
       try {
         const parsed = JSON.parse(buf || '{}');
         // §DX-02cs: `null`, `5`, `"x"` and `[]` are valid JSON, and every handler reads its body as an
@@ -3460,7 +3484,7 @@ async function route(req, res) {
     try { tb = await readBody(req); } catch { return json(res, 400, { ok: false, error: 'Invalid JSON' }); }
     trackerSweep();
     const { serverId, addr, proto, engineVer, worldHash, universeHash, contentHash } = tb || {};
-    if (!/^[0-9a-f]{32}$/.test(serverId || '') || !/^[\w.-]+:\d+$/.test(addr || '') || !proto || !engineVer || !worldHash) {
+    if (!/^[0-9a-f]{32}$/.test(serverId || '') || !MESH_ADDR.test(addr || '') || !proto || !engineVer || !worldHash) {
       logResponse(method, url.pathname, 400, 'tracker/announce: bad fields');
       return json(res, 400, { ok: false, error: 'serverId, addr, proto, engineVer, worldHash required' });
     }
@@ -3655,14 +3679,14 @@ async function route(req, res) {
   if (parts[0] === 'mesh' && parts[1] === 'connect' && method === 'POST') {
     let cb;
     try { cb = await readBody(req); } catch { return json(res, 400, { ok: false, error: 'Invalid JSON' }); }
-    const addr = String(cb.addr || '').trim().replace(/^https?:\/\//, '').replace(/\/+$/, '');
+    const addr = meshAddrNorm(cb.addr);
     const tracker = String(cb.tracker || '').trim().replace(/\/+$/, '');
     if (!addr && !tracker) {
       logResponse(method, url.pathname, 400, 'mesh connect: addr or tracker required');
       return json(res, 400, { ok: false, error: "body.addr ('host:port') or body.tracker ('http(s)://…') required" });
     }
     if (addr) {
-      if (!/^[\w.-]+:\d+$/.test(addr)) return json(res, 400, { ok: false, error: "addr must be 'host:port'" });
+      if (!MESH_ADDR.test(addr)) return json(res, 400, { ok: false, error: "addr must be 'host:port' or 'https://host:port'" });
       if (addr === meshAdvertise()) return json(res, 400, { ok: false, error: 'that is this server' });
       if (!MESH.peers.has(addr)) MESH.peers.set(addr, { serverId: null, lastSeen: 0, lastErr: null });
       pushTraffic('out', 'connect', addr, true, 'peer added via /api/mesh/connect');
@@ -8837,7 +8861,7 @@ async function route(req, res) {
         const m = getManifest();
         let relayed = null;
         try {
-          const resp = await fetch(`http://${peer.addr}/api/trade/relay`, {
+          const resp = await fetch(`${meshUrl(peer.addr)}/api/trade/relay`, {
             method: 'POST', headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ op: 'propose', serverId: getServerId(), proto: m.proto, engineVer: m.engineVer,
               worldHash: m.worldHash, addr: meshAdvertise(), vv: ledgerVVObj(),
@@ -8889,7 +8913,7 @@ async function route(req, res) {
         const m = getManifest();
         let data = null;
         try {
-          const resp = await fetch(`http://${t.remote.addr}/api/trade/relay`, {
+          const resp = await fetch(`${meshUrl(t.remote.addr)}/api/trade/relay`, {
             method: 'POST', headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ op: 'accept', serverId: getServerId(), proto: m.proto, engineVer: m.engineVer,
               worldHash: m.worldHash, addr: meshAdvertise(), vv: ledgerVVObj(),
@@ -8953,7 +8977,7 @@ async function route(req, res) {
       // party notification go too (best-effort — TTL expiry is the backstop).
       if (t.remote && t.remote.addr) {
         const m = getManifest();
-        fetch(`http://${t.remote.addr}/api/trade/relay`, {
+        fetch(`${meshUrl(t.remote.addr)}/api/trade/relay`, {
           method: 'POST', headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ op: 'cancel', serverId: getServerId(), proto: m.proto, engineVer: m.engineVer,
             worldHash: m.worldHash, addr: meshAdvertise(), tradeId: body.tradeId }),
@@ -11225,14 +11249,21 @@ async function route(req, res) {
 // ═══════════════════════════════════════════════════════════════════════════
 // Server
 // ═══════════════════════════════════════════════════════════════════════════
-const server = http.createServer(async (req, res) => {
+async function onRequest(req, res) {
+  const declared = parseInt(req.headers['content-length'] || '', 10);
+  if (declared > BODY_MAX) {
+    logResponse(req.method, req.url, 413, `body of ${declared} bytes refused unread`);
+    res.writeHead(413, { 'Content-Type': 'application/json', Connection: 'close' });
+    return res.end(JSON.stringify({ ok: false, error: `request body of ${declared} bytes exceeds the ${BODY_MAX}-byte limit` }));
+  }
   try {
     await route(req, res);
   } catch(e) {
     log('ERROR', `Unhandled exception: ${e.message}`, { stack: e.stack?.split('\n')[1]?.trim() });
     json(res, 500, { error: e.message });
   }
-});
+}
+const server = TLS ? https.createServer(TLS, onRequest) : http.createServer(onRequest);
 
 // Port 1367 wins: if another instance already owns the port, exit cleanly
 // so the wbapi-toggle restart loop does NOT relaunch (exit 0 ≠ exit 67).

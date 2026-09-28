@@ -167,7 +167,8 @@ test.describe('§MESH-03d — a pack travels A → tracker → B, and only intac
       env: { ...process.env, PORT: String(port), CODEXOFCONQUEST_FILE: path.join(d, 'play.html'),
         PACKS_DIR: path.join(d, 'packs'), MESH_KEY_FILE: path.join(d, 'key.pem'), SERVER_ID_FILE: path.join(d, 'server-id'),
         PEERS_CACHE_FILE: path.join(d, 'peers.json'), MESH_ACL_FILE: path.join(d, 'acl.json'),
-        TRACKER_CACHE_FILE: path.join(d, 'tracker-cache.json'), ADVERTISE_ADDR: `localhost:${port}`, ...env },
+        TRACKER_CACHE_FILE: path.join(d, 'tracker-cache.json'), LEDGER_DIR: path.join(d, 'ledger'),
+        ADVERTISE_ADDR: `localhost:${port}`, ...env },
       stdio: 'ignore',
     });
   };

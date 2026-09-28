@@ -219,6 +219,7 @@ const PORT_BLOCKS = {
   shareable: 14700,
   pack: 14800,
   packmesh: 14900,   // four ports per worker: tracker, A, B, tamperer
+  tls: 15000,        // two ports per worker: a TLS server and a plain one
 };
 
 // Returns `count` consecutive ports reserved for this worker inside `block`'s

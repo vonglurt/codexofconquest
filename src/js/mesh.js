@@ -25,6 +25,7 @@
 //   signEnvelope(p), verifyEnvelope(p),    — §MESH-03g: the payload is signed by its origin's
 //   pinEnvelope(p)                            key and bound to its serverId like a ledger event
 //   publishedPacks()                       — §MESH-03d: [{id, author, base, quests, monsters}] to announce
+//   TLS_ON                                 — §MESH-03f: this server listens with TLS
 
 const fs = require('fs');
 const path = require('path');
@@ -41,7 +42,7 @@ module.exports = function createMesh({
   broadcastCell, broadcastAll, pushChat,
   ledgerVVObj, ledgerSyncWith,
   signEnvelope, verifyEnvelope, pinEnvelope,
-  publishedPacks,
+  publishedPacks, TLS_ON,
 }) {
 
 // ACL — mesh-acl.json (repo root, hot-reloaded on mtime change). Applied to
@@ -131,7 +132,11 @@ const PEERS_CACHE_FILE = process.env.PEERS_CACHE_FILE || path.join(CFG, 'peers-c
 const ADVERTISE_ADDR = process.env.ADVERTISE_ADDR
   || process.argv.find((a, i) => process.argv[i-1] === '--advertise')
   || '';
-function meshAdvertise() { return ADVERTISE_ADDR || ('localhost:' + PORT); }
+function meshAdvertise() { return ADVERTISE_ADDR || ((TLS_ON ? 'https://' : '') + 'localhost:' + PORT); }
+// §MESH-03f — a peer address is `host:port` (dialed over http) or `https://host:port`.
+const MESH_ADDR = /^(https:\/\/)?[\w.-]+:\d+$/;
+const meshAddrNorm = (a) => String(a || '').trim().replace(/^http:\/\//, '').replace(/\/+$/, '');
+const meshUrl = (addr) => (/^https:\/\//.test(addr) ? addr : `http://${addr}`);
 
 // §MESH-01-FU 1 — a mesh is CONFIGURED (peers/trackers/federation) but this
 // server is unreachable from another machine: loopback bind means nobody can
@@ -148,8 +153,10 @@ function meshReachabilityWarnings() {
   const warnings = [];
   if (/^(127\.|localhost$|::1$)/.test(BIND_ADDR))
     warnings.push(`bind is loopback (${BIND_ADDR}) — remote machines cannot reach this server. Start with --bind 0.0.0.0 (or BIND_ADDR=0.0.0.0).`);
-  if (!TRACKER_MODE && /^(localhost:|127\.|\[::1\])/.test(meshAdvertise()))
+  if (!TRACKER_MODE && /^(https:\/\/)?(localhost:|127\.|\[::1\])/.test(meshAdvertise()))
     warnings.push(`advertise addr is ${meshAdvertise()} — peers/trackers will be told to dial localhost (their own machine). Set --advertise <lan-ip>:${PORT} (or ADVERTISE_ADDR).`);
+  if (TLS_ON && !/^https:\/\//.test(meshAdvertise()))
+    warnings.push(`this server speaks TLS but advertises ${meshAdvertise()}, which peers dial over plain http. Advertise https://<host>:${PORT}.`);
   return warnings;
 }
 
@@ -292,7 +299,7 @@ async function meshGossipRound() {
         // LAN/cached peer stalls every round for the OS connect timeout
         // (~10-75 s) and starves presence sync mesh-wide (found 2026-07-06:
         // a stale peers-cache addr slowed 120 ms rounds to ~10 s).
-        const resp = await fetch(`http://${addr}/api/mesh/gossip`, {
+        const resp = await fetch(`${meshUrl(addr)}/api/mesh/gossip`, {
           method: 'POST', headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(meshPayload()),
           signal: AbortSignal.timeout(3000),
@@ -340,7 +347,7 @@ function addTrackerUrl(u) {
   if (!list.includes(u)) list.push(u);
 }
 function loadStaticPeers() {
-  const add = (a) => { if (a && /^[\w.-]+:\d+$/.test(a) && a !== meshAdvertise() && !MESH.peers.has(a)) MESH.peers.set(a, { serverId: null, lastSeen: 0, lastErr: null }); };
+  const add = (a) => { a = meshAddrNorm(a); if (a && MESH_ADDR.test(a) && a !== meshAdvertise() && !MESH.peers.has(a)) MESH.peers.set(a, { serverId: null, lastSeen: 0, lastErr: null }); };
   process.argv.forEach((a, i) => { if (process.argv[i - 1] === '--peer') add(a); });
   (process.env.MESH_PEERS || '').split(',').map((s) => s.trim()).forEach(add);
   try { (JSON.parse(fs.readFileSync(PEERS_CACHE_FILE, 'utf8')).addrs || []).forEach(add); } catch {}
@@ -433,7 +440,7 @@ function trackerMergeRecords(records, ip) {
   const now = Date.now();
   let merged = 0;
   for (const rec of records || []) {
-    if (!rec || !/^[0-9a-f]{32}$/.test(rec.serverId || '') || !/^[\w.-]+:\d+$/.test(rec.addr || '')) continue;
+    if (!rec || !/^[0-9a-f]{32}$/.test(rec.serverId || '') || !MESH_ADDR.test(rec.addr || '')) continue;
     if (!rec.proto || !rec.engineVer || !rec.worldHash || rec.serverId === getServerId()) continue;
     if (!aclAllows({ serverId: rec.serverId, ip, worldHash: rec.worldHash, universeHash: rec.universeHash })) continue;
     const lastSeen = now - Math.max(0, Math.min(rec.ageMs | 0, TRACKER_TTL));
@@ -509,8 +516,8 @@ async function fetchBootstrapUrls() {
         const t = line.trim();
         if (!t || t.startsWith('#')) continue;
         if (t.startsWith('tracker ')) { addTrackerUrl(t.slice(8).trim()); continue; }
-        const a = t.split(/\s+/)[0];
-        if (/^[\w.-]+:\d+$/.test(a) && a !== meshAdvertise() && !MESH.peers.has(a))
+        const a = meshAddrNorm(t.split(/\s+/)[0]);
+        if (MESH_ADDR.test(a) && a !== meshAdvertise() && !MESH.peers.has(a))
           MESH.peers.set(a, { serverId: null, lastSeen: 0, lastErr: null });
       }
       pushTraffic('in', 'bootstrap', u, true, `${MESH.peers.size} peer(s) after parse`);
@@ -533,7 +540,7 @@ return {
   // ACL + ingress rate limit
   getAcl, aclAllows, sameUniverse, meshRateAllows,
   // gossip mesh
-  pushTraffic, meshAdvertise, meshConfigured, meshReachabilityWarnings,
+  pushTraffic, meshAdvertise, meshConfigured, meshReachabilityWarnings, MESH_ADDR, meshAddrNorm, meshUrl,
   emitMeshEvent, remotePlayersAt, meshAddrForOrigin8, meshIngest, meshGossipRound,
   addTrackerUrl, loadStaticPeers, persistPeerCache, fetchBootstrapUrls,
   // tracker role (announce table · persistence · federation)

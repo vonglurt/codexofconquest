@@ -198,7 +198,7 @@ section by far, has no batch path (§7.6).
 > in the same process."*
 
 The conclusion (**no mutex needed**) is correct. The reason is not. The handler is
-`` `src/js/wbapi-server.js:const server = http.createServer@11480` `` — an **`async`** function that
+`` `src/js/wbapi-server.js:async function onRequest@11252` `` — an **`async`** function that
 `await`s `readBody(req)` before mutating. Handler A suspended at that `await` interleaves freely
 with handler B. What actually protects `_rawSrc` is narrower and worth stating precisely: **no
 *synchronous* mutation block is ever interleaved**, and every mutation path — patch, resplice,
