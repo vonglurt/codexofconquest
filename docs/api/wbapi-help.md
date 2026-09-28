@@ -290,6 +290,7 @@ cp mesh-acl.json.example mesh-acl.json   # private/blocklisted mesh — commente
 # Identity + world manifest (what forks a swarm: proto + engineVer + worldHash)
 curl http://localhost:1367/api/manifest
 # → { proto, engineVer, worldName, worldTag, worldHash, parts: {8 collection hashes} }
+# engineVer = ENGINE_VER label + '~' + 8 hex of the MOVER/ROOMS/DUEL/QUEST :CORE spans, e.g. coc-3.104.0~3d93cdc3
 
 # One-call mesh status (worldbuilder 🌐 Mesh tab source; also served in tracker-mode)
 curl http://localhost:1367/api/mesh/status

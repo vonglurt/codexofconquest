@@ -373,6 +373,21 @@ async function main() {
   });
   check(gBad.status === 409, 'gossip ingress refuses a mismatched worldHash with 409');
 
+  const kernFile = path.join(tmp, `coc-kernel-${process.pid}.html`);
+  fs.writeFileSync(kernFile, fs.readFileSync(path.join(ROOT, 'play.html'), 'utf8')
+    .replace('// ◆◆◆ DUEL:CORE:END ◆◆◆', '// kernel differs\n// ◆◆◆ DUEL:CORE:END ◆◆◆'));
+  const mKern = await startServer(PORT + 44, mkEnv(PORT + 44, '0e'.repeat(16), { CODEXOFCONQUEST_FILE: kernFile }));
+  const manK = await jget('/manifest', mKern.base);
+  fs.rmSync(kernFile, { force: true });
+  check(manK.engineVer.split('~')[0] === manA.engineVer.split('~')[0] && manK.engineVer !== manA.engineVer
+    && JSON.stringify(manK.parts) === JSON.stringify(manA.parts),
+    'a build differing only inside a parity kernel keeps the label and the data parts and changes engineVer');
+  const gKern = await fetch(mA.base + '/api/mesh/gossip', {
+    method: 'POST', headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ serverId: '0e'.repeat(16), proto: manK.proto, engineVer: manK.engineVer, worldHash: manK.worldHash }),
+  });
+  check(gKern.status === 409, 'gossip ingress refuses a build whose parity kernels differ with 409');
+
   // ACL: allowlist-mode server refuses even a compatible, unlisted peer.
   const aclPath = path.join(tmp, `coc-acl-${PORT}.json`);
   fs.writeFileSync(aclPath, JSON.stringify({ mode: 'allowlist', allowServerIds: [] }));

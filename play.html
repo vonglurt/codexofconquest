@@ -29592,7 +29592,7 @@ async function _mpPing(base) {
 // synthesized direct-URL row. The tag (`NextWorldMod-131ea`) is the human
 // handle for a world — name from the world file, 5 hash chars to disambiguate.
 function _mpServerRowHtml(s, i, pingPfx) {
-  const evOk = !s.engineVer || s.engineVer === ENGINE_VER;
+  const evOk = !s.engineVer || String(s.engineVer).split('~')[0] === ENGINE_VER;
   const tag = s.worldTag || (s.worldName && s.worldHash ? s.worldName + '-' + String(s.worldHash).slice(0, 5) : '');
   return '<div class="mp-srv-row" data-addr="' + _mpEsc(s.addr) + '">' +
     '<b>' + _mpEsc(s.name || s.addr) + '</b>' +
@@ -29701,8 +29701,8 @@ function _mcRenderStatus() {
     if (!man.ok) throw new Error('bad manifest');
     set('mc-world', '🌍 ' + (man.worldTag || man.worldName || '?')
       + (man.peers && man.peers.length ? ' · ' + man.peers.length + ' mesh peer(s)' : ''));
-    const evOk = man.engineVer === ENGINE_VER;
-    set('mc-build', evOk ? man.engineVer + ' ✓ matches yours'
+    const evOk = String(man.engineVer).split('~')[0] === ENGINE_VER;
+    set('mc-build', evOk ? man.engineVer + ' ✓ same release as yours'
       : '⚠ ' + man.engineVer + ' — yours is ' + ENGINE_VER, evOk ? '' : '#d4a017');
   }).catch(() => {
     set('mc-world', '—');

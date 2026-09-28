@@ -667,12 +667,20 @@ function rawSpan(src, name) {
 }
 
 // World manifest — "all quests and data summed." worldHash covers EVERY data
-// collection + ENGINE_VER (parsed from the game file — each game version is a
-// separate, incompatible swarm). Per-part hashes let mismatched operators see
+// collection + engineVer, which is ENGINE_VER's label plus a hash of the parity-fenced
+// kernels, so two builds whose engines differ are separate swarms whatever the label
+// says. Per-part hashes let mismatched operators see
 // WHERE two worlds differ (the modification set), but sync requires equality
 // of (proto, engineVer, worldHash) — never a partial match.
 const sha16 = (s) => crypto.createHash('sha256').update(s).digest('hex').slice(0, 16);
 const MANIFEST_PARTS = ['NODE_MAP', 'NODE_COORDS', 'SEA_RUNS', 'SEA_LANES', 'ROAD_RUNS', 'QUEST_DB', 'MONSTER_POOL', 'WORLD_DB'];
+const ENGINE_CORES = ['MOVER', 'ROOMS', 'DUEL', 'QUEST'];
+function engineCoreHash(src) {
+  return sha16(ENGINE_CORES.map((n) => {
+    const a = src.indexOf(`// ◆◆◆ ${n}:CORE:START ◆◆◆`), b = src.indexOf(`// ◆◆◆ ${n}:CORE:END ◆◆◆`);
+    return a >= 0 && b > a ? src.slice(a, b) : 'missing';
+  }).join('|')).slice(0, 8);
+}
 let _maniSrc = null, _mani = null;
 function getManifest() {
   const src = WBAPI._rawSrc || '';
@@ -684,7 +692,7 @@ function getManifest() {
     parts[name.toLowerCase()] = span ? sha16(span) : 'missing';
   }
   const evm = src.match(/const\s+ENGINE_VER\s*=\s*['"]([^'"]+)['"]/);
-  const engineVer = (evm && evm[1]) || 'unversioned';
+  const engineVer = ((evm && evm[1]) || 'unversioned') + '~' + engineCoreHash(src);
   // §MESH-01-FU: WORLD_NAME is a DISPLAY tag parsed from the game file (mods
   // rename their world there). Deliberately NOT hashed — renaming a world never
   // forks the swarm; identity stays (proto, engineVer, worldHash).
