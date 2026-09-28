@@ -20,9 +20,12 @@ const CORS = { 'access-control-allow-origin': '*' };
 
 // Requests the firewall aborted for the D4 never-fetched assertion.
 let deniedFetches;
+// Bodies the ACL editor PUT to the stub server.
+let aclPuts;
 
 async function loadHermetic(page) {
   deniedFetches = 0;
+  aclPuts = [];
   await page.route('**/*', (route) => {
     const u = route.request().url();
     // the static game file (and any asset) from the Playwright webServer
@@ -34,6 +37,13 @@ async function loadHermetic(page) {
     if (u === 'http://ref.example:1367/api/manifest')
       return route.fulfill({ headers: CORS, contentType: 'application/json',
         body: JSON.stringify({ ok: true, universeHash: 'u1', contentHash: 'c1', engineVer: 'x' }) });
+    if (u === 'http://ref.example:1367/api/mesh/acl') {
+      const put = route.request().method() === 'PUT';
+      if (put) aclPuts.push(JSON.parse(route.request().postData()));
+      const acl = put ? aclPuts[aclPuts.length - 1] : { mode: 'open', shareBlocklist: false, allowAuthors: ['K1'] };
+      return route.fulfill({ headers: CORS, contentType: 'application/json',
+        body: JSON.stringify({ ok: true, file: 'mesh-acl.json', exists: true, acl }) });
+    }
     if (u === 'http://manual.example/list.json')
       return route.fulfill({ headers: CORS, contentType: 'application/json',
         body: JSON.stringify(['stub2:1402', { addr: 'stub3:1403', name: 'Named Stub' }, 'garbage entry']) });
@@ -161,6 +171,22 @@ test.describe('§MESH-02f — connection-center UI (hermetic, :1367 route-blocke
     expect(await text('same:1401')).not.toMatch(/universe/);
     expect(await text('old:1404')).not.toMatch(/universe/);
     expect(await text('lag:1402')).not.toContain('other universe');
+  });
+
+  test('§MESH-03d-FU ACL editor: trusted pack authors load from the server and save back', async ({ page }) => {
+    await loadHermetic(page);
+    await page.evaluate(() => {
+      localStorage.setItem('mpServer', 'http://ref.example:1367');
+      window.__mesh02.msubSwitch('msub-lists');
+    });
+    await page.evaluate(() => _mlAclLoad());
+    await expect(page.locator('#ml-acl-allowAuthors')).toHaveValue('K1');
+    await page.evaluate(() => { document.getElementById('ml-acl-allowAuthors').value = 'K1\n K2 \n'; });
+    await page.evaluate(() => mlAclSave());
+    await expect(page.locator('#ml-acl-save-note')).toContainText('saved');
+    expect(aclPuts).toHaveLength(1);
+    expect(aclPuts[0].allowAuthors).toEqual(['K1', 'K2']);
+    await expect(page.locator('#ml-acl-allowAuthors')).toHaveValue('K1\nK2');
   });
 
   test('mpJoin refuses a blacklisted target: no mpServer write, MP stays off', async ({ page }) => {

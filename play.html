@@ -4702,7 +4702,9 @@ body.act-three .npc-card-chip { filter: saturate(0.85); }
               <label>allow serverIds<textarea id="ml-acl-allowServerIds" placeholder="one per line"></textarea></label>
               <label>allow IPs<textarea id="ml-acl-allowIps" placeholder="one per line"></textarea></label>
               <label>allow world hashes<textarea id="ml-acl-allowWorldHashes" placeholder="one per line"></textarea></label>
+              <label>trusted pack authors<textarea id="ml-acl-allowAuthors" placeholder="one public key per line"></textarea></label>
             </div>
+            <div class="mp-hint">A quest pack signed by a trusted author is accepted as soon as it is fetched, and it still has to pass review before it lands.</div>
             <div id="ml-acl-save-note" class="mp-hint"></div>
           </div>
           <div class="md-sec-hd">📥 A FRIEND'S SHARED BLOCKLIST</div>
@@ -29926,7 +29928,7 @@ async function _mdOnOpen() {
 // (D2), and the peer must have opted in (D3 — 403 not-shared otherwise).
 // Display/connection layer only (D7): the mover reads none of this.
 const _ML_KEYS = { black: 'mpBlacklist', white: 'mpWhitelist' };
-const _ML_ACL_LISTS = ['blockServerIds', 'blockIps', 'blockWorldHashes', 'allowServerIds', 'allowIps', 'allowWorldHashes'];
+const _ML_ACL_LISTS = ['blockServerIds', 'blockIps', 'blockWorldHashes', 'allowServerIds', 'allowIps', 'allowWorldHashes', 'allowAuthors'];
 // A target is blacklisted if its addr, bare host, serverId, or worldHash is
 // listed — rows carry all four when a tracker supplied them; a plain addr
 // string (mpJoin) can only match the first two.
