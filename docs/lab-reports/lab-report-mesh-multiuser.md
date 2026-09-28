@@ -81,6 +81,8 @@ All eight line citations land on the named symbol; §VIII.A. The session shape t
 
 **Identity and compatibility** — `src/js/wbapi-server.js:const sha16 = (s) => crypto.createHash('sha256')@673` · `src/js/wbapi-server.js:const MANIFEST_PARTS@786` · `serverId` = 16 random bytes hex in `.wbapi-server-id` (live file: `6f139689a4f8ae48c07d88e6af4b2c2d`).
 
+> **Amended 2026-09-28 (§MESH-03c):** the single `worldHash` equality this report measured no longer gates presence. The manifest now also carries `universeHash` (engine + the five map parts), which gossip requires, and `contentHash` (quests, monsters, terrain), which may differ. `worldHash` still gates ledger sync and trade relay until §MESH-03e. `MESH_PROTO` is 3. The measurements above stand as of their date.
+
 **Mesh constants** — `src/js/mesh.js:const MESH_GOSSIP_MS@116` (2 s) · `src/js/mesh.js:const MESH_ORIGIN_TTL = 90_000;@117` · `src/js/mesh.js:const MESH_FANOUT_MAX_AGE = 10_000;@118` · `src/js/mesh.js:if (MESH.log.length > 500)@148` (the bounded presence ring).
 
 **Timers** — `src/js/wbapi-server.js:const SESSION_TTL = parseInt@76` (30 min) · `src/js/wbapi-server.js:const TRADE_TTL = parseInt@264` (60 s) · `src/js/wbapi-server.js:const DUEL_TTL = parseInt@591` (30 s per phase).

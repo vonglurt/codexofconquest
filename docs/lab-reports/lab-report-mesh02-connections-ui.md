@@ -96,6 +96,9 @@ GET  /api/session/chat      ?limit=1..200 (default 100), optional &r=&c= cell fi
 - `src/js/mesh.js:function aclAllows(@67` — blocks are checked
   first and beat an allowlist match. **`shareBlocklist` occurs zero times in `src/js/mesh.js`**:
   it is metadata about publication, never a gate. The report's original sentence, exact.
+  *Amended 2026-09-28 (§MESH-03c):* a `blockWorldHashes`/`allowWorldHashes` entry now matches
+  either a peer's `worldHash` or its `universeHash`, and server rows carry a badge against the
+  server this client points at: *≈ same universe, content differs* or *⚠ other universe*.
 - Footprints (j): `src/js/wbapi-server.js:const FOOTPRINT_TTL = 30 * 60 * 1000, FOOTPRINT_PER_CELL = 8;@175`,
   written by `src/js/wbapi-server.js:function recordFootprint(pid, name, r, c) {@177` from
   `session/move` and `session/pos`, served by

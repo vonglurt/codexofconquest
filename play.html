@@ -29601,7 +29601,24 @@ function _mpServerRowHtml(s, i, pingPfx) {
     '<span>👥 ' + (s.playerCount | 0) + '</span>' +
     '<span id="' + (pingPfx || 'mp-srv-ping-') + i + '">… ms</span>' +
     (evOk ? '' : '<span style="color:#d4a017" title="different game build (' + _mpEsc(s.engineVer) + ' vs ' + _mpEsc(ENGINE_VER) + ')">⚠ build</span>') +
+    '<span id="' + (pingPfx || 'mp-srv-ping-').replace(/ping-$/, 'world-') + i + '"></span>' +
     '<button class="mp-srv-join" onclick="mpJoin(\'' + _mpEsc(s.addr) + '\')">Join</button></div>';
+}
+// §MESH-03c: a row is compared with the server this client points at. Servers of one
+// universe share presence and chat even when their content differs.
+function _mpWorldBadge(s, ref) {
+  if (!ref || !s.universeHash || !ref.universeHash) return '';
+  if (s.universeHash !== ref.universeHash)
+    return '<span style="color:#c05555" title="different map or engine: players there cannot meet players here">⚠ other universe</span>';
+  if (s.contentHash && ref.contentHash && s.contentHash !== ref.contentHash)
+    return '<span style="color:#8fc0f0" title="same universe, content differs: you can meet and chat; trades wait until the content matches">≈ same universe, content differs</span>';
+  return '';
+}
+const _mpRefMan = {};
+function _mpRefManifest() {
+  const base = MP.on ? MP.base : _mpBase();
+  if (!_mpRefMan[base]) _mpRefMan[base] = _mdProbeManifest(base, 1500).then(m => m || (delete _mpRefMan[base], null));
+  return _mpRefMan[base];
 }
 // §MESH-02c: parameterized by container so the Connect pane reuses the SAME
 // renderer as the Shift+🌐 modal — ping-span ids stay per-container unique.
@@ -29619,6 +29636,10 @@ function _mpRenderServerRows(rows, contId) {
     try { const ms = await _mpPing('http://' + s.addr); if (el()) el().textContent = ms + ' ms'; }
     catch { if (el()) { el().textContent = 'unreachable'; el().style.color = '#c05555'; } }
   });
+  _mpRefManifest().then(ref => rows.forEach((s, i) => {
+    const el = document.getElementById(pingPfx.replace(/ping-$/, 'world-') + i);
+    if (el) el.innerHTML = _mpWorldBadge(s, ref);
+  }));
 }
 // Magnet fields → tracker /peers query string ('' when no magnet) — shared by
 // the resolver and the §MESH-02d list-source loader.
@@ -29658,7 +29679,8 @@ async function mpResolveMagnet(ui) {
     if (man.ok) {
       note.textContent = 'Direct server:';
       _mpRenderServerRows([{ addr: man.addr || url.replace(/^https?:\/\//, ''), name: man.addr || url,
-        playerCount: 0, engineVer: man.engineVer, worldTag: man.worldTag }], ui.rows);
+        playerCount: 0, engineVer: man.engineVer, worldTag: man.worldTag,
+        universeHash: man.universeHash, contentHash: man.contentHash }], ui.rows);
       return;
     }
   } catch {}
@@ -29787,7 +29809,8 @@ async function mdScanLocal() {
     const man = await _mdProbeManifest('http://localhost:' + p);
     // join by the probed localhost addr — man.addr is the mesh-advertise identity, shown as the name
     return man ? { addr: 'localhost:' + p, name: man.addr || 'localhost:' + p,
-      worldTag: man.worldTag, engineVer: man.engineVer, playerCount: 0 } : null;
+      worldTag: man.worldTag, engineVer: man.engineVer, playerCount: 0,
+      universeHash: man.universeHash, contentHash: man.contentHash } : null;
   }))).filter(Boolean);
   note.textContent = rows.length ? rows.length + ' local server(s):'
     : 'No WBAPI server listening on localhost:' + _MD_SCAN_PORTS[0] + '–' + _MD_SCAN_PORTS[1] + '.';

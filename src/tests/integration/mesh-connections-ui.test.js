@@ -31,6 +31,9 @@ async function loadHermetic(page) {
       return route.fulfill({ headers: CORS, contentType: 'text/plain',
         body: '# my servers\nstub1:1401\nstub1:1401   # duplicate line\nnot a server line\n' });
     if (u === 'http://denied.example/list.txt') { deniedFetches++; return route.abort(); }
+    if (u === 'http://ref.example:1367/api/manifest')
+      return route.fulfill({ headers: CORS, contentType: 'application/json',
+        body: JSON.stringify({ ok: true, universeHash: 'u1', contentHash: 'c1', engineVer: 'x' }) });
     if (u === 'http://manual.example/list.json')
       return route.fulfill({ headers: CORS, contentType: 'application/json',
         body: JSON.stringify(['stub2:1402', { addr: 'stub3:1403', name: 'Named Stub' }, 'garbage entry']) });
@@ -138,6 +141,26 @@ test.describe('§MESH-02f — connection-center UI (hermetic, :1367 route-blocke
     expect(r.good).toBe(true);
     expect(r.evil).toBe(false);
     expect(r.sneaky).toBe(false);
+  });
+
+  test('§MESH-03c world badge: same universe with other content is joinable news, another universe is a warning', async ({ page }) => {
+    await loadHermetic(page);
+    await page.evaluate(() => {
+      localStorage.setItem('mpServer', 'http://ref.example:1367');
+      window.__mesh02.msubSwitch('msub-discover');
+      _mpRenderServerRows([
+        { addr: 'same:1401', name: 'Same', playerCount: 0, universeHash: 'u1', contentHash: 'c1' },
+        { addr: 'lag:1402', name: 'Lagging', playerCount: 0, universeHash: 'u1', contentHash: 'c0' },
+        { addr: 'far:1403', name: 'Far', playerCount: 0, universeHash: 'u9', contentHash: 'c1' },
+        { addr: 'old:1404', name: 'Old', playerCount: 0 },
+      ], 'md-server-rows');
+    });
+    await expect(page.locator('#md-server-rows .mp-srv-row[data-addr="lag:1402"]')).toContainText('same universe, content differs');
+    const text = async (a) => page.locator(`#md-server-rows .mp-srv-row[data-addr="${a}"]`).textContent();
+    expect(await text('far:1403')).toContain('other universe');
+    expect(await text('same:1401')).not.toMatch(/universe/);
+    expect(await text('old:1404')).not.toMatch(/universe/);
+    expect(await text('lag:1402')).not.toContain('other universe');
   });
 
   test('mpJoin refuses a blacklisted target: no mpServer write, MP stays off', async ({ page }) => {
