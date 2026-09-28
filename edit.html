@@ -2624,7 +2624,7 @@ function terrainColor(key) {
   return `hsl(${h % 360}, ${55 + (h >> 9) % 25}%, ${52 + (h >> 16) % 14}%)`;
 }
 window.terrainColor = terrainColor;   // bridge for §WALK-G tests
-const TIER_ORDER = ['trivial','easy','medium','hard','deadly','boss'];
+const TIER_ORDER = ['trivial','easy','medium','hard','deadly'];
 
 function loadFile(text) {
   _rawSource = text;
@@ -3389,7 +3389,7 @@ function renderMonsterDetail(m) {
   sg.appendChild(mkMonsterField('ac',  'AC',  'number'));
   sg.appendChild(mkMonsterField('hp',  'HP',  'number'));
   sg.appendChild(mkMonsterField('atk', 'ATK Bonus', 'number'));
-  sg.appendChild(mkMonsterField('tier','Tier', 'select', ['trivial','easy','medium','hard','deadly','boss']));
+  sg.appendChild(mkMonsterField('tier','Tier', 'select', TIER_ORDER));
   body.appendChild(sg);
 
   // Damage row: count d die + flat
@@ -5955,7 +5955,7 @@ function renderStats() {
   for (const m of Object.values(WBAPI.monsterPool)) tierCounts[m.tier||'trivial'] = (tierCounts[m.tier||'trivial']||0)+1;
   const tierBox = document.createElement('div'); tierBox.className = 'stats-section';
   tierBox.innerHTML = `<div class="stats-section-title">Monster Tiers</div>` +
-    ['trivial','easy','medium','hard','deadly','boss'].filter(t=>tierCounts[t]).map(t=>
+    TIER_ORDER.filter(t=>tierCounts[t]).map(t=>
       `<div class="bar-row"><span class="bar-key" style="color:${TIER_COLORS[t]}">${t}</span>${bar(tierCounts[t],monsters.length,TIER_COLORS[t])}<span class="bar-val">${tierCounts[t]}</span></div>`
     ).join('');
   cols.appendChild(tierBox);
@@ -6163,14 +6163,14 @@ window._onServerActivated = () => {
       delUrl:  (id) => `/api/monster/${encodeURIComponent(id)}`,
       filters: [
         { key:'terrain',  label:'Terrain',  type:'text',   placeholder:'e.g. crypt' },
-        { key:'tier',     label:'Tier',     type:'select', options:['','trivial','easy','medium','hard','boss'] },
+        { key:'tier',     label:'Tier',     type:'select', options:['', ...TIER_ORDER] },
         { key:'has_drop', label:'Has drop', type:'select', options:['','true','false'] },
         { key:'q',        label:'Search',   type:'text',   placeholder:'name / key' },
       ],
       fields: [
         { key:'key',      label:'Key',      req:true, note:'Immutable after creation' },
         { key:'name',     label:'Name',     req:true },
-        { key:'tier',     label:'Tier',     req:true, type:'select', options:['trivial','easy','medium','hard','boss'] },
+        { key:'tier',     label:'Tier',     req:true, type:'select', options:TIER_ORDER },
         { key:'ac',       label:'AC',       req:true, type:'number' },
         { key:'hp',       label:'HP',       req:true, type:'number' },
         { key:'atk',      label:'Atk',      req:true, type:'number' },
@@ -6198,8 +6198,6 @@ window._onServerActivated = () => {
         { key:'name',       label:'Name',       req:true },
         { key:'occupation', label:'Occupation', req:true },
         { key:'node',       label:'Node',       req:true },
-        { key:'role',       label:'Role' },
-        { key:'desc',       label:'Description', ta:true },
       ],
       rowData: (r) => ({ key:r.key||r.id, name:r.name, occupation:r.occupation||'', node:r.node||'' }),
     },
