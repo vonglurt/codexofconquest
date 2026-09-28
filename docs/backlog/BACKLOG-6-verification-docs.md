@@ -43,6 +43,10 @@
 ---
 ## §BACKLOG — Open Items (Phase 6)
 
+### §DX-02lu — `test:mud` dies in [Q] on the 6 GB musl host, at HEAD as well, so [Q] and [R] go unchecked there (NEW 2026-09-28 during §MESH-03c, 🟡 find the cause, then lighten the harness or declare the host)
+
+- [ ] **§DX-02lu — the MUD harness exits `✗ test server failed to start on 13718` (or `13719`) partway through [Q], the ACL-template / tracker-cache section.** **Measured 2026-09-28** at `cad9487` (HEAD, stashed) and at `64d93ff`: 253 and 260 checks green respectively, then the boot failure, and nothing after it runs. That is [Q]'s remainder and all of [R] (§MESH-02a ACL editor endpoints). **Not a slow boot:** raising the harness's 8 s ping deadline to 30 s fails the same way, and the same tracker env boots alone in 1.5 s. The server's stderr is empty. The host has 4 cores and 5.9 GB of RAM with 0.8 GB swapped, and it now runs Chromium on its desktop; by [Q] the harness has spawned about 38 servers, each holding the 5 MB game file. **Suspected:** memory, or a server that dies after the 500 ms exit window, which `startServer` stops watching. **Next:** log `proc.exitCode` and `free` at the failure, then either stop each section's servers when the section ends or record the host's ceiling beside §DX-02ke's baseline. **Provenance:** §MESH-03c, whose [E] cases passed and whose [Q]/[R] exposure (ACL matching) went unrun.
+
 ### §DX-02lt — `uqf-node-verbs-d3.test.js:141` flaked on the 4-core musl host's first full browser run (NEW 2026-09-28 during §DX-02ir, 🟡 trace it or loosen the beat)
 
 - [ ] **§DX-02lt — *"clicking a confrontation opens the pre-battle overlay … IN THE SAME BEAT"* failed once and passed its retry**, in shard 4/4 at `c057410` (Chromium 152, 4 cores). It asserts timing, so it is load-sensitive in the way §DX-02ht's `worldbuilder-*` family is. **Next:** run the file with `TRACE=1` under load until it reproduces, then decide whether the assertion measures a real beat or the box's speed. If it keeps flaking, give it `test.use({ trace: 'retain-on-failure' })` as the other flaky files have. **Provenance:** §DX-02ir, the first run of the browser half of the suite on this host.
