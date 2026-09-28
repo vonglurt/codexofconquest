@@ -79,7 +79,7 @@ render `makeSection('🔮 Necklace of Knowledge')@31435`.
 `_healTotal = Math.max(_healTotal@36444`, `S_story.day = Math.min(49, S_story.day + 1)@36451`,
 `S_story.shortRests = 3@36486`, `Boyscout Night! Double rolls@36498`.
 **Gate leaf** — `if (g.restedAtMin)@22097`, consumed by exactly one quest:
-`quest_d0206_a3: { id:@21813`, `restedAtMin:{ SZG:1 }@21816`.
+`quest_d0206_a3: { id:@21813`, `restedAtMin:{ SZG:1 }` in `quest_d0206_a3@21804`.
 
 ---
 
@@ -198,7 +198,7 @@ Everything else diverges. The battle-return copy spends the same allowance but d
 
 - grant the Necklace bead (`_maybeAddKnowledgeBead` uncalled) — **so resting here builds no necklace**;
 - set `shortRestedAtNodes`, so no Necklace Token is earned **and no `restedAtMin` gate credit accrues** —
-  `quest_d0206_a3` (`restedAtMin:{ SZG:1 }@21816`) cannot be opened by this path;
+  `quest_d0206_a3` (`restedAtMin:{ SZG:1 }` in `quest_d0206_a3@21804`) cannot be opened by this path;
 - restore Action Surge charges (`if (_lv >= 2) S_story.surgeCharges@25977` has no twin);
 - print the Boy Scouts message, **though it applies the 2× multiplier anyway**.
 

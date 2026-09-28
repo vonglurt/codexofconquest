@@ -186,7 +186,7 @@ The cell map alone would strand 9 quests. The **flag closure** takes it to 13, b
 ### 5.3 The §BOARD-01-FU6 diamond loses its apex
 
 `quest_hunt_01` is not an ordinary casualty: its `onComplete` carries
-`{ kind:'unlock', quests:['sq_2','quest_hunt2_01'] }@12917` — the referral graph's **one geo-spanning diamond**, forking to a highland kelpie and a relay-road hag and reconverging on the reopened harbour at `DNF`. Its completion requires `huntHookReceived`. **The apex can activate and can never complete, so the diamond's fork never fires.** Both arms remain independently reachable by arrival, so the *content* survives; what is lost is the Warrant reader's line that connects them — the sentence that turns two hunts into one pattern.
+`{ kind:'unlock', quests:['sq_2','quest_hunt2_01'] }` in `quest_hunt_01@12903` — the referral graph's **one geo-spanning diamond**, forking to a highland kelpie and a relay-road hag and reconverging on the reopened harbour at `DNF`. Its completion requires `huntHookReceived`. **The apex can activate and can never complete, so the diamond's fork never fires.** Both arms remain independently reachable by arrival, so the *content* survives; what is lost is the Warrant reader's line that connects them — the sentence that turns two hunts into one pattern.
 
 ### 5.4 What survives, and why — the closure in the positive direction
 

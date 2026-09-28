@@ -48,7 +48,7 @@ Kenickie Clawnickie Mancuso is the fence — the quarter's quiet commerce, not i
 
 - **Profile.** `kenickie: { meta: { name:"Kenickie Clawnickie Mancuso"@10420` in `NPC_DIALOGUES`. All **seven** dialogue lines byte-identical to `194a810` across 79 days.
 - **Unlock.** `if (qs['quest_cat_05'] === 'complete')@33220`, inside `function _nodeHookCdgKenickieMarket@33217`, registered as `{ id:'cdg-kenickie-market', nodes:['CDG'], fn:_nodeHookCdgKenickieMarket }@34422`.
-- **Announcement.** `quest_cat_05: { id:'quest_cat_05'@13771`'s `onComplete` narrative: *"💰 +900gp + The Don's Signet Ring. Kenickie's Black Market is open."* The ring is really granted — `itemChain:[{action:'grant',name:"The Don's Signet Ring"@13773`, `silent:true`, `sell:35`.
+- **Announcement.** `quest_cat_05: { id:'quest_cat_05'@13771`'s `onComplete` narrative: *"💰 +900gp + The Don's Signet Ring. Kenickie's Black Market is open."* The ring is really granted — `itemChain:[{action:'grant',name:"The Don's Signet Ring"` in `quest_cat_05@13771`, `silent:true`, `sell:35`.
 - **Shop.** `shopDiv.id = 'kenickie-shop-div';@33241`, mounted by `cqDiv.insertAdjacentElement('afterend', shopDiv);@33286` — an in-place expansion, not a modal, exactly as specified.
 - **Stock, verbatim.** Sardine Pack ×3 · 18gp · `catchBonus:2` · *"Freshish. Don't ask about the smell."* — Live Shallows Minnow · 28gp · `catchBonus:3`, `sizeUp:true` · *"From the Don's private pond. He doesn't need it anymore."* — Minor Healing Potion · 45gp · heals 10 — Healing Potion · 135gp · heals 25.
 - **Discount, still exact.** `const POTION_TIERS = {@24370` prices the same two potions at 50 and 150. 45 and 135 are 10% under both, unchanged after 79 days.
@@ -195,7 +195,7 @@ The report filed one explicit maintenance risk — that hardcoding the 10% disco
 | `kenickie: { meta: { name:"Kenickie Clawnickie Mancuso"@10420` | NPC profile — 3 tiers, 7 lines |
 | `CDG:{ num:77@8811` | The Cat Quarter (ex-`CQ`), primary in cell 21,182 |
 | `quest_cat_05: { id:'quest_cat_05'@13771` | Don Fluffissimo; 900gp + market unlock |
-| `itemChain:[{action:'grant',name:"The Don's Signet Ring"@13773` | Trophy grant |
+| `itemChain:[{action:'grant',name:"The Don's Signet Ring"` in `quest_cat_05@13771` | Trophy grant |
 | `title:'Tommy: The Cat-King Cometh'@13785` | `quest_cat_06` — the actual Cat-King quest |
 | `function _nodeHookCdgKenickieMarket@33217` | Market block (ex-`storyRender`, §VM-01-G4d) |
 | `shopDiv.id = 'kenickie-shop-div';@33241` | Shop container |

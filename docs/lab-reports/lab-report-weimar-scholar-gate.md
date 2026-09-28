@@ -160,10 +160,10 @@ Button label shipped as `📚 Lower Archive`, not the report's `[Open Archive]` 
 
 | Quest | Gate at HEAD | Completion at HEAD | Verdict |
 |---|---|---|---|
-| `quest_wm_01` | open | `` `itemsAll:[{ name:"Scholar Kings' Seal", min:3 }]@11086` `` under `{any}` with the letter flag | **exact** — both paths, as specified |
+| `quest_wm_01` | open | `` `itemsAll:[{ name:"Scholar Kings' Seal", min:3 }]` `` in `` `quest_wm_01@11084` `` under `{any}` with the letter flag | **exact** — both paths, as specified |
 | `quest_wm_02` | `questsDone:['quest_wm_01']` | all three doc-read flags | **exact** |
 | `quest_wm_03` | `flags:['wmArchiveComplete']` | `flags:['wmBenediktCircleComplete']` | **blocked** → Finding 1 |
-| `quest_wm_04` | `` `gate:{ flags:['wmBenediktCircleComplete'] }@11121` `` | `` `completion:{ flags:['wmFirstResearcherKnown'] }@11121` `` | **impossible** → Finding 2 |
+| `quest_wm_04` | `` `gate:{ flags:['wmBenediktCircleComplete'] }` `` in `` `quest_wm_04@11123` `` | `` `completion:{ flags:['wmFirstResearcherKnown'] }` `` in `` `quest_wm_04@11123` `` | **impossible** → Finding 2 |
 | `quest_wm_05` | — | `flags:['wmGurtFileRead']` | *added later (§L), outside this report* |
 
 All three tome grants are exact: `` `bonus:{deathSave:1}@11103` ``,
@@ -201,7 +201,7 @@ engine defect, not report rot.
 | 1 | `wmSessionsDays` "tracks **`gameDay`** values" | the code read `S_story.dayCounter`, a field that never existed; it reads `` `const today = S_story.gameDay || 0;@35014` `` now | **ENGINE DEFECT, the report was right — SHIPPED 2026-09-07** (§AUDIT-03at) |
 | 2 | `quest_wm_04` completes on `wmFirstResearcherKnown` | true — and that flag's only writer was `quest_wm_04`'s own `onComplete`; it is now the unredacted read of Document 3 | **ENGINE DEFECT, circular — SHIPPED 2026-09-07** (§AUDIT-03au) |
 | 3 | "Benedikt → **Dear Friend** on quest_wm_03" (stated 3×) | `` `npc:'benedikt_rasp',set:2@11112` `` — the report was right and the bit was wrong; Dear Friend begins at 2 (`` `fav >= 2 ? p.dearFriend@23749` ``) | **SHIPPED 2026-09-07** (§AUDIT-03ar); inert until §AUDIT-03at |
-| 4 | Isolde "Key line **at Dear Friend**" | she has no `dearFriend` pool at all; that line is her `friendly` tier, and `` `npc:"isolde_voss", set:1@11102` `` is her ceiling | **MISATTRIBUTED — internally consistent, so harmless** |
+| 4 | Isolde "Key line **at Dear Friend**" | she has no `dearFriend` pool at all; that line is her `friendly` tier, and `` `npc:"isolde_voss", set:1` `` in `` `quest_wm_02@11103` `` is her ceiling | **MISATTRIBUTED — internally consistent, so harmless** |
 | 5 | Isolde "Begins Neutral" | base tier is named `impartial` | cosmetic |
 | 6 | §IV: "no UI showing Sessions attended: 2/3" | `` `reading circle (' + sessions.length@34990` `` renders `(N/3)`, and `` `The circle meets again tomorrow.@34989` `` disables the button — **both in the ship commit** | **WRONG WHEN WRITTEN** |
 | 7 | §IV: Benedikt callback in §XXI is "a long gap" | `` `_npcFavor('benedikt_rasp') >= 2@35134` `` — not a gap, an **unreachable** branch (delta 3) | **understated** |

@@ -90,7 +90,7 @@ completion:{ any:[ { flagsAny:['archiveLetterObtained'] }, { itemsAll:[{ name:"S
 
 `itemsAll` already matched exact-name/≥min in AND position; `{any}` lifts it into OR position. The two forms are provably equivalent — old = `flag OR (≥3 seals)`; new = `{any:[(flag), (≥3 seals)]}` = `flag OR (≥3 seals)` — and the differential asserts it over an inventory/flag matrix. **Waypoint safety:** the host waypoint reader does `q.completion.atNode`, now `undefined` for an AST completion, and falls back to `q.waypointNode`, which `quest_wm_01` carries (`'NUE'`); no regression.
 
-Both lines verified byte-exact against `completion:{ any:[ { flagsAny:['archiveLetterObtained']@11086` (ship and HEAD) and against the parent build's pre-F line. The fallback path is `q.waypointNode || (q.completion && q.completion.atNode)@28957`, unchanged.
+Both lines verified byte-exact against `completion:{ any:[ { flagsAny:['archiveLetterObtained']` in `quest_wm_01@11084` (ship and HEAD) and against the parent build's pre-F line. The fallback path is `q.waypointNode || (q.completion && q.completion.atNode)@28957`, unchanged.
 
 ### 4.5 The byproduct — the `activateNode` index — **DEFERRED, and the deferral was honoured in 2 h 07 min**
 

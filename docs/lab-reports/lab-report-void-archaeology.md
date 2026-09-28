@@ -231,7 +231,7 @@ that both sit upstream of everything above.
 read of Document 3, `` `if (unsealed) S_story.wmFirstResearcherKnown = true;@28030` `` — and the
 `flag_write` is gone from the `onComplete`. As measured, the only writer was that `flag_write`,
 inside the `onComplete` of the very quest whose completion condition is
-`completion:{ flags:['wmFirstResearcherKnown'] }@11121`. The quest cannot complete until the flag is
+`completion:{ flags:['wmFirstResearcherKnown'] }` in `quest_wm_04@11123`. The quest cannot complete until the flag is
 set, and nothing else sets it. Tracked as **§AUDIT-03au** (the fix is one line, and the quest's own
 hint says where the grant belongs). `_vaReady` inherits the block whole.
 

@@ -87,7 +87,7 @@ survive slugification because the replace touches whitespace only — the lock s
 
 `SPB: { num:63991, name:"soviet_checkpoint", label:"Nevsky Checkpoint"@9403` still carries
 `loot:"Sealed Recruit Manifest"`. Card battles exact:
-`battle:{"label":"Honor Duel — Rusted Gladiator Bot","key":"gladiator_bot"@9407` and the FBR twin on
+`battle:{"label":"Honor Duel — Rusted Gladiator Bot","key":"gladiator_bot"` in `ZVD@9409` and the FBR twin on
 `trainer_bot_prime`.
 
 ### B. The chain — 11/11 shipped to the lock

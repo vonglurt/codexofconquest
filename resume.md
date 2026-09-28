@@ -401,6 +401,9 @@ Full reference: `docs/api/API-README.md`, `docs/api/wbapi-help.md`,
   `` `#weapon-count` `` plus a line hint and the gate rejected four of them — the file says
   `id="weapon-count"`, and an anchor is a quoted symbol copied from the source, not a CSS
   selector for it.
+  **Inside a data section, anchor the entry's key, never a literal from one of its fields**
+  — the API re-serializes a structured field whole on every write, so a quoted literal dies
+  on someone else's unrelated write (§DX-02ga; `CONTRIBUTING.md` § Doc-Anchor Policy).
 - **A number in a document is not a model.** Wherever a row hands you an arithmetic
   claim, prefer an assertion that **re-derives** the number from the data over one that
   restates it. §AUDIT-03bl's XP chain was done by hand wrong twice — once in the lab

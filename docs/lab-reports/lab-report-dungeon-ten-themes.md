@@ -150,7 +150,7 @@ fails; a table composed to be pasted does not.
 ### Finding 2 — two of the eight chains die at Act III, for two unrelated reasons
 
 **(a) `quest_d0209` — a gate leaf with zero writers.** Act III is
-`completion:{ flags:['voidFluxCleared'] }@21659`, and `g.flags` resolves against `S_story` directly
+`completion:{ flags:['voidFluxCleared'] }` in `quest_d0209_a3@21646`, and `g.flags` resolves against `S_story` directly
 (`g.flags.every(f => !!st[f])`). **`voidFluxCleared` occurs 5 times in 38,712 lines: one default,
 one quest desc, three gate reads — and no writer at all.** Act IV gates on it, Act V gates on Act
 IV's flag, so **Acts III–V are unreachable**.
@@ -165,7 +165,7 @@ consulted). This one is **read-only** — a broken dependency, not dead weight �
 `check:deadconsts` scoped to unread fields would step straight over it.
 
 **(b) `quest_d0205` — the maze was repointed onto a node with no battle.** Act III is
-`completion:{ battles:['BK'] }@21602` and Act IV gates on the same key. At HEAD,
+`completion:{ battles:['BK'] }` in `quest_d0205_a3@21589` and Act IV gates on the same key. At HEAD,
 `BK: { num:241@9024` is *"Birka Shore — Northern Longship Landing"*, a beach whose record carries
 **no `battle` field**, and **nothing in the file ever writes `defeatedBattles['BK']`**. Acts III–V
 are unreachable, and `S_story.mazeSolvedChecks = 3;@21605` — the Act III `onComplete` — can never

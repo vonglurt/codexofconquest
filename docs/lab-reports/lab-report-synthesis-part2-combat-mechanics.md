@@ -279,7 +279,7 @@ by quest state — is the correct model for every post-quest surface change sinc
 | Claim | Verdict |
 |---|---|
 | Unlock at `quest_cat_05 === 'complete'` | ✅ exact (cited line off by 7, hedged) |
-| The single announcement *"Kenickie's Black Market is open"* | ✅ **verbatim**, inside the completion narrative bit at `Kenickie's Black Market is open.@13772` |
+| The single announcement *"Kenickie's Black Market is open"* | ✅ **verbatim**, inside the completion narrative bit at `Kenickie's Black Market is open.` in `quest_cat_05@13771` |
 | `kenickieMarketUsed = true` on first purchase | ✅ exact (`S_story.kenickieMarketUsed = true;@33271`) |
 | No quest entry, no map marker | ✅ still true |
 | *"run stats first ('This run'), career stats second ('All time')"* at game-over | ❌ **three ways wrong.** The game-over modal shows **one** column — `<div class="goc-title">This Run` — with **nine** rows and **no career figures at all**, then and now (`function _populateGameoverChronicle() {@23913`). The two-column ledger lives on the **character sheet** (`function storyRenderCharSheet() {@37804`) and its headers are **"This Life" / "All Lives"**, the second suppressed until the first death. |

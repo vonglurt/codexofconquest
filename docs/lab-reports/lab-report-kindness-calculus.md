@@ -99,7 +99,7 @@ symbol census alone would have declared this report clean.
 | 5 | Table V: monster roles and encounter counts | drowner ×3 · night_hag ×1 · sea_spawn ×2 · Warmth Eel CR 4 non-aggressive, no statline | ✅ EXACT |
 | 6 | §III-C: one organism spans §SPARK-01, §SPARK-02, §ALCHEMY-01 | Confirmed at all three sites (tick glow; `Dunfall Drift Spore` *"related to Warmth Eel bioluminescence"*; the loch-shore finder stone) | ✅ EXACT |
 | 7 | §III-A: §WISDOM-01 reads `roenAlchemistMet` and `sbResolved` as activation conditions "for two of its six fragment quests" | `quest_wis_05` gates `roenAlchemistMet`; `quest_wis_03` gates `sbResolved`. Exactly two, exactly those | ✅ EXACT |
-| 8 | §IV-B cascade: `smaltBefriended` → `_02` → `pipMet` → `_03` → `_04` → `_05` → `aldousConfessed` | Gate chain confirmed — **and understated**: `gate:{ flags:['whodunitSolved','wrenpemburyInconsistencyNoticed'] }@12476` makes the final link a **cross-arc join**, the report's own best example of its §III-A thesis | ✅ + correction |
+| 8 | §IV-B cascade: `smaltBefriended` → `_02` → `pipMet` → `_03` → `_04` → `_05` → `aldousConfessed` | Gate chain confirmed — **and understated**: `gate:{ flags:['whodunitSolved','wrenpemburyInconsistencyNoticed'] }` in `quest_spark_05@12474` makes the final link a **cross-arc join**, the report's own best example of its §III-A thesis | ✅ + correction |
 | 9 | §IV-A: fighting the cat is the alternative path — "CR 0, trivially won", "the cat moves. That's it." | **There is no cat combat.** No `MONSTER_POOL` key, no `node.battle`, no battle id. The EV comparison has no second term | ❌ **NOT SHIPPED** |
 | 10 | §II-A: "DC 10 — the lowest difficulty class in the entire system" | True at `e339aeb` (min = 10). HEAD has four `dc:8` | ⚠️ STALE (right when written) |
 | 11 | §II-A: monster AC "ranging from 11 (shadow, easy tier) to 20 (elite tier)" | shadow is **ac:12** (`key:'shadow',          name:'Shadow'@5435`, identical at birth); max AC is **22**; there is no `elite` tier — the vocabulary is trivial/easy/medium/hard/deadly (§DX-02g) | ❌ **3 errors, all wrong when written** — and footnote 2, two lines later, states AC 12 correctly |
@@ -144,10 +144,10 @@ entered through a **single-writer flag**, and that one writer sits inside a bloc
 | Flag | Sole writer | Enclosing guard | Consequence |
 |---|---|---|---|
 | `wisHookReceived` | `S_story.wisHookReceived = true;@33729` | `if (node.code === 'VS' && S_story.personalLegendComplete) {@33669` | **All 8 §WISDOM-01 quests dead** — `wis_01`/`_02`/`_03` sit on *live* nodes and can still never open |
-| `visbyUnderground` | `S_story.visbyUnderground = true;@33654` | `node.code === 'VS'` | `activateNode:'VS', gate:{ flags:['visbyUnderground'] }@13494` — W6 dead a second way |
+| `visbyUnderground` | `S_story.visbyUnderground = true;@33654` | `node.code === 'VS'` | `activateNode:'VS', gate:{ flags:['visbyUnderground'] }` in `quest_wis_06@13493` — W6 dead a second way |
 | `huntHookReceived` | `S_story.huntHookReceived = true;@33450` | `if (node.code === 'HFT' && !S_story.huntHookReceived) {@33439` | **All 4 §HUNT-01 quests dead** |
 | `whodunitSolved` | `S_story.whodunitSolved = true;@12451` | inside `quest_spark_04` (`activateNode:'SEN'`) | `quest_spark_05` dead; **the Aldous confession branch `S_story.whodunitSolved && S_story.wrenpemburyInconsistencyNoticed && !S_story.aldousConfessed@33791` never fires** |
-| `roenAtSea` | `S_story.roenAtSea = true;@33605` | `node.code === 'SEN'` | `activateNode:'PDL', gate:{ flags:['roenAtSea'] }@13266` and the whole §ALCHEMY relay below it dead |
+| `roenAtSea` | `S_story.roenAtSea = true;@33605` | `node.code === 'SEN'` | `activateNode:'PDL', gate:{ flags:['roenAtSea'] }` in `quest_alch_04@13265` and the whole §ALCHEMY relay below it dead |
 | `seaStrangenessNoticed` | `set:['seaStrangenessNoticed']@12506` | inside `quest_sea_01` (`SEN`) | `quest_sea_02` → `warmthEelFound` → `quest_sea_03` dead |
 
 **Per-family outcome:**

@@ -195,7 +195,7 @@ it is **4 of 9 fields wrong, plus one omission and one invention**:
 
 The §5 **UQF conversion** then carries the error forward — it specifies `reward{xp:150}` where the
 legacy `onPass` awarded **250**. The engine, migrating for real 31 days later, took the *archive's*
-number: `{ kind:'reward', gold:150, xp:250,@13375`.
+number: `{ kind:'reward', gold:150, xp:250,` in `quest_wis_01@13369`.
 
 And every string the author could **copy** survived intact. `quest_wis_01: { id:'quest_wis_01',
 schema:'UQF-1.0'@13351` still holds the `desc`, the `hint`, the 👁️ pass narration and the fail

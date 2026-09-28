@@ -128,7 +128,7 @@ is exactly the compound the migration comment claims. **The gate semantics are c
 | 4 | §2.1: **W4 = INT History 12 @ BK** | INT **Investigation** 12 — skill changed **at birth** | ⚠️ delta |
 | 5 | §2.2: W4 = *"Birka … a guild city"*, timber-supply deal, `birkaAccessed`, `birkaRepImproved` | **Never built.** Shipped as the Mordus/shaman stalemate at Visby's Broken Tooth, retitled *"The Stalemate Cost"* | ❌ NOT SHIPPED (see §VI) |
 | 6 | §2.1: **W6 = WIS Save 14 @ VS** | `quest_wis_06` was `type:'side'`, `bits:[]`; the accept path an unconditional button, **no d20 anywhere** — ✅ **shipped 2026-08-26 by §AUDIT-03ad** as `type:'skill_check'` with a WIS Insight DC 14 bit, resolved through `_resolveQuestUQF` like its five siblings. The spec said *save*; the arc's other five are *checks*, and the check is what shipped | ✅ shipped late (§AUDIT-03ad) |
-| 7 | W5 sets `stoic_letter` | shipped as `{ kind:'flag_write', set:['wisArchiveLetter'] }@13472` — **1 writer, 0 readers** | ⚠️ renamed + inert |
+| 7 | W5 sets `stoic_letter` | shipped as `{ kind:'flag_write', set:['wisArchiveLetter'] }` in `quest_wis_05@13466` — **1 writer, 0 readers** | ⚠️ renamed + inert |
 | 8 | W6 fail → *"Shadow Construct (medium)"* | `MONSTER_POOL.shadow`, ac 12 / hp 16, `tier:'easy'` — no such monster name; tier one band lower | ⚠️ delta |
 | 9 | Hook grants +100 XP on accept | `S_story.xp = (S_story.xp||0) + 100;@33451` | ✅ exact |
 | 10 | Resolution: +600 XP, +400gp, splice Pages, push Complete Laws, knowledge entry | all five, in order | ✅ exact |
@@ -219,7 +219,7 @@ Tavern.'@13426`), and the hub's own fragment tally agrees: *"W4 at Visby Tavern 
 
 Then the world moved. §WALK/§NAV-01 remapped the four codes that **broke** — `DK`→`LCY`,
 `SK`→`MME`, `SB`→`GCI`, `AE`→`ATH` — and skipped the one that still **resolved**. Today
-`activateNode:'BK', gate:{ flags:['wisHookReceived'] }@13442` points at `BK: { num:241@9024`,
+`activateNode:'BK', gate:{ flags:['wisHookReceived'] }` in `quest_wis_04@13441` points at `BK: { num:241@9024`,
 **"Birka Shore — Northern Longship Landing"**, a beach.
 
 > ***38th instrument — a migration repairs the references that BREAK and walks past the one that
