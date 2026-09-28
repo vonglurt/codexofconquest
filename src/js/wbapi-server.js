@@ -222,18 +222,40 @@ const GAME_FILE = process.env.CODEXOFCONQUEST_FILE
 // SINGLE-WRITER (only the origin server mutates its own sessions); receivers
 // dedup with a per-origin version vector; a periodic full snapshot per origin
 // is the anti-entropy floor (event loss can delay but never corrupt state).
-const MESH_PROTO = 1;
+const MESH_PROTO = 2;
 
-// Persistent random identity. MESH_SERVER_ID env override exists ONLY so the
+// Persistent identity. MESH_SERVER_ID env override exists ONLY so the
 // harness can boot several servers from one directory; prod uses the id file.
+// A server with no id yet takes sha256(its public key), so its id proves its key.
 const SERVER_ID_FILE = process.env.SERVER_ID_FILE || path.join(ROOT, '.wbapi-server-id');
+const ED25519_SPKI_PREFIX = Buffer.from('302a300506032b6570032100', 'hex');
+let _serverKey = null;
+function getServerKey() {
+  if (_serverKey) return _serverKey;
+  const envId = /^[0-9a-f]{32}$/.test(process.env.MESH_SERVER_ID || '') ? process.env.MESH_SERVER_ID : null;
+  const file = process.env.MESH_KEY_FILE || (envId
+    ? path.join(ROOT, 'build', 'mesh-keys', `${envId}.pem`)
+    : path.join(path.dirname(SERVER_ID_FILE), '.wbapi-server-key.pem'));
+  let priv = null;
+  try { priv = crypto.createPrivateKey(fs.readFileSync(file, 'utf8')); } catch {}
+  if (!priv || priv.asymmetricKeyType !== 'ed25519') {
+    priv = crypto.generateKeyPairSync('ed25519').privateKey;
+    try {
+      fs.mkdirSync(path.dirname(file), { recursive: true });
+      fs.writeFileSync(file, priv.export({ format: 'pem', type: 'pkcs8' }), { mode: 0o600 });
+    } catch (e) { log('WARN', `mesh: could not persist the server key (${e.message}); it will change on restart`); }
+  }
+  const raw = crypto.createPublicKey(priv).export({ format: 'der', type: 'spki' }).subarray(ED25519_SPKI_PREFIX.length);
+  return (_serverKey = { priv, pub: raw.toString('base64') });
+}
+const keyIdOf = (pubB64) => crypto.createHash('sha256').update(Buffer.from(pubB64, 'base64')).digest('hex').slice(0, 32);
 let _serverId = null;
 function getServerId() {
   if (_serverId) return _serverId;
   if (/^[0-9a-f]{32}$/.test(process.env.MESH_SERVER_ID || '')) return (_serverId = process.env.MESH_SERVER_ID);
   try { _serverId = (fs.readFileSync(SERVER_ID_FILE, 'utf8').trim().match(/^[0-9a-f]{32}$/) || [])[0] || null; } catch {}
   if (!_serverId) {
-    _serverId = crypto.randomBytes(16).toString('hex');
+    _serverId = keyIdOf(getServerKey().pub);
     try { fs.writeFileSync(SERVER_ID_FILE, _serverId + '\n'); } catch {}
   }
   return _serverId;
@@ -245,8 +267,8 @@ function getServerId() {
 // facts: an append-only, per-origin hash-chained log persisted to
 // ledger/<originServerId>.jsonl (one JSON line per event, fsync on append), no
 // TTL, no size cap. Every event carries per-player {height,prevHash} chain
-// linkage, an HMAC sig per participating origin (not PKI — it makes a
-// self-INCONSISTENT origin detectable, §IX.B), and a sha256 identity hash over
+// linkage, an Ed25519 signature by its author origin with the public key beside
+// it (§MESH-03a), and a sha256 identity hash over
 // canonical sorted-key JSON. Ownership + double-spend fork-choice
 // (lowest-hash wins, losers voided) are PURE functions of the merged event set
 // — every server reaches the identical verdict with zero coordination.
@@ -260,7 +282,8 @@ function getServerId() {
 // co-signed trades (the last rung): parties on different servers — the
 // proposer's origin relays the offer to the counterparty's origin over
 // POST /api/trade/relay, the accept relays back, and the proposer's origin
-// authors ONE event carrying both origins' sigs + both players' chain links.
+// authors ONE event carrying both players' chain links and the counterparty
+// origin's signed assent to the terms.
 const LEDGER_DIR = process.env.LEDGER_DIR || path.join(ROOT, 'build', 'ledger');
 const TRADE_TTL = parseInt(process.env.LEDGER_TRADE_TTL_MS || '', 10) || 60 * 1000;
 const LEDGER = {
@@ -323,9 +346,51 @@ function ledgerHashOf(evt) {
   const { hash, ...rest } = evt;
   return crypto.createHash('sha256').update(ledgerCanonical(rest)).digest('hex');
 }
-function ledgerSigOf(evt, signerId) {
+function ledgerPreimage(evt) {
   const { sig, hash, ...rest } = evt;
-  return crypto.createHmac('sha256', signerId).update(ledgerCanonical(rest)).digest('hex');
+  return Buffer.from(ledgerCanonical(rest));
+}
+const signCanonical = (v) => crypto.sign(null, Buffer.isBuffer(v) ? v : Buffer.from(ledgerCanonical(v)), getServerKey().priv).toString('base64');
+function verifyCanonical(v, pubB64, sigB64) {
+  try {
+    const raw = Buffer.from(String(pubB64), 'base64');
+    if (raw.length !== 32) return false;
+    const key = crypto.createPublicKey({ key: Buffer.concat([ED25519_SPKI_PREFIX, raw]), format: 'der', type: 'spki' });
+    return crypto.verify(null, Buffer.isBuffer(v) ? v : Buffer.from(ledgerCanonical(v)), key, Buffer.from(String(sigB64), 'base64'));
+  } catch { return false; }
+}
+
+// Which key speaks for an origin. An id equal to sha256(key) proves itself; any
+// other id is bound to the first key seen for it (trust on first use), persisted
+// in ledger/keys.json, and a different key for it afterwards is refused. A key-derived
+// id looks like any other, so only MESH_REQUIRE_SELF_CERT=1 stops a first-seen forgery
+// of one: it refuses every origin whose id is not the hash of its key.
+const REQUIRE_SELF_CERT = process.env.MESH_REQUIRE_SELF_CERT === '1';
+const KEY_PINS = { loaded: false, map: new Map() };
+function keyPinsFile() { return path.join(LEDGER_DIR, 'keys.json'); }
+function keyBinding(originId, pubB64) {
+  if (keyIdOf(pubB64) === originId) return 'self';
+  if (REQUIRE_SELF_CERT) return null;
+  if (!KEY_PINS.loaded) {
+    KEY_PINS.loaded = true;
+    try { for (const [k, v] of Object.entries(JSON.parse(fs.readFileSync(keyPinsFile(), 'utf8')))) KEY_PINS.map.set(k, v); } catch {}
+  }
+  const pinned = KEY_PINS.map.get(originId);
+  if (pinned) return pinned === pubB64 ? 'pinned' : null;
+  return 'new';
+}
+function keyPin(originId, pubB64) {
+  if (keyIdOf(pubB64) === originId || KEY_PINS.map.has(originId)) return;
+  KEY_PINS.map.set(originId, pubB64);
+  try {
+    fs.mkdirSync(LEDGER_DIR, { recursive: true });
+    fs.writeFileSync(keyPinsFile(), JSON.stringify(Object.fromEntries(KEY_PINS.map), null, 2));
+  } catch (e) { log('WARN', `ledger: could not persist keys.json (${e.message})`); }
+}
+// What a counterparty origin signs to agree to a cross-origin trade; rebuilt from
+// the event's transfers at validation, so the assent cannot be moved to other terms.
+function tradeTerms(tradeId, from, to, give, want) {
+  return { tradeId, from, to, give: [...give].sort(), want: [...want].sort() };
 }
 const mintKeyOf = (mintId) => Array.isArray(mintId) ? `${mintId[0]}:${mintId[1]}` : String(mintId || '');
 
@@ -377,12 +442,9 @@ function ledgerAppend(evt) {
 
 // Author a new event on THIS origin: assign [serverId, ++seq], link each
 // participant's chain tip, sign, hash, persist. Single-writer holds — this is
-// the only author of our origin's events. Cross-origin trades pass the
-// counterparty origin as a cosigner: sig then carries BOTH origins (§6.1 —
-// the HMAC key is the public serverId, so either side can compute either
-// entry; the counterparty's ASSENT is the relayed accept itself, and the
-// second sig makes the event self-verify against both origins at any ingest).
-function ledgerEvent(kind, pids, body, cosigners = []) {
+// the only author of our origin's events. A cross-origin trade carries the
+// counterparty origin's signed assent in body.assent, verified at every ingest.
+function ledgerEvent(kind, pids, body) {
   ledgerLoad();
   const oid = getServerId();
   const evt = { kind, id: [oid, LEDGER.seq + 1], ts: Date.now(), chain: {}, body, sig: {} };
@@ -391,16 +453,16 @@ function ledgerEvent(kind, pids, body, cosigners = []) {
     evt.chain[pid] = { height: tip.height + 1, prevHash: tip.hash };
   }
   if (kind === 'mint') evt.body = { ...body, mintId: evt.id };   // mintId === event.id (§6.2)
-  evt.sig[oid] = ledgerSigOf(evt, oid);
-  for (const cid of cosigners) if (cid && cid !== oid) evt.sig[cid] = ledgerSigOf(evt, cid);
+  evt.pub = { [oid]: getServerKey().pub };
+  evt.sig[oid] = signCanonical(ledgerPreimage(evt));
   evt.hash = ledgerHashOf(evt);
   ledgerAppend(evt);
   return evt;
 }
 
-// Validate a foreign event for ingest (the gossip receive path). Sig is HMAC
-// keyed by the claimed origin id — forgeable by design (friends-mesh, §IX.B);
-// its job is dropping SELF-inconsistent records, not authenticating strangers.
+// Validate a foreign event for ingest (the gossip receive path): the author
+// origin's Ed25519 signature under a key bound to that origin (keyBinding), and
+// for a trade whose parties span origins, each other origin's signed assent.
 function ledgerValidate(evt) {
   if (!evt || typeof evt !== 'object') return 'not-an-object';
   if (evt.kind !== 'mint' && evt.kind !== 'trade' && evt.kind !== 'duel') return 'bad-kind';
@@ -408,9 +470,33 @@ function ledgerValidate(evt) {
   if (!evt.chain || typeof evt.chain !== 'object' || !Object.keys(evt.chain).length) return 'bad-chain';
   if (!evt.body || typeof evt.body !== 'object') return 'bad-body';
   if (evt.hash !== ledgerHashOf(evt)) return 'bad-hash';
-  if (!evt.sig || typeof evt.sig !== 'object' || !Object.keys(evt.sig).length) return 'bad-sig';
-  for (const [signer, mac] of Object.entries(evt.sig)) if (mac !== ledgerSigOf(evt, signer)) return 'bad-sig';
+  const oid = evt.id[0];
+  if (!evt.sig || typeof evt.sig !== 'object' || Object.keys(evt.sig).join() !== oid) return 'bad-sig';
+  if (!evt.pub || typeof evt.pub !== 'object' || Object.keys(evt.pub).join() !== oid) return 'bad-key';
+  if (!verifyCanonical(ledgerPreimage(evt), evt.pub[oid], evt.sig[oid])) return 'bad-sig';
+  if (!keyBinding(oid, evt.pub[oid])) return 'key-mismatch';
+  if (evt.kind === 'trade') {
+    const parties = Array.isArray(evt.body.parties) ? evt.body.parties : [];
+    const foreign = [...new Set(parties.map((p) => String(p).split(':')[0]))].filter((o8) => o8 !== oid.slice(0, 8));
+    const assent = evt.body.assent && typeof evt.body.assent === 'object' ? evt.body.assent : {};
+    if (foreign.length || Object.keys(assent).length) {
+      const [from, to] = parties;
+      const tr = Array.isArray(evt.body.transfers) ? evt.body.transfers : [];
+      const terms = tradeTerms(evt.body.tradeId, from, to,
+        tr.filter((t) => t.from === from).map((t) => mintKeyOf(t.mintId)),
+        tr.filter((t) => t.from === to).map((t) => mintKeyOf(t.mintId)));
+      for (const o8 of foreign) {
+        const entry = Object.entries(assent).find(([aid]) => aid.slice(0, 8) === o8);
+        if (!entry || !entry[1] || !verifyCanonical(terms, entry[1].pub, entry[1].sig)) return 'bad-assent';
+        if (!keyBinding(entry[0], entry[1].pub)) return 'key-mismatch';
+      }
+    }
+  }
   return null;
+}
+function ledgerPinKeys(evt) {
+  keyPin(evt.id[0], evt.pub[evt.id[0]]);
+  for (const [aid, a] of Object.entries((evt.kind === 'trade' && evt.body.assent) || {})) keyPin(aid, a.pub);
 }
 
 // Shared ingest loop: validate + dedup + persist a batch of foreign events.
@@ -424,6 +510,7 @@ function ledgerIngestEvents(events) {
     const bad = ledgerValidate(evt);
     if (bad) { rejected.push({ hash: evt && evt.hash || null, reason: bad }); continue; }
     if (evt.id[0] === getServerId()) { rejected.push({ hash: evt.hash, reason: 'own-origin' }); continue; }   // single-writer: nobody authors OUR events
+    ledgerPinKeys(evt);
     ledgerAppend(evt);
     accepted++;
     // §MESH-01i cross-origin trades: a locally-hosted party hears about their
@@ -701,7 +788,7 @@ function getManifest() {
   // MESH_WORLDHASH_OVERRIDE exists ONLY for the harness incompatibility test.
   const worldHash = process.env.MESH_WORLDHASH_OVERRIDE
     || sha16(engineVer + '|' + MANIFEST_PARTS.map((n) => parts[n.toLowerCase()]).join('|'));
-  _mani = { proto: MESH_PROTO, engineVer, worldName, worldTag: worldTag(worldName, worldHash), worldHash, parts };
+  _mani = { proto: MESH_PROTO, engineVer, worldName, worldTag: worldTag(worldName, worldHash), worldHash, parts, pub: getServerKey().pub };
   return _mani;
 }
 // The human-facing world handle: `NextWorldMod-131ea` — easy name + enough
@@ -8506,7 +8593,8 @@ async function route(req, res) {
             method: 'POST', headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ op: 'accept', serverId: getServerId(), proto: m.proto, engineVer: m.engineVer,
               worldHash: m.worldHash, addr: meshAdvertise(), vv: ledgerVVObj(),
-              tradeId: body.tradeId, by: t.to }),
+              tradeId: body.tradeId, by: t.to,
+              assent: { pub: getServerKey().pub, sig: signCanonical(tradeTerms(body.tradeId, t.from, t.to, t.give, t.want)) } }),
             signal: AbortSignal.timeout(8000),
           });
           data = await resp.json().catch(() => ({}));
@@ -8648,6 +8736,11 @@ async function route(req, res) {
           logResponse(method, url.pathname, 403, 'trade/relay accept: not the counterparty origin');
           return json(res, 403, { ok: false, error: 'Only the counterparty\'s origin may relay the accept, for its own hosted pid.' });
         }
+        const a = body.assent || {};
+        if (!verifyCanonical(tradeTerms(body.tradeId, t.from, t.to, t.give, t.want), a.pub, a.sig) || !keyBinding(body.serverId, a.pub)) {
+          logResponse(method, url.pathname, 403, 'trade/relay accept: assent signature invalid');
+          return json(res, 403, { ok: false, error: 'The accept carries no valid signed assent from the counterparty origin.', reason: 'bad-assent' });
+        }
         const { owners } = ledgerResolve();
         const bad = checkOwnership(t.give, t.from, owners) || checkOwnership(t.want, t.to, owners);
         if (bad) {
@@ -8659,7 +8752,9 @@ async function route(req, res) {
           ...t.give.map((key) => ({ mintId: key.split(':').map((v, i) => i ? +v : v), from: t.from, to: t.to, priorEventHash: owners.get(key).tipHash })),
           ...t.want.map((key) => ({ mintId: key.split(':').map((v, i) => i ? +v : v), from: t.to, to: t.from, priorEventHash: owners.get(key).tipHash })),
         ];
-        const evt = ledgerEvent('trade', [t.from, t.to], { tradeId: body.tradeId, parties: [t.from, t.to], transfers }, [body.serverId]);
+        keyPin(body.serverId, a.pub);
+        const evt = ledgerEvent('trade', [t.from, t.to], { tradeId: body.tradeId, parties: [t.from, t.to], transfers,
+          assent: { [body.serverId]: { pub: a.pub, sig: a.sig } } });
         TRADES.delete(body.tradeId);
         ledgerNotifyPid(t.from, 'trade_completed', { tradeId: body.tradeId, event: evt });
         pushTraffic('in', 'trade', rFrom, true, `accept ${String(body.tradeId).slice(0, 8)}… ⇄ authored co-signed evt ${evt.hash.slice(0, 12)}…`);

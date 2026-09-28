@@ -191,7 +191,8 @@ curl -XPOST http://localhost:1367/api/trade/cancel -d '{"tradeId":"<t>"}'
 # origin, the same three calls work unchanged: your server pulls the peer's
 # ledger frontier, relays the offer over POST /api/trade/relay (server↔server
 # only — compat + ACL gated like gossip), the accept relays back, and the
-# PROPOSER's origin authors the one event carrying BOTH origins' HMAC sigs.
+# PROPOSER's origin authors and signs the one event, which carries the
+# counterparty origin's own Ed25519-signed assent to the terms (§MESH-03a).
 # Requires the two servers to be mutually dialable mesh peers; a counterparty
 # on a never-gossiped origin is refused with reason "peer-unreachable".
 
@@ -251,7 +252,8 @@ channel: every presence gossip payload advertises `ledgerVV` (the per-origin
 event frontier), and a mismatch triggers anti-entropy — pull what the peer holds
 above our vv (`POST /api/ledger/sync`, compat + ACL gated like presence gossip)
 and push what we hold above theirs (`POST /api/ledger/ingest`: shape + hash
-recompute + per-origin HMAC self-consistency, version-vector dedup). No TTL, no
+recompute + the author origin's Ed25519 signature under a key bound to that
+origin — sha256(key) = id, or the key first seen for it — version-vector dedup). No TTL, no
 age cap — a late-joining server back-fills the full history, and the pure
 fork-choice yields the identical dupe-void verdict on every server. Cross-ORIGIN
 co-signed trades (parties on different servers) are the remaining §MESH-01i rung.
@@ -289,7 +291,9 @@ cp mesh-acl.json.example mesh-acl.json   # private/blocklisted mesh — commente
 
 # Identity + world manifest (what forks a swarm: proto + engineVer + worldHash)
 curl http://localhost:1367/api/manifest
-# → { proto, engineVer, worldName, worldTag, worldHash, parts: {8 collection hashes} }
+# → { proto, engineVer, worldName, worldTag, worldHash, parts: {8 collection hashes}, pub }
+# pub = the server's Ed25519 public key (base64, 32 bytes). A new server's id is
+# sha256(pub)[:32]; MESH_REQUIRE_SELF_CERT=1 refuses ledger events from any other kind.
 # engineVer = ENGINE_VER label + '~' + 8 hex of the MOVER/ROOMS/DUEL/QUEST :CORE spans, e.g. coc-3.104.0~3d93cdc3
 
 # One-call mesh status (worldbuilder 🌐 Mesh tab source; also served in tracker-mode)

@@ -906,8 +906,11 @@ async function main() {
     : Array.isArray(v) ? '[' + v.map(canon).join(',') + ']'
     : '{' + Object.keys(v).sort().map((k) => JSON.stringify(k) + ':' + canon(v[k])).join(',') + '}';
   const hashOf = (e) => { const { hash, ...r } = e; return crypto.createHash('sha256').update(canon(r)).digest('hex'); };
-  const sigOf = (e, signer) => { const { sig, hash, ...r } = e; return crypto.createHmac('sha256', signer).update(canon(r)).digest('hex'); };
-  const sealed = (e) => { e.sig = { [e.id[0]]: sigOf(e, e.id[0]) }; e.hash = hashOf(e); return e; };
+  const originKeys = new Map();
+  const keyOf = (oid) => originKeys.get(oid) || originKeys.set(oid, crypto.generateKeyPairSync('ed25519')).get(oid);
+  const pubOf = (k) => k.publicKey.export({ format: 'der', type: 'spki' }).subarray(12).toString('base64');
+  const signWith = (e, k) => { const { sig, hash, ...r } = e; return crypto.sign(null, Buffer.from(canon(r)), k.privateKey).toString('base64'); };
+  const sealed = (e, k = keyOf(e.id[0])) => { e.pub = { [e.id[0]]: pubOf(k) }; e.sig = { [e.id[0]]: signWith(e, k) }; e.hash = hashOf(e); return e; };
 
   // I1 — mint: session-bound, monotonic distinct ids, chain linkage from genesis.
   const annL = await jpost('/session/start', { name: 'Ann', seed: 11 }, led.base);
@@ -954,16 +957,47 @@ async function main() {
   const pX1 = 'cdcdcdcd:11111111', pX2 = 'cdcdcdcd:22222222', pX3 = 'cdcdcdcd:33333333';
   const mintX = sealed({ kind: 'mint', id: [X, 1], ts: 1700000000000, chain: { [pX1]: { height: 0, prevHash: null } },
     body: { player: pX1, item: { key: 'amulet_dupe', name: 'Duped Amulet', qty: 1 }, mintId: [X, 1] } });
-  const tampered = { ...mintX, sig: { [X]: 'ff'.repeat(32) } };
+  const tampered = { ...mintX, sig: { [X]: Buffer.alloc(64, 7).toString('base64') } };
   tampered.hash = hashOf(tampered);
   const ingBad = await jpost('/ledger/ingest', { events: [tampered] }, led.base);
-  check(ingBad.accepted === 0 && ingBad.rejected.length === 1 && ingBad.rejected[0].reason === 'bad-sig', 'ingest drops a self-inconsistent (bad HMAC) event');
+  check(ingBad.accepted === 0 && ingBad.rejected.length === 1 && ingBad.rejected[0].reason === 'bad-sig', 'ingest drops an event whose Ed25519 signature does not verify');
+  const legacy = { kind: 'mint', id: [X, 40], ts: 1700000000000, chain: { [pX1]: { height: 0, prevHash: null } },
+    body: { player: pX1, item: { key: 'hmac', name: 'HMAC era', qty: 1 }, mintId: [X, 40] } };
+  legacy.sig = { [X]: crypto.createHmac('sha256', X).update(canon(legacy)).digest('hex') };
+  legacy.hash = hashOf(legacy);
+  check(['bad-key', 'bad-sig'].includes((await jpost('/ledger/ingest', { events: [legacy] }, led.base)).rejected[0].reason),
+    'an HMAC-era event keyed by the public origin id is refused (anyone could compute it)');
   const forged = sealed({ kind: 'mint', id: [ledId, 999], ts: 1700000000001, chain: { [pX1]: { height: 0, prevHash: null } },
     body: { player: pX1, item: { key: 'forge', name: 'Forged', qty: 1 }, mintId: [ledId, 999] } });
   check((await jpost('/ledger/ingest', { events: [forged] }, led.base)).rejected[0].reason === 'own-origin', 'ingest refuses an event forged in OUR origin’s name (single-writer)');
   const ingOk = await jpost('/ledger/ingest', { events: [mintX] }, led.base);
   const ingDup = await jpost('/ledger/ingest', { events: [mintX] }, led.base);
   check(ingOk.accepted === 1 && ingDup.dup === 1, 'a valid foreign event is accepted once and deduped on replay');
+  const impostor = sealed({ kind: 'mint', id: [X, 41], ts: 1700000000003, chain: { [pX2]: { height: 0, prevHash: null } },
+    body: { player: pX2, item: { key: 'imp', name: 'Impostor', qty: 1 }, mintId: [X, 41] } }, crypto.generateKeyPairSync('ed25519'));
+  check((await jpost('/ledger/ingest', { events: [impostor] }, led.base)).rejected[0].reason === 'key-mismatch',
+    'once an origin is pinned to its key, an event signed for it by any other key is refused');
+  const selfKey = crypto.generateKeyPairSync('ed25519');
+  const Z = crypto.createHash('sha256').update(Buffer.from(pubOf(selfKey), 'base64')).digest('hex').slice(0, 32);
+  const pZ = Z.slice(0, 8) + ':44444444';
+  const mintZ = (seq, k) => sealed({ kind: 'mint', id: [Z, seq], ts: 1700000000004, chain: { [pZ]: { height: seq - 1, prevHash: null } },
+    body: { player: pZ, item: { key: 'z' + seq, name: 'Z', qty: 1 }, mintId: [Z, seq] } }, k);
+  const strict = await startServer(PORT + 45, { LEDGER_DIR: fs.mkdtempSync(path.join(tmp, 'coc-ledstrict-')), MESH_SERVER_ID: '0f'.repeat(16), MESH_REQUIRE_SELF_CERT: '1' });
+  const zFirst = await jpost('/ledger/ingest', { events: [mintZ(1, crypto.generateKeyPairSync('ed25519'))] }, strict.base);
+  check(zFirst.rejected.length === 1 && zFirst.rejected[0].reason === 'key-mismatch',
+    'with MESH_REQUIRE_SELF_CERT, a first-seen forgery of a key-derived id is refused (no trust on first use)');
+  check((await jpost('/ledger/ingest', { events: [mintZ(1, selfKey)] }, strict.base)).accepted === 1,
+    'with MESH_REQUIRE_SELF_CERT, the origin whose id is sha256(its key) is accepted');
+  check((await jpost('/ledger/ingest', { events: [mintX] }, strict.base)).rejected[0].reason === 'key-mismatch',
+    'with MESH_REQUIRE_SELF_CERT, an origin whose id is not derived from its key is refused');
+  const freshDir = fs.mkdtempSync(path.join(tmp, 'coc-freshid-'));
+  const fresh = await startServer(PORT + 46, { SERVER_ID_FILE: path.join(freshDir, 'id'), MESH_KEY_FILE: path.join(freshDir, 'key.pem'),
+    LEDGER_DIR: path.join(freshDir, 'ledger'), PEERS_CACHE_FILE: path.join(freshDir, 'peers.json') });
+  const freshMan = await jget('/manifest', fresh.base);
+  const freshId = fs.readFileSync(path.join(freshDir, 'id'), 'utf8').trim();
+  check(freshId === crypto.createHash('sha256').update(Buffer.from(freshMan.pub, 'base64')).digest('hex').slice(0, 32)
+      && (fs.statSync(path.join(freshDir, 'key.pem')).mode & 0o077) === 0,
+    'a server with no id takes sha256(its public key) as its id, and its private key file is readable by the owner only');
 
   // I6 — dupe-void determinism: a doctored origin signs TWO transfers of one
   // mintId off the SAME priorEventHash. Fork-choice: lowest event hash wins,
@@ -1138,8 +1172,10 @@ async function main() {
   check(wrong.ok === false, 'a third player on the proposer origin cannot accept the cross-origin offer');
   const xa = await jpost('/trade/accept', { tradeId: xp.tradeId, sessionId: benX.sessionId }, gB.base);
   check(xa.ok === true && xa.event && xa.event.id[0] === gid(3), 'the accept relays back and the PROPOSER’s origin authors the one trade event');
-  check(xa.event && Object.keys(xa.event.sig || {}).sort().join(',') === [gid(3), gid(4)].sort().join(','),
-    'the event carries BOTH origins’ signatures (co-signed)');
+  check(xa.event && Object.keys(xa.event.sig || {}).join(',') === gid(3)
+      && Object.keys((xa.event.body && xa.event.body.assent) || {}).join(',') === gid(4),
+    'the proposer origin signs the event and it carries the counterparty origin’s own signed assent');
+
   check(xa.event && !!xa.event.chain[gil.ledgerPid] && !!xa.event.chain[benX.ledgerPid],
     'the event links BOTH players’ chains (dual-membership across origins)');
   check(await waitFor(() => countEv(benSSE, 'trade_completed', (d) => d.tradeId === xp.tradeId) === 1, 4000),
@@ -1158,6 +1194,17 @@ async function main() {
   // (5) cancel relays: the pending copy disappears on the OTHER origin too.
   const xp2 = await jpost('/trade/propose', { sessionId: gil.sessionId, to: benX.ledgerPid, give: [], want: [swordM.mintKey] }, gA.base);
   check(xp2.ok === true, 'a second cross-origin proposal (want-only, the traded sword) is accepted');
+  const manGA = await jget('/manifest', gA.base);
+  const relayAccept = (assent) => fetch(gA.base + '/api/trade/relay', { method: 'POST', headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ op: 'accept', serverId: gid(4), proto: manGA.proto, engineVer: manGA.engineVer, worldHash: manGA.worldHash,
+      tradeId: xp2.tradeId, by: benX.ledgerPid, ...(assent ? { assent } : {}) }) }).then(async (r) => ({ status: r.status, ...(await r.json()) }));
+  const noAssent = await relayAccept(null);
+  const strangerKey = crypto.generateKeyPairSync('ed25519');
+  const terms = { tradeId: xp2.tradeId, from: gil.ledgerPid, to: benX.ledgerPid, give: [], want: [swordM.mintKey] };
+  const strangerAssent = await relayAccept({ pub: strangerKey.publicKey.export({ format: 'der', type: 'spki' }).subarray(12).toString('base64'),
+    sig: crypto.sign(null, Buffer.from(canon(terms)), strangerKey.privateKey).toString('base64') });
+  check(noAssent.status === 403 && noAssent.reason === 'bad-assent' && strangerAssent.status === 403 && strangerAssent.reason === 'bad-assent',
+    'an accept relayed in the counterparty origin’s name without its key — no assent, or one signed by another key — authors nothing');
   await jpost('/trade/cancel', { tradeId: xp2.tradeId }, gA.base);
   check(await until(async () => (await jget(`/trade/list?pid=${benX.ledgerPid}`, gB.base)).count === 0),
     'a cancel on the proposer origin relays — the counterparty’s pending copy goes too');

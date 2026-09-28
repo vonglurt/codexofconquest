@@ -4,6 +4,7 @@
 
 # ── Per-machine identity, ACL and peer caches ────────────────────────────────
 .wbapi-server-id
+.wbapi-server-key.pem
 src/config/mesh-acl.json
 src/config/peers-cache.json
 src/config/tracker-cache.json

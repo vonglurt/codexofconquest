@@ -152,7 +152,7 @@ Presence events live in a bounded 500-entry ring and are display-only: losing on
   hash:  sha256(canonical(event \ {hash})) }    // identity for fork-choice + prevHash linkage
 ```
 
-`hash` is over canonical JSON with stable key order, so client and server compute identical digests — the same discipline `worldHash` already uses. `sig` is an HMAC keyed by the signer's public `serverId`, not a PKI: its job is not *"prove identity to a stranger"* but *"make a self-inconsistent origin detectable."*
+`hash` is over canonical JSON with stable key order, so client and server compute identical digests — the same discipline `worldHash` already uses. `sig` is an HMAC keyed by the signer's public `serverId`, not a PKI: its job is not *"prove identity to a stranger"* but *"make a self-inconsistent origin detectable."* **Superseded 2026-09-28 (§MESH-03a):** anyone could compute that HMAC, so `sig` is now an Ed25519 signature with the author's public key in `pub`, bound to the origin id by `sha256(key) = id` or by the key first seen for it, and a cross-origin trade carries the counterparty origin's signed assent in `body.assent`.
 
 ### C. Ownership and the double-spend
 
