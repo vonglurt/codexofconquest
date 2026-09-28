@@ -19,6 +19,15 @@
 
 ---
 
+## Archived 2026-09-27 — §DX-02kr-FU (neighbours, not links)
+
+### §DX-02kr-FU — three places still name the `links` field §DX-02ky-FU3 increment 2 removed from `location` (NEW 2026-09-27 during §DX-02kr, 🟢 three strings)
+
+- [x] ✅ SHIPPED 2026-09-27 `1d7380f` **§DX-02kr-FU — the location route's own log line prints `undefined links`.** §DX-02ky-FU3 inc 2 (`8d8ae37`) replaced `GET /api/location/{code}`'s `links` and `counts.linkedNodes` with `neighbours` and `counts.neighbours`. Three sites were not updated. (1) The route's `logRow('connections', …)` still reads `out.counts.linkedNodes`, so every location call logs `… NPCs  ·  undefined links`. (2) The `HELP` text says *"Composite view: node + terrain + coords + links + counts"*. (3) `docs/api/API-README.md`'s depth block comments `./bin/api location NUE` as *"node, terrain, coords, links, counts, pointers"*. **Fix:** name `neighbours` in all three, with the log line reading `counts.neighbours`. **Verify:** `grep -n "linkedNodes" src/js/wbapi-server.js` finds 0, and the help and README name `neighbours`. **Provenance:** found while §DX-02kr edited the same handler.
+> **SHIPPED 2026-09-27 `1d7380f` — all three name `neighbours`, plus a fourth site.** The log line reads `counts.neighbours`, and the `HELP` text and the README name `neighbours`. **Found while grepping:** `docs/api/api-faq.md` documented the location list's `counts` as including `linkedNodes`, which the list route never returned. It now reads `counts:{quests, npcs, monsters}, hasCoords`. `grep linkedNodes` over `src`, `edit.html` and `docs/api`: **1 → 0**. **Verify:** `test:help` green (30/30 selftest), `check:walk` 41/41. Suite on this host (no Chromium) **225 passed / 1,087 failed**; only the known two are outside `browserType.launch`.
+
+---
+
 ## Archived 2026-09-27 — §DX-02kr (a summary depth for location)
 
 ### §DX-02kr — the editor pulls 327 KB to render six chips and a list of titles (NEW 2026-09-14 during §DX-02kn, 🟡 one depth to design)
