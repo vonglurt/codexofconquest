@@ -296,20 +296,24 @@ ${o.CODE || `function engineTick() { return 42; }`}
   process.exit(fails.length ? 1 : 0);
 }
 
+module.exports = { canon, fieldDiffs, keyedDiff, diffWorlds };
+
 // ── CLI ──────────────────────────────────────────────────────────────────────
-const argv = process.argv.slice(2);
-if (argv.includes('--selftest')) selftest();
-else {
-  const jsonMode = argv.includes('--json');
-  const [fileA, fileB] = argv.filter((a) => !a.startsWith('--'));
-  if (!fileA || !fileB) {
-    console.error('usage: node src/scripts/world-diff.js <mine.html> <theirs.html> [--json]   |   --selftest');
-    process.exit(64);
+if (require.main === module) {
+  const argv = process.argv.slice(2);
+  if (argv.includes('--selftest')) selftest();
+  else {
+    const jsonMode = argv.includes('--json');
+    const [fileA, fileB] = argv.filter((a) => !a.startsWith('--'));
+    if (!fileA || !fileB) {
+      console.error('usage: node src/scripts/world-diff.js <mine.html> <theirs.html> [--json]   |   --selftest');
+      process.exit(64);
+    }
+    const A = fs.readFileSync(fileA, 'utf8');
+    const B = fs.readFileSync(fileB, 'utf8');
+    const report = diffWorlds(A, B);
+    if (jsonMode) console.log(JSON.stringify({ a: fileA, b: fileB, ...report }, null, 2));
+    else printHuman(report, fileA, fileB, A.length, B.length);
+    process.exit(report.exit);
   }
-  const A = fs.readFileSync(fileA, 'utf8');
-  const B = fs.readFileSync(fileB, 'utf8');
-  const report = diffWorlds(A, B);
-  if (jsonMode) console.log(JSON.stringify({ a: fileA, b: fileB, ...report }, null, 2));
-  else printHuman(report, fileA, fileB, A.length, B.length);
-  process.exit(report.exit);
 }

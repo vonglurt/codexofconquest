@@ -218,6 +218,7 @@ const PORT_BLOCKS = {
   compass: 14600,
   shareable: 14700,
   pack: 14800,
+  packmesh: 14900,   // four ports per worker: tracker, A, B, tamperer
 };
 
 // Returns `count` consecutive ports reserved for this worker inside `block`'s

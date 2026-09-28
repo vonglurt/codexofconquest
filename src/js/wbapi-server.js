@@ -836,16 +836,18 @@ const {
   emitMeshEvent, remotePlayersAt, meshAddrForOrigin8, meshIngest, meshGossipRound,
   addTrackerUrl, loadStaticPeers, persistPeerCache, fetchBootstrapUrls,
   trackerSweep, trackerPersist, trackerLoadCache, trackerMarkDirty,
-  trackerRecordsOut, trackerMergeRecords, trackerFederateRound, trackerAnnounceRound,
+  trackerRecordsOut, trackerMergeRecords, trackerFederateRound, trackerAnnounceRound, cleanPacks,
 } = require('./mesh')({
   PORT, BIND_ADDR, SERVER_NAME, SESSIONS,
   getManifest, getServerId,
   broadcastCell, broadcastAll, pushChat,
   ledgerVVObj, ledgerSyncWith,
   signEnvelope, verifyEnvelope, pinEnvelope,
+  publishedPacks: () => packsPublished(),
 });
 
 // §MESH-03d — content packs, stored as PACKS_DIR/<id>.json.
+const WORLD_DIFF = require('../scripts/world-diff');
 const PACKS = require('./pack')({ canonical: ledgerCanonical, sign: signCanonical, verify: verifyCanonical,
   pub: () => getServerKey().pub });
 const PACKS_DIR = process.env.PACKS_DIR || path.join(ROOT, 'build', 'packs');
@@ -873,6 +875,107 @@ function packCreate(ids) {
 function packRead(id) {
   if (!PACKS.PACK_ID.test(id || '')) return null;
   try { return JSON.parse(fs.readFileSync(path.join(PACKS_DIR, id + '.json'), 'utf8')); } catch { return null; }
+}
+const PACKS_PUBLISHED = () => path.join(PACKS_DIR, 'published.json');
+function packSummary(id, p) {
+  return { id, author: p.author || null, base: p.base || null,
+    quests: Object.keys(p.quests || {}).length, monsters: Object.keys(p.monsters || {}).length };
+}
+function packsPublishedIds() {
+  try { return JSON.parse(fs.readFileSync(PACKS_PUBLISHED(), 'utf8')).filter((id) => PACKS.PACK_ID.test(id)); } catch { return []; }
+}
+function packsPublished() {
+  return packsPublishedIds().map((id) => [id, packRead(id)]).filter(([, p]) => p).map(([id, p]) => packSummary(id, p));
+}
+// Announcing is what publishes: the next announce round carries the pack to every tracker.
+async function packPublish(id) {
+  const pack = packRead(id);
+  if (!pack) return { status: 404, body: { ok: false, error: `no pack ${String(id).slice(0, 64)} here` } };
+  const bad = PACKS.verifyPack(pack, id);
+  if (bad) return { status: 422, body: { ok: false, error: `pack fails verification: ${bad}` } };
+  const ids = packsPublishedIds();
+  if (!ids.includes(id)) fs.writeFileSync(PACKS_PUBLISHED(), JSON.stringify([...ids, id], null, 2) + '\n');
+  const trackers = [...new Set([...TRACKER_URLS, ...MESH_TRACKER_URLS])];
+  await trackerAnnounceRound();
+  return { status: 200, body: { ok: true, id, trackers } };
+}
+function trackerPackIndex() {
+  const byId = new Map();
+  for (const [serverId, r] of TRACKER)
+    for (const p of r.packs || []) {
+      if (!byId.has(p.id)) byId.set(p.id, { ...p, servers: [] });
+      byId.get(p.id).servers.push({ serverId, addr: r.addr, name: r.name, universeHash: r.universeHash });
+    }
+  return [...byId.values()];
+}
+async function packIndexFromTrackers() {
+  const out = [];
+  for (const u of new Set([...TRACKER_URLS, ...MESH_TRACKER_URLS])) {
+    try {
+      const d = await (await fetch(u.replace(/\/+$/, '') + '/api/tracker/packs', { signal: AbortSignal.timeout(5000) })).json();
+      out.push({ tracker: u, packs: Array.isArray(d.packs) ? d.packs : [] });
+    } catch (e) { out.push({ tracker: u, error: e.code || e.name || 'unreachable', packs: [] }); }
+  }
+  return out;
+}
+const PACK_FETCH_MAX = 8 * 1024 * 1024;
+// Any holder may serve the pack; it is stored only if it re-hashes to the id asked for.
+async function packFetch(id, from) {
+  if (!PACKS.PACK_ID.test(id || '')) return { status: 400, body: { ok: false, error: 'id: a 64-hex pack id is required' } };
+  if (packRead(id)) return { status: 200, body: { ok: true, id, already: true } };
+  let sources = from ? [String(from)] : [];
+  if (!from) for (const t of await packIndexFromTrackers())
+    for (const p of t.packs) if (p && p.id === id) for (const sv of p.servers || []) if (sv && sv.addr && sv.addr !== meshAdvertise()) sources.push(sv.addr);
+  sources = [...new Set(sources)];
+  if (!sources.length) return { status: 404, body: { ok: false, error: `no tracker lists a server holding pack ${id.slice(0, 12)}` } };
+  const attempts = [];
+  for (const src of sources) {
+    const base = /^https?:\/\//.test(src) ? src.replace(/\/+$/, '') : `http://${src}`;
+    try {
+      const resp = await fetch(`${base}/api/pack/${id}`, { signal: AbortSignal.timeout(10000) });
+      const text = await resp.text();
+      if (!resp.ok) { attempts.push({ from: src, error: `http-${resp.status}` }); continue; }
+      if (text.length > PACK_FETCH_MAX) { attempts.push({ from: src, error: 'too-large' }); continue; }
+      let pack; try { pack = JSON.parse(text).pack; } catch { attempts.push({ from: src, error: 'format' }); continue; }
+      const bad = PACKS.verifyPack(pack, id);
+      if (bad) { attempts.push({ from: src, error: bad }); continue; }
+      fs.mkdirSync(PACKS_DIR, { recursive: true });
+      fs.writeFileSync(path.join(PACKS_DIR, id + '.json'), JSON.stringify(pack, null, 2) + '\n');
+      return { status: 201, body: { ok: true, id, from: src, author: pack.author, attempts } };
+    } catch (e) { attempts.push({ from: src, error: (e && e.name === 'TimeoutError') ? 'timeout' : (e && e.code) || 'unreachable' }); }
+  }
+  return { status: 422, body: { ok: false, error: `no source served pack ${id.slice(0, 12)} intact`, attempts } };
+}
+function hasFnValue(v) {
+  if (!v || typeof v !== 'object') return false;
+  if (!Array.isArray(v) && typeof v.__fn === 'string') return true;
+  return Object.values(v).some(hasFnValue);
+}
+// What accepting the pack would change here, and whether each quest could land at all.
+function packReview(id) {
+  const pack = packRead(id);
+  if (!pack) return { status: 404, body: { ok: false, error: `no pack ${String(id).slice(0, 64)} here` } };
+  const integrity = PACKS.verifyPack(pack, id);
+  const own = (o, k) => !!o && Object.prototype.hasOwnProperty.call(o, k);
+  const diffOf = (type, db, key, entry) => {
+    if (!own(db, key)) return { key, status: 'new', fields: [] };
+    const local = WBAPI.entryWithFns(type, key).entry;
+    const fields = WORLD_DIFF.fieldDiffs(local, entry);
+    return { key, status: fields.length ? 'changed' : 'same', fields };
+  };
+  const has = WBAPI.shareUniverse(pack);
+  const quests = Object.entries(pack.quests || {}).map(([k, q]) => {
+    const reasons = WBAPI.questShareable(q, has);
+    return { ...diffOf('quest', WBAPI.questDb, k, q), shareable: !reasons.length, reasons };
+  });
+  const monsters = Object.entries(pack.monsters || {}).map(([k, m]) => {
+    const reasons = hasFnValue(m) ? ['carries a function value'] : [];
+    return { ...diffOf('monster', WBAPI.monsterPool, k, m), shareable: !reasons.length, reasons };
+  });
+  const contentHash = getManifest().contentHash;
+  const acceptable = !integrity && [...quests, ...monsters].every((e) => e.shareable);
+  return { status: 200, body: { ok: true, id, integrity, author: pack.author || null, mine: pack.author === getServerKey().pub,
+    base: pack.base || null, contentHash, baseMatches: pack.base === contentHash, acceptable, quests, monsters } };
 }
 
 // ── §NAV-01g — roads-pins.json (worldbuilder pins: forced road links + locked cities) ──
@@ -3286,7 +3389,8 @@ async function route(req, res) {
       return json(res, 503, { ok: false, reason: 'tracker-full' });
     }
     TRACKER.set(serverId, { addr, proto, engineVer, worldHash, universeHash, contentHash, playerCount: (tb.playerCount | 0),
-      name: String(tb.name || '').slice(0, 60), worldName: String(tb.worldName || '').slice(0, 40), lastSeen: Date.now() });
+      name: String(tb.name || '').slice(0, 60), worldName: String(tb.worldName || '').slice(0, 40),
+      packs: cleanPacks(tb.packs), lastSeen: Date.now() });
     trackerMarkDirty();   // §MESH-01-FU 12 (flag lives in mesh.js)
     pushTraffic('in', 'announce', addr, true, `${serverId.slice(0, 8)} · wh:${String(worldHash).slice(0, 8)} · ${tb.playerCount | 0} player(s)`);
     // Same-group peers only — incompatible worlds are segregated, never mixed.
@@ -3322,6 +3426,12 @@ async function route(req, res) {
     return json(res, 200, { ok: true, merged, records: trackerRecordsOut() });
   }
 
+  // §MESH-03d — the pack index: which live servers say they hold which pack.
+  if (parts[0] === 'tracker' && parts[1] === 'packs' && method === 'GET') {
+    trackerSweep();
+    logResponse(method, url.pathname, 200, `pack index: ${trackerPackIndex().length} pack(s)`);
+    return json(res, 200, { ok: true, packs: trackerPackIndex() });
+  }
   if (parts[0] === 'tracker' && parts[1] === 'peers' && method === 'GET') {
     trackerSweep();
     const wh = url.searchParams.get('wh'), uh = url.searchParams.get('uh'), ev = url.searchParams.get('ev'), pr = url.searchParams.get('p');
@@ -5276,13 +5386,28 @@ async function route(req, res) {
     logResponse(method, url.pathname, r.status, r.body.ok ? `pack ${r.body.id.slice(0, 12)} · ${r.body.quests.length} quest(s)` : r.body.error);
     return json(res, r.status, r.body);
   }
+  if (parts[0] === 'pack' && (parts[1] === 'publish' || parts[1] === 'fetch') && method === 'POST') {
+    let body; try { body = await readBody(req); } catch (e) { return json(res, 400, { ok: false, error: e.message }); }
+    const r = parts[1] === 'publish' ? await packPublish(body.id) : await packFetch(body.id, body.from);
+    logResponse(method, url.pathname, r.status, r.body.ok ? `pack ${parts[1]} ${String(body.id).slice(0, 12)}` : r.body.error);
+    return json(res, r.status, r.body);
+  }
+  if (parts[0] === 'pack' && parts[1] === 'index' && method === 'GET') {
+    const trackers = await packIndexFromTrackers();
+    return json(res, 200, { ok: true, trackers });
+  }
+  if (parts[0] === 'pack' && parts[2] === 'review' && method === 'GET') {
+    const r = packReview(parts[1]);
+    logResponse(method, url.pathname, r.status, r.body.ok ? `pack review ${parts[1].slice(0, 12)}: ${r.body.acceptable ? 'acceptable' : 'refuse'}` : r.body.error);
+    return json(res, r.status, r.body);
+  }
   if (parts[0] === 'pack' && method === 'GET') {
     if (!parts[1]) {
       let files = []; try { files = fs.readdirSync(PACKS_DIR).filter((f) => /^[0-9a-f]{64}\.json$/.test(f)); } catch {}
+      const published = new Set(packsPublishedIds()), pub = getServerKey().pub;
       const packs = files.map((f) => {
-        const p = packRead(f.slice(0, 64)) || {};
-        return { id: f.slice(0, 64), author: p.author || null, base: p.base || null,
-          quests: Object.keys(p.quests || {}).length, monsters: Object.keys(p.monsters || {}).length };
+        const id = f.slice(0, 64), p = packRead(id) || {};
+        return { ...packSummary(id, p), mine: p.author === pub, published: published.has(id) };
       });
       return json(res, 200, { ok: true, count: packs.length, packs });
     }

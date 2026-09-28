@@ -130,3 +130,119 @@ test.describe('§MESH-03d — ./bin/api pack against a throwaway server', () => 
     expect(r.stderr).toContain(`${local.key}: ${local.reasons[0]}`);
   });
 });
+
+test.describe('§MESH-03d — a pack travels A → tracker → B, and only intact', () => {
+  test.describe.configure({ mode: 'serial' });
+  const WB = require('../../js/wbapi-core.js');
+  WB.load(path.join(ROOT, 'play.html'));
+  const [PT, PA, PB, PX] = workerPorts('packmesh', 4).ports;
+  const url = (p) => `http://localhost:${p}`;
+  const children = {};
+  let dir, tamperer;
+  const cli = (port, ...args) => spawnSync(process.execPath, [path.join(ROOT, 'src', 'api', 'wb.js'), ...args, '--server', url(port)],
+    { cwd: ROOT, encoding: 'utf8' });
+  // The tamperer answers from this process, so the CLI that dials it must not block it.
+  const cliAsync = (port, ...args) => new Promise((resolve) => {
+    const c = spawn(process.execPath, [path.join(ROOT, 'src', 'api', 'wb.js'), ...args, '--server', url(port)], { cwd: ROOT });
+    let stdout = '', stderr = '';
+    c.stdout.on('data', (d) => { stdout += d; }); c.stderr.on('data', (d) => { stderr += d; });
+    c.stdin.end();
+    c.on('close', (status) => resolve({ status, stdout, stderr }));
+  });
+  const boot = (name, port, env) => {
+    const d = path.join(dir, name);
+    fs.mkdirSync(d);
+    fs.copyFileSync(path.join(ROOT, 'play.html'), path.join(d, 'play.html'));
+    children[name] = spawn(process.execPath, [path.join(ROOT, 'src', 'js', 'wbapi-server.js')], {
+      cwd: ROOT,
+      env: { ...process.env, PORT: String(port), CODEXOFCONQUEST_FILE: path.join(d, 'play.html'),
+        PACKS_DIR: path.join(d, 'packs'), MESH_KEY_FILE: path.join(d, 'key.pem'), SERVER_ID_FILE: path.join(d, 'server-id'),
+        PEERS_CACHE_FILE: path.join(d, 'peers.json'), MESH_ACL_FILE: path.join(d, 'acl.json'),
+        TRACKER_CACHE_FILE: path.join(d, 'tracker-cache.json'), ADVERTISE_ADDR: `localhost:${port}`, ...env },
+      stdio: 'ignore',
+    });
+  };
+  const qid = Object.keys(WB.questDb).find((k) => (WB.questDb[k].killGoals || []).length && WB.shareable('quest', k).shareable);
+
+  test.beforeAll(async () => {
+    dir = fs.mkdtempSync(path.join(os.tmpdir(), 'coc-mesh03d-mesh-'));
+    boot('tracker', PT, { TRACKER_MODE: '1' });
+    boot('a', PA, { TRACKER_URL: url(PT) });
+    boot('b', PB, { TRACKER_URL: url(PT) });
+    const died = watchChildren(children);
+    for (const port of [PT, PA, PB]) {
+      let up = false;
+      for (let i = 0; i < 200 && !up; i++) {
+        try { up = (await fetch(`${url(port)}/api/ping`)).ok; } catch {}
+        if (!up) await new Promise(r => setTimeout(r, 100));
+      }
+      if (!up) throw new Error(`throwaway wbapi-server did not answer on :${port}` + (died.length ? ` — ${died.join('; ')}` : ''));
+    }
+  });
+
+  test.afterAll(() => {
+    for (const c of Object.values(children)) { try { c.kill('SIGTERM'); } catch {} }
+    if (tamperer) tamperer.close();
+    if (dir) fs.rmSync(dir, { recursive: true, force: true });
+  });
+
+  test('A publishes, the tracker lists it, B fetches it by id and reviews the difference', async () => {
+    expect(cli(PA, 'put', 'quest', qid, 'title=A retitled task').status).toBe(0);
+    const made = cli(PA, 'pack', 'create', qid);
+    const id = (made.stdout.match(/pack ([0-9a-f]{64})/) || [])[1];
+    expect(id).toBeTruthy();
+
+    expect(cli(PA, 'pack', 'publish', id).status).toBe(0);
+    const index = await (await fetch(`${url(PT)}/api/tracker/packs`)).json();
+    const listed = index.packs.find((p) => p.id === id);
+    expect(listed.servers.map((s) => s.addr)).toEqual([`localhost:${PA}`]);
+    expect(listed.quests).toBe(1);
+
+    const got = cli(PB, 'pack', 'fetch', id);
+    expect(got.status).toBe(0);
+    expect(got.stdout).toContain(`fetched ${id} from localhost:${PA}, verified`);
+    expect(fs.readFileSync(path.join(dir, 'b', 'packs', id + '.json'), 'utf8'))
+      .toBe(fs.readFileSync(path.join(dir, 'a', 'packs', id + '.json'), 'utf8'));
+
+    const rev = await (await fetch(`${url(PB)}/api/pack/${id}/review`)).json();
+    expect(rev.integrity).toBeNull();
+    expect(rev.mine).toBe(false);
+    expect(rev.baseMatches).toBe(false);
+    expect(rev.acceptable).toBe(true);
+    expect(rev.quests).toEqual([{ key: qid, status: 'changed', shareable: true, reasons: [],
+      fields: [{ path: 'title', a: JSON.stringify(WB.questDb[qid].title), b: '"A retitled task"' }] }]);
+    expect(rev.monsters.every((m) => m.status === 'same' && m.shareable)).toBe(true);
+    expect(cli(PB, 'pack', 'review', id).status).toBe(0);
+  });
+
+  test('a pack altered in transit is refused and never stored', async () => {
+    const { id, pack } = packsWith(keypair()).makePack({ base: 'x', monsters: {}, quests: { [qid]: WB.entryWithFns('quest', qid).entry } });
+    const altered = { ...pack, quests: { [qid]: { ...pack.quests[qid], title: 'Tampered' } } };
+    tamperer = require('http').createServer((req, res) => {
+      res.writeHead(200, { 'Content-Type': 'application/json' });
+      res.end(JSON.stringify({ ok: true, id, pack: altered }));
+    });
+    await new Promise((r) => tamperer.listen(PX, r));
+
+    const r = await cliAsync(PB, 'pack', 'fetch', id, '--from', `localhost:${PX}`);
+    expect(r.status).toBe(1);
+    expect(r.stderr).toContain(`localhost:${PX}: bad-id`);
+    expect(fs.existsSync(path.join(dir, 'b', 'packs', id + '.json'))).toBe(false);
+  });
+
+  test('review refuses a quest that carries code, whoever signed it', async () => {
+    const P = packsWith(keypair());
+    const { id, pack } = P.makePack({ base: 'x', monsters: {},
+      quests: { mesh03d_foreign: { id: 'mesh03d_foreign', title: 'Foreign', onComplete: { __fn: '() => 1' } } } });
+    fs.mkdirSync(path.join(dir, 'b', 'packs'), { recursive: true });
+    fs.writeFileSync(path.join(dir, 'b', 'packs', id + '.json'), JSON.stringify(pack));
+    const rev = await (await fetch(`${url(PB)}/api/pack/${id}/review`)).json();
+    expect(rev.integrity).toBeNull();
+    expect(rev.quests[0]).toMatchObject({ key: 'mesh03d_foreign', status: 'new', shareable: false });
+    expect(rev.quests[0].reasons).toContain('function value at onComplete');
+    expect(rev.acceptable).toBe(false);
+    const r = cli(PB, 'pack', 'review', id);
+    expect(r.status).toBe(1);
+    expect(r.stderr).toContain('refuse');
+  });
+});

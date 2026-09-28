@@ -24,6 +24,7 @@
 //   ledgerVVObj(), ledgerSyncWith(addr,vv) — §MESH-01i durable-ledger anti-entropy hooks
 //   signEnvelope(p), verifyEnvelope(p),    — §MESH-03g: the payload is signed by its origin's
 //   pinEnvelope(p)                            key and bound to its serverId like a ledger event
+//   publishedPacks()                       — §MESH-03d: [{id, author, base, quests, monsters}] to announce
 
 const fs = require('fs');
 const path = require('path');
@@ -40,6 +41,7 @@ module.exports = function createMesh({
   broadcastCell, broadcastAll, pushChat,
   ledgerVVObj, ledgerSyncWith,
   signEnvelope, verifyEnvelope, pinEnvelope,
+  publishedPacks,
 }) {
 
 // ACL — mesh-acl.json (repo root, hot-reloaded on mtime change). Applied to
@@ -367,7 +369,17 @@ function persistPeerCache() {
 // are segregated into separate world groups — they can see their own group,
 // never each other's. The mesh survives tracker death (gossip + peer cache).
 const TRACKER_MODE = process.env.TRACKER_MODE === '1' || process.argv.includes('--tracker-mode');
-const TRACKER = new Map();   // serverId → {addr, proto, engineVer, worldHash, playerCount, name, lastSeen}
+const TRACKER = new Map();   // serverId → {addr, proto, engineVer, worldHash, playerCount, name, packs, lastSeen}
+// §MESH-03d — the packs a record says its server holds. The tracker is an index, not an
+// authority: it keeps only well-formed summaries, and the receiver re-hashes what it fetches.
+const TRACKER_MAX_PACKS = 64;
+function cleanPacks(list) {
+  if (!Array.isArray(list)) return [];
+  return list.filter((p) => p && /^[0-9a-f]{64}$/.test(p.id || '')).slice(0, TRACKER_MAX_PACKS).map((p) => ({
+    id: p.id, author: String(p.author || '').slice(0, 60), base: String(p.base || '').slice(0, 32),
+    quests: p.quests | 0, monsters: p.monsters | 0,
+  }));
+}
 const TRACKER_TTL = parseInt(process.env.TRACKER_TTL_MS || '', 10) || 120_000;
 function trackerSweep() {
   const now = Date.now();
@@ -413,7 +425,8 @@ function trackerRecordsOut() {
   const now = Date.now();
   return [...TRACKER.entries()].map(([id, r]) => ({
     serverId: id, addr: r.addr, proto: r.proto, engineVer: r.engineVer, worldHash: r.worldHash,
-    universeHash: r.universeHash, contentHash: r.contentHash, playerCount: r.playerCount, name: r.name, worldName: r.worldName, ageMs: now - r.lastSeen,
+    universeHash: r.universeHash, contentHash: r.contentHash, playerCount: r.playerCount, name: r.name, worldName: r.worldName,
+    packs: r.packs || [], ageMs: now - r.lastSeen,
   }));
 }
 function trackerMergeRecords(records, ip) {
@@ -430,7 +443,7 @@ function trackerMergeRecords(records, ip) {
     TRACKER.set(rec.serverId, {
       addr: rec.addr, proto: rec.proto, engineVer: rec.engineVer, worldHash: rec.worldHash,
       universeHash: rec.universeHash, contentHash: rec.contentHash, playerCount: rec.playerCount | 0, name: String(rec.name || '').slice(0, 60),
-      worldName: String(rec.worldName || '').slice(0, 40), lastSeen,
+      worldName: String(rec.worldName || '').slice(0, 40), packs: cleanPacks(rec.packs), lastSeen,
     });
     merged++;
   }
@@ -472,7 +485,7 @@ async function trackerAnnounceRound() {
         body: JSON.stringify({ serverId: getServerId(), addr: meshAdvertise(), proto: m.proto,
           engineVer: m.engineVer, worldHash: m.worldHash, universeHash: m.universeHash,
           contentHash: m.contentHash, worldName: m.worldName,
-          playerCount: SESSIONS.size, name: SERVER_NAME }),
+          playerCount: SESSIONS.size, name: SERVER_NAME, packs: publishedPacks() }),
       });
       const data = await resp.json().catch(() => ({}));
       if (resp.ok && data.ok) {
@@ -525,6 +538,6 @@ return {
   addTrackerUrl, loadStaticPeers, persistPeerCache, fetchBootstrapUrls,
   // tracker role (announce table · persistence · federation)
   trackerSweep, trackerPersist, trackerLoadCache, trackerMarkDirty,
-  trackerRecordsOut, trackerMergeRecords, trackerFederateRound, trackerAnnounceRound,
+  trackerRecordsOut, trackerMergeRecords, trackerFederateRound, trackerAnnounceRound, cleanPacks,
 };
 };

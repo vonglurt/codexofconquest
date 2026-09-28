@@ -401,6 +401,7 @@ const CMD = {
 
   // ── pack (§MESH-03d): signed, content-addressed quest packs ─────────────────────
   // Usage: ./bin/api pack create <quest-id>…  |  pack list  |  pack get <id> [--out file]
+  //        pack publish <id>  |  pack index  |  pack fetch <id> [--from host:port]  |  pack review <id>
   async pack(pos, flags) {
     await requireServer();
     const [, sub, ...rest] = pos;
@@ -422,8 +423,62 @@ const CMD = {
       if (r.status !== 200) { printError(r); process.exit(1); }
       if (flags.json || flags.raw) return printResult(r.body, flags);
       ok(`${r.body.count} pack(s)`);
-      for (const p of r.body.packs) info(`${p.id}  ${p.quests}q ${p.monsters}m  base ${p.base}`);
+      for (const p of r.body.packs)
+        info(`${p.id}  ${p.quests}q ${p.monsters}m  base ${p.base}${p.mine ? '  mine' : ''}${p.published ? '  published' : ''}`);
       return;
+    }
+    if (sub === 'publish') {
+      if (!rest[0]) die('usage: ./bin/api pack publish <id>');
+      const r = await request('POST', '/api/pack/publish', { id: rest[0] });
+      if (r.status !== 200) { printError(r); process.exit(1); }
+      ok(`published ${r.body.id}`);
+      if (!r.body.trackers.length) info('no tracker configured; it is announced once one is (TRACKER_URL or a peers.txt tracker line)');
+      for (const t of r.body.trackers) info(`announced to ${t}`);
+      return;
+    }
+    if (sub === 'index') {
+      const r = await request('GET', '/api/pack/index');
+      if (r.status !== 200) { printError(r); process.exit(1); }
+      if (flags.json || flags.raw) return printResult(r.body, flags);
+      if (!r.body.trackers.length) info('no tracker configured');
+      for (const t of r.body.trackers) {
+        if (t.error) { stderr(`${C.red}✗${C.reset} ${t.tracker}: ${t.error}\n`); continue; }
+        ok(`${t.tracker}: ${t.packs.length} pack(s)`);
+        for (const p of t.packs) info(`${p.id}  ${p.quests}q ${p.monsters}m  base ${p.base}  on ${p.servers.map((s) => s.name || s.addr).join(', ')}`);
+      }
+      return;
+    }
+    if (sub === 'fetch') {
+      if (!rest[0]) die('usage: ./bin/api pack fetch <id> [--from host:port]');
+      const r = await request('POST', '/api/pack/fetch', { id: rest[0], ...(flags.from ? { from: flags.from } : {}) });
+      if (r.status !== 200 && r.status !== 201) {
+        printError(r);
+        for (const a of r.body.attempts || []) stderr(`    ${a.from}: ${a.error}\n`);
+        process.exit(1);
+      }
+      if (r.body.already) return ok(`pack ${r.body.id} is already here`);
+      ok(`fetched ${r.body.id} from ${r.body.from}, verified`);
+      info(`review it: ./bin/api pack review ${r.body.id}`);
+      return;
+    }
+    if (sub === 'review') {
+      if (!rest[0]) die('usage: ./bin/api pack review <id>');
+      const r = await request('GET', `/api/pack/${encodeURIComponent(rest[0])}/review`);
+      if (r.status !== 200) { printError(r); process.exit(1); }
+      const d = r.body;
+      if (flags.json || flags.raw) { printResult(d, flags); if (!d.acceptable) process.exit(1); return; }
+      if (d.integrity) stderr(`${C.red}✗${C.reset} integrity: ${d.integrity}\n`);
+      else ok(`signed by ${d.author}${d.mine ? ' (this server)' : ''}`);
+      info(`built on content ${d.base}; here ${d.contentHash}${d.baseMatches ? ' (same)' : ''}`);
+      for (const [label, list] of [['quest', d.quests], ['monster', d.monsters]])
+        for (const e of list) {
+          info(`${label} ${e.key}: ${e.status}${e.shareable ? '' : ' — NOT shareable'}`);
+          for (const f of e.fields) info(`    ${f.path}: ${f.a} → ${f.b}`);
+          for (const why of e.reasons) stderr(`    ${why}\n`);
+        }
+      if (d.acceptable) return ok('acceptable');
+      stderr(`${C.red}✗${C.reset} refuse\n`);
+      process.exit(1);
     }
     if (sub === 'get') {
       if (!rest[0]) die('usage: ./bin/api pack get <id> [--out file]');
@@ -431,7 +486,7 @@ const CMD = {
       if (r.status !== 200) { printError(r); process.exit(1); }
       return printResult(r.body.pack, flags);
     }
-    die(`unknown pack subcommand "${sub}" — create | list | get`);
+    die(`unknown pack subcommand "${sub}" — create | list | get | publish | index | fetch | review`);
   },
 
   // ── save / snapshots (§DX-02l) ──────────────────────────────────────────────
@@ -1664,7 +1719,8 @@ ${C.bold}═══════════════════════�
   ${C.green}dialogue${C.reset} <npc> […]      NPC_DIALOGUES entry (--create to add; meta/array edits)
   ${C.green}audit${C.reset} [--map]          Integrity scan
   ${C.green}shareable${C.reset} quest [id]    Can this quest cross servers? (no id = corpus count)
-  ${C.green}pack${C.reset} create|list|get   Signed content packs of shareable quests (§MESH-03d)
+  ${C.green}pack${C.reset} create|list|get|publish|index|fetch|review
+                          Signed content packs of shareable quests (§MESH-03d)
   ${C.green}export${C.reset} <collection>    Export data as JSON / JS / ES module
   ${C.green}import${C.reset} <file.json>     Bulk import nodes + quest cycles
   ${C.green}speak${C.reset} <npc> "<prompt>" Claude-voiced NPC dialogue
