@@ -19,6 +19,15 @@
 
 ---
 
+## Archived 2026-09-27 — §DX-02lc-FU2 (the worldbuilder's CRUD forms offer only what the creates write)
+
+### §DX-02lc-FU2 — the worldbuilder's CRUD forms offer three values the create refuses (NEW 2026-09-27 during §DX-02lc-FU, 🟢 form entries only, no design call)
+
+- [x] ✅ SHIPPED 2026-09-27 `43af3ad` **§DX-02lc-FU2 — `edit.html`'s `CRUD_TYPES` forms still offer fields and values the write path refuses.** The **npc** form has `role` and `desc`, and **0 of 204** `BIRKA_NPC` entries carry either. `PUT` already refused them by vocabulary, and since §DX-02lc-FU so does `POST /api/npc`, so filling either box makes the create answer 400. The **monster** form's `tier` select offers `boss`, which is not in `WBAPI.monsters.TIERS` (the create answers 422), and omits `deadly`, which is. The filter selects and the two other tier lists in `edit.html` (`TIER_ORDER`, the monster wizard's `mkMonsterField('tier', …)`) carry `boss` too. **Fix:** drop `role`/`desc` from the npc form, and give every tier list `WBAPI.monsters.TIERS`' five values. First grep whether anything renders a `boss` tier: `TIER_ORDER` may colour one in the bestiary. **Verify:** a create through each form with every box filled answers 201. **Provenance:** §DX-02lc-FU, checking which callers send a key the new refusal rejects.
+> **SHIPPED 2026-09-27 `43af3ad` — the forms offer what the creates write (🟢).** **Grounded first:** `role` and `desc` are carried by **0 of 204** NPCs, and the corpus's tiers are `trivial` 32, `easy` 61, `medium` 149, `hard` 124, `deadly` 31, with **no `boss`**. The grep the row asked for: `TIER_ORDER` had **no reader**, and the stats panel's own list filtered by count, so its `boss` never rendered. The live defects were the npc form's two boxes and the three tier selects (the CRUD filter, the CRUD create, and the monster wizard's `mkMonsterField('tier', …)`), two of which lacked `deadly`. **The change:** `TIER_ORDER` is the five tiers, and all four lists read it: the three selects plus the stats panel. The npc form loses `role` and `desc`. `TIER_COLORS.boss` stays, a colour for a key nothing emits. **Verify:** `dx02lc-fu2-crud-forms.test.js` (2 tests, browser-free) reads `CRUD_TYPES`' npc and monster fields out of `edit.html` and requires each one to be carried by an NPC or written by the monster create. It also requires `TIER_ORDER` to equal `WBAPI.monsters.TIERS` and forbids an inline tier list. **Red against the old `edit.html`** (`["role","desc"]`, and the tier assertion), green on the fix. `check:walk` 40/40. Suite on this host (no Chromium) **219 passed / 1,087 failed** (+2, the new file); only the known two are outside `browserType.launch`. **Not driven in a browser here:** this host has no Chromium, so "a create through each form answers 201" is proven for the form's field set, not by a click.
+
+---
+
 ## Archived 2026-09-27 — §DX-02lc-FU (node, terrain, monster and npc creates refuse what they would drop)
 
 ### §DX-02lc-FU — `POST /api/node` (and the other create routes) still answer 201 and drop a field their serializer does not list (NEW 2026-09-27 during §DX-02lb, 🟢 the §DX-02lc refusal, per type)
