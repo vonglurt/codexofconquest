@@ -228,13 +228,17 @@ into full statblocks) travels with `monsters`:
 ./bin/api location NUE                 # 2,233 B — node, terrain, coords, links, counts, pointers
 ./bin/api location NUE --with quests   # + the quest bodies
 ./bin/api location NUE --with all      # the old shape, byte for byte
+./bin/api location NUE --with all:summary  # ids and titles only: {id,title} per quest, {key,name} per monster/npc
 ./bin/api list quest --node NUE        # quest summaries — a tenth of --with quests
 ```
 
 Measured over **all 416 nodes**: worst case **327,226 → 3,781 B**, median **1,069 B**,
 and **0 nodes over 4,000 B** where 282 were. `counts` is identical in both shapes, and an
 unrecognised `?with=` value is a 422 rather than a silent full response. `tests/help-behaviour.mjs`
-asserts all of that against a throwaway server on every run.
+asserts all of that against a throwaway server on every run. The `:summary` depth (§DX-02kr)
+is what the worldbuilder's location strip reads: at NUE its three collections are
+**13,750 B** against **268,362 B** in full (compact JSON). It has its own 16,000 B budget
+in the same harness, and must name exactly the ids the full shape names.
 
 ### The node Talk registry (§DX-02km)
 

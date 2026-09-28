@@ -264,6 +264,7 @@ The game is a D&D world stored in a single HTML file. The API manages: nodes (ma
   ./bin/api context <code> | --arc <arc>        questline neighbourhood + authoring traps (§EDITOR-04)
   ./bin/api location [code]                      composite view (no code = list all)
   ./bin/api location <code> --with all           inline quests/monsters/npcs bodies (default: counts + pointers)
+  ./bin/api location <code> --with all:summary   inline ids and titles only (§DX-02kr)
   ./bin/api speak <npc> "<prompt>" --state neutral|friendly|dearFriend
   ./bin/api import <file.json>                   bulk import nodes + quest cycles  [--out file]
   ./bin/api roads [pins]                         road net summary / pins file (§NAV-01h)

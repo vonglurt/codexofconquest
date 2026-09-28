@@ -2311,12 +2311,14 @@ async function route(req, res) {
           `GET ${b}/api/quest/{id}/chain`,
           '  Upstream and downstream quest chain for a quest.',
           '',
-          `GET ${b}/api/location/{code}[?with=quests,monsters,npcs,waypointQuests|all]`,
+          `GET ${b}/api/location/{code}[?with=quests,monsters,npcs,waypointQuests|all][:summary]`,
           '  Composite view: node + terrain + coords + links + counts, and pointers to the',
           '  verbs that return the rest. The four entity collections are OPT-IN (§DX-02kn):',
           '  inlining them cost 327 KB at NUE (177 full quest bodies) against 2 KB now, and',
           '  ?with=monsters restores terrain.monsters with them. ?with=all is the old shape,',
           '  byte for byte. Quest bodies alone: GET /api/list/quest?node={code}.',
+          '  A :summary depth inlines ids and titles only (§DX-02kr): ?with=quests:summary,',
+          '  or ?with=all:summary for all four — {id,title} per quest, {key,name} otherwise.',
           '',
           `GET ${b}/api/export/{collection}[?format=json|js|module]`,
           '  Dump a full array as JSON, JS literal, or CommonJS module.',
@@ -9515,17 +9517,27 @@ async function route(req, res) {
       // question usually answered by `coords` and `counts`. They are DELETED from the
       // assembled object rather than assembled conditionally, so `?with=all` is the same
       // object in the same key order as before the flag existed.
+      // §DX-02kr — `<collection>:summary` inlines ids and titles only: {id,title} per quest,
+      // {key,name} per monster and npc. The editor's strip reads nothing else.
       const OPTIONAL = ['monsters', 'quests', 'waypointQuests', 'npcs'];
-      const withRaw = (url.searchParams.get('with') || '').trim();
-      const withSet = withRaw === 'all' ? new Set(OPTIONAL)
-                    : new Set(withRaw.split(',').map((x) => x.trim()).filter(Boolean));
-      const unknownWith = [...withSet].filter((k) => !OPTIONAL.includes(k));
+      const SUMMARY = { monsters: (m) => ({ key:m.key, name:m.name }), npcs: (n) => ({ key:n.key, name:n.name }),
+        quests: (q) => ({ id:q.id, title:q.title }), waypointQuests: (q) => ({ id:q.id, title:q.title }) };
+      const depth = {}, unknownWith = [];
+      for (const item of (url.searchParams.get('with') || '').split(',').map((x) => x.trim()).filter(Boolean)) {
+        const [k, d = 'full'] = item.split(':');
+        const keys = k === 'all' ? OPTIONAL : [k];
+        if (!keys.every((x) => OPTIONAL.includes(x)) || !['full', 'summary'].includes(d)) { unknownWith.push(item); continue; }
+        for (const x of keys) depth[x] = d;
+      }
       if (unknownWith.length) {
         logResponse(method, url.pathname, 422, `location/${rawId}: unknown ?with=${unknownWith.join(',')}`);
-        return json(res, 422, { error:`Unknown ?with value(s): ${unknownWith.join(', ')}`, available:[...OPTIONAL, 'all'] });
+        return json(res, 422, { error:`Unknown ?with value(s): ${unknownWith.join(', ')}`,
+          available:[...OPTIONAL, 'all'], depths:['<collection>:summary', 'all:summary'] });
       }
-      const omitted = OPTIONAL.filter((k) => !withSet.has(k));
+      const withSet = new Set(OPTIONAL.filter((k) => depth[k] === 'full'));
+      const omitted = OPTIONAL.filter((k) => !depth[k]);
       for (const k of omitted) delete out[k];
+      for (const k of OPTIONAL) if (depth[k] === 'summary') out[k] = (out[k] || []).map(SUMMARY[k]);
       // `terrain.monsters` is the SAME roster as the top-level `monsters`, resolved through
       // the `P.<key>` proxy into full statblocks — 3,658 B of the 7,941 B LHR default, and
       // the larger half of the duplication §DX-02kn names. The two travel together: asking
@@ -9536,7 +9548,7 @@ async function route(req, res) {
         out.terrain = thin;
       }
       if (omitted.length) out._with = `Inline them: GET /api/location/${rawId}?with=${omitted.join(',')} (or ?with=all). ` +
-        `\`monsters\` also restores terrain.monsters; quest bodies are GET /api/list/quest?node=${rawId}, a tenth of the size.`;
+        `\`monsters\` also restores terrain.monsters. Ids and titles only: ?with=all:summary, or quests:summary and the like.`;
       logRow('location', `${rawId}  ·  ${node.label||rawId}  ·  Act ${node.act||'?'}`);
       logRow('connections', `${out.counts.monsters} monsters  ·  ${out.counts.quests} quests  ·  ${out.counts.npcs} NPCs  ·  ${out.counts.linkedNodes} links`);
       logResponse(method, url.pathname, 200, `location/${rawId}`);

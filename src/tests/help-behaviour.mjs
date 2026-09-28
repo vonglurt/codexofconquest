@@ -22,6 +22,8 @@
 //   [location/depth]     `location` stays under its byte budget at EVERY node with the
 //                        entity collections opt-in, `?with=all` restores them, `counts`
 //                        is the same in both, and an unknown depth is refused (§DX-02kn).
+//                        `?with=all:summary` carries the same ids as `?with=all`, nothing
+//                        but ids and titles, under its own budget (§DX-02kr).
 //
 // The two instruments are not nested — each sees defects the other cannot, measured over
 // six mutations of the real source. (a) alone catches a TTL five times short and a value
@@ -231,6 +233,26 @@ export async function runChecks({ topics, liveTopicKeys, probe }) {
       findings.push('[location/depth] `counts` differs between the default and ?with=all — the flag changes what is reported, not only what is inlined');
     const bogus = (await probe('GET', `/api/location/${probeCode}?with=nonsense`)).status;
     if (bogus < 400) findings.push(`[location/depth] ?with=nonsense answers ${bogus} — an unknown depth is accepted silently`);
+    // §DX-02kr — the summary depth, budgeted on its own: it grows with the busiest node's
+    // quest count, so the default's 4,000 B cannot hold it.
+    const SUMMARY_BUDGET = 16000;
+    const SUMMARY_KEYS = { quests: 'id,title', waypointQuests: 'id,title', monsters: 'key,name', npcs: 'key,name' };
+    const summ = (await probe('GET', `/api/location/${probeCode}?with=all:summary`)).json || {};
+    const summBytes = Buffer.byteLength(JSON.stringify(summ));
+    if (summBytes > SUMMARY_BUDGET)
+      findings.push(`[location/depth] GET /api/location/${probeCode}?with=all:summary is ${summBytes} B, over the ${SUMMARY_BUDGET} B summary budget`);
+    if (summ.terrain && 'monsters' in summ.terrain)
+      findings.push('[location/depth] ?with=all:summary carries terrain.monsters, the full roster the summary exists to avoid');
+    for (const [k, keys] of Object.entries(SUMMARY_KEYS)) {
+      const idKey = keys.split(',')[0];
+      const got = (summ[k] || []).map((x) => x[idKey]).join(','), want = (fat[k] || []).map((x) => x[idKey]).join(',');
+      if (!(k in summ)) findings.push(`[location/depth] ?with=all:summary omits \`${k}\``);
+      else if (got !== want) findings.push(`[location/depth] ?with=all:summary names different \`${k}\` from ?with=all`);
+      const extra = (summ[k] || []).find((x) => Object.keys(x).join(',') !== keys);
+      if (extra) findings.push(`[location/depth] a ?with=all:summary \`${k}\` entry carries ${Object.keys(extra).join(',')}, not only ${keys}`);
+    }
+    const badDepth = (await probe('GET', `/api/location/${probeCode}?with=quests:bodies`)).status;
+    if (badDepth < 400) findings.push(`[location/depth] ?with=quests:bodies answers ${badDepth} — an unknown depth is accepted silently`);
   }
 
   return findings;
@@ -274,20 +296,24 @@ async function selftest() {
     if (clean === '/api/list/ids/node') return { status: 200, json: { ids: routes.loc.codes } };
     if (clean === '/api/location') return { status: 200, json: { ids: routes.loc.codes } };
     if (clean.startsWith('/api/location/')) {
-      if (/[?&]with=/.test(p) && !/[?&]with=(all|monsters|quests|npcs|waypointQuests)(,|$)/.test(p))
+      if (/[?&]with=/.test(p) && !/[?&]with=(all|monsters|quests|npcs|waypointQuests)(:summary)?(,|$)/.test(p))
         return { status: 422, json: { error: 'unknown with' } };
+      if (/:summary/.test(p)) return { status: 200, json: routes.loc.summary };
       return { status: 200, json: /[?&]with=/.test(p) ? routes.loc.fat : routes.loc.thin };
     }
     return routes.get.includes(clean) ? { status: 200, json: {} } : { status: 404, json: {} };
   };
   const LOC_THIN = { node: { code: 'AA' }, terrain: { label: 'x' }, counts: { quests: 2 } };
-  const LOC_FAT = { ...LOC_THIN, terrain: { label: 'x', monsters: [] }, monsters: [], quests: [], waypointQuests: [], npcs: [] };
+  const LOC_FAT = { ...LOC_THIN, terrain: { label: 'x', monsters: [] }, monsters: [{ key: 'm', name: 'M', hp: 9 }],
+    quests: [{ id: 'q1', title: 'Q', desc: 'long' }], waypointQuests: [], npcs: [{ key: 'n', name: 'N', occupation: 'o' }] };
+  const LOC_SUMMARY = { ...LOC_THIN, monsters: [{ key: 'm', name: 'M' }], quests: [{ id: 'q1', title: 'Q' }],
+    waypointQuests: [], npcs: [{ key: 'n', name: 'N' }] };
   const stubRoutes = (over = {}) => ({
     topics: ['nonce', 'export'],
     get: ['/api/ping', '/api/export/node_map', '/api/export/quest_db'],
     nonceTypes: ['node', 'quest'],
     helpFallback: false,
-    loc: { codes: ['AA', 'BB'], thin: LOC_THIN, fat: LOC_FAT },
+    loc: { codes: ['AA', 'BB'], thin: LOC_THIN, fat: LOC_FAT, summary: LOC_SUMMARY },
     ...over,
   });
   const run = (t = {}, r = {}, keys = ['index', 'nonce', 'export']) =>
@@ -312,9 +338,23 @@ async function selftest() {
   ok((await run({}, { loc: { codes: [], thin: LOC_THIN, fat: LOC_FAT } }))
     .some((f) => f.includes('asserted nothing')),
     'an empty node list is a finding, not a vacuous pass');
-  ok((await run({}, { loc: { codes: ['AA'], thin: { ...LOC_THIN, big: 'x'.repeat(5000) }, fat: LOC_FAT } }))
+  ok((await run({}, { loc: { codes: ['AA'], thin: { ...LOC_THIN, big: 'x'.repeat(5000) }, fat: LOC_FAT, summary: LOC_SUMMARY } }))
     .some((f) => f.includes('over the 4000 B budget')),
     'a default over the byte budget is caught');
+  // §DX-02kr — the summary depth, each way it could lie planted once.
+  const locWith = (summary) => ({ loc: { codes: ['AA'], thin: LOC_THIN, fat: LOC_FAT, summary } });
+  ok((await run({}, locWith({ ...LOC_SUMMARY, quests: [{ id: 'q1', title: 'Q', desc: 'long' }] })))
+    .some((f) => f.includes('carries id,title,desc')),
+    'a summary that still carries a quest body field is caught');
+  ok((await run({}, locWith({ ...LOC_SUMMARY, npcs: [] })))
+    .some((f) => f.includes('names different `npcs`')),
+    'a summary naming fewer npcs than the full shape is caught');
+  ok((await run({}, locWith({ ...LOC_SUMMARY, pad: 'x'.repeat(17000) })))
+    .some((f) => f.includes('over the 16000 B summary budget')),
+    'a summary over its own budget is caught');
+  ok((await run({}, locWith({ ...LOC_SUMMARY, terrain: { label: 'x', monsters: [] } })))
+    .some((f) => f.includes('carries terrain.monsters')),
+    'a summary carrying the full terrain roster is caught');
 
   ok((await run({ index: stubTopics().index.replace('/api/help/export', '/api/help/exports') }))
     .some((f) => f.includes('no such topic') && f.includes('exports') && f.includes('404')),
