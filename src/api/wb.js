@@ -1062,33 +1062,6 @@ const CMD = {
     if (d.swapped) ok(`swapped with ${d.swapped.code} → (${d.swapped.movedTo?.r},${d.swapped.movedTo?.c})`);
   },
 
-  // ── junction: spawn a new junction node between two points ───────────────────
-  // Usage: ./bin/api junction <from> <dir> [--label "name"] [--terrain city] [--execute]
-  //   from     — source node code
-  //   dir      — N|S|E|W direction for the new junction
-  //   --label  — custom label (default: auto-generated signpost name)
-  //   --terrain — terrain type (default: inherits from source)
-  //   --execute — actually create (default is dry-run)
-  async junction(pos, flags) {
-    const [, from, dir] = pos;
-    if (!from||!dir) die('Usage: ./bin/api junction <from> <dir> [--label "name"] [--terrain type] [--execute]');
-    const body = { from, dir, dryRun: !flags.execute, ...(flags.label?{label:flags.label}:{}), ...(flags.terrain?{terrain:flags.terrain}:{}) };
-    const resp = await request('POST', '/api/graph/spawn-junction', body);
-    if (resp.status >= 400) { printError(resp); process.exit(1); }
-    const d = resp.body;
-    if (d.dryRun) {
-      ok(`[DRY RUN] Junction ${d.plan.code}  r=${d.plan.r}  c=${d.plan.c}  terrain=${d.plan.terrain}`);
-      ok(`Label:  ${d.plan.label}`);
-      ok(`Text:   ${d.plan.text}`);
-      if (d.plan.needsFillGap) ok(`⚠ Gap ${d.plan.gap} > 4 — empty land is walkable (§WALK-1.5); verify via ./bin/api reachability`);
-      ok(`Add --execute to create the junction`);
-    } else {
-      ok(`Junction ${d.code} created at (${d.r},${d.c})`);
-      ok(`Label: ${d.plan.label}`);
-      if (d.plan.needsFillGap) ok(`⚠ Gap ${d.plan.gap} > 4 — empty land is walkable (§WALK-1.5); verify via ./bin/api reachability`);
-    }
-  },
-
   // ── geo-seed: apply geographic lat/lon seeds to major city coordinates ────────
   // Usage: ./bin/api geo-seed [--execute] [--grid-min 8] [--grid-max 500]
   async 'geo-seed'(pos, flags) {
@@ -1327,55 +1300,6 @@ const CMD = {
     ok(`  Blocked by NPC:    ${nk.blockedByNpc}`);
   },
 
-  // ── connect: wire two existing nodes together in a direction ────────────────
-  // Usage: ./bin/api connect <A> <dir> <B>
-  //   Sets A[dir] = B and B[OPP[dir]] = A (bidirectional wire).
-  //   Checks coordinate alignment first; warns if bendy or gap > 4.
-  async connect(pos, flags) {
-    const [, aCode, dir, bCode] = pos;
-    if (!aCode||!dir||!bCode) die('Usage: ./bin/api connect <A> <N|E|S|W> <B>');
-    if (!['N','E','S','W'].includes(dir.toUpperCase())) die('dir must be N|E|S|W');
-    const D = dir.toUpperCase(), OPP={N:'S',S:'N',E:'W',W:'E'};
-
-    // Fetch current node state + coords for degree/alignment checks
-    const [nmResp, coordsResp] = await Promise.all([
-      request('GET', '/api/export/node_map?format=json'),
-      request('GET', '/api/coords'),
-    ]);
-    const nm     = nmResp.body?.data    || {};
-    const coords = coordsResp.body?.coords || {};
-
-    const degA = ['N','E','S','W'].filter(d => nm[aCode]?.[d]).length;
-    const degB = ['N','E','S','W'].filter(d => nm[bCode]?.[d]).length;
-
-    // Degree-cap warnings
-    if (degA >= 4) { ok(`⚠ ${aCode} already has 4 connections (full). Use --force to wire it anyway.`); if (!flags.force) return; }
-    if (degB >= 4) { ok(`⚠ ${bCode} already has 4 connections (full). Use --force to wire it anyway.`); if (!flags.force) return; }
-    if (degA === 3) ok(`⚠ ${aCode} has 3 connections — this will fill its 4th (last) slot. Consider: ./bin/api junction ${aCode} ${D} --execute  (spawns junction first, preserves slot)`);
-    if (degB === 3) ok(`⚠ ${bCode} has 3 connections — this will fill its 4th (last) slot. Consider: ./bin/api junction ${bCode} ${OPP[D]} --execute  (spawns junction first, preserves slot)`);
-
-    // Coordinate alignment check
-    const ca = coords[aCode], cb = coords[bCode];
-    if (ca && cb) {
-      const axisOff = (D==='N'||D==='S') ? Math.abs(cb.c-ca.c) : Math.abs(cb.r-ca.r);
-      const axisDist= (D==='N'||D==='S') ? Math.abs(cb.r-ca.r) : Math.abs(cb.c-ca.c);
-      if (axisOff > 0) ok(`⚠ BENDY: offset=${axisOff} — consider an elbow junction first`);
-      if (axisDist > 4) ok(`⚠ GAP: distance=${axisDist} > 4 — empty land between is walkable (§WALK-1.5); verify via ./bin/api reachability`);
-      if (axisOff === 0 && axisDist <= 4) ok(`Coords OK: axis-aligned, gap=${axisDist} ≤ 4`);
-    }
-
-    const r1 = await request('PUT', `/api/node/${aCode}`, { [D]: bCode });
-    if (r1.status >= 400) { printError(r1); process.exit(1); }
-    const r2 = await request('PUT', `/api/node/${bCode}`, { [OPP[D]]: aCode });
-    if (r2.status >= 400) { printError(r2); process.exit(1); }
-    // Report auto-junctions (server creates them when source is at deg=3)
-    const jA = r1.body?.autoJunctionsCreated, jB = r2.body?.autoJunctionsCreated;
-    if (jA?.length) jA.forEach(j => ok(`  Auto-junction ${j.jCode} inserted at (${j.at?.r},${j.at?.c}) between ${aCode} and ${bCode} (${aCode} was deg=3)`));
-    if (jB?.length) jB.forEach(j => ok(`  Auto-junction ${j.jCode} inserted at (${j.at?.r},${j.at?.c}) between ${bCode} and ${aCode} (${bCode} was deg=3)`));
-    if (!jA?.length && !jB?.length) ok(`Wired: ${aCode}.${D} = ${bCode}  ↔  ${bCode}.${OPP[D]} = ${aCode}`);
-    else ok(`Wired via junction chain: ${aCode} → junction → ${bCode}`);
-  },
-
   // ── fill-gap: REMOVED (§WALK-3 Inc 2) ───────────────────────────────────────
   // The server endpoint now returns 410. Junction stubs were abolished (§WALK-1)
   // and empty land cells are freely walkable (§WALK-1.5) — there is no gap to fill.
@@ -1406,30 +1330,6 @@ const CMD = {
     if (!execute) ok('[DRY RUN] add --execute to bridge all clusters');
     ok('streaming from server — output below:\n');
     await streamPost('/api/graph/cluster-bridge', { execute });
-  },
-
-  // ── promote-junction: upgrade a junction node to real content, wiring preserved ─
-  // Usage: ./bin/api promote-junction <CODE> --label "Name" --text "desc" [--terrain key]
-  //        [--npc key] [--act N]
-  async 'promote-junction'(pos, flags) {
-    await requireServer();
-    const code = pos[0]; if (!code) die('Usage: ./bin/api promote-junction <CODE> --label "..." --text "..."');
-    const label   = flags.label;
-    const text    = flags.text;
-    const terrain = flags.terrain;
-    const npc     = flags.npc || null;
-    const act     = flags.act ? +flags.act : undefined;
-    const sleep   = !!flags.sleep;
-    if (!label) die('--label is required');
-    if (!text)  die('--text is required');
-    const body = { code, label, text, ...(terrain?{name:terrain}:{}), npc, sleep, ...(act!==undefined?{act}:{}) };
-    const r = await request('POST', '/api/graph/promote-junction', body);
-    if (r.status === 200) {
-      ok(`Promoted ${code} → "${label}"`);
-      ok(`Connections preserved: ${JSON.stringify(r.body.connections)}`);
-    } else {
-      printError(r); process.exit(1);
-    }
   },
 
   // ── migrate: §CELL-14 data cleanup ─────────────────────────────────────────
@@ -1467,170 +1367,6 @@ const CMD = {
     if (!dryRun && savePath) ok(`saved → ${savePath}`);
     if (dryRun)               ok(`add --execute to write`);
     void fields;
-  },
-
-  // ── highway: build a full junction chain between two cities ─────────────────
-  // Usage: ./bin/api highway <from> <to> [--step 4] [--dry-run] [--terrain junction]
-  //
-  // Builds a walkable highway of junctions from <from> to <to>.
-  // Strategy:
-  //   1. Fetch coordinates of both cities
-  //   2. Walk East/West first to align columns, then North/South to align rows
-  //      (or vice versa, whichever is shorter first leg)
-  //   3. At the corner turn, insert an elbow junction
-  //   4. Fill each straight segment with junctions spaced --step apart
-  //   5. Wire <from>.dir = first junction, last junction.dir = <to>
-  //
-  // Signpost text is generated for each junction indicating the road name.
-  // ⚠️ DEPRECATED (§DX-01d) — planning only; --execute is refused. See the block
-  // below the arg parse for why, and for what to do instead.
-  async highway(pos, flags) {
-    const [, fromCode, toCode] = pos;
-    if (!fromCode || !toCode) die('Usage: ./bin/api highway <from> <to> [--step N] [--dry-run] [--terrain type]');
-    const step     = flags.step    ? +flags.step : 4;
-    const terrain  = flags.terrain || 'junction';
-    const dryRun   = flags['dry-run'] !== undefined ? true : !flags.execute;
-    const OPP = { N:'S', S:'N', E:'W', W:'E' };
-
-    // ── §DX-01d: --execute is DEPRECATED and refused, before any work ─────────
-    // What it actually did: drop sparse junction:true waypoint nodes every --step
-    // cells and wire them N/S/E/W. It laid ZERO road cells, so it never produced a
-    // road — and each waypoint referenced a `junction` terrain absent from
-    // WORLD_DB, which is precisely how J14/J15 became the check:invariants I1/I2
-    // reds that sat red until §DX-01a removed the nodes and build-roads.js --apply
-    // laid the real Tungas–Station 7 road.
-    //
-    // It is also unnecessary: a node on land contiguous with the main landmass is
-    // already walk-routable (./bin/api reachability is the authority — the mover
-    // walks cell by cell; the legacy edge graph is abandoned). Waypoints buy
-    // nothing but invariant violations.
-    //
-    // Refused up front, before the coordinate fetch, so it costs nothing and needs
-    // no server. Planning still works — re-run without --execute.
-    if (!dryRun) die([
-      'highway --execute is DEPRECATED (§DX-01d) — refusing to drop junction nodes.',
-      '',
-      'It laid ZERO road cells and created junction:true nodes on a terrain absent',
-      'from WORLD_DB — the direct cause of the J14/J15 check:invariants I1/I2 reds.',
-      '',
-      'What to do instead:',
-      '  • Reachability — nothing to do. A contiguous-land node is already walk-routable.',
-      '      ./bin/api reachability     # the authority (BFS from LHR); target 100%',
-      '  • An encounter-free ROAD between two nodes — lay real road cells:',
-      '      edit ROAD_RUNS in play.html, then  node src/scripts/build-roads.js --apply',
-      '      verify with  npm run check:walk  (check:roads R1–R3)',
-      '  • Just the route plan — re-run without --execute (the default).',
-    ].join('\n'));
-
-    // Fetch current state
-    const [nmResp, coordResp] = await Promise.all([
-      request('GET', '/api/export/node_map?format=json'),
-      request('GET', '/api/coords'),
-    ]);
-    if (nmResp.status !== 200) { printError(nmResp); process.exit(1); }
-    const nm     = nmResp.body.data   || {};
-    const coords = coordResp.body.coords || {};
-
-    const fromNode = nm[fromCode]; if (!fromNode) die(`Node "${fromCode}" not found`);
-    const toNode   = nm[toCode];   if (!toNode)   die(`Node "${toCode}" not found`);
-    const ca = coords[fromCode]; if (!ca) die(`"${fromCode}" has no coordinates — run geo-seed first`);
-    const cb = coords[toCode];   if (!cb) die(`"${toCode}" has no coordinates — run geo-seed first`);
-
-    const fromLabel = (fromNode.label || fromCode).split(/[—–]/)[0].trim().slice(0, 20);
-    const toLabel   = (toNode.label   || toCode).split(/[—–]/)[0].trim().slice(0, 20);
-    const roadName  = `The ${fromLabel}–${toLabel} Road`;
-
-    const dr = cb.r - ca.r;  // positive = toCode is south of fromCode
-    const dc = cb.c - ca.c;  // positive = toCode is east  of fromCode
-
-    ok(`Highway: ${fromCode}(${ca.r},${ca.c}) → ${toCode}(${cb.r},${cb.c})  Δr=${dr} Δc=${dc}`);
-    ok(`Road: "${roadName}"  step=${step}  terrain=${terrain}`);
-    if (dryRun) ok(`[DRY RUN] — add --execute to create junctions`);
-
-    // Plan the route: leg1 (horizontal or vertical), elbow, leg2
-    // Choose: go horizontal first if |dc| > |dr|, else vertical first
-    const goHorizFirst = Math.abs(dc) >= Math.abs(dr);
-    const leg1Dir = goHorizFirst ? (dc >= 0 ? 'E' : 'W') : (dr >= 0 ? 'S' : 'N');
-    const leg2Dir = goHorizFirst ? (dr >= 0 ? 'S' : 'N') : (dc >= 0 ? 'E' : 'W');
-    const elbowR  = goHorizFirst ? ca.r : cb.r;   // elbow row
-    const elbowC  = goHorizFirst ? cb.c : ca.c;   // elbow col
-
-    const leg1Steps = goHorizFirst ? Math.abs(dc) : Math.abs(dr);
-    const leg2Steps = goHorizFirst ? Math.abs(dr) : Math.abs(dc);
-
-    ok(`Route: ${leg1Dir} ${leg1Steps} units, elbow at (${elbowR},${elbowC}), ${leg2Dir} ${leg2Steps} units`);
-    ok(`Junctions needed: leg1≈${Math.ceil(leg1Steps/step)-1}  leg2≈${Math.ceil(leg2Steps/step)-1}  + 1 elbow`);
-
-    if (dryRun) return;
-
-    // ── Execute (unreachable since §DX-01d — retained for the record) ─────────
-    // Helper: spawn one junction in a given direction from a source node
-    const spawnNext = async (srcCode, dir, overrideR, overrideC) => {
-      const body = { from: srcCode, dir, dryRun: false, terrain,
-        label: `${roadName} Waypoint`, text: `Signpost says: ${roadName}. Follow this road between ${fromLabel} and ${toLabel}.` };
-      const r = await request('POST', '/api/graph/spawn-junction', body);
-      if (r.status >= 400) {
-        ok(`  WARN: ${r.body?.error || 'spawn failed'} — skipping`);
-        return null;
-      }
-      ok(`  ✓ ${r.body.code} at (${r.body.r},${r.body.c})`);
-      return r.body.code;
-    };
-
-    // Fill leg 1: from → toward elbow, step by step
-    ok(`\nLeg 1: ${fromCode} → elbow (${elbowR},${elbowC}) going ${leg1Dir}`);
-    let prevCode = fromCode;
-    let stepsLeft = leg1Steps;
-    while (stepsLeft > step) {
-      const next = await spawnNext(prevCode, leg1Dir);
-      if (!next) break;
-      prevCode = next;
-      stepsLeft -= step;
-    }
-    // Last junction of leg 1 (the elbow itself)
-    const elbowCode = await spawnNext(prevCode, leg1Dir);
-    if (elbowCode) {
-      // Move elbow to exact corner position
-      const mv = await request('POST', '/api/graph/move', { code: elbowCode, r: elbowR, c: elbowC });
-      if (mv.status < 400) ok(`  Elbow moved to (${elbowR},${elbowC})`);
-
-      // Fill leg 2: elbow → toCode
-      ok(`\nLeg 2: elbow → ${toCode} going ${leg2Dir}`);
-      prevCode = elbowCode;
-      stepsLeft = leg2Steps;
-      while (stepsLeft > step) {
-        const next = await spawnNext(prevCode, leg2Dir);
-        if (!next) break;
-        prevCode = next;
-        stepsLeft -= step;
-      }
-      // Wire last junction to destination
-      const r1 = await request('PUT', `/api/node/${prevCode}`, { [leg2Dir]: toCode });
-      const r2 = await request('PUT', `/api/node/${toCode}`,   { [OPP[leg2Dir]]: prevCode });
-      if (r1.status < 400 && r2.status < 400) {
-        ok(`  ✓ Wired: ${prevCode}.${leg2Dir} = ${toCode}`);
-      }
-    }
-
-    ok(`\nHighway complete. Verify:`);
-    ok(`  ./bin/api worldmap --route ${fromCode} --to ${toCode}`);
-    ok(`  ./bin/api worldmap --city ${fromCode}`);
-  },
-
-  async mode(pos, flags) {
-    await requireServer();
-    const newMode = pos[1]; // fast | debug | trace | undefined = GET
-    if (!newMode) {
-      const r = await request('GET', '/api/mode');
-      if (r.status !== 200) { printError(r); process.exit(1); }
-      const { mode, verbose, trace } = r.body;
-      const modeColor = { fast: C.dim, debug: C.yellow, trace: C.cyan }[mode] || C.white;
-      ok(`${modeColor}${C.bold}${mode.toUpperCase()}${C.reset}  ${C.dim}verbose=${verbose}  trace=${trace}${C.reset}`);
-      return;
-    }
-    const r = await request('POST', '/api/mode', { mode: newMode });
-    if (r.status !== 200) { printError(r); process.exit(1); }
-    ok(`mode → ${C.bold}${r.body.mode.toUpperCase()}${C.reset}  ${C.dim}verbose=${r.body.verbose}  trace=${r.body.trace}${C.reset}`);
   },
 
   // ── §CELL-08: cell — inspect a single grid cell ─────────────────────────────
@@ -1739,7 +1475,7 @@ ${C.bold}═══════════════════════�
   §18 ai — ask Claude about the API
   §19 MAP VISUALIZATION  (worldmap --regions --region --city --search --monster --route)
   §20 COORDINATE MANAGEMENT  (geo-seed  move)
-  §21 NETWORK WIRING  (highway  junction  connect)
+  §21 NETWORK WIRING  (cell adjacency; nothing to wire)
   §22 NETWORK HEALTH & REPAIR  (verify  broken  reachability  junction-audit  cluster-bridge)
   §23 CELL GRID QUERIES  (cell  grid region|heatmap|reachability)
   §24 COMMON RECIPES
@@ -2891,33 +2627,15 @@ ${C.bold}═══════════════════════�
   NETWORK WIRING
 ═══════════════════════════════════════════════════════════════════${C.reset}
 
-  Connection rules (enforced everywhere):
-    • Max 4 connections per node
-    • Degree-3 rule: if inserting into a deg=3 node, junction auto-created first
-    • After any change: run broken + reachability to check for regressions
+  There is nothing to wire. Two places connect when their cells are neighbours
+  (§CELL-01), and junction nodes are gone (§CELL-05). To connect a new place,
+  put it on a free cell beside the one it should reach:
+    ./bin/api post node code=VAULT name=crypt label="The Sealed Vault" act=2 r=3 c=200
+    ./bin/api validate VAULT     # arrivable, and which neighbour cells are occupied
 
-  Full junction highway (L-shaped route, elbow at corner) — ⚠️ PLANNING ONLY:
-    ./bin/api highway LHR CON            # route/elbow/step report (free, honest)
-    ./bin/api highway LHR CON --execute  # REFUSED since §DX-01d
-
-    --execute laid ZERO road cells and dropped junction:true nodes on a terrain
-    absent from WORLD_DB — the direct cause of the J14/J15 check:invariants reds.
-    A contiguous-land node is already walk-routable (./bin/api reachability is the
-    authority). For a real encounter-free road: edit ROAD_RUNS, then
-    node src/scripts/build-roads.js --apply, then npm run check:walk.
-
-  Single junction node:
-    ./bin/api junction LHR S
-    ./bin/api junction LHR S --execute
-    ./bin/api junction LHR S --label "Birka South Gate" --terrain city --execute
-    ./bin/api junction CON W --execute
-
-  Direct wire (warns on deg=3 or deg=4; --force to override):
-    ./bin/api connect WOR E SAL
-    ./bin/api connect CON W THA
-    ./bin/api connect GLA S YRK
-    ./bin/api connect VEN N ROM
-    ./bin/api connect ANT S JAR
+  connect, junction, highway and promote-junction are retired (§DX-02ky-FU2).
+  For an encounter-free road: edit ROAD_RUNS, then
+  node src/scripts/build-roads.js --apply, then npm run check:walk.
 
 ${C.bold}═══════════════════════════════════════════════════════════════════
   NETWORK HEALTH & REPAIR  (§CELL-06 cell-first)
@@ -3119,9 +2837,6 @@ const SYNOPSIS = [
   `  ${C.green}move${C.reset} <CODE> <r> <c> [--swap]       move node coordinates`,
   ``,
   `  ${C.bold}── Network Wiring ──────────────────────────────────────────────────────${C.reset}`,
-  `  ${C.green}connect${C.reset} <A> <dir> <B>              direct wire (warns on deg=3/4 issues)  [--force]`,
-  `  ${C.green}junction${C.reset} <from> <dir> [--label "…"] [--terrain T] [--execute]`,
-  `  ${C.green}highway${C.reset} <from> <to>                ⚠️ route PLANNING only  [--step 4]  (--execute refused, §DX-01d)`,
   `  ${C.green}cluster-bridge${C.reset} [--execute]             connect remaining isolated clusters`,
   `  ${C.green}migrate strip-exit-fields${C.reset} [--execute]   §CELL-14: strip dead N/S/E/W/portal/spire from NODE_MAP`,
   ``,
@@ -3143,6 +2858,10 @@ const RETIRED = {
   'fix-bidirectional': '(§DX-02kx). It read node.N/S/E/W, stripped to zero by §CELL-01. Census: ./bin/api broken',
   'find-open-location': '(§DX-02ky-FU). It ranked nodes by N/E/S/W links, stripped by §CELL-01. A node\'s cell: ./bin/api validate <code>',
   'smart-connect':     '(§DX-02ky-FU). It planned N/E/S/W links and junctions, removed by §CELL-01/§CELL-05. Connectivity: ./bin/api reachability',
+  'connect':           '(§DX-02ky-FU2). It wrote N/E/S/W links, stripped by §CELL-01. Neighbouring cells connect: ./bin/api post node … r=<row> c=<col>, then ./bin/api validate <code>',
+  'junction':          '(§DX-02ky-FU2). It spawned junction nodes, deleted by §CELL-05. Place a node on a free cell beside the one it should reach: ./bin/api post node … r=<row> c=<col>',
+  'highway':           '(§DX-02ky-FU2). It planned junction chains wired by N/E/S/W links; both are gone (§CELL-05, §CELL-01). Walkability: ./bin/api reachability. A road: edit ROAD_RUNS, then node src/scripts/build-roads.js --apply',
+  'promote-junction':  '(§DX-02ky-FU2). No node is a junction since §CELL-05. Give a node content: ./bin/api put node <code> label=… text=…',
 };
 
 function printSynopsis() {

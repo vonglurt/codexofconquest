@@ -6653,11 +6653,6 @@ window._onServerActivated = () => {
     { section:'Coords & Graph', method:'POST', path:'/api/coords/swap', desc:'Atomically swap two nodes positions', params:[{name:'body',type:'json',desc:'{ a: "CODE1", b: "CODE2" }'}] },
     { section:'Coords & Graph', method:'GET', path:'/api/graph/validate/:code', desc:'One node\'s cell: arrivable (primary), occupied neighbours, heat', params:[] },
     { section:'Coords & Graph', method:'GET', path:'/api/graph/broken', desc:'Nodes whose grid cell touches no occupied cell — the census ./bin/api broken prints', params:[] },
-    { section:'Coords & Graph', method:'GET', path:'/api/graph/path/:from/:to', desc:'Walkable path between two nodes', params:[{name:'maxGap',type:'number',desc:'Default 4'}] },
-    { section:'Coords & Graph', method:'POST', path:'/api/graph/link', desc:'Wire both ends of a directional link', params:[{name:'body',type:'json',desc:'{ a, aDir, b }'}] },
-    { section:'Coords & Graph', method:'POST', path:'/api/graph/junction', desc:'Create one junction node', params:[{name:'body',type:'json',desc:'{ anchor, anchorDir, terrain?, … }'}] },
-    { section:'Coords & Graph', method:'POST', path:'/api/graph/corner-junction', desc:'Fix diagonal connection with corner junction', params:[{name:'body',type:'json',desc:'{ nodeA, dirA, nodeB, dirB, sharedTarget }'}] },
-    { section:'Coords & Graph', method:'POST', path:'/api/graph/fill-gap', desc:'Plan/create junction chain for long gap', params:[{name:'body',type:'json',desc:'{ from, dir, to, maxGap, step, terrain, dryRun }'}] },
     // Layout
     { section:'Layout', method:'GET', path:'/api/layout/solve', desc:'Propose grid layout from a root node', params:[{name:'root',type:'string',desc:'Root node code'},{name:'step',type:'number',desc:'Grid step size'}] },
     { section:'Layout', method:'POST', path:'/api/layout/apply', desc:'Apply a proposed coord map', params:[{name:'body',type:'json',desc:'{ coords: { CODE: {r,c}, … } }'}] },

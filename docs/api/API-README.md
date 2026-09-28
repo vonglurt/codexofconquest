@@ -64,7 +64,6 @@ with a network health check. Broken edges silently disconnect navigation.
 # Repair
 ./bin/api reweave                      # rebuild the road net (build-roads.js --apply + check:roads)
 ./bin/api cluster-bridge --execute     # bridge remaining isolated clusters
-./bin/api highway LHR CON --execute    # build full highway between two cities
 ```
 
 > **Maintain the network**: after every node creation, connection change, or coordinate
@@ -324,22 +323,14 @@ dated snapshot the `milepoints/patches` chain is built from.
 
 ### Network Wiring
 
-**Connection rules (enforced everywhere):**
-- Max 4 connections per node
-- Degree-3 rule: if inserting into a deg=3 node, spawn a junction first (preserves the last slot)
-- Dead ends (deg=1) should be extended with a junction when the area allows it
+There is nothing to wire. Two places connect when their cells are neighbours (§CELL-01), and junction nodes are gone (§CELL-05). To connect a place, put it on a free cell beside the one it should reach, then check the cell.
 
 ```bash
-# smart-connect and find-open-location are retired (410, §DX-02ky-FU): they counted N/E/S/W links.
-./bin/api validate LHR                    # a node's cell: arrivable, occupied neighbours
-
-# Direct wire (use when you know exactly where to connect)
-./bin/api connect WOR E SAL               # warns on deg=3/4; use --force to override
-./bin/api junction LHR S --execute        # spawn single junction node
-./bin/api junction LHR S --label "Crossroads" --terrain city --execute
-./bin/api highway LHR CON --execute       # full junction highway A→B
-./bin/api highway WOR REG --step 4 --execute
+./bin/api move VAULT 3 200                # the cell south of KRN (r:2 c:200)
+./bin/api validate VAULT                  # a node's cell: arrivable, occupied neighbours
 ```
+
+`connect`, `junction`, `highway` and `promote-junction` are retired (§DX-02ky-FU2), like `smart-connect` and `find-open-location` before them (§DX-02ky-FU): each wrote or counted N/E/S/W links or junction nodes.
 
 ### Validation
 
@@ -455,27 +446,20 @@ The correct order for building or repairing the world coordinate mesh:
 ./bin/api geo-seed --execute            # anchor 76 cities to real lat/lon
 node layout-solve.js --apply           # propagate all nodes from geo anchors
 
-# 2. Build the highway between major cities
-./bin/api highway LHR CON --execute    # Birka → Constantinople
-./bin/api highway KOL REG --execute    # Cologne → Regensburg
-./bin/api highway REG VEN --execute    # Regensburg → Venice
-# ... continue for all inter-cluster routes
-
-# 3. Verify connectivity
+# 2. Verify connectivity
 ./bin/api reachability                  # target: 100%
 ./bin/api worldmap --route LHR --to SAM  # test Birka → Samarkand
 
-# 4. Repair remaining isolation
+# 3. Repair remaining isolation
 ./bin/api broken                        # identify remaining issues
 ./bin/api reweave                       # rebuild the road net
 
-# 5. Place sub-locations near quest cities
+# 4. Place sub-locations near quest cities
 ./bin/api list node --no-coords        # find unplaced nodes
 ./bin/api list quest --node <CODE>     # find what quests a node serves
-./bin/api move <NODE> <r> <c>          # place it near its quest city
-./bin/api connect <CITY> S <NODE>      # wire it in
+./bin/api move <NODE> <r> <c>          # a free cell beside its quest city connects it
 
-# 6. Final validation
+# 5. Final validation
 ./bin/api broken                        # target: 0 broken edges
 ./bin/api reachability                  # target: 100%
 ./bin/api audit --map                   # full integrity scan
@@ -515,7 +499,6 @@ If you find yourself reaching for curl to hit one of these, request a `./bin/api
 | `GET /api/coords` | `./bin/api count coords` |
 | `GET /api/graph/broken` | `./bin/api broken` (both read the heatmap's `heat: 0` cells, §DX-02ky) |
 | `GET /api/graph/reachability` | `./bin/api reachability` *(needs wrapper — request refactor)* |
-| `POST /api/graph/spawn-junction` | `./bin/api junction <from> <dir>` |
 | `POST /api/graph/move` | `./bin/api move <code> <r> <c>` |
 | `GET /api/layout/worldmap` | `./bin/api worldmap` |
 | `POST /api/layout/geo-seed` | `./bin/api geo-seed` |

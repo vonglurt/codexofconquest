@@ -6054,113 +6054,17 @@ async function route(req, res) {
       });
 
       const page = suggestions.slice(skip, skip + limit);
-      return json(res, 200, { ok:true, hub, minHops, spatialRadius: spatialR, total:suggestions.length, skip, limit, results:page, reminder:'Use API only: PUT /api/node/{code}, PUT /api/coords/{code}, POST /api/graph/junction — never edit play.html directly.' });
+      return json(res, 200, { ok:true, hub, minHops, spatialRadius: spatialR, total:suggestions.length, skip, limit, results:page, reminder:'Use API only: PUT /api/node/{code}, PUT /api/coords/{code} — never edit play.html directly.' });
     }
 
-    // ── POST /api/graph/junction ───────────────────────────────────────────
-    // Creates a junction node on a reachable anchor and optionally wires it
-    // to a cluster entry node — all in one step.
-    //
-    // Body:
-    //   anchor       — reachable node code to attach junction to
-    //   anchorDir    — N|S|E|W direction on the anchor for the new junction
-    //   clusterEntry — (optional) unreachable node to wire the junction toward
-    //   clusterDir   — N|S|E|W direction on the junction pointing to clusterEntry
-    //   text         — (optional) flavor text for the junction node
-    //   act          — (optional) act number (defaults to anchor's act)
+    // ── POST /api/graph/junction ─────────────────────────────────────────
+    // §DX-02ky-FU2: retired. It minted a junction node and wired it with N/E/S/W links;
+    // §CELL-05 deleted the junction class and §CELL-01 the links.
     if (parts[1] === 'junction' && method === 'POST') {
-      let body;
-      try { body = await readBody(req); } catch(e) {
-        return json(res, 400, { error:'Invalid JSON' });
-      }
-      const { anchor, anchorDir, clusterEntry, clusterDir, text, act } = body || {};
-
-      if (!anchor || !anchorDir || !['N','S','E','W'].includes(anchorDir))
-        return json(res, 400, { error:'Required: anchor (node code), anchorDir (N|S|E|W)' });
-
-      const anchorNode = nm[anchor];
-      if (!anchorNode)
-        return json(res, 400, { error:`Anchor node "${anchor}" not in NODE_MAP` });
-      if (!reachable.has(anchor))
-        return json(res, 400, { error:`Anchor "${anchor}" is not reachable from hub "${hub}"` });
-      if (degree(anchor) >= 4)
-        return json(res, 400, { error:`Anchor "${anchor}" is full (deg 4) — too crowded to attach a junction` });
-      if (anchorNode[anchorDir])
-        return json(res, 400, { error:`Anchor "${anchor}.${anchorDir}" is already occupied by "${anchorNode[anchorDir]}"` });
-
-      if (clusterEntry) {
-        if (!nm[clusterEntry])
-          return json(res, 400, { error:`clusterEntry "${clusterEntry}" not in NODE_MAP` });
-        if (reachable.has(clusterEntry))
-          return json(res, 400, { error:`clusterEntry "${clusterEntry}" is already reachable` });
-        if (!clusterDir || !['N','S','E','W'].includes(clusterDir))
-          return json(res, 400, { error:'clusterDir (N|S|E|W) required when clusterEntry is given' });
-        if (degree(clusterEntry) >= 4)
-          return json(res, 400, { error:`clusterEntry "${clusterEntry}" is full (deg 4)` });
-        if (nm[clusterEntry][OPP[clusterDir]])
-          return json(res, 400, { error:`clusterEntry "${clusterEntry}.${OPP[clusterDir]}" already occupied by "${nm[clusterEntry][OPP[clusterDir]]}"` });
-      }
-
-      // Auto-generate next J-code
-      const nums = Object.keys(nm).filter(c => /^J\d+$/.test(c)).map(c => parseInt(c.slice(1), 10));
-      const jCode = `J${(nums.length ? Math.max(...nums) : 0) + 1}`;
-
-      const junctionTerrain = anchorNode.name || 'junction';
-      const junctionAct     = act !== undefined ? Number(act) : (anchorNode.act || 1);
-      const junctionLabel   = `Junction near ${anchorNode.label || anchor}`;
-      const junctionText    = text || `The road branches here, a junction between ${anchorNode.label || anchor} and the ${anchorDir.toLowerCase()} path.`;
-
-      // Junction body — pre-wired to anchor and optionally to clusterEntry
-      const junctionBody = {
-        name:    junctionTerrain,
-        label:   junctionLabel,
-        text:    junctionText,
-        act:     junctionAct,
-        junction: true,
-        npc:     null,
-        battle:  null,
-        loot:    null,
-        sleep:   false,
-        [OPP[anchorDir]]: anchor,
-        ...(clusterEntry && clusterDir ? { [clusterDir]: clusterEntry } : {}),
-      };
-
-      // Insert into NODE_MAP source
-      const jEntry = serializeNodeLiteral(jCode, junctionBody);
-      const ins = insertBeforeSectionClose('NODE_MAP', jEntry);
-      if (!ins.ok) return json(res, 500, { error:`NODE_MAP insert failed: ${ins.error}` });
-      const newNum = Object.values(WBAPI.nodeMap).reduce((m, n) => Math.max(m, n.num || 0), 0) + 1;
-      WBAPI.nodeMap[jCode] = { ...junctionBody, num: newNum };
-
-      // Wire anchor → junction
-      const r1 = WBAPI.editField('node', anchor, anchorDir, jCode);
-      if (!r1.ok) return json(res, 500, { error:`Wire anchor ${anchor}.${anchorDir}=${jCode} failed: ${r1.error}` });
-
-      // Wire clusterEntry back → junction
-      let clusterWired = false;
-      if (clusterEntry && clusterDir) {
-        const r2 = WBAPI.editField('node', clusterEntry, OPP[clusterDir], jCode);
-        clusterWired = r2.ok;
-        if (!r2.ok) logRow('warn', `clusterEntry wire ${clusterEntry}.${OPP[clusterDir]}=${jCode} failed: ${r2.error}`);
-      }
-
-      WBAPI._buildIndexes();
-      logRow('junction', `${jCode}  ·  terrain:${junctionTerrain}  ·  act:${junctionAct}`);
-      logRow('wires', `${anchor}.${anchorDir}→${jCode}  ${jCode}.${OPP[anchorDir]}→${anchor}${clusterEntry ? `  ${clusterEntry}.${OPP[clusterDir]}→${jCode}  ${jCode}.${clusterDir}→${clusterEntry}` : ''}`);
-      logResponse('POST', url.pathname, 201, `junction/${jCode}`);
-
-      return saveAndRestart(res, 201, {
-        ok: true,
-        junctionCode: jCode,
-        junctionTerrain, junctionAct, junctionLabel,
-        anchor, anchorDir,
-        clusterEntry: clusterEntry || null,
-        clusterDir:   clusterDir   || null,
-        clusterWired,
-        junctionNode: WBAPI.nodeMap[jCode],
-        note: `Junction ${jCode} created and wired to ${anchor}.${anchorDir}.${clusterEntry ? ` Cluster entry ${clusterEntry} also wired.` : ''}`,
-        reminder: 'Use API only: PUT /api/node/{code}, PUT /api/coords/{code}, POST /api/graph/junction — never edit play.html directly.',
-      });
+      logResponse('POST', url.pathname, 410, 'junction retired (§DX-02ky-FU2)');
+      return json(res, 410, { ok:false,
+        error:'junction is retired: junction nodes (§CELL-05) and N/E/S/W links (§CELL-01) are gone. Two places connect when their cells are neighbours, so place a node on a free cell beside the one it should reach.',
+        see:['POST /api/node with r,c', 'PUT /api/coords/{code}', 'GET /api/graph/validate/{code}'] });
     }
 
     // ── GET /api/graph/validate/{code} ───────────────────────────────────────
@@ -6211,87 +6115,14 @@ async function route(req, res) {
     // ── POST /api/coords/swap ─────────────────────────────────────────────────
     // Handled below in the coords block
 
-    // ── POST /api/graph/spawn-junction ───────────────────────────────────────
-    // Create a new junction node between two existing nodes on a given axis.
-    // Body: { from, dir, label?, terrain?, act?, text?, dryRun? }
-    //   from    — source node code
-    //   dir     — N|S|E|W (direction from `from` toward the new junction)
-    //   label   — optional display name (auto-generated if omitted)
-    //   terrain — optional terrain type (inherits from `from` if omitted)
-    //   act     — optional act number (inherits from `from` if omitted)
-    //   text    — signpost description (auto-generated if omitted)
-    //   dryRun  — true → return plan without writing
+    // ── POST /api/graph/spawn-junction ─────────────────────────────────────────
+    // §DX-02ky-FU2: retired. It placed a junction between two nodes and rewired their N/E/S/W links;
+    // both the class and the links are gone.
     if (parts[1] === 'spawn-junction' && method === 'POST') {
-      let body; try { body = await readBody(req); } catch(e) { return json(res,400,{error:'Invalid JSON'}); }
-      const { from: srcCode, dir, label: labelArg, terrain: terrainArg, act: actArg, text: textArg, dryRun=true } = body||{};
-      if (!srcCode||!dir) return json(res,400,{error:'Required: from, dir'});
-      if (!['N','S','E','W'].includes(dir)) return json(res,400,{error:'dir must be N|S|E|W'});
-      const srcNode = nm[srcCode]; if (!srcNode) return json(res,404,{error:`Node not found: ${srcCode}`});
-      const srcCoord = WBAPI.nodeCoords[srcCode];
-      if (!srcCoord) return json(res,400,{error:`${srcCode} has no coordinates — place it first`});
-
-      // If dir is already occupied, warn
-      const existingTgt = srcNode[dir];
-      const DR4={N:-1,S:1,E:0,W:0}, DC4={N:0,S:0,E:1,W:-1};
-
-      // Find a free slot in the given direction (1-4 cells out, then further)
-      const occupied = new Map(Object.entries(WBAPI.nodeCoords).map(([c,p])=>[`${p.r},${p.c}`,c]));
-      let jR = srcCoord.r, jC = srcCoord.c, slotFound=false;
-      for (let d=1; d<=8; d++) {
-        const nr = srcCoord.r + DR4[dir]*d, nc = srcCoord.c + DC4[dir]*d;
-        if (!occupied.has(`${nr},${nc}`)) { jR=nr; jC=nc; slotFound=true; break; }
-      }
-      if (!slotFound) return json(res,409,{error:`No free cell found in direction ${dir} from ${srcCode} within 8 cells`});
-
-      const terrain    = terrainArg || srcNode.name || 'junction';
-      const act        = actArg     != null ? actArg : (srcNode.act||1);
-      const srcLabel   = srcNode.label || srcCode;
-      const tgtLabel   = existingTgt ? (nm[existingTgt]?.label||existingTgt) : `(${dir} end)`;
-      const autoLabel  = labelArg || `${srcLabel} ↔ ${tgtLabel} Junction`;
-      const OPP4={N:'S',S:'N',E:'W',W:'E'};
-      const signEnv    = {city:'crowded streets',airport:'wind-swept tarmac',junction:'open crossroads',site:'ancient ruins',default:'open road'}[terrain]||'open road';
-      const signMonster= {city:'city wolves and pickpockets',airport:'customs wraiths',junction:'highway bandits',site:'site guardians',default:'wandering beasts'}[terrain]||'wandering beasts';
-      const autoText   = textArg || `Signpost says: The road between ${srcLabel} and ${tgtLabel}. You stand at a crossroads on ${signEnv}. Beware of ${signMonster} — good hunting grounds nearby.`;
-
-      // Generate a junction code: next Jnn
-      const jNums = Object.keys(nm).filter(c=>/^J\d+$/.test(c)).map(c=>+c.slice(1));
-      const jCode = `J${(jNums.length?Math.max(...jNums):0)+1}`;
-
-      const plan = {
-        code:jCode, r:jR, c:jC, terrain, label:autoLabel, text:autoText, act,
-        connects: { [OPP4[dir]]: srcCode, ...(existingTgt ? {[dir]:existingTgt} : {}) },
-        patches:  { [srcCode]:{ field:dir, value:jCode }, ...(existingTgt?{[existingTgt]:{field:OPP4[dir],value:jCode}}:{}) },
-        gap: Math.abs(DR4[dir]*(jR-srcCoord.r)) || Math.abs(DC4[dir]*(jC-srcCoord.c)),
-        needsFillGap: (Math.abs(DR4[dir]*(jR-srcCoord.r))||Math.abs(DC4[dir]*(jC-srcCoord.c))) > 4,
-      };
-
-      if (dryRun) {
-        logResponse('POST', url.pathname, 200, `spawn-junction dry-run: ${jCode}`);
-        return json(res,200,{ok:true,dryRun:true,plan});
-      }
-
-      // Execute: create junction node
-      const jBody = { name:terrain, label:autoLabel, text:autoText, act, junction:true, npc:null, battle:null, loot:null, sleep:false, ...plan.connects };
-      const jEntry = serializeNodeLiteral(jCode, jBody);
-      const ins = insertBeforeSectionClose('NODE_MAP', jEntry);
-      if (!ins.ok) return json(res,500,{error:`NODE_MAP insert failed: ${ins.error}`});
-      const newNum = Object.values(WBAPI.nodeMap).reduce((m,n)=>Math.max(m,n.num||0),0)+1;
-      WBAPI.nodeMap[jCode] = { ...jBody, num:newNum };
-
-      // Place coordinates
-      WBAPI.nodeCoords[jCode] = { r:jR, c:jC };
-      const CS='// ◆◆◆ WORLDBUILDER:NODE_COORDS:START ◆◆◆', CE='// ◆◆◆ WORLDBUILDER:NODE_COORDS:END ◆◆◆';
-      const si=WBAPI._rawSrc.indexOf(CS)+CS.length, ei=WBAPI._rawSrc.indexOf(CE);
-      let sec=WBAPI._rawSrc.slice(si,ei);
-      const ci=sec.lastIndexOf('\n};');
-      sec=sec.slice(0,ci+1)+`  ${jCode}:{r:${jR},c:${jC}},\n`+sec.slice(ci+1);
-      WBAPI._rawSrc=WBAPI._rawSrc.slice(0,si)+sec+WBAPI._rawSrc.slice(ei);
-
-      // Patch connecting nodes
-      for (const [pCode, {field,value}] of Object.entries(plan.patches)) WBAPI.editField('node',pCode,field,value);
-      WBAPI._buildIndexes();
-      logResponse('POST', url.pathname, 201, `spawn-junction: ${jCode} at (${jR},${jC})`);
-      return saveAndRestart(res,201,{ok:true,code:jCode,r:jR,c:jC,plan});
+      logResponse('POST', url.pathname, 410, 'spawn-junction retired (§DX-02ky-FU2)');
+      return json(res, 410, { ok:false,
+        error:'spawn-junction is retired: junction nodes (§CELL-05) and N/E/S/W links (§CELL-01) are gone. Place a node on a free cell beside the one it should reach.',
+        see:['POST /api/node with r,c', 'PUT /api/coords/{code}', 'GET /api/graph/validate/{code}'] });
     }
 
     // ── POST /api/graph/move ──────────────────────────────────────────────────
@@ -6343,45 +6174,16 @@ async function route(req, res) {
         see:['GET /api/graph/reachability', 'GET /api/graph/broken'] });
     }
 
-    // ── POST /api/graph/promote-junction ─────────────────────────────────────
-    // Promote a junction node to real content in-place, preserving all N/S/E/W wiring.
-    // Body: { code, label, text, name (terrain key), npc?, battle?, loot?, sleep? }
+    // ── POST /api/graph/promote-junction ─────────────────────────────────────────
+    // §DX-02ky-FU2: retired. It turned a junction:true node into named content, keeping its links;
+    // no node has carried junction:true since §CELL-05.
     if (parts[1] === 'promote-junction' && method === 'POST') {
-      let body; try { body = await readBody(req); } catch(e) { return json(res,400,{error:'Invalid JSON'}); }
-      const { code, label, text, name: terrain, npc=null, battle=null, loot=null, sleep=false, act } = body||{};
-      if (!code) return json(res, 400, {error:'Required: code'});
-      if (!nm[code]) return json(res, 404, {error:`Node "${code}" not found`});
-      const node = nm[code];
-      const errors = [];
-      // Update all provided content fields via editField (preserves wiring)
-      const fields = { label, text, name: terrain };
-      if (act !== undefined) fields.act = act;
-      fields.junction = null;    // remove junction flag
-      fields.npc   = npc;
-      fields.sleep = sleep;
-      if (battle !== undefined) fields.battle = battle;
-      if (loot   !== undefined) fields.loot   = loot;
-      for (const [field, value] of Object.entries(fields)) {
-        if (value === undefined) continue;
-        const r = WBAPI.editField('node', code, field, value);
-        if (!r?.ok) errors.push(`${field}: ${r?.error||'failed'}`);
-      }
-      if (errors.length) {
-        logResponse('POST', url.pathname, 207, `promote-junction: ${code} partial (${errors.join(', ')})`);
-        return json(res, 207, {ok:false, code, errors, connections:{}});
-      }
-      WBAPI._buildIndexes();
-      logResponse('POST', url.pathname, 200, `promote-junction: ${code}`);
-      return saveAndRestart(res, 200, {ok:true, code, promoted:{label,text,terrain,npc,battle,loot,sleep}, connections:{}});
+      logResponse('POST', url.pathname, 410, 'promote-junction retired (§DX-02ky-FU2)');
+      return json(res, 410, { ok:false,
+        error:'promote-junction is retired: no node is a junction since §CELL-05. Give a node content with PUT /api/node/{code}.',
+        see:['PUT /api/node/{code}'] });
     }
 
-    // Find all nodes unreachable from the hub (stray/orphan nodes).
-    // For each stray, determine the best city to relocate near based on:
-    //   1. Quest cross-references (activateNode, waypointNode) — highest weight
-    //   2. Graph proximity (how close the stray was to reachable nodes before)
-    // Then find an open slot in that city's mesh via find-open-location logic,
-    // move the stray's coordinates adjacent to that slot, and wire it in.
-    // Body: { dryRun?, limit?, meshRadius? }
     // ── POST /api/graph/rip-and-connect — DEPRECATED (§WALK-3 Inc 2) ──────────
     // rip-and-connect relocated "stray" nodes (unreachable via node-to-node
     // cell-BFS) to a free cell adjacent to the reachable frontier. After §WALK-1.5
@@ -6938,7 +6740,7 @@ async function route(req, res) {
       });
     }
 
-    return json(res, 404, { error:'Unknown graph sub-route. Available: GET /api/graph/reachability  GET /api/graph/connect  POST /api/graph/junction  GET /api/graph/validate/{code}  GET /api/graph/broken  POST /api/graph/spawn-junction  POST /api/graph/move  GET /api/graph/find-open-location/{code}  POST /api/graph/smart-connect  POST /api/graph/cluster-bridge  GET /api/graph/junction-audit  (deprecated→410: fill-gap, rip-and-connect, reweave-all)' });
+    return json(res, 404, { error:'Unknown graph sub-route. Available: GET /api/graph/reachability  GET /api/graph/connect  GET /api/graph/validate/{code}  GET /api/graph/broken  POST /api/graph/move  POST /api/graph/cluster-bridge  GET /api/graph/junction-audit  (retired→410: junction, spawn-junction, promote-junction, find-open-location, smart-connect, fill-gap, rip-and-connect, reweave-all)' });
   }
 
   // ── Coords (NODE_COORDS) ─────────────────────────────────────────────────
@@ -7178,7 +6980,7 @@ async function route(req, res) {
       WBAPI._rawSrc = WBAPI._rawSrc.slice(0, sIdx) + section + WBAPI._rawSrc.slice(eIdx);
       logRow('coords', `${targetCode}  ${prev?`r:${prev.r},c:${prev.c} → `:'(new) '}r:${r},c:${c}`);
       logResponse(method, url.pathname, 200, `coords/${targetCode} → r:${r} c:${c}`);
-      return saveAndRestart(res, 200, { ok:true, code: targetCode, prev, coords: { r, c }, reminder: 'Use API only: PUT /api/node/{code}, PUT /api/coords/{code}, POST /api/graph/junction — never edit play.html directly.' });
+      return saveAndRestart(res, 200, { ok:true, code: targetCode, prev, coords: { r, c }, reminder: 'Use API only: PUT /api/node/{code}, PUT /api/coords/{code} — never edit play.html directly.' });
     }
 
     // ── POST /api/coords/{code}/nudge — move relatively ──────────────────────
@@ -11206,7 +11008,7 @@ async function route(req, res) {
       // round trip report `ok:false — field mismatch` on a write that was entirely correct.
       if (r.ok && r.strategy === 'editField' && !r.removed) expectedFields[r.field] = String(r.aliased ? r.aliased.to : body[r.field]);
     }
-    const putReminder = type === 'node' ? { reminder: 'Use API only: PUT /api/node/{code}, PUT /api/coords/{code}, POST /api/graph/junction — never edit play.html directly.' } : {};
+    const putReminder = type === 'node' ? { reminder: 'Use API only: PUT /api/node/{code}, PUT /api/coords/{code} — never edit play.html directly.' } : {};
     const autoJunctionInfo = autoJunctionCreated.length
       ? { autoJunctionsCreated: autoJunctionCreated, note: `${autoJunctionCreated.length} junction(s) auto-inserted (source was deg=3). Pass autoJunction:false to bypass.` }
       : {};

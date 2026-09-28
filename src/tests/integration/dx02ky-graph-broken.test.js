@@ -103,3 +103,14 @@ test('§DX-02ky-FU — find-open-location and smart-connect answer 410, and thei
   expect(run('find-open-location', 'LHR')).toMatch(/is retired \(§DX-02ky-FU\)/);
   expect(run('validate', 'BK')).toMatch(/hidden behind LHR/);
 });
+
+test('§DX-02ky-FU2 — the junction routes answer 410 naming a replacement, and the wiring verbs say why', async () => {
+  for (const route of ['junction', 'spawn-junction', 'promote-junction']) {
+    const r = await fetch(`${BASE}/api/graph/${route}`, { method: 'POST', body: '{"anchor":"LHR","anchorDir":"S","code":"LHR"}' });
+    expect(r.status, route).toBe(410);
+    expect((await r.json()).see.length, route).toBeGreaterThan(0);
+  }
+  const run = (...a) => { try { return execFileSync(process.execPath, [path.join(ROOT, 'src', 'api', 'wb.js'), ...a, '--server', BASE],
+    { cwd: ROOT, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] }); } catch (e) { return String(e.stdout) + String(e.stderr); } };
+  for (const verb of ['connect', 'junction', 'highway', 'promote-junction']) expect(run(verb, 'LHR', 'S', 'CON')).toMatch(/is retired \(§DX-02ky-FU2\)/);
+});

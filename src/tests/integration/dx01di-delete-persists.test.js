@@ -193,7 +193,7 @@ test.describe('§DX-01d/i — a delete that reports success must persist', () =>
     expect(W.deleteNodeSource('no_such_node_zzz')).toBe(false);
   });
 
-  test('highway --execute is refused (§DX-01d — the tool that made J14/J15)', () => {
+  test('highway is retired (§DX-01d refused --execute; §DX-02ky-FU2 retired the verb)', () => {
     let out = '';
     try {
       out = execFileSync('node', [path.join(ROOT, 'src', 'api', 'wb.js'), 'highway', 'LHR', 'CON', '--execute'],
@@ -202,7 +202,7 @@ test.describe('§DX-01d/i — a delete that reports success must persist', () =>
     } catch (e) {
       out = (e.stdout || '') + (e.stderr || '');
     }
-    expect(out).toMatch(/DEPRECATED \(§DX-01d\)/);
+    expect(out).toMatch(/"highway" is retired \(§DX-02ky-FU2\)/);
     expect(out).toMatch(/ROAD_RUNS/);          // points at the real road path
     expect(out).toMatch(/reachability/);       // and at why waypoints are unnecessary
   });

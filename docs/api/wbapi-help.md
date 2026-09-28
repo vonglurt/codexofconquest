@@ -80,10 +80,7 @@ src/bin/wbapi-toggle.sh tracker    # §MESH tracker role on :1368 (rendezvous on
 ./bin/api geo-seed --execute              # anchor cities to lat/lon
 node layout-solve.js --apply             # propagate all nodes
 
-./bin/api connect WOR E SAL              # wire two nodes
-./bin/api highway LHR CON --execute      # full junction highway
-./bin/api junction LHR S --execute       # single junction node
-./bin/api move LHR 12 18 --swap          # move/swap coordinates
+./bin/api move LHR 12 18 --swap          # move/swap coordinates; neighbouring cells connect
 
 ./bin/api broken                         # nodes with no occupied neighbour cell
 ./bin/api reweave                        # rebuild the road net

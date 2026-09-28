@@ -333,12 +333,6 @@ curl -s 'http://localhost:1367/api/list/node?has_quests=true'  | jq '[.[] | {id,
 curl -s 'http://localhost:1367/api/list/node?has_quests=false' | jq 'length'
 ```
 
-#### Junction nodes only
-
-```bash
-curl -s 'http://localhost:1367/api/list/node?junction=true'  | jq '[.[] | .id]'
-curl -s 'http://localhost:1367/api/list/node?junction=false' | jq 'length'  # named nodes only
-```
 
 #### Text search in label
 
@@ -1118,11 +1112,10 @@ cat /tmp/cdg-import-result.json | jq '{created: .nodesCreated, skipped: .nodesSk
 ### 14.1 `ai` subcommand
 
 ```bash
-./bin/api ai "how do I link two nodes?"
+./bin/api ai "how do I place a node next to another?"
 ./bin/api ai "what monsters appear in dungeon terrain?"
 ./bin/api ai "how do I add a quest that requires two items to complete?"
 ./bin/api ai "what is the difference between activateNode and waypointNode?"
-./bin/api ai "how do I create a junction between KRN and HKG?"
 ```
 
 ### 14.2 `--ai` shorthand (no subcommand needed)
@@ -1253,16 +1246,9 @@ curl -s 'http://localhost:1367/api/graph/broken' | jq .broken
 curl -s 'http://localhost:1367/api/graph/broken' | jq -r '.cells[] | "\(.code) \(.r),\(.c)"'
 ```
 
-A node whose grid cell touches no occupied neighbour cell: the same census as `./bin/api broken` and `GET /api/grid/heatmap`'s `heat: 0`. `maxGap` and `root` read the retired `N`/`S`/`E`/`W` fields and are ignored (§DX-02ky).
+A node whose grid cell touches no occupied neighbour cell: the same census as `./bin/api broken` and `GET /api/grid/heatmap`'s `heat: 0`. The edge model's query parameters read the retired `N`/`S`/`E`/`W` fields and are ignored (§DX-02ky).
 
-### 17.5 Walkable path between two nodes
-
-```bash
-curl -s 'http://localhost:1367/api/graph/path/LHR/FRO?maxGap=4' | jq '{reachable, walkablePath}'
-curl -s 'http://localhost:1367/api/graph/path/BK/TRD?maxGap=4'  | jq '{reachable, fix}'
-```
-
-### 17.6 Move a node's coordinates (absolute)
+### 17.5 Move a node's coordinates (absolute)
 
 ```bash
 curl -s -XPUT http://localhost:1367/api/coords/LHR \
@@ -1272,7 +1258,7 @@ curl -s -XPUT http://localhost:1367/api/coords/LHR \
 
 Returns 409 if the slot is already occupied.
 
-### 17.7 Nudge a node (relative move)
+### 17.6 Nudge a node (relative move)
 
 ```bash
 # Move BK 4 rows north
@@ -1286,7 +1272,7 @@ curl -s -XPOST http://localhost:1367/api/coords/KRN/nudge \
   -d '{"dr":0,"dc":8}' | jq
 ```
 
-### 17.8 Swap two nodes' positions
+### 17.7 Swap two nodes' positions
 
 ```bash
 curl -s -XPOST http://localhost:1367/api/coords/swap \
@@ -1294,73 +1280,7 @@ curl -s -XPOST http://localhost:1367/api/coords/swap \
   -d '{"a":"J52","b":"LHR"}' | jq
 ```
 
-### 17.9 Wire both ends of a connection
-
-Sets `A.dir = B` and `B.opposite = A` atomically. Fails if either slot is already occupied.
-
-```bash
-curl -s -XPOST http://localhost:1367/api/graph/link \
-  -H 'Content-Type: application/json' \
-  -d '{"a":"LHR","aDir":"N","b":"BMA"}' | jq
-
-curl -s -XPOST http://localhost:1367/api/graph/link \
-  -H 'Content-Type: application/json' \
-  -d '{"a":"KRN","aDir":"S","b":"HKG"}' | jq
-```
-
-Error if already set:
-```json
-{ "ok": false, "error": "LHR.N already set to 'BMA' — clear it first with wb put node LHR N=null" }
-```
-
-### 17.10 Plan a junction chain (dry run)
-
-```bash
-curl -s -XPOST http://localhost:1367/api/graph/fill-gap \
-  -H 'Content-Type: application/json' \
-  -d '{
-    "from": "KRN",
-    "dir": "S",
-    "to": "HKG",
-    "maxGap": 4,
-    "step": 4,
-    "terrain": "inherit",
-    "dryRun": true
-  }' | jq '{junctionsNeeded, plan, conflicts}'
-```
-
-Execute after reviewing the plan (remove `"dryRun": true`):
-```bash
-curl -s -XPOST http://localhost:1367/api/graph/fill-gap \
-  -H 'Content-Type: application/json' \
-  -d '{
-    "from": "KRN",
-    "dir": "S",
-    "to": "HKG",
-    "maxGap": 4,
-    "step": 4,
-    "terrain": "inherit",
-    "resolveConflicts": "shift"
-  }' | jq
-```
-
-### 17.11 Fix a diagonal connection (corner junction)
-
-When two nodes connect diagonally (different row AND column), place a corner junction at the axis intersection:
-
-```bash
-curl -s -XPOST http://localhost:1367/api/graph/corner-junction \
-  -H 'Content-Type: application/json' \
-  -d '{
-    "nodeA": "ROT",
-    "dirA": "E",
-    "nodeB": "NRG",
-    "dirB": "N",
-    "sharedTarget": "SHW"
-  }' | jq
-```
-
-### 17.12 Layout solver
+### 17.8 Layout solver
 
 ```bash
 # Propose a layout from a root node outward
@@ -1375,7 +1295,7 @@ curl -s -XPOST http://localhost:1367/api/layout/apply \
   -d "{\"coords\": $(cat /tmp/proposed-layout.json)}" | jq
 ```
 
-### 17.13 Save to disk — the deliberate dated backup
+### 17.9 Save to disk — the deliberate dated backup
 
 ```bash
 ./bin/api save            # POST /api/save — dated backup beside the game file, then overwrite + reload
@@ -1387,7 +1307,7 @@ Every write already persists on its own (temp beside `play.html` + atomic rename
 
 Disposal keeps history by default: `./archive-snapshots.sh` turns each snapshot into a patch and then removes the file, so `--sweep` deletes only snapshots that chain already holds; `--force` discards the rest. *(§DX-02l, 2026-08-03 — before that this section printed a raw `curl`, which is precisely what §3's golden rule says never to fall back to.)*
 
-### 17.14 Help topics (server-side man pages)
+### 17.10 Help topics (server-side man pages)
 
 ```bash
 curl -s 'http://localhost:1367/api/help'           | jq '.topics'
@@ -1463,7 +1383,6 @@ all                 Full combined export
 /api/list/node?q=birka
 /api/list/node?no_coords=true
 /api/list/node?has_quests=true
-/api/list/node?junction=true
 /api/list/node?ids=true
 
 /api/list/quest?node=LHR
@@ -1493,17 +1412,12 @@ GET  /api/coords                              All coordinates
 GET  /api/coords/near/{code}?radius=N         Nearby search
 GET  /api/graph/validate/{code}               One node's cell: arrivable, neighbours
 GET  /api/graph/broken                        Isolated cells (./bin/api broken)
-GET  /api/graph/path/{from}/{to}?maxGap=4     Walkable path
 
 PUT  /api/coords/{code}  {"r":N,"c":N}        Set absolute position
 POST /api/coords/{code}/nudge {"dr":N,"dc":N} Move relative
 POST /api/coords/swap {"a":"X","b":"Y"}        Swap two nodes
 
-POST /api/graph/link   {"a","aDir","b"}        Wire both link ends
-POST /api/graph/junction {...}                 Create one junction
-POST /api/graph/corner-junction {...}          Fix diagonal connection
-POST /api/graph/fill-gap {..., dryRun:true}    Plan junction chain
-POST /api/graph/fill-gap {..., dryRun:false}   Execute junction chain
+Connectivity is cell adjacency (§CELL-01): the junction routes and fill-gap answer 410.
 
 GET  /api/layout/solve?root=LHR&step=8        Propose layout
 POST /api/layout/apply {"coords":{...}}        Apply layout
@@ -1590,8 +1504,6 @@ curl -s 'http://localhost:1367/api/list/monster?tier=easy' | jq '[.[] | .key]'
 curl -s http://localhost:1367/api/coords | \
   jq '[to_entries[] | select(.value.r==104 and .value.c==172) | .key]'
 
-# Can BK reach TRD (walkable path)?
-curl -s 'http://localhost:1367/api/graph/path/BK/TRD?maxGap=4' | jq '{reachable,fix}'
 
 # How many isolated cells?
 curl -s 'http://localhost:1367/api/graph/broken' | jq .broken
@@ -1631,31 +1543,18 @@ EOF
 ./bin/api get node KRN
 curl -s 'http://localhost:1367/api/coords/near/KRN?radius=12' | jq '.nearby[:5]'
 
-# 2. Create the node
+# 2. Create the node on a free cell beside KRN: the neighbouring cell is the connection
 ./bin/api post node \
   code=VAULT \
   name=crypt \
   label="The Sealed Vault" \
   act=2 \
-  N=KRN
+  r=3 c=200          # KRN is r:2 c:200, so this is the cell south of it
 
-# 3. Wire the reverse link
-./bin/api put node KRN S=VAULT
-
-# Or do both ends at once via graph/link:
-curl -s -XPOST http://localhost:1367/api/graph/link \
-  -H 'Content-Type: application/json' \
-  -d '{"a":"KRN","aDir":"S","b":"VAULT"}' | jq
-
-# 4. Set coordinates
-curl -s -XPUT http://localhost:1367/api/coords/VAULT \
-  -H 'Content-Type: application/json' \
-  -d '{"r":124,"c":136}' | jq
-
-# 5. Check the node's cell: arrivable, and next to occupied cells
+# 3. Check the node's cell: arrivable, and next to occupied cells
 curl -s 'http://localhost:1367/api/graph/validate/VAULT' | jq '{arrivable, heat}'
 
-# 6. Add a quest
+# 4. Add a quest
 ./bin/api post quest \
   id=quest_vault_01 \
   type=combat \
@@ -1667,13 +1566,13 @@ curl -s 'http://localhost:1367/api/graph/validate/VAULT' | jq '{arrivable, heat}
   activateNode=VAULT \
   waypointNode=VAULT
 
-# 7. Composite view
+# 5. Composite view
 ./bin/api location VAULT
 
-# 8. Audit
+# 6. Audit
 ./bin/api audit --map
 
-# 9. Dated backup (the writes above already reached disk)
+# 7. Dated backup (the writes above already reached disk)
 ./bin/api save
 ```
 
