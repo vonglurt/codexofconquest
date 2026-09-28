@@ -71,11 +71,6 @@
 > **The write half shipped under §DX-02fj (2026-09-28):** every write through `saveAndRestart`, `saveAndVerify`, `import/book` and `batch/npc` now refuses a save that leaves a populated collection empty, and puts the previous file back; §DX-02ls covers the three stamped-copy saves. **What stays open here** is `load()` itself: a server started on, or `/api/reload`ed onto, a file with a destroyed section still reports `loaded:true` with that collection at 0.
 > **Provenance:** §DOC-02da, finding F1.
 
-### §DX-02fj — the majority write path does not verify what it wrote (NEW 2026-08-23 during §DOC-02da, 🟡 route or assert)
-
-- [ ] **§DX-02fj — 20+ endpoints save, reload, and return 200 without comparing anything.** 🟡 `` `src/js/wbapi-server.js:function saveAndVerify(res, status, payload, expectedFields@1548` `` does a genuine post-write round trip — save, reload from disk, read the fields back, 422 on mismatch — and it is the minority path. `` `src/js/wbapi-server.js:function saveAndRestart(res, status, payload)@1520` `` is what the structural writers call, and it only `try`/`catch`es the reload, which per §DX-02fi cannot throw. **Fix:** route the structural writers through `saveAndVerify`, or give `saveAndRestart` a minimal count assertion.
-> **Provenance:** §DOC-02da, finding F2.
-
 ### §DX-02fm — `WORLD_DB` has a string writer but no structured writer (NEW 2026-08-23 during §DOC-02da, 🟡 one map entry)
 
 - [ ] **§DX-02fm — any non-string terrain field 422s with `unknown type`.** 🟡 `` `src/js/wbapi-core.js:editStructuredField(type, idOrTitle, field, value, opts)@1500` `` omits `terrain` from its `sectionMap`, though `` `src/js/wbapi-core.js:editField(type, idOrTitle, field, value)@1279` `` carries it (added by §DX-02h). **Measured in-process:** `editStructuredField('terrain','city','testNum',5)` → `{ok:false, error:'unknown type'}` → HTTP 422. It fails loudly, which is §DX-02h's lesson correctly applied — but the message blames the *type*, which is fine, instead of naming the missing *strategy*. **Fix:** add `terrain:'WORLD_DB'` (the roster guard in `editField` shows the pattern for the `monsters` exception), or reword the error.
@@ -190,6 +185,6 @@
 
 ## §RESUME — Phase 5 history
 
-> **Completed work is not carried here.** The 84 closed increments for this phase are condensed in **[`../archive/backlog-resume-history.md`](../archive/backlog-resume-history.md)**; full prose for recent closes is in [`plan-archive.md`](plan-archive.md). This file carries open rows only.
+> **Completed work is not carried here.** The 85 closed increments for this phase are condensed in **[`../archive/backlog-resume-history.md`](../archive/backlog-resume-history.md)**; full prose for recent closes is in [`plan-archive.md`](plan-archive.md). This file carries open rows only.
 
 > When an increment ships: write the full entry into `plan-archive.md`, add its one-line row to `../archive/backlog-resume-history.md` and to the cross-phase table in [`BACKLOG.md`](BACKLOG.md), and delete the row from this file.

@@ -19,6 +19,17 @@
 
 ---
 
+## Archived 2026-09-28 — §DX-02fj (writes refuse an emptied collection)
+
+### §DX-02fj — the majority write path does not verify what it wrote (NEW 2026-08-23 during §DOC-02da, 🟡 route or assert)
+
+- [x] ✅ SHIPPED 2026-09-28 `2ab9569` **§DX-02fj — 20+ endpoints save, reload, and return 200 without comparing anything.** 🟡 `` `src/js/wbapi-server.js:function saveAndVerify(res, status, payload, expectedFields@1548` `` does a genuine post-write round trip — save, reload from disk, read the fields back, 422 on mismatch — and it is the minority path. `` `src/js/wbapi-server.js:function saveAndRestart(res, status, payload)@1520` `` is what the structural writers call, and it only `try`/`catch`es the reload, which per §DX-02fi cannot throw. **Fix:** route the structural writers through `saveAndVerify`, or give `saveAndRestart` a minimal count assertion.
+> **Provenance:** §DOC-02da, finding F2.
+
+> **SHIPPED 2026-09-28 `2ab9569` — the count assertion, made exact and extended to restoring the file.** Re-measured at HEAD: `saveAndRestart` has **33** callers and `saveAndVerify` **7**, and §DX-02fi's premise reproduces — a broken `QUEST_DB` loads **2,853 → 0** quests with `loaded:true`. **Why no tolerance band:** all four parsers fail all-or-nothing (`catch → {}`), so a destroyed section shows as *populated → empty*, never as a partial loss. `reloadGuarded` records the size of **14** loaded collections and the file's text before the save, reloads, and if any collection that had entries is empty, writes the previous text back (temp + rename), refreshes the source digest, reloads, and answers **500** naming the section and its count (`questDb 2853 → 0`). The write fails and the file doesn't. Wired into `saveAndRestart`, `saveAndVerify`, and the two routes that call `saveGameFile` directly, `import/book` and `batch/npc`. **Verified:** no API write is known to corrupt a section (`__fn` is compiled by `isFunctionSource`, and `substituteText` refuses quotes, backslashes and newlines), so the restore path was driven by lifting the real `reloadGuarded` and running it against a scratch copy of `play.html`: broken save → refused, file byte-identical, 2,853 quests reloaded, digest refreshed; good save → passes. `test:write`, `test:help` and `test:mud` issue real writes through these paths and none tripped. **Filed §DX-02ls:** `POST /api/save` and `nuke-junctions` copy a stamped save over the file and reload unguarded. §DX-02fi keeps the load-time half (start-up and `/api/reload`). `check:walk` **41/41** · `npm test` **225 / 1,087** here (no Chromium; the two standing non-launch failures).
+
+---
+
 ## Archived 2026-09-28 — §DX-02cu (allowlist isolation warns at save)
 
 ### §DX-02cu — the ACL editor lets a player isolate their server in two clicks with no warning (NEW 2026-08-17 during §DOC-02bx, 🟡 small design call: warn, guard, or leave)
