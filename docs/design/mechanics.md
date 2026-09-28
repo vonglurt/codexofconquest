@@ -1037,7 +1037,7 @@ Two servers sync only if their `(proto, engineVer, worldHash)` match exactly. `w
 | `S_story.frobergerLastEntryRead` | boolean | true after player finds Journal Entry 41 |
 | `S_story.journalEntriesRead` | array | entryNums of FROBERGER_JOURNAL collectible entries found |
 | `S_story.ebNegotiatedPayments` | object | ebCode → gold accepted during payment negotiation |
-| `S_story.storyAct` | number | Current act (1–8), campaign progress: `1 + shards held`, never falls; advanced by `_advanceStoryAct()` on a shard pickup and on load (§DX-02ft). Not the node's `act` field |
+| `S_story.storyAct` | number | Current act (1–8), campaign progress: `1 + shards held`, never falls; advanced by `_advanceStoryAct()` on a shard pickup and on load (§DX-02ft). Not the node's `act` field; the sidebar shows it as 📜 Story (§DX-02ft-FU3) |
 | `S_story.currentCode` | string | Current node code; set on each navigation event |
 | `S_story.roughWhiskeyUsed` | boolean | true after Rough Whiskey drunk-pit-fight scene fires |
 | `S_story.pitTrainingWins` | number | CY battle wins while quest_pit_training active |

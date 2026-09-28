@@ -4182,6 +4182,7 @@ body.act-three .npc-card-chip { filter: saturate(0.85); }
         <div class="stat-row"><span class="stat-lbl">🧪 Potions</span><span class="stat-val" id="s-potions">×0</span></div>
         <div class="stat-row"><span class="stat-lbl">💰 Gold</span><span class="stat-val" id="s-gold">50gp</span></div>
         <div class="stat-row"><span class="stat-lbl">📅 Day</span><span class="stat-val" id="s-day">1/49</span></div>
+        <div class="stat-row"><span class="stat-lbl">📜 Story</span><span class="stat-val" id="s-story-act" title="The campaign act: one per shard held. The badge above names the region you stand in.">Act I</span></div>
         <div class="stat-row"><span class="stat-lbl">🌙 Rest</span><span class="stat-val" id="s-rests">3/3</span></div>
         <div class="stat-row"><span class="stat-lbl">⏱ Hours</span><span class="stat-val" id="s-hours">0h</span></div>
         <div class="stat-row"><span class="stat-lbl">😴 Awake</span><span class="stat-val" id="s-awake">0h</span></div>
@@ -36507,6 +36508,12 @@ document.addEventListener('pointerdown', function _organResume() {
   if (wanted && !_organPlaying) setTimeout(() => { if (!_organPlaying) _organToggle(); }, 0);
 });
 
+// The act the story gates on (storyAct), as the sidebar prints it. The act badge above it
+// names the region underfoot (ACT_NAMES[node.act]), which is a different thing.
+function _storyActLabel() {
+  return 'Act ' + ['I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII'][Math.min(8, Math.max(1, S_story.storyAct || 1)) - 1];
+}
+
 function storyUpdateStatus() {
   const hpEl = document.getElementById('s-hp');
   hpEl.textContent = S_story.hp + '/' + S_story.hpMax;
@@ -36556,6 +36563,7 @@ function storyUpdateStatus() {
   dayEl.textContent = S_story.day + '/49';
   dayEl.className = 'stat-val' + _dayAlarm(S_story.day);
   document.getElementById('s-shards').textContent = S_story.shards + '/7';
+  document.getElementById('s-story-act').textContent = _storyActLabel();
   const voidEl = document.getElementById('s-void');
   voidEl.textContent = S_story.voidPressure + '/10';
   voidEl.className = 'inv-stat-val' + (S_story.voidPressure >= 7 ? ' danger' : S_story.voidPressure >= 4 ? ' warn' : '');
