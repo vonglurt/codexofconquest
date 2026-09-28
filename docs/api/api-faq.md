@@ -383,7 +383,7 @@ Returns every available list route with counts, available filters, and example p
 curl -s http://localhost:1367/api/location | jq 'length'
 ```
 
-Each entry: `{ code, label, terrain, act, counts:{quests, npcs, monsters, linkedNodes} }`.
+Each entry: `{ code, label, terrain, act, counts:{quests, npcs, monsters}, hasCoords }`.
 
 ### 6.2 Filter locations
 

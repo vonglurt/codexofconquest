@@ -2312,7 +2312,7 @@ async function route(req, res) {
           '  Upstream and downstream quest chain for a quest.',
           '',
           `GET ${b}/api/location/{code}[?with=quests,monsters,npcs,waypointQuests|all][:summary]`,
-          '  Composite view: node + terrain + coords + links + counts, and pointers to the',
+          '  Composite view: node + terrain + coords + neighbours + counts, and pointers to the',
           '  verbs that return the rest. The four entity collections are OPT-IN (§DX-02kn):',
           '  inlining them cost 327 KB at NUE (177 full quest bodies) against 2 KB now, and',
           '  ?with=monsters restores terrain.monsters with them. ?with=all is the old shape,',
@@ -9550,7 +9550,7 @@ async function route(req, res) {
       if (omitted.length) out._with = `Inline them: GET /api/location/${rawId}?with=${omitted.join(',')} (or ?with=all). ` +
         `\`monsters\` also restores terrain.monsters. Ids and titles only: ?with=all:summary, or quests:summary and the like.`;
       logRow('location', `${rawId}  ·  ${node.label||rawId}  ·  Act ${node.act||'?'}`);
-      logRow('connections', `${out.counts.monsters} monsters  ·  ${out.counts.quests} quests  ·  ${out.counts.npcs} NPCs  ·  ${out.counts.linkedNodes} links`);
+      logRow('connections', `${out.counts.monsters} monsters  ·  ${out.counts.quests} quests  ·  ${out.counts.npcs} NPCs  ·  ${out.counts.neighbours} neighbours`);
       logResponse(method, url.pathname, 200, `location/${rawId}`);
       return json(res, 200, out);
     }

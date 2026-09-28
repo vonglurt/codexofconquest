@@ -225,7 +225,7 @@ The four entity collections — `quests`, `waypointQuests`, `monsters`, `npcs` �
 into full statblocks) travels with `monsters`:
 
 ```bash
-./bin/api location NUE                 # 2,233 B — node, terrain, coords, links, counts, pointers
+./bin/api location NUE                 # 2,233 B — node, terrain, coords, neighbours, counts, pointers
 ./bin/api location NUE --with quests   # + the quest bodies
 ./bin/api location NUE --with all      # the old shape, byte for byte
 ./bin/api location NUE --with all:summary  # ids and titles only: {id,title} per quest, {key,name} per monster/npc
