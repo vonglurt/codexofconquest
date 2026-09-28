@@ -3,6 +3,7 @@
 # sayd.sh — say daemon; speaks queued messages one at a time
 # Started automatically by say.sh; exits after ~10s of idle queue.
 # Kill cleanly: kill $(cat build/milepoints/sayd.pid)
+# SAY_CMD="espeak-ng -s 190" replaces macOS say; the message is appended as the last argument.
 #
 VOICES=(
     "Samantha"          # en_US female
@@ -31,6 +32,17 @@ mkdir -p "$QUEUE_DIR"
 printf '%d\n' $$ > "$PID_FILE"
 trap 'rm -f "$PID_FILE"' EXIT INT TERM
 
+if [[ -n "$SAY_CMD" ]]; then
+    read -ra SPEAK <<<"$SAY_CMD"
+else
+    SPEAK=(say)
+fi
+if ! command -v "${SPEAK[0]}" >/dev/null 2>&1; then
+    printf 'sayd.sh %s: no speech backend (%s not found); draining the queue unspoken\n' \
+        "$(date '+%F %T')" "${SPEAK[0]}" >&2
+    SPEAK=()
+fi
+
 idle=0
 while true; do
     NEXT=$(ls "$QUEUE_DIR" 2>/dev/null | grep '\.txt$' | sort | head -1)
@@ -42,14 +54,17 @@ while true; do
         if mv "$FILE" "$WORK" 2>/dev/null; then
             TEXT=$(cat "$WORK")
             rm -f "$WORK"
-            if [[ -n "$TEXT" ]]; then
-                VOICE="${VOICES[RANDOM % ${#VOICES[@]}]}"
-                python3 - "$LOCK_FILE" "$VOICE" "$RATE" "$TEXT" <<'PY'
+            if [[ -n "$TEXT" && ${#SPEAK[@]} -gt 0 ]]; then
+                if [[ -n "$SAY_CMD" ]]; then
+                    CMD=("${SPEAK[@]}" "$TEXT")
+                else
+                    CMD=(say -v "${VOICES[RANDOM % ${#VOICES[@]}]}" -r "$RATE" "$TEXT")
+                fi
+                python3 - "$LOCK_FILE" "${CMD[@]}" <<'PY'
 import fcntl, subprocess, sys
-lock_file, voice, rate, text = sys.argv[1:]
-with open(lock_file, "w") as lf:
+with open(sys.argv[1], "w") as lf:
     fcntl.flock(lf, fcntl.LOCK_EX)
-    subprocess.run(["say", "-v", voice, "-r", rate, text])
+    subprocess.run(sys.argv[2:])
 PY
             fi
         fi
