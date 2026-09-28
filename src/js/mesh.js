@@ -22,6 +22,8 @@
 //   broadcastAll(ev,data,excludeId)        — SSE fanout to every local session
 //   pushChat(entry)                        — §MESH-01-FU 13 chat backlog ring
 //   ledgerVVObj(), ledgerSyncWith(addr,vv) — §MESH-01i durable-ledger anti-entropy hooks
+//   signEnvelope(p), verifyEnvelope(p),    — §MESH-03g: the payload is signed by its origin's
+//   pinEnvelope(p)                            key and bound to its serverId like a ledger event
 
 const fs = require('fs');
 const path = require('path');
@@ -37,6 +39,7 @@ module.exports = function createMesh({
   getManifest, getServerId,
   broadcastCell, broadcastAll, pushChat,
   ledgerVVObj, ledgerSyncWith,
+  signEnvelope, verifyEnvelope, pinEnvelope,
 }) {
 
 // ACL — mesh-acl.json (repo root, hot-reloaded on mtime change). Applied to
@@ -213,15 +216,20 @@ function meshMergeSnapshot(originId, snap) {
   rec.lastSeen = Date.now();
   rec.sessions = new Map((snap.sessions || []).map((s) => [s.sid, { name: s.name, r: s.r, c: s.c, p8: s.p8 || null }]));
 }
+// Built and signed at most once per half gossip interval: a round dials up to three
+// peers and every inbound gossip is answered with the same payload.
+let _payload = null, _payloadAt = 0;
 function meshPayload() {
+  if (_payload && Date.now() - _payloadAt < MESH_GOSSIP_MS / 2) return _payload;
+  _payloadAt = Date.now();
   const m = getManifest();
-  return {
+  return (_payload = signEnvelope({
     serverId: getServerId(), proto: m.proto, engineVer: m.engineVer, worldHash: m.worldHash,
     addr: meshAdvertise(), vv: MESH.vv,
     events: MESH.log.slice(-100), snapshot: localSnapshot(),
     peers: [...MESH.peers.keys()].slice(0, 20),
     ledgerVV: ledgerVVObj(),   // §MESH-01i slice 2: advertises the durable-chain frontier; a mismatch triggers anti-entropy
-  };
+  }));
 }
 // Ingest one gossip payload (from an inbound POST or an outbound round's
 // response). Compatibility gate first, ACL second, then single-writer merge.
@@ -238,6 +246,12 @@ function meshIngest(p, ip) {
     pushTraffic('in', 'gossip', from, false, `refused: ACL (${String(p.serverId).slice(0, 8)})`);
     return { status: 403, body: { ok: false, reason: 'acl' } };
   }
+  const unproven = verifyEnvelope(p);
+  if (unproven) {
+    pushTraffic('in', 'gossip', from, false, `refused: ${unproven} (${String(p.serverId).slice(0, 8)})`);
+    return { status: 401, body: { ok: false, reason: unproven } };
+  }
+  pinEnvelope(p);
   pushTraffic('in', 'gossip', from, true, `${(p.events || []).length} ev · snap ${(p.snapshot && p.snapshot.sessions || []).length} · ${(p.peers || []).length} px · ${String(p.serverId).slice(0, 8)}`);
   if (p.addr && p.addr !== meshAdvertise()) {
     const rec = MESH.peers.get(p.addr) || {};
@@ -276,7 +290,9 @@ async function meshGossipRound() {
         });
         const data = await resp.json().catch(() => ({}));
         const rec = MESH.peers.get(addr) || {};
-        if (resp.ok && data.ok && data.serverId && aclAllows({ serverId: data.serverId, worldHash: data.worldHash })) {
+        const unproven = resp.ok && data.ok && data.serverId ? verifyEnvelope(data) : null;
+        if (resp.ok && data.ok && data.serverId && !unproven && aclAllows({ serverId: data.serverId, worldHash: data.worldHash })) {
+          pinEnvelope(data);
           MESH.peers.set(addr, { ...rec, serverId: data.serverId, lastSeen: Date.now(), lastErr: null });
           meshMergeEvents(data.serverId, data.events);
           meshMergeSnapshot(data.serverId, data.snapshot);
@@ -286,8 +302,8 @@ async function meshGossipRound() {
           if (data.ledgerVV) ledgerSyncWith(addr, data.ledgerVV).catch(() => {});   // §MESH-01i slice 2
           pushTraffic('out', 'gossip', addr, true, `⇄ ${(data.events || []).length} ev · snap ${(data.snapshot && data.snapshot.sessions || []).length} · ${(data.peers || []).length} px`);
         } else {
-          MESH.peers.set(addr, { ...rec, lastErr: data.reason || `http-${resp.status}` });
-          pushTraffic('out', 'gossip', addr, false, `refused: ${data.reason || resp.status}`);
+          MESH.peers.set(addr, { ...rec, lastErr: unproven || data.reason || `http-${resp.status}` });
+          pushTraffic('out', 'gossip', addr, false, `refused: ${unproven || data.reason || resp.status}`);
         }
       } catch (e) {
         const rec = MESH.peers.get(addr) || {};

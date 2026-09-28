@@ -628,6 +628,22 @@ async function main() {
     body: JSON.stringify({ serverId: idP, proto: manA.proto, engineVer: manA.engineVer, worldHash: manA.worldHash, addr: `localhost:${PORT + 18}` }),
   });
   check(gSplit.status === 403, 'gossip from a blocked serverId is refused with 403 (the partition mechanism itself)');
+  const spoof = await fetch(mP.base + '/api/mesh/gossip', {
+    method: 'POST', headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ serverId: idQ, proto: manA.proto, engineVer: manA.engineVer, worldHash: manA.worldHash, addr: `localhost:${PORT + 99}`,
+      snapshot: { seq: 1e9, sessions: [] }, events: [{ seq: 1e9, ts: Date.now(), type: 'chat_world', data: { name: 'Mallory', msg: 'spoofed-world-chat' } }] }),
+  });
+  const spoofKey = crypto.generateKeyPairSync('ed25519');
+  const spoofBody = { serverId: idQ, proto: manA.proto, engineVer: manA.engineVer, worldHash: manA.worldHash, addr: `localhost:${PORT + 99}`,
+    snapshot: { seq: 1e9, sessions: [] }, events: [{ seq: 1e9 + 1, ts: Date.now(), type: 'chat_world', data: { name: 'Mallory', msg: 'spoofed-world-chat' } }],
+    pub: spoofKey.publicKey.export({ format: 'der', type: 'spki' }).subarray(12).toString('base64') };
+  spoofBody.sig = crypto.sign(null, Buffer.from(JSON.stringify(spoofBody)), spoofKey.privateKey).toString('base64');
+  const spoofSigned = await fetch(mP.base + '/api/mesh/gossip', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(spoofBody) })
+    .then(async (r) => ({ status: r.status, ...(await r.json()) }));
+  await sleep(300);
+  check(spoof.status === 401 && spoofSigned.status === 401 && spoofSigned.reason === 'key-mismatch'
+      && countEv(ssePia, 'chat', (d) => d.msg === 'spoofed-world-chat') === 0,
+    'gossip in another server’s name — unsigned, or signed by a key that is not the one pinned for it — is refused and its chat never reaches a player');
 
   // Events DURING the split — kept brief so partition-era events are still
   // fresh (< MESH_FANOUT_MAX_AGE) when the link heals and they first cross it.

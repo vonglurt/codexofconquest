@@ -351,11 +351,16 @@ function ledgerPreimage(evt) {
   return Buffer.from(ledgerCanonical(rest));
 }
 const signCanonical = (v) => crypto.sign(null, Buffer.isBuffer(v) ? v : Buffer.from(ledgerCanonical(v)), getServerKey().priv).toString('base64');
+const _pubKeys = new Map();
 function verifyCanonical(v, pubB64, sigB64) {
   try {
-    const raw = Buffer.from(String(pubB64), 'base64');
-    if (raw.length !== 32) return false;
-    const key = crypto.createPublicKey({ key: Buffer.concat([ED25519_SPKI_PREFIX, raw]), format: 'der', type: 'spki' });
+    let key = _pubKeys.get(pubB64);
+    if (!key) {
+      const raw = Buffer.from(String(pubB64), 'base64');
+      if (raw.length !== 32) return false;
+      key = crypto.createPublicKey({ key: Buffer.concat([ED25519_SPKI_PREFIX, raw]), format: 'der', type: 'spki' });
+      if (_pubKeys.size < 1024) _pubKeys.set(pubB64, key);
+    }
     return crypto.verify(null, Buffer.isBuffer(v) ? v : Buffer.from(ledgerCanonical(v)), key, Buffer.from(String(sigB64), 'base64'));
   } catch { return false; }
 }
@@ -387,6 +392,22 @@ function keyPin(originId, pubB64) {
     fs.writeFileSync(keyPinsFile(), JSON.stringify(Object.fromEntries(KEY_PINS.map), null, 2));
   } catch (e) { log('WARN', `ledger: could not persist keys.json (${e.message})`); }
 }
+// A gossip payload is signed over its JSON text minus `sig` and the response's `ok`.
+// JSON.parse keeps key order, so the receiver's JSON.stringify of what arrived is the
+// signed text, at native speed; gossip runs every MESH_GOSSIP_MS on every peer.
+// Its serverId is bound to its key exactly as a ledger origin is.
+const envelopeText = ({ sig, ok, ...rest }) => Buffer.from(JSON.stringify(rest));
+function signEnvelope(p) {
+  const body = JSON.parse(JSON.stringify({ ...p, pub: getServerKey().pub }));
+  return { ...body, sig: signCanonical(envelopeText(body)) };
+}
+function verifyEnvelope(p) {
+  if (!p.pub || !p.sig) return 'unsigned';
+  if (!verifyCanonical(envelopeText(p), p.pub, p.sig)) return 'bad-sig';
+  if (!keyBinding(p.serverId, p.pub)) return 'key-mismatch';
+  return null;
+}
+function pinEnvelope(p) { keyPin(p.serverId, p.pub); }
 // What a counterparty origin signs to agree to a cross-origin trade; rebuilt from
 // the event's transfers at validation, so the assent cannot be moved to other terms.
 function tradeTerms(tradeId, from, to, give, want) {
@@ -816,6 +837,7 @@ const {
   getManifest, getServerId,
   broadcastCell, broadcastAll, pushChat,
   ledgerVVObj, ledgerSyncWith,
+  signEnvelope, verifyEnvelope, pinEnvelope,
 });
 
 // ── §NAV-01g — roads-pins.json (worldbuilder pins: forced road links + locked cities) ──
