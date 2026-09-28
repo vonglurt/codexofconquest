@@ -149,10 +149,19 @@ test.describe('§MESH-03d — a pack travels A → tracker → B, and only intac
     c.stdin.end();
     c.on('close', (status) => resolve({ status, stdout, stderr }));
   });
+  const waitUp = async (port) => {
+    for (let i = 0; i < 200; i++) {
+      try { if ((await fetch(`${url(port)}/api/ping`)).ok) return true; } catch {}
+      await new Promise(r => setTimeout(r, 100));
+    }
+    return false;
+  };
   const boot = (name, port, env) => {
     const d = path.join(dir, name);
-    fs.mkdirSync(d);
-    fs.copyFileSync(path.join(ROOT, 'play.html'), path.join(d, 'play.html'));
+    if (!fs.existsSync(d)) {
+      fs.mkdirSync(d);
+      fs.copyFileSync(path.join(ROOT, 'play.html'), path.join(d, 'play.html'));
+    }
     children[name] = spawn(process.execPath, [path.join(ROOT, 'src', 'js', 'wbapi-server.js')], {
       cwd: ROOT,
       env: { ...process.env, PORT: String(port), CODEXOFCONQUEST_FILE: path.join(d, 'play.html'),
@@ -163,6 +172,11 @@ test.describe('§MESH-03d — a pack travels A → tracker → B, and only intac
     });
   };
   const qid = Object.keys(WB.questDb).find((k) => (WB.questDb[k].killGoals || []).length && WB.shareable('quest', k).shareable);
+  const [qid2, qid3] = Object.keys(WB.questDb).filter((k) => k !== qid && WB.shareable('quest', k).shareable);
+  const titleOnDisk = (file, key) => spawnSync(process.execPath, ['-e',
+    `const W = require(${JSON.stringify(path.join(ROOT, 'src', 'js', 'wbapi-core.js'))}); W.load(process.argv[1]); process.stdout.write(W.questDb[process.argv[2]].title)`,
+    file, key], { encoding: 'utf8' }).stdout;
+  let published, foreign;
 
   test.beforeAll(async () => {
     dir = fs.mkdtempSync(path.join(os.tmpdir(), 'coc-mesh03d-mesh-'));
@@ -170,14 +184,8 @@ test.describe('§MESH-03d — a pack travels A → tracker → B, and only intac
     boot('a', PA, { TRACKER_URL: url(PT) });
     boot('b', PB, { TRACKER_URL: url(PT) });
     const died = watchChildren(children);
-    for (const port of [PT, PA, PB]) {
-      let up = false;
-      for (let i = 0; i < 200 && !up; i++) {
-        try { up = (await fetch(`${url(port)}/api/ping`)).ok; } catch {}
-        if (!up) await new Promise(r => setTimeout(r, 100));
-      }
-      if (!up) throw new Error(`throwaway wbapi-server did not answer on :${port}` + (died.length ? ` — ${died.join('; ')}` : ''));
-    }
+    for (const port of [PT, PA, PB])
+      if (!await waitUp(port)) throw new Error(`throwaway wbapi-server did not answer on :${port}` + (died.length ? ` — ${died.join('; ')}` : ''));
   });
 
   test.afterAll(() => {
@@ -191,6 +199,7 @@ test.describe('§MESH-03d — a pack travels A → tracker → B, and only intac
     const made = cli(PA, 'pack', 'create', qid);
     const id = (made.stdout.match(/pack ([0-9a-f]{64})/) || [])[1];
     expect(id).toBeTruthy();
+    published = id;
 
     expect(cli(PA, 'pack', 'publish', id).status).toBe(0);
     const index = await (await fetch(`${url(PT)}/api/tracker/packs`)).json();
@@ -236,6 +245,7 @@ test.describe('§MESH-03d — a pack travels A → tracker → B, and only intac
       quests: { mesh03d_foreign: { id: 'mesh03d_foreign', title: 'Foreign', onComplete: { __fn: '() => 1' } } } });
     fs.mkdirSync(path.join(dir, 'b', 'packs'), { recursive: true });
     fs.writeFileSync(path.join(dir, 'b', 'packs', id + '.json'), JSON.stringify(pack));
+    foreign = id;
     const rev = await (await fetch(`${url(PB)}/api/pack/${id}/review`)).json();
     expect(rev.integrity).toBeNull();
     expect(rev.quests[0]).toMatchObject({ key: 'mesh03d_foreign', status: 'new', shareable: false });
@@ -244,5 +254,52 @@ test.describe('§MESH-03d — a pack travels A → tracker → B, and only intac
     const r = cli(PB, 'pack', 'review', id);
     expect(r.status).toBe(1);
     expect(r.stderr).toContain('refuse');
+  });
+
+  test('B accepts one pack, trusts an author for another, and a restart lands both whole or not at all', async () => {
+    const refused = cli(PB, 'pack', 'accept', foreign);
+    expect(refused.status).toBe(1);
+    expect(refused.stdout).toContain('function value at onComplete');
+    expect(cli(PB, 'pack', 'accept', published).status).toBe(0);
+
+    const aPub = (await (await fetch(`${url(PA)}/api/manifest`)).json()).pub;
+    expect(cli(PB, 'mesh', 'acl', `allowAuthors=${aPub}`).status).toBe(0);
+    expect(cli(PA, 'put', 'quest', qid2, 'title=A second retitle').status).toBe(0);
+    const id2 = (cli(PA, 'pack', 'create', qid2).stdout.match(/pack ([0-9a-f]{64})/) || [])[1];
+    expect(cli(PA, 'pack', 'publish', id2).status).toBe(0);
+    const got = cli(PB, 'pack', 'fetch', id2);
+    expect(got.status).toBe(0);
+    expect(got.stdout).toContain('its author is in allowAuthors: accepted');
+
+    const bad = packsWith(keypair()).makePack({ base: 'x', monsters: {}, quests: {
+      [qid3]: { ...WB.entryWithFns('quest', qid3).entry, title: 'Never lands' },
+      mesh03d_incomplete: { id: 'mesh03d_incomplete', title: 'Incomplete', type: 'side', activateNode: WB.questDb[qid].activateNode },
+    } });
+    fs.writeFileSync(path.join(dir, 'b', 'packs', bad.id + '.json'), JSON.stringify(bad.pack));
+    expect(cli(PB, 'pack', 'accept', bad.id).status).toBe(0);
+
+    const bFile = path.join(dir, 'b', 'play.html');
+    expect(titleOnDisk(bFile, qid)).toBe(WB.questDb[qid].title);
+    const before = (await (await fetch(`${url(PB)}/api/manifest`)).json()).contentHash;
+    const aHash = (await (await fetch(`${url(PA)}/api/manifest`)).json()).contentHash;
+    expect(before).not.toBe(aHash);
+
+    await new Promise((r) => { children.b.once('exit', r); children.b.kill('SIGTERM'); });
+    boot('b', PB, { TRACKER_URL: url(PT) });
+    expect(await waitUp(PB)).toBe(true);
+    let acc;
+    await expect.poll(async () => {
+      acc = (await (await fetch(`${url(PB)}/api/pack`)).json()).accepted;
+      return acc.queued.length;
+    }, { timeout: 30000 }).toBe(0);
+
+    expect(acc.applied.map((a) => a.id)).toEqual([published, id2]);
+    expect(acc.failed.map((f) => f.id)).toEqual([bad.id]);
+    expect(acc.failed[0].error).toContain('POST /api/quest → 422');
+    expect(titleOnDisk(bFile, qid)).toBe('A retitled task');
+    expect(titleOnDisk(bFile, qid2)).toBe('A second retitle');
+    expect(titleOnDisk(bFile, qid3)).toBe(WB.questDb[qid3].title);
+    expect(fs.readFileSync(bFile, 'utf8')).not.toContain('mesh03d_incomplete');
+    expect((await (await fetch(`${url(PB)}/api/manifest`)).json()).contentHash).toBe(aHash);
   });
 });

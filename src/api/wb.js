@@ -401,7 +401,7 @@ const CMD = {
 
   // ── pack (§MESH-03d): signed, content-addressed quest packs ─────────────────────
   // Usage: ./bin/api pack create <quest-id>…  |  pack list  |  pack get <id> [--out file]
-  //        pack publish <id>  |  pack index  |  pack fetch <id> [--from host:port]  |  pack review <id>
+  //        pack publish <id>  |  pack index  |  pack fetch <id> [--from host:port]  |  pack review <id>  |  pack accept <id>
   async pack(pos, flags) {
     await requireServer();
     const [, sub, ...rest] = pos;
@@ -425,6 +425,18 @@ const CMD = {
       ok(`${r.body.count} pack(s)`);
       for (const p of r.body.packs)
         info(`${p.id}  ${p.quests}q ${p.monsters}m  base ${p.base}${p.mine ? '  mine' : ''}${p.published ? '  published' : ''}`);
+      const acc = r.body.accepted;
+      for (const id of acc.queued) info(`${id}  queued: applied at the next restart`);
+      for (const a of acc.applied) info(`${a.id}  applied ${a.at}`);
+      for (const f of acc.failed) stderr(`${C.red}✗${C.reset} ${f.id}  not applied ${f.at}: ${f.error}\n`);
+      return;
+    }
+    if (sub === 'accept') {
+      if (!rest[0]) die('usage: ./bin/api pack accept <id>');
+      const r = await request('POST', '/api/pack/accept', { id: rest[0] });
+      if (r.status !== 200) { printError(r); process.exit(1); }
+      if (r.body.already) return ok(`pack ${r.body.id} is already applied`);
+      ok(`accepted ${r.body.id}: applied at the next restart`);
       return;
     }
     if (sub === 'publish') {
@@ -458,7 +470,9 @@ const CMD = {
       }
       if (r.body.already) return ok(`pack ${r.body.id} is already here`);
       ok(`fetched ${r.body.id} from ${r.body.from}, verified`);
-      info(`review it: ./bin/api pack review ${r.body.id}`);
+      if (r.body.autoAccepted) ok('its author is in allowAuthors: accepted, applied at the next restart');
+      else if (r.body.autoAcceptRefused) stderr(`${C.red}✗${C.reset} its author is in allowAuthors, but ${r.body.autoAcceptRefused}\n`);
+      else info(`review it: ./bin/api pack review ${r.body.id}`);
       return;
     }
     if (sub === 'review') {
@@ -486,7 +500,7 @@ const CMD = {
       if (r.status !== 200) { printError(r); process.exit(1); }
       return printResult(r.body.pack, flags);
     }
-    die(`unknown pack subcommand "${sub}" — create | list | get | publish | index | fetch | review`);
+    die(`unknown pack subcommand "${sub}" — create | list | get | publish | index | fetch | review | accept`);
   },
 
   // ── save / snapshots (§DX-02l) ──────────────────────────────────────────────
@@ -796,7 +810,7 @@ const CMD = {
     // ── §MESH-02a/g — acl: GET (no args) or validated merge-PUT (k=v args) ──
     if (sub === 'acl') {
       const body = parseKV(pos.slice(2));
-      const LISTS = ['blockServerIds', 'blockIps', 'blockWorldHashes', 'allowServerIds', 'allowIps', 'allowWorldHashes'];
+      const LISTS = ['blockServerIds', 'blockIps', 'blockWorldHashes', 'allowServerIds', 'allowIps', 'allowWorldHashes', 'allowAuthors'];
       for (const k of LISTS)   // comma-split string → array (JSON arrays pass through)
         if (k in body && typeof body[k] === 'string') body[k] = body[k].split(',').map(v => v.trim()).filter(Boolean);
       const editing = Object.keys(body).length > 0;
@@ -1719,7 +1733,7 @@ ${C.bold}═══════════════════════�
   ${C.green}dialogue${C.reset} <npc> […]      NPC_DIALOGUES entry (--create to add; meta/array edits)
   ${C.green}audit${C.reset} [--map]          Integrity scan
   ${C.green}shareable${C.reset} quest [id]    Can this quest cross servers? (no id = corpus count)
-  ${C.green}pack${C.reset} create|list|get|publish|index|fetch|review
+  ${C.green}pack${C.reset} create|list|get|publish|index|fetch|review|accept
                           Signed content packs of shareable quests (§MESH-03d)
   ${C.green}export${C.reset} <collection>    Export data as JSON / JS / ES module
   ${C.green}import${C.reset} <file.json>     Bulk import nodes + quest cycles

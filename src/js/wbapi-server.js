@@ -941,10 +941,94 @@ async function packFetch(id, from) {
       if (bad) { attempts.push({ from: src, error: bad }); continue; }
       fs.mkdirSync(PACKS_DIR, { recursive: true });
       fs.writeFileSync(path.join(PACKS_DIR, id + '.json'), JSON.stringify(pack, null, 2) + '\n');
-      return { status: 201, body: { ok: true, id, from: src, author: pack.author, attempts } };
+      const trusted = (getAcl().allowAuthors || []).includes(pack.author);
+      const auto = trusted ? packAccept(id) : null;
+      return { status: 201, body: { ok: true, id, from: src, author: pack.author, attempts,
+        autoAccepted: !!(auto && auto.status === 200), ...(auto && auto.status !== 200 ? { autoAcceptRefused: auto.body.error } : {}) } };
     } catch (e) { attempts.push({ from: src, error: (e && e.name === 'TimeoutError') ? 'timeout' : (e && e.code) || 'unreachable' }); }
   }
   return { status: 422, body: { ok: false, error: `no source served pack ${id.slice(0, 12)} intact`, attempts } };
+}
+// Accepted packs wait in PACKS_DIR/accepted.json and are applied at the next boot.
+const PACKS_ACCEPTED = () => path.join(PACKS_DIR, 'accepted.json');
+function packsAccepted() {
+  let j = {}; try { j = JSON.parse(fs.readFileSync(PACKS_ACCEPTED(), 'utf8')); } catch {}
+  const arr = (v) => (Array.isArray(v) ? v : []);
+  return { queued: arr(j.queued), applied: arr(j.applied), failed: arr(j.failed) };
+}
+function packsAcceptedWrite(st) {
+  fs.mkdirSync(PACKS_DIR, { recursive: true });
+  fs.writeFileSync(PACKS_ACCEPTED(), JSON.stringify(st, null, 2) + '\n');
+}
+function packAccept(id) {
+  const r = packReview(id);
+  if (r.status !== 200) return r;
+  if (!r.body.acceptable) return { status: 422, body: { ok: false, error: 'not acceptable: ' + (r.body.integrity
+    || [...r.body.quests, ...r.body.monsters].filter((e) => !e.shareable).map((e) => `${e.key}: ${e.reasons.join('; ')}`).join(' · ')) } };
+  const st = packsAccepted();
+  if (st.applied.some((a) => a.id === id)) return { status: 200, body: { ok: true, id, already: 'applied' } };
+  if (!st.queued.includes(id)) st.queued.push(id);
+  st.failed = st.failed.filter((f) => f.id !== id);
+  packsAcceptedWrite(st);
+  return { status: 200, body: { ok: true, id, queued: st.queued } };
+}
+// Each entry goes through this server's own routes, so every fence a hand write meets
+// applies here. A pack lands whole or not at all: any refusal restores the file.
+async function packApply(id) {
+  const pack = packRead(id);
+  const review = packReview(id).body;
+  if (!pack || !review.acceptable) return { ok: false, error: review.error || 'no longer acceptable here' };
+  const host = ['0.0.0.0', '::'].includes(BIND_ADDR) ? '127.0.0.1' : BIND_ADDR;
+  const call = async (method, p, body, headers = {}) => {
+    const resp = await fetch(`http://${host.includes(':') ? `[${host}]` : host}:${PORT}/api${p}`, { method,
+      headers: { 'Content-Type': 'application/json', ...headers }, ...(body ? { body: JSON.stringify(body) } : {}) });
+    const d = await resp.json().catch(() => ({}));
+    if (!resp.ok) throw new Error(`${method} /api${p} → ${resp.status}: ${d.error || JSON.stringify(d).slice(0, 200)}`);
+    return d;
+  };
+  const prevText = fs.readFileSync(GAME_FILE, 'utf8');
+  const steps = [];
+  try {
+    for (const [type, list, coll] of [['monster', review.monsters, pack.monsters], ['quest', review.quests, pack.quests]])
+      for (const e of list) {
+        const entry = coll[e.key], at = `/${type}/${encodeURIComponent(e.key)}`;
+        if (e.status === 'same') continue;
+        if (e.status === 'new') {
+          await call('POST', `/${type}`, type === 'monster' ? { key: e.key, ...entry } : entry);
+          steps.push(`${type} ${e.key}: created`);
+          continue;
+        }
+        const local = WBAPI.entryWithFns(type, e.key).entry;
+        const set = Object.fromEntries(Object.entries(entry).filter(([k, v]) => WORLD_DIFF.canon(local[k]) !== WORLD_DIFF.canon(v)));
+        if (Object.keys(set).length) await call('PUT', at, set);
+        const gone = Object.keys(local).filter((k) => !(k in entry));
+        for (const k of gone) {
+          const { nonce } = await call('POST', '/nonce', { type, id: e.key });
+          await call('DELETE', `${at}/field/${encodeURIComponent(k)}`, null, { 'X-Nonce': nonce });
+        }
+        steps.push(`${type} ${e.key}: ${[...Object.keys(set).map((k) => 'set ' + k), ...gone.map((k) => 'removed ' + k)].join(', ')}`);
+      }
+  } catch (err) {
+    const tmp = `${GAME_FILE}.tmp-${process.pid}`;
+    fs.writeFileSync(tmp, prevText);
+    fs.renameSync(tmp, GAME_FILE);
+    refreshSourceDigest();
+    WBAPI.load(GAME_FILE);
+    return { ok: false, error: err.message, undone: steps };
+  }
+  return { ok: true, steps };
+}
+async function packApplyQueued() {
+  const st = packsAccepted();
+  if (!st.queued.length) return;
+  for (const id of [...st.queued]) {
+    const r = await packApply(id);
+    st.queued = st.queued.filter((q) => q !== id);
+    if (r.ok) st.applied.push({ id, at: new Date().toISOString(), steps: r.steps });
+    else st.failed.push({ id, at: new Date().toISOString(), error: r.error });
+    logRow('pack', r.ok ? `applied ${id.slice(0, 12)} · ${r.steps.length} entr${r.steps.length === 1 ? 'y' : 'ies'}` : `${C.red}✗ ${id.slice(0, 12)} not applied: ${r.error}${C.reset}`);
+    packsAcceptedWrite(st);
+  }
 }
 function hasFnValue(v) {
   if (!v || typeof v !== 'object') return false;
@@ -3515,7 +3599,7 @@ async function route(req, res) {
   // Design: lab-reports/lab-report-mesh02-connections-ui.md §3.1. Blocklists are
   // share-OUT only (D2): this server never fetches or auto-imports a peer's list.
   if (parts[0] === 'mesh' && parts[1] === 'acl' && (method === 'GET' || method === 'PUT')) {
-    const ACL_LIST_KEYS = ['blockServerIds', 'blockIps', 'blockWorldHashes', 'allowServerIds', 'allowIps', 'allowWorldHashes'];
+    const ACL_LIST_KEYS = ['blockServerIds', 'blockIps', 'blockWorldHashes', 'allowServerIds', 'allowIps', 'allowWorldHashes', 'allowAuthors'];
     const readAclFile = () => { try { return JSON.parse(fs.readFileSync(ACL_FILE, 'utf8')); } catch { return null; } };
     const publicAcl = raw => {
       const a = raw || {};
@@ -5386,9 +5470,10 @@ async function route(req, res) {
     logResponse(method, url.pathname, r.status, r.body.ok ? `pack ${r.body.id.slice(0, 12)} · ${r.body.quests.length} quest(s)` : r.body.error);
     return json(res, r.status, r.body);
   }
-  if (parts[0] === 'pack' && (parts[1] === 'publish' || parts[1] === 'fetch') && method === 'POST') {
+  if (parts[0] === 'pack' && ['publish', 'fetch', 'accept'].includes(parts[1]) && method === 'POST') {
     let body; try { body = await readBody(req); } catch (e) { return json(res, 400, { ok: false, error: e.message }); }
-    const r = parts[1] === 'publish' ? await packPublish(body.id) : await packFetch(body.id, body.from);
+    const r = parts[1] === 'publish' ? await packPublish(body.id)
+      : parts[1] === 'fetch' ? await packFetch(body.id, body.from) : packAccept(body.id);
     logResponse(method, url.pathname, r.status, r.body.ok ? `pack ${parts[1]} ${String(body.id).slice(0, 12)}` : r.body.error);
     return json(res, r.status, r.body);
   }
@@ -5409,7 +5494,7 @@ async function route(req, res) {
         const id = f.slice(0, 64), p = packRead(id) || {};
         return { ...packSummary(id, p), mine: p.author === pub, published: published.has(id) };
       });
-      return json(res, 200, { ok: true, count: packs.length, packs });
+      return json(res, 200, { ok: true, count: packs.length, packs, accepted: packsAccepted() });
     }
     const pack = packRead(parts[1]);
     if (!pack) return json(res, 404, { ok: false, error: `no pack ${String(parts[1]).slice(0, 64)} here` });
@@ -11171,6 +11256,7 @@ server.listen(PORT, BIND_ADDR, () => {
   // §MESH-01-FU 12: in tracker mode the bootstrap's `tracker <url>` lines feed
   // FEDERATION (addTrackerUrl), so the post-fetch round is the federate one.
   fetchBootstrapUrls().then(() => TRACKER_MODE ? trackerFederateRound() : trackerAnnounceRound());
+  if (!TRACKER_MODE) packApplyQueued().catch((e) => logRow('pack', `${C.red}✗ apply queue: ${e.message}${C.reset}`));
   setInterval(trackerAnnounceRound, MESH_ANNOUNCE_MS).unref();
   // §MESH-01d2: tracker federation heartbeat. Started unconditionally in
   // tracker mode (a round with no peers is a no-op) — peers.txt/BOOTSTRAP_URLS
