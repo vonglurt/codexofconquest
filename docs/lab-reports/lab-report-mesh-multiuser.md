@@ -79,7 +79,7 @@ All eight line citations land on the named symbol; §VIII.A. The session shape t
 
 ## IV. As-built inventory (HEAD, 2026-08-17)
 
-**Identity and compatibility** — `src/js/wbapi-server.js:const sha16 = (s) => crypto.createHash('sha256')@673` · `src/js/wbapi-server.js:const MANIFEST_PARTS = ['NODE_MAP', 'NODE_COORDS'@674` · `serverId` = 16 random bytes hex in `.wbapi-server-id` (live file: `6f139689a4f8ae48c07d88e6af4b2c2d`).
+**Identity and compatibility** — `src/js/wbapi-server.js:const sha16 = (s) => crypto.createHash('sha256')@673` · `src/js/wbapi-server.js:const MANIFEST_PARTS@786` · `serverId` = 16 random bytes hex in `.wbapi-server-id` (live file: `6f139689a4f8ae48c07d88e6af4b2c2d`).
 
 **Mesh constants** — `src/js/mesh.js:const MESH_GOSSIP_MS@116` (2 s) · `src/js/mesh.js:const MESH_ORIGIN_TTL = 90_000;@117` · `src/js/mesh.js:const MESH_FANOUT_MAX_AGE = 10_000;@118` · `src/js/mesh.js:if (MESH.log.length > 500)@148` (the bounded presence ring).
 

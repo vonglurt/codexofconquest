@@ -63,13 +63,19 @@ function getAcl() {
   } catch { _acl = null; _aclMtime = -1; }
   return _acl || { mode: 'open' };
 }
-function aclAllows({ serverId, ip, worldHash }) {
+// A world-hash list entry may name a whole world (worldHash) or a universe (universeHash).
+function aclAllows({ serverId, ip, worldHash, universeHash }) {
   const a = getAcl();
   const has = (arr, v) => Array.isArray(arr) && v != null && arr.includes(v);
-  if (has(a.blockServerIds, serverId) || has(a.blockIps, ip) || has(a.blockWorldHashes, worldHash)) return false;
+  const world = (arr) => has(arr, worldHash) || has(arr, universeHash);
+  if (has(a.blockServerIds, serverId) || has(a.blockIps, ip) || world(a.blockWorldHashes)) return false;
   if (a.mode === 'allowlist')
-    return has(a.allowServerIds, serverId) || has(a.allowIps, ip) || has(a.allowWorldHashes, worldHash);
+    return has(a.allowServerIds, serverId) || has(a.allowIps, ip) || world(a.allowWorldHashes);
   return true;
+}
+// A record from before universeHash existed can only be compared by worldHash.
+function sameUniverse(a, b) {
+  return a.universeHash && b.universeHash ? a.universeHash === b.universeHash : a.worldHash === b.worldHash;
 }
 
 // §MESH-01-FU 8 — ingress rate limiting. The server↔server mesh POSTs
@@ -225,6 +231,7 @@ function meshPayload() {
   const m = getManifest();
   return (_payload = signEnvelope({
     serverId: getServerId(), proto: m.proto, engineVer: m.engineVer, worldHash: m.worldHash,
+    universeHash: m.universeHash, contentHash: m.contentHash,
     addr: meshAdvertise(), vv: MESH.vv,
     events: MESH.log.slice(-100), snapshot: localSnapshot(),
     peers: [...MESH.peers.keys()].slice(0, 20),
@@ -236,13 +243,13 @@ function meshPayload() {
 function meshIngest(p, ip) {
   const m = getManifest();
   const from = (p && p.addr) || ip;
-  if (!p || p.proto !== m.proto || p.engineVer !== m.engineVer || p.worldHash !== m.worldHash) {
-    pushTraffic('in', 'gossip', from, false, `refused: incompatible (${p && p.engineVer}/${String(p && p.worldHash).slice(0, 8)})`);
-    return { status: 409, body: { ok: false, reason: 'incompatible', want: { proto: m.proto, engineVer: m.engineVer, worldHash: m.worldHash } } };
+  if (!p || p.proto !== m.proto || p.engineVer !== m.engineVer || p.universeHash !== m.universeHash) {
+    pushTraffic('in', 'gossip', from, false, `refused: incompatible (${p && p.engineVer}/${String(p && p.universeHash).slice(0, 8)})`);
+    return { status: 409, body: { ok: false, reason: 'incompatible', want: { proto: m.proto, engineVer: m.engineVer, universeHash: m.universeHash } } };
   }
   if (!p.serverId || p.serverId === getServerId())
     return { status: 400, body: { ok: false, reason: 'bad-serverId' } };
-  if (!aclAllows({ serverId: p.serverId, ip, worldHash: p.worldHash })) {
+  if (!aclAllows({ serverId: p.serverId, ip, worldHash: p.worldHash, universeHash: p.universeHash })) {
     pushTraffic('in', 'gossip', from, false, `refused: ACL (${String(p.serverId).slice(0, 8)})`);
     return { status: 403, body: { ok: false, reason: 'acl' } };
   }
@@ -264,7 +271,7 @@ function meshIngest(p, ip) {
       MESH.peers.set(a, { serverId: null, lastSeen: 0, lastErr: null });   // PEX candidate — dialed next round
   // §MESH-01i slice 2: ledger anti-entropy off the inbound frontier (fire-and-
   // forget — the dialer's own round covers us if p.addr isn't dialable back).
-  if (p.ledgerVV && p.addr) ledgerSyncWith(p.addr, p.ledgerVV).catch(() => {});
+  if (p.ledgerVV && p.addr && p.worldHash === m.worldHash) ledgerSyncWith(p.addr, p.ledgerVV).catch(() => {});
   return { status: 200, body: { ok: true, ...meshPayload() } };
 }
 let _meshRoundBusy = false;
@@ -291,7 +298,7 @@ async function meshGossipRound() {
         const data = await resp.json().catch(() => ({}));
         const rec = MESH.peers.get(addr) || {};
         const unproven = resp.ok && data.ok && data.serverId ? verifyEnvelope(data) : null;
-        if (resp.ok && data.ok && data.serverId && !unproven && aclAllows({ serverId: data.serverId, worldHash: data.worldHash })) {
+        if (resp.ok && data.ok && data.serverId && !unproven && aclAllows({ serverId: data.serverId, worldHash: data.worldHash, universeHash: data.universeHash })) {
           pinEnvelope(data);
           MESH.peers.set(addr, { ...rec, serverId: data.serverId, lastSeen: Date.now(), lastErr: null });
           meshMergeEvents(data.serverId, data.events);
@@ -299,7 +306,7 @@ async function meshGossipRound() {
           for (const a of data.peers || [])
             if (typeof a === 'string' && a && a !== meshAdvertise() && !MESH.peers.has(a))
               MESH.peers.set(a, { serverId: null, lastSeen: 0, lastErr: null });
-          if (data.ledgerVV) ledgerSyncWith(addr, data.ledgerVV).catch(() => {});   // §MESH-01i slice 2
+          if (data.ledgerVV && data.worldHash === getManifest().worldHash) ledgerSyncWith(addr, data.ledgerVV).catch(() => {});   // §MESH-01i slice 2
           pushTraffic('out', 'gossip', addr, true, `⇄ ${(data.events || []).length} ev · snap ${(data.snapshot && data.snapshot.sessions || []).length} · ${(data.peers || []).length} px`);
         } else {
           MESH.peers.set(addr, { ...rec, lastErr: unproven || data.reason || `http-${resp.status}` });
@@ -406,7 +413,7 @@ function trackerRecordsOut() {
   const now = Date.now();
   return [...TRACKER.entries()].map(([id, r]) => ({
     serverId: id, addr: r.addr, proto: r.proto, engineVer: r.engineVer, worldHash: r.worldHash,
-    playerCount: r.playerCount, name: r.name, worldName: r.worldName, ageMs: now - r.lastSeen,
+    universeHash: r.universeHash, contentHash: r.contentHash, playerCount: r.playerCount, name: r.name, worldName: r.worldName, ageMs: now - r.lastSeen,
   }));
 }
 function trackerMergeRecords(records, ip) {
@@ -415,14 +422,14 @@ function trackerMergeRecords(records, ip) {
   for (const rec of records || []) {
     if (!rec || !/^[0-9a-f]{32}$/.test(rec.serverId || '') || !/^[\w.-]+:\d+$/.test(rec.addr || '')) continue;
     if (!rec.proto || !rec.engineVer || !rec.worldHash || rec.serverId === getServerId()) continue;
-    if (!aclAllows({ serverId: rec.serverId, ip, worldHash: rec.worldHash })) continue;
+    if (!aclAllows({ serverId: rec.serverId, ip, worldHash: rec.worldHash, universeHash: rec.universeHash })) continue;
     const lastSeen = now - Math.max(0, Math.min(rec.ageMs | 0, TRACKER_TTL));
     const existing = TRACKER.get(rec.serverId);
     if (existing && existing.lastSeen >= lastSeen) continue;              // ours is fresher
     if (!existing && TRACKER.size >= TRACKER_MAX_RECORDS) continue;       // full — updates only
     TRACKER.set(rec.serverId, {
       addr: rec.addr, proto: rec.proto, engineVer: rec.engineVer, worldHash: rec.worldHash,
-      playerCount: rec.playerCount | 0, name: String(rec.name || '').slice(0, 60),
+      universeHash: rec.universeHash, contentHash: rec.contentHash, playerCount: rec.playerCount | 0, name: String(rec.name || '').slice(0, 60),
       worldName: String(rec.worldName || '').slice(0, 40), lastSeen,
     });
     merged++;
@@ -463,7 +470,8 @@ async function trackerAnnounceRound() {
       const resp = await fetch(u.replace(/\/+$/, '') + '/api/tracker/announce', {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ serverId: getServerId(), addr: meshAdvertise(), proto: m.proto,
-          engineVer: m.engineVer, worldHash: m.worldHash, worldName: m.worldName,
+          engineVer: m.engineVer, worldHash: m.worldHash, universeHash: m.universeHash,
+          contentHash: m.contentHash, worldName: m.worldName,
           playerCount: SESSIONS.size, name: SERVER_NAME }),
       });
       const data = await resp.json().catch(() => ({}));
@@ -510,7 +518,7 @@ return {
   TRACKER_MODE, TRACKER_TTL, TRACKER_PERSIST_MS, TRACKER_MAX_RECORDS,
   TRACKER_URLS, MESH_TRACKER_URLS, TRACKER_PEER_URLS, ACL_FILE,
   // ACL + ingress rate limit
-  getAcl, aclAllows, meshRateAllows,
+  getAcl, aclAllows, sameUniverse, meshRateAllows,
   // gossip mesh
   pushTraffic, meshAdvertise, meshConfigured, meshReachabilityWarnings,
   emitMeshEvent, remotePlayersAt, meshAddrForOrigin8, meshIngest, meshGossipRound,

@@ -222,7 +222,7 @@ const GAME_FILE = process.env.CODEXOFCONQUEST_FILE
 // SINGLE-WRITER (only the origin server mutates its own sessions); receivers
 // dedup with a per-origin version vector; a periodic full snapshot per origin
 // is the anti-entropy floor (event loss can delay but never corrupt state).
-const MESH_PROTO = 2;
+const MESH_PROTO = 3;
 
 // Persistent identity. MESH_SERVER_ID env override exists ONLY so the
 // harness can boot several servers from one directory; prod uses the id file.
@@ -774,14 +774,16 @@ function rawSpan(src, name) {
   return null;
 }
 
-// World manifest — "all quests and data summed." worldHash covers EVERY data
-// collection + engineVer, which is ENGINE_VER's label plus a hash of the parity-fenced
-// kernels, so two builds whose engines differ are separate swarms whatever the label
-// says. Per-part hashes let mismatched operators see
-// WHERE two worlds differ (the modification set), but sync requires equality
-// of (proto, engineVer, worldHash) — never a partial match.
+// World manifest. engineVer is ENGINE_VER's label plus a hash of the parity-fenced
+// kernels. universeHash = engineVer + the map (UNIVERSE_PARTS): presence, movement and
+// chat require it equal. contentHash = the story (CONTENT_PARTS): advertised, and allowed
+// to differ. worldHash = engineVer + every part, and ledger and trade still require it
+// equal (§MESH-03e replaces that with a dependency rule). Per-part hashes show WHERE two
+// worlds differ.
 const sha16 = (s) => crypto.createHash('sha256').update(s).digest('hex').slice(0, 16);
-const MANIFEST_PARTS = ['NODE_MAP', 'NODE_COORDS', 'SEA_RUNS', 'SEA_LANES', 'ROAD_RUNS', 'QUEST_DB', 'MONSTER_POOL', 'WORLD_DB'];
+const UNIVERSE_PARTS = ['NODE_MAP', 'NODE_COORDS', 'SEA_RUNS', 'SEA_LANES', 'ROAD_RUNS'];
+const CONTENT_PARTS = ['QUEST_DB', 'MONSTER_POOL', 'WORLD_DB'];
+const MANIFEST_PARTS = [...UNIVERSE_PARTS, ...CONTENT_PARTS];
 const ENGINE_CORES = ['MOVER', 'ROOMS', 'DUEL', 'QUEST'];
 function engineCoreHash(src) {
   return sha16(ENGINE_CORES.map((n) => {
@@ -806,10 +808,13 @@ function getManifest() {
   // forks the swarm; identity stays (proto, engineVer, worldHash).
   const wnm = src.match(/const\s+WORLD_NAME\s*=\s*['"]([^'"]+)['"]/);
   const worldName = ((wnm && wnm[1]) || 'world').slice(0, 40);
-  // MESH_WORLDHASH_OVERRIDE exists ONLY for the harness incompatibility test.
-  const worldHash = process.env.MESH_WORLDHASH_OVERRIDE
-    || sha16(engineVer + '|' + MANIFEST_PARTS.map((n) => parts[n.toLowerCase()]).join('|'));
-  _mani = { proto: MESH_PROTO, engineVer, worldName, worldTag: worldTag(worldName, worldHash), worldHash, parts, pub: getServerKey().pub };
+  const of = (names) => names.map((n) => parts[n.toLowerCase()]).join('|');
+  // MESH_WORLDHASH_OVERRIDE exists ONLY for the harness: it stands for a different universe.
+  const worldHash = process.env.MESH_WORLDHASH_OVERRIDE || sha16(engineVer + '|' + of(MANIFEST_PARTS));
+  const universeHash = process.env.MESH_WORLDHASH_OVERRIDE || sha16(engineVer + '|' + of(UNIVERSE_PARTS));
+  const contentHash = sha16(of(CONTENT_PARTS));
+  _mani = { proto: MESH_PROTO, engineVer, worldName, worldTag: worldTag(worldName, worldHash), worldHash,
+    universeHash, contentHash, parts, pub: getServerKey().pub };
   return _mani;
 }
 // The human-facing world handle: `NextWorldMod-131ea` — easy name + enough
@@ -826,7 +831,7 @@ const {
   MESH_GOSSIP_MS, MESH_ORIGIN_TTL, MESH_ANNOUNCE_MS, MESH_RATE_LIMIT, MESH_RATE_BURST,
   TRACKER_MODE, TRACKER_TTL, TRACKER_PERSIST_MS, TRACKER_MAX_RECORDS,
   TRACKER_URLS, MESH_TRACKER_URLS, TRACKER_PEER_URLS, ACL_FILE,
-  getAcl, aclAllows, meshRateAllows,
+  getAcl, aclAllows, sameUniverse, meshRateAllows,
   pushTraffic, meshAdvertise, meshConfigured, meshReachabilityWarnings,
   emitMeshEvent, remotePlayersAt, meshAddrForOrigin8, meshIngest, meshGossipRound,
   addTrackerUrl, loadStaticPeers, persistPeerCache, fetchBootstrapUrls,
@@ -3237,12 +3242,12 @@ async function route(req, res) {
     let tb;
     try { tb = await readBody(req); } catch { return json(res, 400, { ok: false, error: 'Invalid JSON' }); }
     trackerSweep();
-    const { serverId, addr, proto, engineVer, worldHash } = tb || {};
+    const { serverId, addr, proto, engineVer, worldHash, universeHash, contentHash } = tb || {};
     if (!/^[0-9a-f]{32}$/.test(serverId || '') || !/^[\w.-]+:\d+$/.test(addr || '') || !proto || !engineVer || !worldHash) {
       logResponse(method, url.pathname, 400, 'tracker/announce: bad fields');
       return json(res, 400, { ok: false, error: 'serverId, addr, proto, engineVer, worldHash required' });
     }
-    if (!aclAllows({ serverId, ip: req.socket.remoteAddress, worldHash })) {
+    if (!aclAllows({ serverId, ip: req.socket.remoteAddress, worldHash, universeHash })) {
       logResponse(method, url.pathname, 403, `tracker/announce refused by ACL: ${serverId.slice(0, 8)}`);
       return json(res, 403, { ok: false, reason: 'acl' });
     }
@@ -3250,14 +3255,14 @@ async function route(req, res) {
       logResponse(method, url.pathname, 503, 'tracker full');
       return json(res, 503, { ok: false, reason: 'tracker-full' });
     }
-    TRACKER.set(serverId, { addr, proto, engineVer, worldHash, playerCount: (tb.playerCount | 0),
+    TRACKER.set(serverId, { addr, proto, engineVer, worldHash, universeHash, contentHash, playerCount: (tb.playerCount | 0),
       name: String(tb.name || '').slice(0, 60), worldName: String(tb.worldName || '').slice(0, 40), lastSeen: Date.now() });
     trackerMarkDirty();   // §MESH-01-FU 12 (flag lives in mesh.js)
     pushTraffic('in', 'announce', addr, true, `${serverId.slice(0, 8)} · wh:${String(worldHash).slice(0, 8)} · ${tb.playerCount | 0} player(s)`);
     // Same-group peers only — incompatible worlds are segregated, never mixed.
     const group = [];
     for (const [id, r] of TRACKER)
-      if (id !== serverId && r.proto === proto && r.engineVer === engineVer && r.worldHash === worldHash)
+      if (id !== serverId && r.proto === proto && r.engineVer === engineVer && sameUniverse(r, { worldHash, universeHash }))
         group.push({ serverId: id, addr: r.addr, playerCount: r.playerCount });
     const peers = group.sort(() => 0.5 - Math.random()).slice(0, 8);
     logResponse(method, url.pathname, 200, `announce ${serverId.slice(0, 8)} @${addr} wh:${String(worldHash).slice(0, 8)} → ${peers.length} peer(s)`);
@@ -3289,10 +3294,10 @@ async function route(req, res) {
 
   if (parts[0] === 'tracker' && parts[1] === 'peers' && method === 'GET') {
     trackerSweep();
-    const wh = url.searchParams.get('wh'), ev = url.searchParams.get('ev'), pr = url.searchParams.get('p');
+    const wh = url.searchParams.get('wh'), uh = url.searchParams.get('uh'), ev = url.searchParams.get('ev'), pr = url.searchParams.get('p');
     const rows = [];
     for (const [id, r] of TRACKER)
-      if ((!wh || r.worldHash === wh) && (!ev || r.engineVer === ev) && (!pr || String(r.proto) === pr))
+      if ((!wh || r.worldHash === wh) && (!uh || r.universeHash === uh) && (!ev || r.engineVer === ev) && (!pr || String(r.proto) === pr))
         rows.push({ serverId: id, ...r, worldTag: worldTag(r.worldName, r.worldHash) });
     if ((url.searchParams.get('format') || '') === 'txt') {
       cors(res);
@@ -3344,7 +3349,7 @@ async function route(req, res) {
     const groups = {};
     for (const [, r] of TRACKER) {
       const k = `${r.engineVer} · ${r.worldHash}`;
-      groups[k] = groups[k] || { engineVer: r.engineVer, worldHash: r.worldHash,
+      groups[k] = groups[k] || { engineVer: r.engineVer, worldHash: r.worldHash, universeHash: r.universeHash || null,
         worldTag: worldTag(r.worldName, r.worldHash), servers: 0, players: 0 };
       groups[k].servers++; groups[k].players += r.playerCount || 0;
     }
@@ -3354,7 +3359,7 @@ async function route(req, res) {
       name: SERVER_NAME,
       reachability: { bind: BIND_ADDR, advertise: meshAdvertise(), warnings: meshReachabilityWarnings() },
       proto: m.proto, engineVer: m.engineVer, worldName: m.worldName, worldTag: m.worldTag,
-      worldHash: m.worldHash, parts: m.parts,
+      worldHash: m.worldHash, universeHash: m.universeHash, contentHash: m.contentHash, parts: m.parts,
       trackerUrls: [...new Set([...TRACKER_URLS, ...MESH_TRACKER_URLS])],
       // §MESH-01-FU 12: who this tracker federates with (flags + peers.txt + bootstrap)
       ...(TRACKER_MODE ? { federationPeers: [...new Set(TRACKER_PEER_URLS)] } : {}),

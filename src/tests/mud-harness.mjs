@@ -384,9 +384,60 @@ async function main() {
     'a build differing only inside a parity kernel keeps the label and the data parts and changes engineVer');
   const gKern = await fetch(mA.base + '/api/mesh/gossip', {
     method: 'POST', headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ serverId: '0e'.repeat(16), proto: manK.proto, engineVer: manK.engineVer, worldHash: manK.worldHash }),
+    body: JSON.stringify({ serverId: '0e'.repeat(16), proto: manK.proto, engineVer: manK.engineVer, worldHash: manK.worldHash, universeHash: manK.universeHash }),
   });
   check(gKern.status === 409, 'gossip ingress refuses a build whose parity kernels differ with 409');
+
+  // §MESH-03c — the universe (engine + map) must match; the content (quests, monsters,
+  // terrain) may differ. Ledger and trade still require the whole world to match.
+  const questFile = path.join(tmp, `coc-quest-${process.pid}.html`);
+  const srcMesh03c = fs.readFileSync(path.join(ROOT, 'play.html'), 'utf8');
+  fs.writeFileSync(questFile, srcMesh03c.replace('sdq_05_act1: { id:"sdq_05_act1", ',
+    'sdq_05_act1: { id:"sdq_05_act1", rumor:"Only this server tells it.", '));
+  const mContent = await startServer(PORT + 47, mkEnv(PORT + 47, '0f'.repeat(16), {
+    CODEXOFCONQUEST_FILE: questFile, MESH_PEERS: `localhost:${PORT + 2}` }));
+  const manContent = await jget('/manifest', mContent.base);
+  check(manContent.universeHash === manA.universeHash && manContent.contentHash !== manA.contentHash
+    && manContent.worldHash !== manA.worldHash && manContent.parts.quest_db !== manA.parts.quest_db,
+    'one QUEST_DB entry apart: same universeHash, different contentHash and worldHash');
+  const quinnS = await jpost('/session/start', { name: 'Quinn', seed: 47 }, mContent.base);
+  let quinnSeen = false;
+  for (let i = 0; i < 40 && !quinnSeen; i++) {
+    await sleep(150);
+    quinnSeen = (((await jget('/session/who', mA.base)).remotes) || []).some((p) => p.name === 'Quinn');
+  }
+  check(quinnSeen, 'a server whose content differs still shares presence — Quinn is a remote on A');
+  await jpost('/session/say', { sessionId: quinnS.sessionId, msg: 'content-differs-hello' }, mContent.base);
+  check(await waitFor(() => countEv(sseAnn, 'chat', (d) => d.msg === 'content-differs-hello') >= 1, 4000, 100),
+    'and its world chat reaches Ann on A');
+  const lContent = await fetch(mA.base + '/api/ledger/sync', {
+    method: 'POST', headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ serverId: '0f'.repeat(16), proto: manContent.proto, engineVer: manContent.engineVer,
+      worldHash: manContent.worldHash, universeHash: manContent.universeHash, vv: {} }),
+  });
+  check(lContent.status === 409, 'ledger sync still refuses a server whose content differs with 409 (until §MESH-03e)');
+  mContent.proc.kill('SIGTERM');
+  fs.rmSync(questFile, { force: true });
+
+  const roadFile = path.join(tmp, `coc-road-${process.pid}.html`);
+  fs.writeFileSync(roadFile, srcMesh03c.replace('const ROAD_RUNS = {2:[[195,199]', 'const ROAD_RUNS = {2:[[195,198]'));
+  const mRoad = await startServer(PORT + 48, mkEnv(PORT + 48, '1f'.repeat(16), {
+    CODEXOFCONQUEST_FILE: roadFile, MESH_PEERS: `localhost:${PORT + 2}` }));
+  const manRoad = await jget('/manifest', mRoad.base);
+  check(manRoad.universeHash !== manA.universeHash && manRoad.contentHash === manA.contentHash,
+    'a ROAD_RUNS difference changes universeHash and leaves contentHash alone');
+  await jpost('/session/start', { name: 'Rory', seed: 48 }, mRoad.base);
+  const gRoads = await fetch(mA.base + '/api/mesh/gossip', {
+    method: 'POST', headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ serverId: '1f'.repeat(16), proto: manRoad.proto, engineVer: manRoad.engineVer,
+      worldHash: manRoad.worldHash, universeHash: manRoad.universeHash }),
+  });
+  check(gRoads.status === 409, 'gossip ingress refuses a server whose roads differ with 409');
+  await sleep(800);
+  check(!(((await jget('/session/who', mA.base)).remotes) || []).some((p) => p.name === 'Rory'),
+    'and Rory never appears on A');
+  mRoad.proc.kill('SIGTERM');
+  fs.rmSync(roadFile, { force: true });
 
   // ACL: allowlist-mode server refuses even a compatible, unlisted peer.
   const aclPath = path.join(tmp, `coc-acl-${PORT}.json`);
@@ -394,7 +445,7 @@ async function main() {
   const mD = await startServer(PORT + 5, mkEnv(PORT + 5, 'd'.repeat(32), { MESH_ACL_FILE: aclPath }));
   const gAcl = await fetch(mD.base + '/api/mesh/gossip', {
     method: 'POST', headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ serverId: 'a'.repeat(32), proto: manA.proto, engineVer: manA.engineVer, worldHash: manA.worldHash }),
+    body: JSON.stringify({ serverId: 'a'.repeat(32), proto: manA.proto, engineVer: manA.engineVer, worldHash: manA.worldHash, universeHash: manA.universeHash }),
   });
   check(gAcl.status === 403, 'allowlist-mode ACL refuses an unlisted (compatible) peer with 403');
 
@@ -625,16 +676,16 @@ async function main() {
     'partitioned R logs the refusals in its information-passed ring');
   const gSplit = await fetch(mR.base + '/api/mesh/gossip', {
     method: 'POST', headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ serverId: idP, proto: manA.proto, engineVer: manA.engineVer, worldHash: manA.worldHash, addr: `localhost:${PORT + 18}` }),
+    body: JSON.stringify({ serverId: idP, proto: manA.proto, engineVer: manA.engineVer, worldHash: manA.worldHash, universeHash: manA.universeHash, addr: `localhost:${PORT + 18}` }),
   });
   check(gSplit.status === 403, 'gossip from a blocked serverId is refused with 403 (the partition mechanism itself)');
   const spoof = await fetch(mP.base + '/api/mesh/gossip', {
     method: 'POST', headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ serverId: idQ, proto: manA.proto, engineVer: manA.engineVer, worldHash: manA.worldHash, addr: `localhost:${PORT + 99}`,
+    body: JSON.stringify({ serverId: idQ, proto: manA.proto, engineVer: manA.engineVer, worldHash: manA.worldHash, universeHash: manA.universeHash, addr: `localhost:${PORT + 99}`,
       snapshot: { seq: 1e9, sessions: [] }, events: [{ seq: 1e9, ts: Date.now(), type: 'chat_world', data: { name: 'Mallory', msg: 'spoofed-world-chat' } }] }),
   });
   const spoofKey = crypto.generateKeyPairSync('ed25519');
-  const spoofBody = { serverId: idQ, proto: manA.proto, engineVer: manA.engineVer, worldHash: manA.worldHash, addr: `localhost:${PORT + 99}`,
+  const spoofBody = { serverId: idQ, proto: manA.proto, engineVer: manA.engineVer, worldHash: manA.worldHash, universeHash: manA.universeHash, addr: `localhost:${PORT + 99}`,
     snapshot: { seq: 1e9, sessions: [] }, events: [{ seq: 1e9 + 1, ts: Date.now(), type: 'chat_world', data: { name: 'Mallory', msg: 'spoofed-world-chat' } }],
     pub: spoofKey.publicKey.export({ format: 'der', type: 'spki' }).subarray(12).toString('base64') };
   spoofBody.sig = crypto.sign(null, Buffer.from(JSON.stringify(spoofBody)), spoofKey.privateKey).toString('base64');
@@ -1212,7 +1263,7 @@ async function main() {
   check(xp2.ok === true, 'a second cross-origin proposal (want-only, the traded sword) is accepted');
   const manGA = await jget('/manifest', gA.base);
   const relayAccept = (assent) => fetch(gA.base + '/api/trade/relay', { method: 'POST', headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ op: 'accept', serverId: gid(4), proto: manGA.proto, engineVer: manGA.engineVer, worldHash: manGA.worldHash,
+    body: JSON.stringify({ op: 'accept', serverId: gid(4), proto: manGA.proto, engineVer: manGA.engineVer, worldHash: manGA.worldHash, universeHash: manGA.universeHash,
       tradeId: xp2.tradeId, by: benX.ledgerPid, ...(assent ? { assent } : {}) }) }).then(async (r) => ({ status: r.status, ...(await r.json()) }));
   const noAssent = await relayAccept(null);
   const strangerKey = crypto.generateKeyPairSync('ed25519');

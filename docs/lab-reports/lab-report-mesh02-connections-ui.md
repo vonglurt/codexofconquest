@@ -93,7 +93,7 @@ GET  /api/session/chat      ?limit=1..200 (default 100), optional &r=&c= cell fi
   next mesh packet — **no restart between an edit and its effect**.
 - `src/js/wbapi-server.js:return json(res, 403, { ok: false, reason: 'not-shared' });@3031` — the
   D3 gate, and the exact string the client renders as *"does not share its blocklist."*
-- `src/js/mesh.js:function aclAllows({ serverId, ip, worldHash }) {@63` — blocks are checked
+- `src/js/mesh.js:function aclAllows(@67` — blocks are checked
   first and beat an allowlist match. **`shareBlocklist` occurs zero times in `src/js/mesh.js`**:
   it is metadata about publication, never a gate. The report's original sentence, exact.
 - Footprints (j): `src/js/wbapi-server.js:const FOOTPRINT_TTL = 30 * 60 * 1000, FOOTPRINT_PER_CELL = 8;@175`,
