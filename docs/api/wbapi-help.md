@@ -400,9 +400,13 @@ A pack is a set of shareable quests plus the monsters they fight, signed with th
 ./bin/api pack create quest_kg_01 quest_cat_02   # 422 + reasons if any quest is not shareable
 ./bin/api pack list
 ./bin/api pack get <id> --out pack.json
+./bin/api pack publish <id>                     # announce it to every tracker this server announces to
+./bin/api pack index                            # what the trackers list, and which servers hold each pack
+./bin/api pack fetch <id> [--from host:port]    # stored only if it re-hashes to <id>
+./bin/api pack review <id>                      # diff against local content + shareable verdict; exit 1 = refuse
 ```
 
-`POST /api/pack/create {quests:[…]}`, `GET /api/pack`, `GET /api/pack/<id>`. The format is `src/js/pack.js` (`makePack`, `verifyPack`, `packId`). Publishing through the tracker, review and apply-at-restart are still to come.
+`POST /api/pack/create {quests:[…]}`, `GET /api/pack`, `GET /api/pack/<id>`, `POST /api/pack/publish {id}`, `GET /api/pack/index`, `POST /api/pack/fetch {id, from?}`, `GET /api/pack/<id>/review`; on a tracker, `GET /api/tracker/packs`. The format is `src/js/pack.js` (`makePack`, `verifyPack`, `packId`). A published pack rides this server's tracker announce, so the tracker's index is only as current as its live records. Accepting a pack and applying it at restart are still to come.
 
 ---
 
