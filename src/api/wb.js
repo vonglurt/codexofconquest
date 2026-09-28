@@ -399,6 +399,41 @@ const CMD = {
     process.exit(1);
   },
 
+  // ── pack (§MESH-03d): signed, content-addressed quest packs ─────────────────────
+  // Usage: ./bin/api pack create <quest-id>…  |  pack list  |  pack get <id> [--out file]
+  async pack(pos, flags) {
+    await requireServer();
+    const [, sub, ...rest] = pos;
+    if (sub === 'create') {
+      if (!rest.length) die('usage: ./bin/api pack create <quest-id> [<quest-id> …]');
+      const r = await request('POST', '/api/pack/create', { quests: rest });
+      if (r.status === 422) {
+        stderr(`${C.red}✗${C.reset} refused: not shareable\n`);
+        for (const q of r.body.refused || []) stderr(`    ${q.id}: ${q.reasons.join('; ')}\n`);
+        process.exit(1);
+      }
+      if (r.status !== 201) { printError(r); process.exit(1); }
+      ok(`pack ${r.body.id}`);
+      ok(`  ${r.body.quests.length} quest(s), ${r.body.monsters.length} monster(s), built on content ${r.body.base}`);
+      return;
+    }
+    if (sub === 'list' || !sub) {
+      const r = await request('GET', '/api/pack');
+      if (r.status !== 200) { printError(r); process.exit(1); }
+      if (flags.json || flags.raw) return printResult(r.body, flags);
+      ok(`${r.body.count} pack(s)`);
+      for (const p of r.body.packs) info(`${p.id}  ${p.quests}q ${p.monsters}m  base ${p.base}`);
+      return;
+    }
+    if (sub === 'get') {
+      if (!rest[0]) die('usage: ./bin/api pack get <id> [--out file]');
+      const r = await request('GET', `/api/pack/${encodeURIComponent(rest[0])}`);
+      if (r.status !== 200) { printError(r); process.exit(1); }
+      return printResult(r.body.pack, flags);
+    }
+    die(`unknown pack subcommand "${sub}" — create | list | get`);
+  },
+
   // ── save / snapshots (§DX-02l) ──────────────────────────────────────────────
   // Every WRITE already reaches disk on its own (§DX-02k: temp + atomic rename).
   // `save` is the DELIBERATE dated backup — the one surface that stamps on
@@ -1629,6 +1664,7 @@ ${C.bold}═══════════════════════�
   ${C.green}dialogue${C.reset} <npc> […]      NPC_DIALOGUES entry (--create to add; meta/array edits)
   ${C.green}audit${C.reset} [--map]          Integrity scan
   ${C.green}shareable${C.reset} quest [id]    Can this quest cross servers? (no id = corpus count)
+  ${C.green}pack${C.reset} create|list|get   Signed content packs of shareable quests (§MESH-03d)
   ${C.green}export${C.reset} <collection>    Export data as JSON / JS / ES module
   ${C.green}import${C.reset} <file.json>     Bulk import nodes + quest cycles
   ${C.green}speak${C.reset} <npc> "<prompt>" Claude-voiced NPC dialogue

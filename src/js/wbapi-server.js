@@ -845,6 +845,36 @@ const {
   signEnvelope, verifyEnvelope, pinEnvelope,
 });
 
+// §MESH-03d — content packs, stored as PACKS_DIR/<id>.json.
+const PACKS = require('./pack')({ canonical: ledgerCanonical, sign: signCanonical, verify: verifyCanonical,
+  pub: () => getServerKey().pub });
+const PACKS_DIR = process.env.PACKS_DIR || path.join(ROOT, 'build', 'packs');
+function packCreate(ids) {
+  ids = [...new Set((ids || []).map(String))];
+  if (!ids.length) return { status: 400, body: { ok: false, error: 'quests: a non-empty list of quest ids is required' } };
+  const quests = {}, monsters = {}, refused = [];
+  for (const id of ids) {
+    const r = WBAPI.shareable('quest', id);
+    if (!r.ok) { refused.push({ id, reasons: [r.error] }); continue; }
+    if (!r.shareable) { refused.push({ id: r.key, reasons: r.reasons }); continue; }
+    quests[r.key] = WBAPI.entryWithFns('quest', r.key).entry;
+  }
+  for (const key of Object.values(quests).flatMap(PACKS.monsterRefs)) {
+    const m = WBAPI.entryWithFns('monster', key);
+    if (!m.ok || m.fnCount) refused.push({ id: `monster:${key}`, reasons: [m.ok ? 'carries a function value' : m.error] });
+    else monsters[key] = m.entry;
+  }
+  if (refused.length) return { status: 422, body: { ok: false, error: 'not shareable', refused } };
+  const { id, pack } = PACKS.makePack({ quests, monsters, base: getManifest().contentHash });
+  fs.mkdirSync(PACKS_DIR, { recursive: true });
+  fs.writeFileSync(path.join(PACKS_DIR, id + '.json'), JSON.stringify(pack, null, 2) + '\n');
+  return { status: 201, body: { ok: true, id, base: pack.base, quests: Object.keys(quests), monsters: Object.keys(monsters) } };
+}
+function packRead(id) {
+  if (!PACKS.PACK_ID.test(id || '')) return null;
+  try { return JSON.parse(fs.readFileSync(path.join(PACKS_DIR, id + '.json'), 'utf8')); } catch { return null; }
+}
+
 // ── §NAV-01g — roads-pins.json (worldbuilder pins: forced road links + locked cities) ──
 // Schema (plan.md §NAV-01 locked shapes): { pins:[{r,c}], links:[["r,c","r,c"]], locked:["CODE",…] }.
 // scripts/build-roads.js consumes pins/links at reweave (§NAV-01h); `locked` is honored
@@ -5240,6 +5270,27 @@ async function route(req, res) {
   }
 
   // ── Mission Bits catalog ──────────────────────────────────────────────────
+  if (parts[0] === 'pack' && parts[1] === 'create' && method === 'POST') {
+    let body; try { body = await readBody(req); } catch (e) { return json(res, 400, { ok: false, error: e.message }); }
+    const r = packCreate(body.quests);
+    logResponse(method, url.pathname, r.status, r.body.ok ? `pack ${r.body.id.slice(0, 12)} · ${r.body.quests.length} quest(s)` : r.body.error);
+    return json(res, r.status, r.body);
+  }
+  if (parts[0] === 'pack' && method === 'GET') {
+    if (!parts[1]) {
+      let files = []; try { files = fs.readdirSync(PACKS_DIR).filter((f) => /^[0-9a-f]{64}\.json$/.test(f)); } catch {}
+      const packs = files.map((f) => {
+        const p = packRead(f.slice(0, 64)) || {};
+        return { id: f.slice(0, 64), author: p.author || null, base: p.base || null,
+          quests: Object.keys(p.quests || {}).length, monsters: Object.keys(p.monsters || {}).length };
+      });
+      return json(res, 200, { ok: true, count: packs.length, packs });
+    }
+    const pack = packRead(parts[1]);
+    if (!pack) return json(res, 404, { ok: false, error: `no pack ${String(parts[1]).slice(0, 64)} here` });
+    return json(res, 200, { ok: true, id: parts[1], pack });
+  }
+
   if (parts[0] === 'shareable' && method === 'GET') {
     const type = parts[1] || 'quest';
     if (parts[2]) {

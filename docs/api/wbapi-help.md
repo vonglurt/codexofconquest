@@ -392,6 +392,18 @@ A quest may cross servers only as pure data. That means no function value at any
 
 `GET /api/shareable/quest[/:id]` answers the same. The predicate is `WBAPI.questShareable(entry, WBAPI.shareUniverse(pack))`, and import (§MESH-03d) refuses what it rejects.
 
+### Content packs (§MESH-03d)
+
+A pack is a set of shareable quests plus the monsters they fight, signed with this server's Ed25519 key. Its id is the SHA-256 of the canonical JSON of everything except `sig`, so a receiver recomputes it and a pack altered in transit fails. Packs live in `build/packs/<id>.json` (`PACKS_DIR` overrides).
+
+```bash
+./bin/api pack create quest_kg_01 quest_cat_02   # 422 + reasons if any quest is not shareable
+./bin/api pack list
+./bin/api pack get <id> --out pack.json
+```
+
+`POST /api/pack/create {quests:[…]}`, `GET /api/pack`, `GET /api/pack/<id>`. The format is `src/js/pack.js` (`makePack`, `verifyPack`, `packId`). Publishing through the tracker, review and apply-at-restart are still to come.
+
 ---
 
 ## Cell grid queries (§CELL-08)
