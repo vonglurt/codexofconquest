@@ -19,6 +19,16 @@
 
 ---
 
+## Archived 2026-09-28 — §MESH-03d-FU (trusted authors in the Lists pane)
+
+### §MESH-03d-FU — the 🛡 Lists pane cannot show or edit `allowAuthors` (NEW 2026-09-28, found closing §MESH-03d, 🟢)
+
+- [x] ✅ SHIPPED 2026-09-28 `2a3ec639` **§MESH-03d-FU — give `allowAuthors` a field in the server ACL editor.** §MESH-03d added `allowAuthors` to the ACL file, to `PUT /api/mesh/acl` and to `./bin/api mesh acl`, but `play.html`'s `_ML_ACL_LISTS` still names only the six older lists. The pane's merge-`PUT` therefore keeps the key and never shows it, so an operator using the game's editor cannot see whom they trust. **Do:** a seventh textarea and `_ML_ACL_LISTS` entry, and one sentence saying a listed author's packs are accepted on arrival but still reviewed. **Verify:** `mesh-connections-ui.test.js` round-trips an `allowAuthors` entry through the pane.
+
+> **SHIPPED 2026-09-28 `2a3ec639` — as specified.** `_ML_ACL_LISTS` names 6 → 7 lists, and the ACL grid gains *trusted pack authors* (`#ml-acl-allowAuthors`, one public key per line), with one hint line: a pack signed by a trusted author is accepted as soon as it is fetched and still has to pass review. `_mlAclLoad` and `mlAclSave` needed no change, since both iterate the list. **Verify:** `mesh-connections-ui.test.js` gains one hermetic test. A stubbed `ref.example:1367/api/mesh/acl` serves `allowAuthors:['K1']`, the pane shows it, and a save of `K1` plus a padded `K2` sends `['K1','K2']` and re-renders the server's answer. Spec 10/10, `check:walk` 41/41 (the line-count badge 39,280 → 39,282), **1,322 passed / 8 failed** with Chromium launched (the same 8). Not looked at on screen: the map sheet is closed in the hermetic harness, so the field was driven by script.
+
+---
+
 ## Archived 2026-09-28 — §MESH-03d (increment 3, accept and apply; closed)
 
 ### §MESH-03d — there is no way to publish a quest from one server and pull it into another (NEW 2026-09-28, user direction, 🟡 format and review flow)

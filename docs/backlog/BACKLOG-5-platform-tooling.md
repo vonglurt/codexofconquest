@@ -45,10 +45,6 @@
 ---
 ## §BACKLOG — Open Items (Phase 5)
 
-### §MESH-03d-FU — the 🛡 Lists pane cannot show or edit `allowAuthors` (NEW 2026-09-28, found closing §MESH-03d, 🟢)
-
-- [ ] **§MESH-03d-FU — give `allowAuthors` a field in the server ACL editor.** §MESH-03d added `allowAuthors` to the ACL file, to `PUT /api/mesh/acl` and to `./bin/api mesh acl`, but `play.html`'s `_ML_ACL_LISTS` still names only the six older lists. The pane's merge-`PUT` therefore keeps the key and never shows it, so an operator using the game's editor cannot see whom they trust. **Do:** a seventh textarea and `_ML_ACL_LISTS` entry, and one sentence saying a listed author's packs are accepted on arrival but still reviewed. **Verify:** `mesh-connections-ui.test.js` round-trips an `allowAuthors` entry through the pane.
-
 ### §MESH-03a — servers and players have no key pairs, so nothing in the mesh can prove who sent it (NEW 2026-09-28, user direction, 🟡 key choice and migration)
 
 - [ ] **§MESH-03a — real identity: an Ed25519 key per server and per player, and signatures that only the key holder can make.** The **§MESH-03** track (user direction 2026-09-28): servers of one universe share quests and world content as signed changesets, players can run *behind* on content without being split off, and players exchange messages and actions safely across servers. This row goes first because every later row signs or verifies something. **Measured at `47b36a6`:** the ledger's signature is `crypto.createHmac('sha256', signerId)` with `signerId` the server's **public** id (*`src/js/wbapi-server.js:return crypto.createHmac('sha256', signerId)`*@328, retired by this row), so anyone can compute any origin's signature; the comment beside it says so (*"not PKI"*). A player is `S_story.playerKey`, a 32-hex bearer secret the client presents to its server, so whoever holds the string is the player. **Change:** (1) each server generates an Ed25519 key pair on first start and persists it next to `ledger/`; `serverId` becomes a hash of the public key, and `/api/manifest` and gossip carry the public key. (2) The client generates a player key pair with WebCrypto, stored non-extractable in IndexedDB, and a player id derived from the public key replaces `playerKey`; the server holds public keys only. (3) Ledger events are signed with the author's private key, and ingest verifies against the public key; the HMAC path is retired. **Decisions to record:** the fallback where WebCrypto Ed25519 is missing (ECDSA P-256 is universal); how existing `playerKey` holders migrate (sign a one-time binding of the old id to the new key); and whether TOFU pinning of server keys lives in the ACL file. **Verify:** a forged event whose signature uses another server's public id is refused at ingest (it is accepted today); a player's action signed by a different key is refused; `test:mud` [E]/[R] and the ledger checks stay green.
@@ -205,6 +201,6 @@
 
 ## §RESUME — Phase 5 history
 
-> **Completed work is not carried here.** The 93 closed increments for this phase are condensed in **[`../archive/backlog-resume-history.md`](../archive/backlog-resume-history.md)**; full prose for recent closes is in [`plan-archive.md`](plan-archive.md). This file carries open rows only.
+> **Completed work is not carried here.** The 94 closed increments for this phase are condensed in **[`../archive/backlog-resume-history.md`](../archive/backlog-resume-history.md)**; full prose for recent closes is in [`plan-archive.md`](plan-archive.md). This file carries open rows only.
 
 > When an increment ships: write the full entry into `plan-archive.md`, add its one-line row to `../archive/backlog-resume-history.md` and to the cross-phase table in [`BACKLOG.md`](BACKLOG.md), and delete the row from this file.
