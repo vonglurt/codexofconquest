@@ -1236,15 +1236,15 @@ curl -s 'http://localhost:1367/api/coords/near/LHR?radius=16' | jq '.nearby | le
 curl -s 'http://localhost:1367/api/coords/near/FRO?radius=4'  | jq '.available[:3]'  # free slots
 ```
 
-### 17.3 Validate one node's connections
+### 17.3 Validate one node's cell
 
 ```bash
-curl -s 'http://localhost:1367/api/graph/validate/LHR?maxGap=4' | jq
-curl -s 'http://localhost:1367/api/graph/validate/BK?maxGap=4'  | jq '.connections'
-curl -s 'http://localhost:1367/api/graph/validate/KRN?maxGap=4' | jq '.diagnosis'
+curl -s 'http://localhost:1367/api/graph/validate/LHR' | jq
+curl -s 'http://localhost:1367/api/graph/validate/BK'  | jq '{arrivable, neighbours}'
+./bin/api validate KRN
 ```
 
-Returns per-direction status: `ok`, `gap_too_large`, `off_axis`, `unset`, `missing_coords`.
+Returns the node's `cell` (with `primary`, `isPrimary`, `sharedWith`), its four `neighbours` (the primary of each adjacent occupied cell, or `null`), `heat`, `isolated` and `arrivable`. The per-direction link statuses it used to return read `N`/`E`/`S`/`W` fields §CELL-01 stripped (§DX-02ky-FU).
 
 ### 17.4 Isolated cells
 
@@ -1491,7 +1491,7 @@ all                 Full combined export
 
 GET  /api/coords                              All coordinates
 GET  /api/coords/near/{code}?radius=N         Nearby search
-GET  /api/graph/validate/{code}?maxGap=4      Connection check
+GET  /api/graph/validate/{code}               One node's cell: arrivable, neighbours
 GET  /api/graph/broken                        Isolated cells (./bin/api broken)
 GET  /api/graph/path/{from}/{to}?maxGap=4     Walkable path
 
@@ -1652,8 +1652,8 @@ curl -s -XPUT http://localhost:1367/api/coords/VAULT \
   -H 'Content-Type: application/json' \
   -d '{"r":124,"c":136}' | jq
 
-# 5. Validate the connection
-curl -s 'http://localhost:1367/api/graph/validate/VAULT?maxGap=4' | jq
+# 5. Check the node's cell: arrivable, and next to occupied cells
+curl -s 'http://localhost:1367/api/graph/validate/VAULT' | jq '{arrivable, heat}'
 
 # 6. Add a quest
 ./bin/api post quest \

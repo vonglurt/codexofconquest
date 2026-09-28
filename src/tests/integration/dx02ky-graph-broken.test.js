@@ -77,3 +77,29 @@ test('§DX-02ky — the edge-model parameters are named as ignored, not silently
   expect(r.retiredParams).toEqual(['maxGap', 'root']);
   expect(r).not.toHaveProperty('edges');
 });
+
+// §DX-02ky-FU — the rest of the class: validate migrated, the two link-counting routes retired.
+test('§DX-02ky-FU — validate reports a node\'s cell, its primary and its occupied neighbours', async () => {
+  const bk = await (await fetch(`${BASE}/api/graph/validate/BK`)).json();
+  expect(bk.cell).toMatchObject({ primary: 'LHR', isPrimary: false });
+  expect(bk.arrivable).toBe(false);
+  const heat = await (await fetch(`${BASE}/api/grid/heatmap`)).json();
+  const lhr = await (await fetch(`${BASE}/api/graph/validate/LHR`)).json();
+  expect(lhr.arrivable).toBe(true);
+  expect(lhr.heat).toBe(heat.cells.find(c => c.code === 'LHR').heat);
+  expect(Object.values(lhr.neighbours).filter(Boolean)).toHaveLength(lhr.heat);
+  const isolated = (await (await fetch(`${BASE}/api/graph/broken`)).json()).cells[0].code;
+  expect((await (await fetch(`${BASE}/api/graph/validate/${isolated}`)).json()).isolated).toBe(true);
+  expect((await (await fetch(`${BASE}/api/graph/validate/BK?maxGap=4`)).json()).retiredParams).toEqual(['maxGap']);
+  expect((await fetch(`${BASE}/api/graph/validate/NOPE`)).status).toBe(404);
+});
+
+test('§DX-02ky-FU — find-open-location and smart-connect answer 410, and their CLI verbs say why', async () => {
+  expect((await fetch(`${BASE}/api/graph/find-open-location/LHR`)).status).toBe(410);
+  expect((await fetch(`${BASE}/api/graph/smart-connect`, { method: 'POST', body: '{"from":"LHR","to":"CON"}' })).status).toBe(410);
+  const run = (...a) => { try { return execFileSync(process.execPath, [path.join(ROOT, 'src', 'api', 'wb.js'), ...a, '--server', BASE],
+    { cwd: ROOT, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] }); } catch (e) { return String(e.stdout) + String(e.stderr); } };
+  expect(run('smart-connect', 'LHR', 'CON')).toMatch(/is retired \(§DX-02ky-FU\)/);
+  expect(run('find-open-location', 'LHR')).toMatch(/is retired \(§DX-02ky-FU\)/);
+  expect(run('validate', 'BK')).toMatch(/hidden behind LHR/);
+});

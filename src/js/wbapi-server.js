@@ -37,7 +37,7 @@ const WBAPI     = require('./wbapi-core');
 const Mover     = require('./mover');   // §WALK-2 shared movement kernel (also inlined in play.html)
 const Rooms     = require('./rooms');   // §NAV-01f shared room-description kernel (also inlined in play.html)
 const Duel      = require('./duel');
-const { questContext, proveDraft } = require('./quest-context');   // §EDITOR-04 questline neighbourhood    // §MESH-01j shared duel-resolution kernel (also inlined in play.html)
+const { questContext, proveDraft, cellOf } = require('./quest-context');   // §EDITOR-04 questline neighbourhood    // §MESH-01j shared duel-resolution kernel (also inlined in play.html)
 const Anthropic = require('@anthropic-ai/sdk');
 
 // ── Repo layout (this file lives in js/; assets/data are one level up) ────────
@@ -6131,186 +6131,22 @@ async function route(req, res) {
       });
     }
 
-    // ── suggestBetween — ranked placement candidates for an off/isolated node ──
-    // Given source coords ca and destination coords cb (may be null), returns up to 7
-    // candidate positions in priority order:
-    //   1. True midpoint between source and destination
-    //   2. Source row, mid-column
-    //   3. Source column, mid-row
-    //   4. Destination row, mid-column
-    //   5. Destination column, mid-row
-    //   6. Source row, destination column  (L-bend via source)
-    //   7. Destination row, source column  (L-bend via destination)
-    // Each candidate: {r, c, reason, free, occupiedBy}
-    // When cb is null (target has no coords), estimates position 4 steps along dir from ca.
-    function suggestBetween(ca, cb, dir, allCoords, excludeCode, step, sharedOccupied) {
-      const STEP = step || 4;
-      // If destination has no coords, project a target in the given direction
-      const DR4 = { N:-STEP, S:STEP, E:0, W:0 };
-      const DC4 = { N:0, S:0, E:STEP, W:-STEP };
-      const projected = cb || { r: ca.r + DR4[dir]*3, c: ca.c + DC4[dir]*3 };
-
-      // sharedOccupied: caller-built map (all coords). Build it once per batch, not per call.
-      const occupied = sharedOccupied || (() => {
-        const m = new Map();
-        for (const [code, pos] of Object.entries(allCoords)) m.set(`${pos.r},${pos.c}`, code);
-        return m;
-      })();
-
-      // Snap to nearest grid step
-      const snap = v => Math.round(v / STEP) * STEP;
-
-      const out = [];
-      const seen = new Set();
-      function add(r, c, reason) {
-        r = snap(r); c = snap(c);
-        const key = `${r},${c}`;
-        if (seen.has(key)) return;
-        seen.add(key);
-        const occ = occupied.get(key) || null;
-        // treat excludeCode's own position as free (caller may have moved it)
-        const isFree = !occ || occ === excludeCode;
-        const cmd = excludeCode
-          ? `curl -s -XPUT http://localhost:${PORT}/api/coords/${excludeCode} -H 'Content-Type: application/json' -d '{"r":${r},"c":${c}}'`
-          : `curl -s -XPOST http://localhost:${PORT}/api/node -H 'Content-Type: application/json' -d '{"code":"J_new","name":"junction","label":"Junction","act":1}' && curl -s -XPUT http://localhost:${PORT}/api/coords/J_new -H 'Content-Type: application/json' -d '{"r":${r},"c":${c}}'`;
-        out.push({ r, c, reason, free: isFree, occupiedBy: isFree ? null : occ, moveCmd: cmd });
-      }
-
-      const mr = (ca.r + projected.r) / 2;
-      const mc = (ca.c + projected.c) / 2;
-
-      add(mr, mc,           'midpoint between source and destination');
-      add(ca.r, mc,         'source row, mid-column');
-      add(mr,  ca.c,        'source column, mid-row');
-      add(projected.r, mc,  'destination row, mid-column');
-      add(mr,  projected.c, 'destination column, mid-row');
-      add(ca.r, projected.c,'source row, destination column');
-      add(projected.r, ca.c,'destination row, source column');
-
-      return out;
-    }
-
     // ── GET /api/graph/validate/{code} ───────────────────────────────────────
-    // Check one node's N/E/S/W connections for walkability (gap ≤ maxGap, same axis)
+    // §DX-02ky-FU: one node's place in the cell grid — its cell, whether it is the cell's primary
+    // (the only node a player can arrive at), and which of its four neighbour cells are occupied.
+    // It checked the node's own N/E/S/W pointers, which §CELL-01 stripped from every node.
     if (parts[1] === 'validate' && method === 'GET') {
       const code = parts[2];
-      const maxGap = Math.max(1, parseInt(url.searchParams.get('maxGap') || '4', 10));
       if (!code || !nm[code]) return json(res, 404, { error:`Node "${code}" not found` });
-      const cc = WBAPI.nodeCoords[code];
-      const allCoords = WBAPI.nodeCoords;
-      const result = { code, coords: cc || null, maxGap, connections: {}, also_target_of: [] };
-      const DIRS4 = ['N','E','S','W'];
-
-      for (const d of DIRS4) {
-        const tgt = nm[code]?.[d];
-        if (!tgt) { result.connections[d] = { target:null, status:'unset' }; continue; }
-        const tc = WBAPI.nodeCoords[tgt];
-        if (!cc) { result.connections[d] = { target:tgt, status:'src_no_coords' }; continue; }
-        if (!tc) {
-          // Target has no coordinates at all — suggest where to place it
-          const candidates = suggestBetween(cc, null, d, allCoords, tgt);
-          const best = candidates.find(c => c.free) || candidates[0];
-          result.connections[d] = {
-            target: tgt, status: 'tgt_no_coords',
-            fix: `PUT /api/coords/${tgt} {"r":${best.r},"c":${best.c}}`,
-            moveSuggestion: {
-              node: tgt,
-              note: `"${tgt}" has no coordinates — place it between "${code}" and the path ahead`,
-              candidates,
-              recommended: best,
-            },
-          };
-          continue;
-        }
-        const dr = tc.r - cc.r, dc = tc.c - cc.c;
-        const gap  = d in {N:1,S:1} ? Math.abs(dr) : Math.abs(dc);
-        const off  = d in {N:1,S:1} ? Math.abs(dc) : Math.abs(dr);
-        const goodDir = (d==='N'&&dr<0)||(d==='S'&&dr>0)||(d==='E'&&dc>0)||(d==='W'&&dc<0);
-        let status = 'ok', fix = null, moveSuggestion = null;
-
-        if (off > 0 && gap > maxGap) {
-          status = 'diagonal_and_gap';
-          fix = `corner-junction or move both nodes`;
-          // Suggest moving the target to be between source and itself, snapped to axis
-          const candidates = suggestBetween(cc, tc, d, allCoords, tgt);
-          const best = candidates.find(c => c.free) || candidates[0];
-          moveSuggestion = {
-            node: tgt,
-            note: `"${tgt}" is diagonal AND too far — move it between "${code}" and its current position`,
-            candidates,
-            recommended: best,
-          };
-        } else if (off > 0) {
-          status = 'off_axis';
-          // Axis-align: snap target onto the correct row (E/W) or column (N/S) of source, then check distance
-          const axisSnapped = (d==='N'||d==='S') ? { r: tc.r, c: cc.c } : { r: cc.r, c: tc.c };
-          const candidates = suggestBetween(cc, axisSnapped, d, allCoords, tgt);
-          const best = candidates.find(c => c.free) || candidates[0];
-          fix = `Move "${tgt}" onto the same ${(d==='N'||d==='S')?'column':'row'} as "${code}"`;
-          moveSuggestion = {
-            node: tgt,
-            note: `"${tgt}" is off-axis — move it onto the correct ${(d==='N'||d==='S')?'column':'row'} of "${code}"`,
-            candidates,
-            recommended: best,
-          };
-        } else if (!goodDir) {
-          status = 'wrong_direction';
-          fix = `coords reversed — check if ${tgt} is actually ${OPP[d]} of ${code}`;
-        } else if (gap > maxGap) {
-          status = 'gap_too_large';
-          // §WALK-1.5: empty land cells between the two nodes are freely walkable, so a
-          // large gap is no longer "broken" — confirm with the reachability flood.
-          fix = `gap=${gap} cells, but empty land is walkable post-§WALK-1.5 — verify via GET /api/graph/reachability`;
-        }
-        result.connections[d] = { target:tgt, targetCoords:tc, gap, axisOffset:off, goodDirection:goodDir, status, fix, moveSuggestion };
-      }
-
-      // Check: is this node the target of any off-axis connection?
-      for (const [src, dirs] of Object.entries(nm)) {
-        if (src === code) continue;
-        const sc = WBAPI.nodeCoords[src];
-        for (const d of DIRS4) {
-          if (dirs[d] !== code) continue;
-          if (!sc || !cc) continue;
-          const dr = cc.r - sc.r, dc = cc.c - sc.c;
-          const gap = d in {N:1,S:1} ? Math.abs(dr) : Math.abs(dc);
-          const off = d in {N:1,S:1} ? Math.abs(dc) : Math.abs(dr);
-          if (off > 0 || gap > maxGap) {
-            const candidates = suggestBetween(sc, cc, d, allCoords, code);
-            const best = candidates.find(c => c.free) || candidates[0];
-            result.also_target_of.push({
-              from:src, fromDir:d, fromCoords:sc, gap, axisOffset:off,
-              status: off>0 ? 'off_axis' : 'gap_too_large',
-              moveSuggestion: {
-                node: code,
-                note: `"${code}" is off from "${src}"'s ${d} connection — move it between them`,
-                candidates,
-                recommended: best,
-              },
-            });
-          }
-        }
-      }
-
-      // Diagnosis for corner nodes
-      const incoming = result.also_target_of;
-      const nsIncoming = incoming.filter(x=>x.fromDir in {N:1,S:1});
-      const ewIncoming = incoming.filter(x=>x.fromDir in {E:1,W:1});
-      if ((nsIncoming.length && ewIncoming.length) || (Object.values(result.connections).some(c=>c.status==='off_axis'))) {
-        const rFromEW = cc ? cc.r : '?';
-        const cFromNS = nsIncoming[0] ? WBAPI.nodeCoords[nsIncoming[0].from]?.c : '?';
-        result.diagnosis = `CORNER NODE — must sit at axis intersection: r=${rFromEW} c=${cFromNS}`;
-        if (cc && cFromNS !== '?' && (cc.c !== cFromNS)) {
-          const correctPos = { r: rFromEW, c: cFromNS };
-          result.fixCommand = `PUT /api/coords/${code} {"r":${rFromEW},"c":${cFromNS}}`;
-          // Also check collision at the correct position
-          const occAt = Object.entries(allCoords).find(([k,v]) => k !== code && v.r === correctPos.r && v.c === correctPos.c);
-          if (occAt) result.fixConflict = `(${rFromEW},${cFromNS}) is occupied by "${occAt[0]}" — swap or move it first`;
-        }
-      }
-
-      logResponse('GET', url.pathname, 200, `validate/${code}`);
-      return json(res, 200, result);
+      const cell = cellOf(WBAPI, code);
+      const neighbours = {};
+      if (cell) for (const [d, dr, dc] of [['N',-1,0],['S',1,0],['E',0,1],['W',0,-1]]) neighbours[d] = cellGrid[`${cell.r+dr},${cell.c+dc}`] || null;
+      const heat = Object.values(neighbours).filter(Boolean).length;
+      const retiredParams = ['maxGap'].filter(p => url.searchParams.has(p));
+      logResponse('GET', url.pathname, 200, `validate/${code}  heat ${heat}${cell && !cell.isPrimary ? '  (not primary)' : ''}`);
+      return json(res, 200, { ok:true, code, label: nm[code].label || null, cell, neighbours, heat,
+        isolated: !!cell && heat === 0, arrivable: !!cell && cell.isPrimary,
+        ...(retiredParams.length ? { retiredParams, note: 'maxGap measured N/S/E/W links §CELL-01 stripped; it is ignored.' } : {}) });
     }
 
     // ── GET /api/graph/broken ─────────────────────────────────────────────────
@@ -6455,209 +6291,24 @@ async function route(req, res) {
     }
 
     // ── GET /api/graph/find-open-location/{code} ─────────────────────────────
-    // Walk the network BFS from {code}. Return nodes that can accept a new
-    // neighbour without hitting the 4-connection cap.  Rules:
-    //   degree ≤ 2  → directAttach  (connect straight to it)
-    //   degree = 3  → junctionNeeded (spawn junction first, then connect)
-    //   degree = 4  → skip
-    // Dense cells (≥3 of the 4 axis-adjacent grid slots occupied) are skipped.
-    // Query params: ?radius=8 (BFS hop limit)
-    if (parts[1] === 'find-open-location' && parts[2] && method === 'GET') {
-      // §CELL-06: replace DIRS4 edge-degree with CELL_GRID adjacency count
-      const DIRS4    = ['N','E','S','W'];
-      const startCode = parts[2];
-      if (!nm[startCode]) return json(res, 404, { error: `Node "${startCode}" not found` });
-      const radius = Math.max(1, Math.min(20, parseInt(url.searchParams.get('radius') || '8', 10)));
-      const allCoords = WBAPI.nodeCoords;
-
-      // Degree of a node
-      const deg = code => DIRS4.filter(d => nm[code]?.[d] && nm[nm[code][d]]).length;
-
-      // Grid density: count occupied axis-adjacent cells (not diagonals)
-      const density = (r, c) => {
-        let n = 0;
-        for (const [dr, dc] of [[-1,0],[1,0],[0,-1],[0,1]]) {
-          if (allCoords && Object.values(allCoords).some(p => p.r === r+dr && p.c === c+dc)) n++;
-        }
-        return n;
-      };
-
-      const visited = new Set();
-      const queue = [{ code: startCode, depth: 0 }];
-      const directAttach = [], junctionNeeded = [], deadEnds = [];
-
-      while (queue.length) {
-        const { code, depth } = queue.shift();
-        if (visited.has(code) || depth > radius) continue;
-        visited.add(code);
-
-        const d = deg(code);
-        const coord = allCoords[code];
-        const dense = coord ? density(coord.r, coord.c) : 0;
-        const freeSlots = DIRS4.filter(dir => !nm[code]?.[dir]);
-        const entry = { code, degree: d, depth, density: dense,
-          coords: coord || null, freeSlots, label: nm[code]?.label };
-
-        if (d === 1 && depth > 0)       deadEnds.push(entry);
-        if (d <= 2 && dense < 3)        directAttach.push(entry);
-        else if (d === 3 && dense < 3)  junctionNeeded.push(entry);
-
-        for (const dir of DIRS4) {
-          const tgt = nm[code]?.[dir];
-          if (tgt && nm[tgt] && !visited.has(tgt)) queue.push({ code: tgt, depth: depth + 1 });
-        }
-      }
-
-      // Sort each list: prefer shallower, then lower density
-      const rank = e => e.depth * 10 + e.density;
-      directAttach.sort((a, b) => rank(a) - rank(b));
-      junctionNeeded.sort((a, b) => rank(a) - rank(b));
-
-      logResponse('GET', url.pathname, 200,
-        `find-open-location: ${directAttach.length} direct, ${junctionNeeded.length} junction-needed, ${deadEnds.length} dead-ends`);
-      return json(res, 200, {
-        ok: true, startCode, radius,
-        summary: { directAttach: directAttach.length, junctionNeeded: junctionNeeded.length, deadEnds: deadEnds.length },
-        directAttach:    directAttach.slice(0, 10),
-        junctionNeeded:  junctionNeeded.slice(0, 10),
-        deadEnds:        deadEnds.slice(0, 10),
-        advice: directAttach.length
-          ? `Best open slot: ${directAttach[0].code} (deg=${directAttach[0].degree}, depth=${directAttach[0].depth})`
-          : junctionNeeded.length
-          ? `All nearby nodes at deg=3 — spawn junction at ${junctionNeeded[0].code} first`
-          : 'Area saturated — try larger radius or different city',
-      });
+    // §DX-02ky-FU: retired. It ranked nodes by how many N/E/S/W links they had, to find one
+    // that could take another; nodes have had no links since §CELL-01, so every answer was
+    // "attach to the node you asked about".
+    if (parts[1] === 'find-open-location' && method === 'GET') {
+      logResponse('GET', url.pathname, 410, 'find-open-location retired (§DX-02ky-FU)');
+      return json(res, 410, { ok:false,
+        error:'find-open-location is retired: it counted N/E/S/W links, which §CELL-01 stripped. A node is placed on a cell, and a cell is walkable from its occupied neighbours.',
+        see:['GET /api/graph/validate/{code}', 'GET /api/grid/heatmap', 'GET /api/graph/reachability'] });
     }
 
     // ── POST /api/graph/smart-connect ─────────────────────────────────────────
-    // Mesh-aware bidirectional connect: A → B is really A-mesh → B-mesh.
-    // Algorithm:
-    //   1. Walk A's network (BFS, up to meshRadius hops) toward B to find
-    //      the nearest node in A's mesh with a free slot.
-    //   2. Walk B's network toward A to find the nearest node in B's mesh
-    //      with a free slot.
-    //   3. If either insertion node has degree=3, spawn a junction there first.
-    //   4. Wire the two insertion nodes together (or note gap for fill-gap).
-    // Body: { from, to, dir?, meshRadius?, dryRun? }
+    // §DX-02ky-FU: retired. It planned N/E/S/W wiring and junctions between two cities' meshes;
+    // links were stripped by §CELL-01 and junctions deleted by §CELL-05.
     if (parts[1] === 'smart-connect' && method === 'POST') {
-      // §CELL-06: replace DIRS4 edge-degree with CELL_GRID adjacency count
-      const DIRS4 = ['N','E','S','W'];
-      let body; try { body = await readBody(req); } catch(e) { return json(res,400,{error:'Invalid JSON'}); }
-      const { from: fromCode, to: toCode, meshRadius = 6, dryRun = true } = body || {};
-      if (!fromCode || !toCode) return json(res, 400, { error: 'Required: from, to' });
-      if (!nm[fromCode]) return json(res, 404, { error: `Node "${fromCode}" not found` });
-      if (!nm[toCode])   return json(res, 404, { error: `Node "${toCode}" not found` });
-
-      const allCoords = WBAPI.nodeCoords;
-      const deg = code => DIRS4.filter(d => nm[code]?.[d] && nm[nm[code][d]]).length;
-
-      // BFS walk from startCode, scoring each candidate by proximity to targetCoord
-      function walkMesh(startCode, targetCode) {
-        const targetCoord = allCoords[targetCode];
-        const visited = new Set();
-        const queue = [{ code: startCode, depth: 0 }];
-        const candidates = [];
-
-        while (queue.length) {
-          const { code, depth } = queue.shift();
-          if (visited.has(code) || depth > meshRadius) continue;
-          visited.add(code);
-
-          const d = deg(code);
-          const coord = allCoords[code];
-
-          // Distance toward target (Manhattan on grid)
-          const dist = (coord && targetCoord)
-            ? Math.abs(coord.r - targetCoord.r) + Math.abs(coord.c - targetCoord.c)
-            : 999;
-
-          const freeSlots = DIRS4.filter(dir => !nm[code]?.[dir]);
-
-          if (d < 4 && freeSlots.length > 0) {
-            candidates.push({
-              code, degree: d, depth, dist, freeSlots,
-              needsJunction: d === 3,  // would fill 4th slot → spawn junction first
-              label: nm[code]?.label,
-              coords: coord || null,
-            });
-          }
-
-          for (const dir of DIRS4) {
-            const tgt = nm[code]?.[dir];
-            if (tgt && nm[tgt] && !visited.has(tgt)) queue.push({ code: tgt, depth: depth + 1 });
-          }
-        }
-
-        // Prefer: shallow depth, low dist toward target, lower degree
-        candidates.sort((a, b) =>
-          (a.depth + a.dist * 0.1 + (a.needsJunction ? 2 : 0)) -
-          (b.depth + b.dist * 0.1 + (b.needsJunction ? 2 : 0))
-        );
-        return candidates.slice(0, 5);
-      }
-
-      const fromCandidates = walkMesh(fromCode, toCode);
-      const toCandidates   = walkMesh(toCode,   fromCode);
-
-      logTrace('smart-connect', `from=${fromCode}(${fromCandidates.length} candidates) to=${toCode}(${toCandidates.length} candidates) meshRadius=${meshRadius}`);
-      if (fromCandidates.length) logTrace('smart-connect insertA', `best=${fromCandidates[0].code} deg=${fromCandidates[0].degree} depth=${fromCandidates[0].depth} dist=${fromCandidates[0].dist}`);
-      if (toCandidates.length)   logTrace('smart-connect insertB', `best=${toCandidates[0].code} deg=${toCandidates[0].degree} depth=${toCandidates[0].depth} dist=${toCandidates[0].dist}`);
-      if (!fromCandidates.length) return json(res, 409, {
-        error: `No open slots found within ${meshRadius} hops of "${fromCode}"`,
-        advice: `Run ./bin/api find-open-location ${fromCode} to inspect the mesh`,
-      });
-      if (!toCandidates.length) return json(res, 409, {
-        error: `No open slots found within ${meshRadius} hops of "${toCode}"`,
-        advice: `Run ./bin/api find-open-location ${toCode} to inspect the mesh`,
-      });
-
-      const insertA = fromCandidates[0];
-      const insertB = toCandidates[0];
-
-      // Determine best direction between the two insertion points
-      const cA = insertA.coords, cB = insertB.coords;
-      let bestDir = 'E';  // fallback
-      if (cA && cB) {
-        const dr = cB.r - cA.r, dc = cB.c - cA.c;
-        if (Math.abs(dc) >= Math.abs(dr)) bestDir = dc >= 0 ? 'E' : 'W';
-        else                              bestDir = dr >= 0 ? 'S' : 'N';
-        // Prefer a free slot in that direction
-        if (!insertA.freeSlots.includes(bestDir)) bestDir = insertA.freeSlots[0] || bestDir;
-      }
-      const reverseDir = OPP[bestDir];
-
-      const gap = (cA && cB)
-        ? Math.abs(['N','S'].includes(bestDir) ? cB.r - cA.r : cB.c - cA.c)
-        : null;
-
-      const plan = {
-        fromCity:   fromCode,
-        toCity:     toCode,
-        insertA:    { ...insertA, action: insertA.needsJunction ? 'spawn_junction_then_connect' : 'connect_direct' },
-        insertB:    { ...insertB, action: insertB.needsJunction ? 'spawn_junction_then_connect' : 'connect_direct' },
-        direction:  bestDir,
-        gap,
-        needsFillGap: gap !== null && gap > 4,
-        dryRun,
-      };
-
-      if (dryRun) {
-        logResponse('POST', url.pathname, 200, `smart-connect dry-run: ${insertA.code}→${insertB.code}`);
-        return json(res, 200, { ok: true, dryRun: true, plan,
-          commands: [
-            insertA.needsJunction
-              ? `./bin/api junction ${insertA.code} ${bestDir} --execute  # spawn junction at deg-3 node`
-              : `./bin/api connect ${insertA.code} ${bestDir} ${insertB.code}  # direct connect`,
-            ...(plan.needsFillGap ? [`./bin/api fill-gap ${insertA.code} ${bestDir} ${insertB.code} --execute  # bridge gap`] : []),
-          ],
-        });
-      }
-
-      // Execute: connect (possibly via junction) and report
-      // (actual write deferred to api.sh commands — this dry-run plan is the primary output)
-      logResponse('POST', url.pathname, 200, `smart-connect: plan for ${insertA.code}→${insertB.code}`);
-      return json(res, 200, { ok: true, dryRun: false, plan,
-        note: 'Execute the commands field to apply. smart-connect returns the plan; use ./bin/api connect + fill-gap to execute.' });
+      logResponse('POST', url.pathname, 410, 'smart-connect retired (§DX-02ky-FU)');
+      return json(res, 410, { ok:false,
+        error:'smart-connect is retired: it planned N/E/S/W links and junctions, which §CELL-01 and §CELL-05 removed. Connectivity is cell adjacency now.',
+        see:['GET /api/graph/reachability', 'GET /api/graph/broken'] });
     }
 
     // ── POST /api/graph/promote-junction ─────────────────────────────────────

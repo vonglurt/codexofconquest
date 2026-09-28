@@ -8,6 +8,8 @@
 > 4. **Apply** with a single targeted call
 > 5. **Verify** the result
 
+> ⚠️ **Much of this FAQ predates §CELL-01 (2026-07).** Nodes no longer carry `N`/`E`/`S`/`W` links and junctions are gone, so every recipe here that reads links, `maxGap`, junctions or `moveSuggestion` describes a retired model. **Current:** §1.8 and §3.1 (`validate`), §1.9 and §3.2 (`broken`), and Parts 12–16 (count, list, detail). `find-open-location` and `smart-connect` answer 410 (§DX-02ky-FU). The rest is kept as history until it is rewritten or archived.
+
 ---
 
 ## Part 1 — Reading and Finding
@@ -71,12 +73,11 @@ wb audit --map
 # Each error shows exact fix command
 ```
 
-### 1.8 Validate one node's connections
+### 1.8 Validate one node's cell
 
 ```bash
 curl "http://localhost:1367/api/graph/validate/BK"
-# NEW ENDPOINT (see Part 3)
-# Returns: for each direction, gap distance, alignment status, fix suggestion
+# Returns: its cell, whether a player can arrive there, and its occupied neighbour cells (see §3.1)
 ```
 
 ### 1.9 Find every isolated cell
@@ -168,109 +169,22 @@ curl -XPOST http://localhost:1367/api/graph/link \
 
 > All endpoints below are live. Every broken connection now returns a `moveSuggestion` block with ranked placement candidates — see §3.9 for the algorithm.
 
-### 3.1 `GET /api/graph/validate/{code}` — Single Node Walkability Check
+### 3.1 `GET /api/graph/validate/{code}` — One Node's Cell
 
-Checks each N/E/S/W connection against grid rules (gap ≤ maxGap, same axis). Every broken connection returns a `moveSuggestion` with up to 7 ranked candidate positions for the node that needs to move.
+Returns the node's cell, whether it is that cell's primary (the only node a player can arrive at, §AUDIT-03x), and which of its four neighbour cells are occupied. `heat` counts them, and `isolated` is `heat: 0`, the per-node view of §3.2. Until §DX-02ky-FU it checked the node's own `N`/`E`/`S`/`W` links, which §CELL-01 stripped. A request passing `maxGap` gets it back in `retiredParams`.
 
-**Request:**
 ```bash
-curl "http://localhost:1367/api/graph/validate/SHW?maxGap=4"
+curl "http://localhost:1367/api/graph/validate/BK"
+./bin/api validate BK
 ```
 
-**Connection status values:**
-
-| Status | Meaning |
-|---|---|
-| `ok` | Aligned, within maxGap |
-| `unset` | No connection in this direction |
-| `src_no_coords` | This node has no coordinates |
-| `tgt_no_coords` | Target has no coordinates — `moveSuggestion` tells where to place it |
-| `off_axis` | Source and target are on different rows and columns — needs axis alignment |
-| `gap_too_large` | Correct axis but gap > maxGap — needs junction(s) between them |
-| `diagonal_and_gap` | Both off-axis and too far |
-| `wrong_direction` | Target is in the opposite direction — check coord swap |
-
-**Response (with moveSuggestion):**
 ```json
 {
-  "code": "SHW",
-  "coords": {"r": 104, "c": 144},
-  "maxGap": 4,
-  "connections": {
-    "N": { "target": null, "status": "unset" },
-    "E": { "target": null, "status": "unset" },
-    "S": { "target": null, "status": "unset" },
-    "W": {
-      "target": "ROT",
-      "targetCoords": {"r": 104, "c": 132},
-      "gap": 12,
-      "axisOffset": 0,
-      "status": "gap_too_large",
-      "fix": "POST /api/graph/fill-gap {\"from\":\"SHW\",\"dir\":\"W\",\"to\":\"ROT\",\"maxGap\":4}",
-      "moveSuggestion": {
-        "node": "(junction)",
-        "note": "Gap=12 — insert a junction between \"SHW\" and \"ROT\"",
-        "recommended": {"r": 104, "c": 136, "reason": "midpoint between source and destination", "free": true,
-          "moveCmd": "curl -s -XPOST http://localhost:1367/api/node -H 'Content-Type: application/json' -d '{\"code\":\"J_new\",\"name\":\"junction\",\"label\":\"Junction\",\"act\":1}' && curl -s -XPUT http://localhost:1367/api/coords/J_new -H 'Content-Type: application/json' -d '{\"r\":104,\"c\":136}'"},
-        "candidates": [
-          {"r":104,"c":136,"reason":"midpoint between source and destination",           "free":true,  "occupiedBy":null},
-          {"r":104,"c":144,"reason":"source row, mid-column",                            "free":false, "occupiedBy":"SHW"},
-          {"r":104,"c":132,"reason":"source column, mid-row",                            "free":false, "occupiedBy":"ROT"},
-          {"r":104,"c":138,"reason":"destination row, mid-column",                       "free":true,  "occupiedBy":null},
-          {"r":104,"c":132,"reason":"destination column, mid-row",                       "free":false, "occupiedBy":"ROT"},
-          {"r":104,"c":132,"reason":"source row, destination column",                    "free":false, "occupiedBy":"ROT"},
-          {"r":104,"c":144,"reason":"destination row, source column",                    "free":false, "occupiedBy":"SHW"}
-        ]
-      }
-    }
-  },
-  "also_target_of": [
-    {
-      "from": "NRG", "fromDir": "N", "fromCoords": {"r": 112, "c": 136},
-      "gap": 8, "axisOffset": 8,
-      "status": "off_axis",
-      "moveSuggestion": {
-        "node": "SHW",
-        "note": "\"SHW\" is off from \"NRG\"'s N connection — move it between them",
-        "recommended": {"r": 108, "c": 136, "reason": "midpoint between source and destination", "free": true,
-          "moveCmd": "curl -s -XPUT http://localhost:1367/api/coords/SHW -H 'Content-Type: application/json' -d '{\"r\":108,\"c\":136}'"},
-        "candidates": [
-          {"r":108,"c":136,"reason":"midpoint between source and destination","free":true},
-          {"r":112,"c":140,"reason":"source row, mid-column",                  "free":true},
-          {"r":108,"c":136,"reason":"source column, mid-row",                  "free":true},
-          {"r":104,"c":140,"reason":"destination row, mid-column",             "free":true},
-          {"r":108,"c":144,"reason":"destination column, mid-row",             "free":false,"occupiedBy":"SHW"},
-          {"r":112,"c":144,"reason":"source row, destination column",          "free":true},
-          {"r":104,"c":136,"reason":"destination row, source column",          "free":true}
-        ]
-      }
-    }
-  ],
-  "diagnosis": "CORNER NODE — must sit at axis intersection: r=104 c=136",
-  "fixCommand": "PUT /api/coords/SHW {\"r\":104,\"c\":136}"
+  "ok": true, "code": "BK", "label": "Birka Shore — Northern Longship Landing",
+  "cell": { "r": 10, "c": 197, "primary": "LHR", "isPrimary": false, "sharedWith": ["LHR"] },
+  "neighbours": { "N": null, "S": null, "E": "BMA", "W": null },
+  "heat": 1, "isolated": false, "arrivable": false
 }
-```
-
-**Practical usage:**
-
-```bash
-# Check a node
-curl "http://localhost:1367/api/graph/validate/BK?maxGap=4"
-
-# Get just the diagnosis
-curl -s "http://localhost:1367/api/graph/validate/SHW?maxGap=4" | jq '.diagnosis'
-
-# Get the first free candidate for every broken connection
-curl -s "http://localhost:1367/api/graph/validate/BK?maxGap=4" | jq '
-  .connections | to_entries[]
-  | select(.value.status != "ok" and .value.status != "unset")
-  | {dir: .key, status: .value.status,
-     move: (.value.moveSuggestion.candidates // [] | map(select(.free)) | .[0])}'
-
-# Get the ready-to-run moveCmd for the recommended position
-curl -s "http://localhost:1367/api/graph/validate/SHW?maxGap=4" | jq '
-  [.connections[].moveSuggestion, .also_target_of[].moveSuggestion]
-  | map(select(. != null)) | .[].recommended.moveCmd'
 ```
 
 ---
@@ -914,7 +828,7 @@ GET  /api/list/node?act=N                — filter by act
 GET  /api/list/node?terrain=X            — filter by terrain
 GET  /api/coords                         — all coordinates
 GET  /api/coords/near/{code}?radius=N    — proximity search
-GET  /api/graph/validate/{code}?maxGap=N — connection check (NEW)
+GET  /api/graph/validate/{code}         — one node's cell: arrivable, neighbours, heat
 GET  /api/graph/broken                  — isolated cells (the ./bin/api broken census)
 GET  /api/graph/path/{from}/{to}         — walkable path (NEW)
 GET  /api/audit/map                      — bidirectional audit

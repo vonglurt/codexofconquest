@@ -327,18 +327,11 @@ dated snapshot the `milepoints/patches` chain is built from.
 **Connection rules (enforced everywhere):**
 - Max 4 connections per node
 - Degree-3 rule: if inserting into a deg=3 node, spawn a junction first (preserves the last slot)
-- A→B is really A-mesh→B-mesh: use `smart-connect` to find the best insertion points in each city's surrounding mesh
 - Dead ends (deg=1) should be extended with a junction when the area allows it
 
 ```bash
-# Preferred: mesh-aware connect (finds best insertion points in each city's mesh)
-./bin/api smart-connect LHR CON           # dry-run: shows insertion plan
-./bin/api smart-connect LHR CON --execute # applies first wiring step
-./bin/api smart-connect LHR CON --radius 8  # search deeper into mesh
-
-# Find open attachment points near a city (where to add new content)
-./bin/api find-open-location LHR          # lists open nodes near Birka
-./bin/api find-open-location LHR --radius 10
+# smart-connect and find-open-location are retired (410, §DX-02ky-FU): they counted N/E/S/W links.
+./bin/api validate LHR                    # a node's cell: arrivable, occupied neighbours
 
 # Direct wire (use when you know exactly where to connect)
 ./bin/api connect WOR E SAL               # warns on deg=3/4; use --force to override

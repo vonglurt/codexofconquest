@@ -1135,6 +1135,22 @@ const CMD = {
     ok(`Fix: re-anchor the node's lat/lon or carve a sea-lane (§WALK-1.5); confirm with ./bin/api reachability`);
   },
 
+  // ── validate: one node's cell — arrivable or hidden, and its occupied neighbours ──
+  // Usage: ./bin/api validate <code>   (§DX-02ky-FU)
+  async validate(pos, flags) {
+    await requireServer();
+    const code = pos[1] && pos[1].toUpperCase();
+    if (!code) die('Usage: ./bin/api validate <code>');
+    const resp = await request('GET', `/api/graph/validate/${code}`);
+    if (resp.status !== 200) { printError(resp); process.exit(1); }
+    const d = resp.body;
+    if (flags.json) { process.stdout.write(JSON.stringify(d, null, 2) + '\n'); return; }
+    if (!d.cell) { ok(`${d.code}  no coordinates`); return; }
+    ok(`${d.code}  cell ${d.cell.r},${d.cell.c}  ${d.arrivable ? 'arrivable (primary)' : `hidden behind ${d.cell.primary}`}  heat ${d.heat}`);
+    ok(`  N ${d.neighbours.N || '—'}  E ${d.neighbours.E || '—'}  S ${d.neighbours.S || '—'}  W ${d.neighbours.W || '—'}`);
+    if (d.isolated) ok(`  isolated: no occupied neighbour cell — see ./bin/api broken`);
+  },
+
   // ── reachability: show how many nodes are reachable from the hub ─────────────
   // Usage: ./bin/api reachability [--hub LHR]
   //   Uses cell-grid BFS (§CELL-06): adjacency is determined by coordinate
@@ -1311,106 +1327,6 @@ const CMD = {
     ok(`  Blocked by NPC:    ${nk.blockedByNpc}`);
   },
 
-  // ── find-open-location: find a node near a city that can accept a new neighbour
-  // Usage: ./bin/api find-open-location <city> [--radius 8]
-  //
-  // Returns open attachment points in the city's mesh:
-  //   directAttach   — degree ≤ 2, connect straight to this node
-  //   junctionNeeded — degree = 3, spawn junction here first, then connect
-  //   deadEnds       — degree = 1 nodes that should be expanded
-  async 'find-open-location'(pos, flags) {
-    const [, code] = pos;
-    if (!code) die('Usage: ./bin/api find-open-location <city> [--radius N]');
-    const radius = flags.radius ? +flags.radius : 8;
-    const resp = await request('GET', `/api/graph/find-open-location/${code}?radius=${radius}`);
-    if (resp.status >= 400) { printError(resp); process.exit(1); }
-    const d = resp.body;
-    ok(`Open locations near ${code}  (radius=${radius})`);
-    ok(`  Direct attach (deg ≤ 2): ${d.summary.directAttach}`);
-    ok(`  Need junction first (deg=3): ${d.summary.junctionNeeded}`);
-    ok(`  Dead ends (deg=1): ${d.summary.deadEnds}`);
-    ok(`Advice: ${d.advice}`);
-    if (d.directAttach?.length) {
-      ok(`\nBest direct slots:`);
-      d.directAttach.slice(0, 5).forEach(e =>
-        ok(`  ${e.code.padEnd(8)} deg=${e.degree}  depth=${e.depth}  density=${e.density}  free=${e.freeSlots.join(',')}  ${(e.label||'').slice(0,30)}`));
-    }
-    if (d.junctionNeeded?.length) {
-      ok(`\nJunction-spawn spots (deg=3):`);
-      d.junctionNeeded.slice(0, 3).forEach(e =>
-        ok(`  ${e.code.padEnd(8)} deg=${e.degree}  depth=${e.depth}  free=${e.freeSlots.join(',')}  ${(e.label||'').slice(0,30)}`));
-    }
-    if (d.deadEnds?.length) {
-      ok(`\nDead ends (should be extended):`);
-      d.deadEnds.slice(0, 5).forEach(e =>
-        ok(`  ${e.code.padEnd(8)} depth=${e.depth}  free=${e.freeSlots.join(',')}  ${(e.label||'').slice(0,30)}`));
-    }
-  },
-
-  // ── smart-connect: mesh-aware A→B connection with degree/junction rules ─────
-  // Usage: ./bin/api smart-connect <from> <to> [--radius 6] [--execute]
-  //
-  // "A to B" is really "A-mesh to B-mesh".
-  // Walks each city's network to find the best insertion points:
-  //   - Nodes with deg ≤ 2: connect directly
-  //   - Nodes with deg = 3: spawn junction first (preserve the 4th slot)
-  //   - Nodes with deg = 4: skip (full), walk deeper
-  // Reports the plan; use --execute to apply the first step.
-  async 'smart-connect'(pos, flags) {
-    const [, fromCode, toCode] = pos;
-    if (!fromCode || !toCode) die('Usage: ./bin/api smart-connect <from> <to> [--radius 6] [--execute]');
-    const radius  = flags.radius ? +flags.radius : 6;
-    const execute = !!flags.execute;
-
-    // Always fetch the plan first (dryRun=true gives us the commands array)
-    const resp = await request('POST', '/api/graph/smart-connect', {
-      from: fromCode, to: toCode, meshRadius: radius, dryRun: true,
-    });
-    if (resp.status >= 400) { printError(resp); process.exit(1); }
-    const d = resp.body;
-    const p = d.plan;
-
-    ok(`Smart-connect: ${fromCode} ↔ ${toCode}`);
-    ok(`  A-mesh insertion: ${p.insertA.code} (deg=${p.insertA.degree}, depth=${p.insertA.depth}, ${p.insertA.action})`);
-    ok(`  B-mesh insertion: ${p.insertB.code} (deg=${p.insertB.degree}, depth=${p.insertB.depth}, ${p.insertB.action})`);
-    ok(`  Bridge direction: ${p.direction}  gap: ${p.gap ?? '?'}  needsFillGap: ${p.needsFillGap}`);
-
-    const cmds = (d.commands || []).filter(c => !c.startsWith('#'));
-    ok(`\nCommands:`);
-    (d.commands || []).forEach(cmd => ok(`  ${cmd}`));
-
-    if (!execute) {
-      ok(`\nAdd --execute to run these automatically.`);
-      return;
-    }
-
-    // Execute each command by delegating to the existing CMD handlers
-    ok(`\nExecuting...`);
-    for (const rawCmd of cmds) {
-      const parts = rawCmd.trim().split(/\s+/);
-      // Commands look like: "./bin/api connect TLL E BTR" or "node layout-solve.js ..."
-      const apiShIdx = parts.findIndex(p => p === './bin/api' || p === 'api.sh');
-      if (apiShIdx >= 0) {
-        const subParts = parts.slice(apiShIdx + 1);
-        const subCmd = subParts[0];
-        const fn = CMD[subCmd];
-        if (fn) {
-          const subFlags = {};
-          const subPos = [subCmd];
-          for (let i = 1; i < subParts.length; i++) {
-            if (subParts[i].startsWith('--')) subFlags[subParts[i].slice(2)] = subParts[i+1]?.startsWith('--') ? true : subParts[++i];
-            else subPos.push(subParts[i]);
-          }
-          subFlags.execute = true;
-          ok(`  → ${subParts.join(' ')}`);
-          await fn(subPos, subFlags);
-          continue;
-        }
-      }
-      ok(`  (manual): ${rawCmd}`);
-    }
-  },
-
   // ── connect: wire two existing nodes together in a direction ────────────────
   // Usage: ./bin/api connect <A> <dir> <B>
   //   Sets A[dir] = B and B[OPP[dir]] = A (bidirectional wire).
@@ -1433,8 +1349,8 @@ const CMD = {
     const degB = ['N','E','S','W'].filter(d => nm[bCode]?.[d]).length;
 
     // Degree-cap warnings
-    if (degA >= 4) { ok(`⚠ ${aCode} already has 4 connections (full). Use ./bin/api smart-connect ${aCode} ${bCode} to find a mesh insertion point.`); if (!flags.force) return; }
-    if (degB >= 4) { ok(`⚠ ${bCode} already has 4 connections (full). Use ./bin/api smart-connect ${aCode} ${bCode} to find a mesh insertion point.`); if (!flags.force) return; }
+    if (degA >= 4) { ok(`⚠ ${aCode} already has 4 connections (full). Use --force to wire it anyway.`); if (!flags.force) return; }
+    if (degB >= 4) { ok(`⚠ ${bCode} already has 4 connections (full). Use --force to wire it anyway.`); if (!flags.force) return; }
     if (degA === 3) ok(`⚠ ${aCode} has 3 connections — this will fill its 4th (last) slot. Consider: ./bin/api junction ${aCode} ${D} --execute  (spawns junction first, preserves slot)`);
     if (degB === 3) ok(`⚠ ${bCode} has 3 connections — this will fill its 4th (last) slot. Consider: ./bin/api junction ${bCode} ${OPP[D]} --execute  (spawns junction first, preserves slot)`);
 
@@ -1483,7 +1399,7 @@ const CMD = {
   // ── cluster-bridge: connect remaining isolated clusters without a full reweave ──
   // Usage: ./bin/api cluster-bridge [--execute]
   //   Dry-run: reports isolated clusters and the nearest bridge target for each.
-  //   --execute: bridges each cluster to the main network via smart-connect.
+  //   --execute: asks smart-connect for a plan per cluster, which answers 410 since §DX-02ky-FU.
   async 'cluster-bridge'(pos, flags) {
     await requireServer();
     const execute = !!flags.execute;
@@ -1822,8 +1738,8 @@ ${C.bold}═══════════════════════�
   §17 nonce — one-time write token
   §18 ai — ask Claude about the API
   §19 MAP VISUALIZATION  (worldmap --regions --region --city --search --monster --route)
-  §20 COORDINATE MANAGEMENT  (geo-seed  move  find-open-location)
-  §21 NETWORK WIRING  (smart-connect  highway  junction  connect)
+  §20 COORDINATE MANAGEMENT  (geo-seed  move)
+  §21 NETWORK WIRING  (highway  junction  connect)
   §22 NETWORK HEALTH & REPAIR  (verify  broken  reachability  junction-audit  cluster-bridge)
   §23 CELL GRID QUERIES  (cell  grid region|heatmap|reachability)
   §24 COMMON RECIPES
@@ -2968,10 +2884,8 @@ ${C.bold}═══════════════════════�
     ./bin/api move LHR 12 18 --swap
     ./bin/api move KRN 13 18
 
-  Find open attachment points near a city (where to add new content):
-    ./bin/api find-open-location LHR
-    ./bin/api find-open-location CON
-    ./bin/api find-open-location LHR --radius 10
+  Is a node's cell arrivable, and which neighbour cells are occupied?
+    ./bin/api validate LHR        # GET /api/graph/validate/LHR (find-open-location is retired)
 
 ${C.bold}═══════════════════════════════════════════════════════════════════
   NETWORK WIRING
@@ -2980,15 +2894,7 @@ ${C.bold}═══════════════════════�
   Connection rules (enforced everywhere):
     • Max 4 connections per node
     • Degree-3 rule: if inserting into a deg=3 node, junction auto-created first
-    • A→B = A-mesh → B-mesh: use smart-connect for city-to-city wiring
     • After any change: run broken + reachability to check for regressions
-
-  Preferred — mesh-aware (finds open insertion points in each city's mesh):
-    ./bin/api smart-connect LHR CON
-    ./bin/api smart-connect LHR CON --execute
-    ./bin/api smart-connect KOL SAM --execute
-    ./bin/api smart-connect GLA NID --execute
-    ./bin/api smart-connect LHR CON --radius 8
 
   Full junction highway (L-shaped route, elbow at corner) — ⚠️ PLANNING ONLY:
     ./bin/api highway LHR CON            # route/elbow/step report (free, honest)
@@ -3185,6 +3091,7 @@ const SYNOPSIS = [
   `  ${C.green}ping${C.reset}                               health check + entity counts`,
   `  ${C.green}verify${C.reset} [--hub LHR]                full cell-grid health: coords + collisions + reachability + isolated`,
   `  ${C.green}broken${C.reset}                             nodes in grid with no cell neighbors (heat=0)`,
+  `  ${C.green}validate${C.reset} <code>                     one node's cell: arrivable or hidden, occupied neighbours  [--json]`,
   `  ${C.green}reachability${C.reset} [--hub LHR]           % reachable from hub (cell-grid BFS)`,
   `  ${C.green}audit${C.reset} [--map]                      integrity scan`,
   ``,
@@ -3212,8 +3119,6 @@ const SYNOPSIS = [
   `  ${C.green}move${C.reset} <CODE> <r> <c> [--swap]       move node coordinates`,
   ``,
   `  ${C.bold}── Network Wiring ──────────────────────────────────────────────────────${C.reset}`,
-  `  ${C.green}smart-connect${C.reset} <A> <B>              mesh-aware connect: finds open slots, respects deg rules  [--radius 6] [--execute]`,
-  `  ${C.green}find-open-location${C.reset} <city>         find open attachment points near a city  [--radius 8]`,
   `  ${C.green}connect${C.reset} <A> <dir> <B>              direct wire (warns on deg=3/4 issues)  [--force]`,
   `  ${C.green}junction${C.reset} <from> <dir> [--label "…"] [--terrain T] [--execute]`,
   `  ${C.green}highway${C.reset} <from> <to>                ⚠️ route PLANNING only  [--step 4]  (--execute refused, §DX-01d)`,
@@ -3233,9 +3138,11 @@ const SYNOPSIS = [
 ].join('\n');
 
 const RETIRED = {
-  'fix-diagonal':      'It read node.N/S/E/W, stripped to zero by §CELL-01. Census: ./bin/api broken',
-  'fix-all-broken':    'It read node.N/S/E/W, stripped to zero by §CELL-01. Census: ./bin/api broken — repair: ./bin/api reweave',
-  'fix-bidirectional': 'It read node.N/S/E/W, stripped to zero by §CELL-01. Census: ./bin/api broken',
+  'fix-diagonal':      '(§DX-02kx). It read node.N/S/E/W, stripped to zero by §CELL-01. Census: ./bin/api broken',
+  'fix-all-broken':    '(§DX-02kx). It read node.N/S/E/W, stripped to zero by §CELL-01. Census: ./bin/api broken — repair: ./bin/api reweave',
+  'fix-bidirectional': '(§DX-02kx). It read node.N/S/E/W, stripped to zero by §CELL-01. Census: ./bin/api broken',
+  'find-open-location': '(§DX-02ky-FU). It ranked nodes by N/E/S/W links, stripped by §CELL-01. A node\'s cell: ./bin/api validate <code>',
+  'smart-connect':     '(§DX-02ky-FU). It planned N/E/S/W links and junctions, removed by §CELL-01/§CELL-05. Connectivity: ./bin/api reachability',
 };
 
 function printSynopsis() {
@@ -3259,7 +3166,7 @@ function printSynopsis() {
   }
 
   const cmd = pos[0] || 'help';
-  if (RETIRED[cmd]) die(`"${cmd}" is retired (§DX-02kx). ${RETIRED[cmd]}`);
+  if (RETIRED[cmd]) die(`"${cmd}" is retired ${RETIRED[cmd]}`);
   const fn  = CMD[cmd];
   if (!fn) die(`Unknown command "${cmd}". Run: ./bin/api help`);
 
