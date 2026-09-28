@@ -1043,6 +1043,27 @@ function getImpassable() {
   return _seaCache;
 }
 
+// The land a player can walk from (r0,c0): 4-connected, sea impassable, longitude wraps,
+// latitude clamps — the passability the mover walks (§WALK-3).
+const WALK_ROWS = 90, WALK_COLS = 360;
+function landPassable(r, c) { return r >= 0 && r < WALK_ROWS && !getImpassable().has(`${r},${c}`); }
+function landFloodCells(r0, c0) {
+  const seen = new Set();
+  if (!landPassable(r0, c0)) return seen;
+  seen.add(`${r0},${c0}`);
+  const stack = [[r0, c0]];
+  while (stack.length) {
+    const [r, c] = stack.pop();
+    for (const [dr, dc] of MOVES4) {
+      const nr = r + dr, nc = ((c + dc) % WALK_COLS + WALK_COLS) % WALK_COLS;
+      const k = `${nr},${nc}`;
+      if (seen.has(k) || !landPassable(nr, nc)) continue;
+      seen.add(k); stack.push([nr, nc]);
+    }
+  }
+  return seen;
+}
+
 // First-wins locale-list grid: "r,c" → [code,…] in NODE_MAP key order (so the
 // primary, list[0], matches the client's CELL_GRID at collided 1° cells).
 let _lgCacheNm = null, _lgCacheCoords = null, _lgCache = null;
@@ -4961,23 +4982,17 @@ async function route(req, res) {
       if (!coordKeys.has(code))
         suggestions.push({ section:'NODE_COORDS', key:code, field:'coords', msg:`node has no entry in NODE_COORDS — won't appear on map` });
 
-    // SUGGESTIONS — disconnected map graph (BFS from num=1 node)
+    // SUGGESTIONS — nodes a player cannot walk to from the num=1 node, by the reachability flood (§DX-02ky-FU3)
     const allNodeCodes = Object.keys(WBAPI.nodeMap);
     if (allNodeCodes.length > 0) {
       const startCode = allNodeCodes.find(k => WBAPI.nodeMap[k].num === 1) || allNodeCodes[0];
-      const visited = new Set();
-      const queue = [startCode];
-      while (queue.length) {
-        const curr = queue.shift();
-        if (visited.has(curr)) continue;
-        visited.add(curr);
-        const n = WBAPI.nodeMap[curr];
-        if (!n) continue;
-        for (const dir of ['N','S','E','W']) if (n[dir] && WBAPI.nodeMap[n[dir]]) queue.push(n[dir]);
+      const from = WBAPI.nodeCoords[startCode];
+      const reached = from ? landFloodCells(from.r, from.c) : new Set();
+      for (const code of allNodeCodes) {
+        const p = WBAPI.nodeCoords[code];
+        if (p && !reached.has(`${p.r},${p.c}`))
+          suggestions.push({ section:'NODE_COORDS', key:code, field:'connectivity', msg:`cell ${p.r},${p.c} cannot be walked to from "${startCode}" over land — re-anchor its lat/lon or carve a lane (§WALK-1.5)` });
       }
-      for (const code of allNodeCodes)
-        if (!visited.has(code))
-          suggestions.push({ section:'NODE_MAP', key:code, field:'connectivity', msg:`not reachable via map traversal from "${startCode}" — island node or missing exit link` });
     }
 
     const summary = { errors: errors.length, warnings: warnings.length, suggestions: suggestions.length };
@@ -5693,25 +5708,7 @@ async function route(req, res) {
     // Diagnosis only: if anything is unreachable, the fix is a content decision
     // (re-anchor a node's lat/lon, or carve a lane) — never an auto-junction.
     if (parts[1] === 'reachability' && method === 'GET') {
-      const IMP = getImpassable();
-      const ROWS = 90, COLS = 360;
-      const passable = (r, c) => r >= 0 && r < ROWS && !IMP.has(`${r},${c}`);
-      function floodCells(r0, c0) {
-        const seen = new Set();
-        if (!passable(r0, c0)) return seen;   // hub on sea — snap-to-land should prevent this
-        seen.add(`${r0},${c0}`);
-        const stack = [[r0, c0]];
-        while (stack.length) {
-          const [r, c] = stack.pop();
-          for (const [dr, dc] of MOVES4) {
-            const nr = r + dr, nc = ((c + dc) % COLS + COLS) % COLS;   // wrap E↔W, clamp checked in passable
-            const k = `${nr},${nc}`;
-            if (seen.has(k) || !passable(nr, nc)) continue;
-            seen.add(k); stack.push([nr, nc]);
-          }
-        }
-        return seen;
-      }
+      const passable = landPassable, floodCells = landFloodCells;
 
       const hubCoord = coords[hub];
       if (!hubCoord) return json(res, 404, { ok: false, error: `hub '${hub}' has no coordinates` });

@@ -114,3 +114,10 @@ test('§DX-02ky-FU2 — the junction routes answer 410 naming a replacement, and
     { cwd: ROOT, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] }); } catch (e) { return String(e.stdout) + String(e.stderr); } };
   for (const verb of ['connect', 'junction', 'highway', 'promote-junction']) expect(run(verb, 'LHR', 'S', 'CON')).toMatch(/is retired \(§DX-02ky-FU2\)/);
 });
+
+test('§DX-02ky-FU3 — the audit\'s connectivity suggestions are the nodes reachability cannot walk to', async () => {
+  const reach = await (await fetch(`${BASE}/api/graph/reachability`)).json();
+  const audit = await (await fetch(`${BASE}/api/audit`)).json();
+  const flagged = audit.suggestions.filter(s => s.field === 'connectivity').map(s => s.key).sort();
+  expect(flagged).toEqual(reach.unreachable.map(u => u.code).sort());
+});
