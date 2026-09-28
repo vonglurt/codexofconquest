@@ -1679,7 +1679,7 @@ Nodes: TL (Tilbury) + `STN` (historical `SF`) (Storefront/docks). Two new NPCs, 
 - **Adjutant Vonn** (`vonn`) — TL node; rendered when `tlLedgerRead`; caps at Friendly; holds Conclave position.
 - **Q-TL-01** "The Ledger" — Harbor Board button at `STN` (historical `SF`); clicking reveals 10 empty berths + awards The Harrow Manifest (`📄`, readable). `tlLedgerRead = true`. If `wmFirstResearcherKnown`: manifest shows Isolde Voss as consignee.
 - **Q-TL-02** "The Embargo" — Vonn interaction at TL; two choices: [Report to Birka contacts] (+150gp, `tlEmbargoChallenged`) or [Leave it] (`tlEmbargoDismissed`).
-- **Q-TL-03** "The Missing Ship" — Ori encounter at `STN` (historical `SF`) (Act IV+, `tlLedgerRead`); one-click delivery to Rennau; awards Ori's Account (`📜`, readable) + 300gp + Rennau Dear Friend. If `Froberger's Field Notes` in inventory: extra lore line in account.
+- **Q-TL-03** "The Missing Ship" — Ori encounter at `STN` (historical `SF`) (after `quest_tl_02`, until `tlMissingShipSolved`); one-click delivery to Rennau; awards Ori's Account (`📜`, readable) + 300gp + Rennau Dear Friend. If `Froberger's Field Notes` in inventory: extra lore line in account.
 - **State flags (4):** `tlLedgerRead`, `tlEmbargoChallenged`, `tlEmbargoDismissed`, `tlMissingShipSolved`.
 
 ---

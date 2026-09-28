@@ -188,7 +188,7 @@ NODES: DK(07)★ · SF(09) · GC(26)★
 
 §XIX Tilbury Harbor Arc:
   DK(07) / SF(09) — Harbor Board, 10 missing ships, Rennau NPC
-  SF(09) — Ori encounter (Act IV+, tlLedgerRead)
+  SF(09) — Ori encounter (after quest_tl_02)
   Cross-ref: if wmFirstResearcherKnown → Isolde Voss appears in Harrow Manifest
 
 §XX Visby Underground:
