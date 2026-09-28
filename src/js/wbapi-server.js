@@ -1814,9 +1814,6 @@ function insertAfterLastParsedNode(entry) {
 //   'legacy-passthrough' — retired at runtime (UQF W7d/W8a), still passed through for old
 //                          callers; the validate/advise layer flags it at authoring time.
 //   'derived'            — computed from the id, never authored as stored data.
-// Keys a POST body carries that are the request's, not the quest's (§DX-02lc).
-const QUEST_POST_ENVELOPE = ['nonce', 'id'];
-
 const QUEST_POST_UNDECLARED = {
   arc:               'derived',
   checkAbility:      'legacy-passthrough',
@@ -1829,6 +1826,44 @@ const QUEST_POST_UNDECLARED = {
   onPass:            'legacy-passthrough',
   onFail:            'legacy-passthrough',
 };
+
+// Keys a POST body carries that are the request's, not the quest's (§DX-02lc).
+const QUEST_POST_ENVELOPE = ['nonce', 'id'];
+
+// The node, terrain, monster and npc creates serialize a fixed list and omit the rest, so a
+// body key outside `writes` would vanish under a 201. Each create refuses it instead
+// (§DX-02lc-FU); `envelope` is the request's own keys.
+const NODE_CREATE_FIELDS = { STR:['name','label','text','npc','loot','N','S','E','W'], NUM:['act','sleepCost'], BOOL:['sleep','junction'] };
+const CREATE_KEEPS = {
+  node:    { writes: () => [...NODE_CREATE_FIELDS.STR, ...NODE_CREATE_FIELDS.NUM, ...NODE_CREATE_FIELDS.BOOL, 'battle', 'num'],
+             envelope: ['nonce', 'code', 'r', 'c'], after: 'PUT /api/node/{code}' },
+  terrain: { writes: () => ['monsters', 'label', 'icon'], envelope: ['nonce', 'key'], after: 'PUT /api/terrain/{key}' },
+  monster: { writes: () => ['key', 'name', ...WBAPI.monsters.STATS, 'tier', 'voidTainted'], envelope: ['nonce'],
+             after: 'POST /api/monster/{key}/drop for `drop`, PUT /api/monster/{key} otherwise' },
+  npc:     { writes: () => ['key', 'name', 'occupation', 'node', 'neutral', 'friendly', 'dearFriend'], envelope: ['nonce'],
+             after: 'PUT /api/npc/{key}' },
+};
+
+function refuseUnkeptCreateFields(type, body, method, url, res) {
+  const spec = CREATE_KEEPS[type];
+  const keeps = new Set([...spec.writes(), ...spec.envelope]);
+  const refused = Object.keys(body).filter((f) => !keeps.has(f));
+  if (!refused.length) return false;
+  const vocab = fieldVocabulary(type);
+  const notOnCreate = refused.filter((f) => vocab.has(f));
+  const unknown = refused.filter((f) => !vocab.has(f));
+  const why = [];
+  if (unknown.length) why.push(`No ${type} in the corpus carries ${unknown.join(', ')} and the field schema does not declare ${unknown.length === 1 ? 'it' : 'them'}.`);
+  if (notOnCreate.length) why.push(`${notOnCreate.join(', ')} ${notOnCreate.length === 1 ? 'is a' : 'are'} ${type} field${notOnCreate.length === 1 ? '' : 's'} the create does not write — create without ${notOnCreate.length === 1 ? 'it' : 'them'}, then ${spec.after}.`);
+  logResponse(method, url.pathname, 400, `${type} create: unkept field(s): ${refused.join(', ')}`);
+  json(res, 400, { ok:false,
+    error: `${type} create would drop ${refused.join(', ')} and answer 201. ${why.join(' ')}`,
+    unknownFields: refused,
+    ...(notOnCreate.length ? { notOnCreate } : {}),
+    accepted: [...keeps].sort(),
+    hint: `GET /api/schema/${type} for what each field means.` });
+  return true;
+}
 
 function serializeQuestLiteral(id, body) {
   // §EDITOR-03 (UQF W8b): UQF quests carry schema/gate/bits/completion/onComplete —
@@ -1864,9 +1899,7 @@ function serializeQuestLiteral(id, body) {
 function serializeNodeLiteral(code, body) {
   const maxNum = Object.values(WBAPI.nodeMap).reduce((m, n) => Math.max(m, n.num || 0), 0);
   const num = body.num !== undefined ? Number(body.num) : maxNum + 1;
-  const STR  = ['name','label','text','npc','loot','N','S','E','W'];
-  const NUM  = ['act','sleepCost'];
-  const BOOL = ['sleep', 'junction'];
+  const { STR, NUM, BOOL } = NODE_CREATE_FIELDS;
   const parts = [`  ${code}: { num:${num}`];
   for (const f of STR)  if (body[f] !== undefined) parts.push(`${f}:${JSON.stringify(body[f])}`);
   for (const f of NUM)  if (body[f] !== undefined) parts.push(`${f}:${Number(body[f])}`);
@@ -9927,6 +9960,7 @@ async function route(req, res) {
         logResponse(method, url.pathname, 400, `node create: deprecated fields ${_badNodeFields.join(',')}`);
         return json(res, 400, { ok:false, error:`Fields ${_badNodeFields.join(', ')} are deprecated — exits are derived from cell-grid adjacency, not stored. Place the node at (r,c) to establish connections.`, deprecated: _badNodeFields });
       }
+      if (refuseUnkeptCreateFields('node', body, method, url, res)) return;
       const entry = serializeNodeLiteral(code, body);
       const ins = insertAfterLastParsedNode(entry);
       if (!ins.ok) { logResponse(method, url.pathname, 500, ins.error); return json(res, 500, ins); }
@@ -9973,6 +10007,7 @@ async function route(req, res) {
         logResponse(method, url.pathname, 409, `terrain "${key}" already exists`);
         return json(res, 409, { error:`Terrain "${key}" already exists` });
       }
+      if (refuseUnkeptCreateFields('terrain', body, method, url, res)) return;
       const monsterKeys = Array.isArray(body.monsters) ? body.monsters : [];
       const badKeys = monsterKeys.filter(mk => !WBAPI.monsterPool[mk]);
       if (badKeys.length) {
@@ -10010,6 +10045,7 @@ async function route(req, res) {
           example:{ key:'dock_rat', name:'Dock Rat', ac:11, hp:6, atk:2, dmgDie:4, dmgCount:1, dmgFlat:0, tier:'trivial' },
         });
       }
+      if (refuseUnkeptCreateFields('monster', body, method, url, res)) return;
       const cr = WBAPI.monsters.create(key, body);
       if (!cr.ok) { logResponse(method, url.pathname, 500, cr.error); return json(res, 500, cr); }
       logRow('key', key);
@@ -10037,6 +10073,7 @@ async function route(req, res) {
         logResponse(method, url.pathname, 400, `node "${body.node}" not in NODE_MAP`);
         return json(res, 400, { error:`node "${body.node}" not found in NODE_MAP` });
       }
+      if (refuseUnkeptCreateFields('npc', body, method, url, res)) return;
       const entry = serializeNpcLiteral(key, body);
       const ins = insertBeforeSectionClose('BIRKA_NPC', entry);
       if (!ins.ok) { logResponse(method, url.pathname, 500, ins.error); return json(res, 500, ins); }
