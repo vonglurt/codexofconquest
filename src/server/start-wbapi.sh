@@ -13,7 +13,7 @@ ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 cd "$ROOT"
 
 ENTRY="src/js/wbapi-server.js"
-PORT="${WBAPI_PORT:-1367}"
+export PORT="${WBAPI_PORT:-1367}"
 
 printf '\033[1m── WBAPI server ───────────────────────────────────────────\033[0m\n'
 printf '  node binary   : %s (%s)\n' "$(command -v node)" "$(node --version)"

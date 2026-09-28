@@ -118,6 +118,10 @@ try {
   check('start that never answers', './run.sh stop >/dev/null && ./run.sh server',
     { code: 'nonzero', procs: 0, says: ':1367' },
     { WBAPI_START_CMD: 'true', WBAPI_SETTLE_TIMEOUT: '2' });
+  // §DX-02ks — WBAPI_PORT must move where the server listens, not only the health check.
+  check('start under WBAPI_PORT=1384', './run.sh stop >/dev/null && ./run.sh server',
+    { code: 'zero', procs: 1, says: ':1384' }, { WBAPI_PORT: '1384' });
+  sh('./run.sh stop >/dev/null 2>&1 || true');
 } finally {
   if (wasUp) sh('./run.sh server >/dev/null 2>&1 || true');
   else sh('./run.sh stop >/dev/null 2>&1 || true');
@@ -128,5 +132,5 @@ if (findings.length) {
   for (const f of findings) console.log(`  ${f}`);
   process.exitCode = 1;
 } else {
-  console.log(`✓ check-restart: 6 invocations — chained pair ×3, restart ×2, failed start ×1 — each returned inside ${DEADLINE_MS} ms with the process count asserted`);
+  console.log(`✓ check-restart: 7 invocations — chained pair ×3, restart ×2, failed start ×1, WBAPI_PORT start ×1 — each returned inside ${DEADLINE_MS} ms with the process count asserted`);
 }

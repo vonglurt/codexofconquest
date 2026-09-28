@@ -7,13 +7,14 @@
 #
 # `server` and `restart` are one code path (`start_api`): both drain the old process
 # before launching, both bound the launch, and both exit non-zero when nothing answered.
+# WBAPI_PORT picks the port; it is exported as PORT, the name the server reads.
 # WBAPI_START_CMD overrides the launcher so the failed-start path is assertable
 # (src/scripts/check-restart.js); nothing else sets it.
 set -euo pipefail
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 cd "$ROOT"
 
-PORT="${WBAPI_PORT:-1367}"
+export PORT="${WBAPI_PORT:-1367}"
 SERVER_PAT="src/js/wbapi-server.js"
 MONITOR_PAT="src/bin/monitor-snapshots.py"
 START_CMD="${WBAPI_START_CMD:-./src/server/start-wbapi.sh}"
