@@ -1651,8 +1651,34 @@ function listSnapshots() {
   return { dir, snapshots, totalBytes: snapshots.reduce((n, s) => n + s.bytes, 0) };
 }
 
+// A section whose parse fails loads as an EMPTY collection rather than throwing (§DX-02fi),
+// so a reload proves nothing by succeeding. A collection populated before a write and empty
+// after it means the write destroyed that section: the previous file is put back.
+const GUARDED_COLLECTIONS = ['questDb', 'nodeMap', 'nodeCoords', 'monsterPool', 'monsterDrops', 'worldDb',
+  'birkaNpcs', 'fishPool', 'nightFishPool', 'lakeMagicDb', 'npcDialogues', 'npcDialogue', 'ebNpcDialogue', 'conditionItems'];
+const collectionSize = (v) => (v && typeof v === 'object' ? (Array.isArray(v) ? v.length : Object.keys(v).length) : 0);
+function collectionSizes() {
+  const out = {};
+  for (const k of GUARDED_COLLECTIONS) out[k] = collectionSize(WBAPI[k]);
+  return out;
+}
+function reloadGuarded(before, prevText) {
+  WBAPI.load(GAME_FILE);
+  const emptied = GUARDED_COLLECTIONS.filter((k) => before[k] > 0 && collectionSize(WBAPI[k]) === 0);
+  if (!emptied.length) return null;
+  const tmp = `${GAME_FILE}.tmp-${process.pid}`;
+  fs.writeFileSync(tmp, prevText);
+  fs.renameSync(tmp, GAME_FILE);
+  refreshSourceDigest();
+  WBAPI.load(GAME_FILE);
+  logRow('reload', `${C.red}✗ ${emptied.join(', ')} parsed empty after the write — previous file restored${C.reset}`);
+  return { ok:false, emptied, error:`refused: the write left ${emptied.join(', ')} unparseable (${emptied.map((k) => `${k} ${before[k]} → 0`).join(', ')}); ${path.basename(GAME_FILE)} is restored to its state before the write` };
+}
+
 // After every successful write: save to disk, hot-reload in memory, respond — no process restart.
 function saveAndRestart(res, status, payload) {
+  const before = collectionSizes();
+  const prevText = fs.readFileSync(GAME_FILE, 'utf8');
   const r = saveGameFile();
   if (!r.ok) {
     logRow('autoSave', `${C.red}ERROR: ${r.error}${C.reset}`);
@@ -1661,7 +1687,8 @@ function saveAndRestart(res, status, payload) {
   }
   logRow('autoSave', r.path);
   try {
-    WBAPI.load(GAME_FILE);
+    const bad = reloadGuarded(before, prevText);
+    if (bad) return json(res, 500, bad);
     logRow('reload', 'memory refreshed from disk');
   } catch(e) {
     return json(res, 500, { ok:false, error:`reload failed after save: ${e.message}`, savePath: r.path });
@@ -1683,6 +1710,8 @@ function saveAndRestart(res, status, payload) {
 // the expectedFields path can express.
 function saveAndVerify(res, status, payload, expectedFields, connectType, connectKey, postVerify) {
   // 1. Save to disk (§DX-02k — temp + atomic rename, no dated snapshot left behind)
+  const before = collectionSizes();
+  const prevText = fs.readFileSync(GAME_FILE, 'utf8');
   const r = saveGameFile();
   if (!r.ok) {
     logRow('autoSave', `${C.red}ERROR: ${r.error}${C.reset}`);
@@ -1693,7 +1722,8 @@ function saveAndVerify(res, status, payload, expectedFields, connectType, connec
 
   // 2. Soft reload — re-parse all collections from the saved file (keeps process alive)
   try {
-    WBAPI.load(GAME_FILE);
+    const bad = reloadGuarded(before, prevText);
+    if (bad) return json(res, 500, bad);
     logRow('reload', 'memory refreshed from disk');
   } catch(e) {
     return json(res, 500, { ok:false, error:`reload failed after save: ${e.message}`, savePath: r.path });
@@ -9020,11 +9050,16 @@ async function route(req, res) {
     }
 
     // 4. Single save (§DX-02k — temp + rename, no dated snapshot left behind)
+    const before = collectionSizes();
+    const prevText = fs.readFileSync(GAME_FILE, 'utf8');
     const saveR = saveGameFile();
     if (!saveR.ok) return saveR.stale
       ? json(res, 409, { ok:false, stale:true, error: saveR.error, results })
       : json(res, 500, { ok:false, error: saveR.overwrite ? saveR.error : `save failed: ${saveR.error}`, results });
-    try { WBAPI.load(GAME_FILE); } catch(e) {
+    try {
+      const bad = reloadGuarded(before, prevText);
+      if (bad) return json(res, 500, { ...bad, results });
+    } catch(e) {
       return json(res, 500, { ok:false, error:`reload failed: ${e.message}`, results });
     }
 
@@ -9052,11 +9087,16 @@ async function route(req, res) {
       else errors.push({ id, error: r.error });
     }
     WBAPI._buildIndexes();
+    const before = collectionSizes();
+    const prevText = fs.readFileSync(GAME_FILE, 'utf8');
     const saveR = saveGameFile();   // §DX-02k — temp + rename, no dated snapshot
     if (!saveR.ok) return saveR.stale
       ? json(res, 409, { ok:false, stale:true, error: saveR.error })
       : json(res, 500, { ok:false, error: saveR.overwrite ? saveR.error : `save failed: ${saveR.error}` });
-    try { WBAPI.load(GAME_FILE); } catch(e) {
+    try {
+      const bad = reloadGuarded(before, prevText);
+      if (bad) return json(res, 500, bad);
+    } catch(e) {
       return json(res, 500, { ok:false, error:`reload failed: ${e.message}` });
     }
     logResponse(method, url.pathname, 200,
