@@ -1216,12 +1216,12 @@ hr.divider { border: none; border-top: 1px solid var(--border); margin: 2px 0; }
 .msub-placeholder { color: var(--dim); font-size: 12px; font-style: italic; padding: 8px 0; }
 /* ── §MESH-02c: Connect pane (mirrors the mp-browser-card idiom) ── */
 #mc-status-card {
-  border: 1px solid #2a4a6a; border-radius: 6px; background: rgba(10,20,35,0.45);
+  border: 1px solid #2a4a6a; border-radius: 6px; background: #0a1220;
   padding: 10px 12px; display: flex; flex-direction: column; gap: 4px;
   font-size: 12px; color: #9ab0c4; max-width: 560px;
 }
 #mc-status-card .mc-k { display: inline-block; width: 62px; color: #7a8a9a; font-weight: 700; }
-#msub-connect .mp-hint, #msub-discover .mp-hint, #msub-lists .mp-hint { font-size: 11px; color: #7a8a9a; line-height: 1.6; max-width: 560px; }
+#msub-connect .mp-hint, #msub-discover .mp-hint, #msub-lists .mp-hint { font-size: 11px; color: var(--muted); line-height: 1.6; max-width: 560px; }
 #mc-server-input, #msub-discover input:not([type="checkbox"]), #msub-lists input:not([type="checkbox"]) {
   background: #0a1220; border: 1px solid #2a4a6a; border-radius: 4px;
   color: #cde0f0; font: inherit; font-size: 12px; padding: 6px 8px;
@@ -1234,14 +1234,14 @@ hr.divider { border: none; border-top: 1px solid var(--border); margin: 2px 0; }
 #msub-connect button:hover, #msub-discover button:hover, #msub-lists button:hover { border-color: #5a8aba; }
 #mc-server-rows, #md-server-rows, #md-source-rows, #ml-black-rows, #ml-white-rows, #ml-peer-preview { display: flex; flex-direction: column; gap: 6px; max-width: 560px; }
 /* ── §MP-MAP: multiplayer presence + chat hub on the map's Multiplayer pane ── */
-.mp-section-hd { font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: #7a8a9a; border-bottom: 1px solid #2a4a6a; padding-bottom: 4px; margin-top: 8px; }
-.mp-adv-row { display: flex; align-items: center; gap: 8px; font-size: 12px; color: #cde0f0; cursor: pointer; max-width: 560px; }
+.mp-section-hd { font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--muted); border-bottom: 1px solid #2a4a6a; padding-bottom: 4px; margin-top: 8px; }
+.mp-adv-row { display: flex; align-items: center; gap: 8px; font-size: 12px; color: var(--text); cursor: pointer; max-width: 560px; }
 .mp-adv-row input { cursor: pointer; }
-.mp-map-presence { font-size: 12px; color: #cde0f0; min-height: 18px; line-height: 1.7; max-width: 560px; }
+.mp-map-presence { font-size: 12px; color: var(--text); min-height: 18px; line-height: 1.7; max-width: 560px; }
 #msub-connect > * { flex-shrink: 0; }
 #mp-chat-scope-bar { display: flex; gap: 6px; }
 #mp-chat-scope-bar .mp-scope-btn { font-size: 11px; padding: 4px 14px; border: 1px solid #2a4a6a; border-radius: 6px; background: #0a1a2a; color: #7a8a9a; cursor: pointer; }
-#mp-chat-scope-bar .mp-scope-btn.mp-scope-active { border-color: #5a8aba; color: #9abada; background: rgba(90,138,186,0.14); }
+#mp-chat-scope-bar .mp-scope-btn.mp-scope-active { border-color: #5a8aba; color: #cde0f0; background: #1a3350; }
 .mp-map-chat-list { max-height: 220px; min-height: 90px; overflow-y: auto; border: 1px solid #2a4a6a; border-radius: 6px; padding: 6px 8px; background: #0a1220; max-width: 560px; }
 .mp-map-chat-list .mp-chat-line { line-height: 1.6; font-size: 12px; }
 #mp-map-chat-input { background: #0a1220; border: 1px solid #2a4a6a; border-radius: 4px; color: #cde0f0; font: inherit; font-size: 12px; padding: 6px 8px; width: 100%; box-sizing: border-box; max-width: 560px; }
@@ -28874,7 +28874,7 @@ function _mpMapChatRender() {
     '<div class="mp-chat-line' + (String(e.msg).startsWith('👣') ? ' mp-chat-fp' : '') + '"><span class="mp-chat-ts">' + hhmm(e.ts) + '</span> ' + (e.scope === 'world' ? '🌍 ' : '') + '<b>' + _mpEsc(e.name) + '</b>' +
     (e.server ? '<span class="mp-chat-srv">@' + _mpEsc(String(e.server).slice(0, 8)) + '</span>' : '') +
     ': ' + _mpEsc(e.msg) + '</div>').join('')
-    || '<div class="mp-chat-line" style="color:var(--dim)">' +
+    || '<div class="mp-chat-line" style="color:#9ab0c4">' +
        (MP.chatScope === 'local' ? 'Nobody nearby has spoken. Switch to 🌍 World to hear everyone.' : 'No chat yet. Connect (🌐) and say something.') + '</div>';
   list.scrollTop = list.scrollHeight;
 }
