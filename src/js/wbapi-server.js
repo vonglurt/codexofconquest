@@ -568,6 +568,8 @@ function ledgerAppend(evt) {
 // counterparty origin's signed assent in body.assent, verified at every ingest.
 function ledgerEvent(kind, pids, body) {
   ledgerLoad();
+  const deps = ledgerDepsOf(kind, body);
+  if (deps.length) body = { ...body, deps };
   const oid = getServerId();
   const evt = { kind, id: [oid, LEDGER.seq + 1], ts: Date.now(), chain: {}, body, sig: {} };
   for (const pid of pids) {
@@ -621,29 +623,124 @@ function ledgerPinKeys(evt) {
   for (const [aid, a] of Object.entries((evt.kind === 'trade' && evt.body.assent) || {})) keyPin(aid, a.pub);
 }
 
+// §MESH-03e — an event on pack content names its packs in body.deps. An item
+// depends on pack P when a reward bit in one of P's quests grants it and no
+// quest outside the local packs does; a trade inherits its mints' deps. Local
+// packs = applied here, or published from here (the author's own quests are
+// base content on its own server).
+function packsLocal() {
+  const ids = new Set([...packsAccepted().applied.map((a) => a.id), ...packsPublishedIds()]);
+  return [...ids].map((id) => [id, packRead(id)]).filter(([, p]) => p);
+}
+function ledgerDepsOf(kind, body) {
+  if (kind === 'trade') {
+    const want = new Set((body.transfers || []).map((t) => mintKeyOf(t.mintId)));
+    const deps = new Set();
+    for (const e of LEDGER.events)
+      if (e.kind === 'mint' && want.has(mintKeyOf(e.body.mintId))) for (const d of e.body.deps || []) deps.add(d);
+    return [...deps].sort();
+  }
+  if (kind !== 'mint' || !body.item) return [];
+  const local = packsLocal();
+  if (!local.length) return [];
+  const key = body.item.key;
+  const deps = local.filter(([, p]) => Object.values(p.quests).some((q) => PACKS.rewardItemKeys(q).includes(key))).map(([id]) => id);
+  if (!deps.length) return [];
+  const inPacks = new Set(local.flatMap(([, p]) => Object.keys(p.quests)));
+  for (const [qid, q] of Object.entries(WBAPI.questDb || {}))
+    if (!inPacks.has(qid) && PACKS.rewardItemKeys(q).includes(key)) return [];
+  return deps.sort();
+}
+// A foreign event whose deps are not all applied here is HELD, durably: the
+// version vector records only each origin's highest seq, so an event dropped
+// here would never be offered again. It is released once every dep is applied.
+const LEDGER_HELD = { loaded: false, byHash: new Map() };
+const PACK_FETCHING = new Set();
+function ledgerHeldFile() { return path.join(LEDGER_DIR, 'held.jsonl'); }
+function ledgerHeldLoad() {
+  if (LEDGER_HELD.loaded) return;
+  LEDGER_HELD.loaded = true;
+  try {
+    for (const line of fs.readFileSync(ledgerHeldFile(), 'utf8').split('\n'))
+      if (line.trim()) { const e = JSON.parse(line); LEDGER_HELD.byHash.set(e.hash, e); }
+  } catch {}
+}
+function ledgerHeldSave() {
+  fs.mkdirSync(LEDGER_DIR, { recursive: true });
+  fs.writeFileSync(ledgerHeldFile(), [...LEDGER_HELD.byHash.values()].map((e) => JSON.stringify(e) + '\n').join(''));
+}
+function ledgerMissingDeps(evt) {
+  const deps = Array.isArray(evt.body.deps) ? evt.body.deps.map(String) : [];
+  if (!deps.length) return [];
+  const have = new Set(packsLocal().map(([id]) => id));
+  return deps.filter((d) => !have.has(d));
+}
+function packDepState(id) {
+  if (!PACKS.PACK_ID.test(id)) return 'malformed';
+  const st = packsAccepted();
+  if (st.queued.includes(id)) return 'accepted, applies at the next restart';
+  const failed = st.failed.find((f) => f.id === id);
+  if (failed) return 'failed to apply: ' + failed.error;
+  if (packRead(id)) return 'not accepted';
+  return PACK_FETCHING.has(id) ? 'fetching' : 'unavailable';
+}
+function packFetchForHeld(id) {
+  if (!PACKS.PACK_ID.test(id) || PACK_FETCHING.has(id) || packRead(id)) return;
+  PACK_FETCHING.add(id);
+  packFetch(id).catch(() => {}).finally(() => PACK_FETCHING.delete(id));
+}
+function ledgerHeldList() {
+  ledgerHeldLoad();
+  return [...LEDGER_HELD.byHash.values()].map((e) => ({ hash: e.hash, kind: e.kind, id: e.id,
+    deps: ledgerMissingDeps(e).map((d) => ({ pack: d, state: packDepState(d) })) }));
+}
+function ledgerAdmit(evt) {
+  ledgerPinKeys(evt);
+  ledgerAppend(evt);
+  // §MESH-01i cross-origin trades: a locally-hosted party hears about their
+  // trade on FIRST ingest, whichever channel delivered it (the relay-accept
+  // response or, if that reply was lost, the durable gossip catch-up).
+  // Hash-dedup guarantees this fires at most once per event.
+  if (evt.kind === 'trade' && evt.body.tradeId)
+    for (const pid of Object.keys(evt.chain || {}))
+      ledgerNotifyPid(pid, 'trade_completed', { tradeId: evt.body.tradeId, event: evt });
+}
+function ledgerReleaseHeld() {
+  ledgerLoad(); ledgerHeldLoad();
+  let released = 0;
+  for (const [hash, evt] of LEDGER_HELD.byHash) {
+    if (ledgerMissingDeps(evt).length) continue;
+    LEDGER_HELD.byHash.delete(hash);
+    if (!LEDGER.byHash.has(hash)) { ledgerAdmit(evt); released++; }
+  }
+  if (released) { ledgerHeldSave(); logRow('ledger', `released ${released} held event${released === 1 ? '' : 's'}`); }
+  return released;
+}
+
 // Shared ingest loop: validate + dedup + persist a batch of foreign events.
 // Used by POST /api/ledger/ingest (inbound push) and the anti-entropy pull.
 function ledgerIngestEvents(events) {
-  ledgerLoad();
-  let accepted = 0, dup = 0;
+  ledgerLoad(); ledgerHeldLoad();
+  ledgerReleaseHeld();
+  let accepted = 0, dup = 0, held = 0;
   const rejected = [];
   for (const evt of (Array.isArray(events) ? events : [])) {
-    if (evt && LEDGER.byHash.has(evt.hash)) { dup++; continue; }
+    if (evt && (LEDGER.byHash.has(evt.hash) || LEDGER_HELD.byHash.has(evt.hash))) { dup++; continue; }
     const bad = ledgerValidate(evt);
     if (bad) { rejected.push({ hash: evt && evt.hash || null, reason: bad }); continue; }
     if (evt.id[0] === getServerId()) { rejected.push({ hash: evt.hash, reason: 'own-origin' }); continue; }   // single-writer: nobody authors OUR events
-    ledgerPinKeys(evt);
-    ledgerAppend(evt);
+    const missing = ledgerMissingDeps(evt);
+    if (missing.length) {
+      LEDGER_HELD.byHash.set(evt.hash, evt);
+      ledgerHeldSave();
+      missing.forEach(packFetchForHeld);
+      held++;
+      continue;
+    }
+    ledgerAdmit(evt);
     accepted++;
-    // §MESH-01i cross-origin trades: a locally-hosted party hears about their
-    // trade on FIRST ingest, whichever channel delivered it (the relay-accept
-    // response or, if that reply was lost, the durable gossip catch-up).
-    // Hash-dedup above guarantees this fires at most once per event.
-    if (evt.kind === 'trade' && evt.body.tradeId)
-      for (const pid of Object.keys(evt.chain || {}))
-        ledgerNotifyPid(pid, 'trade_completed', { tradeId: evt.body.tradeId, event: evt });
   }
-  return { accepted, dup, rejected };
+  return { accepted, dup, held, rejected };
 }
 
 // ── §MESH-01i slice 2 — the parallel durable gossip channel (anti-entropy) ───
@@ -683,7 +780,7 @@ async function ledgerSyncWith(addr, peerVV) {
       const data = await resp.json().catch(() => ({}));
       if (resp.ok && data.ok) {
         const r = ledgerIngestEvents(data.events);
-        pushTraffic('in', 'ledger', addr, true, `pulled ${r.accepted} ev · ${r.dup} dup · ${r.rejected.length} rejected${data.truncated ? ' (more queued)' : ''}`);
+        pushTraffic('in', 'ledger', addr, true, `pulled ${r.accepted} ev · ${r.dup} dup · ${r.held} held · ${r.rejected.length} rejected${data.truncated ? ' (more queued)' : ''}`);
       } else pushTraffic('in', 'ledger', addr, false, `pull refused: ${data.reason || resp.status}`);
     }
     if (missing.events.length) {
@@ -8731,6 +8828,11 @@ async function route(req, res) {
     const sub = parts[1]; // status | chain | owner | mint | ingest
 
     // ── GET /api/ledger/status ─────────────────────────────────────────────
+    if (sub === 'held' && method === 'GET') {
+      const held = ledgerHeldList();
+      logResponse(method, url.pathname, 200, `ledger: ${held.length} held`);
+      return json(res, 200, { ok: true, held });
+    }
     if (sub === 'status' && method === 'GET') {
       ledgerLoad();
       const players = new Set();
@@ -8740,7 +8842,7 @@ async function route(req, res) {
       return json(res, 200, {
         ok: true, serverId: getServerId(), seq: LEDGER.seq, events: LEDGER.events.length,
         players: players.size, keyedPlayers: (playerKeysLoad(), PLAYER_KEYS.map.size),
-        origins: Object.fromEntries(LEDGER.vv), voided: voided.size,
+        origins: Object.fromEntries(LEDGER.vv), voided: voided.size, held: (ledgerHeldLoad(), LEDGER_HELD.byHash.size),
         dir: LEDGER_DIR, pendingTrades: (tradePrune(), TRADES.size),
       });
     }
@@ -8830,9 +8932,9 @@ async function route(req, res) {
     // this endpoint is its ingest half, and lets the harness exercise the
     // dupe-void fork-choice with a doctored origin today.
     if (sub === 'ingest') {
-      const { accepted, dup, rejected } = ledgerIngestEvents(body.events);
-      logResponse(method, url.pathname, 200, `ledger ingest: ${accepted} accepted · ${dup} dup · ${rejected.length} rejected`);
-      return json(res, 200, { ok: true, accepted, dup, rejected });
+      const { accepted, dup, held, rejected } = ledgerIngestEvents(body.events);
+      logResponse(method, url.pathname, 200, `ledger ingest: ${accepted} accepted · ${dup} dup · ${held} held · ${rejected.length} rejected`);
+      return json(res, 200, { ok: true, accepted, dup, held, rejected });
     }
 
     // ── POST /api/ledger/sync  body: {serverId, proto, engineVer, worldHash, addr?, vv} ─
@@ -9038,7 +9140,7 @@ async function route(req, res) {
           return json(res, 502, { ok: false, error: `The proposer's server did not confirm the trade: ${data && (data.error || data.reason) || 'unreachable'}`, reason: data && data.reason || 'relay-failed' });
         }
         const ing = ledgerIngestEvents([data.event]);   // fires trade_completed to our local party
-        if (ing.accepted !== 1 && !ing.dup) {
+        if (ing.accepted !== 1 && !ing.dup && !ing.held) {
           pushTraffic('out', 'trade', t.remote.addr, false, `co-signed event failed validation: ${JSON.stringify(ing.rejected)}`);
           logResponse(method, url.pathname, 502, 'trade/accept: returned event failed validation');
           return json(res, 502, { ok: false, error: 'The proposer\'s server returned an event that failed validation — trade not applied here.', reason: 'bad-event' });
@@ -9047,7 +9149,7 @@ async function route(req, res) {
         pushTraffic('out', 'trade', t.remote.addr, true, `accept ${body.tradeId.slice(0, 8)}… ⇄ co-signed evt ${String(data.event.hash).slice(0, 12)}…`);
         logRow('trade', `accept ${body.tradeId.slice(0, 8)}… (cross-origin)  ·  evt ${String(data.event.hash).slice(0, 12)}…`);
         logResponse(method, url.pathname, 201, 'cross-origin trade accepted');
-        return json(res, 201, { ok: true, tradeId: body.tradeId, event: data.event });
+        return json(res, 201, { ok: true, tradeId: body.tradeId, event: data.event, ...(ing.held ? { held: ledgerMissingDeps(data.event) } : {}) });
       }
       // Re-validate ownership AT ACCEPT (it may have moved since propose),
       // and capture each item's current owning-event hash as priorEventHash.
@@ -11403,7 +11505,7 @@ server.listen(PORT, BIND_ADDR, () => {
   // §MESH-01-FU 12: in tracker mode the bootstrap's `tracker <url>` lines feed
   // FEDERATION (addTrackerUrl), so the post-fetch round is the federate one.
   fetchBootstrapUrls().then(() => TRACKER_MODE ? trackerFederateRound() : trackerAnnounceRound());
-  if (!TRACKER_MODE) packApplyQueued().catch((e) => logRow('pack', `${C.red}✗ apply queue: ${e.message}${C.reset}`));
+  if (!TRACKER_MODE) packApplyQueued().then(ledgerReleaseHeld).catch((e) => logRow('pack', `${C.red}✗ apply queue: ${e.message}${C.reset}`));
   setInterval(trackerAnnounceRound, MESH_ANNOUNCE_MS).unref();
   // §MESH-01d2: tracker federation heartbeat. Started unconditionally in
   // tracker mode (a round with no peers is a no-op) — peers.txt/BOOTSTRAP_URLS
@@ -11466,6 +11568,7 @@ server.listen(PORT, BIND_ADDR, () => {
     ['GET',    '/api/ledger/owner?mintId=            → ownership resolution (pure fn of the chains; carries the voided double-spend hashes)'],
     ['GET',    '/api/ledger/owned?pid=               → every item a pid currently owns [{mintId, mintKey, item, tipHash}] (the trade UI read surface)'],
     ['GET',    '/api/ledger/chain[?pid=]             → a player’s hash chain (or the full event log)'],
+    ['GET',    '/api/ledger/held                     → foreign events held for packs not applied here, each missing pack with its state (§MESH-03e)'],
     ['GET',    '/api/ledger/status                   → ledger seq/events/origins/pending trades'],
     ['POST',   '/api/ledger/ingest                   body: {events:[…]} → validated foreign-event ingest (the gossip PUSH receive path)'],
     ['POST',   '/api/ledger/sync                     body: {serverId, proto, engineVer, worldHash, addr?, vv} → events above the caller’s vv (anti-entropy PULL; compat+ACL gated)'],

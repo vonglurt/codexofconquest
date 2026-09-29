@@ -13,19 +13,33 @@ module.exports = function createPacks({ canonical, sign, verify, pub }) {
   const unsigned = ({ sig, ...rest }) => rest;
   const packId = (pack) => crypto.createHash('sha256').update(canonical(unsigned(pack))).digest('hex');
 
-  // Monster keys a quest fights, from its bit chains and kill goals.
-  function monsterRefs(q) {
-    const keys = new Set();
+  function walkBits(q, visit) {
     (function walk(arr) {
       if (!Array.isArray(arr)) return;
       for (const b of arr) {
         if (!b || typeof b !== 'object') continue;
-        if (b.kind === 'combat' && b.key) keys.add(b.key);
+        visit(b);
         walk(b.onPass); walk(b.onFail);
         if (Array.isArray(b.options)) b.options.forEach((o) => walk(o && o.bits));
       }
     })([...(q.bits || []), ...(Array.isArray(q.onComplete) ? q.onComplete : [])]);
+  }
+
+  // Monster keys a quest fights, from its bit chains and kill goals.
+  function monsterRefs(q) {
+    const keys = new Set();
+    walkBits(q, (b) => { if (b.kind === 'combat' && b.key) keys.add(b.key); });
     for (const k of q.killGoals || []) if (k && k.key) keys.add(k.key);
+    return [...keys];
+  }
+
+  // Ledger item keys a quest's reward bits grant, slugged as the client's mint does.
+  const itemKey = (name) => String(name).toLowerCase().replace(/[^a-z0-9]+/g, '_').replace(/^_+|_+$/g, '') || 'item';
+  function rewardItemKeys(q) {
+    const keys = new Set();
+    walkBits(q, (b) => {
+      if (b.kind === 'reward' && Array.isArray(b.items)) for (const it of b.items) if (it && it.name) keys.add(itemKey(it.name));
+    });
     return [...keys];
   }
 
@@ -46,5 +60,5 @@ module.exports = function createPacks({ canonical, sign, verify, pub }) {
     return null;
   }
 
-  return { PACK_FORMAT, PACK_ID, packId, monsterRefs, makePack, verifyPack };
+  return { PACK_FORMAT, PACK_ID, packId, monsterRefs, rewardItemKeys, makePack, verifyPack };
 };
