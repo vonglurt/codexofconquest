@@ -1447,6 +1447,8 @@ hr.divider { border: none; border-top: 1px solid var(--border); margin: 2px 0; }
 }
 .mp-srv-row b { color: #cde0f0; }
 .mp-srv-row .mp-srv-join { margin-left: auto; }
+#sheet-map .mp-srv-row { background: #0a1220; border-color: #2a4a6a; flex-wrap: wrap; row-gap: 4px; }
+#sheet-map .mp-srv-row > * { white-space: nowrap; }
 
 /* ── §MESH-01i slice 2b: trade modal + presence trade button ─── */
 #mp-trade-modal {
@@ -29759,7 +29761,7 @@ function _mpServerRowHtml(s, i, pingPfx) {
 function _mpWorldBadge(s, ref) {
   if (!ref || !s.universeHash || !ref.universeHash) return '';
   if (s.universeHash !== ref.universeHash)
-    return '<span style="color:#c05555" title="different map or engine: players there cannot meet players here">⚠ other universe</span>';
+    return '<span style="color:#e07a7a" title="different map or engine: players there cannot meet players here">⚠ other universe</span>';
   if (s.contentHash && ref.contentHash && s.contentHash !== ref.contentHash)
     return '<span style="color:#8fc0f0" title="same universe, content differs: you can meet and chat; trades wait until the content matches">≈ same universe, content differs</span>';
   return '';
