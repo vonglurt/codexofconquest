@@ -11340,9 +11340,19 @@ async function route(req, res) {
 async function onRequest(req, res) {
   const declared = parseInt(req.headers['content-length'] || '', 10);
   if (declared > BODY_MAX) {
-    logResponse(req.method, req.url, 413, `body of ${declared} bytes refused unread`);
-    res.writeHead(413, { 'Content-Type': 'application/json', Connection: 'close' });
-    return res.end(JSON.stringify({ ok: false, error: `request body of ${declared} bytes exceeds the ${BODY_MAX}-byte limit` }));
+    // Answering while the sender is still writing lets the close reach it first
+    // (EPIPE, no reason given), so a body within DRAIN_MAX is discarded unparsed
+    // and the 413 goes out once it has arrived.
+    const refuse = () => {
+      logResponse(req.method, req.url, 413, `body of ${declared} bytes refused unread`);
+      res.writeHead(413, { 'Content-Type': 'application/json', Connection: 'close' });
+      res.end(JSON.stringify({ ok: false, error: `request body of ${declared} bytes exceeds the ${BODY_MAX}-byte limit` }));
+    };
+    if (declared > BODY_MAX * 8) return refuse();
+    req.on('end', refuse);
+    req.on('error', () => {});
+    req.resume();
+    return;
   }
   try {
     await route(req, res);

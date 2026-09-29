@@ -6,6 +6,7 @@
 const { test, expect } = require('@playwright/test');
 const { spawn, spawnSync } = require('child_process');
 const fs = require('fs');
+const http = require('http');
 const https = require('https');
 const os = require('os');
 const path = require('path');
@@ -83,5 +84,17 @@ test.describe('§MESH-03f — TLS between peers, and the body cap', () => {
     expect(r.status).toBe(413);
     expect((await r.json()).error).toContain('exceeds the 1048576-byte limit');
     expect((await fetch(`http://localhost:${PB}/api/ping`)).ok).toBe(true);
+  });
+
+  test('a body declared past eight times the cap is refused at once, without waiting for it', async () => {
+    const status = await new Promise((resolve, reject) => {
+      const req = http.request({ host: 'localhost', port: PB, path: '/api/mesh/gossip', method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Content-Length': String(64 * 1024 * 1024) } },
+      (res) => { res.resume(); resolve(res.statusCode); req.destroy(); });
+      req.on('error', reject);
+      req.write('{"pad":"');
+      setTimeout(() => reject(new Error('no answer while the declared body was still owed')), 5000);
+    });
+    expect(status).toBe(413);
   });
 });
