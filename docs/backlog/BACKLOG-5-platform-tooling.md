@@ -45,10 +45,6 @@
 ---
 ## §BACKLOG — Open Items (Phase 5)
 
-### §MESH-03f-FU2 — ✉ reaches only players in your cell: the world list carries no `ledgerPid` (NEW 2026-09-28 during §MESH-03f-FU inc 2, 🟢 one field and one button)
-
-- [ ] **§MESH-03f-FU2 — let ✉ address a player anywhere on the map.** **Measured 2026-09-28 at `08599b2`:** the ✉ button is drawn only on the *"👥 Also here"* roster (`_mpRenderPresence`), whose entries come from `remotePlayersAt` and carry `ledgerPid`. The worldwide list that `session/move` returns as `world` (`worldPlayers`) and the page keeps in `MP.remotes` has `pid`, `name`, `r`, `c` and `server`, but no `ledgerPid`. So a friend you can see across the world map cannot be messaged, although `dmkey` would find their key. **Change:** add `ledgerPid` to `worldPlayers` for keyed sessions, local (`ledgerPidOf`) and remote (`origin8:p8` from the roster). Then add a ✉ to the map pane's traveler list (`_mpRenderMapPresence`), or to a player's dot on the map. **Verify:** two sessions in different cells on two servers. The second one's `world` entry carries the first's `ledgerPid`, and the page's ✉ sends to it.
-
 ### §MESH-03e-FU — a mint is authorized by nothing, so no receiving server can bound what a pack's reward lets a player mint (NEW 2026-09-28 during §MESH-03e, 🟠 trust model)
 
 - [ ] **§MESH-03e-FU — decide what makes a mint legitimate, then check it at ingest.** §MESH-03e's economy clause (*"a mint must cite the pack whose reward authorizes it, and ingest checks the cited reward against that pack … a mint larger than P's reward is refused"*) assumed mints are tied to rewards. **Measured at `4fb91cd`:** `POST /api/ledger/mint` takes `{sessionId, item:{key, name, qty}}` and mints whatever a live session names. The client calls it from `mpMintStamp` on any acquisition while connected. The server has no record of what the player earned, because quests run in the browser. So a qty cap per cited reward only limits one mint, never how many there are, and a base-content item has nothing to cite at all. **Options:** (a) accept the §IX.B trust model (a server vouches for its own players) and let receivers cap per-origin mint *rates* per item key; (b) move reward grants server-side for connected players (the server runs the reward bit and mints), so a mint cites a quest completion the server itself witnessed; (c) receivers refuse mints of pack items above the pack's reward qty and ignore counts, which is the row's clause as written, and weak. **Recommendation:** (b) for pack content, since packs are already plain data the server can run, with (a) as the base-content floor. **Verify:** a mint of a pack item with no witnessed completion is refused at ingest on a peer, and a completed quest mints exactly its reward.
@@ -191,6 +187,6 @@
 
 ## §RESUME — Phase 5 history
 
-> **Completed work is not carried here.** The 106 closed increments for this phase are condensed in **[`../archive/backlog-resume-history.md`](../archive/backlog-resume-history.md)**; full prose for recent closes is in [`plan-archive.md`](plan-archive.md). This file carries open rows only.
+> **Completed work is not carried here.** The 107 closed increments for this phase are condensed in **[`../archive/backlog-resume-history.md`](../archive/backlog-resume-history.md)**; full prose for recent closes is in [`plan-archive.md`](plan-archive.md). This file carries open rows only.
 
 > When an increment ships: write the full entry into `plan-archive.md`, add its one-line row to `../archive/backlog-resume-history.md` and to the cross-phase table in [`BACKLOG.md`](BACKLOG.md), and delete the row from this file.

@@ -19,6 +19,16 @@
 
 ---
 
+## Archived 2026-09-28 — §MESH-03f-FU2 (✉ reaches a keyed player anywhere on the map)
+
+### §MESH-03f-FU2 — ✉ reaches only players in your cell: the world list carries no `ledgerPid` (NEW 2026-09-28 during §MESH-03f-FU inc 2, 🟢 one field and one button)
+
+- [x] ✅ SHIPPED 2026-09-28 `d2f9299` **§MESH-03f-FU2 — let ✉ address a player anywhere on the map.** **Measured 2026-09-28 at `08599b2`:** the ✉ button is drawn only on the *"👥 Also here"* roster (`_mpRenderPresence`), whose entries come from `remotePlayersAt` and carry `ledgerPid`. The worldwide list that `session/move` returns as `world` (`worldPlayers`) and the page keeps in `MP.remotes` has `pid`, `name`, `r`, `c` and `server`, but no `ledgerPid`. So a friend you can see across the world map cannot be messaged, although `dmkey` would find their key. **Change:** add `ledgerPid` to `worldPlayers` for keyed sessions, local (`ledgerPidOf`) and remote (`origin8:p8` from the roster). Then add a ✉ to the map pane's traveler list (`_mpRenderMapPresence`), or to a player's dot on the map. **Verify:** two sessions in different cells on two servers. The second one's `world` entry carries the first's `ledgerPid`, and the page's ✉ sends to it.
+
+> **SHIPPED 2026-09-28 `d2f9299`.** **Before:** Bob, keyed and in another cell on server B, appeared in Alice's `session/pos` `world` list on A with `ledgerPid` **undefined**, so the page had nothing for ✉ to address. The ground was one layer wider than the row: the list is seeded once at connect, and then every `player_moved`/`player_arrived`/`player_left` SSE event rewrites the entry. So a field only in `world` would have been lost at the first move, and never known for a player who joined later. **Change:** `presenceEvt` is the one builder of every presence event, and it now adds `ledgerPid` for a session with a durable `player8`. The mesh relays that event unchanged, so remote moves carry it too. `worldPlayers` adds it for local sessions (`ledgerPidOf`) and remote roster entries (`origin8:p8`). The three presence listeners keep it in `MP.remotes`. `_mpRenderMapPresence` lists up to twelve keyed travelers as *✉ <name>* buttons, keyed connections only, and `_mpRepaintMaps` re-renders it as dots move. **After:** Bob's entry carries his `ledgerPid` from the beacon and from the relayed move, and Alice's map-pane ✉ followed by Enter in the map chat reaches Bob's browser, opened. **Verify:** `mesh03f-fu-dm-page.test.js` 6/6 (red at HEAD: *Received: undefined*). With every mesh, multiplayer, session, chat and roster file, **96/96** across 19. `npm run test:mud` all ✓, which matters because every presence payload changed. `check:walk` 41/41 (the badge moved 39,531 → 39,537). Not looked at on screen.
+
+---
+
 ## Archived 2026-09-28 — §MESH-03f-FU (private messages end to end, the page's half; closed)
 
 ### §MESH-03f-FU — there are no private messages to encrypt: chat is `local` or `world` only (NEW 2026-09-28 during §MESH-03f inc 2, 🟡 build them end to end from the start)
