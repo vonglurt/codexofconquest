@@ -2024,6 +2024,18 @@ function reloadGuarded(before, prevText) {
   return { ok:false, emptied, error:`refused: the write left ${emptied.join(', ')} unparseable (${emptied.map((k) => `${k} ${before[k]} → 0`).join(', ')}); ${path.basename(GAME_FILE)} is restored to its state before the write` };
 }
 
+// The older save shape: a dated file beside the game file, copied over it, then reloaded under the
+// same guard. Returns saveStamped's {ok, path}, or the guard's refusal with the stamped path.
+function saveStampedGuarded() {
+  const before = collectionSizes();
+  const prevText = fs.readFileSync(GAME_FILE, 'utf8');
+  const r = WBAPI.saveStamped();
+  if (!r.ok) return r;
+  fs.copyFileSync(r.path, GAME_FILE);
+  const bad = reloadGuarded(before, prevText);
+  return bad ? { ...bad, path: r.path } : r;
+}
+
 // After every successful write: save to disk, hot-reload in memory, respond — no process restart.
 function saveAndRestart(res, status, payload) {
   const before = collectionSizes();
@@ -3817,33 +3829,23 @@ async function route(req, res) {
   if (parts[0] === 'save' && method === 'POST') {
     // 1. Write timestamped backup (§DX-02k — this is the ONE surface that stamps
     //    on purpose; it lands beside the game file and feeds archive-snapshots.sh)
-    const r = WBAPI.saveStamped();
+    // 2. Overwrite the primary game file and hot-reload it, restoring the previous file if a
+    //    collection that had entries reloads empty
+    let r;
+    try { r = saveStampedGuarded(); }
+    catch (e) {
+      logResponse(method, url.pathname, 500, `save failed: ${e.message}`);
+      return json(res, 500, { ok:false, error: e.message });
+    }
     if (!r.ok) {
       logResponse(method, url.pathname, 500, r.error);
-      return json(res, 500, r);
+      return json(res, 500, { ...r, ...(r.path ? { backup: r.path } : {}) });
     }
     const backupPath = r.path;
-    const kb = (fs.statSync(backupPath).size / 1024).toFixed(1);
     logRow('backup', backupPath);
-    logRow('size',   `${kb} KB`);
-
-    // 2. Overwrite the primary game file
-    try {
-      fs.copyFileSync(backupPath, GAME_FILE);
-      logRow('wrote', GAME_FILE);
-    } catch (e) {
-      logResponse(method, url.pathname, 500, `overwrite failed: ${e.message}`);
-      return json(res, 500, { ok:false, error: e.message, backup: backupPath });
-    }
-
-    // 3. Hot-reload in memory, then respond — no process restart
-    try {
-      WBAPI.load(GAME_FILE);
-      logRow('reload', 'memory refreshed from disk');
-    } catch(e) {
-      logResponse(method, url.pathname, 500, `reload failed: ${e.message}`);
-      return json(res, 500, { ok:false, error:`reload failed after save: ${e.message}`, backup: backupPath });
-    }
+    logRow('size',   `${(fs.statSync(backupPath).size / 1024).toFixed(1)} KB`);
+    logRow('wrote', GAME_FILE);
+    logRow('reload', 'memory refreshed from disk');
     logResponse(method, url.pathname, 200, `saved → reloaded`);
     return json(res, 200, { ok:true, backup: backupPath, primary: GAME_FILE, bytes: fs.statSync(backupPath).size });
   }
@@ -6322,14 +6324,11 @@ async function route(req, res) {
 
       // Save stitch results to disk so file monitor sees progress before bulk delete
       if (stitchOk > 0) {
-        const svS = WBAPI.saveStamped();   // §DX-02k — beside the source, not the CWD
-        if (svS.ok) {
-          fs.copyFileSync(svS.path, GAME_FILE);
-          WBAPI.load(GAME_FILE);
-          nm = WBAPI.nodeMap;
-          emit(`[save] phase-1-stitches  nodes=${Object.keys(nm).length}`);
-          logTrace('nuke-save', `phase-1 stitches written to ${GAME_FILE}`);
-        }
+        const svS = saveStampedGuarded();   // §DX-02k — beside the source, not the CWD
+        if (!svS.ok) { emit(`[ERROR] save refused: ${svS.error}`); res.end(); return; }
+        nm = WBAPI.nodeMap;
+        emit(`[save] phase-1-stitches  nodes=${Object.keys(nm).length}`);
+        logTrace('nuke-save', `phase-1 stitches written to ${GAME_FILE}`);
       }
 
       // ── Phase 5 (bulk): remove all J#### from NODE_MAP source in one pass ───
@@ -6409,10 +6408,8 @@ async function route(req, res) {
       // ── Reload in-memory nodeMap and nodeCoords from updated source ──────────
       emit(`[phase-5c] rebuilding in-memory nodeMap from updated source…`);
       {
-        const sv = WBAPI.saveStamped();   // §DX-02k — beside the source, not the CWD
+        let sv; try { sv = saveStampedGuarded(); } catch(e) { sv = { ok:false, error:e.message }; }   // §DX-02k — beside the source
         if (!sv.ok) { emit(`[ERROR] save failed: ${sv.error}`); res.end(); return; }
-        try { fs.copyFileSync(sv.path, GAME_FILE); } catch(e) { emit(`[ERROR] copy: ${e.message}`); res.end(); return; }
-        try { WBAPI.load(GAME_FILE); } catch(e) { emit(`[ERROR] reload: ${e.message}`); res.end(); return; }
         nm = WBAPI.nodeMap;
         emit(`[save] post-nuke-bulk  nodes=${Object.keys(nm).length}`);
       }
@@ -6433,8 +6430,9 @@ async function route(req, res) {
       }
       emit(`[phase-4] cleared ${danglingFixed} dangling direction fields`);
       if (danglingFixed > 0) {
-        const sv = WBAPI.saveStamped();   // §DX-02k — beside the source, not the CWD
-        if (sv.ok) { fs.copyFileSync(sv.path, GAME_FILE); WBAPI.load(GAME_FILE); nm = WBAPI.nodeMap; }
+        const sv = saveStampedGuarded();   // §DX-02k — beside the source, not the CWD
+        if (!sv.ok) { emit(`[ERROR] save refused: ${sv.error}`); res.end(); return; }
+        nm = WBAPI.nodeMap;
         emit(`[save] post-dangling-cleanup  nodes=${Object.keys(nm).length}`);
       }
       await yieldN();
