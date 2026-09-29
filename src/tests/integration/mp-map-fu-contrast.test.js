@@ -43,3 +43,21 @@ test('the Multiplayer, Discover and Lists panes meet 4.5:1 on every visible text
   });
   expect(bad, bad.join('\n')).toEqual([]);
 });
+
+// §MP-MAP-FU2 — a long status value wraps inside its own column, not back under its label.
+test('the status card keeps a wrapped value right of its label', async ({ page }) => {
+  await page.setViewportSize({ width: 1280, height: 900 });
+  await page.goto('/play.html');
+  await page.locator('#story-panel').waitFor({ state: 'visible' });
+  const r = await page.evaluate(() => {
+    switchSheet('sheet-map'); msubSwitch('msub-connect');
+    const v = document.getElementById('mc-build');
+    v.textContent = '🔴 no server at http://localhost:7654 — start one with ./bin/wbapi start, then press Connect again';
+    const label = v.parentElement.querySelector('.mc-k').getBoundingClientRect();
+    const rng = document.createRange(); rng.selectNodeContents(v);
+    const lines = [...rng.getClientRects()];
+    return { lines: lines.length, strays: lines.filter((l) => l.left < label.right - 0.5).length };
+  });
+  expect(r.lines).toBeGreaterThan(1);
+  expect(r.strays).toBe(0);
+});

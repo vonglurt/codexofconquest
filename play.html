@@ -1220,7 +1220,8 @@ hr.divider { border: none; border-top: 1px solid var(--border); margin: 2px 0; }
   padding: 10px 12px; display: flex; flex-direction: column; gap: 4px;
   font-size: 12px; color: #9ab0c4; max-width: 560px;
 }
-#mc-status-card .mc-k { display: inline-block; width: 62px; color: #7a8a9a; font-weight: 700; }
+#mc-status-card > div { display: grid; grid-template-columns: 62px 1fr; }
+#mc-status-card .mc-k { color: #7a8a9a; font-weight: 700; }
 #msub-connect .mp-hint, #msub-discover .mp-hint, #msub-lists .mp-hint { font-size: 11px; color: var(--muted); line-height: 1.6; max-width: 560px; }
 #mc-server-input, #msub-discover input:not([type="checkbox"]), #msub-lists input:not([type="checkbox"]) {
   background: #0a1220; border: 1px solid #2a4a6a; border-radius: 4px;
