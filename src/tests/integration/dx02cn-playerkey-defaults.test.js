@@ -69,6 +69,20 @@ test.describe('§DX-02cn — the ledger credential obeys the defaults contract',
     expect(r.second).not.toBe(r.first);
   });
 
+  test('keyTransfers (§MESH-03a-FU) follows the key: New Game clears it, NG+ keeps it', async ({ page }) => {
+    await page.goto('/play.html');
+    const r = await page.evaluate(() => {
+      const chain = [{ from: { kty: 'OKP' }, to: { kty: 'OKP' }, sig: 'x' }];
+      S_story.keyTransfers = chain.slice();
+      S_story.active = true;
+      storyNewGamePlus();
+      const ngPlus = S_story.keyTransfers.length;
+      storyNewGame({ str:10, dex:8, con:8, int:8, wis:8, cha:8 });
+      return { def: _S_DEFAULTS().keyTransfers, ngPlus, fresh: S_story.keyTransfers };
+    });
+    expect(r).toEqual({ def: [], ngPlus: 1, fresh: [] });
+  });
+
   test('NG+ preserves the key — the same player keeps their chain', async ({ page }) => {
     await page.goto('/play.html');
     const r = await page.evaluate(() => {

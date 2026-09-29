@@ -2,7 +2,8 @@
 // §MESH-03a (player half) — a session start proves a key pair: a signature over a
 // single-use nonce, verified against the presented public key. A legacy playerKey
 // is bound to the first key that signs for it, and from then on the bare string is
-// refused. The browser's pair is non-extractable, kept in IndexedDB per character.
+// refused. The browser's pair is non-extractable, kept in IndexedDB per character,
+// and a transfer certificate chain from the bound key moves a character to a new one.
 
 const { test, expect } = require('@playwright/test');
 const { spawn } = require('child_process');
@@ -125,6 +126,64 @@ test.describe('§MESH-03a — player keys prove the session start', () => {
     expect(bare.ok).toBe(false);
     expect(bare.error).toContain('MESH_REQUIRE_PLAYER_SIG');
     expect((await signedStart(R, edPair())).r.ok).toBe(true);
+  });
+
+  test('a transfer chain signed by the bound key hands the character to a new key, on a server that saw only the first', async () => {
+    const playerKey = crypto.randomBytes(16).toString('hex');
+    const h = crypto.createHash('sha256').update(playerKey).digest('hex');
+    const pubId = (p) => p.kty === 'OKP' ? `ed25519:${p.x}` : `p256:${p.x}.${p.y}`;
+    const cert = (from, to) => ({ from: from.pub, to: to.pub, sig: from.sign(`codex-transfer-v1\n${h}\n${pubId(to.pub)}`) });
+    const [a, b, c] = [edPair(), p256Pair(), edPair()];
+    const { r: first } = await signedStart(A, a, { playerKey });
+    expect(first.ok).toBe(true);
+
+    const { r: forged } = await signedStart(A, c, { playerKey, transfers: [cert(c, c)] });
+    expect(forged.error).toContain('bound to a different key');
+    const { r: moved } = await signedStart(A, c, { playerKey, transfers: [cert(a, b), cert(b, c)] });
+    expect(moved.ok).toBe(true);
+    expect(moved.ledgerPid).toBe(first.ledgerPid);
+    const { r: old } = await signedStart(A, a, { playerKey });
+    expect(old.error).toContain('bound to a different key');
+  });
+
+  test('two browsers: the old one authorizes, the new one accepts, and connects as the same character', async ({ browser }) => {
+    const ctxOld = await browser.newContext(), ctxNew = await browser.newContext();
+    const [pOld, pNew] = [await ctxOld.newPage(), await ctxNew.newPage()];
+    try {
+      for (const pg of [pOld, pNew]) await pg.goto('/play.html');
+      const playerKey = crypto.randomBytes(16).toString('hex');
+      const setup = ({ base, key }) => { MP.base = base; S_story.playerKey = key; S_story.keyTransfers = []; };
+      await pOld.evaluate(setup, { base: A, key: playerKey });
+      await pNew.evaluate(setup, { base: A, key: playerKey });
+      const bound = await pOld.evaluate(() => _mpStart({ name: 'Old' }));
+      expect(bound.ok).toBe(true);
+      const refused = await pNew.evaluate(() => _mpStart({ name: 'New' }));
+      expect(refused.error).toContain('bound to a different key');
+
+      const reqCode = await pNew.evaluate(async () => { await mlTransfer('request'); return document.getElementById('ml-xfer-code').value; });
+      expect(reqCode).toMatch(/^codex-req1\./);
+      expect((await pNew.evaluate((c) => mpTransferAuthorize(c), reqCode)).error).toContain('came from this browser');
+      const certCode = await pOld.evaluate(async (c) => {
+        document.getElementById('ml-xfer-code').value = c; await mlTransfer('authorize');
+        return document.getElementById('ml-xfer-code').value;
+      }, reqCode);
+      expect(certCode).toMatch(/^codex-xfer1\./);
+      const accepted = await pNew.evaluate(async (c) => {
+        document.getElementById('ml-xfer-code').value = c; await mlTransfer('accept');
+        return { note: document.getElementById('ml-xfer-note').textContent, links: S_story.keyTransfers.length };
+      }, certCode);
+      expect(accepted.note).toContain('Accepted');
+      expect(accepted.links).toBe(1);
+      const joined = await pNew.evaluate(() => _mpStart({ name: 'New' }));
+      expect(joined.ok).toBe(true);
+      expect(joined.ledgerPid).toBe(bound.ledgerPid);
+
+      const other = await pOld.evaluate(async (c) => {
+        S_story.playerKey = 'f'.repeat(32);
+        return mpTransferAuthorize(c);
+      }, reqCode);
+      expect(other.error).toContain('different character');
+    } finally { await ctxOld.close(); await ctxNew.close(); }
   });
 
   test('the browser signs with a non-extractable key kept per character, and the same key across reloads', async ({ page }) => {

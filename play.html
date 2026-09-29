@@ -4715,6 +4715,17 @@ body.act-three .npc-card-chip { filter: saturate(0.85); }
           <div style="display:flex;gap:8px;flex-wrap:wrap"><button id="ml-peer-fetch" onclick="mlPeerFetch()">📥 Fetch</button></div>
           <div id="ml-peer-note" class="mp-hint"></div>
           <div id="ml-peer-preview"></div>
+          <div class="md-sec-hd">🔑 MOVE THIS CHARACTER TO ANOTHER BROWSER</div>
+          <div class="mp-hint">A character's trade identity is a key that never leaves the browser that made it.
+            In the new browser, load the save and press Request; in the old one, paste that code and press Authorize;
+            back in the new one, paste the answer and press Accept.</div>
+          <textarea id="ml-xfer-code" placeholder="paste a codex-req1. or codex-xfer1. code"></textarea>
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <button onclick="mlTransfer('request')">📋 Request</button>
+            <button onclick="mlTransfer('authorize')">✍ Authorize</button>
+            <button onclick="mlTransfer('accept')">✅ Accept</button>
+          </div>
+          <div id="ml-xfer-note" class="mp-hint"></div>
         </div>
       </div>
 
@@ -23136,7 +23147,7 @@ const _S_DEFAULTS = () => ({
   dearFriendGranted: {}, dearFriendPlusGranted: {},
   npcTalk: {},   // §NPC-01-D — key → { count, lastDay }: deliberate-talk progress toward Friendly (fav 1). Never raises above 1; Dear Friend stays quest/personal-act-earned.
   npcVisitCounts: {}, couperiSongReceived: false, bruhnsDepthsReported: false, frobergerLastEntryRead: false,
-  playerKey: '', pvpOff: false,
+  playerKey: '', keyTransfers: [], pvpOff: false,
   pitPerks: [], crovsLessonUsed: false, frobergerNoteNode: null, froberger_last_note_found: false, froberger_last_note_read: false, ngPlusRun: 0,
   hoursElapsed: 0, hoursSinceSlept: 0,
   playerR: 0, playerC: 0,   // §CELL-03: current grid position
@@ -24142,6 +24153,7 @@ function storyNewGamePlus() {
   const savedEntry42Text       = S_story.entry42Text || '';
   const savedPriorQuestMinus1  = !!(S_story.questMinusOne);
   const savedPlayerKey         = S_story.playerKey || '';
+  const savedKeyTransfers      = (S_story.keyTransfers || []).slice();
   const savedCareerStats       = Object.assign({}, S_story.careerStats || {});
   try { localStorage.removeItem('coc_autosave'); localStorage.removeItem('coc_checkpoint'); } catch(e) {}
   Object.assign(S_story, _S_DEFAULTS());
@@ -24155,6 +24167,7 @@ function storyNewGamePlus() {
   S_story.entry42Text       = savedEntry42Text;
   S_story.priorQuestMinusOne = savedPriorQuestMinus1;
   S_story.playerKey         = savedPlayerKey;
+  S_story.keyTransfers      = savedKeyTransfers;
   S_story.careerStats       = savedCareerStats;
   S_story.active = true;
   S_story.equippedMainWeapon = Object.assign({}, STARTER_POINTY_STICK);
@@ -29303,8 +29316,65 @@ async function _mpStart(body) {
   const params = id.alg === 'Ed25519' ? { name: 'Ed25519' } : { name: 'ECDSA', hash: 'SHA-256' };
   const sig = new Uint8Array(await crypto.subtle.sign(params, id.privateKey,
     new TextEncoder().encode(`codex-session-v1\n${n.serverId}\n${n.nonce}`)));
-  const b64u = btoa(String.fromCharCode(...sig)).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
-  return _mpFetch('/api/session/start', { ...body, playerKey: id.handle, pub: id.pub, nonce: n.nonce, sig: b64u });
+  return _mpFetch('/api/session/start', { ...body, playerKey: id.handle, pub: id.pub, nonce: n.nonce, sig: _mpB64u(sig),
+    ...((S_story.keyTransfers || []).length ? { transfers: S_story.keyTransfers } : {}) });
+}
+// §MESH-03a-FU — moving a character to another browser. The new browser shows a
+// request code (its public key); the old one signs a transfer certificate for
+// it; the new one keeps the chain in the save and presents it to any server that
+// still has an earlier key bound. No private key ever leaves its browser.
+function _mpB64u(bytes) {
+  return btoa(String.fromCharCode(...bytes)).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+}
+function _mpPubId(pub) { return pub.kty === 'OKP' ? 'ed25519:' + pub.x : 'p256:' + pub.x + '.' + pub.y; }
+async function _mpCharHash() {
+  const d = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(_mpPlayerKey()));
+  return Array.from(new Uint8Array(d), x => x.toString(16).padStart(2, '0')).join('');
+}
+function _mpCode(kind, obj) { return kind + '.' + _mpB64u(new TextEncoder().encode(JSON.stringify(obj))); }
+function _mpUncode(kind, code) {
+  const m = String(code || '').trim().match(/^([\w-]+)\.([A-Za-z0-9_-]+)$/);
+  if (!m || m[1] !== kind) return null;
+  try { return JSON.parse(new TextDecoder().decode(Uint8Array.from(atob(m[2].replace(/-/g, '+').replace(/_/g, '/')), c => c.charCodeAt(0)))); }
+  catch { return null; }
+}
+async function mpTransferRequest() {
+  const id = await _mpIdentity();
+  if (!id) return { ok: false, error: 'this browser has no WebCrypto key store, so it cannot hold a character key' };
+  return { ok: true, code: _mpCode('codex-req1', { h: await _mpCharHash(), to: id.pub }) };
+}
+async function mpTransferAuthorize(reqCode) {
+  const req = _mpUncode('codex-req1', reqCode);
+  if (!req || !req.to || !req.h) return { ok: false, error: 'that is not a request code (it starts codex-req1.)' };
+  if (req.h !== await _mpCharHash()) return { ok: false, error: 'that request is for a different character' };
+  const id = await _mpIdentity();
+  if (!id) return { ok: false, error: 'this browser holds no key for this character' };
+  if (_mpPubId(req.to) === _mpPubId(id.pub)) return { ok: false, error: 'that request came from this browser' };
+  const params = id.alg === 'Ed25519' ? { name: 'Ed25519' } : { name: 'ECDSA', hash: 'SHA-256' };
+  const sig = new Uint8Array(await crypto.subtle.sign(params, id.privateKey,
+    new TextEncoder().encode(`codex-transfer-v1\n${req.h}\n${_mpPubId(req.to)}`)));
+  const chain = (S_story.keyTransfers || []).concat([{ from: id.pub, to: req.to, sig: _mpB64u(sig) }]);
+  return { ok: true, code: _mpCode('codex-xfer1', { h: req.h, chain }) };
+}
+async function mpTransferAccept(certCode) {
+  const cert = _mpUncode('codex-xfer1', certCode);
+  if (!cert || !Array.isArray(cert.chain) || !cert.chain.length) return { ok: false, error: 'that is not a transfer code (it starts codex-xfer1.)' };
+  if (cert.h !== await _mpCharHash()) return { ok: false, error: 'that transfer is for a different character' };
+  const id = await _mpIdentity();
+  if (!id || _mpPubId(cert.chain[cert.chain.length - 1].to) !== _mpPubId(id.pub)) return { ok: false, error: 'that transfer was made for another browser' };
+  S_story.keyTransfers = cert.chain;
+  return { ok: true, links: cert.chain.length };
+}
+async function mlTransfer(step) {
+  const box = document.getElementById('ml-xfer-code');
+  const note = document.getElementById('ml-xfer-note');
+  const r = step === 'request' ? await mpTransferRequest()
+    : step === 'authorize' ? await mpTransferAuthorize(box.value) : await mpTransferAccept(box.value);
+  if (!r.ok) { note.textContent = '🔴 ' + r.error; return; }
+  if (r.code) box.value = r.code;
+  note.textContent = step === 'request' ? '📋 Paste this request code into the browser that plays this character now, and press Authorize there.'
+    : step === 'authorize' ? '✍ Paste this transfer code into the new browser, and press Accept there.'
+    : '✅ Accepted. Save the game; this browser now connects as this character on every server.';
 }
 async function mpToggle(ev) {
   if (ev && ev.shiftKey) return mpBrowserOpen();   // §MESH-01-FU 2: Shift+🌐 = server browser
@@ -29319,7 +29389,7 @@ async function mpToggle(ev) {
       // save came from another browser). Never regenerate the durable key (it
       // owns chains on other servers) — connect keyless here and say so loudly.
       console.warn('[ledger] trade identity refused on this server — connecting keyless:', start.error);
-      storyMsg('⚠ This server refused your trade identity (' + (/collision/i.test(start.error) ? 'id collision' : 'bound to a key held by another browser') + ') — connected without it; trades here use a temporary id.');
+      storyMsg('⚠ This server refused your trade identity (' + (/collision/i.test(start.error) ? 'id collision' : 'bound to a key held by another browser — 🛡 Lists → 🔑 moves it here') + ') — connected without it; trades here use a temporary id.');
       start = await _mpFetch('/api/session/start', { name });
     }
     if (!start.ok) throw new Error(start.error || 'start failed');

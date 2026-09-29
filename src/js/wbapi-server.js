@@ -378,6 +378,19 @@ function playerSigVerify(pubId, message, sigB64u) {
       : crypto.verify('sha256', data, { key, dsaEncoding: 'ieee-p1363' }, sig);
   } catch { return false; }
 }
+// A transfer certificate {from, to, sig}: the key bound to a character signs
+// `codex-transfer-v1\n<h>\n<toPubId>` to hand the character to another
+// browser's key. Walked from the key this server has bound, so a chain from an
+// earlier key works on a server that has seen none of its middle links.
+function playerTransferWalk(h, boundPub, transfers) {
+  let cur = boundPub;
+  if (!Array.isArray(transfers)) return cur;
+  for (const t of transfers.slice(0, 16)) {
+    const from = playerPubId(t && t.from), to = playerPubId(t && t.to);
+    if (from === cur && to && playerSigVerify(cur, `codex-transfer-v1\n${h}\n${to}`, t.sig)) cur = to;
+  }
+  return cur;
+}
 function playerSessionMessage(nonce) { return `codex-session-v1\n${getServerId()}\n${nonce}`; }
 function playerKeysSave() {
   try {
@@ -385,7 +398,7 @@ function playerKeysSave() {
     fs.writeFileSync(playerKeysFile(), JSON.stringify(Object.fromEntries(PLAYER_KEYS.map), null, 2));
   } catch (e) { log('WARN', `ledger: could not persist players.json (${e.message})`); }
 }
-// {pub, nonce, sig, playerKey?} → {player8} | {status, error}
+// {pub, nonce, sig, playerKey?, transfers?} → {player8} | {status, error}
 function playerKeyProve(body) {
   const pubId = playerPubId(body.pub);
   if (!pubId) return { status: 400, error: 'body.pub must be an Ed25519 or P-256 public JWK.' };
@@ -404,7 +417,12 @@ function playerKeyProve(body) {
   const known = PLAYER_KEYS.map.get(player8);
   const knownH = known && typeof known === 'object' ? known.h : known;
   if (knownH && knownH !== full) return { status: 409, error: `player8 collision on ${player8} — this key maps to an id already claimed by a different key` };
-  if (known && typeof known === 'object' && known.pub !== pubId) return { status: 409, error: `player ${player8} is bound to a different key` };
+  if (known && typeof known === 'object' && known.pub !== pubId) {
+    if (playerTransferWalk(full, known.pub, body.transfers) !== pubId) return { status: 409, error: `player ${player8} is bound to a different key` };
+    PLAYER_KEYS.map.set(player8, { h: full, pub: pubId });
+    playerKeysSave();
+    return { player8 };
+  }
   if (!known || typeof known !== 'object') { PLAYER_KEYS.map.set(player8, { h: full, pub: pubId }); playerKeysSave(); }
   return { player8 };
 }
@@ -11434,7 +11452,7 @@ server.listen(PORT, BIND_ADDR, () => {
     ['GET',    '/api/grid/heatmap                    → all cells with adjacency heat (0-4)'],
     ['GET',    '/api/grid/reachability[?hub=LHR]     → reachable vs unreachable cells from hub'],
     ['POST',   '/api/session/nonce                   → {nonce, serverId, ttlMs} — single-use challenge for a signed session/start (§MESH-03a)'],
-    ['POST',   '/api/session/start                   body: {name, seed?, playerKey?, pub?, nonce?, sig?} → {sessionId, pid, ledgerPid, r, c, node, desc, exits} (pub+sig over "codex-session-v1\\n<serverId>\\n<nonce>" proves a player key; playerKey alone is the legacy bearer id, refused once bound or under MESH_REQUIRE_PLAYER_SIG)'],
+    ['POST',   '/api/session/start                   body: {name, seed?, playerKey?, pub?, nonce?, sig?, transfers?} → {sessionId, pid, ledgerPid, r, c, node, desc, exits} (pub+sig over "codex-session-v1\\n<serverId>\\n<nonce>" proves a player key; playerKey alone is the legacy bearer id, refused once bound or under MESH_REQUIRE_PLAYER_SIG; transfers: [{from, to, sig}] hands a bound character to a new key)'],
     ['POST',   '/api/session/move                    body: {sessionId, dir} → {r, c, node, desc, exits, players, room, encounter}'],
     ['GET',    '/api/session/look?sessionId=          → current cell + exits + co-present players + room (§NAV-01f MUD room object)'],
     ['GET',    '/api/session/who                     → all active sessions'],
