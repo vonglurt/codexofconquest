@@ -1238,6 +1238,7 @@ hr.divider { border: none; border-top: 1px solid var(--border); margin: 2px 0; }
 .mp-adv-row { display: flex; align-items: center; gap: 8px; font-size: 12px; color: #cde0f0; cursor: pointer; max-width: 560px; }
 .mp-adv-row input { cursor: pointer; }
 .mp-map-presence { font-size: 12px; color: #cde0f0; min-height: 18px; line-height: 1.7; max-width: 560px; }
+#msub-connect > * { flex-shrink: 0; }
 #mp-chat-scope-bar { display: flex; gap: 6px; }
 #mp-chat-scope-bar .mp-scope-btn { font-size: 11px; padding: 4px 14px; border: 1px solid #2a4a6a; border-radius: 6px; background: #0a1a2a; color: #7a8a9a; cursor: pointer; }
 #mp-chat-scope-bar .mp-scope-btn.mp-scope-active { border-color: #5a8aba; color: #9abada; background: rgba(90,138,186,0.14); }
@@ -28855,6 +28856,7 @@ _mpChatLoad();   // boot: yesterday's conversation is still there before any con
 // Is a chat entry "local" — spoken within ~10 cells of the player? Reuses the
 // column-wrap distance the minimap uses so the antimeridian doesn't read as far.
 function _mpChatIsLocal(e) {
+  if (e && e.scope === 'dm') return true;   // §MESH-03f-FU: addressed to you, so shown in either view
   if (e == null || e.r == null || e.c == null) return false;   // no coords → world-only
   const cr = S_story.playerR || 0, cc = S_story.playerC || 0;
   const dcRaw = Math.abs(e.c - cc);

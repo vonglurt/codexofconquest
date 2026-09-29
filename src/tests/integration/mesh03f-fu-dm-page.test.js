@@ -155,12 +155,17 @@ test.describe('§MESH-03f-FU — private messages between two browsers on two se
 
     expect(await until(() => pa.evaluate(({ bobPid, r, c }) => Object.values(MP.remotes).some((p) => p.ledgerPid === bobPid && p.r === r && p.c === c),
       { bobPid, r: moved.r, c: moved.c }))).toBe(true);
-    await pa.evaluate(() => { MP.players = []; _mpRenderMapPresence(); });
+    await pa.evaluate(() => { switchSheet('sheet-map'); msubSwitch('msub-connect'); MP.players = []; _mpRenderMapPresence(); });
     const btn = pa.locator('#mp-map-presence button', { hasText: '✉ Bob' });
     await expect(btn).toHaveCount(1);
-    await btn.evaluate((b) => b.click());
+    const box = await pa.locator('#mp-map-presence').evaluate((el) => ({ h: el.clientHeight, content: el.scrollHeight }));
+    expect(box.content, 'the presence box holds its lines instead of spilling over the Chat header').toBeLessThanOrEqual(box.h + 1);
+    await btn.click({ timeout: 5000 });
     await pa.locator('#mp-map-chat-input').evaluate((el) => { el.value = 'across the map'; el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' })); });
     expect(await until(() => pb.evaluate(() => MP.chat.some((e) => e.scope === 'dm' && e.msg === 'across the map')))).toBe(true);
+    const shown = await pb.evaluate(() => { switchSheet('sheet-map'); msubSwitch('msub-connect'); mpChatScope('local'); _mpMapChatRender();
+      return document.getElementById('mp-map-chat-list').textContent; });
+    expect(shown, 'a private line shows in the Local view too').toContain('across the map');
   });
 
   test('Bob answers through mpDmSend, and Alice\'s browser opens the reply', async () => {
