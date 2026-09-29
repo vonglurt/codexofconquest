@@ -45,10 +45,6 @@
 ---
 ## §BACKLOG — Open Items (Phase 5)
 
-### §MESH-03a-FU — a save moved to another browser loses its trade identity, and there is no way to carry the key over (NEW 2026-09-28 during §MESH-03a inc 2, 🟡 export format)
-
-- [ ] **§MESH-03a-FU — moving a character between browsers keeps its ledger.** Since §MESH-03a inc 2 the character's key pair is non-extractable and lives in one browser's IndexedDB under its `playerKey`. A save loaded in another browser generates a new pair, the server answers `bound to a different key` (409), and `mpToggle` connects keyless with a warning, so that character's items cannot trade there. **Options:** (a) a one-time *transfer* — the old browser signs `{playerKey, newPub}` and the server rebinds (needs both browsers once); (b) an extractable, passphrase-wrapped key export in the save (weaker: the save becomes the secret again, but only with the passphrase); (c) accept the loss and document it. **Recommendation:** (a), because it keeps the private key unexportable. **Verify:** a character bound in browser context 1 connects from context 2 with its original `ledgerPid` after a transfer, and a transfer signed by a third key is refused.
-
 ### §MESH-03e — cross-server events do not say which content they depend on, so a server behind cannot tell "missing" from "invalid" (NEW 2026-09-28, user direction, 🟡 hold, fetch or refuse)
 
 - [ ] **§MESH-03e — every cross-server event names the content it depends on, and a server behind holds it, fetches it, or refuses it.** Depends on §MESH-03c/§MESH-03d. **Rule:** presence, movement and chat depend only on the universe, so they always flow. A ledger mint, a trade of an item, a quest-credit event or a duel on a pack's monster carries `deps: [packId…]`. A receiver that has every dependency applies it. One that lacks a pack its operator already accepts fetches it and holds the event. One that lacks a pack its operator has not accepted refuses the event visibly, never half-applies it. **Economy:** a mint must cite the pack whose reward authorizes it, and ingest checks the cited reward against that pack. This closes the path by which a generous pack on one server inflates another. **Verify:** B, missing pack P, holds A's trade of P's item and applies it once P is pulled; with P refused, the trade is refused and both ledgers stay consistent; a mint larger than P's reward is refused.
@@ -197,6 +193,6 @@
 
 ## §RESUME — Phase 5 history
 
-> **Completed work is not carried here.** The 98 closed increments for this phase are condensed in **[`../archive/backlog-resume-history.md`](../archive/backlog-resume-history.md)**; full prose for recent closes is in [`plan-archive.md`](plan-archive.md). This file carries open rows only.
+> **Completed work is not carried here.** The 99 closed increments for this phase are condensed in **[`../archive/backlog-resume-history.md`](../archive/backlog-resume-history.md)**; full prose for recent closes is in [`plan-archive.md`](plan-archive.md). This file carries open rows only.
 
 > When an increment ships: write the full entry into `plan-archive.md`, add its one-line row to `../archive/backlog-resume-history.md` and to the cross-phase table in [`BACKLOG.md`](BACKLOG.md), and delete the row from this file.
