@@ -221,6 +221,7 @@ const PORT_BLOCKS = {
   packmesh: 14900,   // four ports per worker: tracker, A, B, tamperer
   tls: 15000,        // two ports per worker: a TLS server and a plain one
   stamped: 15200,
+  playerkeys: 15300,  // two ports per worker: a default server and one under MESH_REQUIRE_PLAYER_SIG
 };
 
 // Returns `count` consecutive ports reserved for this worker inside `block`'s

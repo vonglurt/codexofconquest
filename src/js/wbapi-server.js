@@ -313,7 +313,7 @@ const TRADES = new Map();  // tradeId → {from, to, give, want, expires} — pe
 // ledger/players.json so a player8 collision is detected across restarts
 // (first-writer wins, refused loudly). Keyless sessions fall back to the
 // session-scoped pid: still mintable, but the chain strands with the session.
-const PLAYER_KEYS = { loaded: false, map: new Map() };   // player8 → full sha256
+const PLAYER_KEYS = { loaded: false, map: new Map() };   // player8 → full sha256, or {h, pub} once bound (§MESH-03a)
 function playerKeysFile() { return path.join(LEDGER_DIR, 'players.json'); }
 function playerKeysLoad() {
   if (PLAYER_KEYS.loaded) return;
@@ -325,16 +325,90 @@ function playerKeyRegister(playerKey) {
   const full = crypto.createHash('sha256').update(playerKey).digest('hex');
   const player8 = full.slice(0, 8);
   const known = PLAYER_KEYS.map.get(player8);
-  if (known && known !== full) return { error: `player8 collision on ${player8} — this key maps to an id already claimed by a different key` };
-  if (!known) {
-    PLAYER_KEYS.map.set(player8, full);
-    try {
-      fs.mkdirSync(LEDGER_DIR, { recursive: true });
-      fs.writeFileSync(playerKeysFile(), JSON.stringify(Object.fromEntries(PLAYER_KEYS.map), null, 2));
-    } catch (e) { log('WARN', `ledger: could not persist players.json (${e.message})`); }
-  }
+  const knownH = known && typeof known === 'object' ? known.h : known;
+  if (knownH && knownH !== full) return { error: `player8 collision on ${player8} — this key maps to an id already claimed by a different key` };
+  if (known && typeof known === 'object') return { status: 401, error: `player ${player8} is bound to a key — sign the session start (pub, nonce, sig) instead of presenting playerKey alone` };
+  if (!known) { PLAYER_KEYS.map.set(player8, full); playerKeysSave(); }
   return { player8 };
 }
+// §MESH-03a (player half): a player proves a key pair instead of presenting a
+// bearer string. The client signs `codex-session-v1\n<serverId>\n<nonce>` with a
+// non-extractable WebCrypto key (Ed25519, or ECDSA P-256 where Ed25519 is
+// missing); the nonce is single-use and short-lived, so a captured start cannot
+// be replayed. A keyed player's id is sha256(pubId)[:8]. A legacy playerKey
+// holder signs once with the key presented beside it, which binds the old
+// player8 to the key; from then on the bare string is refused for that id.
+// players.json values: a string (legacy full sha256, unbound) or
+// {h, pub} (h = the full sha256 the player8 was cut from).
+const REQUIRE_PLAYER_SIG = process.env.MESH_REQUIRE_PLAYER_SIG === '1';
+const SESSION_NONCE_TTL = 60 * 1000;
+const SESSION_NONCES = new Map();   // nonce → expires
+function sessionNonceIssue() {
+  const now = Date.now();
+  for (const [n, exp] of SESSION_NONCES) if (exp < now) SESSION_NONCES.delete(n);
+  const nonce = crypto.randomBytes(16).toString('hex');
+  SESSION_NONCES.set(nonce, now + SESSION_NONCE_TTL);
+  return nonce;
+}
+function sessionNonceTake(nonce) {
+  const exp = SESSION_NONCES.get(nonce);
+  SESSION_NONCES.delete(nonce);
+  return exp != null && exp >= Date.now();
+}
+function playerPubId(jwk) {
+  if (!jwk || typeof jwk !== 'object') return null;
+  const b64u = (s) => typeof s === 'string' && /^[A-Za-z0-9_-]{16,}$/.test(s);
+  if (jwk.kty === 'OKP' && jwk.crv === 'Ed25519' && b64u(jwk.x)) return 'ed25519:' + jwk.x;
+  if (jwk.kty === 'EC' && jwk.crv === 'P-256' && b64u(jwk.x) && b64u(jwk.y)) return 'p256:' + jwk.x + '.' + jwk.y;
+  return null;
+}
+function playerPubJwk(pubId) {
+  const [alg, rest] = pubId.split(':');
+  if (alg === 'ed25519') return { kty: 'OKP', crv: 'Ed25519', x: rest };
+  const [x, y] = rest.split('.');
+  return { kty: 'EC', crv: 'P-256', x, y };
+}
+function playerSigVerify(pubId, message, sigB64u) {
+  try {
+    const key = crypto.createPublicKey({ key: playerPubJwk(pubId), format: 'jwk' });
+    const sig = Buffer.from(String(sigB64u), 'base64url');
+    const data = Buffer.from(message);
+    return pubId.startsWith('ed25519:')
+      ? crypto.verify(null, data, key, sig)
+      : crypto.verify('sha256', data, { key, dsaEncoding: 'ieee-p1363' }, sig);
+  } catch { return false; }
+}
+function playerSessionMessage(nonce) { return `codex-session-v1\n${getServerId()}\n${nonce}`; }
+function playerKeysSave() {
+  try {
+    fs.mkdirSync(LEDGER_DIR, { recursive: true });
+    fs.writeFileSync(playerKeysFile(), JSON.stringify(Object.fromEntries(PLAYER_KEYS.map), null, 2));
+  } catch (e) { log('WARN', `ledger: could not persist players.json (${e.message})`); }
+}
+// {pub, nonce, sig, playerKey?} → {player8} | {status, error}
+function playerKeyProve(body) {
+  const pubId = playerPubId(body.pub);
+  if (!pubId) return { status: 400, error: 'body.pub must be an Ed25519 or P-256 public JWK.' };
+  if (!sessionNonceTake(String(body.nonce || ''))) return { status: 401, error: 'nonce unknown, used or expired — POST /api/session/nonce for a fresh one.' };
+  if (!playerSigVerify(pubId, playerSessionMessage(body.nonce), body.sig)) return { status: 401, error: 'signature does not verify against body.pub.' };
+  playerKeysLoad();
+  let full;
+  if (body.playerKey != null && body.playerKey !== '') {
+    const pk = String(body.playerKey).trim().toLowerCase();
+    if (!/^[0-9a-f]{32}$/.test(pk)) return { status: 400, error: 'body.playerKey must be 32 lowercase hex chars.' };
+    full = crypto.createHash('sha256').update(pk).digest('hex');
+  } else {
+    full = crypto.createHash('sha256').update(pubId).digest('hex');
+  }
+  const player8 = full.slice(0, 8);
+  const known = PLAYER_KEYS.map.get(player8);
+  const knownH = known && typeof known === 'object' ? known.h : known;
+  if (knownH && knownH !== full) return { status: 409, error: `player8 collision on ${player8} — this key maps to an id already claimed by a different key` };
+  if (known && typeof known === 'object' && known.pub !== pubId) return { status: 409, error: `player ${player8} is bound to a different key` };
+  if (!known || typeof known !== 'object') { PLAYER_KEYS.map.set(player8, { h: full, pub: pubId }); playerKeysSave(); }
+  return { player8 };
+}
+
 // The pid ledger/duel chains key on. Durable when the session presented a
 // playerKey; otherwise the same origin8:session8 string as presence pidOf.
 function ledgerPidOf(sessionId) {
@@ -8248,6 +8322,11 @@ async function route(req, res) {
       return json(res, 400, { error: 'Invalid JSON' });
     }
 
+    // ── POST /api/session/nonce — §MESH-03a: the challenge a signed start answers
+    if (sub === 'nonce') {
+      return json(res, 200, { ok: true, nonce: sessionNonceIssue(), serverId: getServerId(), ttlMs: SESSION_NONCE_TTL });
+    }
+
     // ── POST /api/session/start ────────────────────────────────────────────
     if (sub === 'start') {
       const playerName = (body.name || '').trim();
@@ -8259,7 +8338,18 @@ async function route(req, res) {
       // gives this session a DURABLE ledger pid that survives session death —
       // without it, ledger chains key on the session and strand at the TTL.
       let player8 = null;
-      if (body.playerKey != null && body.playerKey !== '') {
+      if (body.pub != null) {
+        const proof = playerKeyProve(body);
+        if (proof.error) {
+          logResponse(method, url.pathname, proof.status, 'session/start: key proof refused');
+          return json(res, proof.status, { ok: false, error: proof.error });
+        }
+        player8 = proof.player8;
+      } else if (body.playerKey != null && body.playerKey !== '') {
+        if (REQUIRE_PLAYER_SIG) {
+          logResponse(method, url.pathname, 401, 'session/start: bare playerKey refused');
+          return json(res, 401, { ok: false, error: 'this server requires a signed session start (MESH_REQUIRE_PLAYER_SIG): send pub, nonce and sig.' });
+        }
         const pk = String(body.playerKey).trim().toLowerCase();
         if (!/^[0-9a-f]{32}$/.test(pk)) {
           logResponse(method, url.pathname, 400, 'session/start: malformed playerKey');
@@ -8268,8 +8358,8 @@ async function route(req, res) {
         const reg = playerKeyRegister(pk);
         if (reg.error) {
           log('WARN', `session/start: ${reg.error}`);
-          logResponse(method, url.pathname, 409, 'session/start: playerKey collision');
-          return json(res, 409, { ok: false, error: reg.error });
+          logResponse(method, url.pathname, reg.status || 409, 'session/start: playerKey refused');
+          return json(res, reg.status || 409, { ok: false, error: reg.error });
         }
         player8 = reg.player8;
       }
@@ -11333,7 +11423,8 @@ server.listen(PORT, BIND_ADDR, () => {
     ['GET',    '/api/grid/region?r1=&c1=&r2=&c2=    → 2D array of cells in bounding box'],
     ['GET',    '/api/grid/heatmap                    → all cells with adjacency heat (0-4)'],
     ['GET',    '/api/grid/reachability[?hub=LHR]     → reachable vs unreachable cells from hub'],
-    ['POST',   '/api/session/start                   body: {name, seed?, playerKey?} → {sessionId, pid, ledgerPid, r, c, node, desc, exits} (playerKey: 32 hex, gives a durable ledgerPid)'],
+    ['POST',   '/api/session/nonce                   → {nonce, serverId, ttlMs} — single-use challenge for a signed session/start (§MESH-03a)'],
+    ['POST',   '/api/session/start                   body: {name, seed?, playerKey?, pub?, nonce?, sig?} → {sessionId, pid, ledgerPid, r, c, node, desc, exits} (pub+sig over "codex-session-v1\\n<serverId>\\n<nonce>" proves a player key; playerKey alone is the legacy bearer id, refused once bound or under MESH_REQUIRE_PLAYER_SIG)'],
     ['POST',   '/api/session/move                    body: {sessionId, dir} → {r, c, node, desc, exits, players, room, encounter}'],
     ['GET',    '/api/session/look?sessionId=          → current cell + exits + co-present players + room (§NAV-01f MUD room object)'],
     ['GET',    '/api/session/who                     → all active sessions'],

@@ -29244,8 +29244,8 @@ async function _mpFetch(path, body) {
 // §MESH-01i slice 2b (lab report §6.4) — the durable half of the trade
 // identity. Generated ONCE, 32 hex chars from crypto.getRandomValues, kept in
 // the save file like any other S_story field; every session/start presents it
-// and the server derives ledgerPid = (origin8, sha256(key).slice(0,8)). A
-// bearer credential — whoever holds the save owns the chain (§IX.B trust).
+// and the server derives ledgerPid = (origin8, sha256(key).slice(0,8)). On its
+// own it is a bearer credential; §MESH-03a pairs it with a key pair below.
 function _mpPlayerKey() {
   if (!/^[0-9a-f]{32}$/.test(S_story.playerKey || '')) {
     const b = new Uint8Array(16);
@@ -29254,19 +29254,72 @@ function _mpPlayerKey() {
   }
   return S_story.playerKey;
 }
+// §MESH-03a — the character's key pair, so the server can tell the player from
+// anyone who has read the save. Generated non-extractable (Ed25519, or ECDSA
+// P-256 where Ed25519 is missing) and kept in this browser's IndexedDB under the
+// character's playerKey, so a New Game gets a new pair and NG+ keeps its own.
+// The first signed start binds the playerKey's id to this key on that server;
+// after that the bare playerKey is refused there. null = no WebCrypto/IndexedDB
+// here, and the start falls back to the bearer playerKey.
+function _mpIdb(mode, fn) {
+  return new Promise((resolve, reject) => {
+    const open = indexedDB.open('codex-identity', 1);
+    open.onupgradeneeded = () => open.result.createObjectStore('players');
+    open.onerror = () => reject(open.error);
+    open.onsuccess = () => {
+      const tx = open.result.transaction('players', mode);
+      const req = fn(tx.objectStore('players'));
+      tx.oncomplete = () => { open.result.close(); resolve(req.result); };
+      tx.onerror = () => { open.result.close(); reject(tx.error); };
+    };
+  });
+}
+async function _mpIdentity() {
+  const handle = _mpPlayerKey();
+  if (_mpIdentity.cache && _mpIdentity.cache.handle === handle) return _mpIdentity.cache;
+  const subtle = globalThis.crypto && crypto.subtle;
+  if (!subtle || typeof indexedDB === 'undefined') return null;
+  try {
+    let rec = await _mpIdb('readonly', st => st.get(handle));
+    if (!rec) {
+      try { rec = { alg: 'Ed25519', keys: await subtle.generateKey({ name: 'Ed25519' }, false, ['sign', 'verify']) }; }
+      catch { rec = { alg: 'P-256', keys: await subtle.generateKey({ name: 'ECDSA', namedCurve: 'P-256' }, false, ['sign', 'verify']) }; }
+      await _mpIdb('readwrite', st => st.put(rec, handle));
+    }
+    const j = await subtle.exportKey('jwk', rec.keys.publicKey);
+    const pub = j.kty === 'OKP' ? { kty: j.kty, crv: j.crv, x: j.x } : { kty: j.kty, crv: j.crv, x: j.x, y: j.y };
+    return (_mpIdentity.cache = { handle, alg: rec.alg, privateKey: rec.keys.privateKey, pub });
+  } catch (e) {
+    console.warn('[ledger] no player key pair in this browser — falling back to the bearer playerKey:', e);
+    return null;
+  }
+}
+async function _mpStart(body) {
+  const legacy = () => _mpFetch('/api/session/start', { ...body, playerKey: _mpPlayerKey() });
+  const id = await _mpIdentity();
+  if (!id) return legacy();
+  const n = await _mpFetch('/api/session/nonce', {}).catch(() => null);
+  if (!n || !n.ok) return legacy();
+  const params = id.alg === 'Ed25519' ? { name: 'Ed25519' } : { name: 'ECDSA', hash: 'SHA-256' };
+  const sig = new Uint8Array(await crypto.subtle.sign(params, id.privateKey,
+    new TextEncoder().encode(`codex-session-v1\n${n.serverId}\n${n.nonce}`)));
+  const b64u = btoa(String.fromCharCode(...sig)).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+  return _mpFetch('/api/session/start', { ...body, playerKey: id.handle, pub: id.pub, nonce: n.nonce, sig: b64u });
+}
 async function mpToggle(ev) {
   if (ev && ev.shiftKey) return mpBrowserOpen();   // §MESH-01-FU 2: Shift+🌐 = server browser
   if (MP.on) return mpDisconnect('🌐 Multiplayer off.');
   MP.base = _mpBase();
   try {
     const name = S_story.playerName || ('Wanderer-' + Math.floor(Math.random() * 900 + 100));
-    let start = await _mpFetch('/api/session/start', { name, playerKey: _mpPlayerKey(), pvp: S_story.pvpOff ? 'off' : 'on' });
-    if (!start.ok && /collision/i.test(start.error || '')) {
+    let start = await _mpStart({ name, pvp: S_story.pvpOff ? 'off' : 'on' });
+    if (!start.ok && /collision|bound to/i.test(start.error || '')) {
       // §6.4 first-writer-wins: OUR player8 is claimed by a different key on
-      // THIS server. Never regenerate the durable key (it owns chains on other
-      // servers) — connect keyless here and say so loudly.
-      console.warn('[ledger] playerKey collision on this server — connecting keyless:', start.error);
-      storyMsg('⚠ This server refused your trade identity (id collision) — connected without it; trades here use a temporary id.');
+      // THIS server, or bound to a key pair this browser does not hold (the
+      // save came from another browser). Never regenerate the durable key (it
+      // owns chains on other servers) — connect keyless here and say so loudly.
+      console.warn('[ledger] trade identity refused on this server — connecting keyless:', start.error);
+      storyMsg('⚠ This server refused your trade identity (' + (/collision/i.test(start.error) ? 'id collision' : 'bound to a key held by another browser') + ') — connected without it; trades here use a temporary id.');
       start = await _mpFetch('/api/session/start', { name });
     }
     if (!start.ok) throw new Error(start.error || 'start failed');
