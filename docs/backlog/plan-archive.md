@@ -19,6 +19,16 @@
 
 ---
 
+## Archived 2026-09-29 — §MP-MAP-FU (the map sheet's multiplayer panes are readable)
+
+### §MP-MAP-FU — the Multiplayer pane is painted in the dark modal's palette on the cream sheet: its presence line reads at 1.09:1 (NEW 2026-09-29 during the §MESH-03f-FU2 on-screen check, 🟡 one palette call, the §MESH-03c-FU precedent)
+
+- [x] ✅ SHIPPED 2026-09-29 `efc4666` **§MP-MAP-FU — make the Map → Multiplayer pane readable.** **Measured on screen 2026-09-29 at `8e4e726`** (the worst text node in `#msub-connect`, WCAG ratio against the nearest opaque background): `#mp-map-presence` (*"🟢 Connected as … nobody else in this cell"*) and the *"Advertise my position"* label are `#cde0f0` on the cream `#f0e6c8`, at **1.09**. Every `.mp-hint` and `.mp-section-hd` (the Paste-a-server help, *"📢 Presence"*, *"✉ Write privately to:"*) is `#7a8a9a` on cream, at **2.84**. The empty-chat line is `#6a4a28` on `#0a1220`, at **2.34**. The status card's labels (*Server*, *Status*, *World*, *Engine*) looked nearly invisible in the screenshot too, but the probe read their background as the card's and did not rank them, so measure them first. The rules were written for the dark Shift+🌐 modal, as the server rows were before §MESH-03c-FU. **The call:** give the pane's text a light-sheet palette scoped to `#sheet-map`, or give the pane the modal's dark card, as §MESH-03c-FU did for rows. **Verify:** a computed-contrast assertion (4.5:1) over every visible text node in `#msub-connect` while connected, plus a screenshot.
+
+> **SHIPPED 2026-09-29 `efc4666`.** **The call (🟡):** this extends §MESH-03c-FU's rule, which said cards on the map sheet take the modal's dark card, with its other half: **text that sits on the sheet uses the sheet's own ink.** So there is one rule per surface, not a second blue palette. **Before:** `mp-map-fu-contrast.test.js` walks every visible text node in `#msub-connect`, `#msub-discover` and `#msub-lists`, and composites translucent backgrounds over the cream sheet. That compositing is what the row's first probe lacked, and it is why the status card had not ranked. **38** nodes were under 4.5:1: the presence line and Advertise label at 1.09, the active *Local* scope button at 1.42, the status card's values at 1.60 (its `rgba(10,20,35,0.45)` mixed to grey over cream), the empty-chat line at 2.34, and every hint and section head at 2.84. **Change:** `.mp-hint` in the three panes and `.mp-section-hd` take `var(--muted)`, while `.mp-adv-row` and `.mp-map-presence` take `var(--text)`. `#mc-status-card` becomes opaque `#0a1220`, the active scope button `#1a3350` with `#cde0f0` text, and the empty-chat line `#9ab0c4`. Every changed rule is used only by these panes. **After:** **0**, and screenshots of Multiplayer and Lists read cleanly. **Verify:** with every mesh, multiplayer, session and pane file, **97/97** across 20. `check:walk` 41/41, and the badge does not move. **Filed:** §MP-MAP-FU2 (the status card's long values wrap under their label).
+
+---
+
 ## Archived 2026-09-28 — §MESH-03f-FU2 (✉ reaches a keyed player anywhere on the map)
 
 ### §MESH-03f-FU2 — ✉ reaches only players in your cell: the world list carries no `ledgerPid` (NEW 2026-09-28 during §MESH-03f-FU inc 2, 🟢 one field and one button)

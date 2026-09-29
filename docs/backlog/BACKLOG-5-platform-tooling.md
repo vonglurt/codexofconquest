@@ -45,9 +45,9 @@
 ---
 ## §BACKLOG — Open Items (Phase 5)
 
-### §MP-MAP-FU — the Multiplayer pane is painted in the dark modal's palette on the cream sheet: its presence line reads at 1.09:1 (NEW 2026-09-29 during the §MESH-03f-FU2 on-screen check, 🟡 one palette call, the §MESH-03c-FU precedent)
+### §MP-MAP-FU2 — the Multiplayer status card's long values wrap under their label (NEW 2026-09-29 during §MP-MAP-FU, 🟢 one layout rule)
 
-- [ ] **§MP-MAP-FU — make the Map → Multiplayer pane readable.** **Measured on screen 2026-09-29 at `8e4e726`** (the worst text node in `#msub-connect`, WCAG ratio against the nearest opaque background): `#mp-map-presence` (*"🟢 Connected as … nobody else in this cell"*) and the *"Advertise my position"* label are `#cde0f0` on the cream `#f0e6c8`, at **1.09**. Every `.mp-hint` and `.mp-section-hd` (the Paste-a-server help, *"📢 Presence"*, *"✉ Write privately to:"*) is `#7a8a9a` on cream, at **2.84**. The empty-chat line is `#6a4a28` on `#0a1220`, at **2.34**. The status card's labels (*Server*, *Status*, *World*, *Engine*) looked nearly invisible in the screenshot too, but the probe read their background as the card's and did not rank them, so measure them first. The rules were written for the dark Shift+🌐 modal, as the server rows were before §MESH-03c-FU. **The call:** give the pane's text a light-sheet palette scoped to `#sheet-map`, or give the pane the modal's dark card, as §MESH-03c-FU did for rows. **Verify:** a computed-contrast assertion (4.5:1) over every visible text node in `#msub-connect` while connected, plus a screenshot.
+- [ ] **§MP-MAP-FU2 — keep a status value's continuation lines in its own column.** **Seen on screen 2026-09-29 at `efc4666`:** with no server, the *Build* row reads *"🔴 no server at http://localhost:7654 — start one with ./bin/wbapi"*, and its second line (*"start"*) wraps back to the card's left edge under *Build*. The cause is that `#mc-status-card .mc-k` is an `inline-block` of 62 px inside a plain `<div>`, so the value's wrapped lines return to the div's edge. **Change:** make each row `display: grid; grid-template-columns: 62px 1fr` (or flex with the value `flex: 1`). **Verify:** with a long *Build* message, every line of the value starts right of the label column; plus a screenshot.
 
 ### §MESH-03e-FU — a mint is authorized by nothing, so no receiving server can bound what a pack's reward lets a player mint (NEW 2026-09-28 during §MESH-03e, 🟠 trust model)
 
@@ -191,6 +191,6 @@
 
 ## §RESUME — Phase 5 history
 
-> **Completed work is not carried here.** The 107 closed increments for this phase are condensed in **[`../archive/backlog-resume-history.md`](../archive/backlog-resume-history.md)**; full prose for recent closes is in [`plan-archive.md`](plan-archive.md). This file carries open rows only.
+> **Completed work is not carried here.** The 108 closed increments for this phase are condensed in **[`../archive/backlog-resume-history.md`](../archive/backlog-resume-history.md)**; full prose for recent closes is in [`plan-archive.md`](plan-archive.md). This file carries open rows only.
 
 > When an increment ships: write the full entry into `plan-archive.md`, add its one-line row to `../archive/backlog-resume-history.md` and to the cross-phase table in [`BACKLOG.md`](BACKLOG.md), and delete the row from this file.
