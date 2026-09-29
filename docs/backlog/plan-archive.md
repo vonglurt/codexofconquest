@@ -19,6 +19,16 @@
 
 ---
 
+## Archived 2026-09-28 — §MESH-03c-FU (server rows are readable on the map sheet)
+
+### §MESH-03c-FU — the Discover pane's server rows use the dark-modal palette on the cream map sheet, so the address is near-invisible (NEW 2026-09-28 during the on-screen check, 🟡 one palette call)
+
+- [x] ✅ SHIPPED 2026-09-28 `811432c` **§MESH-03c-FU — make `.mp-srv-row` readable on the map sheet.** **Measured on screen 2026-09-28 at `cbcb761`:** Map → Discover → 🖥 Scan found both scratch servers, and the §MESH-03c badge rendered on the right one (*"≈ same universe, content differs"* on :1380, whose copy differed in one `passText`; none on :1379). But `.mp-srv-row` was written for the dark Shift+🌐 modal: the bold address is `#cde0f0` and the row text `#9ab0c4`, over the transparent Discover pane on the cream sheet, so `localhost:1379` is nearly invisible. At 1280 px the badge also wraps to four lines, squeezed by the name, address and ping spans. **The call:** scope a light palette to `#msub-discover .mp-srv-row` and `#msub-connect .mp-srv-row`, or give the map panes the modal's dark card. **Verify:** a computed-contrast assertion (WCAG AA 4.5:1) for the address and badge spans in both containers, plus a screenshot.
+
+> **SHIPPED 2026-09-28 `811432c`.** **The call (🟡):** give the map panes the modal's dark card, not a second light palette. One palette for `.mp-srv-row` means one set of badge colours to hold at contrast, and the row looks the same wherever it appears. **Before** (worst text span per container, WCAG ratio against the nearest opaque background): Connect **1.09**, Discover **1.09**, Shift+🌐 modal **4.39**. The modal was failing too, because *"⚠ other universe"* in `#c05555` sits under 4.5 on navy. **Change:** two rules in `play.html` CSS scope `#sheet-map .mp-srv-row` to the modal's `#0a1220` card with `flex-wrap: wrap` and `white-space: nowrap` spans, so the world badge takes its own line instead of wrapping to four. `_mpWorldBadge`'s red goes from `#c05555` to `#e07a7a`. **After:** Connect **6.46**, Discover **6.46**, modal **6.80**. The worst span everywhere is now the red badge. **Verify:** `mesh03c-fu-row-contrast.test.js` is red at HEAD (*Received: 1.086*) and green after. A 1280 px screenshot of two Discover rows shows the address and both badges readable, one line each. With every test that renders a server row, **26/26**. `check:walk` 41/41 (the badge moved 39,430 → 39,432). The full suite was not re-run for a CSS-only change.
+
+---
+
 ## Archived 2026-09-28 — §MESH-03a-FU2 (the hand-over code box is readable)
 
 ### §MESH-03a-FU2 — the 🔑 hand-over code box renders 2 px tall, so the code it holds cannot be seen or selected (NEW 2026-09-28 during the on-screen check, 🟢 one CSS rule)

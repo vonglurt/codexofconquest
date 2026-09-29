@@ -45,10 +45,6 @@
 ---
 ## §BACKLOG — Open Items (Phase 5)
 
-### §MESH-03c-FU — the Discover pane's server rows use the dark-modal palette on the cream map sheet, so the address is near-invisible (NEW 2026-09-28 during the on-screen check, 🟡 one palette call)
-
-- [ ] **§MESH-03c-FU — make `.mp-srv-row` readable on the map sheet.** **Measured on screen 2026-09-28 at `cbcb761`:** Map → Discover → 🖥 Scan found both scratch servers, and the §MESH-03c badge rendered on the right one (*"≈ same universe, content differs"* on :1380, whose copy differed in one `passText`; none on :1379). But `.mp-srv-row` was written for the dark Shift+🌐 modal: the bold address is `#cde0f0` and the row text `#9ab0c4`, over the transparent Discover pane on the cream sheet, so `localhost:1379` is nearly invisible. At 1280 px the badge also wraps to four lines, squeezed by the name, address and ping spans. **The call:** scope a light palette to `#msub-discover .mp-srv-row` and `#msub-connect .mp-srv-row`, or give the map panes the modal's dark card. **Verify:** a computed-contrast assertion (WCAG AA 4.5:1) for the address and badge spans in both containers, plus a screenshot.
-
 ### §DX-02lx — a server that hosts the game page answers the browser's `favicon.ico` with 400 (NEW 2026-09-28 during the on-screen check, 🟢 one route or one `<link>`)
 
 - [ ] **§DX-02lx — stop the stray 400 when the game page is served from a WBAPI server.** **Measured 2026-09-28:** loading `http://localhost:1379/api/source` logs *"Failed to load resource: … 400 (Bad Request)"* for `http://localhost:1379/favicon.ico`, the only non-scan console error in the whole pass. It is harmless, but it is noise in every on-screen check, and it also reaches a friend opening a world served by their server (§MESH-01-REVIEW's same-origin mode). **Change:** either an inline `<link rel="icon" href="data:,">` in `play.html`'s head, or a 204 for `GET /favicon.ico` in `wbapi-server.js`. The `<link>` also covers `file://`. **Verify:** a page load against a scratch server logs no 4xx.
@@ -199,6 +195,6 @@
 
 ## §RESUME — Phase 5 history
 
-> **Completed work is not carried here.** The 102 closed increments for this phase are condensed in **[`../archive/backlog-resume-history.md`](../archive/backlog-resume-history.md)**; full prose for recent closes is in [`plan-archive.md`](plan-archive.md). This file carries open rows only.
+> **Completed work is not carried here.** The 103 closed increments for this phase are condensed in **[`../archive/backlog-resume-history.md`](../archive/backlog-resume-history.md)**; full prose for recent closes is in [`plan-archive.md`](plan-archive.md). This file carries open rows only.
 
 > When an increment ships: write the full entry into `plan-archive.md`, add its one-line row to `../archive/backlog-resume-history.md` and to the cross-phase table in [`BACKLOG.md`](BACKLOG.md), and delete the row from this file.
