@@ -69,7 +69,7 @@ export function sectionHeadersIn(src) {
 // ── the checks, as pure functions of a probe ─────────────────────────────────
 // Each returns a finding string or null. `poolRow` reads the entity's literal back out of
 // the scratch file, so "where it landed" is answered from disk and not from the response.
-export async function runChecks({ probe, poolRow, dropRow, onDisk, sectionHeaders, questRoundTrip, createRefusals, staleWriteProbe }) {
+export async function runChecks({ probe, poolRow, dropRow, onDisk, sectionHeaders, questRoundTrip, createRefusals, staleWriteProbe, terrainGuard }) {
   const out = [];
   const add = (f) => { if (f) out.push(f); };
   const headersBefore = await sectionHeaders();
@@ -205,6 +205,15 @@ export async function runChecks({ probe, poolRow, dropRow, onDisk, sectionHeader
   add(st.recovered === 200 ? null
     : `[stale-unrecoverable] after POST /api/reload the same write answered ${st.recovered}, not 200 — the refusal names a recovery that does not work`);
 
+  // §DX-02fm — WORLD_DB's structured fields are not writable as JSON: \`monsters\` holds P.<key>
+  // proxy references a literal cannot carry, and \`isEpicBattleground\` is fixed. The terrain
+  // route refuses the one and writes the other from monster keys; both are held here.
+  const tg = await terrainGuard();
+  add(tg.epic.status === 422 && !tg.epic.landed ? null
+    : `[structured] PUT /api/terrain/{key} with isEpicBattleground answered ${tg.epic.status}${tg.epic.landed ? ' and reached WORLD_DB on disk' : ''} — a field SCHEMAS marks editable:false got through`);
+  add(tg.roster.status === 200 && tg.roster.pRefs ? null
+    : `[proxy-lost] a monsters write by key answered ${tg.roster.status} and left the WORLD_DB row as ${String(tg.roster.row).trim().slice(0, 120)} — P.<key> references replaced`);
+
   return out;
 }
 
@@ -246,6 +255,7 @@ if (process.argv.includes('--selftest')) {
     createRefusals: async () => ['node', 'terrain', 'monster', 'npc'].map((type) =>
       ({ type, field: 'nosuchfield', status: 400, named: ['nosuchfield'], landed: false })),
     staleWriteProbe: async () => ({ refused: 409, editSurvived: true, refusedValueLanded: false, recovered: 200 }),
+    terrainGuard: async () => ({ epic: { status: 422, landed: false }, roster: { status: 200, pRefs: true, row: '' } }),
   };
   ok((await runChecks(healthy)).length === 0, 'a healthy write path produces no findings');
 
@@ -377,6 +387,11 @@ if (process.argv.includes('--selftest')) {
   ok((await runChecks(bend({ staleWriteProbe: async () => ({ ...S0, refusedValueLanded: true }) })))
     .some((f) => f.includes('refused write reached disk')),
     'a refusal that writes anyway is caught');
+  ok((await runChecks(bend({ terrainGuard: async () => ({ epic: { status: 200, landed: true }, roster: { status: 200, pRefs: true } }) })))
+    .some((f) => f.startsWith('[structured]')), 'a non-editable terrain field written through the route is caught as [structured]');
+  ok((await runChecks(bend({ terrainGuard: async () => ({ epic: { status: 422, landed: false }, roster: { status: 200, pRefs: false, row: 'monsters:[{"key":"x"}]' } }) })))
+    .some((f) => f.startsWith('[proxy-lost]')), 'a monsters write that inlines its references is caught as [proxy-lost]');
+
   ok((await runChecks(bend({ staleWriteProbe: async () => ({ ...S0, recovered: 409 }) })))
     .some((f) => f.startsWith('[stale-unrecoverable]')),
     'a refusal naming a recovery that does not work is caught');
@@ -521,7 +536,21 @@ const staleWriteProbe = async () => {
   };
 };
 
-const findings = await runChecks({ probe, poolRow, dropRow, onDisk, sectionHeaders, questRoundTrip, createRefusals, staleWriteProbe });
+const terrainGuard = async () => {
+  const core = createRequire(import.meta.url)(path.join(ROOT, 'src', 'js', 'wbapi-core.js'));
+  core.load(scratch);
+  const tk = Object.keys(core.worldDb).sort((a, b) => core.worldDb[a].monsters.length - core.worldDb[b].monsters.length)[0];
+  const row = () => (fs.readFileSync(scratch, 'utf8').match(new RegExp(`^\\s*${tk}\\s*:\\s*\\{.*$`, 'm')) || [''])[0];
+  const epic = await probe('PUT', `/api/terrain/${tk}`, { isEpicBattleground: true });
+  const epicLanded = /isEpicBattleground/.test(row()) && !core.worldDb[tk].isEpicBattleground;
+  const keys = (await probe('GET', `/api/terrain/${tk}`)).json?.connections?.monsters?.map((m) => m.key) || [];
+  const roster = await probe('PUT', `/api/terrain/${tk}`, { monsters: keys });
+  const r = row();
+  return { epic: { status: epic.status, landed: epicLanded },
+    roster: { status: roster.status, pRefs: keys.length > 0 && keys.every((k) => new RegExp(`\\bP\\.${k}\\b`).test(r)), row: r } };
+};
+
+const findings = await runChecks({ probe, poolRow, dropRow, onDisk, sectionHeaders, questRoundTrip, createRefusals, staleWriteProbe, terrainGuard });
 console.log(`  probe monster written to a throwaway copy · pool row read from disk: ${(await poolRow()).trim().slice(0, 100)}`);
 if (findings.length) {
   findings.forEach((f) => console.log('  ✗ ' + f));

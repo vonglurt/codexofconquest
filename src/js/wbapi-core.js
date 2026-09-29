@@ -1744,6 +1744,7 @@ const WBAPI = {
   // Falls back to inserting the field if absent. Strings/null still belong to editField.
   editStructuredField(type, idOrTitle, field, value, opts) {
     if (!this._rawSrc) return { ok:false, error:'no source loaded' };
+    if (type === 'terrain') return { ok:false, error:'terrain has no structured writer: monsters holds P.<key> references, written by key through PUT /api/terrain/{key}, and isEpicBattleground is not editable' };
     const section = ENTRY_SECTION[type]; if (!section) return { ok:false, error:'unknown type' };
     const col = this[ENTRY_COLLECTION[type]];
     const key = this._findKey(col, idOrTitle); if (!key) return { ok:false, error:'not found' };
