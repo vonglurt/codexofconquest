@@ -135,6 +135,34 @@ test.describe('§MESH-03f-FU — private messages between two browsers on two se
     await ctx.close();
   });
 
+  test('§MESH-03f-FU2 — Bob in another cell on B is in Alice\'s world list with his ledgerPid, and ✉ in the map pane reaches him', async () => {
+    const post = async (base, p, body) => (await fetch(base + p, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) })).json();
+    const bobSess = await pb.evaluate(() => MP.session), aliceSess = await pa.evaluate(() => MP.session);
+    const here = await post(A, '/api/session/pos', { sessionId: aliceSess, r: 64, c: 224 });
+    let moved = null;
+    for (const [dr, dc] of [[0, 3], [3, 0], [-3, 0], [0, -3], [5, 5], [-5, -5]]) {
+      const r = await post(B, '/api/session/pos', { sessionId: bobSess, r: here.r + dr, c: here.c + dc });
+      if (r.ok) { moved = r; break; }
+    }
+    expect(moved, 'Bob found no land cell near the hub').not.toBeNull();
+    let bob;
+    expect(await until(async () => {
+      const look = await post(A, '/api/session/pos', { sessionId: aliceSess, r: here.r, c: here.c });
+      bob = (look.world || []).find((p) => p.name === 'Bob');
+      return bob && bob.r === moved.r && bob.c === moved.c;
+    })).toBe(true);
+    expect(bob.ledgerPid).toBe(bobPid);
+
+    expect(await until(() => pa.evaluate(({ bobPid, r, c }) => Object.values(MP.remotes).some((p) => p.ledgerPid === bobPid && p.r === r && p.c === c),
+      { bobPid, r: moved.r, c: moved.c }))).toBe(true);
+    await pa.evaluate(() => { MP.players = []; _mpRenderMapPresence(); });
+    const btn = pa.locator('#mp-map-presence button', { hasText: '✉ Bob' });
+    await expect(btn).toHaveCount(1);
+    await btn.evaluate((b) => b.click());
+    await pa.locator('#mp-map-chat-input').evaluate((el) => { el.value = 'across the map'; el.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter' })); });
+    expect(await until(() => pb.evaluate(() => MP.chat.some((e) => e.scope === 'dm' && e.msg === 'across the map')))).toBe(true);
+  });
+
   test('Bob answers through mpDmSend, and Alice\'s browser opens the reply', async () => {
     const r = await pb.evaluate(({ alicePid }) => mpDmSend({ ledgerPid: alicePid, name: 'Alice' }, 'silver it is'), { alicePid });
     expect(r.ok, r.error).toBe(true);

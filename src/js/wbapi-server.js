@@ -125,7 +125,8 @@ function pidOf(sessionId) { return getServerId().slice(0, 8) + ':' + String(sess
 // name-keying bug was payload drift between hand-built emit sites). Sites
 // spread in extras (`node`) where an arrival carries them.
 function presenceEvt(sessionId, name, from, to) {
-  return { pid: pidOf(sessionId), name, from, to };
+  const s = SESSIONS.get(sessionId);
+  return { pid: pidOf(sessionId), name, from, to, ...(s && s.player8 ? { ledgerPid: ledgerPidOf(sessionId) } : {}) };
 }
 
 function broadcastCell(r, c, event, data, excludeId) {
@@ -8772,12 +8773,13 @@ async function route(req, res) {
       // `nearby` stays the viewport subset the minimap reads.
       const worldPlayers = [];
       for (const [id2, s2] of SESSIONS)
-        if (id2 !== s.id) worldPlayers.push({ pid: pidOf(id2), name: s2.playerName, r: s2.r, c: s2.c });
+        if (id2 !== s.id) worldPlayers.push({ pid: pidOf(id2), name: s2.playerName, r: s2.r, c: s2.c, ...(s2.player8 ? { ledgerPid: ledgerPidOf(id2) } : {}) });
       const _mnow = Date.now();   // §MESH-01c: same-world peers' replicated players
       for (const [oid, rec] of MESH.remote) {
         if (_mnow - rec.lastSeen > MESH_ORIGIN_TTL) continue;
         for (const [sid, p] of rec.sessions)
-          worldPlayers.push({ pid: `${oid.slice(0, 8)}:${sid.slice(0, 8)}`, name: p.name, r: p.r, c: p.c, server: oid.slice(0, 8) });
+          worldPlayers.push({ pid: `${oid.slice(0, 8)}:${sid.slice(0, 8)}`, name: p.name, r: p.r, c: p.c, server: oid.slice(0, 8),
+            ...(p.p8 ? { ledgerPid: `${oid.slice(0, 8)}:${p.p8}` } : {}) });
       }
       const nearby = worldPlayers.filter((p) => inView(p.r, p.c));
       const look = buildLook(s);

@@ -28908,14 +28908,19 @@ function _mpRenderMapPresence() {
   if (!MP.on) { el.textContent = 'Not connected. Join a server above to see who else is out there.'; return; }
   const players = (MP.players || []).filter(p => p && p.kind !== 'sentry');
   const remotes = Object.values(MP.remotes || {}).filter(p => p && p.kind !== 'sentry').length;
+  // §MESH-03f-FU2: ✉ any keyed traveler on the map, not only those in this cell.
+  const writable = MP.act ? Object.values(MP.remotes || {})
+    .filter(p => p && p.kind !== 'sentry' && p.ledgerPid && /^[0-9a-f]{8}:[0-9a-f]{8}$/.test(p.pid)).slice(0, 12) : [];
+  const write = writable.length ? '<div class="mp-hint">✉ Write privately to: ' + writable.map(p =>
+    '<button class="mp-trade-btn" title="Send a private message" onclick="mpDmTo(MP.remotes[\'' + p.pid + '\'])">✉ ' + _mpEsc(p.name) + '</button>').join(' ') + '</div>' : '';
   if (!players.length) {
-    el.textContent = '🟢 Connected as ' + (MP.name || '?') + ' · nobody else in this cell'
-      + (remotes ? ' · ' + remotes + ' traveler(s) elsewhere in the world.' : '.');
+    el.innerHTML = '🟢 Connected as ' + _mpEsc(MP.name || '?') + ' · nobody else in this cell'
+      + (remotes ? ' · ' + remotes + ' traveler(s) elsewhere in the world.' : '.') + write;
     return;
   }
   el.innerHTML = '🟢 <b>' + _mpEsc(MP.name || '?') + '</b> · Also here: '
     + players.map(p => _mpEsc(p.name)).join(', ')
-    + (remotes > players.length ? ' · ' + (remotes) + ' traveler(s) worldwide.' : '.');
+    + (remotes > players.length ? ' · ' + (remotes) + ' traveler(s) worldwide.' : '.') + write;
 }
 
 // Send from the map pane's chat input (mirrors mpSay, different input element).
@@ -29552,7 +29557,7 @@ function _mpOpenStream() {
     const d = JSON.parse(ev.data);
     if (d.pid === MP.pid) return;   // never track yourself
     if (!MP.players.some(p => p.pid === d.pid)) MP.players.push({ pid: d.pid, name: d.name, server: d.server, kind: d.kind || 'player' });
-    if (d.pid && d.to) MP.remotes[d.pid] = { pid: d.pid, name: d.name, r: d.to.r, c: d.to.c, server: d.server, kind: d.kind || 'player' };
+    if (d.pid && d.to) MP.remotes[d.pid] = { pid: d.pid, name: d.name, r: d.to.r, c: d.to.c, server: d.server, kind: d.kind || 'player', ledgerPid: d.ledgerPid };
     storyMsg(d.kind === 'sentry' ? '🛡 A sentry takes up post here.' : '🌐 ' + d.name + ' arrives.');
     _mpRenderPresence();
     _mpRepaintMaps();
@@ -29560,7 +29565,7 @@ function _mpOpenStream() {
   es.addEventListener('player_left', ev => {
     const d = JSON.parse(ev.data);
     MP.players = MP.players.filter(p => p.pid !== d.pid);   // pid-keyed: only the leaver goes
-    if (d.pid) { if (d.to) MP.remotes[d.pid] = { pid: d.pid, name: d.name, r: d.to.r, c: d.to.c, server: d.server }; else delete MP.remotes[d.pid]; }
+    if (d.pid) { if (d.to) MP.remotes[d.pid] = { pid: d.pid, name: d.name, r: d.to.r, c: d.to.c, server: d.server, ledgerPid: d.ledgerPid }; else delete MP.remotes[d.pid]; }
     storyMsg(d.kind === 'sentry' ? '🛡 The sentry stands down.' : '🌐 ' + d.name + ' leaves.');
     _mpRenderPresence();
     _mpRepaintMaps();
@@ -29570,7 +29575,7 @@ function _mpOpenStream() {
   es.addEventListener('player_moved', ev => {
     const d = JSON.parse(ev.data);
     if (!d.pid || d.pid === MP.pid) return;
-    if (d.to) MP.remotes[d.pid] = { pid: d.pid, name: d.name, r: d.to.r, c: d.to.c, server: d.server };
+    if (d.to) MP.remotes[d.pid] = { pid: d.pid, name: d.name, r: d.to.r, c: d.to.c, server: d.server, ledgerPid: d.ledgerPid };
     else delete MP.remotes[d.pid];
     _mpRepaintMaps();
   });
@@ -29796,6 +29801,7 @@ function _mpRepaintMaps() {
     _mpRepaintTimer = null;
     if (!MP.on) return;
     _mpRecomputeNearby();
+    _mpRenderMapPresence();
     _renderMiniMap();
     _renderGlobeMap();
     // §MP-MAPTABS: the full-world canvas moved into the 🛰 Full sub-tab and is now
