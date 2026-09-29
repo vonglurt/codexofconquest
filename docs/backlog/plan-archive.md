@@ -19,6 +19,16 @@
 
 ---
 
+## Archived 2026-09-28 — §DX-02lx (no host answers the page's favicon with a 4xx)
+
+### §DX-02lx — a server that hosts the game page answers the browser's `favicon.ico` with 400 (NEW 2026-09-28 during the on-screen check, 🟢 one route or one `<link>`)
+
+- [x] ✅ SHIPPED 2026-09-28 `d5dd633` **§DX-02lx — stop the stray 400 when the game page is served from a WBAPI server.** **Measured 2026-09-28:** loading `http://localhost:1379/api/source` logs *"Failed to load resource: … 400 (Bad Request)"* for `http://localhost:1379/favicon.ico`, the only non-scan console error in the whole pass. It is harmless, but it is noise in every on-screen check, and it also reaches a friend opening a world served by their server (§MESH-01-REVIEW's same-origin mode). **Change:** either an inline `<link rel="icon" href="data:,">` in `play.html`'s head, or a 204 for `GET /favicon.ico` in `wbapi-server.js`. The `<link>` also covers `file://`. **Verify:** a page load against a scratch server logs no 4xx.
+
+> **SHIPPED 2026-09-28 `d5dd633`.** **The choice:** the row offered an inline `<link>` or a 204 route in `wbapi-server.js`. The `<link>` won because the ground was wider than the row. **Before:** `dx02lx-no-favicon-4xx.test.js` loads the page from both origins the Playwright config already boots. It caught **2** console errors: *400* for `http://localhost:1367/favicon.ico` (WBAPI, `/api/source`) and *404* for `http://localhost:7654/favicon.ico` (the static host, not in the row). A server route would have fixed only the first. The first draft of the test watched `page.on('response')` and passed at HEAD, because Chromium fetches the favicon from the browser process, not the page. It now reads console errors, which is how the on-screen check saw it. **Change:** `<link rel="icon" href="data:,">` after the viewport meta in `play.html`'s head, which also covers `file://`. **After:** **0** on both hosts, 2/2 green. `check:walk` 41/41 (the badge moved 39,432 → 39,433). The full suite was not re-run for a one-line head change.
+
+---
+
 ## Archived 2026-09-28 — §MESH-03c-FU (server rows are readable on the map sheet)
 
 ### §MESH-03c-FU — the Discover pane's server rows use the dark-modal palette on the cream map sheet, so the address is near-invisible (NEW 2026-09-28 during the on-screen check, 🟡 one palette call)

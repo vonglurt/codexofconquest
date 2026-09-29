@@ -45,10 +45,6 @@
 ---
 ## §BACKLOG — Open Items (Phase 5)
 
-### §DX-02lx — a server that hosts the game page answers the browser's `favicon.ico` with 400 (NEW 2026-09-28 during the on-screen check, 🟢 one route or one `<link>`)
-
-- [ ] **§DX-02lx — stop the stray 400 when the game page is served from a WBAPI server.** **Measured 2026-09-28:** loading `http://localhost:1379/api/source` logs *"Failed to load resource: … 400 (Bad Request)"* for `http://localhost:1379/favicon.ico`, the only non-scan console error in the whole pass. It is harmless, but it is noise in every on-screen check, and it also reaches a friend opening a world served by their server (§MESH-01-REVIEW's same-origin mode). **Change:** either an inline `<link rel="icon" href="data:,">` in `play.html`'s head, or a 204 for `GET /favicon.ico` in `wbapi-server.js`. The `<link>` also covers `file://`. **Verify:** a page load against a scratch server logs no 4xx.
-
 ### §MESH-03f-FU — there are no private messages to encrypt: chat is `local` or `world` only (NEW 2026-09-28 during §MESH-03f inc 2, 🟡 build them end to end from the start)
 
 - [ ] **§MESH-03f-FU — player-to-player private messages, end to end from the first version.** §MESH-03f item (3) asked to encrypt private messages so relays carry ciphertext only. **Measured at `e85c85c`:** `POST /api/session/say` takes `scope: 'local' | 'world'` and nothing else, and no route takes a recipient. There is no private channel to encrypt. **Change:** a `to: <ledgerPid>` message, delivered by SSE on the recipient's server and relayed across the mesh like trade relays, whose body is only `{to, from, epk, iv, ct}`: an X25519 key per character (a second non-extractable WebCrypto pair beside the signing key, published in the session start), ECDH to AES-GCM, and the envelope signed by the sender's §MESH-03a key. **Decisions to record:** where a recipient's X25519 public key is found when they are on another server (their origin's roster, or a signed key announcement in gossip), and whether offline messages are stored. **Verify:** A's player messages B's player on another server; B's page decrypts it; the relay's log and B's server hold only ciphertext; a tampered envelope is refused.
@@ -195,6 +191,6 @@
 
 ## §RESUME — Phase 5 history
 
-> **Completed work is not carried here.** The 103 closed increments for this phase are condensed in **[`../archive/backlog-resume-history.md`](../archive/backlog-resume-history.md)**; full prose for recent closes is in [`plan-archive.md`](plan-archive.md). This file carries open rows only.
+> **Completed work is not carried here.** The 104 closed increments for this phase are condensed in **[`../archive/backlog-resume-history.md`](../archive/backlog-resume-history.md)**; full prose for recent closes is in [`plan-archive.md`](plan-archive.md). This file carries open rows only.
 
 > When an increment ships: write the full entry into `plan-archive.md`, add its one-line row to `../archive/backlog-resume-history.md` and to the cross-phase table in [`BACKLOG.md`](BACKLOG.md), and delete the row from this file.
