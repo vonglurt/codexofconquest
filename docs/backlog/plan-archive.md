@@ -19,6 +19,16 @@
 
 ---
 
+## Archived 2026-09-29 — §MP-MAP-FU2 (status values wrap in their own column)
+
+### §MP-MAP-FU2 — the Multiplayer status card's long values wrap under their label (NEW 2026-09-29 during §MP-MAP-FU, 🟢 one layout rule)
+
+- [x] ✅ SHIPPED 2026-09-29 `9223207` **§MP-MAP-FU2 — keep a status value's continuation lines in its own column.** **Seen on screen 2026-09-29 at `efc4666`:** with no server, the *Build* row reads *"🔴 no server at http://localhost:7654 — start one with ./bin/wbapi"*, and its second line (*"start"*) wraps back to the card's left edge under *Build*. The cause is that `#mc-status-card .mc-k` is an `inline-block` of 62 px inside a plain `<div>`, so the value's wrapped lines return to the div's edge. **Change:** make each row `display: grid; grid-template-columns: 62px 1fr` (or flex with the value `flex: 1`). **Verify:** with a long *Build* message, every line of the value starts right of the label column; plus a screenshot.
+
+> **SHIPPED 2026-09-29 `9223207`.** **Before:** a long *Build* value (*"🔴 no server at … — start one with ./bin/wbapi start, then press Connect again"*) wrapped to a second line box that started at the card's left edge, left of the label's right edge: **1** stray line. The test measures the value's line boxes with a DOM Range. **Change:** `#mc-status-card > div { display: grid; grid-template-columns: 62px 1fr }`, and `.mc-k` drops its `inline-block` width. **After:** **0**, and a screenshot shows *start* under the value, not under *Build*. **Verify:** `mp-map-fu-contrast.test.js` 2/2, `mesh03c-fu-row-contrast` green, `check:walk` 41/41 (the badge moved 39,539 → 39,540).
+
+---
+
 ## Archived 2026-09-29 — §MP-MAP-FU (the map sheet's multiplayer panes are readable)
 
 ### §MP-MAP-FU — the Multiplayer pane is painted in the dark modal's palette on the cream sheet: its presence line reads at 1.09:1 (NEW 2026-09-29 during the §MESH-03f-FU2 on-screen check, 🟡 one palette call, the §MESH-03c-FU precedent)

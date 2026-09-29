@@ -45,10 +45,6 @@
 ---
 ## §BACKLOG — Open Items (Phase 5)
 
-### §MP-MAP-FU2 — the Multiplayer status card's long values wrap under their label (NEW 2026-09-29 during §MP-MAP-FU, 🟢 one layout rule)
-
-- [ ] **§MP-MAP-FU2 — keep a status value's continuation lines in its own column.** **Seen on screen 2026-09-29 at `efc4666`:** with no server, the *Build* row reads *"🔴 no server at http://localhost:7654 — start one with ./bin/wbapi"*, and its second line (*"start"*) wraps back to the card's left edge under *Build*. The cause is that `#mc-status-card .mc-k` is an `inline-block` of 62 px inside a plain `<div>`, so the value's wrapped lines return to the div's edge. **Change:** make each row `display: grid; grid-template-columns: 62px 1fr` (or flex with the value `flex: 1`). **Verify:** with a long *Build* message, every line of the value starts right of the label column; plus a screenshot.
-
 ### §MESH-03e-FU — a mint is authorized by nothing, so no receiving server can bound what a pack's reward lets a player mint (NEW 2026-09-28 during §MESH-03e, 🟠 trust model)
 
 - [ ] **§MESH-03e-FU — decide what makes a mint legitimate, then check it at ingest.** §MESH-03e's economy clause (*"a mint must cite the pack whose reward authorizes it, and ingest checks the cited reward against that pack … a mint larger than P's reward is refused"*) assumed mints are tied to rewards. **Measured at `4fb91cd`:** `POST /api/ledger/mint` takes `{sessionId, item:{key, name, qty}}` and mints whatever a live session names. The client calls it from `mpMintStamp` on any acquisition while connected. The server has no record of what the player earned, because quests run in the browser. So a qty cap per cited reward only limits one mint, never how many there are, and a base-content item has nothing to cite at all. **Options:** (a) accept the §IX.B trust model (a server vouches for its own players) and let receivers cap per-origin mint *rates* per item key; (b) move reward grants server-side for connected players (the server runs the reward bit and mints), so a mint cites a quest completion the server itself witnessed; (c) receivers refuse mints of pack items above the pack's reward qty and ignore counts, which is the row's clause as written, and weak. **Recommendation:** (b) for pack content, since packs are already plain data the server can run, with (a) as the base-content floor. **Verify:** a mint of a pack item with no witnessed completion is refused at ingest on a peer, and a completed quest mints exactly its reward.
@@ -191,6 +187,6 @@
 
 ## §RESUME — Phase 5 history
 
-> **Completed work is not carried here.** The 108 closed increments for this phase are condensed in **[`../archive/backlog-resume-history.md`](../archive/backlog-resume-history.md)**; full prose for recent closes is in [`plan-archive.md`](plan-archive.md). This file carries open rows only.
+> **Completed work is not carried here.** The 109 closed increments for this phase are condensed in **[`../archive/backlog-resume-history.md`](../archive/backlog-resume-history.md)**; full prose for recent closes is in [`plan-archive.md`](plan-archive.md). This file carries open rows only.
 
 > When an increment ships: write the full entry into `plan-archive.md`, add its one-line row to `../archive/backlog-resume-history.md` and to the cross-phase table in [`BACKLOG.md`](BACKLOG.md), and delete the row from this file.
