@@ -45,9 +45,9 @@
 ---
 ## §BACKLOG — Open Items (Phase 5)
 
-### §MESH-03e — cross-server events do not say which content they depend on, so a server behind cannot tell "missing" from "invalid" (NEW 2026-09-28, user direction, 🟡 hold, fetch or refuse)
+### §MESH-03e-FU — a mint is authorized by nothing, so no receiving server can bound what a pack's reward lets a player mint (NEW 2026-09-28 during §MESH-03e, 🟠 trust model)
 
-- [ ] **§MESH-03e — every cross-server event names the content it depends on, and a server behind holds it, fetches it, or refuses it.** Depends on §MESH-03c/§MESH-03d. **Rule:** presence, movement and chat depend only on the universe, so they always flow. A ledger mint, a trade of an item, a quest-credit event or a duel on a pack's monster carries `deps: [packId…]`. A receiver that has every dependency applies it. One that lacks a pack its operator already accepts fetches it and holds the event. One that lacks a pack its operator has not accepted refuses the event visibly, never half-applies it. **Economy:** a mint must cite the pack whose reward authorizes it, and ingest checks the cited reward against that pack. This closes the path by which a generous pack on one server inflates another. **Verify:** B, missing pack P, holds A's trade of P's item and applies it once P is pulled; with P refused, the trade is refused and both ledgers stay consistent; a mint larger than P's reward is refused.
+- [ ] **§MESH-03e-FU — decide what makes a mint legitimate, then check it at ingest.** §MESH-03e's economy clause (*"a mint must cite the pack whose reward authorizes it, and ingest checks the cited reward against that pack … a mint larger than P's reward is refused"*) assumed mints are tied to rewards. **Measured at `4fb91cd`:** `POST /api/ledger/mint` takes `{sessionId, item:{key, name, qty}}` and mints whatever a live session names. The client calls it from `mpMintStamp` on any acquisition while connected. The server has no record of what the player earned, because quests run in the browser. So a qty cap per cited reward only limits one mint, never how many there are, and a base-content item has nothing to cite at all. **Options:** (a) accept the §IX.B trust model (a server vouches for its own players) and let receivers cap per-origin mint *rates* per item key; (b) move reward grants server-side for connected players (the server runs the reward bit and mints), so a mint cites a quest completion the server itself witnessed; (c) receivers refuse mints of pack items above the pack's reward qty and ignore counts, which is the row's clause as written, and weak. **Recommendation:** (b) for pack content, since packs are already plain data the server can run, with (a) as the base-content floor. **Verify:** a mint of a pack item with no witnessed completion is refused at ingest on a peer, and a completed quest mints exactly its reward.
 
 ### §MESH-03f — the mesh speaks plain HTTP with no rate limit, and private messages are readable by every relay (NEW 2026-09-28, user direction, 🟢 TLS and limits · 🟡 end-to-end messages)
 
@@ -193,6 +193,6 @@
 
 ## §RESUME — Phase 5 history
 
-> **Completed work is not carried here.** The 99 closed increments for this phase are condensed in **[`../archive/backlog-resume-history.md`](../archive/backlog-resume-history.md)**; full prose for recent closes is in [`plan-archive.md`](plan-archive.md). This file carries open rows only.
+> **Completed work is not carried here.** The 100 closed increments for this phase are condensed in **[`../archive/backlog-resume-history.md`](../archive/backlog-resume-history.md)**; full prose for recent closes is in [`plan-archive.md`](plan-archive.md). This file carries open rows only.
 
 > When an increment ships: write the full entry into `plan-archive.md`, add its one-line row to `../archive/backlog-resume-history.md` and to the cross-phase table in [`BACKLOG.md`](BACKLOG.md), and delete the row from this file.
