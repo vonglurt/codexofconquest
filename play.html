@@ -4301,7 +4301,7 @@ body.act-three .npc-card-chip { filter: saturate(0.85); }
         <span id="mp-status">off</span>
         <span id="mp-presence"></span>
         <input id="mp-chat-input" placeholder="say…" maxlength="500" style="display:none"
-               onkeydown="if(event.key==='Enter')mpSay()">
+               onkeydown="if(event.key==='Enter')mpSay();else if(event.key==='Escape')mpDmTo(null)">
       </div>
 
       <!-- §MESH-01-FU 2 — server browser / join-by-magnet (Shift+🌐, or auto-opens on failed connect) -->
@@ -4649,9 +4649,10 @@ body.act-three .npc-card-chip { filter: saturate(0.85); }
           </div>
           <div id="mp-map-chat-list" class="mp-map-chat-list"></div>
           <input id="mp-map-chat-input" placeholder="say to the room… (Enter)" maxlength="500"
-                 onkeydown="if(event.key==='Enter')mpSayMap()">
+                 onkeydown="if(event.key==='Enter')mpSayMap();else if(event.key==='Escape')mpDmTo(null)">
           <div class="mp-hint">Local = players within ~10 cells of you · World = everyone. Chat is never saved to your
-            game — it lives in your browser cache (last 200 lines, oldest dropped first).</div>
+            game — it lives in your browser cache (last 200 lines, oldest dropped first). ✉ beside a player sends a
+            private line that only their browser can open.</div>
         </div>
         <div id="msub-discover" class="map-subpane">
           <!-- §MESH-02d: local port scan (D6) · tracker/magnet resolve · server-list sources (D4) -->
@@ -28920,13 +28921,11 @@ function _mpRenderMapPresence() {
 // Send from the map pane's chat input (mirrors mpSay, different input element).
 function mpSayMap() {
   const inp = document.getElementById('mp-map-chat-input');
-  const msg = (inp && inp.value || '').trim();
-  if (!msg) return;
+  if (!(inp && inp.value || '').trim()) return;
   if (!MP.on) { storyMsg('🌐 Connect to a world server first (Multiplayer pane, above).'); return; }
-  inp.value = '';
   // §MP-CHAT-GLOBAL: the channel you're reading is the channel you speak into —
   // 🌍 World sends worldwide (broadcastAll + mesh), 📍 Local stays proximity.
-  _mpFetch('/api/session/say', { sessionId: MP.session, msg, scope: MP.chatScope }).catch(() => {});
+  _mpSend(inp);
 }
 
 // §MESH-01f — co-presence combat buffs ("traveling with allies"). Pure
@@ -29322,11 +29321,19 @@ async function _mpIdentity() {
     if (!rec) {
       try { rec = { alg: 'Ed25519', keys: await subtle.generateKey({ name: 'Ed25519' }, false, ['sign', 'verify']) }; }
       catch { rec = { alg: 'P-256', keys: await subtle.generateKey({ name: 'ECDSA', namedCurve: 'P-256' }, false, ['sign', 'verify']) }; }
+    }
+    // §MESH-03f-FU: the key private messages to this character are encrypted to.
+    // Added in place to a record made before it existed, so the signing key stays.
+    if (!rec.xkeys) {
+      try { rec.xalg = 'X25519'; rec.xkeys = await subtle.generateKey({ name: 'X25519' }, false, ['deriveBits']); }
+      catch { rec.xalg = 'P-256'; rec.xkeys = await subtle.generateKey({ name: 'ECDH', namedCurve: 'P-256' }, false, ['deriveBits']); }
       await _mpIdb('readwrite', st => st.put(rec, handle));
     }
     const j = await subtle.exportKey('jwk', rec.keys.publicKey);
     const pub = j.kty === 'OKP' ? { kty: j.kty, crv: j.crv, x: j.x } : { kty: j.kty, crv: j.crv, x: j.x, y: j.y };
-    return (_mpIdentity.cache = { handle, alg: rec.alg, privateKey: rec.keys.privateKey, pub });
+    const xj = await subtle.exportKey('jwk', rec.xkeys.publicKey);
+    const xpub = xj.kty === 'OKP' ? { kty: xj.kty, crv: xj.crv, x: xj.x } : { kty: xj.kty, crv: xj.crv, x: xj.x, y: xj.y };
+    return (_mpIdentity.cache = { handle, alg: rec.alg, privateKey: rec.keys.privateKey, pub, xalg: rec.xalg, xpriv: rec.xkeys.privateKey, xpub });
   } catch (e) {
     console.warn('[ledger] no player key pair in this browser — falling back to the bearer playerKey:', e);
     return null;
@@ -29342,10 +29349,95 @@ async function _mpStart(body) {
   const params = id.alg === 'Ed25519' ? { name: 'Ed25519' } : { name: 'ECDSA', hash: 'SHA-256' };
   const sig = new Uint8Array(await crypto.subtle.sign(params, id.privateKey,
     new TextEncoder().encode(`codex-session-v1\n${n.serverId}\n${n.nonce}`)));
+  const xsig = new Uint8Array(await crypto.subtle.sign(params, id.privateKey,
+    new TextEncoder().encode(`codex-xpub-v1\n${_mpXpubId(id.xpub)}`)));
   const start = await _mpFetch('/api/session/start', { ...body, playerKey: id.handle, pub: id.pub, nonce: n.nonce, sig: _mpB64u(sig),
+    xpub: id.xpub, xsig: _mpB64u(xsig),
     ...((S_story.keyTransfers || []).length ? { transfers: S_story.keyTransfers } : {}) });
   if (start && start.ok) MP.act = { id, serverId: n.serverId, seq: 0 };
   return start;
+}
+// §MESH-03f-FU — private messages, sealed here and opened only by the recipient's
+// browser. The server's dmkey answer is checked against the player's own xsig,
+// each message gets a fresh ephemeral key, and the envelope is signed with the
+// sender's player key: ECDH → HKDF-SHA256 (info "codex-dm-v1\n<from>\n<to>") →
+// AES-256-GCM, the same scheme wbapi-server.js routes without opening.
+function _mpXpubId(x) { return x.kty === 'OKP' ? 'x25519:' + x.x : 'p256:' + x.x + '.' + x.y; }
+function _mpUnB64u(s) { return Uint8Array.from(atob(String(s).replace(/-/g, '+').replace(/_/g, '/')), c => c.charCodeAt(0)); }
+async function _mpImportPub(id, usage) {
+  const [alg, rest] = String(id).split(':');
+  if (usage === 'verify') {
+    if (alg === 'ed25519') return crypto.subtle.importKey('jwk', { kty: 'OKP', crv: 'Ed25519', x: rest }, { name: 'Ed25519' }, false, ['verify']);
+    const [x, y] = rest.split('.');
+    return crypto.subtle.importKey('jwk', { kty: 'EC', crv: 'P-256', x, y }, { name: 'ECDSA', namedCurve: 'P-256' }, false, ['verify']);
+  }
+  if (alg === 'x25519') return crypto.subtle.importKey('jwk', { kty: 'OKP', crv: 'X25519', x: rest }, { name: 'X25519' }, false, []);
+  const [x, y] = rest.split('.');
+  return crypto.subtle.importKey('jwk', { kty: 'EC', crv: 'P-256', x, y }, { name: 'ECDH', namedCurve: 'P-256' }, false, []);
+}
+async function _mpVerify(pubId, msg, sigB64u) {
+  try {
+    const params = pubId.startsWith('ed25519:') ? { name: 'Ed25519' } : { name: 'ECDSA', hash: 'SHA-256' };
+    return await crypto.subtle.verify(params, await _mpImportPub(pubId, 'verify'), _mpUnB64u(sigB64u), new TextEncoder().encode(msg));
+  } catch { return false; }
+}
+async function _mpDmKey(privateKey, peerId, from, to, usage) {
+  const peer = await _mpImportPub(peerId, 'derive');
+  const bits = await crypto.subtle.deriveBits({ name: peerId.startsWith('x25519:') ? 'X25519' : 'ECDH', public: peer }, privateKey, 256);
+  const hk = await crypto.subtle.importKey('raw', bits, 'HKDF', false, ['deriveKey']);
+  return crypto.subtle.deriveKey({ name: 'HKDF', hash: 'SHA-256', salt: new Uint8Array(0), info: new TextEncoder().encode(`codex-dm-v1\n${from}\n${to}`) },
+    hk, { name: 'AES-GCM', length: 256 }, false, [usage]);
+}
+async function mpDmSend(to, text) {
+  const id = MP.act && MP.act.id;
+  if (!MP.on || !id) return { ok: false, error: 'private messages need a connection that proved a player key' };
+  const k = await fetch(MP.base + '/api/session/dmkey?pid=' + encodeURIComponent(to.ledgerPid)).then(r => r.json()).catch(() => null);
+  if (!k || !k.ok) return { ok: false, error: (k && k.error) || 'no message key for ' + to.name };
+  if (!await _mpVerify(k.pub, `codex-xpub-v1\n${k.xpub}`, k.xsig)) return { ok: false, error: to.name + '\'s message key is not signed by their player key; not sent' };
+  const eph = k.xpub.startsWith('x25519:')
+    ? await crypto.subtle.generateKey({ name: 'X25519' }, true, ['deriveBits'])
+    : await crypto.subtle.generateKey({ name: 'ECDH', namedCurve: 'P-256' }, true, ['deriveBits']);
+  const from = MP.ledgerPid;
+  const aes = await _mpDmKey(eph.privateKey, k.xpub, from, to.ledgerPid, 'encrypt');
+  const iv = crypto.getRandomValues(new Uint8Array(12));
+  const ct = new Uint8Array(await crypto.subtle.encrypt({ name: 'AES-GCM', iv }, aes, new TextEncoder().encode(text)));
+  const env = { v: 1, to: to.ledgerPid, from, ts: Date.now(), epk: _mpXpubId(await crypto.subtle.exportKey('jwk', eph.publicKey)), iv: _mpB64u(iv), ct: _mpB64u(ct) };
+  const params = id.alg === 'Ed25519' ? { name: 'Ed25519' } : { name: 'ECDSA', hash: 'SHA-256' };
+  const sig = new Uint8Array(await crypto.subtle.sign(params, id.privateKey, new TextEncoder().encode('codex-dm-v1\n' + _mpCanonical(env))));
+  const r = await _mpFetch('/api/session/dm', { sessionId: MP.session, env: { ...env, sig: _mpB64u(sig) } }).catch(e => ({ ok: false, error: String(e) }));
+  if (r && r.ok) _mpChatPush({ ts: env.ts, pid: MP.pid, name: '✉ → ' + to.name, msg: text, r: null, c: null, scope: 'dm' });
+  return r;
+}
+async function _mpDmOpen(d) {
+  const id = MP.act && MP.act.id, env = d && d.env;
+  if (!id || !env || env.to !== MP.ledgerPid) return null;
+  const { sig, ...signed } = env;
+  if (!await _mpVerify(String(d.fromPub), 'codex-dm-v1\n' + _mpCanonical(signed), sig)) return null;
+  try {
+    const aes = await _mpDmKey(id.xpriv, env.epk, env.from, env.to, 'decrypt');
+    return new TextDecoder().decode(await crypto.subtle.decrypt({ name: 'AES-GCM', iv: _mpUnB64u(env.iv) }, aes, _mpUnB64u(env.ct)));
+  } catch { return null; }
+}
+function mpDmTo(p) {
+  MP.dmTo = p ? { ledgerPid: p.ledgerPid, name: p.name } : null;
+  for (const inpId of ['mp-chat-input', 'mp-map-chat-input']) {
+    const inp = document.getElementById(inpId);
+    if (!inp) continue;
+    if (!inp.dataset.say) inp.dataset.say = inp.placeholder;
+    inp.placeholder = MP.dmTo ? '✉ private to ' + MP.dmTo.name + '… (Esc cancels)' : inp.dataset.say;
+  }
+  const inp = document.getElementById('mp-chat-input');
+  if (MP.dmTo && inp && inp.style.display !== 'none') inp.focus();
+}
+async function _mpSend(inp) {
+  const msg = (inp && inp.value || '').trim();
+  if (!msg) return;
+  inp.value = '';
+  if (!MP.dmTo) return _mpFetch('/api/session/say', { sessionId: MP.session, msg, scope: MP.chatScope }).catch(() => {});
+  const to = MP.dmTo;
+  mpDmTo(null);
+  const r = await mpDmSend(to, msg);
+  if (!r || !r.ok) storyMsg('✉ Not sent to ' + to.name + ': ' + ((r && r.error) || 'no answer'));
 }
 // §MESH-03a-FU — moving a character to another browser. The new browser shows a
 // request code (its public key); the old one signs a transfer certificate for
@@ -29442,6 +29534,7 @@ async function mpToggle(ev) {
 function mpDisconnect(msg) {
   if (MP.session) _mpFetch('/api/session/end', { sessionId: MP.session }).catch(() => {});
   if (MP.es) { try { MP.es.close(); } catch {} }
+  MP.dmTo = null;
   MP.es = null; MP.session = null; MP.pid = null; MP.ledgerPid = null; MP.act = null; MP.on = false; MP.players = []; MP.nearby = []; MP.remotes = {}; MP.trade = null; MP.duel = null; MP._fpCell = null;
   mpTradeClose();
   mpDuelClose();
@@ -29480,6 +29573,13 @@ function _mpOpenStream() {
     if (d.to) MP.remotes[d.pid] = { pid: d.pid, name: d.name, r: d.to.r, c: d.to.c, server: d.server };
     else delete MP.remotes[d.pid];
     _mpRepaintMaps();
+  });
+  es.addEventListener('dm', async ev => {
+    const d = JSON.parse(ev.data);
+    const text = await _mpDmOpen(d);
+    if (text == null) { console.warn('[dm] a private message did not verify or decrypt; dropped'); return; }
+    storyMsg('✉ ' + d.fromName + ' (private): ' + text);
+    _mpChatPush({ ts: d.env.ts, pid: d.env.from, name: '✉ ' + d.fromName, msg: text, r: null, c: null, scope: 'dm' });
   });
   es.addEventListener('chat', ev => {
     const d = JSON.parse(ev.data);
@@ -29638,14 +29738,11 @@ async function _mpResume() {
   } catch { _mpSetStatus('🔴 no server'); }   // key kept — a later reload retries
 }
 function mpSay() {
-  const inp = document.getElementById('mp-chat-input');
-  const msg = (inp && inp.value || '').trim();
-  if (!msg || !MP.on) return;
-  inp.value = '';
+  if (!MP.on) return;
   // No local echo: the server broadcast includes the sender exactly once
   // (§WALK-5 harness property) and renders through the SSE chat handler.
   // §MP-CHAT-GLOBAL: send into the active scope (📍 Local proximity / 🌍 World).
-  _mpFetch('/api/session/say', { sessionId: MP.session, msg, scope: MP.chatScope }).catch(() => {});
+  _mpSend(document.getElementById('mp-chat-input'));
 }
 function _mpSetStatus(txt) {
   const el = document.getElementById('mp-status');
@@ -29672,6 +29769,7 @@ function _mpRenderPresence() {
   el.innerHTML = '👥 Also here: ' + MP.players.map((p, i) =>
     _mpEsc(label(p)) + (p.ledgerPid && p.kind !== 'sentry'
       ? ' <button class="mp-trade-btn" title="Offer a trade" onclick="mpTradeOpen(MP.players[' + i + '])">⇄</button>'
+        + (MP.act ? '<button class="mp-trade-btn" title="Send a private message" onclick="mpDmTo(MP.players[' + i + '])">✉</button>' : '')
         + (!p.server ? '<button class="mp-duel-btn" title="Challenge to a duel" onclick="mpDuelChallenge(MP.players[' + i + '])">⚔</button>' : '')
       : '')
   ).join(', ');

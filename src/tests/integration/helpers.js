@@ -225,6 +225,7 @@ const PORT_BLOCKS = {
   deps: 15400,        // three ports per worker: tracker, A, B
   actions: 15500,     // one port per worker
   dm: 15600,          // two ports per worker: A and B
+  dmpage: 15700,      // two ports per worker: A and B, driven by two browsers
 };
 
 // Returns `count` consecutive ports reserved for this worker inside `block`'s
