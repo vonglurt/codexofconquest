@@ -19,6 +19,17 @@
 
 ---
 
+## Archived 2026-09-29 — §DX-02fm (DISPROVED: terrain has no structured writer by design; the write path now proves it)
+
+### §DX-02fm — `WORLD_DB` has a string writer but no structured writer (NEW 2026-08-23 during §DOC-02da, 🟡 one map entry)
+
+- [x] ✅ SHIPPED 2026-09-29 `2d845dc` **§DX-02fm — any non-string terrain field 422s with `unknown type`.** 🟡 `` `src/js/wbapi-core.js:editStructuredField(type, idOrTitle, field, value, opts)@1500` `` omits `terrain` from its `sectionMap`, though `` `src/js/wbapi-core.js:editField(type, idOrTitle, field, value)@1279` `` carries it (added by §DX-02h). **Measured in-process:** `editStructuredField('terrain','city','testNum',5)` → `{ok:false, error:'unknown type'}` → HTTP 422. It fails loudly, which is §DX-02h's lesson correctly applied — but the message blames the *type*, which is fine, instead of naming the missing *strategy*. **Fix:** add `terrain:'WORLD_DB'` (the roster guard in `editField` shows the pattern for the `monsters` exception), or reword the error.
+> **Provenance:** §DOC-02da, finding F5.
+
+> **Closed 2026-09-29 `2d845dc` — the row's fix is disproved and must not ship. The refusal is now held by `test:write`, and its message names the route.** **Measured in-process at HEAD:** `editStructuredField('terrain','city','encounterRate',0.3)` → `unknown type`, as the row said. **What the ground added (three layers):** (1) §DX-02km left `terrain` out of `ENTRY_SECTION` **on purpose**, in its comment at the map: `WORLD_DB` entries hold `P.<key>` proxy references. (2) A census of the 111 terrains finds only two non-string fields, and `SCHEMAS.terrain` marks both `editable:false`: `monsters` (P-reference lists, *"populated via worlds.swapMonster() to avoid breaking P.proxy refs"*) and `isEpicBattleground` (a boolean, on 20). (3) The generic `put` never consults `editable`, but `PUT /api/terrain/{key}` has its own handler that answers first. It refuses anything but `label`, `icon` and `monsters` (422 naming the editable set), and writes `monsters` from monster keys through `editTerrainRoster`. So no HTTP path reaches `editStructuredField('terrain', …)`. Its `unknown type` was the only thing that would stop an in-process `monsters` write from inlining over live references, and the row's `terrain:'WORLD_DB'` would have opened both fields the schema withholds. **Shipped instead:** `test:write` gains `terrainGuard` against the real server on a throwaway copy. On the terrain with the shortest roster, `isEpicBattleground:true` must answer 422 and not land, and writing its roster back by key must leave every `P.<key>` on the row on disk. The self-test is 29/29 with both new failure modes, `[structured]` and `[proxy-lost]`. `editStructuredField('terrain')` now answers *"terrain has no structured writer: monsters holds P.<key> references, written by key through PUT /api/terrain/{key}, and isEpicBattleground is not editable"*. **Verify:** `test:write` green, `check:walk` 41/41, and the three files that write structured or terrain fields pass 19, except `dx02ee-scalar-field-clear:103`, one of §DX-02ke's standing seven.
+
+---
+
 ## Archived 2026-09-29 — §DX-02cq (ALREADY SHIPPED as §MESH-03c)
 
 ### §DX-02cq — `worldHash` hashes the story as well as the map, so editing one quest segregates you from your friend's server (NEW 2026-08-17 during §DOC-02bw, ✔ DECIDED 2026-09-28 by the user: option (b), built as §MESH-03c — close with it)

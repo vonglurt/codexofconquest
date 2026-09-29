@@ -69,11 +69,6 @@
 > **The write half shipped under §DX-02fj (2026-09-28):** every write through `saveAndRestart`, `saveAndVerify`, `import/book` and `batch/npc` now refuses a save that leaves a populated collection empty, and puts the previous file back; §DX-02ls covers the three stamped-copy saves. **What stays open here** is `load()` itself: a server started on, or `/api/reload`ed onto, a file with a destroyed section still reports `loaded:true` with that collection at 0.
 > **Provenance:** §DOC-02da, finding F1.
 
-### §DX-02fm — `WORLD_DB` has a string writer but no structured writer (NEW 2026-08-23 during §DOC-02da, 🟡 one map entry)
-
-- [ ] **§DX-02fm — any non-string terrain field 422s with `unknown type`.** 🟡 `` `src/js/wbapi-core.js:editStructuredField(type, idOrTitle, field, value, opts)@1500` `` omits `terrain` from its `sectionMap`, though `` `src/js/wbapi-core.js:editField(type, idOrTitle, field, value)@1279` `` carries it (added by §DX-02h). **Measured in-process:** `editStructuredField('terrain','city','testNum',5)` → `{ok:false, error:'unknown type'}` → HTTP 422. It fails loudly, which is §DX-02h's lesson correctly applied — but the message blames the *type*, which is fine, instead of naming the missing *strategy*. **Fix:** add `terrain:'WORLD_DB'` (the roster guard in `editField` shows the pattern for the `monsters` exception), or reword the error.
-> **Provenance:** §DOC-02da, finding F5.
-
 ### §DX-02fn — the patch queue is node-only, and `QUEST_DB` is the big section (NEW 2026-08-23 during §DOC-02da, 🟡 extend the batcher)
 
 - [ ] **§DX-02fn — every quest field edit costs a 5.5 MB write plus a 180 ms re-parse.** 🟡 `` `src/js/wbapi-core.js:editField(type, idOrTitle, field, value)@1279` `` queues only when `type === 'node'`, and `` `src/js/wbapi-core.js:batchEditNode(edits)@1429` `` is the only batcher. Under §DX-02k's write-through model each edit runs `saveGameFile()` + `load()`. **Measured 2026-08-23, five runs at 5,513,613 bytes: 170 · 176 · 180 · 188 · 242 ms, median 180 ms** — so a 40-field quest pass costs ~7 s of parse alone, on top of 40 full-file writes. `QUEST_DB` is 2,853 entries, the largest section by an order of magnitude. **Fix:** extend `batchEditNode`'s group-then-single-resplice shape to quests, and let `` `src/js/wbapi-core.js:beginPatchQueue()@1413` `` accept it.
@@ -183,6 +178,6 @@
 
 ## §RESUME — Phase 5 history
 
-> **Completed work is not carried here.** The 110 closed increments for this phase are condensed in **[`../archive/backlog-resume-history.md`](../archive/backlog-resume-history.md)**; full prose for recent closes is in [`plan-archive.md`](plan-archive.md). This file carries open rows only.
+> **Completed work is not carried here.** The 111 closed increments for this phase are condensed in **[`../archive/backlog-resume-history.md`](../archive/backlog-resume-history.md)**; full prose for recent closes is in [`plan-archive.md`](plan-archive.md). This file carries open rows only.
 
 > When an increment ships: write the full entry into `plan-archive.md`, add its one-line row to `../archive/backlog-resume-history.md` and to the cross-phase table in [`BACKLOG.md`](BACKLOG.md), and delete the row from this file.
