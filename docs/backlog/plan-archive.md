@@ -19,6 +19,16 @@
 
 ---
 
+## Archived 2026-09-28 — §DX-02lw (the 413 reaches the sender)
+
+### §DX-02lw — the 413 body cap closes the socket while the client is still sending, so a large-body sender can get EPIPE instead of the 413 (NEW 2026-09-28 during §MESH-03a inc 2, 🟢)
+
+- [x] ✅ SHIPPED 2026-09-28 `1c02d96` **§DX-02lw — a refused oversize body must reach the sender as a 413, not a broken pipe.** `mesh03f-transport.test.js:80` ("a body past the cap is refused with 413 unread") went **flaky** in the §MESH-03a inc 2 full run: first attempt `TypeError: fetch failed … [cause]: Error: write EPIPE`, retry green. The server answers 413 from `Content-Length` before reading and then the connection closes while the client is still writing its 2 MiB, so whether the client reads the response first is a race. A real peer that hits the cap sees a transport error with no reason. **Change:** after writing the 413, set `Connection: close` and drain (or `req.resume()`) up to a bound before the socket ends, or pause-then-destroy only after the response flushes. **Verify:** the spec's 413 case passes 20/20 under `--repeat-each=20`, and the refused body is still never parsed.
+
+> **SHIPPED 2026-09-28 `1c02d96` — the 413 waits for a bounded body.** **Measured before:** the 413 case under `--repeat-each=20 --retries=0` gave **14 passed / 6 failed**, every failure `write EPIPE`. `onRequest` wrote the 413 with `Connection: close` as soon as it read `Content-Length`, and the socket closed while the client was still writing. **Change:** a declared body up to **8 × `BODY_MAX`** is discarded unparsed (`req.resume()`), and the 413 goes out on `end`. A larger declared body is still refused at once and closed, so the server never waits on an unbounded stream. **Verify:** **20/20** after. `mesh03f-transport.test.js` **3/3**, with a new case: a request declaring 64 MiB that has sent 8 bytes gets 413 within 5 s, so the over-bound path does not wait for the bytes. The pack specs 10/10, `check:walk` 41/41, `check:restart` green, full suite **1,332 passed / 8 failed / 0 flaky**, Chromium launched (the standing 8).
+
+---
+
 ## Archived 2026-09-28 — §MESH-03a (player key pairs, the row closes)
 
 ### §MESH-03a — servers and players have no key pairs, so nothing in the mesh can prove who sent it (NEW 2026-09-28, user direction, 🟡 key choice and migration)

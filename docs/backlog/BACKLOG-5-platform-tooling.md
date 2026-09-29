@@ -45,10 +45,6 @@
 ---
 ## §BACKLOG — Open Items (Phase 5)
 
-### §DX-02lw — the 413 body cap closes the socket while the client is still sending, so a large-body sender can get EPIPE instead of the 413 (NEW 2026-09-28 during §MESH-03a inc 2, 🟢)
-
-- [ ] **§DX-02lw — a refused oversize body must reach the sender as a 413, not a broken pipe.** `mesh03f-transport.test.js:80` ("a body past the cap is refused with 413 unread") went **flaky** in the §MESH-03a inc 2 full run: first attempt `TypeError: fetch failed … [cause]: Error: write EPIPE`, retry green. The server answers 413 from `Content-Length` before reading and then the connection closes while the client is still writing its 2 MiB, so whether the client reads the response first is a race. A real peer that hits the cap sees a transport error with no reason. **Change:** after writing the 413, set `Connection: close` and drain (or `req.resume()`) up to a bound before the socket ends, or pause-then-destroy only after the response flushes. **Verify:** the spec's 413 case passes 20/20 under `--repeat-each=20`, and the refused body is still never parsed.
-
 ### §MESH-03a-FU — a save moved to another browser loses its trade identity, and there is no way to carry the key over (NEW 2026-09-28 during §MESH-03a inc 2, 🟡 export format)
 
 - [ ] **§MESH-03a-FU — moving a character between browsers keeps its ledger.** Since §MESH-03a inc 2 the character's key pair is non-extractable and lives in one browser's IndexedDB under its `playerKey`. A save loaded in another browser generates a new pair, the server answers `bound to a different key` (409), and `mpToggle` connects keyless with a warning, so that character's items cannot trade there. **Options:** (a) a one-time *transfer* — the old browser signs `{playerKey, newPub}` and the server rebinds (needs both browsers once); (b) an extractable, passphrase-wrapped key export in the save (weaker: the save becomes the secret again, but only with the passphrase); (c) accept the loss and document it. **Recommendation:** (a), because it keeps the private key unexportable. **Verify:** a character bound in browser context 1 connects from context 2 with its original `ledgerPid` after a transfer, and a transfer signed by a third key is refused.
@@ -201,6 +197,6 @@
 
 ## §RESUME — Phase 5 history
 
-> **Completed work is not carried here.** The 97 closed increments for this phase are condensed in **[`../archive/backlog-resume-history.md`](../archive/backlog-resume-history.md)**; full prose for recent closes is in [`plan-archive.md`](plan-archive.md). This file carries open rows only.
+> **Completed work is not carried here.** The 98 closed increments for this phase are condensed in **[`../archive/backlog-resume-history.md`](../archive/backlog-resume-history.md)**; full prose for recent closes is in [`plan-archive.md`](plan-archive.md). This file carries open rows only.
 
 > When an increment ships: write the full entry into `plan-archive.md`, add its one-line row to `../archive/backlog-resume-history.md` and to the cross-phase table in [`BACKLOG.md`](BACKLOG.md), and delete the row from this file.
