@@ -391,6 +391,34 @@ function playerTransferWalk(h, boundPub, transfers) {
   }
   return cur;
 }
+// §MESH-03f (4): a session that proved a key signs every ledger action, so its
+// bearer session id alone cannot trade, mint or duel. Each action carries a
+// per-session seq and a timestamp; a seq is accepted once, within a window of
+// ACTION_SEQ_WINDOW below the highest seen (parallel requests arrive out of
+// order), and never outside ACTION_TS_WINDOW_MS of now.
+const PLAYER_ACTIONS = new Set(['ledger/mint', 'trade/propose', 'trade/accept', 'trade/cancel', 'duel/challenge', 'duel/accept', 'duel/reveal']);
+const ACTION_SEQ_WINDOW = 64;
+const ACTION_TS_WINDOW_MS = 60 * 1000;
+function playerActionMessage(route, sessionId, seq, ts, rest) {
+  return `codex-action-v1\n${getServerId()}\n${route}\n${sessionId}\n${seq}\n${ts}\n${ledgerCanonical(rest)}`;
+}
+function playerActionCheck(route, body) {
+  if (!PLAYER_ACTIONS.has(route)) return null;
+  const s = body && body.sessionId && SESSIONS.get(body.sessionId);
+  if (!s || !s.playerPub) return null;
+  const { act, ...rest } = body;
+  if (!act || !Number.isInteger(act.seq) || act.seq < 1 || !Number.isFinite(act.ts) || typeof act.sig !== 'string')
+    return { status: 401, error: 'this session proved a player key, so its ledger actions must be signed: body.act {seq, ts, sig}' };
+  if (Math.abs(Date.now() - act.ts) > ACTION_TS_WINDOW_MS) return { status: 401, error: `act.ts is outside the ${ACTION_TS_WINDOW_MS / 1000} s window` };
+  if (!s.actSeen) { s.actSeen = new Set(); s.actMax = 0; }
+  if (act.seq <= s.actMax - ACTION_SEQ_WINDOW || s.actSeen.has(act.seq)) return { status: 409, error: `replayed action: seq ${act.seq} was already used or is too old` };
+  if (!playerSigVerify(s.playerPub, playerActionMessage(route, body.sessionId, act.seq, act.ts, rest), act.sig))
+    return { status: 401, error: 'action signature does not verify against the session key' };
+  s.actSeen.add(act.seq);
+  if (act.seq > s.actMax) s.actMax = act.seq;
+  for (const q of s.actSeen) if (q <= s.actMax - ACTION_SEQ_WINDOW) s.actSeen.delete(q);
+  return null;
+}
 function playerSessionMessage(nonce) { return `codex-session-v1\n${getServerId()}\n${nonce}`; }
 function playerKeysSave() {
   try {
@@ -421,10 +449,10 @@ function playerKeyProve(body) {
     if (playerTransferWalk(full, known.pub, body.transfers) !== pubId) return { status: 409, error: `player ${player8} is bound to a different key` };
     PLAYER_KEYS.map.set(player8, { h: full, pub: pubId });
     playerKeysSave();
-    return { player8 };
+    return { player8, pubId };
   }
   if (!known || typeof known !== 'object') { PLAYER_KEYS.map.set(player8, { h: full, pub: pubId }); playerKeysSave(); }
-  return { player8 };
+  return { player8, pubId };
 }
 
 // The pid ledger/duel chains key on. Durable when the session presented a
@@ -8452,7 +8480,7 @@ async function route(req, res) {
       // §MESH-01i slice 2 (lab report §6.4): an optional persistent playerKey
       // gives this session a DURABLE ledger pid that survives session death —
       // without it, ledger chains key on the session and strand at the TTL.
-      let player8 = null;
+      let player8 = null, playerPub = null;
       if (body.pub != null) {
         const proof = playerKeyProve(body);
         if (proof.error) {
@@ -8460,6 +8488,7 @@ async function route(req, res) {
           return json(res, proof.status, { ok: false, error: proof.error });
         }
         player8 = proof.player8;
+        playerPub = proof.pubId;
       } else if (body.playerKey != null && body.playerKey !== '') {
         if (REQUIRE_PLAYER_SIG) {
           logResponse(method, url.pathname, 401, 'session/start: bare playerKey refused');
@@ -8499,6 +8528,7 @@ async function route(req, res) {
         rngState:   seed,        // mutable RNG stream, advanced per encounter roll
         encounter:  null,        // pending instanced encounter (null = none); hub is a named cell
         player8,                 // §MESH-01i slice 2: durable identity half of the ledger pid (null = keyless)
+        playerPub,               // §MESH-03a: the key this session proved; its ledger actions must be signed with it
         pvpOff:     body.pvp === 'off' || body.pvpOff === true,   // §MESH-01j: global duel opt-out — unchallengeable
       };
       SESSIONS.set(sessionId, s);
@@ -8901,6 +8931,8 @@ async function route(req, res) {
     }
     let body;
     try { body = await readBody(req); } catch (e) { return json(res, 400, { error: 'Invalid JSON' }); }
+    const actErr = playerActionCheck(`${parts[0]}/${sub}`, body);
+    if (actErr) { logResponse(method, url.pathname, actErr.status, `${parts[0]}/${sub}: ${actErr.error}`); return json(res, actErr.status, { ok: false, error: actErr.error, reason: 'action-sig' }); }
 
     // ── POST /api/ledger/mint  body: {sessionId, item:{key,name,qty}} ──────
     // Server-side minting for a live session's acquisition. The response event
@@ -9008,6 +9040,8 @@ async function route(req, res) {
     }
     let body;
     try { body = await readBody(req); } catch (e) { return json(res, 400, { error: 'Invalid JSON' }); }
+    const actErr = playerActionCheck(`${parts[0]}/${sub}`, body);
+    if (actErr) { logResponse(method, url.pathname, actErr.status, `${parts[0]}/${sub}: ${actErr.error}`); return json(res, actErr.status, { ok: false, error: actErr.error, reason: 'action-sig' }); }
 
     // Shared ownership check: every given/wanted mintId must be minted, and
     // currently resolve to the expected owner. Returns an error string or null.
@@ -9347,6 +9381,8 @@ async function route(req, res) {
     }
     let body;
     try { body = await readBody(req); } catch (e) { return json(res, 400, { error: 'Invalid JSON' }); }
+    const actErr = playerActionCheck(`${parts[0]}/${sub}`, body);
+    if (actErr) { logResponse(method, url.pathname, actErr.status, `${parts[0]}/${sub}: ${actErr.error}`); return json(res, actErr.status, { ok: false, error: actErr.error, reason: 'action-sig' }); }
 
     // ── POST /api/duel/challenge  body: {sessionId, to:<ledgerPid>} ────────
     if (sub === 'challenge') {

@@ -28770,7 +28770,7 @@ function storyBlock(txt) {
 // §MESH-01-FU 4: `remotes` is the pid-keyed WORLDWIDE track (seeded by the pos
 // beacon's world[], updated live by player_moved SSE); `nearby` is its viewport
 // subset (minimap dots); world/globe panels draw all of `remotes`.
-const MP = { base: null, session: null, pid: null, ledgerPid: null, name: null, es: null, players: [], nearby: [], remotes: {}, on: false, trade: null, duel: null, chat: [], chatUnread: 0, advertise: true, chatScope: 'local' };
+const MP = { base: null, session: null, pid: null, ledgerPid: null, act: null, name: null, es: null, players: [], nearby: [], remotes: {}, on: false, trade: null, duel: null, chat: [], chatUnread: 0, advertise: true, chatScope: 'local' };
 // §MP-MAP: presence-advertising is opt-OUT (default on); persisted client-side so
 // the choice survives reloads. Chat scope (local proximity vs world) is a pure
 // display filter over the same shared MP.chat log — also client-persisted.
@@ -29247,7 +29247,24 @@ function _mpBase() {
   try { return localStorage.getItem('mpServer') || fallback; }
   catch { return fallback; }
 }
+// §MESH-03f (4): once the session proved a key, every ledger action is signed
+// with it and numbered, so the session id alone cannot act and a captured
+// request cannot be replayed.
+const _MP_ACTIONS = /^\/api\/(ledger\/mint|trade\/(propose|accept|cancel)|duel\/(challenge|accept|reveal))$/;
+function _mpCanonical(v) {
+  if (v === null || typeof v !== 'object') return JSON.stringify(v);
+  if (Array.isArray(v)) return '[' + v.map(_mpCanonical).join(',') + ']';
+  return '{' + Object.keys(v).sort().map(k => JSON.stringify(k) + ':' + _mpCanonical(v[k])).join(',') + '}';
+}
 async function _mpFetch(path, body) {
+  const a = MP.act;
+  if (body && a && body.sessionId && _MP_ACTIONS.test(path)) {
+    const seq = ++a.seq, ts = Date.now();
+    const route = path.slice('/api/'.length);
+    const params = a.id.alg === 'Ed25519' ? { name: 'Ed25519' } : { name: 'ECDSA', hash: 'SHA-256' };
+    const msg = `codex-action-v1\n${a.serverId}\n${route}\n${body.sessionId}\n${seq}\n${ts}\n${_mpCanonical(JSON.parse(JSON.stringify(body)))}`;
+    body = { ...body, act: { seq, ts, sig: _mpB64u(new Uint8Array(await crypto.subtle.sign(params, a.id.privateKey, new TextEncoder().encode(msg)))) } };
+  }
   const opts = body
     ? { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) }
     : undefined;
@@ -29308,6 +29325,7 @@ async function _mpIdentity() {
   }
 }
 async function _mpStart(body) {
+  MP.act = null;
   const legacy = () => _mpFetch('/api/session/start', { ...body, playerKey: _mpPlayerKey() });
   const id = await _mpIdentity();
   if (!id) return legacy();
@@ -29316,8 +29334,10 @@ async function _mpStart(body) {
   const params = id.alg === 'Ed25519' ? { name: 'Ed25519' } : { name: 'ECDSA', hash: 'SHA-256' };
   const sig = new Uint8Array(await crypto.subtle.sign(params, id.privateKey,
     new TextEncoder().encode(`codex-session-v1\n${n.serverId}\n${n.nonce}`)));
-  return _mpFetch('/api/session/start', { ...body, playerKey: id.handle, pub: id.pub, nonce: n.nonce, sig: _mpB64u(sig),
+  const start = await _mpFetch('/api/session/start', { ...body, playerKey: id.handle, pub: id.pub, nonce: n.nonce, sig: _mpB64u(sig),
     ...((S_story.keyTransfers || []).length ? { transfers: S_story.keyTransfers } : {}) });
+  if (start && start.ok) MP.act = { id, serverId: n.serverId, seq: 0 };
+  return start;
 }
 // §MESH-03a-FU — moving a character to another browser. The new browser shows a
 // request code (its public key); the old one signs a transfer certificate for
@@ -29414,7 +29434,7 @@ async function mpToggle(ev) {
 function mpDisconnect(msg) {
   if (MP.session) _mpFetch('/api/session/end', { sessionId: MP.session }).catch(() => {});
   if (MP.es) { try { MP.es.close(); } catch {} }
-  MP.es = null; MP.session = null; MP.pid = null; MP.ledgerPid = null; MP.on = false; MP.players = []; MP.nearby = []; MP.remotes = {}; MP.trade = null; MP.duel = null; MP._fpCell = null;
+  MP.es = null; MP.session = null; MP.pid = null; MP.ledgerPid = null; MP.act = null; MP.on = false; MP.players = []; MP.nearby = []; MP.remotes = {}; MP.trade = null; MP.duel = null; MP._fpCell = null;
   mpTradeClose();
   mpDuelClose();
   try { sessionStorage.removeItem('mpSession'); } catch {}
