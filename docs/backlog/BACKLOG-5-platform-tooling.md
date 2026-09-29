@@ -69,11 +69,6 @@
 > **The write half shipped under §DX-02fj (2026-09-28):** every write through `saveAndRestart`, `saveAndVerify`, `import/book` and `batch/npc` now refuses a save that leaves a populated collection empty, and puts the previous file back; §DX-02ls covers the three stamped-copy saves. **What stays open here** is `load()` itself: a server started on, or `/api/reload`ed onto, a file with a destroyed section still reports `loaded:true` with that collection at 0.
 > **Provenance:** §DOC-02da, finding F1.
 
-### §DX-02fn — the patch queue is node-only, and `QUEST_DB` is the big section (NEW 2026-08-23 during §DOC-02da, 🟡 extend the batcher)
-
-- [ ] **§DX-02fn — every quest field edit costs a 5.5 MB write plus a 180 ms re-parse.** 🟡 `` `src/js/wbapi-core.js:editField(type, idOrTitle, field, value)@1279` `` queues only when `type === 'node'`, and `` `src/js/wbapi-core.js:batchEditNode(edits)@1429` `` is the only batcher. Under §DX-02k's write-through model each edit runs `saveGameFile()` + `load()`. **Measured 2026-08-23, five runs at 5,513,613 bytes: 170 · 176 · 180 · 188 · 242 ms, median 180 ms** — so a 40-field quest pass costs ~7 s of parse alone, on top of 40 full-file writes. `QUEST_DB` is 2,853 entries, the largest section by an order of magnitude. **Fix:** extend `batchEditNode`'s group-then-single-resplice shape to quests, and let `` `src/js/wbapi-core.js:beginPatchQueue()@1413` `` accept it.
-> **Provenance:** §DOC-02da, finding F6.
-
 ### §DX-02eb — the count-preserving swap a lab report calls impossible is exactly what one worldbuilder patch emits (NEW 2026-08-22 during §DOC-02cr, 🟡 authoring surface only, ONE DESIGN CALL)
 
 - [ ] **§DX-02eb — `_questsByNode`'s documented accepted limitation names the wrong injector as safe.** 🟡 **authoring-surface correctness; the shipped game is unaffected.** The comment above `let _questsByNodeIndex = null@37204` states the size guard *"catches every such add/remove with NO injector cooperation"* and concedes one gap: *"A simultaneous add-one/remove-one that keeps the count fixed would go stale; that never happens with a const DB and no test performs it."* Both clauses are true. **But the second of the three injectors the same comment names is the one that can produce exactly that patch.** `edit.html:function applyPatch(NODE_MAP, QUEST_DB@2513` builds its output from `DIFF.sections`, emitting `delete QUEST_DB['a'];` for every deleted key and `QUEST_DB['b'] = {…};` for every added one **in a single `applyPatch` call** — so one authoring session that retires one quest and adds another leaves `Object.keys(QUEST_DB).length` unchanged and the index stale, silently, with no error and no visible symptom beyond a quest that will not post at its node.
@@ -178,6 +173,6 @@
 
 ## §RESUME — Phase 5 history
 
-> **Completed work is not carried here.** The 111 closed increments for this phase are condensed in **[`../archive/backlog-resume-history.md`](../archive/backlog-resume-history.md)**; full prose for recent closes is in [`plan-archive.md`](plan-archive.md). This file carries open rows only.
+> **Completed work is not carried here.** The 112 closed increments for this phase are condensed in **[`../archive/backlog-resume-history.md`](../archive/backlog-resume-history.md)**; full prose for recent closes is in [`plan-archive.md`](plan-archive.md). This file carries open rows only.
 
 > When an increment ships: write the full entry into `plan-archive.md`, add its one-line row to `../archive/backlog-resume-history.md` and to the cross-phase table in [`BACKLOG.md`](BACKLOG.md), and delete the row from this file.

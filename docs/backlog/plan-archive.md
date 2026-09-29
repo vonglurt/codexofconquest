@@ -19,6 +19,17 @@
 
 ---
 
+## Archived 2026-09-29 — §DX-02fn (DISPROVED: a multi-field quest put already writes once)
+
+### §DX-02fn — the patch queue is node-only, and `QUEST_DB` is the big section (NEW 2026-08-23 during §DOC-02da, 🟡 extend the batcher)
+
+- [x] ✅ SHIPPED 2026-09-29 `7fbe54a` **§DX-02fn — every quest field edit costs a 5.5 MB write plus a 180 ms re-parse.** 🟡 `` `src/js/wbapi-core.js:editField(type, idOrTitle, field, value)@1279` `` queues only when `type === 'node'`, and `` `src/js/wbapi-core.js:batchEditNode(edits)@1429` `` is the only batcher. Under §DX-02k's write-through model each edit runs `saveGameFile()` + `load()`. **Measured 2026-08-23, five runs at 5,513,613 bytes: 170 · 176 · 180 · 188 · 242 ms, median 180 ms** — so a 40-field quest pass costs ~7 s of parse alone, on top of 40 full-file writes. `QUEST_DB` is 2,853 entries, the largest section by an order of magnitude. **Fix:** extend `batchEditNode`'s group-then-single-resplice shape to quests, and let `` `src/js/wbapi-core.js:beginPatchQueue()@1413` `` accept it.
+> **Provenance:** §DOC-02da, finding F6.
+
+> **Closed 2026-09-29 at `7fbe54a` — DISPROVED; nothing to build.** The row priced a 40-field quest pass at **40 full-file writes and ~7 s of re-parse**, because `editField` queues only nodes and each edit ran `saveGameFile()` + `load()` under §DX-02k's write-through model. **At HEAD, that is not the path a pass takes.** The generic `PUT /api/{type}/{id}` applies every field of the body through `editField`/`editStructuredField` into `_rawSrc` in memory, then calls `saveAndVerify` **once** for the request. `./bin/api put <type> <id> field=value [field=value …]` sends all its fields in that one body (`./bin/api help put`). **Measured in-process at 5,563,409 bytes:** 40 quest `editField` calls on `mq_1` (alternating `title`/`desc`) took **117 ms in total**, median **2.8 ms** each. Five `load()` runs took 180 · 192 · 217 · 242 · 249 ms. So a 40-field pass costs one write, one ~200 ms re-parse and ~0.12 s of patching. A quest batcher could save at most that 0.12 s. The ~7 s appears only if a client sends 40 separate requests, and the CLI does not. **Not filed:** a cross-entry batch (one field on 40 quests) still costs 40 requests, which is ~8 s. But no current workload issues one, and `batchEditNode` exists for the worldbuilder's drag layout, not for quests. File it when a tool does.
+
+---
+
 ## Archived 2026-09-29 — §DX-02fm (DISPROVED: terrain has no structured writer by design; the write path now proves it)
 
 ### §DX-02fm — `WORLD_DB` has a string writer but no structured writer (NEW 2026-08-23 during §DOC-02da, 🟡 one map entry)
