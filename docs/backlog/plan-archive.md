@@ -19,6 +19,16 @@
 
 ---
 
+## Archived 2026-09-28 — §MESH-03a-FU2 (the hand-over code box is readable)
+
+### §MESH-03a-FU2 — the 🔑 hand-over code box renders 2 px tall, so the code it holds cannot be seen or selected (NEW 2026-09-28 during the on-screen check, 🟢 one CSS rule)
+
+- [x] ✅ SHIPPED 2026-09-28 `13b3427` **§MESH-03a-FU2 — give `#ml-xfer-code` a visible box.** **Measured on screen 2026-09-28 at `cbcb761`** (Playwright on `/usr/bin/chromium`, 1280×900, `play.html` served by a scratch server on :1379): `#ml-xfer-code` is **1002 × 2 px** with the browser's default white fill and black text, because no rule styles it: `#ml-acl-grid textarea` covers only the ACL grid. Request, Authorize and Accept all work (Request filled a `codex-req1.` code; Authorize on the same browser answered *"🔴 that request came from this browser"*), but the code sits in a 2 px strip the player cannot read, select or paste into with confidence. **Change:** style it like the ACL textareas (dark fill, `min-height`, monospace, `word-break: break-all`), in `play.html` CSS with the server stopped. **Verify:** a Playwright assertion that the box is at least 48 px tall and the Request code is visible, plus a screenshot.
+
+> **SHIPPED 2026-09-28 `13b3427`.** **Before:** `#ml-xfer-code` measured **1002 × 2 px** on screen (Playwright on `/usr/bin/chromium`, 1280×900), white on the cream sheet, because no rule styled it. **Change:** one rule in `play.html` CSS, beside `#ml-acl-grid textarea`, with the same dark fill and border, `min-height: 64px`, full width, monospace, and `word-break: break-all` so a long `codex-req1.` code wraps. **After:** the box is at least 64 px tall and dark. **Verify:** `mesh03a-fu2-xfer-box.test.js` red at HEAD (*Received: 2*) and green after; with `mesh03a-player-keys`, `mesh-connections-ui` and `mp-maptabs`, **19/19**. `check:walk` 41/41 (the badge moved 39,425 → 39,430). The full suite was not re-run for a CSS-only change.
+
+---
+
 ## Archived 2026-09-28 — §MESH-03f (signed actions and replay; private messages split off)
 
 ### §MESH-03f — the mesh speaks plain HTTP with no rate limit, and private messages are readable by every relay (NEW 2026-09-28, user direction, 🟢 TLS and limits · 🟡 end-to-end messages)

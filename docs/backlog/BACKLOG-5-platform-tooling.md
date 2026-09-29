@@ -45,10 +45,6 @@
 ---
 ## §BACKLOG — Open Items (Phase 5)
 
-### §MESH-03a-FU2 — the 🔑 hand-over code box renders 2 px tall, so the code it holds cannot be seen or selected (NEW 2026-09-28 during the on-screen check, 🟢 one CSS rule)
-
-- [ ] **§MESH-03a-FU2 — give `#ml-xfer-code` a visible box.** **Measured on screen 2026-09-28 at `cbcb761`** (Playwright on `/usr/bin/chromium`, 1280×900, `play.html` served by a scratch server on :1379): `#ml-xfer-code` is **1002 × 2 px** with the browser's default white fill and black text, because no rule styles it: `#ml-acl-grid textarea` covers only the ACL grid. Request, Authorize and Accept all work (Request filled a `codex-req1.` code; Authorize on the same browser answered *"🔴 that request came from this browser"*), but the code sits in a 2 px strip the player cannot read, select or paste into with confidence. **Change:** style it like the ACL textareas (dark fill, `min-height`, monospace, `word-break: break-all`), in `play.html` CSS with the server stopped. **Verify:** a Playwright assertion that the box is at least 48 px tall and the Request code is visible, plus a screenshot.
-
 ### §MESH-03c-FU — the Discover pane's server rows use the dark-modal palette on the cream map sheet, so the address is near-invisible (NEW 2026-09-28 during the on-screen check, 🟡 one palette call)
 
 - [ ] **§MESH-03c-FU — make `.mp-srv-row` readable on the map sheet.** **Measured on screen 2026-09-28 at `cbcb761`:** Map → Discover → 🖥 Scan found both scratch servers, and the §MESH-03c badge rendered on the right one (*"≈ same universe, content differs"* on :1380, whose copy differed in one `passText`; none on :1379). But `.mp-srv-row` was written for the dark Shift+🌐 modal: the bold address is `#cde0f0` and the row text `#9ab0c4`, over the transparent Discover pane on the cream sheet, so `localhost:1379` is nearly invisible. At 1280 px the badge also wraps to four lines, squeezed by the name, address and ping spans. **The call:** scope a light palette to `#msub-discover .mp-srv-row` and `#msub-connect .mp-srv-row`, or give the map panes the modal's dark card. **Verify:** a computed-contrast assertion (WCAG AA 4.5:1) for the address and badge spans in both containers, plus a screenshot.
@@ -203,6 +199,6 @@
 
 ## §RESUME — Phase 5 history
 
-> **Completed work is not carried here.** The 101 closed increments for this phase are condensed in **[`../archive/backlog-resume-history.md`](../archive/backlog-resume-history.md)**; full prose for recent closes is in [`plan-archive.md`](plan-archive.md). This file carries open rows only.
+> **Completed work is not carried here.** The 102 closed increments for this phase are condensed in **[`../archive/backlog-resume-history.md`](../archive/backlog-resume-history.md)**; full prose for recent closes is in [`plan-archive.md`](plan-archive.md). This file carries open rows only.
 
 > When an increment ships: write the full entry into `plan-archive.md`, add its one-line row to `../archive/backlog-resume-history.md` and to the cross-phase table in [`BACKLOG.md`](BACKLOG.md), and delete the row from this file.
