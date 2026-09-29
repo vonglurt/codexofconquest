@@ -169,7 +169,10 @@ function localSnapshot() {
   // p8 — §MESH-01i cross-origin trades: the durable identity half rides the
   // presence snapshot so remote rosters can offer the ⇄ trade target
   // (ledgerPid = origin8:p8). Presence itself stays session-keyed/display-only.
-  return { seq: MESH.seq, sessions: [...SESSIONS.values()].map((s) => ({ sid: s.id, name: s.playerName, r: s.r, c: s.c, p8: s.player8 || null })) };
+  // pub/xpub/xsig (§MESH-03f-FU): this origin vouches for which key a ledgerPid
+  // holds, and the player's own xsig over xpub lets a page refuse a swapped one.
+  return { seq: MESH.seq, sessions: [...SESSIONS.values()].map((s) => ({ sid: s.id, name: s.playerName, r: s.r, c: s.c, p8: s.player8 || null,
+    ...(s.playerXpub ? { pub: s.playerPub, xpub: s.playerXpub, xsig: s.playerXsig } : {}) })) };
 }
 function remotePlayersAt(r, c) {
   const out = [], now = Date.now();
@@ -229,7 +232,8 @@ function meshMergeSnapshot(originId, snap) {
   if (snap.seq < rec.snapSeq) return;   // stale snapshot from an older round
   rec.snapSeq = snap.seq;
   rec.lastSeen = Date.now();
-  rec.sessions = new Map((snap.sessions || []).map((s) => [s.sid, { name: s.name, r: s.r, c: s.c, p8: s.p8 || null }]));
+  rec.sessions = new Map((snap.sessions || []).map((s) => [s.sid, { name: s.name, r: s.r, c: s.c, p8: s.p8 || null,
+    ...(typeof s.xpub === 'string' && typeof s.pub === 'string' ? { pub: s.pub, xpub: s.xpub, xsig: String(s.xsig || '') } : {}) }]));
 }
 // Built and signed at most once per half gossip interval: a round dials up to three
 // peers and every inbound gossip is answered with the same payload.

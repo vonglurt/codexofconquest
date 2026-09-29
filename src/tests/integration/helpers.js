@@ -224,6 +224,7 @@ const PORT_BLOCKS = {
   playerkeys: 15300,  // two ports per worker: a default server and one under MESH_REQUIRE_PLAYER_SIG
   deps: 15400,        // three ports per worker: tracker, A, B
   actions: 15500,     // one port per worker
+  dm: 15600,          // two ports per worker: A and B
 };
 
 // Returns `count` consecutive ports reserved for this worker inside `block`'s

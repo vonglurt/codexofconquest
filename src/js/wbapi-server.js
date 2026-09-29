@@ -420,6 +420,61 @@ function playerActionCheck(route, body) {
   return null;
 }
 function playerSessionMessage(nonce) { return `codex-session-v1\n${getServerId()}\n${nonce}`; }
+
+// §MESH-03f-FU — private messages, end to end. A keyed player publishes an ECDH
+// key (X25519, or P-256 where X25519 is missing) signed with their session key,
+// and a sender encrypts to it with a fresh ephemeral key per message:
+// ECDH(epk, xpub) → HKDF-SHA256 (empty salt, info "codex-dm-v1\n<from>\n<to>") →
+// AES-256-GCM. The envelope {v, to, from, ts, epk, iv, ct} is signed by the
+// sender's player key. Servers route it by `to` and never hold a key that opens
+// it. Nothing is stored for an absent recipient: the sender is told, and resends.
+function playerXpubId(jwk) {
+  if (!jwk || typeof jwk !== 'object') return null;
+  const b64u = (v) => typeof v === 'string' && /^[A-Za-z0-9_-]{16,}$/.test(v);
+  if (jwk.kty === 'OKP' && jwk.crv === 'X25519' && b64u(jwk.x)) return 'x25519:' + jwk.x;
+  if (jwk.kty === 'EC' && jwk.crv === 'P-256' && b64u(jwk.x) && b64u(jwk.y)) return 'p256:' + jwk.x + '.' + jwk.y;
+  return null;
+}
+const DM_ID_RE = /^(x25519:[A-Za-z0-9_-]{16,}|p256:[A-Za-z0-9_-]{16,}\.[A-Za-z0-9_-]{16,})$/;
+const DM_PID_RE = /^[0-9a-f]{8}:[0-9a-f]{8}$/;
+const DM_CT_MAX = 4096;
+const DM_TS_WINDOW_MS = 60 * 1000;
+const DM_SEEN = new Map();   // envelope sig → expiry; a delivered envelope is not delivered twice
+function dmMessage({ v, to, from, ts, epk, iv, ct }) { return 'codex-dm-v1\n' + ledgerCanonical({ v, to, from, ts, epk, iv, ct }); }
+function dmEnvelopeCheck(env, fromPub) {
+  if (!env || typeof env !== 'object') return { status: 400, error: 'body.env required: {v, to, from, ts, epk, iv, ct, sig}' };
+  if (env.v !== 1 || !DM_PID_RE.test(env.to || '') || !DM_PID_RE.test(env.from || '') || !DM_ID_RE.test(env.epk || '')
+      || !/^[A-Za-z0-9_-]{16}$/.test(env.iv || '') || !/^[A-Za-z0-9_-]{22,}$/.test(env.ct || '') || typeof env.sig !== 'string')
+    return { status: 400, error: 'malformed envelope: v 1, to/from ledgerPids, epk an ECDH key id, iv 12 bytes and ct as base64url, sig' };
+  if (env.ct.length > DM_CT_MAX) return { status: 413, error: `ciphertext over ${DM_CT_MAX} characters` };
+  if (!Number.isFinite(env.ts) || Math.abs(Date.now() - env.ts) > DM_TS_WINDOW_MS) return { status: 401, error: `env.ts is outside the ${DM_TS_WINDOW_MS / 1000} s window` };
+  if (!fromPub || !playerSigVerify(fromPub, dmMessage(env), env.sig)) return { status: 401, error: 'envelope signature does not verify against the sender\'s key' };
+  const now = Date.now();
+  for (const [k, exp] of DM_SEEN) if (exp < now) DM_SEEN.delete(k);
+  if (DM_SEEN.has(env.sig)) return { status: 409, error: 'replayed envelope: already delivered' };
+  return null;
+}
+function dmDeliver(to, data) {
+  let n = 0;
+  for (const [id] of SESSIONS)
+    if (ledgerPidOf(id) === to) { const sse = SSE_CLIENTS.get(id); if (sse) { sseSend(sse, 'dm', data); n++; } }
+  if (n) DM_SEEN.set(data.env.sig, Date.now() + 2 * DM_TS_WINDOW_MS);
+  return n;
+}
+function dmKeyOf(pid) {
+  const [o8, p8] = String(pid).split(':');
+  if (o8 === getServerId().slice(0, 8)) {
+    for (const s of SESSIONS.values())
+      if (s.playerXpub && s.player8 === p8) return { pid, name: s.playerName, pub: s.playerPub, xpub: s.playerXpub, xsig: s.playerXsig, server: o8 };
+    return null;
+  }
+  for (const [oid, rec] of MESH.remote) {
+    if (oid.slice(0, 8) !== o8 || Date.now() - rec.lastSeen > MESH_ORIGIN_TTL) continue;
+    for (const [, p] of rec.sessions)
+      if (p.p8 === p8 && p.xpub) return { pid, name: p.name, pub: p.pub, xpub: p.xpub, xsig: p.xsig, server: o8 };
+  }
+  return null;
+}
 function playerKeysSave() {
   try {
     fs.mkdirSync(LEDGER_DIR, { recursive: true });
@@ -3946,6 +4001,40 @@ async function route(req, res) {
     logResponse(method, url.pathname, out.status,
       out.status === 200 ? `gossip ok ⇄ ${String(gbody && gbody.serverId).slice(0, 8)}` : `gossip refused: ${out.body.reason}`);
     return json(res, out.status, out.body);
+  }
+
+  // §MESH-03f-FU: a peer hands on a private message for a player hosted here. The
+  // relaying server signs the hop (§MESH-03g envelope) and vouches for the sender's
+  // key as the origin of their ledgerPid; the player's own signature is checked again.
+  if (parts[0] === 'mesh' && parts[1] === 'dm' && method === 'POST') {
+    if (!meshRateAllows(req.socket.remoteAddress)) {
+      logResponse(method, url.pathname, 429, 'mesh/dm: rate limited');
+      return json(res, 429, { ok: false, reason: 'rate' });
+    }
+    let d;
+    try { d = await readBody(req); } catch { return json(res, 400, { ok: false, error: 'Invalid JSON' }); }
+    const from = (d && d.addr) || req.socket.remoteAddress;
+    const refuse = (status, reason, error) => {
+      pushTraffic('in', 'dm', from, false, `refused: ${reason}`);
+      logResponse(method, url.pathname, status, `mesh/dm refused: ${reason}`);
+      return json(res, status, { ok: false, reason, ...(error ? { error } : {}) });
+    };
+    if (!d || !/^[0-9a-f]{32}$/.test(d.serverId || '') || d.serverId === getServerId()) return refuse(400, 'bad-serverId');
+    const unproven = verifyEnvelope(d);
+    if (unproven) return refuse(401, unproven);
+    if (!aclAllows({ serverId: d.serverId, ip: req.socket.remoteAddress })) return refuse(403, 'acl');
+    pinEnvelope(d);
+    const env = d.env;
+    if (!env || String(env.from).split(':')[0] !== d.serverId.slice(0, 8)) return refuse(403, 'origin', 'env.from does not belong to the relaying server');
+    if (String(env.to).split(':')[0] !== getServerId().slice(0, 8)) return refuse(404, 'not-hosted', 'env.to is not hosted on this server');
+    const bad = dmEnvelopeCheck(env, typeof d.fromPub === 'string' ? d.fromPub : null);
+    if (bad) return refuse(bad.status, 'envelope', bad.error);
+    const n = dmDeliver(env.to, { env, fromPub: d.fromPub, fromName: String(d.fromName || '').slice(0, 60), server: d.serverId.slice(0, 8) });
+    if (!n) return refuse(404, 'offline', `${env.to} is not online; nothing is stored, so send again when they are.`);
+    pushTraffic('in', 'dm', from, true, `dm ${env.from} → ${env.to}`);
+    logRow('dm', `${env.from} → ${env.to} (relayed in from ${d.serverId.slice(0, 8)})  ·  ${env.ct.length} ch ciphertext`);
+    logResponse(method, url.pathname, 200, `mesh/dm delivered → ${env.to}`);
+    return json(res, 200, { ok: true, delivered: n });
   }
 
   // ── Mode (fast | debug | trace) ──
@@ -8420,6 +8509,18 @@ async function route(req, res) {
       return json(res, 200, look);
     }
 
+    // ── GET /api/session/dmkey?pid= — §MESH-03f-FU: a player's message key ─
+    if (sub === 'dmkey' && method === 'GET') {
+      const pid = url.searchParams.get('pid') || '';
+      const k = DM_PID_RE.test(pid) ? dmKeyOf(pid) : null;
+      if (!k) {
+        logResponse(method, url.pathname, 404, `dmkey: none for ${pid}`);
+        return json(res, 404, { ok: false, error: `No message key for ${pid}: the player is not online here or on a gossip peer, or started without one.` });
+      }
+      logResponse(method, url.pathname, 200, `dmkey: ${pid}`);
+      return json(res, 200, { ok: true, ...k });
+    }
+
     // ── GET /api/session/events?sessionId= — SSE stream ───────────────────
     if (sub === 'events' && method === 'GET') {
       const sessionId = url.searchParams.get('sessionId');
@@ -8480,7 +8581,7 @@ async function route(req, res) {
       // §MESH-01i slice 2 (lab report §6.4): an optional persistent playerKey
       // gives this session a DURABLE ledger pid that survives session death —
       // without it, ledger chains key on the session and strand at the TTL.
-      let player8 = null, playerPub = null;
+      let player8 = null, playerPub = null, playerXpub = null, playerXsig = null;
       if (body.pub != null) {
         const proof = playerKeyProve(body);
         if (proof.error) {
@@ -8489,6 +8590,14 @@ async function route(req, res) {
         }
         player8 = proof.player8;
         playerPub = proof.pubId;
+        if (body.xpub != null) {
+          playerXpub = playerXpubId(body.xpub);
+          if (!playerXpub || !playerSigVerify(playerPub, `codex-xpub-v1\n${playerXpub}`, body.xsig)) {
+            logResponse(method, url.pathname, 400, 'session/start: xpub refused');
+            return json(res, 400, { ok: false, error: 'body.xpub must be an X25519 or P-256 public JWK, and body.xsig the player key\'s signature over "codex-xpub-v1\\n<xpubId>".' });
+          }
+          playerXsig = String(body.xsig);
+        }
       } else if (body.playerKey != null && body.playerKey !== '') {
         if (REQUIRE_PLAYER_SIG) {
           logResponse(method, url.pathname, 401, 'session/start: bare playerKey refused');
@@ -8529,6 +8638,7 @@ async function route(req, res) {
         encounter:  null,        // pending instanced encounter (null = none); hub is a named cell
         player8,                 // §MESH-01i slice 2: durable identity half of the ledger pid (null = keyless)
         playerPub,               // §MESH-03a: the key this session proved; its ledger actions must be signed with it
+        playerXpub, playerXsig,  // §MESH-03f-FU: the key private messages to this player are encrypted to
         pvpOff:     body.pvp === 'off' || body.pvpOff === true,   // §MESH-01j: global duel opt-out — unchallengeable
       };
       SESSIONS.set(sessionId, s);
@@ -8723,6 +8833,53 @@ async function route(req, res) {
       return json(res, 200, { ok: true, scope, broadcast: chatData, recipientCount });
     }
 
+    // ── POST /api/session/dm — §MESH-03f-FU: an end-to-end private message ─
+    if (sub === 'dm') {
+      if (!s.playerPub) {
+        logResponse(method, url.pathname, 401, 'session/dm: keyless session');
+        return json(res, 401, { ok: false, error: 'private messages need a session started with a player key (pub, nonce, sig).' });
+      }
+      const env = body.env;
+      if (env && env.from !== ledgerPidOf(sessionId)) {
+        logResponse(method, url.pathname, 403, 'session/dm: from is not this session');
+        return json(res, 403, { ok: false, error: `env.from must be this session's ledgerPid (${ledgerPidOf(sessionId)})` });
+      }
+      const bad = dmEnvelopeCheck(env, s.playerPub);
+      if (bad) { logResponse(method, url.pathname, bad.status, `session/dm: ${bad.error}`); return json(res, bad.status, { ok: false, error: bad.error }); }
+      const data = { env, fromPub: s.playerPub, fromName: s.playerName, server: getServerId().slice(0, 8) };
+      const o8 = env.to.split(':')[0];
+      if (o8 === getServerId().slice(0, 8)) {
+        const n = dmDeliver(env.to, data);
+        if (!n) { logResponse(method, url.pathname, 404, 'session/dm: recipient offline'); return json(res, 404, { ok: false, error: `${env.to} is not online; nothing is stored, so send again when they are.` }); }
+        logRow('dm', `${env.from} → ${env.to}  ·  ${env.ct.length} ch ciphertext`);
+        logResponse(method, url.pathname, 200, `session/dm delivered locally → ${env.to}`);
+        return json(res, 200, { ok: true, delivered: n, remote: false });
+      }
+      const peer = meshAddrForOrigin8(o8);
+      if (!peer) {
+        logResponse(method, url.pathname, 404, `session/dm: origin ${o8} is not a gossip peer`);
+        return json(res, 404, { ok: false, error: `${env.to}'s server (${o8}) is not a gossip peer of this one.` });
+      }
+      let relayed;
+      try {
+        const resp = await fetch(`${meshUrl(peer.addr)}/api/mesh/dm`, {
+          method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(signEnvelope({ serverId: getServerId(), addr: meshAdvertise(), env, fromPub: s.playerPub, fromName: s.playerName })),
+          signal: AbortSignal.timeout(5000),
+        });
+        relayed = { status: resp.status, ...(await resp.json().catch(() => ({}))) };
+      } catch (e) { relayed = { status: 502, ok: false, error: (e && e.name === 'TimeoutError') ? 'timeout' : (e && e.code) || 'unreachable' }; }
+      pushTraffic('out', 'dm', peer.addr, relayed.ok === true, relayed.ok ? `dm → ${env.to}` : `dm refused: ${relayed.error || relayed.reason || relayed.status}`);
+      if (relayed.ok !== true) {
+        logResponse(method, url.pathname, relayed.status, `session/dm relay refused: ${relayed.error || relayed.reason}`);
+        return json(res, relayed.status >= 400 ? relayed.status : 502, { ok: false, error: `The recipient's server refused the message: ${relayed.error || relayed.reason || 'unreachable'}` });
+      }
+      DM_SEEN.set(env.sig, Date.now() + 2 * DM_TS_WINDOW_MS);
+      logRow('dm', `${env.from} → ${env.to} (via ${peer.addr})  ·  ${env.ct.length} ch ciphertext`);
+      logResponse(method, url.pathname, 200, `session/dm relayed → ${env.to}`);
+      return json(res, 200, { ok: true, delivered: relayed.delivered, remote: true });
+    }
+
     // ── POST /api/session/end ──────────────────────────────────────────────
     if (sub === 'end') {
       SESSIONS.delete(sessionId);
@@ -8741,7 +8898,7 @@ async function route(req, res) {
     }
 
     logResponse(method, url.pathname, 404, `unknown session sub-route "${sub}"`);
-    return json(res, 404, { error: `Unknown session sub-route "${sub}"`, available: ['start', 'move', 'pos', 'look', 'who', 'say', 'end', 'events'] });
+    return json(res, 404, { error: `Unknown session sub-route "${sub}"`, available: ['start', 'move', 'pos', 'look', 'who', 'say', 'dm', 'dmkey', 'end', 'events'] });
   }
 
   // ── §MESH-01h: Sentry bot endpoints ───────────────────────────────────────
@@ -11590,11 +11747,13 @@ server.listen(PORT, BIND_ADDR, () => {
     ['GET',    '/api/grid/heatmap                    → all cells with adjacency heat (0-4)'],
     ['GET',    '/api/grid/reachability[?hub=LHR]     → reachable vs unreachable cells from hub'],
     ['POST',   '/api/session/nonce                   → {nonce, serverId, ttlMs} — single-use challenge for a signed session/start (§MESH-03a)'],
-    ['POST',   '/api/session/start                   body: {name, seed?, playerKey?, pub?, nonce?, sig?, transfers?} → {sessionId, pid, ledgerPid, r, c, node, desc, exits} (pub+sig over "codex-session-v1\\n<serverId>\\n<nonce>" proves a player key; playerKey alone is the legacy bearer id, refused once bound or under MESH_REQUIRE_PLAYER_SIG; transfers: [{from, to, sig}] hands a bound character to a new key)'],
+    ['POST',   '/api/session/start                   body: {name, seed?, playerKey?, pub?, nonce?, sig?, transfers?, xpub?, xsig?} → {sessionId, pid, ledgerPid, r, c, node, desc, exits} (pub+sig over "codex-session-v1\\n<serverId>\\n<nonce>" proves a player key; playerKey alone is the legacy bearer id, refused once bound or under MESH_REQUIRE_PLAYER_SIG; transfers: [{from, to, sig}] hands a bound character to a new key; xpub + xsig publish a signed ECDH key for private messages)'],
     ['POST',   '/api/session/move                    body: {sessionId, dir} → {r, c, node, desc, exits, players, room, encounter}'],
     ['GET',    '/api/session/look?sessionId=          → current cell + exits + co-present players + room (§NAV-01f MUD room object)'],
     ['GET',    '/api/session/who                     → all active sessions'],
     ['POST',   '/api/session/say                     body: {sessionId, msg} → chat broadcast (look/start replay the last few lines per cell)'],
+    ['GET',    '/api/session/dmkey?pid=               → {pid, name, pub, xpub, xsig, server} — a keyed player\'s message key, local or from a gossip peer\'s roster (§MESH-03f-FU)'],
+    ['POST',   '/api/session/dm                      body: {sessionId, env: {v:1, to, from, ts, epk, iv, ct, sig}} → end-to-end private message, SSE "dm" on the recipient\'s server, relayed by POST /api/mesh/dm; nothing stored offline (§MESH-03f-FU)'],
     ['POST',   '/api/session/end                     body: {sessionId} → remove session'],
     ['GET',    '/api/session/events?sessionId=        → SSE stream (player_arrived, chat)'],
     ['POST',   '/api/sentry/deploy                   body: {node, dailyFee?} → station a §MESH-01h sentry bot at a junction (suppresses encounters + auto-assists there)'],
