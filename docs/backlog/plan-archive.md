@@ -19,6 +19,16 @@
 
 ---
 
+## Archived 2026-10-04 — §DX-02mb (ported; the editor's chain equals the server's for every quest both parse)
+
+### §DX-02mb — `edit.html` carries its own copy of the quest chain analyser, still regex-only (NEW 2026-10-04 during §DX-02ar, 🟡 share or port)
+
+- [x] ✅ SHIPPED 2026-10-04 `5722a6a` **§DX-02mb — the editor's `_questFlags`/`_flagToQuests` are built by the same `S_story.` regex §DX-02ar moved off in `wbapi-core.js`.** `edit.html`'s parser builds its own indexes at the `this._questFlags = {};` block in its loader, and its `chain(id)`, flag panels, flag-graph views and dead-flag counts all read them, so in the editor's local (server-off) mode the chain is empty for the same declarative quests. §DX-02ar measured the server copy at **2,808 → 899** empty chains of 2,853. **Decide:** port the declarative pass (`gateReads` + `questWrites` + the `sequence` edges) into the page, or have the editor read `GET /api/quest/{id}`'s chain when the server is up and say the local chain is partial when it is not. **Verify:** the same corpus count through the editor's model in a page spec.
+
+> **Closed 2026-10-04 at `5722a6a` — ported, not fetched.** The editor also runs with the server off, and `check-questgraph.js` is CommonJS that requires `fs`, so the page cannot load it. `edit.html`'s loader now runs the same gate walk (`gate` + `completion`), the same bit walk (`bits` + `onComplete`, both branches) and the same `sequence` edges as `wbapi-core`, and its `_deps.quest` unions both downstreams. Drift is fenced by a parity spec in `dx02ar-declarative-chain.test.js`: for every quest both parsers load, upstream, downstream, both sequence lists and the guard's downstream are equal (the old editor fails it). **Before → after, through the editor's own `WBAPI.load` on `play.html`:** empty chains **2,806 → 898** of 2,851; quests its delete guard refuses **43 → 1,652**. `check:walk` 41/41; 17 editor spec files 171/171. **Found on the path:** the editor's parser loads **2,851** quests to `wbapi-core`'s 2,853, missing `quest_sea_01` and `quest_sb_01`, filed as §DX-02mc and pinned in the spec as `EDITOR_UNPARSED`.
+
+---
+
 ## Archived 2026-10-04 — §DX-02ar (the quest chain reads declarative gates and bits; sequence edges kept separate)
 
 ### §DX-02ar — the quest dependency graph still reads the format §ARCH-01 retired, and the delete guard is fed by it (NEW 2026-08-12 during §DOC-02ag, 🟡 no design call on the diagnosis, a small one on the fix's scope)
