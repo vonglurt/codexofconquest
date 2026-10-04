@@ -148,6 +148,9 @@ body{background:var(--bg);color:var(--text);font-family:'SF Mono','Consolas',mon
 .quest-title{font-size:12px;color:var(--text);}
 .quest-meta{font-size:10px;color:var(--muted);}
 .flag-pill{display:inline-block;padding:1px 6px;border-radius:10px;font-size:10px;margin:1px;font-weight:600;}
+.dev-meta{display:none;flex-wrap:wrap;gap:4px;align-items:center;margin-top:3px;font-size:10px;color:var(--muted);font-family:monospace;}
+body.dev-meta-on .dev-meta{display:flex;}
+.dev-meta button{font:inherit;color:var(--accent);background:var(--bg3);border:1px solid var(--border);border-radius:3px;padding:1px 5px;cursor:pointer;}
 .flag-read{background:#1a2a3a;color:var(--accent);border:1px solid #2a4a6a;}
 .flag-write{background:#1a3a1a;color:var(--green);border:1px solid #2a5a2a;}
 .chain-link{padding:4px 8px;background:var(--bg3);border-radius:4px;margin-bottom:3px;font-size:11px;cursor:pointer;}
@@ -460,6 +463,7 @@ select.fi{appearance:none;}
   <div id="topbar-right">
     <span id="server-indicator" class="offline" style="display:none">○ Browser only</span>
     <input type="file" id="file-input" accept=".html" style="display:none">
+    <button class="btn" id="btn-dev-meta" title="Show each field's JavaScript path, data type and source line; click a path to copy it">{ } dev</button>
     <span id="diff-badge" class="badge yellow" style="display:none">0 changes</span>
     <button class="btn" id="btn-diff" disabled>Diff</button>
     <button class="btn primary" id="btn-apply-patch" disabled>Save</button>
@@ -2924,6 +2928,7 @@ function renderNodeDetail(code){
       inp.addEventListener('input',()=>{ mapEditBuf[key]=inp.value||null; inp.classList.toggle('chg',inp.value!==(orig||'')); });
       div.appendChild(inp);
     }
+    div.appendChild(devMeta('NODE_MAP', code, key, (WBAPI.nodeMap[code] || {})[key]));
     body.appendChild(div);
   }
   // §WORLDBUILDER-01: junction toggle + "Exits N/S/E/W" panel retired. The game
@@ -3137,6 +3142,7 @@ function renderDiffPanel(){
 }
 $('btn-copy-patch').addEventListener('click',()=>{ navigator.clipboard.writeText($('patch-out').value); $('btn-copy-patch').textContent='Copied!'; setTimeout(()=>$('btn-copy-patch').textContent='Copy',1500); });
 $('btn-dl-patch').addEventListener('click',()=>{ dl(DIFF.patch(),`codexofconquest-patch-${Date.now()}.patch.js`,'text/javascript'); });
+$('btn-dev-meta').addEventListener('click', () => devMetaSet(!document.body.classList.contains('dev-meta-on')));
 $('btn-apply-patch').addEventListener('click', async () => {
   if (!_rawSource) { alert('No source loaded.'); return; }
   if (SERVER.active) {
@@ -3365,6 +3371,73 @@ function mdCheckChanges() {
   $('md-change-count').textContent = n ? `${n} field${n!==1?'s':''} changed` : '';
 }
 
+// Developer metadata: where a shown value lives in play.html. `path` evaluates in the
+// game's console to the value; the line is the entry's key line in the loaded source.
+let _devSrc = null;
+const _devLines = new Map();
+function devSource() { return _rawSource || _devSrc; }
+function devEntryLine(constName, key) {
+  const src = devSource(); if (!src) return null;
+  const ck = constName + '\u0000' + key;
+  if (_devLines.has(ck) && _devLines.get(ck).src === src) return _devLines.get(ck).line;
+  const at = src.search(new RegExp(`(?:const|let|var)\\s+${constName}\\s*=`));
+  let line = null;
+  if (at >= 0) {
+    const re = new RegExp(`\\n[ \\t]*(['"]?)${String(key).replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\1\\s*:`, 'g');
+    re.lastIndex = at;
+    const m = re.exec(src);
+    if (m) { line = 2; for (let i = 0; i < m.index; i++) if (src.charCodeAt(i) === 10) line++; }
+  }
+  _devLines.set(ck, { src, line });
+  return line;
+}
+function devType(v) {
+  if (v === undefined) return 'absent';
+  if (v === null) return 'null';
+  if (Array.isArray(v)) return `array[${v.length}]`;
+  return typeof v;
+}
+function devMeta(constName, key, fieldPath, value) {
+  const path = `${constName}[${JSON.stringify(key)}]` + fieldPath.split('.').map(f => '.' + f).join('');
+  const el = document.createElement('div'); el.className = 'dev-meta';
+  el.dataset.const = constName; el.dataset.key = key;
+  const b = document.createElement('button'); b.type = 'button'; b.className = 'dev-path'; b.textContent = path;
+  b.title = 'Copy — evaluates to this value in the game\u2019s console';
+  b.addEventListener('click', () => {
+    try { navigator.clipboard.writeText(path); b.textContent = path + '  ✓ copied'; setTimeout(() => { b.textContent = path; }, 1200); } catch {}
+  });
+  const t = document.createElement('span'); t.className = 'dev-type'; t.textContent = devType(value);
+  const l = document.createElement('span'); l.className = 'dev-line';
+  const ln = devEntryLine(constName, key);
+  l.textContent = ln ? `play.html:${ln}` : 'line ?';
+  el.append(b, t, l);
+  return el;
+}
+function devMetaList(constName, key, entry, fieldPaths) {
+  const box = document.createElement('div');
+  for (const fp of fieldPaths) {
+    const v = fp.split('.').reduce((o, f) => (o == null ? undefined : o[f]), entry);
+    if (v !== undefined) box.appendChild(devMeta(constName, key, fp, v));
+  }
+  return box;
+}
+async function devMetaRefreshLines() {
+  if (!devSource() && SERVER.active) {
+    try { _devSrc = await (await fetch(`${SERVER.url}/api/source`)).text(); } catch { return; }
+  }
+  for (const el of document.querySelectorAll('.dev-meta')) {
+    const ln = devEntryLine(el.dataset.const, el.dataset.key);
+    el.querySelector('.dev-line').textContent = ln ? `play.html:${ln}` : 'line ?';
+  }
+}
+function devMetaSet(on) {
+  document.body.classList.toggle('dev-meta-on', on);
+  $('btn-dev-meta').classList.toggle('primary', on);
+  try { localStorage.setItem('coc-dev-meta', on ? '1' : '0'); } catch {}
+  if (on) devMetaRefreshLines();
+}
+try { if (localStorage.getItem('coc-dev-meta') === '1') devMetaSet(true); } catch {}
+
 function mkMonsterField(field, label, inputType, options) {
   const g = document.createElement('div'); g.className = 'fg';
   if (label) g.innerHTML = `<div class="fl">${label}</div>`;
@@ -3384,6 +3457,7 @@ function mkMonsterField(field, label, inputType, options) {
     inp.addEventListener('input', mdCheckChanges);
     g.appendChild(inp);
   }
+  g.appendChild(devMeta('MONSTER_POOL', mdCurrentKey, field, (WBAPI.monsterPool[mdCurrentKey] || {})[field]));
   return g;
 }
 
@@ -4088,6 +4162,8 @@ function renderNpcDetail(npc){
     }
   }
   area.innerHTML=h;
+  if (npcKey) area.appendChild(devMetaList('BIRKA_NPC_PROFILES', npcKey, WBAPI.birkaNpcs[npcKey],
+    ['name', 'occupation', 'node', ...['neutral', 'friendly', 'dearFriend'].flatMap(l => [`${l}.greeting`, `${l}.dialogue`, `${l}.special`])]));
   const _rgNpc = document.createElement('div'); area.appendChild(_rgNpc);
   if (npcKey) renderRelGraph('npc', npcKey, _rgNpc);
   if (SERVER.active && npcKey) loadNpcFromAPI(npcKey);
@@ -4309,6 +4385,7 @@ function selectQuest(id){
       inp.addEventListener('input', qCheckChanges);
       g.appendChild(inp);
     }
+    g.appendChild(devMeta('QUEST_DB', id, key, q[key]));
     area.appendChild(g);
   }
 
