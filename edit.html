@@ -1499,6 +1499,7 @@ const WBAPI = {
   _nodesByTerrain: {},      // terrainKey → [nodeCode]
   _questFlags: {},          // questId → { reads:Set, writes:Set }
   _flagToQuests: {},        // flagName → { reads:[id], writes:[id] }
+  _flagToEngine: {},        // flagName → { reads:[fn], writes:[fn] }  S_story.<flag> outside QUEST_DB
   _questSeq: {},            // questId → { upstream:Set, downstream:Set }  (questsDone / unlock)
   _questArcs: {},           // arcPrefix → [questId]  e.g. 'quest_wis' → [...]
   _rawQuestSrc: '',
@@ -1678,6 +1679,10 @@ const WBAPI = {
     this.birkaNpcs  = parseSanitized(extr(`// ${A}BIRKA_NPC:START ◆◆◆`, `// ${A}BIRKA_NPC:END ◆◆◆`), 'BIRKA_NPC_PROFILES');
 
     const qSrc = extr(`// ${A}QUEST_DB:START ◆◆◆`, `// ${A}QUEST_DB:END ◆◆◆`);
+    {
+      const qa = src.indexOf(`// ${A}QUEST_DB:START ◆◆◆`), qb = src.indexOf(`// ${A}QUEST_DB:END ◆◆◆`);
+      this._rawEngineSrc = qa > -1 && qb > qa ? src.slice(0, qa) + src.slice(qb) : src;
+    }
     this._rawQuestSrc = qSrc || '';
     this.questDb = parseSanitized(qSrc, 'QUEST_DB');
 
@@ -1770,6 +1775,22 @@ const WBAPI = {
     for (const [id, { reads, writes }] of Object.entries(this._questFlags)) {
       for (const f of reads) { if (!this._flagToQuests[f]) this._flagToQuests[f] = {reads:[],writes:[]}; this._flagToQuests[f].reads.push(id); }
       for (const f of writes) { if (!this._flagToQuests[f]) this._flagToQuests[f] = {reads:[],writes:[]}; this._flagToQuests[f].writes.push(id); }
+    }
+    this._flagToEngine = {};
+    const eng = this._rawEngineSrc || '';
+    if (eng) {
+      const fnAt = [...eng.matchAll(/function\s+([A-Za-z_$][\w$]*)\s*\(/g)].map(m => [m.index, m[1]]);
+      const enclosing = at => {
+        let lo = 0, hi = fnAt.length - 1, best = null;
+        while (lo <= hi) { const mid = (lo + hi) >> 1; if (fnAt[mid][0] < at) { best = fnAt[mid][1]; lo = mid + 1; } else hi = mid - 1; }
+        return best || '(top level)';
+      };
+      for (const m of eng.matchAll(/S_story\.(\w+)(\s*(?:\+\+|--|[-+*]?=(?!=)))?/g)) {
+        const role = m[2] ? 'writes' : 'reads';
+        const e = this._flagToEngine[m[1]] || (this._flagToEngine[m[1]] = { reads:[], writes:[] });
+        const fn = enclosing(m.index);
+        if (!e[role].includes(fn)) e[role].push(fn);
+      }
     }
 
     // Quest arcs
@@ -2431,9 +2452,10 @@ const WBAPI = {
     const allWrittenFlags = new Set();
     for (const { writes } of Object.values(this._questFlags || {}))
       for (const f of writes) allWrittenFlags.add(f);
+    for (const [f, e] of Object.entries(this._flagToEngine || {})) if (e.writes.length) allWrittenFlags.add(f);
     for (const [id, q] of Object.entries(this.questDb)) {
       if (q.checkPassFlag && !allWrittenFlags.has(q.checkPassFlag))
-        warnings.push({ section:'QUEST_DB', key:id, field:'checkPassFlag', msg:`flag "${q.checkPassFlag}" is never written by any quest` });
+        warnings.push({ section:'QUEST_DB', key:id, field:'checkPassFlag', msg:`flag "${q.checkPassFlag}" is never written by any quest or engine function` });
     }
 
     // LAKE_MAGIC items with impossible minRank
@@ -2470,8 +2492,8 @@ const WBAPI = {
     for (const [id, { writes }] of Object.entries(this._questFlags || {})) {
       for (const f of writes) {
         const readers = (this._flagToQuests[f] || {}).reads || [];
-        if (readers.length === 0)
-          suggestions.push({ section:'QUEST_DB', key:id, field:`flag:${f}`, msg:`writes flag "${f}" that no quest reads — possible dead-end branch` });
+        if (readers.length === 0 && !((this._flagToEngine || {})[f] || { reads:[] }).reads.length)
+          suggestions.push({ section:'QUEST_DB', key:id, field:`flag:${f}`, msg:`writes flag "${f}" that no quest or engine function reads — possible dead-end branch` });
       }
     }
 
@@ -4419,8 +4441,10 @@ function selectQuest(id){
         const qq=WBAPI.questDb[qid]||{};
         return `<span class="flag-pill flag-${relRole==='reads'?'read':'write'}" style="cursor:pointer;font-size:9px" onclick="selectQuest('${qid}')" title="${qq.title||qid}">${qid}</span>`;
       }).join('');
+      const engineHtml = ((WBAPI._flagToEngine[f]||{})[relRole]||[]).map(fn =>
+        `<span class="flag-pill" style="font-size:9px;font-family:monospace;background:var(--bg3);color:var(--muted)" title="engine function in play.html">ƒ ${fn}</span>`).join('');
       row.innerHTML = `<span class="flag-pill ${cls}" style="font-family:monospace">${f}</span>`;
-      if (othersHtml) row.innerHTML += `<span style="font-size:9px;color:var(--muted);align-self:center">→ ${relRole==='reads'?'written by':'read by'}:</span>${othersHtml}`;
+      if (othersHtml || engineHtml) row.innerHTML += `<span style="font-size:9px;color:var(--muted);align-self:center">→ ${relRole==='reads'?'written by':'read by'}:</span>${othersHtml}${engineHtml}`;
       fg.appendChild(row);
     }
     area.appendChild(fg);
