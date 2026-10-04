@@ -19,6 +19,16 @@
 
 ---
 
+## Archived 2026-10-04 — §DX-02mc (the editor's removeFns copies comments through, as core's has since §AUDIT-03f)
+
+### §DX-02mc — `edit.html`'s parser loads 2,851 quests where `wbapi-core` loads 2,853 (NEW 2026-10-04 during §DX-02mb, 🟢 find the cause, then fix the parser)
+
+- [x] ✅ SHIPPED 2026-10-04 `067c02b` **§DX-02mc — `quest_sea_01` and `quest_sb_01` are missing from the editor's `WBAPI.questDb`.** Measured 2026-10-04 by `WBAPI.load(<play.html text>)` in `edit.html` against `src/js/wbapi-core.js`'s `load('play.html')`: **2,851 vs 2,853**, the two missing ids exactly these, and no extra ids. Both are ordinary `UQF-1.0` side quests with a comment block above them. Neither appears in the editor's Quests tab, chain views or audit counts, and `quest_sea_02`'s chain in the editor lacks its edge to `quest_sea_01`. `dx02ar-declarative-chain.test.js` pins the pair as `EDITOR_UNPARSED`, so the fix must empty that list. **Verify:** the list is `[]` and the parity spec stays green.
+
+> **Closed 2026-10-04 at `067c02b`.** **Cause:** the editor's `removeFns` did not skip comments. The comment above each quest quotes its retired closure (`completeFn:()=>…`), and the stripper took it for a function value and consumed text up to the next depth-0 comma, swallowing the entry's key. `wbapi-core`'s copy was fixed for exactly these two quests under §AUDIT-03f, and its own comment names them; the editor's copy never got the fix. **Fix:** the editor's `removeFns` copies `//` and `/* */` comments through and skips them inside function bodies, the same four branches as core's. **Before → after, through the editor's `WBAPI.load` on `play.html`:** quests **2,851 → 2,853**. Monsters, drops, terrains, nodes, coords, NPCs and lake magic already matched core and did not move. `EDITOR_UNPARSED` is gone: the parity spec requires the full set and equal chains with no filtering, and on the old parser it fails naming the two. `check:walk` 41/41; 17 editor spec files 171/171.
+
+---
+
 ## Archived 2026-10-04 — §DX-02mb (ported; the editor's chain equals the server's for every quest both parse)
 
 ### §DX-02mb — `edit.html` carries its own copy of the quest chain analyser, still regex-only (NEW 2026-10-04 during §DX-02ar, 🟡 share or port)
