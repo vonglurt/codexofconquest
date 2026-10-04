@@ -19,6 +19,16 @@
 
 ---
 
+## Archived 2026-10-04 — §DX-02ga-FU (check:anchorliterals, gate #42: the write-path simulation by span)
+
+### §DX-02ga-FU — nothing stops a new doc anchor from quoting a literal the API will re-serialize (NEW 2026-09-28 during §DX-02ga, 🟢 a gate; the rule is decided)
+
+- [x] ✅ SHIPPED 2026-10-04 `fa663e4` **§DX-02ga-FU — §DX-02ga decided that an anchor into a data section names the entry, never a literal from one of its fields, and re-pointed the 35 that broke it; only prose enforces the rule.** `check:anchors` passes an anchor like `` `gate:{ flags:['x'] }` `` today and goes red on the first unrelated `./bin/api put` to that quest, which is the defect §DX-02ga closed, waiting for its next author. **The measurement that found the 35** loaded `play.html` into `src/js/wbapi-core.js` in memory, wrote every structured field of every quest, node, npc and monster back through `editStructuredField` with its own parsed value (5,961 writes, 4,534 of which change text, 112 refused for closures), and counted the anchors that resolve before and not after. That is exact, and it takes **92 s** and 620 MB: too slow for a gate with a 120 s deadline among 41. **The gate wants the same answer by span, not by simulation:** for each unqualified anchor that resolves only inside a WORLDBUILDER section, find the structured field literal its hit lies in and fail if the symbol is not a substring of that literal's `serializeJsLiteral` form. A selftest plants one literal anchor, which must go red, and one entry-key anchor, which must stay green. **Verify:** 0 findings at HEAD; red on a planted `` `completion:{ flags:['entry42Written'] }` ``; wall time under 10 s.
+
+> **Closed 2026-10-04 at `fa663e4` — gate #42, `check:anchorliterals`.** `wbapi-core`'s own entry walk (`findEntryBounds` + `entryFieldLiterals`, walked forward entry by entry) finds every structured field literal in the five entry sections whose canonical form differs from its text: **4,533**, against §DX-02ga's 4,534 text-changing writes. Literals holding a function or a comment are skipped, because the write path refuses them. For each anchor hit on such a line, the gate swaps in the `serializeJsLiteral` form and looks for the symbol again; an anchor fails only if every hit dies. Only anchors whose symbol occurs on a literal line are fully resolved (154 at HEAD). **Verify, as specified:** **0 findings at HEAD**. The selftest's planted `completion:{ flags:['entry42Written'] }` goes **red** and an entry-key anchor stays green. Wall time **3.7 s**, against 92 s for the simulation and a 10 s target. **Stronger than the row asked:** on the tree before `d52c03d` the gate reports **exactly §DX-02ga's 35**. `resolve-anchors.js` now exports its scan behind `require.main`, `serializeJsLiteral` joins `WBAPI._parse`, and the gate is in both `check:walk` and `check:walk:serial`. `check:walk` **42/42**; the four specs over the resolver and gate runner 32/32.
+
+---
+
 ## Archived 2026-10-04 — §DX-02lv (spawned servers get a temp LEDGER_DIR; a full run leaves build/ledger untouched)
 
 ### §DX-02lv — throwaway-server specs write their players into the working tree's ledger (NEW 2026-09-28 during §MESH-03f, 🟢 one env var per spawn)
