@@ -3854,7 +3854,7 @@ $('btn-d100-put').addEventListener('click', async () => {
       result = {ok:true};
     }
     if (result.ok) {
-      $('d100-put-status').textContent = '✓ Saved — POST /api/save to persist';
+      $('d100-put-status').textContent = '✓ Saved';
       btn.textContent = 'PUT Table'; btn.disabled = false;
     } else {
       $('d100-put-status').style.color = 'var(--red)';
@@ -6508,7 +6508,7 @@ window._onServerActivated = () => {
   const EP = [
     // Health
     { section:'Health & Status', method:'GET', path:'/api/ping', desc:'Server health + data counts', params:[] },
-    { section:'Health & Status', method:'POST', path:'/api/save', desc:'Write all in-memory data to disk', params:[] },
+    { section:'Health & Status', method:'POST', path:'/api/save', desc:'Write a dated backup beside the game file, then reload it under the empty-section guard (every write already saves itself)', params:[] },
     { section:'Health & Status', method:'POST', path:'/api/reload', desc:'Re-read game file from disk into memory', params:[] },
     { section:'Health & Status', method:'POST', path:'/api/restart', desc:'Exit server (toggle script relaunches it)', params:[] },
     { section:'Health & Status', method:'GET', path:'/api/source', desc:'Serve raw HTML game file', params:[] },
