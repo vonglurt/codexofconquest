@@ -19,6 +19,16 @@
 
 ---
 
+## Archived 2026-10-04 — §DX-02lv (spawned servers get a temp LEDGER_DIR; a full run leaves build/ledger untouched)
+
+### §DX-02lv — throwaway-server specs write their players into the working tree's ledger (NEW 2026-09-28 during §MESH-03f, 🟢 one env var per spawn)
+
+- [x] ✅ SHIPPED 2026-10-04 `719b9f4` **§DX-02lv — specs that spawn `wbapi-server.js` without `LEDGER_DIR` persist test player keys into `build/ledger/players.json`.** **Measured 2026-09-28:** that file holds **106** player8 → key entries and was last written during the `npm test` run, not by any play. The server writes it from `playerKeyRegister` whenever a session registers a key, and 15 integration specs spawn the server with no `LEDGER_DIR`, `multiplayer-presence` and `mesh-sentry` among them. The file is gitignored, so nothing shows in `git status`, but the dev server loads it. Every run adds random keys to the id space a real player's `player8` must not collide with, and `keys.json` in the same directory pins server keys the same way. **Fix:** give each spawning spec a scratch `LEDGER_DIR`, or have `helpers.js` supply one as a default spawn env. **Verify:** `players.json` and `keys.json` keep their mtime and byte count across a full `npm test`.
+
+> **Closed 2026-10-04 at `719b9f4`.** **Re-derived:** the row's 15 spawning specs are really 6. The other 8 that name `wbapi-server.js` only read its source. Add the two `.mjs` harnesses and Playwright's own `webServer` on 1367, which `mesh-sentry` writes through. `helpers.js` gains `testLedgerDir()`, one directory per worker under the OS temp dir, so nothing goes in the tree and nothing grows per run. The six specs pass it, the harnesses use their own scratch dir, and the `webServer` entry gets `coc-test-ledger-webserver`. A reused dev server still uses its own ledger, which is its own business. **Before → after:** `multiplayer-presence` + `mesh-sentry` on the old code rewrote `players.json` (**26,796 → 28,263 B**). With the fix, a **full `npm test` in four foreground shards** left `players.json` and `keys.json` at identical mtime and size. That run is **1,368 passed / 8 failed / 0 flaky**: §DX-02ke's seven plus `dx02l-save-snapshots-cli:130`, with `uqf-node-verbs-d3:220` (§DX-02ly) passing this time. `test:help`, `test:write` green; `check:walk` 41/41.
+
+---
+
 ## Archived 2026-10-04 — §DX-02mg (widened: engine readers and writers indexed by enclosing function)
 
 ### §DX-02mg — the editor's flag index sees which quests read and write a flag, and not which engine functions do (NEW 2026-10-04 during §DX-02ao, 🟡 widen the scan universe)
