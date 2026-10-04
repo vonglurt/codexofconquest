@@ -19,6 +19,16 @@
 
 ---
 
+## Archived 2026-10-04 — §CSS-CENSUS-FU (both ratchet tables empty: 82 dead rules deleted, 3 undeclared classes resolved)
+
+### §CSS-CENSUS-FU — 53 dead class selectors and 3 unstyled classes in `play.html`, each named by gate #36 (NEW 2026-09-25 during §CSS-CENSUS, 🟢 delete or style, no design call)
+
+- [x] ✅ SHIPPED 2026-10-04 `3498b7e` **§CSS-CENSUS-FU — empty `check-css-classes.js`'s two ratchet tables.** **`KNOWN_DEAD`, 53 selectors** declared in `<style>` whose names appear nowhere else in `play.html`, including whole families: the retired quest card (`quest-card`, `qc-title`, `qc-obj`, `qc-status-*`), the old minimap (`mmc-*`, `wmc-empty-visited`, `map-cell`, `current-pos`, `path-active`), `sleep-field*`, `rest-chip*`, and the vendor/loot/inn/npc/fish chips. Spot-checked by hand at `8ed4d77`: `quest-card`, `map-cell`, `ds-die` and `npc-chip` occur only inside `<style>` (the one test hit for `map-cell` is `.final-map-cell`). **`KNOWN_UNDECLARED`, 3 classes** applied and never styled: `mc-junction` (minimap junction cells), `norm` (the adv badge's markup default, while the stylesheet keys on `show-norm`), `shield-item` (inventory). **Fix:** delete the dead rules from both the dark and light theme blocks. Watch compound selectors, since `.map-cell.visited` goes with `map-cell`. For each undeclared class, either give it the style its name promises or remove the application. The gate turns each table entry into a stale-known failure as it is fixed, so the tables shrink with the work. **Verify:** both tables empty, gate #36 green, and a screenshot pass on a host with Chromium, because deleting CSS is the one change here a gate cannot see render. **Provenance:** §CSS-CENSUS, whose census found them.
+
+> **Closed 2026-10-04 at `3498b7e`.** A prefix scan of all 41 dead families found no class built by concatenation (`'qc-status-' + s`), so a whole-name census was safe to act on. The two mentions in tests assert absence (`navigation.test.js`'s fog classes) or name a different class (`.final-map-cell`). A rule-aware pass over the `<style>` block removed every rule whose selectors all name a dead class: **82 rules, 101 lines**. No selector list was only partly dead, and no `@media` block emptied. **The three undeclared:** `norm` → the badge's markup default is now `show-norm`, the class its own render sets (base and state both `display:none`). `mc-junction` removed, because 0 of 416 nodes carry `junction:true`. `shield-item` removed rather than styled, since a new colour is a choice nobody has looked at on screen and the class drew nothing. **Before → after:** `KNOWN_DEAD` **53 → 0**, `KNOWN_UNDECLARED` **3 → 0**, gate #36 green. **The render check the row asked for**, by computed style rather than eye: a hash over every element's computed style (4,576 elements) on load, after the renderers run, and under the light theme is **identical before and after**. `play.html` 39,540 → 39,437 lines, badge updated. `check:walk` 42/42; 8 UI spec files 152/152.
+
+---
+
 ## Archived 2026-10-04 — §DX-02ga-FU (check:anchorliterals, gate #42: the write-path simulation by span)
 
 ### §DX-02ga-FU — nothing stops a new doc anchor from quoting a literal the API will re-serialize (NEW 2026-09-28 during §DX-02ga, 🟢 a gate; the rule is decided)
