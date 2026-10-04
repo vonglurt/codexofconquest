@@ -19,6 +19,16 @@
 
 ---
 
+## Archived 2026-10-04 — §DX-02lq (check:nodehomes, gate #43: 293 of 416 live nodes have a home, 123 ratcheted)
+
+### §DX-02lq — 80 live nodes appear in no document except the generated node index, and no gate says so (NEW 2026-09-26 during §DX-02em, 🟡 one design call: which docs count as a node's home, then a ratchet)
+
+- [x] ✅ SHIPPED 2026-10-04 `dadbde5` **§DX-02lq — the detector §DX-02em asked for, measured before building it.** §DX-02em proposed extending `node-index.js --check` to flag any `NODE_MAP` key found in no `.md`. As written it cannot fire: `docs/maps/node-index.md` is generated from `NODE_MAP` and lists every node. **Measured at `571dee3`, word-bounded, over tracked `*.md`:** of **416** live codes, **80** appear nowhere once `node-index.md` is excluded (`ADM ADR ALE AMD AMY ARB ARD ASH BAS BGC BOLSAC BRC …`). **271** appear in none of `docs/design`, `docs/world`, `docs/story` or `docs/mechanics`, so many live only in lab reports and backlog rows. §DX-02em took the five §KG codes off both lists. **The call:** which roots count as a home (all docs except the generated index, or only the maintained design/world/story/mechanics set), and whether the gate is a ratchet on today's list or waits for a sweep. **Recommendation:** all tracked docs except `node-index.md` and the backlog/archive records, with a ratchet list of today's absentees that may only shrink, like gate #40's `historical-hashes.txt`. **Provenance:** §DX-02em, 2026-09-26.
+
+> **Closed 2026-10-04 at `dadbde5`, the row's recommendation taken (🟡, decided here).** **Homes:** every tracked `*.md` except the generated `docs/maps/node-index.md` and the backlog/archive records (`docs/backlog/`, `docs/archive/`). A node a backlog row once mentioned has still never been described. **Re-measured at HEAD** (word-bounded, case-sensitive): **416** live codes. **69** appear in no tracked doc except the index (the row's 80 at `571dee3` has shrunk since). **123** appear in no home under the chosen rule; the extra 54 are named only in backlog rows. **The gate:** `src/scripts/check-node-homes.js`, `check:walk` gate #43, with a ratchet list `src/scripts/undocumented-nodes.txt` of those 123, the same shape as gate #40's `historical-hashes.txt`. The list only shrinks: a listed code a doc now names, or one `NODE_MAP` no longer has, is a finding. A new node needs a doc line, not a list line. **Verified:** selftest 10/10 (absent, listed-allowed, listed-documented, listed-gone, word boundaries, the excluded roots, an empty load); dropping one code from the list fails the gate with that code named; `check:walk` **43/43**. **Left for later:** shrinking the list is content work, a node at a time, in the region or story doc where each belongs. No row is filed for it, because the gate's own list is the work queue. `npm test` was not rerun: nothing it loads changed.
+
+---
+
 ## Archived 2026-10-04 — §DX-02lr (prompt.md §7 names the per-host rule and points at §DX-02ke; three dated baseline claims → 0)
 
 ### §DX-02lr — `prompt.md` §7 *"Verify — tests and the known baseline"* describes one host's baseline from August (NEW 2026-09-26 during §DX-02ec, 🟡 rewrite or point away)

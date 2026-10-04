@@ -43,10 +43,6 @@
 ---
 ## §BACKLOG — Open Items (Phase 6)
 
-### §DX-02lq — 80 live nodes appear in no document except the generated node index, and no gate says so (NEW 2026-09-26 during §DX-02em, 🟡 one design call: which docs count as a node's home, then a ratchet)
-
-- [ ] **§DX-02lq — the detector §DX-02em asked for, measured before building it.** §DX-02em proposed extending `node-index.js --check` to flag any `NODE_MAP` key found in no `.md`. As written it cannot fire: `docs/maps/node-index.md` is generated from `NODE_MAP` and lists every node. **Measured at `571dee3`, word-bounded, over tracked `*.md`:** of **416** live codes, **80** appear nowhere once `node-index.md` is excluded (`ADM ADR ALE AMD AMY ARB ARD ASH BAS BGC BOLSAC BRC …`). **271** appear in none of `docs/design`, `docs/world`, `docs/story` or `docs/mechanics`, so many live only in lab reports and backlog rows. §DX-02em took the five §KG codes off both lists. **The call:** which roots count as a home (all docs except the generated index, or only the maintained design/world/story/mechanics set), and whether the gate is a ratchet on today's list or waits for a sweep. **Recommendation:** all tracked docs except `node-index.md` and the backlog/archive records, with a ratchet list of today's absentees that may only shrink, like gate #40's `historical-hashes.txt`. **Provenance:** §DX-02em, 2026-09-26.
-
 ### §DX-02lp — the 460 historical hashes could be mapped to live commits, and the rewrite left a key for part of it (NEW 2026-09-26 during §DX-02lo, 🟡 do it only when someone needs the old commits)
 
 - [ ] **§DX-02lp — option (a) of §DX-02lo, deferred there: annotate each pre-rewrite citation as `` `new` (was `old`) `` and delete its line from `src/scripts/historical-hashes.txt`.** Gate #40 `check:hashes` then ratchets the list down, since a listed hash nothing cites is a finding. **What §DX-02lo learned that makes this cheaper than it looked:** the 2026-08-23 rewrite remapped every hash inside a commit *message* and no file contents. So a pre-rewrite *"record the ship hash X"* commit carries the new hash in its subject and the old one in its diff. Of the 54 such commits, **14** add exactly one dead stamp and are clean old→new pairs, for example `0f5ebe0`: message `72e9d7d`, diff `3d0ab1d`. The rest add up to 86 dead hashes each, because they rewrite whole tables. For the remainder, a `SHIPPED <date> `old`` stamp names its row, and the ship commit is the one whose subject carries that row on that date: `git log --format='%h %ad %s' --date=short | grep '§ROW'`. **Measure first:** how many of the 460 sit in a `SHIPPED` stamp (275 stamps matched in all, dead and live), and how many resolve to exactly one commit by row and date. **Why 🟡:** 313 of the citations are in `plan-archive.md`, a record, so the value is only to someone running `git show` on an old row. **Provenance:** §DX-02lo, 2026-09-26.
@@ -660,6 +656,6 @@
 
 ## §RESUME — Phase 6 history
 
-> **Completed work is not carried here.** The 102 closed increments for this phase are condensed in **[`../archive/backlog-resume-history.md`](../archive/backlog-resume-history.md)**; full prose for recent closes is in [`plan-archive.md`](plan-archive.md). This file carries open rows only.
+> **Completed work is not carried here.** The 103 closed increments for this phase are condensed in **[`../archive/backlog-resume-history.md`](../archive/backlog-resume-history.md)**; full prose for recent closes is in [`plan-archive.md`](plan-archive.md). This file carries open rows only.
 
 > When an increment ships: write the full entry into `plan-archive.md`, add its one-line row to `../archive/backlog-resume-history.md` and to the cross-phase table in [`BACKLOG.md`](BACKLOG.md), and delete the row from this file.
