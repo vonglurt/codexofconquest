@@ -656,4 +656,4 @@ function main() {
 }
 
 if (require.main === module) main();
-module.exports = { gateReads, scanFlagWrites, selfDeadlocks, startFlagsFromDefaults, KNOWN_UNWRITTEN_FLAG, KNOWN_SELF_DEADLOCK };
+module.exports = { gateReads, questWrites, scanFlagWrites, selfDeadlocks, startFlagsFromDefaults, KNOWN_UNWRITTEN_FLAG, KNOWN_SELF_DEADLOCK };

@@ -898,6 +898,7 @@ function respliceSection(rawSrc, sectionName, newContent) {
 // navigate / kill_at / …) is retired — those kinds never had runtime handlers.
 // ═══════════════════════════════════════════════════════════════════════════
 const { BIT_CONTRACTS } = require('./quest');
+const QG = require('../scripts/check-questgraph.js');
 const NOT_AUTHORABLE = ['_legacy_fn'];
 const OPERAND_PROSE = {
   skill_check: { gate:'resolved via the quest roll card', complete:'pass → status done + onPass bits; fail → onFail bits' },
@@ -1014,7 +1015,7 @@ const WBAPI = {
   conditionItems: [],
   _terrainToMonsters: {}, _monsterToTerrains: {},
   _questsByNode: {}, _questsByNpc: {}, _questsByWaypoint: {},
-  _questFlags: {}, _flagToQuests: {}, _questArcs: {},
+  _questFlags: {}, _flagToQuests: {}, _questSeq: {}, _questArcs: {},
   _rawQuestSrc: '',
   _rawSrc: null,
   _srcPath: null,
@@ -1110,16 +1111,31 @@ const WBAPI = {
       }
     }
     for (const code of Object.keys(_byNodeSets)) this._questsByNode[code] = [..._byNodeSets[code]];
-    this._questFlags = {}; this._flagToQuests = {};
+    this._questFlags = {}; this._flagToQuests = {}; this._questSeq = {};
     if (this._rawQuestSrc) {
       for (const { id, src } of this._splitQuestBlocks(this._rawQuestSrc)) {
         const reads = new Set(), writes = new Set();
         for (const m of src.matchAll(/S_story\.(\w+)\s*[^=!<>]/g)) if (m[1]!=='active') reads.add(m[1]);
         for (const m of src.matchAll(/S_story\.(\w+)\s*=/g)) writes.add(m[1]);
         this._questFlags[id] = { reads, writes };
-        for (const f of reads) { if (!this._flagToQuests[f]) this._flagToQuests[f]={reads:[],writes:[]}; this._flagToQuests[f].reads.push(id); }
-        for (const f of writes) { if (!this._flagToQuests[f]) this._flagToQuests[f]={reads:[],writes:[]}; this._flagToQuests[f].writes.push(id); }
       }
+    }
+    const seq = id => this._questSeq[id] || (this._questSeq[id] = { upstream:new Set(), downstream:new Set() });
+    for (const [id, q] of Object.entries(this.questDb)) {
+      if (!q || typeof q !== 'object') continue;
+      const fl = this._questFlags[id] || (this._questFlags[id] = { reads:new Set(), writes:new Set() });
+      for (const tree of [q.gate, q.completion]) {
+        const r = QG.gateReads(tree, { flags:new Set(), quests:new Set(), battles:new Set(), resources:new Set() });
+        for (const f of r.flags) fl.reads.add(f);
+        for (const qq of r.quests) if (qq !== id) { seq(id).upstream.add(qq); seq(qq).downstream.add(id); }
+      }
+      const w = QG.questWrites(q, {}, [], [], []);
+      for (const f of w.flags) fl.writes.add(f);
+      for (const qq of w.quests) if (qq !== id) { seq(id).downstream.add(qq); seq(qq).upstream.add(id); }
+    }
+    for (const [id, { reads, writes }] of Object.entries(this._questFlags)) {
+      for (const f of reads) { if (!this._flagToQuests[f]) this._flagToQuests[f]={reads:[],writes:[]}; this._flagToQuests[f].reads.push(id); }
+      for (const f of writes) { if (!this._flagToQuests[f]) this._flagToQuests[f]={reads:[],writes:[]}; this._flagToQuests[f].writes.push(id); }
     }
     this._questArcs = {};
     for (const id of Object.keys(this.questDb)) {
@@ -1167,7 +1183,7 @@ const WBAPI = {
         npcs:   WBAPI.npcs.byNode(key).map(n => n.key),
       };
     },
-    quest(id) { return { downstream: WBAPI.quests.chain(id).downstream }; },
+    quest(id) { const c=WBAPI.quests.chain(id); return { downstream: [...new Set([...c.downstream, ...c.sequence.downstream])] }; },
     monster(key) {
       return { terrains: Object.entries(WBAPI.worldDb)
         .filter(([,t]) => (t.monsters||[]).some(m=>(typeof m==='string'?m:m?.key)===key))
@@ -1441,11 +1457,13 @@ const WBAPI = {
     byClass(cls){ return WBAPI.quests.all().filter(q=>_classifyQuest(q)===cls); },
     flags(id)   { return WBAPI._questFlags[id]||{reads:new Set(),writes:new Set()}; },
     chain(id) {
-      const flags=WBAPI._questFlags[id]; if(!flags) return {upstream:[],downstream:[]};
+      const flags=WBAPI._questFlags[id], s=WBAPI._questSeq[id];
+      const sequence={upstream:s?[...s.upstream]:[],downstream:s?[...s.downstream]:[]};
+      if(!flags) return {upstream:[],downstream:[],sequence};
       const up=new Set(), dn=new Set();
       for(const f of flags.reads) for(const qid of (WBAPI._flagToQuests[f]||{}).writes||[]) up.add(qid);
       for(const f of flags.writes) for(const qid of (WBAPI._flagToQuests[f]||{}).reads||[]) dn.add(qid);
-      up.delete(id); dn.delete(id); return {upstream:[...up],downstream:[...dn]};
+      up.delete(id); dn.delete(id); return {upstream:[...up],downstream:[...dn],sequence};
     },
     arcs() { return Object.keys(WBAPI._questArcs); },
     get(idOrTitle) {
