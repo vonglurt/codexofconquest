@@ -45,10 +45,6 @@
 ---
 ## §BACKLOG — Open Items (Phase 5)
 
-### §DX-02mf — `edit.html` still tells the author to save by hand in two places (NEW 2026-10-04 during §DX-02me, 🟢 strings)
-
-- [ ] **§DX-02mf — §DX-02md cleaned the server's help; the editor has its own copies.** Measured 2026-10-04: the d100 table's PUT reports *"✓ Saved — POST /api/save to persist"*, and the Endpoints tab lists `POST /api/save` as *"Write all in-memory data to disk"*. The PUT has already saved, and the save route now writes a dated copy, not pending changes. **Fix:** the d100 status says *"✓ Saved"*. The Endpoints entry describes what the route does today: a dated backup beside the file, reloaded under the §DX-02fj guard. The Server-mode save button at the `// Server mode: POST /api/save` comment is a deliberate snapshot action and stays. **Verify:** no editor string tells the author a write needs a separate save.
-
 ### §DX-02lz — ledger sync and trade relay still require equal `worldHash`, so two servers with different quests can meet but never trade (NEW 2026-09-29 during the §DX-02cq close, 🟡 blocked behind §MESH-03e-FU)
 
 - [ ] **§DX-02lz — let content-divergent servers trade once a mint can be bounded.** **Measured at `9223207`:** `ledger/sync` and `trade/relay` refuse a body whose `worldHash` differs (409 `incompatible`, both beside their `meshRateAllows` checks in `wbapi-server.js`). `meshIngest` starts `ledgerSyncWith` only when `p.worldHash === m.worldHash`. So §MESH-03c's split reaches presence and chat only: two friends who each add a quest see each other, but a ⇄ offer between them relays to a 409, and their item ledgers never converge. **Why it waits:** `worldHash` still covers `QUEST_DB` and `MONSTER_POOL`, so the gate is what keeps one world's reward table from spending in another. §MESH-03e already tags pack items with their pack and holds them until the pack arrives, but a mint is authorized by nothing (§MESH-03e-FU). **Change, after §MESH-03e-FU:** gate ledger and trade on `universeHash`, and hold or refuse a pack-tagged mint by §MESH-03e's rules. **Verify:** two servers that share a universe and differ in one pack complete a ⇄ trade of a base-content item, and each ledger holds it.
@@ -151,6 +147,6 @@
 
 ## §RESUME — Phase 5 history
 
-> **Completed work is not carried here.** The 121 closed increments for this phase are condensed in **[`../archive/backlog-resume-history.md`](../archive/backlog-resume-history.md)**; full prose for recent closes is in [`plan-archive.md`](plan-archive.md). This file carries open rows only.
+> **Completed work is not carried here.** The 122 closed increments for this phase are condensed in **[`../archive/backlog-resume-history.md`](../archive/backlog-resume-history.md)**; full prose for recent closes is in [`plan-archive.md`](plan-archive.md). This file carries open rows only.
 
 > When an increment ships: write the full entry into `plan-archive.md`, add its one-line row to `../archive/backlog-resume-history.md` and to the cross-phase table in [`BACKLOG.md`](BACKLOG.md), and delete the row from this file.

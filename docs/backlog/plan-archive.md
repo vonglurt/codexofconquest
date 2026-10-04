@@ -19,6 +19,16 @@
 
 ---
 
+## Archived 2026-10-04 — §DX-02mf (no editor string says a write needs a separate save)
+
+### §DX-02mf — `edit.html` still tells the author to save by hand in two places (NEW 2026-10-04 during §DX-02me, 🟢 strings)
+
+- [x] ✅ SHIPPED 2026-10-04 `c214ed9` **§DX-02mf — §DX-02md cleaned the server's help; the editor has its own copies.** Measured 2026-10-04: the d100 table's PUT reports *"✓ Saved — POST /api/save to persist"*, and the Endpoints tab lists `POST /api/save` as *"Write all in-memory data to disk"*. The PUT has already saved, and the save route now writes a dated copy, not pending changes. **Fix:** the d100 status says *"✓ Saved"*. The Endpoints entry describes what the route does today: a dated backup beside the file, reloaded under the §DX-02fj guard. The Server-mode save button at the `// Server mode: POST /api/save` comment is a deliberate snapshot action and stays. **Verify:** no editor string tells the author a write needs a separate save.
+
+> **Closed 2026-10-04 at `c214ed9`.** The d100 PUT status says *"✓ Saved"*, and the Endpoints tab describes `POST /api/save` as a dated backup beside the game file, reloaded under the empty-section guard. The Server-mode snapshot button stays, since taking a dated copy is its purpose. **Before → after:** the two strings **2 → 0**. `check:walk` 41/41. The three specs touching those panels: 104 passed, 1 failed, `dx02l-save-snapshots-cli:130`, which is in this host's recorded baseline.
+
+---
+
 ## Archived 2026-10-04 — §DX-02me (the Wizard's bodies follow the repo's own shapes; one builder for review and Create)
 
 ### §DX-02me — the Wizard's Create button sends node and quest bodies the server refuses (NEW 2026-10-04 during §DX-02ap, 🟡 map the Wizard's fields onto the shapes the server writes)
