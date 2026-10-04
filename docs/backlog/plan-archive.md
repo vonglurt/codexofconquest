@@ -19,6 +19,16 @@
 
 ---
 
+## Archived 2026-10-04 — §DX-02lr (prompt.md §7 names the per-host rule and points at §DX-02ke; three dated baseline claims → 0)
+
+### §DX-02lr — `prompt.md` §7 *"Verify — tests and the known baseline"* describes one host's baseline from August (NEW 2026-09-26 during §DX-02ec, 🟡 rewrite or point away)
+
+- [x] ✅ SHIPPED 2026-10-04 `2c08614` **§DX-02lr — the section an author reads before verifying content still lists "known pre-existing baseline reds" from 2026-07/08, and the suite now has two baselines.** §DX-02ec took the gate count out of it (16 against 40 real). What remains: a list of named reds and retirements (`worldbuilder-crud-arrays.test.js` **4/6**, `quest-runtime-uqf.test.js` *"fully green, no known red"*), each true for one host on one day. §DX-02ke records that the host that runs Chromium reports **7** reds, and the host that cannot run it reports 2 real reds under 1,086 launch failures. A reader following §7 on either host would misread its own run. **The call:** rewrite §7 to name commands and the per-host rule (as `AGENTS.md` does), or cut the baseline list and point at §DX-02ke. **Recommendation:** the second: one sentence, which cannot go stale. **Provenance:** §DX-02ec, 2026-09-26.
+
+> **Closed 2026-10-04 at `2c08614`, the row's recommendation taken (🟡, decided here).** Measured at HEAD before the change, §7 carried three host-and-day claims: *"935 passed / 4 failed"* (2026-08-06), `worldbuilder-crud-arrays.test.js` **4/6**, and `quest-runtime-uqf.test.js` *"fully green, no known red"*. The last was **false on the host that launches Chromium**, where four of §DX-02ke's seven reds live in that file. The command block also still said *"16 world-invariant CI gates"* against 42. **After:** one paragraph says `check:walk` has no baseline (every gate green, the `✓ N/N` line is the verdict) and the Playwright baseline is per host, and points at §DX-02ke and the newest full-suite §RESUME entry. **Dated baseline claims in §7: 3 → 0.** The heading now reads *"tests and the per-host baseline"*. The long descriptions of gates #11–#16 are design knowledge, not a baseline, so they stay, under *"What the older gates check"*. The retired-red footnotes (§DX-02l-FU, §DX-02e, §DX-02f) are cut; each lives in its own archived row. `dx02l-save-snapshots-cli`'s comment that names prompt.md §7 is history and asserts nothing about its text. `check:walk` 42/42. The change is docs-only, so the suite was not rerun.
+
+---
+
 ## Archived 2026-10-04 — §DX-02lu (the harness held every server to the end, 5.7 GB by [Q]; each section now retires its own)
 
 ### §DX-02lu — `test:mud` dies in [Q] on the 6 GB musl host, at HEAD as well, so [Q] and [R] go unchecked there (NEW 2026-09-28 during §MESH-03c, 🟡 find the cause, then lighten the harness or declare the host)
