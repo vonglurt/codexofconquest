@@ -19,6 +19,18 @@
 
 ---
 
+## Archived 2026-10-04 — §DX-02lu (the harness held every server to the end, 5.7 GB by [Q]; each section now retires its own)
+
+### §DX-02lu — `test:mud` dies in [Q] on the 6 GB musl host, at HEAD as well, so [Q] and [R] go unchecked there (NEW 2026-09-28 during §MESH-03c, 🟡 find the cause, then lighten the harness or declare the host)
+
+- [x] ✅ SHIPPED 2026-10-04 `0e2bbe5` **§DX-02lu — the MUD harness exits `✗ test server failed to start on 13718` (or `13719`) partway through [Q], the ACL-template / tracker-cache section.** **Measured 2026-09-28** at `cad9487` (HEAD, stashed) and at `64d93ff`: 253 and 260 checks green respectively, then the boot failure, and nothing after it runs. That is [Q]'s remainder and all of [R] (§MESH-02a ACL editor endpoints). **Not a slow boot:** raising the harness's 8 s ping deadline to 30 s fails the same way, and the same tracker env boots alone in 1.5 s. The server's stderr is empty. The host has 4 cores and 5.9 GB of RAM with 0.8 GB swapped, and it now runs Chromium on its desktop; by [Q] the harness has spawned about 38 servers, each holding the 5 MB game file. **Suspected:** memory, or a server that dies after the 500 ms exit window, which `startServer` stops watching. **Next:** log `proc.exitCode` and `free` at the failure, then either stop each section's servers when the section ends or record the host's ceiling beside §DX-02ke's baseline. **Provenance:** §MESH-03c, whose [E] cases passed and whose [Q]/[R] exposure (ACL matching) went unrun.
+
+> **Measured again 2026-09-28 at `d2f9299` (loop 20):** `npm run test:mud` ran to the end, every check ✓ including [Q], with no other browser or server running. So the death is intermittent, or it depends on what else holds memory. Record free memory beside the next reproduction.
+
+> **Closed 2026-10-04 at `0e2bbe5`: it was memory, and the harness was the one holding it.** A probe at the [Q] header, on an otherwise idle host (4,308 MB free at start), read **37 of 37 servers live, 5,699 MB RSS between them, 615 MB free**. Each `wbapi-server` child holds about 154 MB, mostly the parsed game file, and `startServer` keeps every one until `stopAllServers` at exit. Only four were ever stopped early. With Chromium on the desktop the margin is gone, and that is the loop-20 measurement's "passes with nothing else running". **The fix:** `retire(...srvs)` sends SIGTERM and awaits the exit. It is called before each section header for the servers whose last use was in the section that just ended, mapped from each variable's last reference (the four unnamed spawns got names so they could be retired). **After:** at [L] 2 live of 20, at [Q] **2 live of 37, 439 MB, 4,551 MB free**, at [R] 1 live of 42. **The same 289 checks pass, line for line identical to the run before the change**, and none fail. A boot failure now prints the child's exit code and signal, the live server count and free memory, so a death from another cause will say what it was. **Not rerun:** `npm test`, which never loads the harness (four specs name it only in comments); the full suite at `2c590f8` is the standing measurement. `check:walk` 42/42.
+
+---
+
 ## Archived 2026-10-04 — §DX-02ly + §DX-02lt (one cause: a delayed onActivate line overwrote the click's message; `_storyMsgLater` drops it once anything newer is on the strip)
 
 ### §DX-02ly — `uqf-node-verbs-d3.test.js:220` failed twice in a full run, reading another quest's dialogue where the delivery's narrative should be (NEW 2026-09-28 during the loop-20 full suite, 🟡 find the second writer)

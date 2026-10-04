@@ -43,12 +43,6 @@
 ---
 ## §BACKLOG — Open Items (Phase 6)
 
-### §DX-02lu — `test:mud` dies in [Q] on the 6 GB musl host, at HEAD as well, so [Q] and [R] go unchecked there (NEW 2026-09-28 during §MESH-03c, 🟡 find the cause, then lighten the harness or declare the host)
-
-- [ ] **§DX-02lu — the MUD harness exits `✗ test server failed to start on 13718` (or `13719`) partway through [Q], the ACL-template / tracker-cache section.** **Measured 2026-09-28** at `cad9487` (HEAD, stashed) and at `64d93ff`: 253 and 260 checks green respectively, then the boot failure, and nothing after it runs. That is [Q]'s remainder and all of [R] (§MESH-02a ACL editor endpoints). **Not a slow boot:** raising the harness's 8 s ping deadline to 30 s fails the same way, and the same tracker env boots alone in 1.5 s. The server's stderr is empty. The host has 4 cores and 5.9 GB of RAM with 0.8 GB swapped, and it now runs Chromium on its desktop; by [Q] the harness has spawned about 38 servers, each holding the 5 MB game file. **Suspected:** memory, or a server that dies after the 500 ms exit window, which `startServer` stops watching. **Next:** log `proc.exitCode` and `free` at the failure, then either stop each section's servers when the section ends or record the host's ceiling beside §DX-02ke's baseline. **Provenance:** §MESH-03c, whose [E] cases passed and whose [Q]/[R] exposure (ACL matching) went unrun.
-
-> **Measured again 2026-09-28 at `d2f9299` (loop 20):** `npm run test:mud` ran to the end, every check ✓ including [Q], with no other browser or server running. So the death is intermittent, or it depends on what else holds memory. Record free memory beside the next reproduction.
-
 ### §DX-02lr — `prompt.md` §7 *"Verify — tests and the known baseline"* describes one host's baseline from August (NEW 2026-09-26 during §DX-02ec, 🟡 rewrite or point away)
 
 - [ ] **§DX-02lr — the section an author reads before verifying content still lists "known pre-existing baseline reds" from 2026-07/08, and the suite now has two baselines.** §DX-02ec took the gate count out of it (16 against 40 real). What remains: a list of named reds and retirements (`worldbuilder-crud-arrays.test.js` **4/6**, `quest-runtime-uqf.test.js` *"fully green, no known red"*), each true for one host on one day. §DX-02ke records that the host that runs Chromium reports **7** reds, and the host that cannot run it reports 2 real reds under 1,086 launch failures. A reader following §7 on either host would misread its own run. **The call:** rewrite §7 to name commands and the per-host rule (as `AGENTS.md` does), or cut the baseline list and point at §DX-02ke. **Recommendation:** the second: one sentence, which cannot go stale. **Provenance:** §DX-02ec, 2026-09-26.
@@ -670,6 +664,6 @@
 
 ## §RESUME — Phase 6 history
 
-> **Completed work is not carried here.** The 100 closed increments for this phase are condensed in **[`../archive/backlog-resume-history.md`](../archive/backlog-resume-history.md)**; full prose for recent closes is in [`plan-archive.md`](plan-archive.md). This file carries open rows only.
+> **Completed work is not carried here.** The 101 closed increments for this phase are condensed in **[`../archive/backlog-resume-history.md`](../archive/backlog-resume-history.md)**; full prose for recent closes is in [`plan-archive.md`](plan-archive.md). This file carries open rows only.
 
 > When an increment ships: write the full entry into `plan-archive.md`, add its one-line row to `../archive/backlog-resume-history.md` and to the cross-phase table in [`BACKLOG.md`](BACKLOG.md), and delete the row from this file.
