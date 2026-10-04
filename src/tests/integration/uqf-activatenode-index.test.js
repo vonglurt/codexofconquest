@@ -93,4 +93,42 @@ test.describe('§VM-01-F-FU — the activateNode index', () => {
     expect(r.atNode).not.toContain('__ffu_epic');
     expect(r.inAnyBucket).toBe(false);
   });
+
+  // 5. A real worldbuilder patch: edit.html's emitter deletes one quest, adds another at the same
+  //    node and retargets a third in one applyPatch, which keeps QUEST_DB's entry count unchanged.
+  async function emitQuestSwap(page) {
+    await page.goto('/play.html');
+    const ids = await page.evaluate(() => {
+      const counts = {};
+      for (const q of Object.values(QUEST_DB))
+        if (q && q.type !== 'epic' && q.activateNode) counts[q.activateNode] = (counts[q.activateNode] || 0) + 1;
+      const node = Object.entries(counts).sort((a, b) => b[1] - a[1])[0][0];
+      const [gone, moved] = _questsByNode(node).map(q => q.id);
+      return { node, gone, moved, npc: Object.keys(BIRKA_NPC_PROFILES)[0] };
+    });
+    expect(ids.gone && ids.moved && ids.npc).toBeTruthy();
+    await page.goto('/edit.html');
+    const src = await page.evaluate(({ node, gone, moved, npc }) => {
+      DIFF.delSection('QUEST_DB', gone);
+      DIFF.recordSection('QUEST_DB', '__eb_new', 'added', { id: '__eb_new', schema: 'UQF-1.0',
+        title: 'EB New', activateNode: node, gate: {}, bits: [] });
+      DIFF.recordSection('QUEST_DB', moved, 'modified', { activateNode: 'ZZZ_EB' });
+      DIFF.recordSection('BIRKA_NPC', npc, 'modified', { occupation: 'EB occupation' });
+      return DIFF.patch();
+    }, ids);
+    await page.goto('/play.html');
+    return { ...ids, src };
+  }
+
+  test('an emitted worldbuilder patch runs in the game and applies every change', async ({ page }) => {
+    const p = await emitQuestSwap(page);
+    const r = await page.evaluate(({ src, gone, moved, npc }) => {
+      const before = Object.keys(QUEST_DB).length;
+      (0, eval)(src);
+      return { countKept: Object.keys(QUEST_DB).length === before, gone: gone in QUEST_DB,
+        added: QUEST_DB.__eb_new && QUEST_DB.__eb_new.title, moved: QUEST_DB[moved].activateNode,
+        npc: BIRKA_NPC_PROFILES[npc].occupation };
+    }, p);
+    expect(r).toEqual({ countKept: true, gone: false, added: 'EB New', moved: 'ZZZ_EB', npc: 'EB occupation' });
+  });
 });

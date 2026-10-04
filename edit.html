@@ -2499,7 +2499,7 @@ const DIFF = {
     const lines = [`// Codex of Conquest World Builder Patch — ${ts}`];
 
     // NODE_MAP
-    lines.push('(function applyPatch(NODE_MAP, QUEST_DB, MONSTER_POOL, BIRKA_NPC){');
+    lines.push('(function applyPatch(NODE_MAP, QUEST_DB, MONSTER_POOL, BIRKA_NPC_PROFILES){');
     for (const c of DIFF.deleted) lines.push(`  delete NODE_MAP['${c}'];`);
     for (const [c,fields] of Object.entries(DIFF.modified))
       for (const [f,{new:v}] of Object.entries(fields))
@@ -2508,7 +2508,7 @@ const DIFF = {
       lines.push(`  NODE_MAP['${c}'] = ${JSON.stringify(n,null,4).replace(/\n/g,'\n  ')};`);
 
     // Section patches
-    const sectionVar = { QUEST_DB:'QUEST_DB', MONSTER_POOL:'MONSTER_POOL', BIRKA_NPC:'BIRKA_NPC' };
+    const sectionVar = { QUEST_DB:'QUEST_DB', MONSTER_POOL:'MONSTER_POOL', BIRKA_NPC:'BIRKA_NPC_PROFILES' };
     for (const [sec, s] of Object.entries(DIFF.sections)) {
       const v = sectionVar[sec];
       for (const k of s.deleted) lines.push(`  delete ${v}['${k}'];`);
@@ -2519,7 +2519,7 @@ const DIFF = {
         lines.push(`  ${v}['${k}'] = ${JSON.stringify(data,null,4).replace(/\n/g,'\n  ')};`);
     }
 
-    lines.push(`})(NODE_MAP, QUEST_DB, MONSTER_POOL, BIRKA_NPC);`);
+    lines.push(`})(NODE_MAP, QUEST_DB, MONSTER_POOL, BIRKA_NPC_PROFILES);`);
     return lines.join('\n');
   },
 
