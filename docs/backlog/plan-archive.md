@@ -19,6 +19,16 @@
 
 ---
 
+## Archived 2026-10-04 — §DX-02me (the Wizard's bodies follow the repo's own shapes; one builder for review and Create)
+
+### §DX-02me — the Wizard's Create button sends node and quest bodies the server refuses (NEW 2026-10-04 during §DX-02ap, 🟡 map the Wizard's fields onto the shapes the server writes)
+
+- [x] ✅ SHIPPED 2026-10-04 `00efb39` **§DX-02me — `wizCreate` posts `terrain`, `startText`, `missionBitKey` and `retryGateDays:0`.** Measured 2026-10-04: the node body carries `terrain`, which `NODE_CREATE_FIELDS` does not hold (the terrain field is `name`), so `POST /api/node` answers 400 under §DX-02lc-FU. The quest body carries `startText` and `missionBitKey`, which **0 of 2,853** quests carry, so `POST /api/quest` answers 400 under §DX-02lc. `retryGateDays:0` is the value §DX-02ee swept out of the corpus. The review block (§DX-02ap) mirrors these bodies line for line, so its `./bin/api post` lines are refused too. **Decide:** `terrain` → `name` is mechanical. `startText` has no UQF field (`desc` or a `narrative` bit?), and `missionBitKey` should become a `mission_bit` bit in `bits`, as the §EDITOR-02 Mission tab emits. **Verify:** a scratch-server spec that runs the Wizard end to end and reads the node and quest back off disk.
+
+> **Closed 2026-10-04 at `00efb39` — the mapping, decided (🟡) from in-repo conventions.** One `wizBodies()` builds all three bodies for both the review block and Create, so they cannot diverge. **Node:** `terrain` → `name`. **Quest:** `startText` → `desc`, which the create *requires* (422 without it), so that call made itself; `schema:'UQF-1.0'`, `gate:{}`, and `completion:{atNode}`, the Mission compiler's rule for a quest with no authored completion. `missionBitKey` → a `mission_bit` bit `{flag, label}` (the contract's only fields). `retryGateDays:0` dropped (§DX-02ee); `retryable` sent only when true. **Wider than the row: the monster body was refused too.** `dmg`, `xp`, `cr` and `desc` are carried by 0 monsters, and `tier` went as a number. Now `dmgDie` with `dmgCount:1, dmgFlat:0`, and `tier` comes from a select of the five names. The XP, CR, monster Description and token Description inputs stored nowhere and are removed. Create no longer calls `POST /api/save` or says to restart. Quest `type` is left as authored: type checks are audit warnings, not refusals, and the list is §DX-02jj's open question. **Before → after:** `dx02me-wizard-bodies.test.js` fills the Wizard, runs the review's three `./bin/api post` lines against a scratch server (new `wizard` port block) and reads node, monster and quest back off disk. On the previous `edit.html` the node line is refused; now all three land with every field. `check:walk` 41/41; editor specs 156/156. **Found on the path:** two editor strings still say to save by hand, filed as §DX-02mf.
+
+---
+
 ## Archived 2026-10-04 — §DX-02ap (the Wizard's review emits ./bin/api post lines)
 
 ### §DX-02ap — the authoring tool hands the author a runnable raw-`curl` sequence (NEW 2026-08-12 during §DOC-02ae, split from §DX-02ao's section at close)
