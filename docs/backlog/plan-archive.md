@@ -19,6 +19,16 @@
 
 ---
 
+## Archived 2026-10-04 — §DX-02md (no help text or route tells the author to save by hand)
+
+### §DX-02md — three server help texts and one route still tell the author to run `POST /api/save` by hand (NEW 2026-10-04 during §DX-02bp, 🟢 strings, plus one route's answer)
+
+- [x] ✅ SHIPPED 2026-10-04 `4f98e1a` **§DX-02md — every mutating route autosaves (§DX-02gz), and the help still says to save.** Measured 2026-10-04 in `src/js/wbapi-server.js`: the `coords` help topic's placement workflow ends *"4. POST /api/save"*; the write-endpoints header reads *"All mutate play.html. Run POST /api/save after."*; an import help line says to write changes *"back into the HTML file via POST /api/save"*; and one GET route both logs and answers `{ note: 'Use POST /api/save to write all pending changes to disk' }`. `AGENTS.md` calls a route that tells you to save by hand a defect. The `saveStamped` comment and the snapshots comment describe what `POST /api/save` does and are correct. **Fix:** delete the save step from the three help texts, and have the route say nothing is pending (or name what is). **Verify:** `grep -c "POST /api/save"` counts only the two descriptive comments and the route's own help entry.
+
+> **Closed 2026-10-04 at `4f98e1a`.** The architecture note, the write-endpoints header and the coords placement workflow now say each write saves before it answers, and the workflow's step 4 is gone. `GET /api/diff` answers `{ pending: 0, note }` with that reason; nothing reads it. `grep -c "POST /api/save"` in `wbapi-server.js`: **7 → 2**, both comments describing what the save route does. The verify clause had also counted the route's own help entry, but there is none to count. `check:walk` 41/41, `test:write` and `test:help` green. **Found on the path:** the first full `test:help` run of the loop failed `[location/depth]`, a regression from §DX-02ar, fixed at `fe39bf6` and recorded in §DX-02ar's archive entry.
+
+---
+
 ## Archived 2026-10-04 — §DX-02bp (sharing a held cell is opt-in; a refused placement writes nothing)
 
 ### §DX-02bp — `POST /api/node` returns 201 for a node it silently refused to place, and the collision rule contradicts the data model (NEW 2026-08-13 during §DOC-02az, 🟡 small design call)
