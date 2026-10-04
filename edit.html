@@ -7828,7 +7828,10 @@ window._onServerActivated = () => {
     const monKey   = WIZ.mon.existing || $w('wiz-mon-existing').value.trim() || $w('wiz-mon-key').value.trim();
 
     const sections = [];
-    const curlLines = [];
+    const cliLines = [];
+    const shq = v => `'${String(v).replace(/'/g, `'\\''`)}'`;
+    const cliPost = (type, body) => `./bin/api post ${type} ` +
+      Object.entries(body).map(([k, v]) => `${k}=${shq(JSON.stringify(v))}`).join(' ');
 
     // Token section
     if (bitKey) {
@@ -7853,7 +7856,7 @@ window._onServerActivated = () => {
           code: `POST /api/node\n${JSON.stringify({code,label,act:Number(act)||1,terrain:ter,text:desc},null,2)}`,
           note: 'Creates a new map node.',
         });
-        curlLines.push(`curl -s -X POST ${FS_API}/node -H 'Content-Type: application/json' -d '${body}'`);
+        cliLines.push(cliPost('node', JSON.parse(body)));
       }
     }
 
@@ -7876,7 +7879,7 @@ window._onServerActivated = () => {
           code: `POST /api/monster\n${JSON.stringify({key:mk,name:mn,ac:mac,hp:mhp,atk:matk,dmg:mdmg,xp:mxp,tier:mtier,cr:mcr,desc:mdesc},null,2)}`,
           note: `Inserted into MONSTER_POOL. To add to terrain: PUT /api/terrain/${$w('wiz-node-terrain').value.trim()||'your_terrain'}`,
         });
-        curlLines.push(`curl -s -X POST ${FS_API}/monster -H 'Content-Type: application/json' -d '${body}'`);
+        cliLines.push(cliPost('monster', JSON.parse(body)));
       }
     }
 
@@ -7894,12 +7897,8 @@ window._onServerActivated = () => {
         code: `POST /api/quest\n${JSON.stringify(qbody,null,2)}`,
         note: `Inserted into QUEST_DB. activateNode: ${locCode}`,
       });
-      curlLines.push(`curl -s -X POST ${FS_API}/quest -H 'Content-Type: application/json' -d '${JSON.stringify(qbody)}'`);
+      cliLines.push(cliPost('quest', qbody));
     }
-
-    // Save
-    curlLines.push(`curl -s -X POST ${FS_API}/save`);
-    curlLines.push(`curl -s -X POST ${FS_API}/restart`);
 
     // Render sections
     sections.forEach(s => {
@@ -7911,13 +7910,12 @@ window._onServerActivated = () => {
       sec.appendChild(div);
     });
 
-    // Curl block
-    const curlEl = $w('wiz-curl-block');
-    curlEl.style.display = '';
-    curlEl.innerHTML = `<div style="font-size:10px;color:var(--muted);margin-bottom:6px">Full curl sequence (run in order):</div>` +
-      curlLines.map(l => escHtml(l)).join('\n');
+    const cliEl = $w('wiz-curl-block');
+    cliEl.style.display = cliLines.length ? '' : 'none';
+    cliEl.innerHTML = `<div style="font-size:10px;color:var(--muted);margin-bottom:6px">The same writes from a shell, in order (each saves itself):</div>` +
+      cliLines.map(l => escHtml(l)).join('\n');
 
-    WIZ._reviewData = { sections, curlLines, questId, bitKey,
+    WIZ._reviewData = { sections, cliLines, questId, bitKey,
       locCode, monKey, questType, questTitle, startTxt, failTxt, passTxt,
       retryable };
   }
