@@ -226,6 +226,7 @@ const PORT_BLOCKS = {
   actions: 15500,     // one port per worker
   dm: 15600,          // two ports per worker: A and B
   dmpage: 15700,      // two ports per worker: A and B, driven by two browsers
+  wizard: 15800,      // one port per worker: the Wizard's CLI lines against a scratch copy
 };
 
 // Returns `count` consecutive ports reserved for this worker inside `block`'s

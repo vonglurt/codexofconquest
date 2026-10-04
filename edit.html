@@ -1228,11 +1228,9 @@ select.fi{appearance:none;}
               <input id="wiz-bit-key" class="fi" placeholder="e.g. sealed_merchant_chest">
             </div>
           </div>
-          <div class="fl">Token description (shown in inventory)</div>
-          <input id="wiz-bit-desc" class="fi" placeholder="A locked chest you were paid to deliver. You dare not look inside.">
         </div>
         <div class="wiz-token-preview" id="wiz-token-preview">
-          <div style="font-size:10px;color:var(--muted);margin-bottom:6px">Preview — inventory item</div>
+          <div style="font-size:10px;color:var(--muted);margin-bottom:6px">Preview — the bit the quest grants on completion</div>
           <div id="wiz-token-preview-body" style="font-size:11px;color:var(--text);font-family:monospace;white-space:pre"></div>
         </div>
         <div class="wiz-nav-row">
@@ -1296,14 +1294,11 @@ select.fi{appearance:none;}
             <div class="fg"><div class="fl">AC</div><input id="wiz-mon-ac" class="fi" type="number" placeholder="11"></div>
             <div class="fg"><div class="fl">HP</div><input id="wiz-mon-hp" class="fi" type="number" placeholder="4"></div>
             <div class="fg"><div class="fl">ATK</div><input id="wiz-mon-atk" class="fi" type="number" placeholder="2"></div>
-            <div class="fg"><div class="fl">DMG</div><input id="wiz-mon-dmg" class="fi" type="number" placeholder="3"></div>
+            <div class="fg"><div class="fl">Damage die (d)</div><input id="wiz-mon-dmg" class="fi" type="number" placeholder="3"></div>
           </div>
           <div class="wiz-row">
-            <div class="fg"><div class="fl">XP</div><input id="wiz-mon-xp" class="fi" type="number" placeholder="10"></div>
-            <div class="fg"><div class="fl">Tier (1–5)</div><input id="wiz-mon-tier" class="fi" type="number" min="1" max="5" placeholder="1"></div>
-            <div class="fg"><div class="fl">CR</div><input id="wiz-mon-cr" class="fi" placeholder="1/8"></div>
+            <div class="fg"><div class="fl">Tier</div><select id="wiz-mon-tier" class="fi"><option>trivial</option><option>easy</option><option>medium</option><option>hard</option><option>deadly</option></select></div>
           </div>
-          <div><div class="fl">Description</div><textarea id="wiz-mon-desc" class="fi" rows="2" placeholder="A mangy, disease-ridden rodent the size of a small dog." style="resize:none"></textarea></div>
         </div>
         <div class="wiz-nav-row">
           <button class="btn" onclick="wizStep(3)">← Back</button>
@@ -1356,7 +1351,7 @@ select.fi{appearance:none;}
         <div class="wiz-card" style="background:transparent;border-color:var(--border)">
           <div style="display:flex;align-items:center;gap:10px">
             <input type="checkbox" id="wiz-retryable" checked style="width:14px;height:14px;accent-color:var(--accent)">
-            <label for="wiz-retryable" style="font-size:12px;color:var(--text)">Retryable — each attempt costs 1 hour (<code>retryable:true, retryGateDays:0</code>)</label>
+            <label for="wiz-retryable" style="font-size:12px;color:var(--text)">Retryable — each attempt costs 1 hour (<code>retryable:true</code>)</label>
           </div>
         </div>
         <div class="wiz-nav-row">
@@ -7693,11 +7688,9 @@ window._onServerActivated = () => {
     const nounMatch = txt.match(/(?:a|an|the)\s+([a-z][a-z\s]{2,30})/i);
     const bitLabel = nounMatch ? nounMatch[1].replace(/\b\w/g,c=>c.toUpperCase()).trim() : 'Mission Token';
     const bitKey   = slugify(bitLabel);
-    const bitDesc  = txt.length > 120 ? txt.slice(0,120).trim()+'…' : txt;
 
     if (!$w('wiz-bit-label').value) $w('wiz-bit-label').value = bitLabel;
     if (!$w('wiz-bit-key').value)   $w('wiz-bit-key').value   = bitKey;
-    if (!$w('wiz-bit-desc').value)  $w('wiz-bit-desc').value  = bitDesc;
 
     // Suggest quest ID from slug
     const qid = 'quest_' + bitKey.slice(0,24);
@@ -7711,10 +7704,8 @@ window._onServerActivated = () => {
   function updateTokenPreview(){
     const label = $w('wiz-bit-label').value.trim();
     const key   = $w('wiz-bit-key').value.trim();
-    const desc  = $w('wiz-bit-desc').value.trim();
     if (!key) { $w('wiz-token-preview-body').textContent = ''; return; }
-    $w('wiz-token-preview-body').textContent =
-      `{ type: 'mission_bit',\n  id:   '${key}',\n  name: '${label||key}',\n  desc: '${desc}',\n  checkPassFlag: '${key}_done' }`;
+    $w('wiz-token-preview-body').textContent = JSON.stringify({ kind: 'mission_bit', flag: key, label: label || key });
   }
 
   // ── Step navigation ────────────────────────────────────────────────────────
@@ -7748,7 +7739,7 @@ window._onServerActivated = () => {
   });
 
   // ── Token preview live update ──────────────────────────────────────────────
-  ['wiz-bit-label','wiz-bit-key','wiz-bit-desc'].forEach(id =>
+  ['wiz-bit-label','wiz-bit-key'].forEach(id =>
     $w(id).addEventListener('input', updateTokenPreview));
   $w('wiz-bit-label').addEventListener('blur', () => {
     if (!$w('wiz-bit-key').value)
@@ -7809,98 +7800,66 @@ window._onServerActivated = () => {
   }
   window.wizLookupMonster = wizLookupMonster;
 
+  // ── The three create bodies, in the shapes POST /api/{node,monster,quest} accept ──
+  function wizBodies(){
+    const bitKey   = $w('wiz-bit-key').value.trim();
+    const bitLabel = $w('wiz-bit-label').value.trim();
+    const locCode  = WIZ.loc.existing || $w('wiz-loc-existing').value.trim().toUpperCase() || ($w('wiz-node-code').value.trim().toUpperCase());
+    const out = { node:null, monster:null, quest:null, bitKey, bitLabel, locCode };
+
+    const code = $w('wiz-node-code').value.trim().toUpperCase();
+    if (WIZ.modes.has('location') && WIZ.loc.isNew && code) {
+      out.node = { code, label:$w('wiz-node-label').value.trim(), act:Number($w('wiz-node-act').value)||1,
+        name:$w('wiz-node-terrain').value.trim(), text:$w('wiz-node-desc').value.trim() };
+    }
+    const mk = $w('wiz-mon-key').value.trim();
+    if (WIZ.modes.has('monster') && WIZ.mon.isNew && mk) {
+      out.monster = { key:mk, name:$w('wiz-mon-name').value.trim(),
+        ac:Number($w('wiz-mon-ac').value)||11, hp:Number($w('wiz-mon-hp').value)||4, atk:Number($w('wiz-mon-atk').value)||2,
+        dmgDie:Number($w('wiz-mon-dmg').value)||3, dmgCount:1, dmgFlat:0, tier:$w('wiz-mon-tier').value||'trivial' };
+    }
+    const id = $w('wiz-quest-id').value.trim();
+    if (WIZ.modes.has('quest') && id) {
+      const q = { id, schema:'UQF-1.0', type:$w('wiz-quest-type').value, title:$w('wiz-quest-title').value.trim(),
+        activateNode:locCode, desc:$w('wiz-quest-start').value.trim(),
+        passText:$w('wiz-quest-pass').value.trim(), failText:$w('wiz-quest-fail').value.trim(),
+        gate:{}, completion:{ atNode:locCode } };
+      if ($w('wiz-retryable').checked) q.retryable = true;
+      if (bitKey) q.bits = [{ kind:'mission_bit', flag:bitKey, label:bitLabel || bitKey }];
+      out.quest = q;
+    }
+    return out;
+  }
+
   // ── Build review step ──────────────────────────────────────────────────────
   function wizBuildReview(){
     const sec = $w('wiz-review-sections');
     sec.innerHTML = '';
-
-    const bitLabel = $w('wiz-bit-label').value.trim();
-    const bitKey   = $w('wiz-bit-key').value.trim();
-    const bitDesc  = $w('wiz-bit-desc').value.trim();
-    const questId  = $w('wiz-quest-id').value.trim();
-    const questTitle = $w('wiz-quest-title').value.trim();
-    const questType  = $w('wiz-quest-type').value;
-    const startTxt = $w('wiz-quest-start').value.trim();
-    const failTxt  = $w('wiz-quest-fail').value.trim();
-    const passTxt  = $w('wiz-quest-pass').value.trim();
-    const retryable = $w('wiz-retryable').checked;
-    const locCode  = WIZ.loc.existing || $w('wiz-loc-existing').value.trim().toUpperCase() || ($w('wiz-node-code').value.trim().toUpperCase());
-    const monKey   = WIZ.mon.existing || $w('wiz-mon-existing').value.trim() || $w('wiz-mon-key').value.trim();
-
+    const B = wizBodies();
     const sections = [];
     const cliLines = [];
     const shq = v => `'${String(v).replace(/'/g, `'\\''`)}'`;
     const cliPost = (type, body) => `./bin/api post ${type} ` +
       Object.entries(body).map(([k, v]) => `${k}=${shq(JSON.stringify(v))}`).join(' ');
 
-    // Token section
-    if (bitKey) {
-      sections.push({
-        title: '1. Mission Token (inventory item)',
-        code: `{ type: 'mission_bit', id: '${bitKey}', name: '${bitLabel||bitKey}',\n  desc: '${bitDesc}',\n  checkPassFlag: '${bitKey}_done' }`,
-        note: 'Granted at quest start via _grantMissionBit(player, item). Taken on pass via _takeMissionBit.',
-      });
+    if (B.quest && B.quest.bits) sections.push({ title: '1. Mission Token', code: JSON.stringify(B.quest.bits[0], null, 2),
+      note: 'A mission_bit bit in the quest: it grants the token when the quest completes.' });
+    if (B.node) {
+      sections.push({ title: `2. New Node — ${B.node.code} ${B.node.label}`, code: `POST /api/node\n${JSON.stringify(B.node, null, 2)}`,
+        note: 'Creates a new map node.' });
+      cliLines.push(cliPost('node', B.node));
+    }
+    if (B.monster) {
+      sections.push({ title: `3. New Monster — ${B.monster.key}`, code: `POST /api/monster\n${JSON.stringify(B.monster, null, 2)}`,
+        note: `Inserted into MONSTER_POOL. To add to terrain: PUT /api/terrain/${$w('wiz-node-terrain').value.trim()||'your_terrain'}` });
+      cliLines.push(cliPost('monster', B.monster));
+    }
+    if (B.quest) {
+      sections.push({ title: `4. Quest — ${B.quest.id}`, code: `POST /api/quest\n${JSON.stringify(B.quest, null, 2)}`,
+        note: `Inserted into QUEST_DB. Activates and completes on arrival at ${B.locCode}.` });
+      cliLines.push(cliPost('quest', B.quest));
     }
 
-    // Location section
-    if (WIZ.modes.has('location') && WIZ.loc.isNew) {
-      const code  = $w('wiz-node-code').value.trim().toUpperCase();
-      const label = $w('wiz-node-label').value.trim();
-      const act   = $w('wiz-node-act').value.trim();
-      const ter   = $w('wiz-node-terrain').value.trim();
-      const desc  = $w('wiz-node-desc').value.trim();
-      if (code) {
-        const body = JSON.stringify({ code, label, act:Number(act)||1, terrain:ter, text:desc });
-        sections.push({
-          title: `2. New Node — ${code} ${label}`,
-          code: `POST /api/node\n${JSON.stringify({code,label,act:Number(act)||1,terrain:ter,text:desc},null,2)}`,
-          note: 'Creates a new map node.',
-        });
-        cliLines.push(cliPost('node', JSON.parse(body)));
-      }
-    }
-
-    // Monster section
-    if (WIZ.modes.has('monster') && WIZ.mon.isNew) {
-      const mk   = $w('wiz-mon-key').value.trim();
-      const mn   = $w('wiz-mon-name').value.trim();
-      const mac  = Number($w('wiz-mon-ac').value)||11;
-      const mhp  = Number($w('wiz-mon-hp').value)||4;
-      const matk = Number($w('wiz-mon-atk').value)||2;
-      const mdmg = Number($w('wiz-mon-dmg').value)||3;
-      const mxp  = Number($w('wiz-mon-xp').value)||10;
-      const mtier= Number($w('wiz-mon-tier').value)||1;
-      const mcr  = $w('wiz-mon-cr').value.trim()||'1/8';
-      const mdesc= $w('wiz-mon-desc').value.trim();
-      if (mk) {
-        const body = JSON.stringify({key:mk,name:mn,ac:mac,hp:mhp,atk:matk,dmg:mdmg,xp:mxp,tier:mtier,cr:mcr,desc:mdesc});
-        sections.push({
-          title: `3. New Monster — ${mk}`,
-          code: `POST /api/monster\n${JSON.stringify({key:mk,name:mn,ac:mac,hp:mhp,atk:matk,dmg:mdmg,xp:mxp,tier:mtier,cr:mcr,desc:mdesc},null,2)}`,
-          note: `Inserted into MONSTER_POOL. To add to terrain: PUT /api/terrain/${$w('wiz-node-terrain').value.trim()||'your_terrain'}`,
-        });
-        cliLines.push(cliPost('monster', JSON.parse(body)));
-      }
-    }
-
-    // Quest section
-    if (WIZ.modes.has('quest') && questId) {
-      const qbody = {
-        id:questId, type:questType, title:questTitle,
-        activateNode:locCode,
-        startText:startTxt, failText:failTxt, passText:passTxt,
-        retryable, retryGateDays:0,
-        missionBitKey:bitKey,
-      };
-      sections.push({
-        title: `4. Quest — ${questId}`,
-        code: `POST /api/quest\n${JSON.stringify(qbody,null,2)}`,
-        note: `Inserted into QUEST_DB. activateNode: ${locCode}`,
-      });
-      cliLines.push(cliPost('quest', qbody));
-    }
-
-    // Render sections
     sections.forEach(s => {
       const div = document.createElement('div');
       div.className = 'wiz-review-section';
@@ -7915,9 +7874,7 @@ window._onServerActivated = () => {
     cliEl.innerHTML = `<div style="font-size:10px;color:var(--muted);margin-bottom:6px">The same writes from a shell, in order (each saves itself):</div>` +
       cliLines.map(l => escHtml(l)).join('\n');
 
-    WIZ._reviewData = { sections, cliLines, questId, bitKey,
-      locCode, monKey, questType, questTitle, startTxt, failTxt, passTxt,
-      retryable };
+    WIZ._reviewData = { sections, cliLines, bodies: B };
   }
 
   function escHtml(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
@@ -7936,80 +7893,20 @@ window._onServerActivated = () => {
     if (!d){ logLine('err','No review data — go back to step 5 and fill in the quest arc.'); btn.disabled=false; return; }
 
     let allOk = true;
-
-    // 1. Create node if new
-    if (WIZ.modes.has('location') && WIZ.loc.isNew) {
-      const code  = $w('wiz-node-code').value.trim().toUpperCase();
-      const label = $w('wiz-node-label').value.trim();
-      const act   = Number($w('wiz-node-act').value)||1;
-      const ter   = $w('wiz-node-terrain').value.trim();
-      const desc  = $w('wiz-node-desc').value.trim();
-      if (code) {
-        logLine('info', `POST /api/node  (${code})…`);
-        try {
-          const r = await fetch(`${FS_API}/node`, { method:'POST', headers:{'Content-Type':'application/json'},
-            body: JSON.stringify({code,label,act,terrain:ter,text:desc}) });
-          const rd = await r.json();
-          if (r.ok) logLine('ok', `✓ Node ${code} created`);
-          else { logLine('err', `✗ Node failed: ${rd.error||r.status}`); allOk=false; }
-        } catch(e){ logLine('err',`✗ Network error: ${e.message}`); allOk=false; }
-      }
-    }
-
-    // 2. Create monster if new
-    if (WIZ.modes.has('monster') && WIZ.mon.isNew) {
-      const mk  = $w('wiz-mon-key').value.trim();
-      if (mk) {
-        const body = {
-          key:mk, name:$w('wiz-mon-name').value.trim(),
-          ac:Number($w('wiz-mon-ac').value)||11, hp:Number($w('wiz-mon-hp').value)||4,
-          atk:Number($w('wiz-mon-atk').value)||2, dmg:Number($w('wiz-mon-dmg').value)||3,
-          xp:Number($w('wiz-mon-xp').value)||10, tier:Number($w('wiz-mon-tier').value)||1,
-          cr:$w('wiz-mon-cr').value.trim()||'1/8', desc:$w('wiz-mon-desc').value.trim(),
-        };
-        logLine('info', `POST /api/monster  (${mk})…`);
-        try {
-          const r = await fetch(`${FS_API}/monster`, { method:'POST', headers:{'Content-Type':'application/json'},
-            body: JSON.stringify(body) });
-          const rd = await r.json();
-          if (r.ok) logLine('ok', `✓ Monster ${mk} created`);
-          else { logLine('err', `✗ Monster failed: ${rd.error||r.status}`); allOk=false; }
-        } catch(e){ logLine('err',`✗ Network error: ${e.message}`); allOk=false; }
-      }
-    }
-
-    // 3. Create quest
-    if (WIZ.modes.has('quest') && d.questId) {
-      const qbody = {
-        id:d.questId, type:d.questType, title:d.questTitle,
-        activateNode:d.locCode,
-        startText:d.startTxt, failText:d.failTxt, passText:d.passTxt,
-        retryable:d.retryable, retryGateDays:0,
-        missionBitKey:d.bitKey,
-      };
-      logLine('info', `POST /api/quest  (${d.questId})…`);
+    for (const [type, idKey] of [['node','code'], ['monster','key'], ['quest','id']]) {
+      const body = d.bodies[type];
+      if (!body) continue;
+      logLine('info', `POST /api/${type}  (${body[idKey]})…`);
       try {
-        const r = await fetch(`${FS_API}/quest`, { method:'POST', headers:{'Content-Type':'application/json'},
-          body: JSON.stringify(qbody) });
+        const r = await fetch(`${FS_API}/${type}`, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify(body) });
         const rd = await r.json();
-        if (r.ok) logLine('ok', `✓ Quest ${d.questId} created`);
-        else { logLine('err', `✗ Quest failed: ${rd.error||r.status}`); allOk=false; }
+        if (r.ok) logLine('ok', `✓ ${type} ${body[idKey]} created and saved`);
+        else { logLine('err', `✗ ${type} failed: ${rd.error||r.status}${rd.unknownFields ? ' — unknown: ' + rd.unknownFields.join(', ') : ''}`); allOk=false; }
       } catch(e){ logLine('err',`✗ Network error: ${e.message}`); allOk=false; }
     }
 
-    // 4. Save
-    logLine('info', 'POST /api/save…');
-    try {
-      const r = await fetch(`${FS_API}/save`, { method:'POST' });
-      if (r.ok) logLine('ok', '✓ Saved to play.html');
-      else { logLine('err', `✗ Save failed: ${r.status}`); allOk=false; }
-    } catch(e){ logLine('err',`✗ Network error: ${e.message}`); allOk=false; }
-
-    if (allOk){
-      logLine('ok', '✓ Done! Restart server to reload game data: POST /api/restart');
-    } else {
-      logLine('err', 'Some steps failed — check above and retry or fix manually.');
-    }
+    if (allOk) logLine('ok', '✓ Done — every write saved itself.');
+    else logLine('err', 'Some steps failed — check above and retry or fix manually.');
     btn.disabled = false;
   }
   window.wizCreate = wizCreate;
