@@ -2418,5 +2418,5 @@ WBAPI._classifyQuest = _classifyQuest; // expose for server routes and direct us
 // §MESH-01-FU 9: low-level parse pipeline, exposed for scripts/world-diff.js —
 // the deep diff must parse ARBITRARY world files (not this singleton's loaded
 // one), so it needs the helpers, not the loaded state.
-WBAPI._parse = { extrSection, extractObj, extractArr, removeFns, parseSimple, parseArr, parseWithP, parseSanitized, isFunctionSource, commentTally: _commentTally, fieldsWithComments, findEntryBounds, entryFieldLiterals, stringSpans: _stringSpans };
+WBAPI._parse = { extrSection, extractObj, extractArr, removeFns, parseSimple, parseArr, parseWithP, parseSanitized, isFunctionSource, commentTally: _commentTally, fieldsWithComments, findEntryBounds, entryFieldLiterals, stringSpans: _stringSpans, serializeJsLiteral };
 module.exports = WBAPI;

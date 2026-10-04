@@ -286,6 +286,10 @@ function selftest() {
 }
 
 // ── main ──────────────────────────────────────────────────────────────────────
+module.exports = { docFiles, audit, resolve, ANCHOR_RE, HTML };
+if (require.main === module) main();
+
+function main() {
 const argv = process.argv.slice(2);
 if (argv.includes('--selftest')) process.exit(selftest() ? 0 : 1);
 
@@ -363,3 +367,4 @@ console.log(`✓ check:anchors — ${live.length} symbol anchor(s) across `
         + `${new Set(qualified.map(a => a.target)).size} other file(s))`
       : ` in ${rel(HTML)}`)
   + (stale.length ? ` (${stale.length} hint(s) stale — run \`npm run anchors:fix\`)` : ''));
+}
