@@ -123,8 +123,19 @@ async function startServer(port, extraEnv = {}, extraArgs = []) {
     while (Date.now() - start < 8000) { if (await pingOk(base)) return true; await sleep(150); }
     return false;
   })();
-  if (!up) { console.error(`✗ test server failed to start on ${port}\n${srv.stderr}`); stopAllServers(); process.exit(1); }
+  if (!up) {
+    const live = servers.filter((x) => x.proc.exitCode === null && x.proc.signalCode === null).length;
+    console.error(`✗ test server failed to start on ${port} (exit ${proc.exitCode}, signal ${proc.signalCode}; ` +
+      `${live} servers live, ${Math.round(os.freemem() / 1048576)} MB free)\n${srv.stderr}`);
+    stopAllServers(); process.exit(1);
+  }
   return srv;
+}
+// Each spawn holds the whole game file (~150 MB RSS), so a server is retired once its
+// section is done with it; kept to the end, the run held 5.7 GB by [Q] (§DX-02lu).
+async function retire(...srvs) {
+  await Promise.all(srvs.filter((x) => x.proc.exitCode === null && x.proc.signalCode === null)
+    .map((x) => new Promise((resolve) => { x.proc.once('exit', resolve); x.proc.kill('SIGTERM'); })));
 }
 function stopAllServers() {
   for (const s of servers) if (s.proc && s.proc.exitCode === null) { try { s.proc.kill('SIGTERM'); } catch {} }
@@ -302,6 +313,7 @@ async function main() {
   // Two servers over the SAME game file gossip presence (single-writer records,
   // version-vector dedup, snapshot anti-entropy); an incompatible-worldHash
   // server never merges; an allowlist ACL refuses even a compatible peer.
+  await retire(ttl);
   console.log('\n[E] §MESH-01 b/c — manifest identity + gossip mesh');
   const tmp = os.tmpdir();
   // PEERS_CACHE_FILE is pid-scoped: port-only names survive ACROSS runs, and
@@ -450,6 +462,7 @@ async function main() {
   check(gAcl.status === 403, 'allowlist-mode ACL refuses an unlisted (compatible) peer with 403');
 
   // ════════ (f) §MESH-01d — tracker discovery + world grouping + bootstrap URL ════════
+  await retire(mC, mKern, mD);
   console.log('\n[F] §MESH-01d — tracker rendezvous, compat grouping, BOOTSTRAP_URLS');
   const trk = await startServer(PORT + 6, { TRACKER_MODE: '1', MESH_SERVER_ID: 'e'.repeat(32), PEERS_CACHE_FILE: path.join(tmp, `coc-peers-${PORT + 6}.json`), TRACKER_CACHE_FILE: path.join(tmp, `coc-trkcache-${process.pid}-${PORT + 6}.json`) });
   check((await jget('/ping', trk.base)).ok === true, 'tracker answers /api/ping');
@@ -481,7 +494,7 @@ async function main() {
     'CLI: mesh tracker <url> browses the tracker’s live server table');
   check((await cli(['mesh', 'bogus'])).code === 1, 'CLI: mesh rejects an unknown subcommand (usage, exit 1)');
 
-  await startServer(PORT + 9, mkEnv(PORT + 9, '8'.repeat(32), { TRACKER_URL: trk.base, MESH_ANNOUNCE_MS: '150', MESH_WORLDHASH_OVERRIDE: 'deadbeefdeadbeef' }));
+  const mG9 = await startServer(PORT + 9, mkEnv(PORT + 9, '8'.repeat(32), { TRACKER_URL: trk.base, MESH_ANNOUNCE_MS: '150', MESH_WORLDHASH_OVERRIDE: 'deadbeefdeadbeef' }));
   await sleep(700);
   const tpReal = await jget(`/tracker/peers?wh=${manA.worldHash}`, trk.base);
   check(!(tpReal.servers || []).some((s) => s.worldHash === 'deadbeefdeadbeef'), 'world grouping: the incompatible server never appears in the real-world group');
@@ -501,6 +514,7 @@ async function main() {
   // Server Ida announces ONLY to tracker A; server J announces ONLY to tracker
   // B, which federates with A. J must still discover Ida — proof that manually
   // connecting two trackers implicitly shares both server lists.
+  await retire(mE, mF, mG9, mH);
   console.log('\n[G] §MESH-01d2 — tracker federation (announce tables merge)');
   const trkA2 = await startServer(PORT + 11, { TRACKER_MODE: '1', MESH_SERVER_ID: '6'.repeat(32), MESH_ANNOUNCE_MS: '150', PEERS_CACHE_FILE: path.join(tmp, `coc-peers-${PORT + 11}.json`), TRACKER_CACHE_FILE: path.join(tmp, `coc-trkcache-${process.pid}-${PORT + 11}.json`) });
   const trkB2 = await startServer(PORT + 12, { TRACKER_MODE: '1', MESH_SERVER_ID: '5'.repeat(32), MESH_ANNOUNCE_MS: '150', TRACKER_PEERS: trkA2.base, PEERS_CACHE_FILE: path.join(tmp, `coc-peers-${PORT + 12}.json`), TRACKER_CACHE_FILE: path.join(tmp, `coc-trkcache-${process.pid}-${PORT + 12}.json`) });
@@ -529,6 +543,7 @@ async function main() {
   check((await fetch(trkA2.base + '/api/world/download')).status === 410, 'tracker-mode refuses world download (rendezvous only, never a relay)');
 
   // ════════ (h) §MESH-01-FU 1 — LAN/WAN reachability ════════
+  await retire(trkA2, trkB2, mI, mJ);
   console.log('\n[H] §MESH-01-FU 1 — --bind/--advertise flags + loopback reachability warnings');
   // The main harness server has no peers/trackers configured: a solo dev
   // server must boot warning-free (loopback is the CORRECT default there).
@@ -552,13 +567,14 @@ async function main() {
   check(/MESH REACHABILITY/.test(mK.stderr), 'the reachability warning is printed loudly at startup');
 
   // ════════ (i) §MESH-01-FU 2 — world name/tag + server-browser data ════════
+  await retire(mB, mK);
   console.log('\n[I] §MESH-01-FU 2 — WORLD_NAME tag + tracker server-browser rows');
   const manMain = await jget('/manifest');
   check(manMain.worldName === 'CodexOfConquest'
     && manMain.worldTag === 'CodexOfConquest-' + manMain.worldHash.slice(0, 5),
     'manifest parses WORLD_NAME from the game file and derives worldTag <name>-<hash5>');
   // A named server announces → the tracker row carries name + worldName + worldTag.
-  await startServer(PORT + 16, mkEnv(PORT + 16, '1'.repeat(32),
+  const mW16 = await startServer(PORT + 16, mkEnv(PORT + 16, '1'.repeat(32),
     { TRACKER_URL: trk.base, MESH_ANNOUNCE_MS: '150', SERVER_NAME: 'Hub Alpha' }));
   let hubRow = null;
   for (let i = 0; i < 40 && !hubRow; i++) {
@@ -574,6 +590,7 @@ async function main() {
     'tracker world groups are tagged (mesh/status.trackerGroups[].worldTag)');
 
   // ════════ (j) §MESH-01-FU 3 — pid-keyed presence ════════
+  await retire(trk, mW16);
   console.log('\n[J] §MESH-01-FU 3 — pid identity (same display name never misattributes)');
   const twin1 = await jpost('/session/start', { name: 'Twin', seed: 71 });
   const twin2 = await jpost('/session/start', { name: 'Twin', seed: 72 });
@@ -735,7 +752,7 @@ async function main() {
   check(reconverged, 'heal: the isolated server re-converges — R replicates both majority-side players again');
 
   // (5) incompat-refusal in the same topology: a mismatched world knocks on the healed mesh
-  await startServer(PORT + 21, mkEnv(PORT + 21, '5e'.repeat(16), {
+  const mL21 = await startServer(PORT + 21, mkEnv(PORT + 21, '5e'.repeat(16), {
     TRACKER_URL: trkL.base, MESH_ANNOUNCE_MS: '150', MESH_PEERS: `localhost:${PORT + 18}`, MESH_WORLDHASH_OVERRIDE: 'feedfacefeedface',
   }));
   await jpost('/session/start', { name: 'Xeno', seed: 444 }, `http://127.0.0.1:${PORT + 21}`);
@@ -752,6 +769,7 @@ async function main() {
   // by check:roomsparity) over a world built here the way the CLIENT builds it
   // (literals re-parsed from play.html, client fallbacks reproduced) —
   // an independent construction, so server-side world-assembly drift fails.
+  await retire(trkL, mP, mQ, mR, mL21);
   console.log('\n[M] §NAV-01f — server room ≡ client describeCell (byte-equal)');
   const Rooms = requireCjs(path.join(ROOT, 'src', 'js', 'rooms.js'));
   const CORE  = requireCjs(path.join(ROOT, 'src', 'js', 'wbapi-core.js'));
@@ -874,6 +892,7 @@ async function main() {
   // kind:'sentry'), (2) suppress the instanced encounter roll in its cell, and
   // (3) never idle-expire (sessionPrune skips bots). Deploy/recall are the
   // single-writer mutations of THIS origin's sentries.
+  await retire(srvN);
   console.log('\n[H] §MESH-01h — sentry bots (deploy → presence, suppression, recall, prune-immunity)');
   const cellN = { r: alice.r - 1, c: alice.c };   // empty, encounter-eligible cell N of the hub (see [C])
 
@@ -961,6 +980,7 @@ async function main() {
   // two-phase same-origin trade → ONE dual-chain event, pure ownership
   // resolution, deterministic lowest-hash dupe-void, and durability across a
   // restart — the property presence deliberately lacks. Lab report §6.1–6.2.
+  await retire(sTtl);
   console.log('\n[I] §MESH-01i — no-dupe ledger (mint, provenance, trade, dupe-void, durability)');
   const ledDir = fs.mkdtempSync(path.join(tmp, 'coc-ledger-'));
   const ledId = 'ab'.repeat(16);
@@ -1109,6 +1129,7 @@ async function main() {
   // on presence gossip; anti-entropy range pull (/ledger/sync) + push
   // (/ledger/ingest) replicate the chains cross-mesh with no TTL and no age
   // cap — then the pure fork-choice yields identical verdicts everywhere.
+  await retire(strict, fresh, led2);
   console.log('\n[I2] §MESH-01i slice 2 — persistent player key + ledger gossip replication');
   const until = async (fn, ms = 6000, step = 100) => {
     const t0 = Date.now();
@@ -1211,6 +1232,7 @@ async function main() {
   // gossip). The propose relays gA→gB, the accept relays back, and gA (the
   // proposer's origin) authors ONE event co-signed by both origins; gC (a
   // third server) replays it to the same verdict.
+  await retire(led);
   console.log('\n[I3] §MESH-01i — cross-origin co-signed trades (propose/accept relay, dual-origin sig)');
 
   const benX = await jpost('/session/start', { name: 'Ben', seed: 99, playerKey: 'ef56'.repeat(8) }, gB.base);
@@ -1285,6 +1307,7 @@ async function main() {
   // duelSeed = sha256(nonceA‖nonceB‖duelId) — neither party alone steers the
   // dice — and the outcome event carries everything needed to REPLAY the duel
   // and independently agree on the winner.
+  await retire(gC);
   console.log('\n[O] §MESH-01j — consensual PvP duels (commit-reveal, DUEL:CORE replay, forfeit)');
   const DUEL = requireCjs('../js/duel.js');
 
@@ -1387,6 +1410,7 @@ async function main() {
   // {reason:'rate'} 429, while GETs, client-facing routes, and well-behaved
   // peers (one gossip per MESH_GOSSIP_MS) are never touched. Tight limits via
   // env so the flood fits in a test.
+  await retire(gA, gB, dT);
   console.log('\n[P] §MESH-01-FU 8 — ingress rate limiting (per-IP token bucket before JSON parse)');
   const rl = await startServer(PORT + 37, {
     MESH_RATE_LIMIT: '5', MESH_RATE_BURST: '8', MESH_SERVER_ID: '3f'.repeat(16),
@@ -1418,6 +1442,7 @@ async function main() {
 
   // ════════ (q) §MESH-01-FU 11–13 — ACL template · tracker persistence +
   // federation bootstrap · chat backlog on join ════════
+  await retire(rl);
   console.log('\n[Q] §MESH-01-FU 11–13 — ACL template · tracker cache + federation bootstrap · chat backlog');
 
   // FU 11 — the committed template must be valid JSON that keeps the mesh open verbatim.
@@ -1443,7 +1468,7 @@ async function main() {
   const trkEnvQ = { TRACKER_MODE: '1', MESH_SERVER_ID: '7a'.repeat(16), TRACKER_PERSIST_MS: '100',
     TRACKER_CACHE_FILE: trkCache, PEERS_CACHE_FILE: path.join(tmp, `coc-peers-${process.pid}-${PORT + 39}.json`) };
   let trkQ = await startServer(PORT + 39, trkEnvQ);
-  await startServer(PORT + 40, mkEnv(PORT + 40, '8b'.repeat(16), { TRACKER_URL: trkQ.base, MESH_ANNOUNCE_MS: '600000' }));
+  const mQ40 = await startServer(PORT + 40, mkEnv(PORT + 40, '8b'.repeat(16), { TRACKER_URL: trkQ.base, MESH_ANNOUNCE_MS: '600000' }));
   await waitFor(() => { try { return (JSON.parse(fs.readFileSync(trkCache, 'utf8')).records || []).length >= 1; } catch { return false; } }, 5000, 50);
   let cacheJ = {}; try { cacheJ = JSON.parse(fs.readFileSync(trkCache, 'utf8')); } catch {}
   check((cacheJ.records || []).some((r) => r.addr === `localhost:${PORT + 40}`),
@@ -1502,6 +1527,7 @@ async function main() {
   // not-shared until the D3 shareBlocklist opt-in flips it to 200 (ACL
   // hot-reloads via mtime — no restart between the flip and the read). Design:
   // lab-reports/lab-report-mesh02-connections-ui.md §3.1.
+  await retire(mQ2, trkQ, mQ40, trkR, mA);
   console.log('\n[R] §MESH-02a — mesh ACL GET/PUT + blocklist 403→200 share flip');
   const aclR2 = path.join(tmp, `coc-acl-mesh02-${process.pid}.json`);
   fs.rmSync(aclR2, { force: true });
