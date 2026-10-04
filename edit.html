@@ -1500,6 +1500,7 @@ const WBAPI = {
   _nodesByTerrain: {},      // terrainKey → [nodeCode]
   _questFlags: {},          // questId → { reads:Set, writes:Set }
   _flagToQuests: {},        // flagName → { reads:[id], writes:[id] }
+  _questSeq: {},            // questId → { upstream:Set, downstream:Set }  (questsDone / unlock)
   _questArcs: {},           // arcPrefix → [questId]  e.g. 'quest_wis' → [...]
   _rawQuestSrc: '',
 
@@ -1710,9 +1711,11 @@ const WBAPI = {
       }
     }
 
-    // Flag extraction from raw source
+    // Flag extraction: S_story. tokens in raw source, plus the declarative gate/bit walk
+    // that src/js/wbapi-core.js runs through check-questgraph's gateReads/questWrites.
     this._questFlags = {};
     this._flagToQuests = {};
+    this._questSeq = {};
     if (this._rawQuestSrc) {
       const questBlocks = this._splitQuestBlocks(this._rawQuestSrc);
       for (const { id, src } of questBlocks) {
@@ -1720,9 +1723,40 @@ const WBAPI = {
         for (const m of src.matchAll(/S_story\.(\w+)\s*[^=!<>]/g)) { if (m[1] !== 'active') reads.add(m[1]); }
         for (const m of src.matchAll(/S_story\.(\w+)\s*=/g)) writes.add(m[1]);
         this._questFlags[id] = { reads, writes };
-        for (const f of reads) { if (!this._flagToQuests[f]) this._flagToQuests[f] = {reads:[],writes:[]}; this._flagToQuests[f].reads.push(id); }
-        for (const f of writes) { if (!this._flagToQuests[f]) this._flagToQuests[f] = {reads:[],writes:[]}; this._flagToQuests[f].writes.push(id); }
       }
+    }
+    const seq = id => this._questSeq[id] || (this._questSeq[id] = { upstream:new Set(), downstream:new Set() });
+    const gateWalk = (node, fl, qs) => {
+      if (!node || typeof node !== 'object') return;
+      if (node.all) { node.all.forEach(n => gateWalk(n, fl, qs)); return; }
+      if (node.any) { node.any.forEach(n => gateWalk(n, fl, qs)); return; }
+      if (node.not) { gateWalk(node.not, fl, qs); return; }
+      for (const k of ['flags', 'flagsAny', 'notFlags']) (node[k] || []).forEach(f => fl.add(f));
+      if (node.flagEquals) Object.keys(node.flagEquals).forEach(f => fl.add(f));
+      (node.flagsPath || []).forEach(p => fl.add(p.split('.')[0]));
+      for (const k of ['questsAttempted', 'questsDone', 'questsComplete']) (node[k] || []).forEach(q => qs.add(q));
+    };
+    const bitWalk = (bits, fl, qs) => {
+      for (const bit of bits || []) {
+        if (bit.kind === 'flag_write') { (bit.set || []).forEach(f => fl.add(f)); (bit.clear || []).forEach(f => fl.add(f)); }
+        else if (bit.kind === 'mission_bit') { if (bit.flag) fl.add(bit.flag); }
+        else if (bit.kind === 'unlock') (bit.quests || []).forEach(q => qs.add(q));
+        else if (bit.kind === 'skill_check') { bitWalk(bit.onPass, fl, qs); bitWalk(bit.onFail, fl, qs); }
+        else if (bit.kind === 'choice') (bit.options || []).forEach(o => bitWalk(o.bits, fl, qs));
+      }
+    };
+    for (const [id, q] of Object.entries(this.questDb)) {
+      if (!q || typeof q !== 'object') continue;
+      const fl = this._questFlags[id] || (this._questFlags[id] = { reads:new Set(), writes:new Set() });
+      const before = new Set(), after = new Set();
+      gateWalk(q.gate, fl.reads, before); gateWalk(q.completion, fl.reads, before);
+      bitWalk([...(q.bits || []), ...(Array.isArray(q.onComplete) ? q.onComplete : [])], fl.writes, after);
+      for (const qq of before) if (qq !== id) { seq(id).upstream.add(qq); seq(qq).downstream.add(id); }
+      for (const qq of after) if (qq !== id) { seq(id).downstream.add(qq); seq(qq).upstream.add(id); }
+    }
+    for (const [id, { reads, writes }] of Object.entries(this._questFlags)) {
+      for (const f of reads) { if (!this._flagToQuests[f]) this._flagToQuests[f] = {reads:[],writes:[]}; this._flagToQuests[f].reads.push(id); }
+      for (const f of writes) { if (!this._flagToQuests[f]) this._flagToQuests[f] = {reads:[],writes:[]}; this._flagToQuests[f].writes.push(id); }
     }
 
     // Quest arcs
@@ -1791,7 +1825,8 @@ const WBAPI = {
       };
     },
     quest(id) {
-      return { downstream: WBAPI.quests.chain(id).downstream };
+      const c = WBAPI.quests.chain(id);
+      return { downstream: [...new Set([...c.downstream, ...c.sequence.downstream])] };
     },
     monster(key) {
       const terrains = Object.entries(WBAPI.worldDb)
@@ -1925,13 +1960,14 @@ const WBAPI = {
     byClass(cls){ return WBAPI.quests.all().filter(q=>_classifyQuestWB(q)===cls); },
     flags(id) { return WBAPI._questFlags[id] || {reads:new Set(), writes:new Set()}; },
     chain(id) {
-      const flags = WBAPI._questFlags[id];
-      if (!flags) return { upstream:[], downstream:[] };
+      const flags = WBAPI._questFlags[id], s = (WBAPI._questSeq || {})[id];
+      const sequence = { upstream: s ? [...s.upstream] : [], downstream: s ? [...s.downstream] : [] };
+      if (!flags) return { upstream:[], downstream:[], sequence };
       const up = new Set(), down = new Set();
       for (const f of flags.reads) for (const qid of (WBAPI._flagToQuests[f]||{}).writes||[]) up.add(qid);
       for (const f of flags.writes) for (const qid of (WBAPI._flagToQuests[f]||{}).reads||[]) down.add(qid);
       up.delete(id); down.delete(id);
-      return { upstream:[...up], downstream:[...down] };
+      return { upstream:[...up], downstream:[...down], sequence };
     },
     arcs() { return Object.keys(WBAPI._questArcs); },
     get(idOrTitle) {

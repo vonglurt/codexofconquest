@@ -2,13 +2,17 @@
 // §DX-02ar — WBAPI.quests.chain() reads declarative gates and bits, not only S_story.
 // tokens in a quest's source, and the quest delete guard is fed by it.
 //
-// Pure-node (no browser): the chain is authoring metadata read by the WBAPI.
+// The chain is authoring metadata read by the WBAPI; edit.html carries a port of the
+// same analyser, held equal to wbapi-core's by the last test (§DX-02mb).
 
 const { test, expect } = require('@playwright/test');
 const path = require('path');
 
 const ROOT = path.resolve(__dirname, '..', '..', '..');
 const GAME = path.join(ROOT, 'play.html');
+
+// Quests the editor's own parser does not load (§DX-02mc).
+const EDITOR_UNPARSED = ['quest_sb_01', 'quest_sea_01'];
 
 function freshWorld() {
   delete require.cache[require.resolve(path.join(ROOT, 'src', 'js', 'wbapi-core.js'))];
@@ -53,5 +57,31 @@ test.describe('§DX-02ar — the declarative quest chain', () => {
     expect(r.ok).toBe(false);
     expect(r.blockedBy.downstream).toEqual(W.quests.chain(gated).sequence.downstream);
     expect(W.questDb[gated]).toBeTruthy();
+  });
+
+  test('edit.html builds the same chain and delete guard as wbapi-core for every quest', async ({ page }) => {
+    const W = freshWorld();
+    const norm = c => ({ up: [...c.upstream].sort(), dn: [...c.downstream].sort(),
+      sUp: [...c.sequence.upstream].sort(), sDn: [...c.sequence.downstream].sort() });
+    const core = {};
+    for (const id of Object.keys(W.questDb))
+      core[id] = { ...norm(W.quests.chain(id)), del: [...W._deps.quest(id).downstream].sort() };
+    await page.goto('/edit.html');
+    const ed = await page.evaluate(async () => {
+      WBAPI.load(await (await fetch('/play.html')).text());
+      const out = {};
+      for (const id of Object.keys(WBAPI.questDb)) {
+        const c = WBAPI.quests.chain(id);
+        out[id] = { up: [...c.upstream].sort(), dn: [...c.downstream].sort(),
+          sUp: [...c.sequence.upstream].sort(), sDn: [...c.sequence.downstream].sort(),
+          del: [...WBAPI._deps.quest(id).downstream].sort() };
+      }
+      return out;
+    });
+    const unparsed = Object.keys(core).filter(id => !(id in ed));
+    expect(unparsed.sort()).toEqual(EDITOR_UNPARSED);
+    const seen = c => Object.fromEntries(Object.entries(c).map(([k, v]) => [k, v.filter(id => id in ed)]));
+    const differ = Object.keys(ed).filter(id => JSON.stringify(seen(core[id])) !== JSON.stringify(ed[id]));
+    expect(differ).toEqual([]);
   });
 });

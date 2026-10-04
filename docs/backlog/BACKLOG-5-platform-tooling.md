@@ -45,6 +45,10 @@
 ---
 ## §BACKLOG — Open Items (Phase 5)
 
+### §DX-02mc — `edit.html`'s parser loads 2,851 quests where `wbapi-core` loads 2,853 (NEW 2026-10-04 during §DX-02mb, 🟢 find the cause, then fix the parser)
+
+- [ ] **§DX-02mc — `quest_sea_01` and `quest_sb_01` are missing from the editor's `WBAPI.questDb`.** Measured 2026-10-04 by `WBAPI.load(<play.html text>)` in `edit.html` against `src/js/wbapi-core.js`'s `load('play.html')`: **2,851 vs 2,853**, the two missing ids exactly these, and no extra ids. Both are ordinary `UQF-1.0` side quests with a comment block above them. Neither appears in the editor's Quests tab, chain views or audit counts, and `quest_sea_02`'s chain in the editor lacks its edge to `quest_sea_01`. `dx02ar-declarative-chain.test.js` pins the pair as `EDITOR_UNPARSED`, so the fix must empty that list. **Verify:** the list is `[]` and the parity spec stays green.
+
 ### §DX-02mb — `edit.html` carries its own copy of the quest chain analyser, still regex-only (NEW 2026-10-04 during §DX-02ar, 🟡 share or port)
 
 - [ ] **§DX-02mb — the editor's `_questFlags`/`_flagToQuests` are built by the same `S_story.` regex §DX-02ar moved off in `wbapi-core.js`.** `edit.html`'s parser builds its own indexes at the `this._questFlags = {};` block in its loader, and its `chain(id)`, flag panels, flag-graph views and dead-flag counts all read them, so in the editor's local (server-off) mode the chain is empty for the same declarative quests. §DX-02ar measured the server copy at **2,808 → 899** empty chains of 2,853. **Decide:** port the declarative pass (`gateReads` + `questWrites` + the `sequence` edges) into the page, or have the editor read `GET /api/quest/{id}`'s chain when the server is up and say the local chain is partial when it is not. **Verify:** the same corpus count through the editor's model in a page spec.
