@@ -11,9 +11,6 @@ const path = require('path');
 const ROOT = path.resolve(__dirname, '..', '..', '..');
 const GAME = path.join(ROOT, 'play.html');
 
-// Quests the editor's own parser does not load (§DX-02mc).
-const EDITOR_UNPARSED = ['quest_sb_01', 'quest_sea_01'];
-
 function freshWorld() {
   delete require.cache[require.resolve(path.join(ROOT, 'src', 'js', 'wbapi-core.js'))];
   const W = require(path.join(ROOT, 'src', 'js', 'wbapi-core.js'));
@@ -59,7 +56,7 @@ test.describe('§DX-02ar — the declarative quest chain', () => {
     expect(W.questDb[gated]).toBeTruthy();
   });
 
-  test('edit.html builds the same chain and delete guard as wbapi-core for every quest', async ({ page }) => {
+  test('edit.html parses every quest and builds the same chain and delete guard as wbapi-core', async ({ page }) => {
     const W = freshWorld();
     const norm = c => ({ up: [...c.upstream].sort(), dn: [...c.downstream].sort(),
       sUp: [...c.sequence.upstream].sort(), sDn: [...c.sequence.downstream].sort() });
@@ -78,10 +75,9 @@ test.describe('§DX-02ar — the declarative quest chain', () => {
       }
       return out;
     });
-    const unparsed = Object.keys(core).filter(id => !(id in ed));
-    expect(unparsed.sort()).toEqual(EDITOR_UNPARSED);
-    const seen = c => Object.fromEntries(Object.entries(c).map(([k, v]) => [k, v.filter(id => id in ed)]));
-    const differ = Object.keys(ed).filter(id => JSON.stringify(seen(core[id])) !== JSON.stringify(ed[id]));
+    expect(Object.keys(core).filter(id => !(id in ed))).toEqual([]);
+    expect(Object.keys(ed).length).toBe(Object.keys(core).length);
+    const differ = Object.keys(ed).filter(id => JSON.stringify(core[id]) !== JSON.stringify(ed[id]));
     expect(differ).toEqual([]);
   });
 });
