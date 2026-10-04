@@ -19,6 +19,16 @@
 
 ---
 
+## Archived 2026-10-04 — §DX-02mg (widened: engine readers and writers indexed by enclosing function)
+
+### §DX-02mg — the editor's flag index sees which quests read and write a flag, and not which engine functions do (NEW 2026-10-04 during §DX-02ao, 🟡 widen the scan universe)
+
+- [x] ✅ SHIPPED 2026-10-04 `7159452` **§DX-02mg — §III.B's State Flag Browser asks for "which render functions read it", and the editor's index covers `QUEST_DB` only.** §DX-02ao's row noted that the per-flag reader/writer index in `edit.html`'s loader is half of that browser. Since §DX-02mb it also reads declarative gates and bits, but its scan is still the quest section only. A flag set in a node hook (`wisHookReceived` is set in engine code, §DX-02ar) shows no writer, and one read by a renderer shows no reader. `check:deadconsts` (§DX-02n) meets the same gap from the other side. **Decide:** scan `S_story.<flag>` reads and writes across the engine script too and label them by enclosing function, or stop at quests and say so in the panel. **Verify:** `wisHookReceived` shows its engine writer.
+
+> **Closed 2026-10-04 at `7159452` — widened the scan, not "quests only".** `edit.html`'s loader scans `play.html` outside the `QUEST_DB` section for `S_story.<flag>`. Writes are `=`, `op=`, `++` and `--`; `==`, `!==` and comparisons count as reads. Each hit is labeled with its nearest enclosing `function` name and stored in `_flagToEngine`. The quest view's flag rows show those as `ƒ name` pills, and the audit counts engine readers and writers before it calls a flag dead or unwritten. A closure inside a named function is labeled with the outer name, which is close enough to navigate by. **Before → after:** `wisHookReceived` showed no writer; it now names `_nodeHookWisVsHub`, the function around `S_story.wisHookReceived = true`. "Writes a flag nothing reads" suggestions **907 → 884**. The remaining 884 have no reader in quests or engine code, so the audit was mostly right. `dx02mg-engine-flags.test.js` holds the index, the pill and the audit (red on the old editor). `check:walk` 41/41; editor specs 160/160.
+
+---
+
 ## Archived 2026-10-04 — §DX-02ao ((b)+(c): a dev toggle and click-to-copy path chips in four detail views)
 
 ### §DX-02ao — the Mission Explorer shipped as `edit.html` and dropped the one requirement the user stated in their own words (NEW 2026-08-12 during §DOC-02ae)
