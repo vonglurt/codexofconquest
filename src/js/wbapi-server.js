@@ -2539,13 +2539,27 @@ const QUEST_POST_ENVELOPE = ['nonce', 'id'];
 const NODE_CREATE_FIELDS = { STR:['name','label','text','npc','loot','N','S','E','W'], NUM:['act','sleepCost'], BOOL:['sleep','junction'] };
 const CREATE_KEEPS = {
   node:    { writes: () => [...NODE_CREATE_FIELDS.STR, ...NODE_CREATE_FIELDS.NUM, ...NODE_CREATE_FIELDS.BOOL, 'battle', 'num'],
-             envelope: ['nonce', 'code', 'r', 'c'], after: 'PUT /api/node/{code}' },
+             envelope: ['nonce', 'code', 'r', 'c', 'locale'], after: 'PUT /api/node/{code}' },
   terrain: { writes: () => ['monsters', 'label', 'icon'], envelope: ['nonce', 'key'], after: 'PUT /api/terrain/{key}' },
   monster: { writes: () => ['key', 'name', ...WBAPI.monsters.STATS, 'tier', 'voidTainted'], envelope: ['nonce'],
              after: 'POST /api/monster/{key}/drop for `drop`, PUT /api/monster/{key} otherwise' },
   npc:     { writes: () => ['key', 'name', 'occupation', 'node', 'neutral', 'friendly', 'dearFriend'], envelope: ['nonce'],
              after: 'PUT /api/npc/{key}' },
 };
+
+// A cell is a locale: the nodes on it are ordered by NODE_MAP key order, and only the first is
+// ever arrived at (cellOf). Sharing an occupied cell is therefore opt-in, and the answer names
+// the primary and every node the placement leaves unstandable.
+function coordPlacement(code, r, c, locale) {
+  const at = k => WBAPI.nodeCoords[k] || WBAPI.nodeMap[k] || {};
+  const occupiedBy = Object.keys(WBAPI.nodeMap).filter(k => k !== code && at(k).r === r && at(k).c === c);
+  if (!occupiedBy.length) return { ok:true, locale:null };
+  if (locale !== true) return { ok:false, occupiedBy,
+    error:`r:${r} c:${c} is held by ${occupiedBy.join(', ')} — send "locale":true to share the cell; only the first node in NODE_MAP order can be arrived at` };
+  const order = Object.keys(WBAPI.nodeMap).filter(k => k === code || occupiedBy.includes(k));
+  if (!order.includes(code)) order.push(code);
+  return { ok:true, locale:{ r, c, primary:order[0], unstandable:order.slice(1) } };
+}
 
 function refuseUnkeptCreateFields(type, body, method, url, res) {
   const spec = CREATE_KEEPS[type];
@@ -3275,8 +3289,11 @@ async function route(req, res) {
           '  4. POST /api/save',
           '',
           'COLLISION CHECK',
-          '  PUT /api/coords/{code} returns 409 if the target r,c is already occupied.',
-          '  POST /api/node with r,c also checks for collisions before writing.',
+          '  POST /api/node with r,c, PUT /api/coords/{code}, POST /api/coords/{code}/nudge and',
+          '  POST /api/graph/move answer 409 naming the occupants when the target cell is held,',
+          '  and write nothing. A cell is a locale: send "locale":true to share it. Only the first',
+          '  node in NODE_MAP order is ever arrived at, so the answer carries',
+          '  locale:{primary, unstandable[]} — every node listed there cannot be reached.',
           '',
           'See: GET /api/help/import',
         ].join('\n'),
@@ -6437,12 +6454,12 @@ async function route(req, res) {
     //   swap: true → swap coords with whatever is at the destination (if occupied)
     if (parts[1] === 'move' && method === 'POST') {
       let body; try { body = await readBody(req); } catch(e) { return json(res,400,{error:'Invalid JSON'}); }
-      const { code, r, c, swap=false } = body||{};
+      const { code, r, c, swap=false, locale } = body||{};
       if (!code||r==null||c==null) return json(res,400,{error:'Required: code, r, c'});
       if (!nm[code]) return json(res,404,{error:`Node not found: ${code}`});
-      const destKey = `${r},${c}`;
       const occupier = Object.entries(WBAPI.nodeCoords).find(([k,p])=>k!==code&&p.r===r&&p.c===c)?.[0];
-      if (occupier && !swap) return json(res,409,{error:`(${r},${c}) occupied by "${occupier}"`,occupier,tip:'Add "swap":true to swap coordinates'});
+      const place = swap ? { ok:true, locale:null } : coordPlacement(code, r, c, locale);
+      if (!place.ok) return json(res,409,{ ok:false, error:place.error, occupiedBy:place.occupiedBy, tip:'Add "swap":true to swap coordinates with the first of them' });
       const srcCoord = WBAPI.nodeCoords[code] || null;
       if (occupier && swap && srcCoord) WBAPI.nodeCoords[occupier] = { r:srcCoord.r, c:srcCoord.c };
       WBAPI.nodeCoords[code] = { r, c };
@@ -6456,7 +6473,7 @@ async function route(req, res) {
       newSec+=`};\n`;
       WBAPI._rawSrc=WBAPI._rawSrc.slice(0,si)+newSec+WBAPI._rawSrc.slice(ei);
       logResponse('POST', url.pathname, 200, `move: ${code} → (${r},${c})${occupier&&swap?' swapped with '+occupier:''}`);
-      return saveAndRestart(res,200,{ok:true,code,from:srcCoord,to:{r,c},...(occupier&&swap?{swapped:{code:occupier,movedTo:srcCoord}}:{})});
+      return saveAndRestart(res,200,{ok:true,code,from:srcCoord,to:{r,c},...(occupier&&swap?{swapped:{code:occupier,movedTo:srcCoord}}:{}),...(place.locale?{locale:place.locale}:{})});
     }
 
     // ── GET /api/graph/find-open-location/{code} ─────────────────────────────
@@ -7241,11 +7258,10 @@ async function route(req, res) {
         logResponse(method, url.pathname, 400, 'body must have numeric r and c');
         return json(res, 400, { error:'body must contain numeric fields: r (row) and c (column)' });
       }
-      // Check for coordinate collision
-      const collision = Object.entries(WBAPI.nodeCoords).find(([code, p]) => p.r===r && p.c===c && code!==targetCode);
-      if (collision) {
-        logResponse(method, url.pathname, 409, `${r},${c} already occupied by ${collision[0]}`);
-        return json(res, 409, { error:`Coordinate r:${r} c:${c} already occupied by node "${collision[0]}"` });
+      const place = coordPlacement(targetCode, r, c, body.locale);
+      if (!place.ok) {
+        logResponse(method, url.pathname, 409, `${r},${c} already occupied by ${place.occupiedBy.join(',')}`);
+        return json(res, 409, { ok:false, error:place.error, occupiedBy:place.occupiedBy });
       }
       const prev = WBAPI.nodeCoords[targetCode] || null;
       WBAPI.nodeCoords[targetCode] = { r, c };
@@ -7267,7 +7283,7 @@ async function route(req, res) {
       WBAPI._rawSrc = WBAPI._rawSrc.slice(0, sIdx) + section + WBAPI._rawSrc.slice(eIdx);
       logRow('coords', `${targetCode}  ${prev?`r:${prev.r},c:${prev.c} → `:'(new) '}r:${r},c:${c}`);
       logResponse(method, url.pathname, 200, `coords/${targetCode} → r:${r} c:${c}`);
-      return saveAndRestart(res, 200, { ok:true, code: targetCode, prev, coords: { r, c }, reminder: 'Use API only: PUT /api/node/{code}, PUT /api/coords/{code} — never edit play.html directly.' });
+      return saveAndRestart(res, 200, { ok:true, code: targetCode, prev, coords: { r, c }, ...(place.locale ? { locale: place.locale } : {}), reminder: 'Use API only: PUT /api/node/{code}, PUT /api/coords/{code} — never edit play.html directly.' });
     }
 
     // ── POST /api/coords/{code}/nudge — move relatively ──────────────────────
@@ -7275,13 +7291,13 @@ async function route(req, res) {
       const code = parts[1];
       if (!code) return json(res, 400, { error:'Usage: POST /api/coords/{code}/nudge  body: {dr, dc}' });
       let body; try { body = await readBody(req); } catch(e) { return json(res,400,{error:'Invalid JSON'}); }
-      const { dr, dc } = body||{};
+      const { dr, dc, locale } = body||{};
       if (dr===undefined && dc===undefined) return json(res,400,{error:'body must have dr and/or dc (relative offsets)'});
       const prev = WBAPI.nodeCoords[code];
       if (!prev) return json(res,404,{error:`Node "${code}" has no coordinates. Use PUT /api/coords/${code} to set initial position.`});
       const nr = prev.r + (Number(dr)||0), nc = prev.c + (Number(dc)||0);
-      const collision = Object.entries(WBAPI.nodeCoords).find(([c,p])=>p.r===nr&&p.c===nc&&c!==code);
-      if (collision) return json(res,409,{error:`r:${nr} c:${nc} already occupied by "${collision[0]}"`});
+      const place = coordPlacement(code, nr, nc, locale);
+      if (!place.ok) return json(res,409,{ ok:false, error:place.error, occupiedBy:place.occupiedBy });
       WBAPI.nodeCoords[code] = { r:nr, c:nc };
       const START='// ◆◆◆ WORLDBUILDER:NODE_COORDS:START ◆◆◆', END='// ◆◆◆ WORLDBUILDER:NODE_COORDS:END ◆◆◆';
       const sI=WBAPI._rawSrc.indexOf(START)+START.length, eI=WBAPI._rawSrc.indexOf(END);
@@ -7291,7 +7307,7 @@ async function route(req, res) {
       else { const cIdx=sec.lastIndexOf('\n};'); sec=sec.slice(0,cIdx+1)+`  ${code}:{r:${nr},c:${nc}},\n`+sec.slice(cIdx+1); }
       WBAPI._rawSrc=WBAPI._rawSrc.slice(0,sI)+sec+WBAPI._rawSrc.slice(eI);
       logResponse('POST', url.pathname, 200, `nudge ${code}: (${prev.r},${prev.c})→(${nr},${nc})`);
-      return saveAndRestart(res, 200, { ok:true, code, before:prev, after:{r:nr,c:nc}, dr:Number(dr)||0, dc:Number(dc)||0 });
+      return saveAndRestart(res, 200, { ok:true, code, before:prev, after:{r:nr,c:nc}, dr:Number(dr)||0, dc:Number(dc)||0, ...(place.locale ? { locale: place.locale } : {}) });
     }
 
     // ── POST /api/coords/swap — atomically exchange two node positions ─────────
@@ -10065,20 +10081,23 @@ async function route(req, res) {
         return json(res, 400, { ok:false, error:`Fields ${_badNodeFields.join(', ')} are deprecated — exits are derived from cell-grid adjacency, not stored. Place the node at (r,c) to establish connections.`, deprecated: _badNodeFields });
       }
       if (refuseUnkeptCreateFields('node', body, method, url, res)) return;
+      const hasRC = body.r !== undefined && body.c !== undefined;
+      const place = hasRC ? coordPlacement(code, Number(body.r), Number(body.c), body.locale) : { ok:true, locale:null };
+      if (!place.ok) {
+        logResponse(method, url.pathname, 409, `node create ${code}: ${place.occupiedBy.join(',')} at ${body.r},${body.c}`);
+        return json(res, 409, { ok:false, error:place.error, occupiedBy:place.occupiedBy });
+      }
       const entry = serializeNodeLiteral(code, body);
       const ins = insertAfterLastParsedNode(entry);
       if (!ins.ok) { logResponse(method, url.pathname, 500, ins.error); return json(res, 500, ins); }
       const maxNum = Object.values(WBAPI.nodeMap).reduce((m, n) => Math.max(m, n.num || 0), 0);
-      const { code: _code, r: _r, c: _c, ...nodeFields } = body;
+      const { code: _code, r: _r, c: _c, locale: _locale, ...nodeFields } = body;
       WBAPI.nodeMap[code] = { ...nodeFields, num: body.num !== undefined ? Number(body.num) : maxNum + 1 };
       // If r,c provided, also insert into NODE_COORDS
       let coordNote = '';
-      if (body.r !== undefined && body.c !== undefined) {
+      if (hasRC) {
         const r = Number(body.r), c = Number(body.c);
-        const collision = Object.entries(WBAPI.nodeCoords).find(([cd, p]) => p.r===r && p.c===c);
-        if (collision) {
-          coordNote = ` — coords r:${r},c:${c} conflict with ${collision[0]}; not written`;
-        } else {
+        {
           WBAPI.nodeCoords[code] = { r, c };
           const START = '// ◆◆◆ WORLDBUILDER:NODE_COORDS:START ◆◆◆';
           const END   = '// ◆◆◆ WORLDBUILDER:NODE_COORDS:END ◆◆◆';
@@ -10088,7 +10107,7 @@ async function route(req, res) {
           const closeIdx = section.lastIndexOf('\n};');
           section = section.slice(0, closeIdx + 1) + `  ${code}:{r:${r},c:${c}},\n` + section.slice(closeIdx + 1);
           WBAPI._rawSrc = WBAPI._rawSrc.slice(0, sIdx) + section + WBAPI._rawSrc.slice(eIdx);
-          coordNote = `  coords: r:${r},c:${c}`;
+          coordNote = `  coords: r:${r},c:${c}${place.locale ? `  locale, primary ${place.locale.primary}` : ''}`;
         }
       } else {
         coordNote = ' — no r,c provided; add coords via PUT /api/coords/{code}';
@@ -10098,7 +10117,7 @@ async function route(req, res) {
       logRow('label', `${body.label}  ·  Act ${body.act}  ·  terrain: ${body.name||'—'}${coordNote}`);
       logTrace('node create', `code=${code} terrain=${body.name} label="${(body.label||'').slice(0,40)}" act=${body.act} coords=${coordNote.trim()}`);
       logResponse(method, url.pathname, 201, `created node/${code}`);
-      return saveAndRestart(res, 201, { ok:true, code, coords: WBAPI.nodeCoords[code] || null, ...nodeConnections(code) });
+      return saveAndRestart(res, 201, { ok:true, code, coords: WBAPI.nodeCoords[code] || null, ...(place.locale ? { locale: place.locale } : {}), ...nodeConnections(code) });
     }
 
     if (type === 'terrain') {

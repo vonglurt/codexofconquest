@@ -69,7 +69,7 @@ export function sectionHeadersIn(src) {
 // ── the checks, as pure functions of a probe ─────────────────────────────────
 // Each returns a finding string or null. `poolRow` reads the entity's literal back out of
 // the scratch file, so "where it landed" is answered from disk and not from the response.
-export async function runChecks({ probe, poolRow, dropRow, onDisk, sectionHeaders, questRoundTrip, createRefusals, staleWriteProbe, terrainGuard }) {
+export async function runChecks({ probe, poolRow, dropRow, onDisk, sectionHeaders, questRoundTrip, createRefusals, staleWriteProbe, terrainGuard, coordGuard }) {
   const out = [];
   const add = (f) => { if (f) out.push(f); };
   const headersBefore = await sectionHeaders();
@@ -214,6 +214,16 @@ export async function runChecks({ probe, poolRow, dropRow, onDisk, sectionHeader
   add(tg.roster.status === 200 && tg.roster.pRefs ? null
     : `[proxy-lost] a monsters write by key answered ${tg.roster.status} and left the WORLD_DB row as ${String(tg.roster.row).trim().slice(0, 120)} — P.<key> references replaced`);
 
+  // §DX-02bp — a cell already held is shared only on request, and a refused placement writes
+  // nothing: a node with no r,c can hold quests and never appear in CELL_GRID.
+  const cg = await coordGuard();
+  add(cg.create.status === 409 && !cg.create.landed ? null
+    : `[ghost] POST /api/node onto held cell ${cg.cell} answered ${cg.create.status}${cg.create.landed ? ' and wrote the node' : ''} — a create that declines its coordinates must not succeed`);
+  add(cg.locale.status === 201 && cg.locale.coordsOnDisk && cg.locale.primary === cg.holder && cg.locale.unstandable.includes(cg.locale.code) ? null
+    : `[locale] POST /api/node with locale:true onto ${cg.cell} answered ${cg.locale.status}, primary ${cg.locale.primary}, coords on disk ${cg.locale.coordsOnDisk} — sharing a cell must place the node and name who is arrived at`);
+  add(cg.move.status === 409 && !cg.move.moved ? null
+    : `[slot] PUT /api/coords onto held cell answered ${cg.move.status}${cg.move.moved ? ' and moved the node' : ''} without locale:true`);
+
   return out;
 }
 
@@ -233,6 +243,8 @@ const PERSIST_ROUTES = [
 const DIALOGUE_VOCAB = ['dearFriend', 'friendly', 'impartial', 'meta', 'questActive', 'quote'];
 
 // ── selftest — the check functions against a stub probe ─────────────────────
+const CG0 = { cell: '1,1', holder: 'AAA', create: { status: 409, landed: false },
+  locale: { status: 201, code: 'ZZ', primary: 'AAA', unstandable: ['ZZ'], coordsOnDisk: true }, move: { status: 409, moved: false } };
 if (process.argv.includes('--selftest')) {
   let pass = 0, fail = 0;
   const ok = (c, m) => { if (c) pass++; else { fail++; console.log('  ✗ FAIL:', m); } };
@@ -256,6 +268,7 @@ if (process.argv.includes('--selftest')) {
       ({ type, field: 'nosuchfield', status: 400, named: ['nosuchfield'], landed: false })),
     staleWriteProbe: async () => ({ refused: 409, editSurvived: true, refusedValueLanded: false, recovered: 200 }),
     terrainGuard: async () => ({ epic: { status: 422, landed: false }, roster: { status: 200, pRefs: true, row: '' } }),
+    coordGuard: async () => CG0,
   };
   ok((await runChecks(healthy)).length === 0, 'a healthy write path produces no findings');
 
@@ -392,6 +405,12 @@ if (process.argv.includes('--selftest')) {
   ok((await runChecks(bend({ terrainGuard: async () => ({ epic: { status: 422, landed: false }, roster: { status: 200, pRefs: false, row: 'monsters:[{"key":"x"}]' } }) })))
     .some((f) => f.startsWith('[proxy-lost]')), 'a monsters write that inlines its references is caught as [proxy-lost]');
 
+  ok((await runChecks(bend({ coordGuard: async () => ({ ...CG0, create: { status: 201, landed: true } }) })))
+    .some((f) => f.startsWith('[ghost]')), 'a create that drops its coordinates and answers 201 is caught as [ghost]');
+  ok((await runChecks(bend({ coordGuard: async () => ({ ...CG0, locale: { ...CG0.locale, status: 409 } }) })))
+    .some((f) => f.startsWith('[locale]')), 'a refused opt-in is caught as [locale]');
+  ok((await runChecks(bend({ coordGuard: async () => ({ ...CG0, move: { status: 200, moved: true } }) })))
+    .some((f) => f.startsWith('[slot]')), 'a coords write onto a held cell without opt-in is caught as [slot]');
   ok((await runChecks(bend({ staleWriteProbe: async () => ({ ...S0, recovered: 409 }) })))
     .some((f) => f.startsWith('[stale-unrecoverable]')),
     'a refusal naming a recovery that does not work is caught');
@@ -550,7 +569,29 @@ const terrainGuard = async () => {
     roster: { status: roster.status, pRefs: keys.length > 0 && keys.every((k) => new RegExp(`\\bP\\.${k}\\b`).test(r)), row: r } };
 };
 
-const findings = await runChecks({ probe, poolRow, dropRow, onDisk, sectionHeaders, questRoundTrip, createRefusals, staleWriteProbe, terrainGuard });
+const coordGuard = async () => {
+  const core = createRequire(import.meta.url)(path.join(ROOT, 'src', 'js', 'wbapi-core.js'));
+  core.load(scratch);
+  const at = (k) => core.nodeCoords[k] || {};
+  const cellOf = (k) => `${at(k).r},${at(k).c}`;
+  const keys = Object.keys(core.nodeMap).filter((k) => at(k).r != null);
+  const [holder, other] = keys.filter((k) => keys.find((j) => cellOf(j) === cellOf(k)) === k);
+  const { r, c } = at(holder);
+  const terrain = Object.keys(core.worldDb)[0];
+  const disk = () => fs.readFileSync(scratch, 'utf8');
+  const a = await probe('POST', '/api/node', { code: 'ZZBPA', name: terrain, label: 'Probe', act: 1, r, c });
+  const b = await probe('POST', '/api/node', { code: 'ZZBPB', name: terrain, label: 'Probe', act: 1, r, c, locale: true });
+  const before = at(other);
+  const m = await probe('PUT', `/api/coords/${other}`, { r, c });
+  core.load(scratch);
+  return { cell: `${r},${c}`, holder,
+    create: { status: a.status, landed: disk().includes('ZZBPA') },
+    locale: { status: b.status, code: 'ZZBPB', primary: b.json?.locale?.primary, unstandable: b.json?.locale?.unstandable || [],
+      coordsOnDisk: disk().includes(`ZZBPB:{r:${r},c:${c}}`) },
+    move: { status: m.status, moved: at(other).r !== before.r || at(other).c !== before.c } };
+};
+
+const findings = await runChecks({ probe, poolRow, dropRow, onDisk, sectionHeaders, questRoundTrip, createRefusals, staleWriteProbe, terrainGuard, coordGuard });
 console.log(`  probe monster written to a throwaway copy · pool row read from disk: ${(await poolRow()).trim().slice(0, 100)}`);
 if (findings.length) {
   findings.forEach((f) => console.log('  ✗ ' + f));
