@@ -27,24 +27,11 @@ const path = require('path');
 
 const ROOT = path.resolve(__dirname, '..', '..');
 
-// Declared and applied by nothing at 2026-09-25. Deleting the rules is §CSS-CENSUS-FU.
-const KNOWN_DEAD = new Set(`
-  cfg-grid3 chip-label chips-section-lbl cond-afford-hint cond-cost cond-item-row cs-feature
-  current-pos dpad-center-spacer ds-die final-battle-chip fish-chip froberger-journal-attr
-  froberger-journal-entry glow-crit inn-chip inn-slept inv-item-sell inv-sep loot-chip
-  loot-collected map-cell mc-fog-icon mmc-current mmc-empty-visited mmc-fog mmc-fog-cell
-  mmc-icon mmc-node mmc-partial nav-section-hd npc-chip path-active q-name qc-obj
-  qc-status-active qc-status-done qc-status-failed qc-title quest-card rest-chip
-  rest-chip-empty rest-chip-used sbo-btn-flash sleep-field sleep-field-lbl sleep-field-val
-  story-nav-section-lbl vendor-chip vendor-item-cost vendor-section-hd vendor-sell-btn
-  wmc-empty-visited
-`.trim().split(/\s+/));
+// Declared and applied by nothing. Deleting the rule is the fix; an entry here needs a reason.
+const KNOWN_DEAD = new Set([]);
 
 // Applied and neither styled nor read. Each names why it may stay.
 const KNOWN_UNDECLARED = {
-  'mc-junction': 'the minimap marks junction cells and no rule draws them — §CSS-CENSUS-FU',
-  'norm': "the adv badge's markup default; the render replaces it and the stylesheet keys on show-norm — §CSS-CENSUS-FU",
-  'shield-item': 'inventory rows for shields; no rule styles them — §CSS-CENSUS-FU',
 };
 
 const TOKEN = /^-?[A-Za-z_][\w-]*$/;

@@ -255,10 +255,6 @@ html, body { height: 100%; background: var(--bg); color: var(--text); font-famil
   align-items: center;
   gap: 2px;
 }
-.dmg-chip-wrap .chip-label {
-  font-size: 9px;
-  color: var(--dim);
-}
 
 .mod-bk {
   font-size: 11px;
@@ -381,7 +377,6 @@ html, body { height: 100%; background: var(--bg); color: var(--text); font-famil
 /* ── Glow Classes ──────────────────────────────────────── */
 .glow-nat20 { filter: drop-shadow(0 0 6px var(--gold)) drop-shadow(0 0 12px var(--gold-lt)); }
 .glow-nat1  { filter: drop-shadow(0 0 6px var(--red)) drop-shadow(0 0 10px var(--red-lt)); }
-.glow-crit  { filter: drop-shadow(0 0 8px var(--gold-lt)); transform: scale(1.06); }
 .glow-hit   { filter: drop-shadow(0 0 4px var(--grn-lt)); }
 
 /* ── Left Panel Components ─────────────────────────────── */
@@ -814,11 +809,6 @@ html, body { height: 100%; background: var(--bg); color: var(--text); font-famil
   grid-template-columns: 1fr 1fr;
   gap: 6px;
 }
-.cfg-grid3 {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  gap: 6px;
-}
 .cfg-field {
   display: flex;
   flex-direction: column;
@@ -983,15 +973,6 @@ hr.divider { border: none; border-top: 1px solid var(--border); margin: 2px 0; }
   color: var(--muted); padding: 1px 0; margin-bottom: 0;
 }
 .stat-row { display: flex; justify-content: space-between; align-items: center; min-height: 16px; }
-.story-nav-section-lbl {
-  font-size: 8px; font-weight: 900; letter-spacing: 1.5px; text-transform: uppercase;
-  color: var(--muted); padding: 4px 0 2px; border-top: 1px solid var(--border);
-  margin-top: 4px;
-}
-.chips-section-lbl {
-  font-size: 8px; font-weight: 900; letter-spacing: 2px; text-transform: uppercase;
-  color: var(--muted); padding: 2px 0;
-}
 #map-travel-log {
   flex: 1; min-width: 160px; max-width: 220px;
   background: var(--panel2); border-left: 1px solid var(--border);
@@ -1313,15 +1294,8 @@ hr.divider { border: none; border-top: 1px solid var(--border); margin: 2px 0; }
   color: var(--muted); font-size: 9px; letter-spacing: 0.8px;
   text-transform: uppercase; font-weight: 700; margin-right: 1px; flex-shrink: 0;
 }
-.info-chip.npc-chip   { border-color: #7a5a9a; color: #5a3a7a; cursor: pointer; }
-.info-chip.npc-chip:hover { background: rgba(122,90,154,0.1); border-color: #5a3a7a; }
-.info-chip.loot-chip  { border-color: #5a8a3a; color: var(--grn-lt); }
-.info-chip.loot-collected { border-color: var(--muted); color: var(--muted); }
 .info-chip.battle-chip { border-color: var(--red-lt); color: var(--red); cursor: pointer; }
 .info-chip.battle-chip:hover { background: rgba(192,48,32,0.08); border-color: var(--red); }
-.info-chip.rest-chip { border-color: var(--sky); color: var(--sky-dk); cursor: pointer; }
-.info-chip.rest-chip:hover { background: rgba(123,170,184,0.15); border-color: var(--sky-dk); }
-.info-chip.rest-chip-empty { border-color: var(--muted); color: var(--muted); cursor: default; }
 /* Layer 39 — Epic Battleground NPC chips */
 .info-chip.eb-npc-chip   { border-color: var(--red-lt); color: var(--red); cursor: pointer; }
 .info-chip.eb-npc-chip:hover { background: rgba(192,48,32,0.1); border-color: var(--red); }
@@ -1346,11 +1320,6 @@ hr.divider { border: none; border-top: 1px solid var(--border); margin: 2px 0; }
 }
 .dpad-btn:hover:not(:disabled) { background: var(--panel3); border-color: var(--c3); color: var(--c3); }
 .dpad-btn:disabled { opacity: 0.22; cursor: default; }
-.nav-section-hd {
-  font-size: 8px; font-weight: 900; letter-spacing: 2px; text-transform: uppercase;
-  color: var(--muted); text-align: center; padding: 2px 0;
-}
-.dpad-center-spacer { display: block; }
 /* §KG-01: Hunt Mode toggle sits in the d-pad center — dim when off, gold-lit when armed. */
 .dpad-btn.dpad-hunt { font-size: 13px; padding: 0; background: var(--panel2); border-color: var(--border); color: var(--dim); }
 .dpad-btn.dpad-hunt:hover:not(:disabled) { background: var(--panel3); border-color: var(--gold); color: var(--gold); }
@@ -1550,7 +1519,6 @@ hr.divider { border: none; border-top: 1px solid var(--border); margin: 2px 0; }
 .inv-section-hd { font-size: 10px; font-weight: 700; letter-spacing: 0.8px; color: var(--purple); text-transform: uppercase; padding: 8px 2px 3px; border-top: 1px solid var(--border); margin-top: 4px; }
 .quest-section-hd { font-size: 10px; font-weight: 700; letter-spacing: 0.8px; color: #6A4808; text-transform: uppercase; padding: 8px 2px 3px; border-top: 1px solid var(--border); margin-top: 4px; }
 .quest-item.quest-corpse { border-color: #5a3a1a; }
-.quest-item.quest-corpse .q-name { color: #6A4808; }
 .inv-item-knowledge { border-color: #2a1a4a; opacity: 0.85; }
 .inv-item-knowledge .inv-name { color: #5A2A8A; }
 .inv-tag { font-size: 9px; color: var(--purple); border: 1px solid #3a1a6a; border-radius: 3px; padding: 1px 4px; white-space: nowrap; flex-shrink: 0; }
@@ -1610,9 +1578,6 @@ hr.divider { border: none; border-top: 1px solid var(--border); margin: 2px 0; }
 #s-quest-count { font-size: 10px; color: var(--gold); }
 
 /* ── Layer 5: Sleep + Void Tide ── */
-.info-chip.inn-chip { border-color: var(--sky); color: var(--sky-dk); cursor: pointer; }
-.info-chip.inn-chip:hover { background: rgba(123,170,184,0.15); border-color: var(--sky-dk); }
-.info-chip.inn-slept { border-color: var(--muted); color: var(--muted); }
 #story-sleep-overlay {
   position: absolute; inset: 0; z-index: 11;
   background: var(--bg); display: none;
@@ -1935,8 +1900,6 @@ hr.divider { border: none; border-top: 1px solid var(--border); margin: 2px 0; }
 .btn-buy-shield:hover { background: rgba(123,170,184,0.2); }
 #vendor-empty { font-size: 12px; color: var(--dim); font-style: italic; }
 .buy-locked { opacity: 0.5; }
-.info-chip.vendor-chip { border-color: #5a8a3a; color: var(--grn-lt); cursor: pointer; }
-.info-chip.vendor-chip:hover { border-color: #3A7A3A; background: rgba(58,122,58,0.08); }
 .inv-use-btn {
   padding: 3px 8px; font-size: 10px; font-weight: 600;
   background: rgba(58,122,58,0.1); border: 1px solid var(--grn-lt); color: var(--grn-lt);
@@ -2001,7 +1964,6 @@ hr.divider { border: none; border-top: 1px solid var(--border); margin: 2px 0; }
 .mc-trail .mc-code { color: #2A7A2A; }
 .mc-icon { font-size: calc(var(--mcpx) * 0.3); line-height: 1; }
 .mc-current .mc-icon { font-size: calc(var(--mcpx) * 0.36); }
-.mc-fog-icon { font-size: calc(var(--mcpx) * 0.3); color: #2A2A3A; }
 .mc-exits { position: absolute; inset: 0; pointer-events: none; }
 .mc-exit { position: absolute; font-size: 7px; line-height: 1; }
 .mc-exit.available { color: #1A5070; }
@@ -2788,15 +2750,8 @@ body.act-three .npc-card-chip { filter: saturate(0.85); }
   background: #1e0f06; color: #4a2c14;
 }
 .mmc-player       { background: #B87C28; color: #1a0400; border: 1px solid #F0E6C8; box-shadow: 0 0 4px rgba(184,124,40,0.9); font-size: 8px; font-weight: 900; }
-.mmc-current      { background: #B87C28; color: #1a0400; border: 1px solid #F0E6C8; box-shadow: 0 0 4px rgba(184,124,40,0.9); font-size: 8px; font-weight: 900; }
 .mmc-visited      { background: #0f3820; color: #50d880; border: 1px solid #2a7840; }
 .mmc-trail        { background: #1e1800; color: #c8a828; border: 1px solid #5a4410; }
-.mmc-node         { background: #0c0c1a; color: #3a3a6a; border: 1px solid #1a1a30; }
-.mmc-empty-visited{ background: #120e0a; color: #5a4020; }
-.mmc-partial      { background: #0e0e0e; color: #2a2a2a; }
-.mmc-fog-cell     { background: #0a0a0a; }
-.mmc-icon { font-size: 7px; line-height: 1; }
-.mmc-fog  { font-size: 6px; color: #4a2c14; }
 .mmc-epic         { background: #8b0000; color: #ffaaaa; border: 1px solid #cc2222; box-shadow: 0 0 3px rgba(180,0,0,0.8); }
 .mmc-epic-visited { background: #3a0000; color: #cc5555; border: 1px solid #770000; }
 .mmc-epic-unvis   { background: #200808; color: #4a1a1a; }
@@ -2825,7 +2780,6 @@ body.act-three .npc-card-chip { filter: saturate(0.85); }
 .wmc-visited  { background: #0f3820; color: #50d880; border: 1px solid #2a7840; }
 .wmc-trail    { background: #1e1800; color: #c8a828; border: 1px solid #5a4410; }
 .wmc-node     { background: #0c0c1a; color: #3a3a6a; border: 1px solid #1a1a30; }
-.wmc-empty-visited { background: #100c08; }
 .wmc-icon  { font-size: 4px; line-height: 1; overflow: hidden; }
 .wmc-unvis { font-size: 3px; color: #25253a; }
 .wmc-epic         { background: #8b0000; color: #ffaaaa; border: 1px solid #cc2222; box-shadow: 0 0 4px rgba(180,0,0,0.8); }
@@ -2902,17 +2856,9 @@ body.act-three .npc-card-chip { filter: saturate(0.85); }
   color: var(--text);
 }
 .info-chip .chip-lbl { color: var(--muted); }
-.info-chip.npc-chip    { border-color: var(--border); color: var(--text); }
-.info-chip.npc-chip:hover { background: var(--panel2); }
-.info-chip.loot-chip   { border-left: 3px solid var(--gold); color: var(--gold); }
-.info-chip.loot-collected { border-color: var(--muted); color: var(--muted); }
 .info-chip.battle-chip { border-left: 3px solid var(--red-lt); color: var(--red); }
 .info-chip.battle-chip:hover { background: rgba(192,48,32,0.07); }
-.info-chip.rest-chip   { border-left: 3px solid var(--sky-dk); color: var(--sky-dk); }
-.info-chip.rest-chip:hover { background: rgba(123,170,184,0.12); }
-.info-chip.rest-chip-empty { border-color: var(--muted); color: var(--muted); }
 .info-chip.battle-defeated { border-color: var(--muted); color: var(--muted); }
-.info-chip.final-battle-chip { border-left: 4px solid var(--gold); border-color: var(--gold); color: var(--gold); font-weight: 900; animation: pulse-gold 1.5s infinite; }
 @keyframes pulse-gold { 0%,100%{ box-shadow:0 0 4px rgba(254,167,18,0.3); } 50%{ box-shadow:0 0 14px rgba(254,167,18,0.7); } }
 
 /* ── Pre-Battle Overlay — light parchment + dark ember header ── */
@@ -2931,13 +2877,6 @@ body.act-three .npc-card-chip { filter: saturate(0.85); }
 .threat-medium  { color: var(--gold);    border-color: var(--gold); }
 .threat-hard    { color: var(--red);     border-color: var(--red); }
 .threat-deadly  { color: var(--c5); border-color: var(--red); background: var(--red); }
-
-.cond-item-row { background: var(--panel); border: 1px solid var(--border); border-radius: 6px; }
-.cond-item-row.selected { border-color: var(--red-lt); background: rgba(138,32,21,0.06); }
-.cond-item-row .cond-name { color: var(--text); font-weight: 700; }
-.cond-item-row .cond-cost { color: var(--gold); font-weight: 700; }
-.cond-item-row .cond-effect { color: var(--dim); font-size: 10px; }
-.cond-afford-hint { color: var(--red); font-style: italic; font-size: 10px; }
 #prebatt-cond-summary { background: var(--panel); border: 1px solid var(--border); border-radius: 6px; color: var(--text); }
 
 /* ── Battle Overlay — light parchment, dark ember header, red motif ── */
@@ -3016,8 +2955,6 @@ body.act-three .npc-card-chip { filter: saturate(0.85); }
 .sbo-btn-spell:hover  { background: rgba(64,64,175,0.1); }
 .sbo-btn-shield { background: var(--panel); border: 2px solid var(--grn-lt); color: var(--grn-lt); border-radius: 8px; font-weight: 700; }
 .sbo-btn-shield:hover { background: rgba(58,122,58,0.1); border-color: var(--grn-lt); }
-.sbo-btn-flash  { background: var(--panel); border: 2px solid var(--gold); color: var(--gold); border-radius: 8px; font-weight: 700; }
-.sbo-btn-flash:hover  { background: rgba(106,72,8,0.12); }
 #sbo-spell-row { border-top: 1px dashed var(--border); }
 #sbo-shield-row { border-top: 1px dashed var(--border); }
 #sbo-shield-name { color: var(--gold); }
@@ -3051,9 +2988,6 @@ body.act-three .npc-card-chip { filter: saturate(0.85); }
 #story-sleep-overlay { background: #1e0802; }
 #sleep-header { background: #C21717; border-bottom: 3px solid #E76219; }
 #sleep-node-name { color: #FDDCA9; font-weight: 900; text-transform: uppercase; letter-spacing: 1px; }
-.sleep-field { background: #3d1510; border: 2px solid #562717; border-radius: 6px; }
-.sleep-field-lbl { color: #E76219; text-transform: uppercase; font-size: 9px; letter-spacing: 1px; }
-.sleep-field-val { color: #FDDCA9; }
 #sleep-warning { background: #3d0505; border: 2px solid #C21717; border-radius: 6px; color: #E76219; }
 #btn-sleep-confirm { background: #FEA712; border: 3px solid #FDDCA9; color: #120600; font-weight: 900; border-radius: 8px; text-transform: uppercase; letter-spacing: 1px; }
 #btn-sleep-confirm:hover { background: #FDDCA9; }
@@ -3216,8 +3150,6 @@ body.act-three .npc-card-chip { filter: saturate(0.85); }
 #btn-victory-close:hover { background: #FDDCA9; }
 #victory-ending { font-size: 12px; color: #c0a060; line-height: 1.7; font-style: italic; max-width: 380px; padding: 10px 14px; border: 1px solid #5a3010; border-radius: 6px; background: #2a1008; white-space: pre-wrap; }
 #victory-question { font-size: 13px; color: #e0c890; font-style: italic; max-width: 380px; padding: 10px 0 4px; text-align: center; letter-spacing: 0.5px; border-top: 1px solid #3a2a08; margin-top: 4px; }
-.froberger-journal-entry { background: #1e1608; border-left: 3px solid #8a6a20; border-radius: 4px; padding: 10px 14px; margin: 8px 0; font-size: 12px; color: #c0a840; line-height: 1.75; font-style: italic; white-space: pre-wrap; }
-.froberger-journal-attr { font-size: 10px; color: #6a5020; margin-top: 6px; font-style: normal; }
 .jov-entry { padding: 8px 12px; border: 1px solid #3a2a08; border-radius: 5px; font-size: 11px; background: #18120a; cursor: pointer; }
 .jov-entry.unlocked { border-color: #6a5020; color: #c0a060; }
 .jov-entry.locked { color: #3a2a10; border-color: #221800; cursor: default; }
@@ -3244,34 +3176,18 @@ body.act-three .npc-card-chip { filter: saturate(0.85); }
 .inv-item-knowledge  .inv-name { color: #BE96EA; }
 .inv-item .inv-use-btn { color: #85E7A2; border-color: #3f9557; background: rgba(63,149,87,0.18); }
 .inv-item .inv-use-btn:hover { background: rgba(63,149,87,0.42); color: #B4F7C6; }
-.inv-item-sell { color: #FEA712; font-size: 10px; }
-.inv-sep { border-color: #7a4022; }
 
 /* ── Quest Overlay ───────────────────────────────────── */
-.quest-card { background: #3d1510; border: 2px solid #E76219; border-radius: 8px; }
-.quest-card:nth-child(5n+2) { border-color: #C21717; }
-.quest-card:nth-child(5n+3) { border-color: #FEA712; }
-.quest-card:nth-child(5n+4) { border-color: #FDDCA9; }
-.quest-card:nth-child(5n+0) { border-color: #562717; border-width: 3px; }
-.qc-title { color: #FDDCA9; font-weight: 900; text-transform: uppercase; letter-spacing: 0.5px; }
-.qc-status-active { color: #E76219; }
-.qc-status-done   { color: #FEA712; }
-.qc-status-failed { color: #C21717; }
-.qc-obj { color: #b07040; }
 
 /* ── Vendor Overlay ──────────────────────────────────── */
-.vendor-section-hd { color: #FEA712; text-transform: uppercase; letter-spacing: 2px; font-weight: 900; border-left: 4px solid #E76219; padding-left: 6px; }
 .vendor-item { background: #3d1510; border: 2px solid #562717; border-radius: 8px; }
 .vendor-item:nth-child(5n+1) { border-color: #E76219; }
 .vendor-item:nth-child(5n+2) { border-color: #FEA712; }
 .vendor-item:nth-child(5n+3) { border-color: #C21717; }
 .vendor-item:nth-child(5n+4) { border-color: #FDDCA9; }
 .vendor-item-name { color: #FDDCA9; font-weight: 700; }
-.vendor-item-cost { color: #FEA712; font-weight: 900; }
 .vendor-buy-btn { background: #E76219; border: 2px solid #FEA712; color: #120600; font-weight: 900; border-radius: 6px; text-transform: uppercase; letter-spacing: 0.5px; }
 .vendor-buy-btn:hover { background: #FEA712; border-color: #FDDCA9; }
-.vendor-sell-btn { background: #562717; border: 2px solid #E76219; color: #FDDCA9; font-weight: 700; border-radius: 6px; text-transform: uppercase; font-size: 10px; }
-.vendor-sell-btn:hover { background: #E76219; color: #120600; }
 #btn-sell-equipment { background: #1a0c1a; border: 2px solid #6a2a6a; color: #c080c0; font-weight: 900; border-radius: 6px; padding: 7px 0; font-size: 10px; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; width: 100%; margin-top: 4px; }
 #btn-sell-equipment:hover { background: #6a2a6a; color: #FDDCA9; }
 #btn-sell-equipment:disabled { opacity: 0.35; cursor: not-allowed; }
@@ -3345,8 +3261,6 @@ body.act-three .npc-card-chip { filter: saturate(0.85); }
 #btn-fishing-abandon:hover { border-color: #2a5a6a; color: #80a0b0; }
 #btn-fishing-cast, #btn-fishing-recast { padding: 8px 18px; border-radius: 4px; border: 1px solid #1a5a8a; background: #030e18; color: #60b0e0; font-size: 12px; font-weight: 700; cursor: pointer; }
 #btn-fishing-cast:hover, #btn-fishing-recast:hover { background: #0a2030; border-color: #40a0d0; color: #90d0ff; }
-.info-chip.fish-chip { border-color: #1a4a6a; color: #60b0e0; cursor: pointer; }
-.info-chip.fish-chip:hover { background: #030e18; border-color: #40a0d0; }
 
 /* ── Layer 39: Epic Battleground NPC Modal ── */
 #story-eb-npc-modal {
@@ -3438,9 +3352,7 @@ body.act-three .npc-card-chip { filter: saturate(0.85); }
 .cs-row { display: flex; justify-content: space-between; font-size: 11px; padding: 2px 0; }
 .cs-row-lbl { color: var(--muted); }
 .cs-row-val { color: var(--text); font-weight: 700; }
-.cs-feature { font-size: 11px; padding: 3px 0; color: var(--text); }
 .cs-feature-icon { margin-right: 4px; }
-.cs-feature.upcoming { color: var(--muted); opacity: 0.5; }
 .tattoo-item { border-left: 3px solid var(--border) !important; }
 .tattoo-item:hover { border-left-color: var(--gold) !important; }
 .cs-prog-row { display:flex; align-items:center; gap:4px; font-size:11px; padding:2px 0; color:var(--text); }
@@ -3452,25 +3364,12 @@ body.act-three .npc-card-chip { filter: saturate(0.85); }
 .cs-feat-tag { font-size:9px; color:var(--muted); background:var(--panel2); padding:0 3px; border-radius:2px; flex-shrink:0; }
 .cs-tattoo-name { flex:1; font-style:italic; }
 
-.map-cell { border-radius: 4px; font-family: 'Courier New', monospace; }
-.map-cell.current-pos { background: #FEA712 !important; color: #120600 !important; font-weight: 900; box-shadow: 0 0 8px rgba(254,167,18,0.7); }
-.map-cell.visited { background: #562717; color: #FDDCA9; }
-.map-cell.path-active { background: #E76219; color: #120600; }
-.map-cell.unvisited { background: #1e0802; color: #562717; }
-.map-cell.water { background: #120600; color: #2a0a05; }
-
 
 /* ── Death Save Panel ────────────────────────────────── */
 #sbo-death-save-panel { background: #2a0505; border: 3px solid #C21717; border-radius: 10px; }
 .ds-status { color: #E76219; text-transform: uppercase; letter-spacing: 2px; }
-.ds-die { border: 3px solid #C21717; border-radius: 8px; background: #3d0505; color: #E76219; }
-.ds-die.success { border-color: #FEA712; background: #3d2a00; color: #FEA712; }
-.ds-die.failure { border-color: #C21717; background: #3d0505; color: #C21717; }
 
 /* ── Rest Chip (light theme) ── */
-.rest-chip { background: var(--panel); border: 1px solid var(--sky-dk); border-radius: 6px; color: var(--sky-dk); font-weight: 700; }
-.rest-chip:hover { background: #562717; border-color: #FDDCA9; color: #FDDCA9; }
-.rest-chip-used { border-color: #562717; color: #b07040; }
 
 /* §TIMELESS-01: dark-theme Stalk Modal styles removed with the Hunt/Stalk feature. */
 
@@ -3596,7 +3495,7 @@ body.act-three .npc-card-chip { filter: saturate(0.85); }
           </optgroup>
         </select>
       </div>
-      <div class="adv-badge norm" id="player-adv-badge"></div>
+      <div class="adv-badge show-norm" id="player-adv-badge"></div>
 
       <button class="roll-btn-main" id="player-roll-btn">⚔ ROLL ATTACK</button>
       <button class="btn-death" id="death-save-btn" style="display:none">💀 DEATH SAVE</button>
@@ -31445,8 +31344,7 @@ function storyRenderInventory() {
     const div = document.createElement('div');
     div.className = 'inv-item'
       + (item.type === 'shard'   ? ' shard-item'   : '')
-      + (item.type === 'key'     ? ' key-item'      : '')
-      + (item.type === 'shield'  ? ' shield-item'   : '');
+      + (item.type === 'key'     ? ' key-item'      : '');
     div.innerHTML = '<span class="inv-icon">' + item.icon + '</span>'
       + '<span class="inv-name">' + item.name
       + (item.mintKey ? ' <span class="inv-tag" title="Minted on the ledger — tradeable in multiplayer">🔗</span>' : '')
@@ -31464,7 +31362,7 @@ function storyRenderInventory() {
     if (S_story.equippedShield) {
       const sh = S_story.equippedShield;
       const div = document.createElement('div');
-      div.className = 'inv-item shield-item';
+      div.className = 'inv-item';
       div.innerHTML = '<span class="inv-icon">' + sh.icon + '</span>'
         + '<span class="inv-name">' + sh.name + ' <span class="inv-tag">+' + sh.acBonus + ' AC</span></span>'
         + '<span class="inv-src">equipped</span>';
@@ -37481,7 +37379,6 @@ function _renderMapGrid() {
         const isTrail = trailSet.has(code);
         if (isVis || isTrail) {
           const n = NODE_MAP[code];
-          if (n && n.junction) cell.classList.add('mc-junction');
           cell.classList.add(isTrail ? 'mc-trail' : 'mc-visited');
           cell.innerHTML = '<div class="mc-icon">' + _mapIcon(code) + '</div><div class="mc-code">' + code + '</div>';
           _mapAddExits(cell, code);
