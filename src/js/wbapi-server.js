@@ -3003,14 +3003,15 @@ async function route(req, res) {
           `GET ${b}/api/quest/{id}/chain`,
           '  Upstream and downstream quest chain for a quest.',
           '',
-          `GET ${b}/api/location/{code}[?with=quests,monsters,npcs,waypointQuests|all][:summary]`,
+          `GET ${b}/api/location/{code}[?with=quests,monsters,npcs,waypointQuests,flagReads,flagWrites|all][:summary]`,
           '  Composite view: node + terrain + coords + neighbours + counts, and pointers to the',
-          '  verbs that return the rest. The four entity collections are OPT-IN (§DX-02kn):',
+          '  verbs that return the rest. The four entity collections and the two flag lists',
+          '  (the quest-chain flags the node\'s quests read and write) are OPT-IN (§DX-02kn):',
           '  inlining them cost 327 KB at NUE (177 full quest bodies) against 2 KB now, and',
           '  ?with=monsters restores terrain.monsters with them. ?with=all is the old shape,',
           '  byte for byte. Quest bodies alone: GET /api/list/quest?node={code}.',
           '  A :summary depth inlines ids and titles only (§DX-02kr): ?with=quests:summary,',
-          '  or ?with=all:summary for all four — {id,title} per quest, {key,name} otherwise.',
+          '  or ?with=all:summary — {id,title} per quest, {key,name} per monster and npc, flags as-is.',
           '',
           `GET ${b}/api/export/{collection}[?format=json|js|module]`,
           '  Dump a full array as JSON, JS literal, or CommonJS module.',
@@ -10396,21 +10397,23 @@ async function route(req, res) {
         ...prof,
         coords,
         neighbours,
-        counts: { monsters:prof.monsters?.length||0, quests:prof.quests.length, waypointQuests:prof.waypointQuests.length, npcs:prof.npcs.length, neighbours:Object.values(neighbours).filter(Boolean).length },
+        counts: { monsters:prof.monsters?.length||0, quests:prof.quests.length, waypointQuests:prof.waypointQuests.length, npcs:prof.npcs.length, neighbours:Object.values(neighbours).filter(Boolean).length,
+          flagReads:prof.flagReads.length, flagWrites:prof.flagWrites.length },
         _detail: `Full entity: GET /api/node/${rawId}`,
         _nearby: `Nearby coords: GET /api/coords/near/${rawId}?radius=8`,
         _validate: `Walkability: GET /api/graph/validate/${rawId}`,
       };
-      // §DX-02kn — the four heavy keys are opt-in. `location` is the orientation call,
+      // §DX-02kn — the heavy keys are opt-in. `location` is the orientation call,
       // and it inlined 177 full quest bodies at NUE — 264 KB of desc/passText/hint for a
       // question usually answered by `coords` and `counts`. They are DELETED from the
       // assembled object rather than assembled conditionally, so `?with=all` is the same
       // object in the same key order as before the flag existed.
       // §DX-02kr — `<collection>:summary` inlines ids and titles only: {id,title} per quest,
       // {key,name} per monster and npc. The editor's strip reads nothing else.
-      const OPTIONAL = ['monsters', 'quests', 'waypointQuests', 'npcs'];
+      const OPTIONAL = ['monsters', 'quests', 'waypointQuests', 'npcs', 'flagReads', 'flagWrites'];
       const SUMMARY = { monsters: (m) => ({ key:m.key, name:m.name }), npcs: (n) => ({ key:n.key, name:n.name }),
-        quests: (q) => ({ id:q.id, title:q.title }), waypointQuests: (q) => ({ id:q.id, title:q.title }) };
+        quests: (q) => ({ id:q.id, title:q.title }), waypointQuests: (q) => ({ id:q.id, title:q.title }),
+        flagReads: (f) => f, flagWrites: (f) => f };
       const depth = {}, unknownWith = [];
       for (const item of (url.searchParams.get('with') || '').split(',').map((x) => x.trim()).filter(Boolean)) {
         const [k, d = 'full'] = item.split(':');
