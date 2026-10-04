@@ -43,6 +43,15 @@ async function at(page, code, overrides = {}) {
   await dismissContinue(page);
 }
 
+// Arrival can schedule a quest's onActivate line 500ms out (_uqfActivateAtNode). A paused clock
+// keeps it pending through the click; settle() then runs past its deadline before the read, so
+// a line that is not cancelled overwrites the message every time instead of under load (§DX-02ly).
+async function frozen(page) {
+  await page.clock.install({ time: 0 });
+  await page.clock.pauseAt(1000);
+}
+const settle = page => page.clock.runFor(1000);
+
 const clickVerb = (page, text) =>
   page.locator('#story-center button', { hasText: text }).first().evaluate(el => el.click());
 
@@ -139,8 +148,10 @@ test.describe('§VM-01-G4d — the D3 concurrent menu at CDG', () => {
   });
 
   test('clicking a confrontation opens the pre-battle overlay for the synthetic node IN THE SAME BEAT, and the narrative lands', async ({ page }) => {
+    await frozen(page);
     await at(page, 'CDG', { quests: { quest_cat_04: 'active' } });
     await clickVerb(page, 'Confront the Taz Devil');
+    await settle(page);
     const r = await page.evaluate(() => ({
       overlayVisible: document.getElementById('story-prebatt-overlay').classList.contains('visible'),
       preBattCode: _preBattNode && _preBattNode.code,
@@ -190,6 +201,7 @@ test.describe('§VM-01-G4d — Kenickie\'s Black Market (Class E, verbatim; pass
   });
 
   test('a buy without the gold refuses with the shake and spends nothing; with it, spends once and stocks the item', async ({ page }) => {
+    await frozen(page);
     await at(page, 'CDG', { gold: 20, quests: { quest_cat_05: 'complete' } });
     await clickVerb(page, "Kenickie's Black Market");
     // Live Shallows Minnow is 28gp; we hold 20
@@ -198,6 +210,7 @@ test.describe('§VM-01-G4d — Kenickie\'s Black Market (Class E, verbatim; pass
       const row = [...shop.children].find(c => c.textContent.includes('Live Shallows Minnow'));
       row.querySelector('button').click();
     });
+    await settle(page);
     let r = await probe(page);
     expect(r.msg).toBe('💰 Not enough gold.');
     expect(r.blocked).toBe(true);
@@ -208,6 +221,7 @@ test.describe('§VM-01-G4d — Kenickie\'s Black Market (Class E, verbatim; pass
       const row = [...shop.children].find(c => c.textContent.includes('Sardine Pack'));
       row.querySelector('button').click();
     });
+    await settle(page);
     r = await probe(page);
     expect(r.gold).toBe(2);
     expect(r.inv).toContain('Sardine Pack');
@@ -218,6 +232,7 @@ test.describe('§VM-01-G4d — Kenickie\'s Black Market (Class E, verbatim; pass
 
 test.describe('§VM-01-G4d — the la_riva_03 delivery, last child of the menu', () => {
   test('the delivery pays the whole chain once, completes the quest in the same beat, and the message SURVIVES', async ({ page }) => {
+    await frozen(page);
     await at(page, 'CDG', {
       gold: 50,
       quests: { quest_la_riva_03: 'active' },
@@ -225,6 +240,7 @@ test.describe('§VM-01-G4d — the la_riva_03 delivery, last child of the menu',
     });
     await expect(page.locator('#verb-cdg-la-riva-delivery')).toHaveCount(1);
     await clickVerb(page, 'Give Kenickie the Account Book');
+    await settle(page);
     const r = await probe(page);
     expect(r.inv, 'the book is consumed through item_remove').toEqual([]);
     expect(r.laRivaComplete).toBe(true);
@@ -237,6 +253,11 @@ test.describe('§VM-01-G4d — the la_riva_03 delivery, last child of the menu',
     expect(r.msg).toContain("I'll hold onto this");
     expect(r.msg).toContain('✓ Aldo: The Account Book');
     await expect(page.locator('#verb-cdg-la-riva-delivery')).toHaveCount(0);
+  });
+
+  test('with no click, the arrival\'s delayed onActivate line still lands', async ({ page }) => {
+    await at(page, 'CDG', { quests: { quest_la_riva_03: 'active' } });
+    await expect(page.locator('#story-move-msg')).toContainText('📋 Quest: The New Scratch — accepted.');
   });
 
   test('menu order is preserved by construction: bosses, then launcher, then delivery', async ({ page }) => {

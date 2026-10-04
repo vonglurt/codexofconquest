@@ -44,6 +44,15 @@ async function at(page, code, overrides = {}) {
 
 // The journal modal can sit over the story column at an inn node, so drive the button the way
 // the player's click reaches the handler rather than through hit-testing.
+// Arrival can schedule a quest's onActivate line 500ms out (_uqfActivateAtNode). A paused clock
+// keeps it pending through the click; settle() then runs past its deadline before the read, so
+// a line that is not cancelled overwrites the message every time instead of under load (§DX-02ly).
+async function frozen(page) {
+  await page.clock.install({ time: 0 });
+  await page.clock.pauseAt(1000);
+}
+const settle = page => page.clock.runFor(1000);
+
 const clickVerb = (page, text) =>
   page.locator('#story-center button', { hasText: text }).first().evaluate(el => el.click());
 
@@ -187,14 +196,17 @@ test.describe('§VM-01-G4c — the three plain verbs', () => {
   });
 
   test("Sweelinck's S49 scene closes differently on NG+ — the chain is computed at click", async ({ page }) => {
+    await frozen(page);
     await at(page, 'NUE', { frobergerLastEntryRead: true });
     await clickVerb(page, 'You read the last entry');
+    await settle(page);
     let r = await probe(page);
     expect(r.s49).toBe(true);
     expect(r.msg).toContain("I'll keep it here. You know where to find me when you're done.");
 
     await at(page, 'NUE', { frobergerLastEntryRead: true, ngPlusRun: 1 });
     await clickVerb(page, 'You read the last entry');
+    await settle(page);
     r = await probe(page);
     expect(r.msg).toContain("Still here. Bring it back when you're done again.");
   });

@@ -28617,6 +28617,7 @@ function _enterEmptyCell(r, c) {
     (room.signposts.length ? '\n\n' + room.signposts.map(s => '🪧 ' + s).join('\n') : '');
   _renderNodeShell(room.icon, room.title, room.sub, '— ' + room.title + ' —', body);
   // §NAV-01d: while auto-travelling, the move-msg line is a persistent status strip.
+  _storyMsgSeq++;
   document.getElementById('story-move-msg').textContent = _travelStepping
     ? '🐎 Travelling to ' + (NODE_MAP[S_story.waypoint] ? NODE_MAP[S_story.waypoint].label : S_story.waypoint) + ' — any input halts.'
     : '';
@@ -28649,12 +28650,15 @@ function _enterEmptyCell(r, c) {
 // §CELL-13 (re-applied 2026-07-03): storyPortal removed — no node carries a `portal`
 // field (stripped by /api/admin/strip-edges) and no jump travel exists.
 
+let _storyMsgSeq = 0;
 function storyMsg(txt) {
+  _storyMsgSeq++;
   const el = document.getElementById('story-move-msg');
   el.textContent = txt;
   el.classList.remove('msg-block', 'msg-shake');
 }
 function storyBlock(txt) {
+  _storyMsgSeq++;
   const el = document.getElementById('story-move-msg');
   el.textContent = txt;
   el.classList.remove('msg-shake');
@@ -30614,10 +30618,19 @@ function _uqfActivateAtNode(node, indexFresh) {
       // null → silent activation (the migrated storyRender blocks never announced these);
       // {msg, delayMs} → the arc's bespoke delayed narration, verbatim from the old block.
       if (!('onActivate' in q)) msgs.push('📋 ' + q.title);
-      else if (q.onActivate && q.onActivate.msg) setTimeout(() => storyMsg(q.onActivate.msg), q.onActivate.delayMs || 500);
+      else if (q.onActivate && q.onActivate.msg) _storyMsgLater(q.onActivate.msg, q.onActivate.delayMs || 500);
     }
   });
   return msgs;
+}
+// A delayed line belongs to the moment that scheduled it. The microtask reads the message
+// sequence once the scheduling render has finished; any later write to #story-move-msg or
+// render (a verb, a shop, a move) means the player has moved on, and the line is dropped
+// rather than overwrite what they are reading.
+function _storyMsgLater(txt, ms) {
+  let seq = -1;
+  queueMicrotask(() => { seq = _storyMsgSeq; });
+  setTimeout(() => { if (seq === _storyMsgSeq) storyMsg(txt); }, ms);
 }
 function storyCheckQuests(node, indexFresh) {
   const msgs = [];
@@ -35119,6 +35132,7 @@ function storyRender(node, prefix) {
     S_story.playerC = NODE_COORDS[node.code].c;
   }
   _questsByNodeRevalidate();   // §DX-02ea — one size guard per arrival; both activation passes below get indexFresh
+  _storyMsgSeq++;
   const lootMsg  = storyCollectLoot(node);
   _organSetStops();
   // §VM-01-G3 — activate this node's declaratively-gated quests BEFORE the render body, so
