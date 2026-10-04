@@ -43,21 +43,11 @@
 ---
 ## §BACKLOG — Open Items (Phase 6)
 
-### §DX-02ly — `uqf-node-verbs-d3.test.js:220` failed twice in a full run, reading another quest's dialogue where the delivery's narrative should be (NEW 2026-09-28 during the loop-20 full suite, 🟡 find the second writer)
-
-- [ ] **§DX-02ly — the `la_riva_03` delivery's message is overwritten under load.** **Measured 2026-09-28 at `045df9f`,** in shard 4/4 of the full suite (Chromium 152, this host). *"the delivery pays the whole chain once … and the message SURVIVES"* failed on the first try and on its retry. It expected *"I'll hold onto this"* and read Jimmy Two-Tails' *"The New Scratch"* acceptance: a second quest's narrative reached `storyMsg` after the delivery's. Run alone it passes **3/3**. The loop's changes (server-row CSS, the favicon link, private messages, presence `ledgerPid`) touch no quest runtime. This is not §DX-02lt: that row is a timing flake on `:141` in the same file that passes its retry. **Next:** run the file under load with `TRACE=1` until it reproduces, and find which path accepts *The New Scratch* during the delivery beat (an auto-offer on arrival, or an earlier test's state leaking through `localStorage`). Then decide whether the game or the test is wrong. **Full suite for the record:** 1,354 passed / 9 failed / 1 flaky. The nine are §DX-02ke's seven, `dx02l-save-snapshots-cli:130` and this one; the flaky one is `:141`.
-
 ### §DX-02lu — `test:mud` dies in [Q] on the 6 GB musl host, at HEAD as well, so [Q] and [R] go unchecked there (NEW 2026-09-28 during §MESH-03c, 🟡 find the cause, then lighten the harness or declare the host)
 
 - [ ] **§DX-02lu — the MUD harness exits `✗ test server failed to start on 13718` (or `13719`) partway through [Q], the ACL-template / tracker-cache section.** **Measured 2026-09-28** at `cad9487` (HEAD, stashed) and at `64d93ff`: 253 and 260 checks green respectively, then the boot failure, and nothing after it runs. That is [Q]'s remainder and all of [R] (§MESH-02a ACL editor endpoints). **Not a slow boot:** raising the harness's 8 s ping deadline to 30 s fails the same way, and the same tracker env boots alone in 1.5 s. The server's stderr is empty. The host has 4 cores and 5.9 GB of RAM with 0.8 GB swapped, and it now runs Chromium on its desktop; by [Q] the harness has spawned about 38 servers, each holding the 5 MB game file. **Suspected:** memory, or a server that dies after the 500 ms exit window, which `startServer` stops watching. **Next:** log `proc.exitCode` and `free` at the failure, then either stop each section's servers when the section ends or record the host's ceiling beside §DX-02ke's baseline. **Provenance:** §MESH-03c, whose [E] cases passed and whose [Q]/[R] exposure (ACL matching) went unrun.
 
 > **Measured again 2026-09-28 at `d2f9299` (loop 20):** `npm run test:mud` ran to the end, every check ✓ including [Q], with no other browser or server running. So the death is intermittent, or it depends on what else holds memory. Record free memory beside the next reproduction.
-
-### §DX-02lt — `uqf-node-verbs-d3.test.js:141` flaked on the 4-core musl host's first full browser run (NEW 2026-09-28 during §DX-02ir, 🟡 trace it or loosen the beat)
-
-- [ ] **§DX-02lt — *"clicking a confrontation opens the pre-battle overlay … IN THE SAME BEAT"* failed once and passed its retry**, in shard 4/4 at `c057410` (Chromium 152, 4 cores). It asserts timing, so it is load-sensitive in the way §DX-02ht's `worldbuilder-*` family is. **Next:** run the file with `TRACE=1` under load until it reproduces, then decide whether the assertion measures a real beat or the box's speed. If it keeps flaking, give it `test.use({ trace: 'retain-on-failure' })` as the other flaky files have. **Provenance:** §DX-02ir, the first run of the browser half of the suite on this host.
-
-> **Measured 2026-09-28 during §DX-02ls (`494fcbb`):** the family is wider than the one test. In a full run's shard 4/4, `uqf-node-verbs-d1:189` and `uqf-node-verbs-d3:141` failed and `d3:220` flaked. Rerun alone, the two files failed `d3:192` and `d3:220` and passed the rest, `d1:189` included. Neither file starts a server, so a server-side change cannot move them. Which test fails changes from run to run, which points at load, not at any one assertion.
 
 ### §DX-02lr — `prompt.md` §7 *"Verify — tests and the known baseline"* describes one host's baseline from August (NEW 2026-09-26 during §DX-02ec, 🟡 rewrite or point away)
 
@@ -680,6 +670,6 @@
 
 ## §RESUME — Phase 6 history
 
-> **Completed work is not carried here.** The 99 closed increments for this phase are condensed in **[`../archive/backlog-resume-history.md`](../archive/backlog-resume-history.md)**; full prose for recent closes is in [`plan-archive.md`](plan-archive.md). This file carries open rows only.
+> **Completed work is not carried here.** The 100 closed increments for this phase are condensed in **[`../archive/backlog-resume-history.md`](../archive/backlog-resume-history.md)**; full prose for recent closes is in [`plan-archive.md`](plan-archive.md). This file carries open rows only.
 
 > When an increment ships: write the full entry into `plan-archive.md`, add its one-line row to `../archive/backlog-resume-history.md` and to the cross-phase table in [`BACKLOG.md`](BACKLOG.md), and delete the row from this file.
