@@ -426,7 +426,7 @@ const scratch = path.join(dir, 'play.html');
 fs.copyFileSync(path.join(ROOT, 'play.html'), scratch);
 const proc = spawn('node', [path.join(ROOT, 'src', 'js', 'wbapi-server.js')], {
   cwd: ROOT,
-  env: { ...process.env, PORT: String(PORT), CODEXOFCONQUEST_FILE: scratch, PEERS_CACHE_FILE: path.join(dir, 'peers.json') },
+  env: { ...process.env, PORT: String(PORT), CODEXOFCONQUEST_FILE: scratch, LEDGER_DIR: path.join(dir, 'ledger'), PEERS_CACHE_FILE: path.join(dir, 'peers.json') },
   stdio: ['ignore', 'ignore', 'pipe'],
 });
 let stderr = '';

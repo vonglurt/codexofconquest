@@ -242,6 +242,12 @@ function workerPorts(block, count = 1) {
   return { ports, worker, tag: `-${worker}` };
 }
 
+// A spawned wbapi-server keeps registered player keys and pinned server keys in
+// LEDGER_DIR, which defaults to the working tree's build/ledger, the dev server's own.
+function testLedgerDir() {
+  return require('path').join(require('os').tmpdir(), `coc-test-ledger-${Number(process.env.TEST_PARALLEL_INDEX || 0)}`);
+}
+
 // `stdio: 'ignore'` means a spawn that dies takes its reason with it, and the
 // readiness poll then times out naming a port instead of a cause. Attach this to
 // every spawned child and pass the returned array into the timeout message.
@@ -398,6 +404,7 @@ module.exports = {
   expectNpcRenderStateClean,
 
   openEditor,
+  testLedgerDir,
   workerPorts,
   watchChildren,
   patchGameHtml,

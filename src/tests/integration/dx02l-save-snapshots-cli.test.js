@@ -31,7 +31,7 @@ const path = require('path');
 
 const ROOT = path.resolve(__dirname, '..', '..', '..');
 const GAME = path.join(ROOT, 'play.html');
-const { workerPorts, watchChildren } = require('./helpers');
+const { workerPorts, watchChildren, testLedgerDir } = require('./helpers');
 
 // §DX-02hq — a per-worker port from the shared map, so `fullyParallel` (which runs
 // this beforeAll once per worker) does not have every worker but the first die of
@@ -59,7 +59,7 @@ test.beforeAll(async () => {
   fs.copyFileSync(GAME, scratch);
   server = spawn(process.execPath, [path.join(ROOT, 'src', 'js', 'wbapi-server.js')], {
     cwd: ROOT,
-    env: { ...process.env, PORT: String(PORT), CODEXOFCONQUEST_FILE: scratch,
+    env: { ...process.env, LEDGER_DIR: testLedgerDir(), PORT: String(PORT), CODEXOFCONQUEST_FILE: scratch,
       PEERS_CACHE_FILE: path.join(dir, 'peers.json') },
     stdio: 'ignore',
   });

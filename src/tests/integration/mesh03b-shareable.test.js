@@ -7,7 +7,7 @@ const { spawn, spawnSync } = require('child_process');
 const fs = require('fs');
 const os = require('os');
 const path = require('path');
-const { workerPorts, watchChildren } = require('./helpers');
+const { workerPorts, watchChildren, testLedgerDir } = require('./helpers');
 
 const ROOT = path.resolve(__dirname, '..', '..', '..');
 
@@ -85,7 +85,7 @@ test.describe('§MESH-03b — ./bin/api shareable against a throwaway server', (
     fs.copyFileSync(path.join(ROOT, 'play.html'), path.join(dir, 'play.html'));
     server = spawn(process.execPath, [path.join(ROOT, 'src', 'js', 'wbapi-server.js')], {
       cwd: ROOT,
-      env: { ...process.env, PORT: String(PORT), CODEXOFCONQUEST_FILE: path.join(dir, 'play.html'),
+      env: { ...process.env, LEDGER_DIR: testLedgerDir(), PORT: String(PORT), CODEXOFCONQUEST_FILE: path.join(dir, 'play.html'),
         PEERS_CACHE_FILE: path.join(dir, 'peers.json'), MESH_ACL_FILE: path.join(dir, 'acl.json') },
       stdio: 'ignore',
     });

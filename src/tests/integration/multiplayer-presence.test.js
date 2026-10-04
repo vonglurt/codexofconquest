@@ -9,7 +9,7 @@
 const { test, expect } = require('@playwright/test');
 const path = require('path');
 const { spawn } = require('child_process');
-const { seedAndLoad, dismissContinue, workerPorts, watchChildren } = require('./helpers');
+const { seedAndLoad, dismissContinue, workerPorts, watchChildren, testLedgerDir } = require('./helpers');
 
 // §DX-02hm/§DX-02hq — one port pair PER WORKER, from the shared map in helpers.js.
 const { ports: [MP_PORT, TRK_PORT], tag: W } = workerPorts('presence', 2);   // TRK: §MESH-01-FU 2, join-by-magnet
@@ -19,12 +19,12 @@ const TMP = require('os').tmpdir();
 const ROOT = path.resolve(__dirname, '..', '..', '..');
 test.beforeAll(async () => {
   tracker = spawn(process.execPath, [path.join(ROOT, 'src', 'js', 'wbapi-server.js'), '--tracker-mode'], {
-    env: { ...process.env, PORT: String(TRK_PORT), MESH_SERVER_ID: 'b'.repeat(32),
+    env: { ...process.env, LEDGER_DIR: testLedgerDir(), PORT: String(TRK_PORT), MESH_SERVER_ID: 'b'.repeat(32),
       PEERS_CACHE_FILE: `${TMP}/coc-presence-trk-cache${W}.json` },
     stdio: 'ignore',
   });
   server = spawn(process.execPath, [path.join(ROOT, 'src', 'js', 'wbapi-server.js')], {
-    env: { ...process.env, PORT: String(MP_PORT), MESH_SERVER_ID: 'a'.repeat(32),
+    env: { ...process.env, LEDGER_DIR: testLedgerDir(), PORT: String(MP_PORT), MESH_SERVER_ID: 'a'.repeat(32),
       TRACKER_URL: `http://localhost:${TRK_PORT}`, MESH_ANNOUNCE_MS: '200',
       SERVER_NAME: 'Hub Alpha', PEERS_CACHE_FILE: `${TMP}/coc-presence-srv-cache${W}.json` },
     stdio: 'ignore',

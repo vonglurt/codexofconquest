@@ -62,6 +62,7 @@ module.exports = defineConfig({
     },
     {
       command: 'node js/wbapi-server.js',
+      env: { ...process.env, LEDGER_DIR: require('path').join(require('os').tmpdir(), 'coc-test-ledger-webserver') },
       url: 'http://localhost:1367/api/ping',
       reuseExistingServer: true,
       timeout: 20_000,
