@@ -2861,7 +2861,7 @@ async function route(req, res) {
           '',
           '  wbapi-server.js reads the HTML text directly and parses it in memory.',
           '  Every write endpoint mutates the in-memory objects, then serialises',
-          '  them back into the HTML file via POST /api/save.',
+          '  them back into the HTML file before it answers.',
           '',
           '  The game is fully playable in a browser with only play.html —',
           '  no Node, no server, no dependencies.',
@@ -3045,7 +3045,7 @@ async function route(req, res) {
       write: {
         title: 'Write Endpoints (POST / PUT / DELETE)',
         body: [
-          'WRITE ENDPOINTS — All mutate play.html. Run POST /api/save after.',
+          'WRITE ENDPOINTS — All mutate play.html, and each saves before it answers.',
           '',
           'CREATE',
           `  POST ${b}/api/node          body: {code, label, act, name?, desc?, ...}`,
@@ -3286,8 +3286,7 @@ async function route(req, res) {
           '  2. Choose a slot from available[] that is close to the starting node',
           '     and does not conflict with existing nodes.',
           '  3. POST /api/node with r and c set to the chosen slot.',
-          '     → NODE_MAP + NODE_COORDS both updated in one call.',
-          '  4. POST /api/save',
+          '     → NODE_MAP + NODE_COORDS both updated and saved in one call.',
           '',
           'COLLISION CHECK',
           '  POST /api/node with r,c, PUT /api/coords/{code}, POST /api/coords/{code}/nudge and',
@@ -4237,9 +4236,8 @@ async function route(req, res) {
 
   // ── Diff summary ──
   if (parts[0] === 'diff' && method === 'GET') {
-    logRow('note', 'Use POST /api/save to write pending changes');
     logResponse(method, url.pathname, 200, 'diff');
-    return json(res, 200, { note: 'Use POST /api/save to write all pending changes to disk' });
+    return json(res, 200, { pending: 0, note: 'Every write route saves before it answers, so nothing is pending.' });
   }
 
   // ── Fish (FISH_DB) ────────────────────────────────────────────────────────
