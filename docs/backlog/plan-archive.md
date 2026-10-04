@@ -19,6 +19,17 @@
 
 ---
 
+## Archived 2026-10-04 — §DX-02ap (the Wizard's review emits ./bin/api post lines)
+
+### §DX-02ap — the authoring tool hands the author a runnable raw-`curl` sequence (NEW 2026-08-12 during §DOC-02ae, split from §DX-02ao's section at close)
+
+- [x] ✅ SHIPPED 2026-10-04 `85d6487` **§DX-02ap — the authoring tool hands the author a runnable raw-`curl` sequence.** 🟢 **no design call.** *`edit.html:Full curl sequence (run in order)`@7969* (retired by §DX-02ap) renders a copy-and-run block of `curl -s -X POST ${FS_API}/node|/monster|/quest -H 'Content-Type: application/json' -d '…'` lines built by the Wizard's review step (3 push sites). That is precisely the shape prompt.md §3's golden rule and CONTRIBUTING Hazard #7 forbid — *"all world-building goes through `./api.sh`… never use raw `curl` for authoring"* — emitted by the authoring tool itself, so it teaches the hazard rather than merely tolerating it. **It is invisible to every gate:** §DX-02l-FU deliberately narrowed the detector to *"a line an author can copy and run"*, which these are, but the detector's file universe is `.md` only and `edit.html` is not in it.
+> **Fix:** emit `./api.sh post node code=… label=… act=… name=…` equivalents in the review block (keep the curl lines behind a "raw HTTP" disclosure if they are wanted for debugging). **Do NOT touch the Endpoints tab** — its curl examples are an HTTP reference for the API surface itself, which is the one legitimate use, and the same distinction §DX-02l-FU drew for the docs. **Verify:** `grep -c "curl -s -X POST" edit.html` outside the Endpoints block = 0.
+
+> **Closed 2026-10-04 at `85d6487`.** The review block renders one `./bin/api post <type> k='<json>'` line per write (the row's `./api.sh` was retired by §DX-02gh). Each value is JSON-encoded and single-quoted, so the CLI's `parseKV` returns strings, numbers and booleans unchanged. The `/save` and `/restart` lines are gone because every write saves itself. No raw-HTTP disclosure was kept: the Endpoints tab is the HTTP reference, and it has no `curl -s -X POST` lines to begin with. **Before → after:** `grep -c "curl -s -X POST" edit.html` **5 → 0**. `dx02ap-wizard-cli-lines.test.js` fills the Wizard with apostrophes, double quotes, `$HOME` and backticks, runs the emitted quest line through `sh`, and parses it with `wb.js`'s own `parseKV`: every value is intact. `check:walk` 41/41; 13 editor spec files 155/155. Both anchors to the removed string are retired in place. **Found on the path:** `wizCreate`, and so this block, sends `terrain`, `startText` and `missionBitKey`, which the server answers 400; filed as §DX-02me.
+
+---
+
 ## Archived 2026-10-04 — §DX-02md (no help text or route tells the author to save by hand)
 
 ### §DX-02md — three server help texts and one route still tell the author to run `POST /api/save` by hand (NEW 2026-10-04 during §DX-02bp, 🟢 strings, plus one route's answer)
