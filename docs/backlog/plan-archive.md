@@ -19,6 +19,16 @@
 
 ---
 
+## Archived 2026-10-04 — §DX-02ma (worldbuilder patches name the game's real NPC variable)
+
+### §DX-02ma — every patch the worldbuilder emits throws before its first line runs, because it passes a variable the game does not declare (NEW 2026-10-04 during §DX-02eb, 🟢 gates §DX-02eb's verify)
+
+- [x] ✅ SHIPPED 2026-10-04 `bc3fdc4` **§DX-02ma — `DIFF.patch()` closes its IIFE with `(NODE_MAP, QUEST_DB, MONSTER_POOL, BIRKA_NPC)`, and `play.html` has no `BIRKA_NPC`.** `BIRKA_NPC` is the editor's *section* name (the `WORLDBUILDER:BIRKA_NPC` markers); the variable those markers wrap is `const BIRKA_NPC_PROFILES`. `edit.html`'s `sectionVar` maps that section to the identifier `'BIRKA_NPC'`, and the IIFE's argument list names it too, so evaluating any patch in the game, even one that touches only `NODE_MAP`, raises `ReferenceError: BIRKA_NPC is not defined` while the arguments are evaluated, before any statement in the body. **Measured 2026-10-04:** §DX-02eb's spec built a three-change `QUEST_DB` patch through `DIFF.patch()` and `eval`'d it in `play.html`, and got that error. The emitter has had this signature since 2026-05-29, and nothing has run its output since. **Fix:** name the real variable in the parameter list, the argument list and `sectionVar`. **Verify:** §DX-02eb's spec evaluates a real emitted patch in `play.html` without a shim.
+
+> **Closed 2026-10-04 at `bc3fdc4`.** The parameter list, the argument list and `sectionVar` in `DIFF.patch()` now name `BIRKA_NPC_PROFILES`. **Before:** a patch emitted through `DIFF.delSection`/`recordSection` (one quest deleted, one added, one retargeted) and `eval`'d in `play.html` threw `ReferenceError: BIRKA_NPC is not defined`, and nothing applied. **After:** the same patch plus an NPC field edit applies all four changes, and the new spec in `uqf-activatenode-index.test.js` holds it. `check:walk` 41/41; the index, `dx02cl` and `editor04-context` specs 18/18. The patch it runs is the one §DX-02eb's verify needed.
+
+---
+
 ## Archived 2026-09-29 — §DX-02fn (DISPROVED: a multi-field quest put already writes once)
 
 ### §DX-02fn — the patch queue is node-only, and `QUEST_DB` is the big section (NEW 2026-08-23 during §DOC-02da, 🟡 extend the batcher)
