@@ -131,4 +131,16 @@ test.describe('§VM-01-F-FU — the activateNode index', () => {
     }, p);
     expect(r).toEqual({ countKept: true, gone: false, added: 'EB New', moved: 'ZZZ_EB', npc: 'EB occupation' });
   });
+
+  test('a count-preserving worldbuilder patch leaves no stale activateNode index', async ({ page }) => {
+    const p = await emitQuestSwap(page);
+    const r = await page.evaluate(({ src, node, gone, moved }) => {
+      _questsByNode(node);
+      (0, eval)(src);
+      const at = _questsByNode(node).map(q => q.id);
+      return { goneDropped: !at.includes(gone), newFound: at.includes('__eb_new'),
+        movedOut: !at.includes(moved), movedIn: _questsByNode('ZZZ_EB').some(q => q.id === moved) };
+    }, p);
+    expect(r).toEqual({ goneDropped: true, newFound: true, movedOut: true, movedIn: true });
+  });
 });

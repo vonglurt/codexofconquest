@@ -2518,6 +2518,9 @@ const DIFF = {
       for (const [k, data] of Object.entries(s.added))
         lines.push(`  ${v}['${k}'] = ${JSON.stringify(data,null,4).replace(/\n/g,'\n  ')};`);
     }
+    const q = DIFF.sections.QUEST_DB;
+    if (q.deleted.size || Object.keys(q.added).length || Object.keys(q.modified).length)
+      lines.push('  _questsByNodeIndex = null;');
 
     lines.push(`})(NODE_MAP, QUEST_DB, MONSTER_POOL, BIRKA_NPC_PROFILES);`);
     return lines.join('\n');

@@ -37773,11 +37773,11 @@ function _questNodes() {
 // linear scan over all ~2,850 quests. Excludes epics (activated explicitly, not by
 // arrival) and quests with no activateNode, mirroring the scan's own filters. Size-
 // guarded: a rebuild fires whenever QUEST_DB's entry count changes. The shipped game's
-// QUEST_DB is a frozen const so this never fires there; the test harness, the world-
-// builder editor, and a future §MESH-delivered quest inject at runtime, and the size-
-// guard catches every such add/remove with NO injector cooperation — there is no cache
-// to invalidate. (A simultaneous add-one/remove-one that keeps the count fixed would go
-// stale; that never happens with a const DB and no test performs it.) Insertion order
+// QUEST_DB is a frozen const so this never fires there; the test harness and a future
+// §MESH-delivered quest inject at runtime, and the size-guard catches every such
+// add/remove with NO injector cooperation. A change that keeps the count — a swap, or a
+// retargeted activateNode — is invisible to it, so edit.html's applyPatch, which can emit
+// one, sets _questsByNodeIndex = null itself. Insertion order
 // is preserved — we push in Object.values order — so a multi-quest node activates its
 // quests in the same order as the old scan and the 📋 msgs stream stays byte-identical.
 let _questsByNodeIndex = null, _questsByNodeCount = -1;
