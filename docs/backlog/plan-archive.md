@@ -19,6 +19,16 @@
 
 ---
 
+## Archived 2026-10-05 — §DX-02ev(a) (partial — HKG lists Weckmann and Auros, the higher favor speaks; Auros farewells 0/2 → 2/2; (b) stays open)
+
+### §DX-02ev(a) (from §DX-02ev, which stays open for (b))
+
+- [x] ✅ SHIPPED 2026-10-05 `813f88e` **§DX-02ev(a) — Auros has farewells and no doorway.** 🟡 `const NPC_FAREWELLS = {@27561` holds an `auros` block of two lines. `function _getFarewell(fromCode, toCode)@27711` sources its owner key from exactly one table — `const npcKey = NODE_NPC_KEYS[fromCode];` — and `const NODE_NPC_KEYS = {@27547` is five rows at HEAD (`LHR:'yael', TLL:'brynn', MHQ:'quill', LLA:'pachelbel', HKG:'crov'`). Auros and Crov share `HKG`; the map gives the doorway to Crov. **The lock anticipated this exactly, and the anticipation is the part that did not ship:** `CY: 'crov', // also 'auros' — use max of both`. **Measured exhaustively** — `_getFarewell` swept over every ordered pair of `NODE_MAP` codes at maximum favor for all six NPCs yields **16 reachable strings** (11 routes + 5 defaults); *"The Ironshell node has subsidence in the northwest corner. Don't stand there."* and *"Document what you see."* are not among them. The same shortfall hides map warmth from her node, since `function _getNodeMapColor(nodeSlug)@27698` reads the identical table. **Fix:** implement the spec's `max of both`, or retire the `auros` block.
+
+**Closed 2026-10-05 at `813f88e` — implemented the spec's `max of both`, not retired (🟡 decided here: both profiles say `node:'HKG'`, the lines are authored, and the lock spelled out the rule).** `NODE_NPC_KEYS.HKG` is `['crov','auros']`, read through a new `_nodeNpcKeys(code)`. `_getNodeMapColor` tints by the higher favor at the node, and `_getFarewell` hears every NPC there at favor ≥ 1, highest first: a route line beats a default, and a tie keeps table order, so Weckmann still speaks first when both are equal. **Before:** Auros lines reachable **0/2**, the exhaustive max-favor sweep **16**. **After:** **2/2**: her `HKG_to_PDL` line at any favor ≥ 1, her default once her favor leads his; the sweep **17** (12 routes + 5 defaults), **18** with her leading. `living-world-l44.spec.js` F2 now asserts the fix instead of the finding; `audit03j-node-registries.test.js` reads array rows (5 → 6 pairs). `world.md` and the lab report follow. Full suite **1,376 / 8 / 0**, `check:walk` 43/43.
+
+---
+
 ## Archived 2026-10-05 — §DX-02es (THE CALL decided (a) by the user: the Gigault stall moves to LHR, the market; stall at LLA/LHR 1/0 → 0/1; PETRA_STALL_STATES renamed)
 
 ### §DX-02es — the off-screen character the design is built around is named by nobody (NEW 2026-08-23 during §DOC-02cy, 🟡 two strings + ONE DESIGN CALL, which node)
