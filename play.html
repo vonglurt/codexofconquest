@@ -1790,6 +1790,7 @@ hr.divider { border: none; border-top: 1px solid var(--border); margin: 2px 0; }
 .cc-tab { flex: 1; padding: 6px; border-radius: 4px; border: 1px solid var(--border); background: transparent; color: var(--dim); font-size: 12px; font-weight: 700; cursor: pointer; transition: all .15s; }
 .cc-tab.active { border-color: var(--gold); color: var(--gold-lt); background: var(--panel2); }
 .cc-tab:hover:not(.active) { border-color: var(--text); color: var(--text); }
+#cc-std-array { width: 100%; margin-bottom: 8px; }
 #cc-budget-row { font-size: 12px; color: var(--text); text-align: center; }
 #cc-pts-left { font-weight: 900; color: var(--gold); font-size: 15px; }
 #cc-stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 7px; }
@@ -4889,6 +4890,7 @@ body.act-three .npc-card-chip { filter: saturate(0.85); }
       </div>
       <div id="cc-custom-panel">
         <div id="cc-budget-row">Build points: <span id="cc-pts-left">27</span> / 27</div>
+        <button id="cc-std-array" class="cc-tab">📐 Standard Array — 15 · 14 · 13 · 12 · 10 · 8</button>
         <div id="cc-stat-grid">
           <div class="cc-stat-row" data-stat="str">
             <span class="cc-stat-lbl">STR</span>
@@ -39353,6 +39355,13 @@ document.getElementById('charcreate-tabs').addEventListener('click', e => {
   document.querySelectorAll('.cc-tab').forEach(t => t.classList.toggle('active', t === tab));
   document.getElementById('cc-custom-panel').style.display = _cc_mode === 'custom' ? '' : 'none';
   document.getElementById('cc-hard-panel').style.display   = _cc_mode === 'hard'   ? '' : 'none';
+});
+
+// The classic standard array spends exactly CC_BUDGET, ordered for a fighter; the steppers stay live.
+const CC_STANDARD_ARRAY = { str:15, con:14, dex:13, wis:12, int:10, cha:8 };
+document.getElementById('cc-std-array').addEventListener('click', () => {
+  _cc_scores = Object.assign({}, CC_STANDARD_ARRAY);
+  _ccRefresh();
 });
 
 // Stat adjust buttons

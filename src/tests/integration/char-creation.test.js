@@ -72,4 +72,23 @@ test.describe('§CHAR-01-A — point-buy character creation (already shipped; co
     expect(scores, 'hard origin ignores _cc_scores and ships the fixed array').toEqual(
       { str:10, dex:8, con:8, int:8, wis:8, cha:8 });
   });
+  test('§CHAR-01-B — the standard-array preset fills the steppers, spends the whole budget, and Begin writes it', async ({ page }) => {
+    await page.goto('/play.html');
+    await page.evaluate(() => _showCharCreate());
+    await page.locator('#cc-std-array').click();
+    const shown = await page.evaluate(() => ({
+      left: document.getElementById('cc-pts-left').textContent,
+      vals: ['str','dex','con','int','wis','cha'].map(st => document.getElementById('cc-val-' + st).textContent),
+      plusDisabled: [...document.querySelectorAll('.cc-adj-btn[data-dir="1"]')].every(b => b.disabled),
+    }));
+    expect(shown.left, '15·14·13·12·10·8 costs exactly the 27-point budget').toBe('0');
+    expect(shown.vals).toEqual(['15', '13', '14', '10', '12', '8']);
+    expect(shown.plusDisabled, 'no point is left to raise anything').toBe(true);
+    await page.locator('#cc-stat-grid .cc-stat-row[data-stat="str"] .cc-adj-btn[data-dir="-1"]').click();
+    expect(await page.locator('#cc-val-str').textContent(), 'the steppers still adjust the preset').toBe('14');
+    await page.locator('#cc-std-array').click();
+    await page.locator('#btn-charcreate-begin').click();
+    const scores = await page.evaluate(() => S_story.abilityScores);
+    expect(scores).toEqual({ str:15, dex:13, con:14, int:10, wis:12, cha:8 });
+  });
 });

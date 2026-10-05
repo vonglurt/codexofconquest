@@ -110,6 +110,7 @@ const NOT_NPC_KEYED = {
   QUEST_DB:                'quest ids',
   POTION_TIERS:            'potion tier names (minor/healing/greater/superior)',
   STARTER_DAGGER:          'item FIELDS (name/icon/type/sell), not a keyed table',
+  CC_STANDARD_ARRAY:       'ability score keys (str/dex/con/int/wis/cha)',
   EB_STORY_ITEMS:          'item keys — Epic Battleground story rewards',
   LAKE_MAGIC_DB:           'lake-magic entry ids (lake_mag_01…)',
   CORELLI_ITEMS:           'item keys — Corelli\'s stock',
