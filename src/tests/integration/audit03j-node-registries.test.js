@@ -53,9 +53,10 @@ test.describe('§AUDIT-03j — engine node registries resolve', () => {
     const W = freshWorld();
     const live = new Set(Object.keys(W.nodeMap));
     const body = src().slice(src().indexOf('const NODE_NPC_KEYS'), src().indexOf('const NPC_FAREWELLS'));
-    const rows = [...body.matchAll(/([A-Z][A-Z0-9_]{0,5})\s*:\s*'([a-z_0-9]+)'/g)].map(m => [m[1], m[2]]);
+    const rows = [...body.matchAll(/([A-Z][A-Z0-9_]{0,5})\s*:\s*(\[[^\]]*\]|'[a-z_0-9]+')/g)]
+      .flatMap(m => [...m[2].matchAll(/'([a-z_0-9]+)'/g)].map(k => [m[1], k[1]]));
 
-    expect(rows.length).toBe(5);
+    expect(rows.length).toBe(6);
     for (const [code, npc] of rows) {
       expect(live.has(code), `${code} is not a NODE_MAP key`).toBe(true);
       // the npc key must be a real profile — 'couperin'/'weckmann'/'crane' were surnames
@@ -64,7 +65,7 @@ test.describe('§AUDIT-03j — engine node registries resolve', () => {
       expect(W.birkaNpcs[npc].node, `${code}:'${npc}' — profile lives elsewhere`).toBe(code);
     }
     expect(rows.map(r => r.join(':')).sort())
-      .toEqual(['HKG:crov', 'LHR:yael', 'LLA:pachelbel', 'MHQ:quill', 'TLL:brynn']);
+      .toEqual(['HKG:auros', 'HKG:crov', 'LHR:yael', 'LLA:pachelbel', 'MHQ:quill', 'TLL:brynn']);
   });
 
   test('removing the 20 EB placeholder rows is a no-op — the colour comes from ebReturnDone', () => {
@@ -74,9 +75,9 @@ test.describe('§AUDIT-03j — engine node registries resolve', () => {
     expect(s).not.toMatch(/'e[a-z]_npc'/);           // no placeholder key survives
     const fn = s.slice(s.indexOf('function _getNodeMapColor'), s.indexOf('function _getFarewell'));
     expect(fn).toContain('ebReturnDone');             // the branch that actually tints EB nodes
-    expect(fn).toContain('NODE_NPC_KEYS[nodeSlug]');
+    expect(fn).toContain('_nodeNpcKeys(nodeSlug)');
     // and a missing key must degrade to the same value the dead key produced
-    expect(fn).toMatch(/npcKey \? _npcFavor\(npcKey\) : 0/);
+    expect(fn).toContain('Math.max(0, ');
   });
 
   test('every NPC_FAREWELLS owner is a favor-capable profile and every route resolves', () => {

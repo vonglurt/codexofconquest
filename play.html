@@ -27567,8 +27567,13 @@ const NODE_NPC_KEYS = { // → doc: world.md §PART FOUR — ALL NAMED NPCs (nod
   // The 20 E*:'e?_npc' rows were placeholders naming a key that exists nowhere; EB nodes
   // are tinted by the live `ebReturnDone` branch instead, so removing them is a no-op.
   // 'crane' named no NPC anywhere in the file and went with its dead code.
-  LHR:'yael', TLL:'brynn', MHQ:'quill', LLA:'pachelbel', HKG:'crov'
+  // A node two NPCs share lists both, and the higher favor wins (the lock's "max of both").
+  LHR:'yael', TLL:'brynn', MHQ:'quill', LLA:'pachelbel', HKG:['crov','auros']
 };
+function _nodeNpcKeys(code) {
+  const k = NODE_NPC_KEYS[code];
+  return !k ? [] : Array.isArray(k) ? k : [k];
+}
 
 const NPC_FAREWELLS = { // → doc: world.md §The Homecoming: Act VIII NPC Farewell Beats (separate from ACT8_FAREWELL_BEATS modal; ambient farewell text)
   // §AUDIT-03j: owner keys and `<from>_to_<to>` route keys were all written in the
@@ -27711,8 +27716,7 @@ function _getGigaultState() {
 function _getNodeMapColor(nodeSlug) {
   const visited = !!(S_story.visited || {})[nodeSlug];
   if (!visited) return '#222';
-  const npcKey = NODE_NPC_KEYS[nodeSlug];
-  const fav = npcKey ? _npcFavor(npcKey) : 0;
+  const fav = Math.max(0, ..._nodeNpcKeys(nodeSlug).map(_npcFavor));
   const ebReturned = !!(S_story.ebReturnDone || {})[nodeSlug];
   if (ebReturned) return '#3a7a5a';
   if (fav >= 3)   return '#8a6a3a';
@@ -27722,12 +27726,13 @@ function _getNodeMapColor(nodeSlug) {
 }
 
 function _getFarewell(fromCode, toCode) {
-  const npcKey = NODE_NPC_KEYS[fromCode];
-  if (!npcKey || _npcFavor(npcKey) < 1) return null;
-  const farewells = NPC_FAREWELLS[npcKey];
-  if (!farewells) return null;
   const routeKey = fromCode + '_to_' + toCode;
-  return farewells[routeKey] || farewells.default || null;
+  const speakers = _nodeNpcKeys(fromCode)
+    .filter(k => _npcFavor(k) >= 1 && NPC_FAREWELLS[k])
+    .sort((a, b) => _npcFavor(b) - _npcFavor(a));
+  const onRoute = speakers.find(k => NPC_FAREWELLS[k][routeKey]);
+  if (onRoute) return NPC_FAREWELLS[onRoute][routeKey];
+  return speakers.length ? NPC_FAREWELLS[speakers[0]].default || null : null;
 }
 
 /* Layer 44 §III — the world's record of your absence. Newest first, and deliberately

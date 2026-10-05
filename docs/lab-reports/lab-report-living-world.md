@@ -142,6 +142,8 @@ CY: 'crov', // also 'auros' — use max of both
 
 Measured exhaustively: `_getFarewell` swept over all ordered pairs of `NODE_MAP` codes at maximum favor for all six NPCs yields **16 reachable strings** (11 routes + 5 defaults). Auros's *"The Ironshell node has subsidence in the northwest corner. Don't stand there."* and *"Document what you see."* are not among them, and never have been. The same shortfall hides the map-warmth tint from her node, since `_getNodeMapColor` reads the identical table.
 
+*(Fixed 2026-10-05 by §DX-02ev(a): `HKG:['crov','auros']`, read through `_nodeNpcKeys`; the higher favor speaks and a route line beats a default. The same sweep yields **17**, Auros's route line among them, and her default joins once her favor leads Weckmann's: 2 of 2 reachable.)*
+
 ### F5 — five receipts with no lookup, and one return met with silence
 
 `QUIET_RETURN_RECEIPTS` holds **24** keys. Its only consumer is `const receipt = QUIET_RETURN_RECEIPTS[ebCode];` inside `function _storyEbReturnBeat(ebCode)@30516`, where `ebCode` is always an Epic Battleground node code. Nineteen keys are EB codes. The other five — `yael_ghetto`, `quill_debt`, `deacon_redd`, `crov_pit`, `auros_depths` — are the Birka arc returns the spec listed alongside them, and no call site can ever produce those strings as an argument. *"[Pachelbel holds the receipt for a long time. Then puts it in his coat.]"* has never been held by anyone. (`deacon_redd` also preserves the retired `deacon` prefix in a line that names Pachelbel — harmless, since it is unreachable.)

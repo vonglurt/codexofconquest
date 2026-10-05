@@ -50,15 +50,14 @@ test.describe('Layer 44 — Living World', () => {
     expect(styled).toBe(1);
   });
 
-  // ── F2: Auros has farewells and no node to say them from ──
-  test('auros farewells are unreachable; NODE_NPC_KEYS has no auros row', async ({ page }) => {
+  // ── F2 (§DX-02ev(a)): Auros shares HKG with Weckmann, and the higher favor speaks ──
+  test('auros farewells are reachable from HKG; the higher favor of the two speaks', async ({ page }) => {
     await seedAndLoad(page, { currentCode: 'HKG', visited: { HKG: true } });
     await dismissContinue(page);
 
     const out = await page.evaluate(() => {
       // Max favor for every canonical NPC.
       S_story.npcFavorability = { yael:3, brynn:3, quill:3, pachelbel:3, crov:3, auros:3 };
-      const owners = Object.values(NODE_NPC_KEYS);
       // Every node code in NODE_MAP, as a departure point, to every other.
       const codes = Object.keys(NODE_MAP);
       const reachable = new Set();
@@ -66,21 +65,30 @@ test.describe('Layer 44 — Living World', () => {
         const f = _getFarewell(from, to);
         if (f) reachable.add(f);
       }
+      const atMax = reachable.size;
+      // Auros above Weckmann: her default is the HKG line, his route lines still win their routes.
+      S_story.npcFavorability = { crov:1, auros:3 };
+      for (const to of codes) { const f = _getFarewell('HKG', to); if (f) reachable.add(f); }
+      const tieDefault = (S_story.npcFavorability = { crov:2, auros:2 }, _getFarewell('HKG', 'LHR'));
       const aurosLines = Object.values(NPC_FAREWELLS.auros);
       return {
-        owners,
-        aurosInOwners: owners.includes('auros'),
+        hkg: _nodeNpcKeys('HKG'),
         aurosLinesReachable: aurosLines.filter(l => reachable.has(l)).length,
         aurosLineCount: aurosLines.length,
-        totalReachable: reachable.size,
+        atMax, total: reachable.size, tieDefault,
+        crovRoute: (S_story.npcFavorability = { crov:1, auros:3 }, _getFarewell('HKG', 'MSY')),
+        tint: (S_story.npcFavorability = { crov:0, auros:2 }, _getNodeMapColor('HKG')),
       };
     });
 
-    expect(out.owners.sort()).toEqual(['brynn', 'crov', 'pachelbel', 'quill', 'yael']);
-    expect(out.aurosInOwners).toBe(false);
+    expect(out.hkg).toEqual(['crov', 'auros']);
     expect(out.aurosLineCount).toBe(2);
-    expect(out.aurosLinesReachable).toBe(0);   // ← the finding
-    expect(out.totalReachable).toBe(16);       // 11 routes + 5 defaults
+    expect(out.aurosLinesReachable).toBe(2);   // was 0: the finding
+    expect(out.atMax).toBe(17);                // 12 routes + 5 defaults (Weckmann's wins the tie)
+    expect(out.total).toBe(18);                // + Auros's default once her favor leads
+    expect(out.tieDefault).toContain('Weckmann');
+    expect(out.crovRoute).toContain('Weckmann');
+    expect(out.tint).toBe('#6a5a3a');          // her favor tints the node with his at 0
   });
 
   // ── F3: farewells and Brynn's tasks open one favor tier below spec ──
