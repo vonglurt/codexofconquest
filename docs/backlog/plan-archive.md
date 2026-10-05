@@ -19,6 +19,20 @@
 
 ---
 
+## Archived 2026-10-05 — §DX-02es (THE CALL decided (a) by the user: the Gigault stall moves to LHR, the market; stall at LLA/LHR 1/0 → 0/1; PETRA_STALL_STATES renamed)
+
+### §DX-02es — the off-screen character the design is built around is named by nobody (NEW 2026-08-23 during §DOC-02cy, 🟡 two strings + ONE DESIGN CALL, which node)
+
+- [x] ✅ SHIPPED 2026-10-05 `7d77e88` **§DX-02es — Gigault exists in three set-dressing strings and no character's mouth.** 🟡 `docs/lab-reports/lab-report-living-world.md` §II rests its whole argument on one mechanism and says so: *"She is named by two people. She affects the world. She exists."* The two namings are quoted verbatim in the lock — Yael's (*"She goes home an hour early when there's going to be trouble. I use her schedule to calibrate mine."*) and Brynn's (*"Gigault's the one who notices when the city is wrong before anyone else does."*). **Neither is in the engine.** `grep -c "Gigault" play.html` = **9**, and all nine are the feature's own plumbing (3 stall strings + `function _getGigaultState()@27694` + `function _nodeHookBirkaGigaultStall(node,@32333` + its registration + 2 comments). The stall itself works — `const PETRA_STALL_STATES = [`@27532 (renamed `GIGAULT_STALL_STATES` by this row) cycles on `gameDay % 3`, verified in Chromium — so the player sees a blocked counter, then *"Back at ninth bell,"* then *"Tomorrow."* They just have no reason to look, because nobody told them she matters. **§II's own test (*"Gigault is the test"*) cannot be administered.**
+> **THE CALL — which node?** The hook registers `nodes:['LLA']` = **The Rough Bar**; the `→ doc:` comment says `CI` (= `LHR`, City Streets); the lock says *"the player can visit the **market** node and see her stall."* A bread stall currently operates inside a bar. (a) **Move it to `LHR`** — matches the lock and the doc pointer, and City Streets is where a market belongs. (b) **Keep `LLA`** and repoint the comment — a bread stall outside a bar is not absurd and the text never names the room. **(a) recommended.** Also worth one line: the constant is named for **Petra**, a character who exists nowhere else in the file — a rename artifact frozen into a symbol name.
+> **Fix:** add the two quoted lines to Yael's and Brynn's Friendly pools, pick the node. **Cost: two strings.** They are already written, in quotation marks, in the design document.
+> **The two strings shipped 2026-10-04 under §DX-02ff** (`NPC_CROSS_REFS`, Yael fav 1 and Brynn fav 1, verbatim from the lock), so Gigault is named. **What stays open here is only THE CALL above: which node the stall belongs to.**
+> **Provenance:** §DOC-02cy, finding F1, `docs/lab-reports/lab-report-living-world.md` §II.
+
+> **Closed 2026-10-05 at `7d77e88` — option (a), decided by the user** (they accepted the recommendation at the start of loop 27). **Before:** the `birka-gigault-stall` hook registered `nodes:['LLA']` and checked `node.code === 'LLA'` again inside, so the stall rendered at The Rough Bar and nowhere else: LLA/LHR **1/0**. **Changed** (engine JS, server stopped): both checks and the three comments now say `LHR`, City Streets, whose own `text` opens on the market carts, and Yael's §DX-02ff line puts her on Conclave Way. The constant is renamed `GIGAULT_STALL_STATES` (🟡 decided here: two code references and two live doc anchors, and a grep for Gigault should find the table). The lab report is annotated, not rewritten (§AUDIT-03n). `world.md` follows. **After:** LLA/LHR **0/1**. `uqf-npc-row-hooks.test.js`: the ctx test dispatches at LHR, the order test keeps Varga before Deacon at LLA, and a new probe renders both nodes and fails on the old file. Full suite **1,376 / 8 / 0** (the known eight), `check:walk` 43/43.
+
+---
+
 ## Archived 2026-10-05 — §MESH-01-HIRE-A (Bram the Trailhand gets an NPC_DIALOGUES entry: a line on hire, one per paid day; 0 → 1 entry)
 
 ### §MESH-01-HIRE-A (from §POT-PROMOTE / §MESH-01-HIRE)
