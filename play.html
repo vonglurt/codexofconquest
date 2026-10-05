@@ -23060,7 +23060,7 @@ const _S_DEFAULTS = () => ({
   warrantStanding: 0, warrantAccepted: {},   // §BOARD-01-FU7 — Warrant reputation: completed board-accepted bounties + the accept-tag map
   huntMode: false,  // §KG-01: Hunt Mode — ×2 encounter rate + 80/20 bias toward monsters at/below your level
   hireling: null,   // §MESH-01g: hired guide bot (single-player; persists in save)
-  ebNegotiatedPayments: {}, ebReturnDone: {},
+  ebNegotiatedPayments: {}, ebReturnDone: {}, quietReturnsSeen: {},
   journalEntriesRead: [],
   npcFavorability: {}, roughWhiskeyUsed: false, roughWhiskeyActive: false, yaelEscortUsed: false, pitTrainingWins: 0, slStalksWon: 0, muffatBerthReached: false, muffatManifestRead: false, station7LogRead: false, suppressorLogRead: false, antecedentMet: false, solmFound: false, cycle4NoteRead: false, bogDefeated: false, // §LI–§LVIII + CO-001
   dearFriendGranted: {}, dearFriendPlusGranted: {},
@@ -27696,6 +27696,25 @@ const QUIET_RETURN_RECEIPTS = { // → doc: story.md §FL3 — Epic Battleground
   crov_pit:     "Weckmann says nothing. He sets up the training mat.",
   auros_depths: "Auros saves the data without looking up. Then: 'That\'s what I needed.'"
 };
+// The five Birka keys above are spoken once, at the NPC's own node, on the first render
+// after their arc is done: a receipt for coming back, never a completion pop-up.
+const BIRKA_QUIET_RETURNS = [
+  { key:'yael_ghetto',  node:'LHR', done: () => S_story.quests.quest_slums_cleanup === 'complete' },
+  { key:'quill_debt',   node:'MHQ', done: () => !!S_story.couperiDebtReleased },
+  { key:'deacon_redd',  node:'LLA', done: () => S_story.quests.quest_pachelbel_shipment === 'complete' },
+  { key:'crov_pit',     node:'HKG', done: () => S_story.quests.quest_pit_training === 'complete' },
+  { key:'auros_depths', node:'HKG', done: () => !!S_story.bruhnsDepthsReported },
+];
+function _birkaQuietReturns(node) {
+  const seen = S_story.quietReturnsSeen = S_story.quietReturnsSeen || {};
+  const out = [];
+  for (const r of BIRKA_QUIET_RETURNS) {
+    if (r.node !== node.code || seen[r.key] || !r.done()) continue;
+    seen[r.key] = true;
+    out.push(QUIET_RETURN_RECEIPTS[r.key]);
+  }
+  return out;
+}
 
 const DEACON_CODE_TEXT = // → doc: world.md §Deacon's Code (4 rules; readable at LLA; no favor gate, it is posted on the wall)
 `Pachelbel's Code — posted on the back wall of the salvage front
@@ -36561,7 +36580,7 @@ function storyRender(node, prefix) {
   storyUpdateStatus();
   // Quests + messages
   const questMsgs = storyCheckQuests(node, true);
-  const parts = [prefix, lootMsg, ...activationMsgs, ...questMsgs].filter(Boolean);
+  const parts = [prefix, lootMsg, ...activationMsgs, ...questMsgs, ..._birkaQuietReturns(node)].filter(Boolean);
   storyMsg(parts.join('  ·  '));
   // Keep quest list DOM in sync so it's current when user opens the panel
   storyRenderQuests();

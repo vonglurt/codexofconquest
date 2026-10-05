@@ -2551,6 +2551,8 @@ MILEPOINT E  Player travels back to EB node → _storyEbReturnBeat(ebCode) fires
              Checks ebReturnDone[ebCode] — idempotent; can only fire once
              Gold paid (negotiated amount if set, else paymentFloor); specialItem from EB_STORY_ITEMS pushed to inventory
              setTimeout(quietReceipt, 800) appends QUIET_RETURN_RECEIPTS[ebCode]
+             (The five Birka keys take another path: BIRKA_QUIET_RETURNS, spoken once in the
+             arrival strip at the NPC's node after the arc is done — §DX-02ev(b))
 
 MILEPOINT F  ebReturnDone[ebCode] = true; quest_[code]_return set to 'complete'
              _curseScore() reflects one more completed return (−1 to startedNotReturned bucket)

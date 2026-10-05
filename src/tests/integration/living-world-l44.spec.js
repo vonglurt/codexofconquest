@@ -135,8 +135,8 @@ test.describe('Layer 44 — Living World', () => {
     expect(out.printedFixed).toBe(142);
   });
 
-  // ── F5: all 20 EB returns carry a receipt (INV since §DX-02ev(c)); 5 authored Birka receipts are dead ──
-  test('quiet return receipts: every EB return has one, and the 5 Birka keys cannot be looked up', async ({ page }) => {
+  // ── F5: all 20 EB returns carry a receipt (INV since §DX-02ev(c)); the 5 Birka keys are not EB codes ──
+  test('quiet return receipts: every EB return has one, and 5 more keys are Birka arcs, not EB codes', async ({ page }) => {
     await seedAndLoad(page, {});
     await dismissContinue(page);
 
@@ -157,6 +157,46 @@ test.describe('Layer 44 — Living World', () => {
     expect(out.missing).toEqual([]);             // Shepherd Rona's receipt landed with §DX-02ev(c)
     expect(out.nonEbKeys.sort()).toEqual(
       ['auros_depths', 'crov_pit', 'deacon_redd', 'quill_debt', 'yael_ghetto']);
+  });
+
+  // §DX-02ev(b): the five Birka receipts are spoken once, at the NPC's node, once the arc is done
+  test('the five Birka receipts each have a node and a trigger, and speak once on return', async ({ page }) => {
+    await seedAndLoad(page, {});
+    await dismissContinue(page);
+
+    const out = await page.evaluate(() => {
+      const strip = code => { storyRender(NODE_MAP[code]); return document.getElementById('story-move-msg').textContent; };
+      const R = QUIET_RETURN_RECEIPTS;
+      const o = { wired: BIRKA_QUIET_RETURNS.map(r => r.key).sort() };
+      S_story.quietReturnsSeen = {};
+      // a return, not a first visit: each node's journal entry was found when the arc began there
+      S_story.journalEntriesRead = FROBERGER_JOURNAL.map(e => e.entryNum);
+      S_story.quests.quest_pit_training = 'active'; S_story.bruhnsDepthsReported = false;
+      o.notYet = strip('HKG').includes(R.crov_pit);
+      S_story.quests.quest_pit_training = 'complete'; S_story.bruhnsDepthsReported = true;
+      const hkg = strip('HKG');
+      o.hkgBoth = hkg.includes(R.crov_pit) && hkg.includes(R.auros_depths);
+      o.hkgAgain = strip('HKG').includes(R.crov_pit);
+      S_story.couperiDebtReleased = true;
+      o.wrongNode = strip('LHR').includes(R.quill_debt);
+      o.mhq = strip('MHQ').includes(R.quill_debt);
+      S_story.quests.quest_slums_cleanup = 'complete';
+      o.lhr = strip('LHR').includes(R.yael_ghetto);
+      S_story.quests.quest_pachelbel_shipment = 'complete';
+      o.lla = strip('LLA').includes(R.deacon_redd);
+      o.seen = Object.keys(S_story.quietReturnsSeen).sort();
+      return o;
+    });
+
+    expect(out.wired).toEqual(['auros_depths', 'crov_pit', 'deacon_redd', 'quill_debt', 'yael_ghetto']);
+    expect(out.notYet).toBe(false);
+    expect(out.hkgBoth).toBe(true);     // two NPCs share HKG; both receipts land in one strip
+    expect(out.hkgAgain).toBe(false);   // once only
+    expect(out.wrongNode).toBe(false);
+    expect(out.mhq).toBe(true);
+    expect(out.lhr).toBe(true);
+    expect(out.lla).toBe(true);
+    expect(out.seen).toEqual(out.wired);
   });
 
   // ── F6: the warmth gradient and the stall cycle do work ──

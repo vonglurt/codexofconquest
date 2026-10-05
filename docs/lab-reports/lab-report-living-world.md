@@ -59,7 +59,7 @@ The eleven subsystems: **(II)** the off-screen character · **(III)** world prog
 | V | Corridor farewells | ✅ 16/18 | Route lookup the spec punted on was **finished** by the implementer (**F10**). Threshold is `fav >= 1`, not the spec's `>= 2` (**F7**). Auros's 2 lines unreachable (**F4**) |
 | VI | Third Act weight | ✅ byte-identical | 6/6 lines; `body.act-three .npc-card-chip { filter: saturate(0.85); }` shipped exactly as written, chip class applied at `card.className@23758` |
 | VII | Brynn's maintenance | ✅ byte-identical | 3 tasks, narration + `brynn_after` exact, ledger panel, zero-balance line. Ledger arithmetic never balanced (**F6** → §DX-02iq, ASK); surplus **closed 2026-09-03** at exactly 0 (**F6** ✅ §DX-02ew); gate one tier low (**F7**) |
-| VIII | Quiet receipts | ✅ 19/24 reachable | 5 Birka keys have no lookup path; `INV` has no receipt (**F5**) |
+| VIII | Quiet receipts | ✅ 19/24 reachable | 5 Birka keys have no lookup path; `INV` has no receipt (**F5**). *(Both fixed: `INV` by §DX-02ev(c) 2026-09-13; the Birka five by §DX-02ev(b) 2026-10-05, 25/25.)* |
 | IX | Pachelbel's code | ✅ byte-identical | 4 rules exact, ungated and public **exactly as the spec asked** — the `→ doc:` comment claiming a Dear Friend gate is the thing that's wrong (**F11**) |
 | X | The Void's First Sign | ❌ | Not shipped, in any form (**F3b**) |
 | XI | Final map | ✅ + ⚠️ | 129 cells, timings matched to the millisecond. **Overlay is not full-screen** (**F3**); §XI's "no text on the map" superseded by Layer 66b's caption |
@@ -151,6 +151,8 @@ Measured exhaustively: `_getFarewell` swept over all ordered pairs of `NODE_MAP`
 Separately, the file defines **20** EB return quests. Exactly one has no receipt: **`INV`** (`quest_eh_return` — *Return: Shepherd Rona*). This is not remap damage — the ship build authored 19 legacy keys too, so Rona has been returning to silence since the initial commit while her nineteen colleagues each get a sentence.
 
 > **✅ SHIPPED 2026-09-13 (§DX-02ev(c)) `e0f3fa0`.** `QUIET_RETURN_RECEIPTS` now holds `INV`, written from Rona's Q53 entry in `story.md`: *"The shepherd doesn't look at the water again. She looks up the hill, toward the churchyard. 'I have somewhere to go now.'"* All 20 EB returns carry a receipt, and this report's F5 spec case asserts none missing. The five Birka keys are unchanged and still unreachable (§DX-02ev(b)).
+
+> **✅ SHIPPED 2026-10-05 (§DX-02ev(b)).** `BIRKA_QUIET_RETURNS` gives each Birka key a node and the act that ends its arc: Yael's slums cleanup, Quill's released debt, Pachelbel's shipment, Weckmann's pit training, Auros's depths report. `_birkaQuietReturns` speaks each one once, on the first render at that node after the arc is done, in the arrival strip (`S_story.quietReturnsSeen`). 25 of 25 keys reachable.
 
 ### F6 — the ledger does not balance, and never has
 
