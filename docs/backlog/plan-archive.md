@@ -19,6 +19,18 @@
 
 ---
 
+## Archived 2026-10-04 — §DX-02ff (four NPC_CROSS_REFS lines: the connection map's edges with lines 6/8 → 8/8, cross-refs 17 → 21)
+
+### §DX-02ff — two declared relationships with no lines in either direction (NEW 2026-08-23 during §DOC-02cz, 🟡 four strings)
+
+- [x] ✅ SHIPPED 2026-10-04 `1fb5a36` **§DX-02ff — the connection map promises eight edges and delivers six.** 🟡 §III of the Layer 45 lock draws a connection map; `const NPC_CROSS_REFS = {@27835` honours six of its eight edges with all **17** authored lines byte-identical since `32c10c5`. Two are empty. **Measured across all 17 lines:** `Yael — Pachelbel` — **0** lines from Yael mentioning Pachelbel, **0** from Pachelbel mentioning Yael. The map describes it as *"professional awareness; Yael knows what Pachelbel does; doesn't move on it"* — dramatically the most interesting relationship on the board, a guard captain who knows a fence's business and has decided not to act, and it is never spoken. `All → Gigault` — **0** mentions of Gigault across all 17.
+> ⚠️ **The Gigault half is the other side of §DX-02es, and the pair is the finding.** Layer 44 §II argues Gigault is real *because two people name her*; Layer 45 §III asserts *everyone* names her. Two locks written the same day, each treating the other as the place the naming happens. **Neither shipped it.** Between them the game has one bread stall, three ambient strings, and a woman nobody has ever mentioned. **Fix: two strings for Gigault (shared with §DX-02es), two for the Yael/Pachelbel edge.**
+> **Provenance:** §DOC-02cz, finding F3.
+
+> **Closed 2026-10-04 at `1fb5a36`.** **Before, measured at HEAD:** 17 lines in `NPC_CROSS_REFS`; **0** name Gigault, **0** of Yael's name Pachelbel and **0** of Pachelbel's name Yael, so **6 of 8** connection-map edges had lines. `NPC_CROSS_REFS` is an engine table, not an API section, so it was edited in `play.html` directly with no server running. **The four lines.** *All → Gigault:* the two namings Layer 44 §II quotes verbatim, Yael's at fav 1 (*"She goes home an hour early when there's going to be trouble. I use her schedule to calibrate mine."*) and Brynn's at fav 1 (*"Gigault's the one who notices when the city is wrong before anyone else does."*). These are also the two strings §DX-02es asked for, so that row now carries only its node call. *Yael — Pachelbel*, written from the map's own description (*"professional awareness; Yael knows what Pachelbel does; doesn't move on it"*), both at fav 2 because the relationship is a confidence: Yael knows what moves through his back room and walks past, because he has never hidden it from her; Pachelbel keeps the room to nothing she would have to stop, and neither has said so out loud. Both lines stay inside each character's established voice, Yael's measured line-drawing and Pachelbel's code. **After:** 21 lines, **8 of 8** edges, fav tiers still {1, 2}. Appended at each pool's end, so earlier lines keep their order in the consumed sequence (F5). **Tests:** `web-of-connections-l45.spec.js` F4 flips from pinning the gaps to pinning the edges (21 total, 2 Gigault, 1 each way), and F5's Brynn pool reads 5 eligible lines, delivered at visits 3–15. The file passes 10/11; the eleventh is the known `:248`. **Docs:** world.md §Cross-References, both lab reports annotated (not rewritten), §DX-02es updated in place. **Full suite** 1,374 / 8 / 0, the known eight. `check:walk` 43/43.
+
+---
+
 ## Archived 2026-10-04 — §MUD-01-A (ALREADY SHIPPED by §NAV-01c `953f848`, 2026-07-01: every field describeCell returns already reaches the player)
 
 ### §MUD-01-A (from §POT-PROMOTE / §MUD-01)
