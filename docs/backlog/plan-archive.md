@@ -19,6 +19,16 @@
 
 ---
 
+## Archived 2026-10-05 — §MESH-01-HIRE-A (Bram the Trailhand gets an NPC_DIALOGUES entry: a line on hire, one per paid day; 0 → 1 entry)
+
+### §MESH-01-HIRE-A (from §POT-PROMOTE / §MESH-01-HIRE)
+
+- [x] ✅ SHIPPED 2026-10-05 `d6e5754` **§MESH-01-HIRE-A — a dialogue key for the guide bot.** Add an `NPC_DIALOGUES` entry (with `meta`) for the hireling and render a line at hire/daily-fee time.
+
+**Closed 2026-10-05 at `d6e5754`.** **Before:** `grep -c bram_trailhand play.html` **0**; the hire message and the wage message were fixed strings with no line of his. **Written through the API:** `./bin/api dialogue bram_trailhand --create` on a scratch server (:1379, killed in the same command) adds `NPC_DIALOGUES.bram_trailhand` — `meta` (name, occupation, worldTruth, enemy; `check:npcregs` wants a worldTruth on every speaker), a `quote` spoken on hire, and four `impartial` lines, one per paid day. Read back off disk after the reload: identical. **Engine:** `HIRELING_SPEC.dialogueKey` points `_hirelingHireMsg` and `_hirelingWageMsg` at it; the Hire button and `storyConfirmSleep` call them. The wage line cycles on `gameDay`, not `day`, because `day` stops at 49 and would repeat the same line every night after. No favor track, no card: the entry is a voice, not a resident. **After:** 1 entry; the hire line carries his quote and each paid rest one of four lines, two consecutive rests never the same. `mesh-hireling-guide.test.js` 6 → **7**. `story-arc-npc-dialogues.md` has his section; badge 39,472 → 39,487. Full suite **1,375 / 8 / 0** (the known eight), `check:walk` 43/43. **Found en route:** §DX-02mh (Phase 5) — the create route answers with a top-level `name` the serializer never writes.
+
+---
+
 ## Archived 2026-10-04 — §DX-02ff (four NPC_CROSS_REFS lines: the connection map's edges with lines 6/8 → 8/8, cross-refs 17 → 21)
 
 ### §DX-02ff — two declared relationships with no lines in either direction (NEW 2026-08-23 during §DOC-02cz, 🟡 four strings)

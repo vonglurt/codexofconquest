@@ -50,7 +50,7 @@
 
 - **`[~]` §BOARD-01 — The Warrant's Board** — the spine is COMPLETE (Inc 0/A/B/C + FU1–8 + VOID-GATE all shipped). **Open: Inc D only** (optional ripple/codex merge, 🟡 ASK). See [§BOARD-01](#board-01--the-warrants-board-rumorbounty-discovery--promotes-pot-h1-new-2026-07-21).
 
-- **`[ ]` §POT-PROMOTE — 12 planned tracks (spec only, ⚠️ PLANNED 2026-07-23)** — §CODEX-01 · §TIDE-01 (B/C open; A shipped) · §XP-02 (B optional; A shipped) · §CLUE-01 · §BOSS-01 · §CHAR-01 (B optional; A already shipped) · §MESH-01-HIRE · §RIPPLE-01 · §MUD-01 · §HINT-01 (design call first) · §INNER-01 (design call + lab report) · §JUNK-01 (✅ closed 2026-07-28 via §DX-01a). None need §VM-01. See [§POT-PROMOTE](#pot-promote--potentialmd-seed-batch--12-tracks--planned-2026-07-23).
+- **`[ ]` §POT-PROMOTE — 12 planned tracks (spec only, ⚠️ PLANNED 2026-07-23)** — §CODEX-01 · §TIDE-01 (B/C open; A shipped) · §XP-02 (B optional; A shipped) · §CLUE-01 · §BOSS-01 · §CHAR-01 (B optional; A already shipped) · §MESH-01-HIRE (✅ 2026-10-05) · §RIPPLE-01 · §MUD-01 · §HINT-01 (design call first) · §INNER-01 (design call + lab report) · §JUNK-01 (✅ closed 2026-07-28 via §DX-01a). None need §VM-01. See [§POT-PROMOTE](#pot-promote--potentialmd-seed-batch--12-tracks--planned-2026-07-23).
 
 ---
 ## §BACKLOG — Open Items (Phase 2)
@@ -199,14 +199,15 @@
 
 **Invariants:** writes an **existing** `_S_DEFAULTS()` field (no new persistent field); DC curve unchanged (fixed point total); Free-Movement/parity N/A; no rolls (RNG N/A). ⚠️ Hazard #1 (inline-JS). **Verify:** `src/tests/integration/point-buy.test.js` (new game writes a valid distribution; total matches the fixed budget; a mid-game save is untouched) + `check:walk`. Sync `mechanics.md` §Character + `index.md` State Fields. **Ask-gate:** the array-vs-point-buy choice is a user design call (Loop-vs-Ask).
 
-#### §MESH-01-HIRE — Give the hireling a voice (the §POT-C4 open slice) 🟢
+#### §MESH-01-HIRE — Give the hireling a voice (the §POT-C4 open slice) ✅ SHIPPED 2026-10-05 🟢
 
 **The finding (measured).** No party — and none wanted (`DUEL:CORE`/`S_story`/XP are single-combatant; MESH multiplayer is the better answer and ships). But the **§MESH-01g hired-guide bot** (`#hireling-section`, `hireling-section@2860`+) is *"a single-player companion, daily fee"* with **no `NPC_DIALOGUES` entry** — the one "companion" in the game is a daily charge with no voice.
 
 **The design.** Give the hireling a dialogue key so it becomes a character, not a fee. Tiny, self-contained. Optionally surface a line when hired/paid.
 
 **Increments:**
-- [ ] **§MESH-01-HIRE-A — a dialogue key for the guide bot.** Add an `NPC_DIALOGUES` entry (with `meta`) for the hireling and render a line at hire/daily-fee time.
+- [x] ✅ SHIPPED 2026-10-05 `d6e5754` **§MESH-01-HIRE-A — a dialogue key for the guide bot.** Add an `NPC_DIALOGUES` entry (with `meta`) for the hireling and render a line at hire/daily-fee time.
+  **Closed 2026-10-05 at `d6e5754`.** **Before:** `grep -c bram_trailhand play.html` **0**; the hire message and the wage message were fixed strings with no line of his. **Written through the API:** `./bin/api dialogue bram_trailhand --create` on a scratch server (:1379, killed in the same command) adds `NPC_DIALOGUES.bram_trailhand` — `meta` (name, occupation, worldTruth, enemy; `check:npcregs` wants a worldTruth on every speaker), a `quote` spoken on hire, and four `impartial` lines, one per paid day. Read back off disk after the reload: identical. **Engine:** `HIRELING_SPEC.dialogueKey` points `_hirelingHireMsg` and `_hirelingWageMsg` at it; the Hire button and `storyConfirmSleep` call them. The wage line cycles on `gameDay`, not `day`, because `day` stops at 49 and would repeat the same line every night after. No favor track, no card: the entry is a voice, not a resident. **After:** 1 entry; the hire line carries his quote and each paid rest one of four lines, two consecutive rests never the same. `mesh-hireling-guide.test.js` 6 → **7**. `story-arc-npc-dialogues.md` has his section; badge 39,472 → 39,487. Full suite **1,375 / 8 / 0** (the known eight), `check:walk` 43/43. **Found en route:** §DX-02mh (Phase 5) — the create route answers with a top-level `name` the serializer never writes.
 
 **Invariants:** data + a small render hook — Free-Movement/parity/RNG all N/A. ⚠️ Hazard #1 if the render hook is inline JS. **Verify:** eyeball the hire flow (§7½) + a smoke assertion that the line renders. Sync `story.md`/`docs/story/story-arc-npc-dialogues.md`.
 
@@ -269,7 +270,7 @@
 | **§CLUE-01** | H3 | content pattern (no opcode) | A: document the recipe |
 | **§BOSS-01** | B3 + B2 | data-generalizes shipped code | A: `phases` field |
 | **§CHAR-01** | C1 | bounded, no rebalance | A ✅ ALREADY SHIPPED 2026-07-23 (27-pt point-buy live; +4 tests); B optional |
-| **§MESH-01-HIRE** | C4 | small content | A: hireling dialogue key |
+| **§MESH-01-HIRE** | C4 | small content | A: hireling dialogue key ✅ 2026-10-05 |
 | **§RIPPLE-01** | P3 + W3 | unblocked by §NPC-01-B | A: NPC token reaction |
 | **§MUD-01** | S3 | renderer over `describeCell` | A: descriptive view |
 | **§HINT-01** | M2 | **design call first** | 0: the ASK |
@@ -409,6 +410,6 @@
 
 ## §RESUME — Phase 2 history
 
-> **Completed work is not carried here.** The 120 closed increments for this phase are condensed in **[`../archive/backlog-resume-history.md`](../archive/backlog-resume-history.md)**; full prose for recent closes is in [`plan-archive.md`](plan-archive.md). This file carries open rows only.
+> **Completed work is not carried here.** The 121 closed increments for this phase are condensed in **[`../archive/backlog-resume-history.md`](../archive/backlog-resume-history.md)**; full prose for recent closes is in [`plan-archive.md`](plan-archive.md). This file carries open rows only.
 
 > When an increment ships: write the full entry into `plan-archive.md`, add its one-line row to `../archive/backlog-resume-history.md` and to the cross-phase table in [`BACKLOG.md`](BACKLOG.md), and delete the row from this file.
