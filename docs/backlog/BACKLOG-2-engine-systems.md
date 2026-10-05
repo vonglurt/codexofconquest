@@ -230,7 +230,8 @@
 **The design.** A text/MUD-style view is **mostly a renderer over shipped output** — surface `describeCell`'s prose + exits as an in-game panel. The *"I declare how my character interacts"* half is **§POT-R1 (BLOCKED on §VM-01 Inc A)** and is explicitly **out of scope** — this track ships only the **read** half (the view), which is unblocked and cheap.
 
 **Increments:**
-- [ ] **§MUD-01-A — the descriptive view.** Render `describeCell(world, pos)`'s prose + exit list as a read-only in-game panel (reuse the harness's proven output). No input parser (that's §POT-R1).
+- [x] ✅ SHIPPED 2026-10-04 `953f848` **§MUD-01-A — the descriptive view.** Render `describeCell(world, pos)`'s prose + exit list as a read-only in-game panel (reuse the harness's proven output). No input parser (that's §POT-R1).
+  **Closed 2026-10-04 as ALREADY SHIPPED, by §NAV-01c at `953f848` (2026-07-01), three weeks before this row was written.** The row's premise, *"the player sees only node text + the road-hover tooltip"*, does not hold at HEAD. **Measured field by field** against `describeCell`'s return (`{ icon, title, sub, terrain, prose, exits, signposts, landmarks }`): `_enterEmptyCell` renders `room.icon`, `room.title` and `room.sub` through `_renderNodeShell`, and its body is `room.prose` plus every signpost as a 🪧 line. `sub` is where `landmarks` reach the player (*"Near X · r,c"*), and `icon`/`title` carry the terrain's label. `_updateExitLinks` reads `describeCell(...).exits` for the four exit lines (§NAV-01e: road and sea-lane destination hints, "open sea", "the edge of the known world"). **Eight of eight fields are on screen.** At a named node the node's authored text replaces the prose, which is the design, not a gap. **Proof at HEAD:** `navigation.test.js` asserts the shell's body equals `describeCell`'s prose + signposts and its title/sub/badge equal the room's, and it passes **35/35**. Nothing to build; the input half stays §POT-R1.
 
 **Invariants:** ⚠️ **`ROOMS:CORE` (`ROOMS:CORE:START@9998`) is parity-fenced** — read its output, never edit the inlined copy; if `src/js/rooms.js` is touched, re-inline + `src/scripts/check-rooms-parity.js`. Render-only; Free-Movement N/A. **Verify:** reuse `src/tests/mud-harness.mjs` expectations for the rendered strings + eyeball (§7½). Sync `maps.md`/`docs/spec/spec-corridors.md`.
 
@@ -408,6 +409,6 @@
 
 ## §RESUME — Phase 2 history
 
-> **Completed work is not carried here.** The 119 closed increments for this phase are condensed in **[`../archive/backlog-resume-history.md`](../archive/backlog-resume-history.md)**; full prose for recent closes is in [`plan-archive.md`](plan-archive.md). This file carries open rows only.
+> **Completed work is not carried here.** The 120 closed increments for this phase are condensed in **[`../archive/backlog-resume-history.md`](../archive/backlog-resume-history.md)**; full prose for recent closes is in [`plan-archive.md`](plan-archive.md). This file carries open rows only.
 
 > When an increment ships: write the full entry into `plan-archive.md`, add its one-line row to `../archive/backlog-resume-history.md` and to the cross-phase table in [`BACKLOG.md`](BACKLOG.md), and delete the row from this file.

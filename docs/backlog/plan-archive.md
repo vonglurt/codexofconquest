@@ -19,6 +19,16 @@
 
 ---
 
+## Archived 2026-10-04 — §MUD-01-A (ALREADY SHIPPED by §NAV-01c `953f848`, 2026-07-01: every field describeCell returns already reaches the player)
+
+### §MUD-01-A (from §POT-PROMOTE / §MUD-01)
+
+- [x] ✅ SHIPPED 2026-10-04 `953f848` **§MUD-01-A — the descriptive view.** Render `describeCell(world, pos)`'s prose + exit list as a read-only in-game panel (reuse the harness's proven output). No input parser (that's §POT-R1).
+
+**Closed 2026-10-04 as ALREADY SHIPPED, by §NAV-01c at `953f848` (2026-07-01), three weeks before this row was written.** The row's premise, *"the player sees only node text + the road-hover tooltip"*, does not hold at HEAD. **Measured field by field** against `describeCell`'s return (`{ icon, title, sub, terrain, prose, exits, signposts, landmarks }`): `_enterEmptyCell` renders `room.icon`, `room.title` and `room.sub` through `_renderNodeShell`, and its body is `room.prose` plus every signpost as a 🪧 line. `sub` is where `landmarks` reach the player (*"Near X · r,c"*), and `icon`/`title` carry the terrain's label. `_updateExitLinks` reads `describeCell(...).exits` for the four exit lines (§NAV-01e: road and sea-lane destination hints, "open sea", "the edge of the known world"). **Eight of eight fields are on screen.** At a named node the node's authored text replaces the prose, which is the design, not a gap. **Proof at HEAD:** `navigation.test.js` asserts the shell's body equals `describeCell`'s prose + signposts and its title/sub/badge equal the room's, and it passes **35/35**. Nothing to build; the input half stays §POT-R1.
+
+---
+
 ## Archived 2026-10-04 — §DX-02ah (option 1 ratified: the quest panel is a global mission log; option 2 filed as §DX-02ah-FU behind §AUDIT-03x)
 
 ### §DX-02ah — the quest panel renders every active quest at every node, and its own comment says otherwise (NEW 2026-08-12 during §DOC-02z, 🟡 design call)
