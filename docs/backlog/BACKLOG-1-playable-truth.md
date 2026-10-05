@@ -48,10 +48,6 @@
 ---
 ## §BACKLOG — Open Items (Phase 1)
 
-### §DX-02mi — a journal find replaces the whole arrival strip, so that render's quest messages are never shown (NEW 2026-10-05 during §DX-02ev(b), 🟢)
-
-- [ ] **§DX-02mi — `storyCheckJournal` calls `storyMsg` after `storyRender` has joined and shown the arrival parts.** `storyRender` builds `[prefix, lootMsg, …activationMsgs, …questMsgs, …_birkaQuietReturns(node)]`, shows them in one `storyMsg`, and then calls `storyCheckJournal(node)`. On a render that finds a non-read-aloud entry, that function's own `storyMsg('📖 Froberger's Journal — Entry N found.')` replaces the strip in the same synchronous pass, before a frame is painted. Its comment calls this harmless (*"may overwrite any message visually but modal covers it"*), but only the read-aloud branch opens a modal. **Measured 2026-10-05:** a render at `LLA` with Entry 4 unread showed only the journal line. A quest activated or completed on arriving at a journal node is never announced, and a one-time line such as a quiet receipt is spent unseen (§DX-02ev(b) cannot hit this in play, since every arc needs an earlier visit to its node). **Fix:** have `storyCheckJournal` return its line and join it into the parts, the §DX-02gc `say`-sink shape, then census which arrival messages a journal node has been eating.
-
 ## Track records (Phase 1)
 
 ### §AUDIT-03 — Quest-data appended-field rot (NEW 2026-07-28, surfaced by §VM-01-G3)
@@ -295,6 +291,6 @@
 
 ## §RESUME — Phase 1 history
 
-> **Completed work is not carried here.** The 41 closed increments for this phase are condensed in **[`../archive/backlog-resume-history.md`](../archive/backlog-resume-history.md)**; full prose for recent closes is in [`plan-archive.md`](plan-archive.md). This file carries open rows only.
+> **Completed work is not carried here.** The 42 closed increments for this phase are condensed in **[`../archive/backlog-resume-history.md`](../archive/backlog-resume-history.md)**; full prose for recent closes is in [`plan-archive.md`](plan-archive.md). This file carries open rows only.
 
 > When an increment ships: write the full entry into `plan-archive.md`, add its one-line row to `../archive/backlog-resume-history.md` and to the cross-phase table in [`BACKLOG.md`](BACKLOG.md), and delete the row from this file.

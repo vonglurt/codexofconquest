@@ -19,6 +19,16 @@
 
 ---
 
+## Archived 2026-10-05 — §DX-02mi (a journal find joins the arrival strip; first-visit strips lost at journal nodes 24/31 → 0/31)
+
+### §DX-02mi — a journal find replaces the whole arrival strip, so that render's quest messages are never shown (NEW 2026-10-05 during §DX-02ev(b), 🟢)
+
+- [x] ✅ SHIPPED 2026-10-05 `b713431` **§DX-02mi — `storyCheckJournal` calls `storyMsg` after `storyRender` has joined and shown the arrival parts.** `storyRender` builds `[prefix, lootMsg, …activationMsgs, …questMsgs, …_birkaQuietReturns(node)]`, shows them in one `storyMsg`, and then calls `storyCheckJournal(node)`. On a render that finds a non-read-aloud entry, that function's own `storyMsg('📖 Froberger's Journal — Entry N found.')` replaces the strip in the same synchronous pass, before a frame is painted. Its comment calls this harmless (*"may overwrite any message visually but modal covers it"*), but only the read-aloud branch opens a modal. **Measured 2026-10-05:** a render at `LLA` with Entry 4 unread showed only the journal line. A quest activated or completed on arriving at a journal node is never announced, and a one-time line such as a quiet receipt is spent unseen (§DX-02ev(b) cannot hit this in play, since every arc needs an earlier visit to its node). **Fix:** have `storyCheckJournal` return its line and join it into the parts, the §DX-02gc `say`-sink shape, then census which arrival messages a journal node has been eating.
+
+> **Closed 2026-10-05 at `b713431`.** **The row undercounted its own reach.** A census, run before the fix, rendered every non-read-aloud journal node twice from the same state: entry unread (the first visit) and entry read (what the arrival says without it). **24 of 31** first visits lost the whole strip: loot (Shards #2 at `FRO`, #4 at `TRD`, #6 at `BKK`, #7 at `NUE`), quest activations (`HKG` drops *Weckmann: Pit Training* and *Act I — The Plate*, `SSJ` three, `NUE` three), and a §BOARD-01 sign at `KIR`. A first visit is exactly when loot drops and quests activate, so this was the common case, not an edge. A second eater sat in the same function: `_checkDearFriendUpgrade('brynn')` speaks through `storyMsg` without a sink. **Fix:** `storyCheckJournal` returns its lines (the found-line, plus Brynn's tier line through the §DX-02gc `say` sink), and `storyRender` calls it before the join and appends them to the strip. The read-aloud modal still opens. **After:** **0/31**, every journal line still shown. New `dx02mi-journal-strip.test.js` holds all 31. `story.md` follows. Full suite **1,378 / 8 / 0**, `check:walk` 43/43.
+
+---
+
 ## Archived 2026-10-05 — §DX-02ev (closed: (b) wires the five Birka quiet receipts to their arcs, 20/25 → 25/25; (a) shipped 813f88e, (c) e0f3fa0)
 
 ### §DX-02ev — seven authored lines with no lookup path, and one battleground return met with silence (NEW 2026-08-23 during §DOC-02cy, 🟡 implement-or-retire)
