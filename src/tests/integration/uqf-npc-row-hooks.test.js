@@ -61,7 +61,7 @@ test.describe('§VM-01-G2b — npc-row hooks', () => {
       const live = document.getElementById('story-npc-cards-row');
       const liveBefore = live ? live.children.length : -1;
       const el = document.createElement('div');
-      _runNodeHook('birka-gigault-stall', NODE_MAP['LLA'], { npcRowDiv: el });
+      _runNodeHook('birka-gigault-stall', NODE_MAP['LHR'], { npcRowDiv: el });
       return { appended: el.children.length, liveBefore, liveAfter: live ? live.children.length : -1 };
     });
     expect(r.appended, 'the hook rendered into the caller-supplied anchor').toBeGreaterThan(0);
@@ -131,13 +131,21 @@ test.describe('§VM-01-G2b — npc-row hooks', () => {
       const kids = [...document.getElementById('story-npc-cards-row').children].map(e => e.textContent);
       return {
         iVarga: kids.findIndex(t => t.indexOf('corner table') !== -1),
-        iGigault: kids.findIndex(t => t.indexOf('Gigault') !== -1),
         iDeacon: kids.findIndex(t => t.indexOf('The code on the wall') !== -1),
       };
     });
     expect(r.iVarga).toBeGreaterThanOrEqual(0);
-    expect(r.iGigault).toBeGreaterThan(r.iVarga);      // stall block follows the Varga block in source
-    expect(r.iDeacon).toBeGreaterThan(r.iGigault);     // deacon-code block follows the stall
+    expect(r.iDeacon).toBeGreaterThan(r.iVarga);       // deacon-code block follows the Varga block in source
+  });
+
+  test('§DX-02es: the Gigault bread stall stands in the LHR market, not in The Rough Bar', async ({ page }) => {
+    const stallAt = async code => {
+      await renderAt(page, code, { gameDay: 1 });
+      return page.evaluate(() => (document.getElementById('story-npc-cards-row') || { textContent: '' })
+        .textContent.indexOf("Gigault's bread stall") !== -1);
+    };
+    expect(await stallAt('LHR')).toBe(true);
+    expect(await stallAt('LLA')).toBe(false);
   });
 
   // §VM-01-G2b-FU / §DX-02ft — these five beats once read `actNumber`, the act of the tile under

@@ -54,7 +54,7 @@ Anchors resolve at HEAD unless a reference-build line is named explicitly.
 | State selection | `function _getNPCDialogue(npcKey) {@23582` | `questActive` from `_hasActiveQuestFor` |
 | Card renderer | `function _renderNpcCard(key, container) {@23718` | reads both structures |
 | Mission ledger | `function _missionComplete() {@23696` | 12 bits, returns `>= 8` |
-| Off-screen character | `const PETRA_STALL_STATES = [@27532` · `function _getGigaultState() {@27694` | cycles on `gameDay % 3` |
+| Off-screen character | `const GIGAULT_STALL_STATES = [@27544` · `function _getGigaultState() {@27694` | cycles on `gameDay % 3` |
 | Corridor farewells | `const NPC_FAREWELLS = {@27561` · `function _getFarewell(fromCode, toCode) {@27711` | Friendly+ only |
 | Act III one-liners | `const NPC_ACT_THREE_LINES = {@27603` | priority injection, additive |
 | Node→NPC routing | `const NODE_NPC_KEYS = {@27547` | read by colour *and* farewell |

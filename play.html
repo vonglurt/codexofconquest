@@ -27541,7 +27541,7 @@ const ROUGH_WHISKEY_REACTIONS = { // → doc: world.md §Rough Whiskey (LLA vend
 };
 
 /* ── Layer 44: Living World Consts ── */
-const PETRA_STALL_STATES = [ // → doc: lab-reports/lab-report-living-world.md §F1 — Gigault is named by nobody (Gigault's bread stall at LLA; 3 states cycling on gameDay % 3)
+const GIGAULT_STALL_STATES = [ // → doc: lab-reports/lab-report-living-world.md §II (Gigault's bread stall in the LHR market; 3 states cycling on gameDay % 3)
   '<div class="npc-ambient">Gigault\'s bread stall — a customer is blocking your view of the counter. You can see fresh loaves. You can smell them.</div>',
   '<div class="npc-ambient">Gigault\'s bread stall — unattended. The loaves are still warm. A handwritten sign: <em>Back at ninth bell.</em></div>',
   '<div class="npc-ambient">Gigault\'s bread stall — sold out. The sign reads: <em>Tomorrow</em>. The stall is clean.</div>'
@@ -27705,7 +27705,7 @@ Four. No desperate goods. If someone is selling because they need the coin badly
 
 /* ── Layer 44: Living World Helpers ── */
 function _getGigaultState() {
-  return PETRA_STALL_STATES[(S_story.gameDay || 0) % 3];
+  return GIGAULT_STALL_STATES[(S_story.gameDay || 0) % 3];
 }
 
 function _getNodeMapColor(nodeSlug) {
@@ -32671,8 +32671,8 @@ function _nodeHookBirkaQuillCouperinFarewell(node) {
       }
 }
 function _nodeHookBirkaGigaultStall(node, { npcRowDiv }) {
-      // ── L44-A: Gigault stall at LLA ──
-      if (node.code === 'LLA') {
+      // ── L44-A: Gigault stall at LHR ──
+      if (node.code === 'LHR') {
         const gig = document.createElement('div');
         gig.style.cssText = 'margin-top:6px;';
         gig.innerHTML = _getGigaultState();
@@ -34765,7 +34765,7 @@ const NODE_HOOKS = [ // ordered by former storyRender source position
   { id:'birka-varga-watch', nodes:['LLA'], anchor:'npc-row', fn:_nodeHookBirkaVargaWatch },
   { id:'birka-pachelbel-ledger', nodes:['LLA'], anchor:'npc-row', fn:_nodeHookBirkaPachelbelLedger },
   { id:'birka-quill-couperin-farewell', nodes:['LLA'], anchor:'npc-row', fn:_nodeHookBirkaQuillCouperinFarewell },
-  { id:'birka-gigault-stall', nodes:['LLA'], anchor:'npc-row', fn:_nodeHookBirkaGigaultStall },
+  { id:'birka-gigault-stall', nodes:['LHR'], anchor:'npc-row', fn:_nodeHookBirkaGigaultStall },
   { id:'birka-deacon-code', nodes:['LLA'], anchor:'npc-row', fn:_nodeHookBirkaDeaconCode },
   { id:'birka-brynn-maintenance', nodes:['TLL'], anchor:'npc-row', fn:_nodeHookBirkaBrynnMaintenance },
   { id:'birka-night-ambient', nodes:null, anchor:'npc-row', fn:_nodeHookBirkaNightAmbient },
@@ -35733,7 +35733,7 @@ function storyRender(node, prefix) {
       _runNodeHook('birka-varga-watch', node, _npcHookCtx); // ── S8: Varga's presence at LLA — observation mechanic ── → NODE_HOOKS (§VM-01-G2b)
       _runNodeHook('birka-pachelbel-ledger', node, _npcHookCtx); // ── Layer 68b: Pachelbel Ledger at LLA (Dear Friend) ── → NODE_HOOKS (§VM-01-G2b)
       _runNodeHook('birka-quill-couperin-farewell', node, _npcHookCtx); // ── Layer 69 §XXXIV — Act VIII: Quill visits LLA to close the Couperin estate ledger ── → NODE_HOOKS (§VM-01-G2b)
-      _runNodeHook('birka-gigault-stall', node, _npcHookCtx); // ── L44-A: Gigault stall at LLA ── → NODE_HOOKS (§VM-01-G2b)
+      _runNodeHook('birka-gigault-stall', node, _npcHookCtx); // ── L44-A: Gigault stall at LHR ── → NODE_HOOKS (§VM-01-G2b)
       _runNodeHook('birka-deacon-code', node, _npcHookCtx); // ── L44-Q: Deacon Code click target at LLA ── → NODE_HOOKS (§VM-01-G2b)
       _runNodeHook('birka-brynn-maintenance', node, _npcHookCtx); // ── L44-L/N: Brynn maintenance + ledger at TLL ── → NODE_HOOKS (§VM-01-G2b)
       _runNodeHook('birka-night-ambient', node, _npcHookCtx); // ── S52: Night-mode ambient text ── → NODE_HOOKS (§VM-01-G2b)

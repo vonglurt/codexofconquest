@@ -53,7 +53,7 @@ The eleven subsystems: **(II)** the off-screen character · **(III)** world prog
 
 | § | Subsystem | Shipped? | Delta |
 |---|---|---|---|
-| II | Gigault, off-screen | ⚠️ half | 3 stall strings byte-identical and cycling. **NOT SHIPPED: the two NPC lines that name her** (**F1**). Renders at `LLA` — *The Rough Bar*, not a market |
+| II | Gigault, off-screen | ⚠️ half | 3 stall strings byte-identical and cycling. **NOT SHIPPED: the two NPC lines that name her** (**F1**). Renders at `LLA` — *The Rough Bar*, not a market. *(Lines shipped 2026-10-04 by §DX-02ff; the stall moved to `LHR`, the market, 2026-10-05 by §DX-02es.)* |
 | III | World progression | ✅ | 6 events live; **6 of 6 can fire** — `weckmann_class` asks `_npcFavor('crov') >= 3`, and crov's ceiling of **2** (§DOC-02cz F1) was lifted to 3 by §DX-02fb ✅ 2026-08-23. **rendering shipped 2026-09-03** — `S_story.worldLog` + the inventory panel under `.journal-entry.world` (**F2** ✅ §DX-02et); flag polarity collided with Layer 69 (**F8** ✅ §DX-02ex 2026-09-05 — `couperiDebtReleased` split out); fires on sleep, not visit (**F9**) |
 | IV | Map warmth | ✅ | All five tiers exact (`#222`/`#555`/`#5a4a3a`/`#6a5a3a`/`#8a6a3a`/`#3a7a5a`). Spec's dead `warmth = fav * 20` line correctly dropped (**F10**). EB green is ending-map-only in practice |
 | V | Corridor farewells | ✅ 16/18 | Route lookup the spec punted on was **finished** by the implementer (**F10**). Threshold is `fav >= 1`, not the spec's `>= 2` (**F7**). Auros's 2 lines unreachable (**F4**) |
@@ -64,7 +64,7 @@ The eleven subsystems: **(II)** the off-screen character · **(III)** world prog
 | X | The Void's First Sign | ❌ | Not shipped, in any form (**F3b**) |
 | XI | Final map | ✅ + ⚠️ | 129 cells, timings matched to the millisecond. **Overlay is not full-screen** (**F3**); §XI's "no text on the map" superseded by Layer 66b's caption |
 
-Anchors at HEAD: `const PETRA_STALL_STATES = [@27532` · `const WORLD_PROGRESSION_EVENTS = [@27538` · `const NODE_NPC_KEYS = {@27547` · `const NPC_FAREWELLS = {@27561` · `const NPC_ACT_THREE_LINES = {@27603` · `const BRYNN_MAINTENANCE_TASKS = [@27634` · `const QUIET_RETURN_RECEIPTS = {@27655` · `const DEACON_CODE_TEXT =@27682` · `function _getGigaultState()@27694` · `function _getNodeMapColor(nodeSlug)@27698` · `function _getFarewell(fromCode, toCode)@27711` · `function _checkWorldProgressionEvents()@27728` · `function _applyActThreeWeight()@27739` · `function _renderFinalMap()@27746` · `function _storyEbReturnBeat(ebCode)@30516` · `function _nodeHookBirkaGigaultStall(node,@32333` · `function _nodeHookBirkaDeaconCode(node,@32342` · `function _nodeHookBirkaBrynnMaintenance(node,@32370`.
+Anchors at HEAD: `const GIGAULT_STALL_STATES = [@27544` · `const WORLD_PROGRESSION_EVENTS = [@27538` · `const NODE_NPC_KEYS = {@27547` · `const NPC_FAREWELLS = {@27561` · `const NPC_ACT_THREE_LINES = {@27603` · `const BRYNN_MAINTENANCE_TASKS = [@27634` · `const QUIET_RETURN_RECEIPTS = {@27655` · `const DEACON_CODE_TEXT =@27682` · `function _getGigaultState()@27694` · `function _getNodeMapColor(nodeSlug)@27698` · `function _getFarewell(fromCode, toCode)@27711` · `function _checkWorldProgressionEvents()@27728` · `function _applyActThreeWeight()@27739` · `function _renderFinalMap()@27746` · `function _storyEbReturnBeat(ebCode)@30516` · `function _nodeHookBirkaGigaultStall(node,@32333` · `function _nodeHookBirkaDeaconCode(node,@32342` · `function _nodeHookBirkaBrynnMaintenance(node,@32370`.
 
 ---
 
@@ -78,7 +78,7 @@ Neither line is in the engine. *(Both shipped 2026-10-04 by §DX-02ff, as `NPC_C
 
 What shipped is the *set dressing* without the *evidence*. The stall cycles correctly — `PETRA_STALL_STATES[(S_story.gameDay || 0) % 3]`, three days, verified in Chromium — so a player sees a blocked counter, then warm loaves and *"Back at ninth bell,"* then *"Tomorrow."* But the section's own test ("*Gigault is the test*") cannot be administered: the player has no reason to try to interact with a stall belonging to a woman nobody mentioned, and therefore never experiences the frustration-or-delight the design was measuring.
 
-Two smaller drifts ride along. The constant is named for **Petra**, a character who no longer exists anywhere in the file — a rename artifact preserved in a symbol name. And the hook registers `nodes:['LLA']`, which is **The Rough Bar**, while the `→ doc:` comment says `CI` (= `LHR`, City Streets). The spec says *"the player can visit the market node and see her stall."* A bread stall currently operates inside a bar.
+Two smaller drifts ride along. The constant is named for **Petra**, a character who no longer exists anywhere in the file — a rename artifact preserved in a symbol name. And the hook registers `nodes:['LLA']`, which is **The Rough Bar**, while the `→ doc:` comment says `CI` (= `LHR`, City Streets). The spec says *"the player can visit the market node and see her stall."* A bread stall currently operates inside a bar. *(Both fixed 2026-10-05 by §DX-02es: the hook registers `nodes:['LHR']`, and the constant is `GIGAULT_STALL_STATES`.)*
 
 **Cost to fix: two dialogue lines.** They are already written, in this document, in quotation marks.
 
@@ -247,7 +247,7 @@ Worth stating plainly, since this program mostly records the other direction: **
 
 1. Report restructured to the program's IEEE-style form (Abstract / Introduction / Method / Result / Findings / Playability / Corrections / Rows / Conclusion); **431 → 268 lines**, with all speculative implementation sketches replaced by the shipped anchors and every design-intent passage preserved.
 2. Status header added: **HISTORY doc**, legacy codes annotated rather than rewritten, with the ship build and both file sizes pinned.
-3. §II annotated: `PETRA_STALL_STATES` renders at `LLA` (The Rough Bar), not a market; the constant preserves a retired character name.
+3. §II annotated: `PETRA_STALL_STATES` renders at `LLA` (The Rough Bar), not a market; the constant preserves a retired character name. *(Moved to `LHR` and renamed `GIGAULT_STALL_STATES` by §DX-02es, 2026-10-05.)*
 4. §III's Act V / Act IV self-contradiction recorded, with the shipped value (Act IV) marked authoritative.
 5. §IV/§V tables annotated with the §AUDIT-03j remap (`CI`→`LHR`, `IN`→`TLL`, `TV`→`MHQ`, `BA`→`LLA`, `CY`→`HKG`, legacy `E*`→ live EB codes) and the loss of the spec's `// also 'auros' — use max of both`.
 6. §XI's *"No text on the map itself. No legend."* marked **superseded** by Layer 66b's S55 caption, which is intentional and shipped.
