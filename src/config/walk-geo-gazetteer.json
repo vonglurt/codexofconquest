@@ -253,7 +253,16 @@
     "TGS": {"anchor": "SVO", "lat": 62.50, "lon": 37.50, "why": "The Tungas — forest north of the §KG corridor, reached by the road spur at 8,217/9,217. §DX-02cb: own cell (7,217)"},
     "ZVD": {"anchor": "SVO", "lat": 57.98, "lon": 33.24, "why": "Gulag Gladiator Zavod — §KG machine-works pit; the Valdai Hills, on the Novgorod–Tver road. §DX-02cb: own cell (12,213)"},
     "FBR": {"anchor": "SVO", "lat": 56.90, "lon": 35.50, "why": "The Skill Fabrika — §KG jack-in trade school, near Tver. §DX-02cb: own cell (13,215)"},
-    "TVR": {"anchor": "SVO", "lat": 56.50, "lon": 36.50, "why": "Rzhev Transit Waystation — §KG rest stop on the Tver–Moscow road toward Station 7 (SVO). §DX-02cb: own cell (13,216)"}
+    "TVR": {"anchor": "SVO", "lat": 56.50, "lon": 36.50, "why": "Rzhev Transit Waystation — §KG rest stop on the Tver–Moscow road toward Station 7 (SVO). §DX-02cb: own cell (13,216)"},
+    "LC1":  {"anchor": "ATH", "lat": 36.5, "lon": 29.5, "why": "Littoral Courts — Port Aurel, (33,209). §SIREN-01-FU (user decision 2026-10-04, option A): the arc runs east along the Anatolian coast and south down the Levant, one free cell per node, so every court and crossing can be stood on. LCA overrides GEO2's Larnaca."},
+    "LJ1":  {"anchor": "ATH", "lat": 36.5, "lon": 30.5, "why": "Littoral Courts — First Crossing, (33,210)."},
+    "LC2":  {"anchor": "ATH", "lat": 37.5, "lon": 31.5, "why": "Littoral Courts — Port Calice, (32,211)."},
+    "LJ2":  {"anchor": "ATH", "lat": 36.5, "lon": 32.5, "why": "Littoral Courts — Second Crossing, (33,212)."},
+    "LC3":  {"anchor": "ATH", "lat": 35.5, "lon": 37.5, "why": "Littoral Courts — Port Mireille, (34,217)."},
+    "LJ3":  {"anchor": "ATH", "lat": 34.5, "lon": 37.5, "why": "Littoral Courts — The Serpent Passage, (35,217)."},
+    "LSO":  {"anchor": "ATH", "lat": 34.5, "lon": 38.5, "why": "Littoral Courts — The Fog Bank, (35,218)."},
+    "LC4":  {"anchor": "ATH", "lat": 33.5, "lon": 37.5, "why": "Littoral Courts — Port Solen, (36,217)."},
+    "LCA":  {"anchor": "ATH", "lat": 32.5, "lon": 36.5, "why": "Littoral Courts — The Southern Anchorage, (37,216)."}
   },
 
   "offEarth": {
@@ -278,11 +287,6 @@
     "HJ3":  {"anchor": "SDQ", "why": "Hag arc — Dark Passage"},
     "WG0":  {"anchor": "SDQ", "why": "Hag arc — Deeper Gate"},
 
-    "LC1":  {"anchor": "ATH", "why": "Littoral Courts — Port Aurel (fictional Mediterranean realm)"},
-    "LC2":  {"anchor": "ATH", "why": "Littoral Courts — Port Calice"},
-    "LC3":  {"anchor": "ATH", "why": "Littoral Courts — Port Mireille"},
-    "LC4":  {"anchor": "ATH", "why": "Littoral Courts — Port Solen"},
-    "LSO":  {"anchor": "ATH", "why": "Littoral Courts — The Fog Bank"},
 
     "ALF":  {"anchor": "SIG", "why": "Lake realm — North Shore; thematic anchor to Swedish lakes (Sigtuna), no entry quest"},
     "HFT":  {"anchor": "SIG", "why": "Lake realm — South Shore (quest_hunt_01); thematic Swedish lakes"},

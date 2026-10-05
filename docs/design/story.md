@@ -2938,7 +2938,9 @@ Fires once at `MLA` (historical `ML`) when `!S_story.maltaSnakeEvent` → sets f
 Ten-node sequential ocean arc. Entry via `SID` east probe (`SID` at r:25,c:10; `LJ0` (historical — no live node) at r:25,c:14). Four courtly skill-check encounters, three sea battles, one parallel Overseer quest, one arc-close storyRender. Writing register: compressed French vignette, two perspectives implied per encounter, no declared manipulation.  *(historical: `DS`=`SID`)*
 
 **Node chain:**
-`LJ0` (historical — no live node)(entry) → LC1(court) → `LJ1` (historical — no live node)(battle) → LC2(court) → `LJ2` (historical — no live node)(battle) → LC3(court) → `LJ3` (historical — no live node)(battle+trigger) → LC4(court) → LCA(terminal); LSO branches east from `LJ3` (historical — no live node).
+`LJ0` (historical — no live node)(entry) → LC1(court) → `LJ1`(battle) → LC2(court) → `LJ2`(battle) → LC3(court) → `LJ3`(battle+trigger) → LC4(court) → LCA(terminal); LSO branches east from `LJ3`.
+
+**Restored 2026-10-04 (§SIREN-01-FU, option A).** The three crossings are live again as non-junction `deep_sea` nodes carrying their original battles, and each of the nine nodes has a cell of its own: east along the Anatolian coast (`LC1` 33,209 · `LJ1` 33,210 · `LC2` 32,211 · `LJ2` 33,212), then south down the Levant (`LC3` 34,217 · `LJ3` 35,217 · `LC4` 36,217 · `LCA` 37,216), with `LSO` at 35,218, east of the Serpent Passage. `LJ0` (historical — no live node), the entry, was not restored.
 
 **Quest table:**
 
@@ -2980,9 +2982,9 @@ Ten-node sequential ocean arc. Entry via `SID` east probe (`SID` at r:25,c:10; `
 
 | Node | Battle | Key | Count |
 |------|--------|-----|-------|
-| `LJ1` (historical — no live node) | First Crossing | `sea_serpent` | 2 |
-| `LJ2` (historical — no live node) | Second Crossing | `deep_one` | 3 |
-| `LJ3` (historical — no live node) | The Serpent of the Passage | `sea_serpent` | 1 (solo, full HP) |
+| `LJ1` | First Crossing | `sea_serpent` | 2 |
+| `LJ2` | Second Crossing | `deep_one` | 3 |
+| `LJ3` | The Serpent of the Passage | `sea_serpent` | 1 (solo, full HP) |
 
 **Overseer design:** WIS DC 15 (matches Succubus/Incubus charm save DC). Not a battle — dialogue in the fog. Pass = name the structure aloud, go to fourth court anyway. Fail = accept the "helpful offer" (one specific framing at Port Solen). The offer is transparent; the difficulty is not deception but the knight's willingness to accept assistance from something that has been instrumentalizing them.
 

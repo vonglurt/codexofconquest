@@ -157,7 +157,7 @@ figures):
 | LSO The Fog Bank | `32,203` | 7th of 17 | ❌ |
 | LCA Southern Anchorage | `35,213` | 2nd of 2 | ❌ `list[0]` = `CI2` |
 
-`LC4:{r:32,c:203},@9786` and `LCA:{r:35,c:213},@9825` are the coordinates that did it. Since
+`LC4:{r:32,c:203},`@9786 and `LCA:{r:35,c:213},`@9825 are the coordinates that did it. *(Retired 2026-10-04 by §SIREN-01-FU: each of the six now has a cell of its own, and the three crossings are back as `LJ1`–`LJ3`.)* Since
 `function _uqfActivateAtNode(node, indexFresh) {@30293` keys on `node.code`, **all five quests are stranded**;
 since the arc-close is a node panel, **the ending cannot render either**.
 

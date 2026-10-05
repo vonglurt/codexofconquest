@@ -65,14 +65,15 @@ test.describe('§EDITOR-04 — the questline context query', () => {
     expect([...seen].sort()).toEqual(Object.keys(QG.KNOWN_UNWRITTEN_FLAG).sort());
   });
 
-  test('cell primacy reproduces the §AUDIT-03x baseline: 416 nodes, 244 cells, 172 non-primary', () => {
+  test('cell primacy reproduces the §AUDIT-03x baseline: 419 nodes, 253 cells, 166 non-primary', () => {
     const W = world();
     const { cellOf } = require(path.join(ROOT, 'src', 'js', 'quest-context.js'));
     const cells = new Set(); let nonPrimary = 0;
     for (const code of Object.keys(W.nodeMap)) {
       const c = cellOf(W, code); cells.add(`${c.r},${c.c}`); if (!c.isPrimary) nonPrimary++;
     }
-    expect([Object.keys(W.nodeMap).length, cells.size, nonPrimary]).toEqual([416, 244, 172]);
+    // §SIREN-01-FU: 416/244/172 until the Littoral arc got nine cells of its own (three new nodes, six moved)
+    expect([Object.keys(W.nodeMap).length, cells.size, nonPrimary]).toEqual([419, 253, 166]);
   });
 
   test('GET /api/context/LHR returns the node, its questline and its gate reads', async () => {

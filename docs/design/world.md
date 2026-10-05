@@ -44,7 +44,7 @@ The Void breaks through completely on the **seventh new moon** from the story's 
 > `N`/`S`/`E`/`W` from `NODE_MAP`, and 0 of the 416 live nodes carries one** — so "verified
 > against `NODE_MAP`" was true when written and is not a claim you can re-check today. The
 > historical **junction nodes** (`J1`…`J7`, `RD`, `LJ0`…`LJ3`) were deleted by §WALK-1 and
-> §DX-01a; where one names a place that survived, the annotation points at the surviving node,
+> §DX-01a (`LJ1`–`LJ3` came back on 2026-10-04 as ordinary nodes, §SIREN-01-FU); where one names a place that survived, the annotation points at the surviving node,
 > not at a live junction. The `R03,C16`-style grid cells are the retired **26×16** projection
 > (live `NODE_COORDS` runs r 2–73 / c 154–249). Movement is cell-based: the authority on what
 > adjoins what is `./bin/api location <CODE>` and `./bin/api reachability`. The *content* below —
@@ -498,7 +498,7 @@ The bloodstained map is Froberger's. He made it himself, over three years, one d
 ---
 
 **The Overseer**
-- **Location:** The Fog Bank — Open Water (Node LSO, §SIREN-01) — east branch from The Serpent Passage (`LJ3` (historical — no live node))
+- **Location:** The Fog Bank — Open Water (Node LSO, §SIREN-01) — east branch from The Serpent Passage (`LJ3`)
 - **Role:** Parallel quest antagonist; has been in telepathic contact with the ship's navigator since Port Aurel; constructed the four-court sequence
 - **Motivation:** It offers to "arrange the fourth court differently." The offer is warm. It costs "nothing." It requires only one word — a specific framing at Port Solen. The word is not wrong. It gives the Overseer a small piece of the frame.
 - **Secret:** It has been in the water ahead of the knight since the first crossing. The navigator is not aware of the contact. The fog bank it inhabits has no seasonal explanation. Its form is not fixed — it appears through the navigator's second register and then directly, in the fog.
@@ -1374,7 +1374,7 @@ The Town Crier lines in `TOWN_CRIER_LINES` draw on existing world state already 
 
 The four coastal harbor-courts are fortresses on a southward littoral chain west of the deep-sea trench. They predate the Conclave. They are not on any existing political map. Their architecture is described through specific objects: the harbormaster's tower, the drawbridge chain, the cape court fire, the harbor window facing south.
 
-**Geographic position:** Extended south-west grid; entry via `SID` (historical `DS`) east probe. The Littoral Sea connects to the same ocean that contains the Charybdis and the Leviathan's silhouette — but the courts are coastal, not deep. The sea battles are with the ocean, not the Ladies.
+**Geographic position:** since §SIREN-01-FU (2026-10-04), east along the Anatolian coast from Port Aurel to the Second Crossing, then south down the Levant to the Southern Anchorage; `docs/design/story.md` lists the cells. The old 26×16 placement entered via `SID` (historical `DS`) east probe. The Littoral Sea connects to the same ocean that contains the Charybdis and the Leviathan's silhouette — but the courts are coastal, not deep. The sea battles are with the ocean, not the Ladies.
 
 **World logic — why the Ladies never fight:** The source design is explicit: the manipulative dynamic and direct violence are structurally opposed. The sea is what the courts are not: honest about what it wants. The battles (Sea Spawn, Deep Ones, the Serpent of the Passage) are direct, physical, mortal. The courts are indirect, verbal, calibrated. The contrast is the arc's structure.
 

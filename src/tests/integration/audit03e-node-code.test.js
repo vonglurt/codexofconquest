@@ -37,8 +37,8 @@ test.describe('§AUDIT-03e — NODE_MAP code backfill', () => {
     // The identity that makes `code = key` provably behaviour-preserving for the 129 authored ones.
     expect(r.mismatched, 'no NODE_MAP entry may have code !== key').toEqual([]);
     expect(r.missing, 'after the backfill no entry may lack a code').toEqual([]);
-    expect(r.total).toBe(416);
-    expect(r.backfilled, '287 entries omitted `code:` in source').toBe(287);
+    expect(r.total).toBe(419);
+    expect(r.backfilled, '290 entries omitted `code:` in source (287, then §SIREN-01-FU\'s LJ1–LJ3)').toBe(290);
     expect(r.backfilledAllExist).toBe(true);
   });
 

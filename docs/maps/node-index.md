@@ -8,7 +8,7 @@
 > code from a hand-maintained table** (that is how `710bb75` put `activateNode:"SF"` on eight
 > quests — §AUDIT-03c). `./bin/api get node <CODE>` is the other live answer.
 
-**416 nodes** · coordinates are live `NODE_COORDS` cells on the §CELL-02 grid (r 2–73, c 154–249), not the retired 26×16 projection.
+**419 nodes** · coordinates are live `NODE_COORDS` cells on the §CELL-02 grid (r 2–73, c 154–249), not the retired 26×16 projection.
 
 | Code | Node # | Terrain | Act | Cell (r,c) | 🛏 | Label | Inline NPC |
 |------|--------|---------|-----|-----------|----|-------|------------|
@@ -227,11 +227,11 @@
 | `KYA` | 90 | `lystra` | 4 | 32,212 | 🛏 | Lystra — The East Gate | Timael |
 | `LAT` | 305 | `docks` | 1 | 34,215 |  | Latakia — Syrian Mediterranean Port |  |
 | `LBC` | 145 | `docks` | 2 | 16,190 |  | Lübeck — The Hansa Gate |  |
-| `LC1` | 112 | `port_aurel` | 4 | 32,203 | 🛏 | Port Aurel — The Tide Keep | Lady Aurel |
-| `LC2` | 114 | `port_calice` | 4 | 32,203 | 🛏 | Port Calice — The Drawbridge Court | Lady Calice |
-| `LC3` | 116 | `port_mireille` | 4 | 32,203 | 🛏 | Port Mireille — The Cape Court | Lady Mireille |
-| `LC4` | 118 | `port_solen` | 4 | 32,203 | 🛏 | Port Solen — The Far Harbor | Lady Solen |
-| `LCA` | 119 | `southern_anchorage` | 4 | 35,213 | 🛏 | The Southern Anchorage | Harbor Keeper |
+| `LC1` | 112 | `port_aurel` | 4 | 33,209 | 🛏 | Port Aurel — The Tide Keep | Lady Aurel |
+| `LC2` | 114 | `port_calice` | 4 | 32,211 | 🛏 | Port Calice — The Drawbridge Court | Lady Calice |
+| `LC3` | 116 | `port_mireille` | 4 | 34,217 | 🛏 | Port Mireille — The Cape Court | Lady Mireille |
+| `LC4` | 118 | `port_solen` | 4 | 36,217 | 🛏 | Port Solen — The Far Harbor | Lady Solen |
+| `LCA` | 119 | `southern_anchorage` | 4 | 37,216 | 🛏 | The Southern Anchorage | Harbor Keeper |
 | `LCY` | 7 | `docks` | 2 | 18,180 |  | Harbor Docks — Tilbury | Magistra Elara Muffat |
 | `LDN` | 269 | `city` | 0 | 18,179 |  | Gwynvryn — The White Hill (London) |  |
 | `LEA` | 297 | `midlands` | — | 17,178 |  | Castle Lea — Sir Richard's Estate |  |
@@ -241,13 +241,16 @@
 | `LHA` | 464 | `docks` | 6 | 31,170 |  | Lisbon Harbor — Royal Departure Quay |  |
 | `LHR` | 1 | `city` | 1 | 10,197 |  | City Streets — Birka | City Guard Captain |
 | `LIM` | 81 | `mimic_meadow` | 6 | 21,182 |  | The Mimic Meadows |  |
+| `LJ1` | 113 | `deep_sea` | 4 | 33,210 |  | First Crossing |  |
+| `LJ2` | 115 | `deep_sea` | 4 | 33,212 |  | Second Crossing |  |
+| `LJ3` | 117 | `deep_sea` | 4 | 35,217 |  | The Serpent Passage |  |
 | `LKS` | 395 | `freshwater_lake` | 5 | 18,177 |  | Avalon Shore — The Lake of Excalibur |  |
 | `LLA` | 4 | `bar` | 1 | 4,202 |  | The Rough Bar | City Fence |
 | `LLM` | 407 | `freshwater_lake` | 1 | 13,175 |  | Loch Lomond — The Shore at Dawn |  |
 | `LMO` | 212 | `city` | 1 | 29,203 |  | Thessaloniki — Monastery of the Latomos |  |
 | `LON` | 215 | `city` | 1 | 18,179 |  | London — English Lord Chancellor's Office |  |
 | `LRD` | 259 | `city` | 0 | 18,177 |  | The Lord's Manor |  |
-| `LSO` | 120 | `fog_bank` | 4 | 32,203 |  | The Fog Bank — Open Water | The Overseer |
+| `LSO` | 120 | `fog_bank` | 4 | 35,218 |  | The Fog Bank — Open Water | The Overseer |
 | `LXF` | 227 | `freshwater_lake` | 1 | 4,158 |  | Saelingsdals Ford — The River Crossing |  |
 | `LYG` | 246 | `city` | 1 | 8,189 |  | Lyngvi Hall — Borgny's Estate |  |
 | `LYR` | 41 | `arctic` | 7 | 2,194 |  | Arctic Wastes — Detour |  |
@@ -439,7 +442,7 @@
 > (num 77 is held by two nodes, and several terrain keys were renamed since). Rows that
 > could not be corroborated are listed as **unresolved** rather than guessed.
 
-**83 recovered · 11 unresolved** (source: the historical legend in `maps.md`).
+**86 recovered · 8 unresolved** (source: the historical legend in `maps.md`).
 
 | Legacy | Node # | Live code | Label | Note |
 |--------|--------|-----------|-------|------|
@@ -521,8 +524,11 @@
 | `ML` | 95 | **`MLA`** | Malta — The Shore |  |
 | `ST` | 96 | **`FCO`** | Rome — House Arrest |  |
 | `LC1` | 112 | **`LC1`** | Port Aurel — The Tide Keep |  |
+| `LJ1` | 113 | **`LJ1`** | First Crossing | terrain renamed → `deep_sea` |
 | `LC2` | 114 | **`LC2`** | Port Calice — The Drawbridge Court |  |
+| `LJ2` | 115 | **`LJ2`** | Second Crossing | terrain renamed → `deep_sea` |
 | `LC3` | 116 | **`LC3`** | Port Mireille — The Cape Court |  |
+| `LJ3` | 117 | **`LJ3`** | The Serpent Passage | terrain renamed → `deep_sea` |
 | `LC4` | 118 | **`LC4`** | Port Solen — The Far Harbor |  |
 | `LCA` | 119 | **`LCA`** | The Southern Anchorage |  |
 | `LSO` | 120 | **`LSO`** | The Fog Bank — Open Water |  |
@@ -540,7 +546,4 @@ stubs and other entries the world removed; they are dead references, not renames
 | `J6` | 48 | `junction` |
 | `J7` | 49 | `junction` |
 | `LJ0` | 111 | `junction` |
-| `LJ1` | 113 | `junction` |
-| `LJ2` | 115 | `junction` |
-| `LJ3` | 117 | `junction` |
 
