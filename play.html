@@ -36070,7 +36070,9 @@ function storyRender(node, prefix) {
     row.appendChild(sec);
   }
 
-  // ── QUESTS section (active quests at this node) ────
+  // ── QUESTS section: every active quest, wherever the player stands ────
+  // A global mission log by design (§DX-02ah): a board-accepted bounty, and any quest whose
+  // activateNode is not its cell's primary, can only be rolled from here.
   {
     const activeEntries = Object.entries(S_story.quests || {})
       .filter(([, s]) => s === 'active')
