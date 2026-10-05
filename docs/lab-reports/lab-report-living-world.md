@@ -74,7 +74,7 @@ Anchors at HEAD: `const PETRA_STALL_STATES = [@27532` · `const WORLD_PROGRESSIO
 
 §II's argument rests on exactly one mechanism, and states it plainly: *"She is named by two people. She affects the world. She exists."* The two namings are quoted verbatim in the spec — Yael's (*"She goes home an hour early when there's going to be trouble. I use her schedule to calibrate mine."*) and Brynn's (*"Gigault's the one who notices when the city is wrong before anyone else does."*).
 
-Neither line is in the engine. `grep -c "Gigault" play.html` returns **9**, and all nine are the feature's own plumbing: three stall strings, the state function, the hook, its registration, and two comments. Strip those and no character in the game has ever said her name.
+Neither line is in the engine. *(Both shipped 2026-10-04 by §DX-02ff, as `NPC_CROSS_REFS` lines for Yael and Brynn; the node call is §DX-02es.)* `grep -c "Gigault" play.html` returns **9**, and all nine are the feature's own plumbing: three stall strings, the state function, the hook, its registration, and two comments. Strip those and no character in the game has ever said her name.
 
 What shipped is the *set dressing* without the *evidence*. The stall cycles correctly — `PETRA_STALL_STATES[(S_story.gameDay || 0) % 3]`, three days, verified in Chromium — so a player sees a blocked counter, then warm loaves and *"Back at ninth bell,"* then *"Tomorrow."* But the section's own test ("*Gigault is the test*") cannot be administered: the player has no reason to try to interact with a stall belonging to a woman nobody mentioned, and therefore never experiences the frustration-or-delight the design was measuring.
 

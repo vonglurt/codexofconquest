@@ -198,8 +198,8 @@ test.describe('Layer 45 — Web of Connections', () => {
     expect(out.allEven).toContain('The second report is filed');
   });
 
-  // ── F4: the connection map declares two relationships with no lines ──
-  test('17 cross-reference lines; nobody mentions Gigault; Yael and Pachelbel never mention each other', async ({ page }) => {
+  // ── F4: the connection map's eight edges all have lines (§DX-02ff added the last two) ──
+  test('21 cross-reference lines; Yael and Brynn name Gigault; Yael and Pachelbel each name the other', async ({ page }) => {
     await seedAndLoad(page, {});
     await dismissContinue(page);
 
@@ -216,11 +216,11 @@ test.describe('Layer 45 — Web of Connections', () => {
       };
     });
 
-    expect(out.total).toBe(17);
+    expect(out.total).toBe(21);
     expect(out.owners).toEqual(BIRKA.slice().sort());
-    expect(out.gigault).toBe(0);          // the lock's "All → Gigault" edge
-    expect(out.yaelOnPachelbel).toBe(0);  // the lock's "Yael — Pachelbel" edge
-    expect(out.pachelbelOnYael).toBe(0);
+    expect(out.gigault).toBe(2);          // the lock's "All → Gigault" edge, in the two lines Layer 44 §II quotes
+    expect(out.yaelOnPachelbel).toBe(1);  // the lock's "Yael — Pachelbel" edge
+    expect(out.pachelbelOnYael).toBe(1);
     expect(out.favTiers).toEqual([1, 2]); // never gated at 3
   });
 
@@ -239,9 +239,9 @@ test.describe('Layer 45 — Web of Connections', () => {
       return { eligibleCount: eligible.length, visitsThatDeliver: seen, exhaustedAfter: seen[seen.length - 1] };
     });
 
-    expect(out.eligibleCount).toBe(4);
-    expect(out.visitsThatDeliver).toEqual([3, 6, 9, 12]);
-    expect(out.exhaustedAfter).toBe(12);  // then the pool is silent forever
+    expect(out.eligibleCount).toBe(5);
+    expect(out.visitsThatDeliver).toEqual([3, 6, 9, 12, 15]);
+    expect(out.exhaustedAfter).toBe(15);  // then the pool is silent forever
   });
 
   // ── F6: the training log ships an authoring stage direction as player text ──

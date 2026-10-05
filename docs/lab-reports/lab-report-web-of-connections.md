@@ -215,7 +215,7 @@ Worth stating plainly. All eight subsystems shipped. All 17 cross-references, al
 1. Report restructured to the program's IEEE-style form; **402 → 258 lines**, all design-intent prose preserved, speculative code blocks replaced with shipped anchors.
 2. Status header added: **HISTORY doc**, ship build and both file sizes pinned, sibling-layer cross-link to `lab-report-living-world.md`.
 3. §II annotated: the `crov` trace is **out of range**, not missing; `MAREN_DIALOGUE` shipped as `NIVERS_DIALOGUE` from the first commit.
-4. §III's connection map annotated: 6 of 8 edges honored; `Yael — Pachelbel` and `All → Gigault` marked **NOT SHIPPED** rather than deleted.
+4. §III's connection map annotated: 6 of 8 edges honored; `Yael — Pachelbel` and `All → Gigault` marked **NOT SHIPPED** rather than deleted. *(Both shipped 2026-10-04 by §DX-02ff: four lines, 17 → 21.)*
 5. §V annotated with the §AUDIT-03j node remap (`SW`→`MSY`, `SL`→`BMA`, `IN`→`TLL`, `TV`→`MHQ`) and the Layer 74 fifth entry; the `ER`/Redwater row marked **NOT SHIPPED**.
 6. **`lab-report-living-world.md` corrected** — its Result table said *"All 6 events live and correctly gated"*; `weckmann_class` cannot fire. Both the table row and finding F2's prose now carry the correction and a pointer here.
 

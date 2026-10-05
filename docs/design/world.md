@@ -665,7 +665,7 @@ Second-visit callbacks for Dear Friends in qualifying NG+ runs (ngPlusRun ≥ 1,
 
 ### Cross-References
 
-`NPC_CROSS_REFS` — 17 dialogue lines where NPCs mention each other. Injected every 3rd visit at fav ≥ 1. Reveals the pre-existing web of relationships in Birka.
+`NPC_CROSS_REFS` — 21 dialogue lines where NPCs mention each other. Injected every 3rd visit at fav ≥ 1. Reveals the pre-existing web of relationships in Birka. All eight edges of the Layer 45 connection map have lines since §DX-02ff (2026-10-04): Yael and Brynn name Gigault, in the two lines Layer 44 §II quotes, and Yael and Pachelbel each name the other — she knows what moves through his back room and walks past; he keeps it to nothing she would have to stop.
 
 > **§AUDIT-03n (2026-07-31) — this table, `ROUGH_WHISKEY_REACTIONS` and `FROBERGER_TRACES` were each 3/6 dead.** Their keys were the profiles' **surnames** (`couperin` / `weckmann` / `bruhns`), which the favor ledger never writes, so those entries could never be reached — the npc-key twin of §AUDIT-03j's `NODE_NPC_KEYS` defect, and the same three names. Renamed to the ledger's keys **`quill`** (Bard Tomas Couperin, MHQ) · **`crov`** (Pit Master Weckmann, HKG) · **`auros`** (Cmdr Seraphine Bruhns, HKG). Seven registries and 21 entries in total — the full table and the ending consequence are in `story.md` §Epilogue. **The favor ledger spends exactly six keys:** `yael` · `brynn` · `quill` · `pachelbel` · `crov` · `auros`. Fenced by `check:npcregs` (`check:walk` gate #14), which also checks every `_npcFavor('…')` literal — five of them named `bruhns` and gated whole scenes that could never fire.
 
