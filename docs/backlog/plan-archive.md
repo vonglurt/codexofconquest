@@ -19,6 +19,16 @@
 
 ---
 
+## Archived 2026-10-04 — §CHAR-01-B (a 📐 Standard Array button in the Custom panel; 15·14·13·12·10·8 spends exactly the 27-point budget)
+
+### §CHAR-01-B (from §POT-PROMOTE / §CHAR-01)
+
+- [x] ✅ SHIPPED 2026-10-04 `1ebc412` **§CHAR-01-B (optional) — a standard-array preset origin.** Add a third origin button seeding `_cc_scores = {15,14,13,12,10,8}` (the classic array) as a one-click convenience next to custom/hard. Pure additive UI, same `storyNewGame` path, no rebalance. Low priority — the point-buy already covers this allocation manually.
+
+**Closed 2026-10-04 at `1ebc412`.** **Decided here (🟡 inside a 🟢 track):** a one-click button inside the Custom panel that fills the steppers, not a third tab. The array spends exactly `CC_BUDGET` (9+7+5+4+2+0 = 27), so it is a point-buy allocation, and a tab would have been a second way to Begin with nothing to tell it apart. The order is the classic fighter's: STR 15 · CON 14 · DEX 13 · WIS 12 · INT 10 · CHA 8 (`CC_STANDARD_ARRAY`). The steppers stay live after the preset, and Begin is the custom path, unchanged. **Before:** 2 origins and no preset; reaching the array took 13 stepper clicks. **After:** one click. `char-creation.test.js` 4 → **5**: the new test reads 0 points left, the six values and every ＋ disabled, steps STR down to show the steppers still work, then Begins and reads `abilityScores`. It fails on the old file. `check:npcregs` classifies the new lowercase-keyed table as ability keys. `mechanics-economy.md` names the preset. Full suite **1,373 / 8 / 0**, the known eight. `check:walk` 43/43.
+
+---
+
 ## Archived 2026-10-04 — §SIREN-01-FU (option A: nine cells of their own, LJ1–LJ3 restored as nodes; arc 0/6 → 9/9 standable, 0/5 → 5/5 quests)
 
 ### §SIREN-01-FU — the Littoral Courts lost their entire combat layer to a worldbuilder commit, and the shape it used is now a CI failure (NEW 2026-08-12 during §DOC-02u, 🟢 option (A) decided 2026-10-04)
