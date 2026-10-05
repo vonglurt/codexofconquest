@@ -30727,14 +30727,17 @@ function storyCheckQuests(node, indexFresh) {
   return msgs;
 }
 
+// Returns its lines for storyRender's arrival strip: a storyMsg here would replace the
+// strip that render has just shown (§DX-02mi).
 function storyCheckJournal(node) {
   if (!S_story.journalEntriesRead) S_story.journalEntriesRead = [];
   const entry = FROBERGER_JOURNAL.find(e => e.nodeCode === node.code);
-  if (!entry) return;
-  if (S_story.journalEntriesRead.includes(entry.entryNum)) return;
+  if (!entry) return [];
+  if (S_story.journalEntriesRead.includes(entry.entryNum)) return [];
   S_story.journalEntriesRead.push(entry.entryNum);
   if (entry.entryNum === 41) S_story.frobergerLastEntryRead = true;
-  _checkDearFriendUpgrade('brynn');
+  const lines = [];
+  _checkDearFriendUpgrade('brynn', m => lines.push(m));
   if (entry.readAloud) {
     document.getElementById('journal-entry-hd').textContent = '📔 Froberger\'s Journal — Entry ' + entry.entryNum;
     document.getElementById('journal-text').textContent = entry.text;
@@ -30742,8 +30745,9 @@ function storyCheckJournal(node) {
     mustTag.classList.add('show');
     document.getElementById('story-journal-modal').classList.add('visible');
   } else {
-    storyMsg('📖 Froberger\'s Journal — Entry ' + entry.entryNum + ' found.');
+    lines.push('📖 Froberger\'s Journal — Entry ' + entry.entryNum + ' found.');
   }
+  return lines;
 }
 
 function storyShowNpc(nodeCode) {
@@ -36580,12 +36584,11 @@ function storyRender(node, prefix) {
   storyUpdateStatus();
   // Quests + messages
   const questMsgs = storyCheckQuests(node, true);
-  const parts = [prefix, lootMsg, ...activationMsgs, ...questMsgs, ..._birkaQuietReturns(node)].filter(Boolean);
+  const journalMsgs = storyCheckJournal(node);
+  const parts = [prefix, lootMsg, ...activationMsgs, ...questMsgs, ..._birkaQuietReturns(node), ...journalMsgs].filter(Boolean);
   storyMsg(parts.join('  ·  '));
   // Keep quest list DOM in sync so it's current when user opens the panel
   storyRenderQuests();
-  // Journal modal (must come last — may overwrite any message visually but modal covers it)
-  storyCheckJournal(node);
   storyAutoSave();
   storyCheckVictory(node);
   _renderMiniMap();

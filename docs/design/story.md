@@ -2665,7 +2665,7 @@ MILEPOINT G  storyNewGamePlus() — NG+ reset
 | `_hasActiveQuestFor(npcKey)` | 7983 | Returns true if player has active quest tied to NPC | `S_story.quests`, hardcoded npcQuests map | none |
 | `_checkFrobergerTrace(npcKey)` | 10717 | One-time Froberger memory delivery per NPC | `FROBERGER_TRACES[key]`, `npcFavorability`, `npcVisitCounts` | `frobergerTrace_[key]_delivered = true` |
 | `_checkDearFriendUpgrade(key)` | 7908 | Upgrades fav 1→2 when NPC-specific bit is met | `npcFavorability[key]`, NPC-specific S_story bits | `npcFavorability[key] = 2` |
-| `storyCheckJournal(node)` | 11358 | Finds Froberger journal entry at node; shows modal or log line | `FROBERGER_JOURNAL`, `journalEntriesRead` | `journalEntriesRead.push(entryNum)`, `frobergerLastEntryRead` |
+| `storyCheckJournal(node)` | 11358 | Finds Froberger journal entry at node; opens the read-aloud modal, or returns its line (and any Brynn tier line) for `storyRender` to join into the arrival strip (§DX-02mi) | `FROBERGER_JOURNAL`, `journalEntriesRead` | `journalEntriesRead.push(entryNum)`, `frobergerLastEntryRead` |
 | `storyJournalToggle()` | 11689 | Opens/closes journal sidebar | DOM state | DOM story-journal-overlay |
 | `storyUpdateJournalCount()` | 11714 | Updates journal badge count | `journalEntriesRead.length` | DOM journal-count badge |
 | `storyShowFrobergerNote()` | 11090 | Renders parchment note at `TLS` (historical `CO`) node | DOM froberger-note-overlay | `froberger_last_note_read = true` |
