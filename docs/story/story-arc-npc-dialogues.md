@@ -258,5 +258,18 @@ At **Dear Friend** (`npcFavorability` = **2**, not 3 — the ledger stores three
 3. "I've been here three years. In that time I've filed fourteen reports and received twelve 'Noted' stamps and two genuine responses." She looks at the terminal. "You're the third genuine response."
 4. "The relay will hold now. Not indefinitely — nothing holds indefinitely. But long enough. That's all infrastructure ever does: hold long enough for the next person to figure out the rest."
 
+#### Bram the Trailhand — Hired Trail Guide (no node; travels with the player)
+The §MESH-01g hireling, keyed `bram_trailhand`. He has no favor track and no card: `HIRELING_SPEC.dialogueKey` points the hire and wage messages at this entry (§MESH-01-HIRE-A).
+- **worldTruth:** "A road is only as safe as the last person who walked it and said so."
+- **enemy:** Guides who take the wage and the shortcut — the ones whose clients stop writing home.
+
+**Quote** (spoken on hire, `_hirelingHireMsg`): "Sixty up front, twelve a night. I walk in front, and I don't charge for the walk back."
+
+**Impartial** (one per paid day, cycled on `gameDay`, `_hirelingWageMsg`):
+1. "Twelve. Counted. I'll sleep by the door."
+2. "Wage is fair. The road wasn't, today. Tomorrow it might be."
+3. "I write the day's road down before I sleep. Somebody walks it after us."
+4. "You pay on time. You'd be surprised how rare that is."
+
 ---
 *© 2026 Paul Richeson — MIT License. See [LICENSE](../../LICENSE) for full text.*

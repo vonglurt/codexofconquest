@@ -187,4 +187,26 @@ test.describe('§MESH-01g hireling guide bot', () => {
     expect(r.noHireWp).toBeNull();
   });
 
+  test('§MESH-01-HIRE-A: the guide speaks from NPC_DIALOGUES on hire and on each paid day', async ({ page }) => {
+    await page.goto('/play.html');
+    const r = await page.evaluate(() => {
+      const d = NPC_DIALOGUES[HIRELING_SPEC.dialogueKey];
+      S_story.hireling = null; S_story.gold = 100;
+      const rec = _hirelingHire();
+      const out = { name: d && d.meta && d.meta.name, quote: d && d.quote, pool: d && d.impartial,
+                    hire: _hirelingHireMsg(rec) };
+      S_story.gameDay = 60; out.wageA = _hirelingWageMsg(12);
+      S_story.gameDay = 61; out.wageB = _hirelingWageMsg(12);
+      S_story.hireling = null;
+      return out;
+    });
+    expect(r.name).toBe('Bram the Trailhand');
+    expect(r.hire).toContain(r.quote);
+    expect(r.hire).toContain('12g/day');
+    expect(r.pool.length).toBeGreaterThan(1);
+    expect(r.wageA).toContain('Paid your guide 12g');
+    expect(r.pool.some(l => r.wageA.endsWith(l))).toBe(true);
+    expect(r.wageB).not.toBe(r.wageA);
+  });
+
 });

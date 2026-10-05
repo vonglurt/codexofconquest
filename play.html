@@ -10555,6 +10555,7 @@ const NPC_DIALOGUES = { // → doc: docs/story/story-arc-npc-dialogues.md
   khalid_kya: { meta: { worldTruth:"A craftsman-origin acknowledged by six dynasties in the same phrase is not an accident. It is a decision that outlasted every dynasty that made it.", enemy:"Incoming guild masters who will file without reading.", missionBit:"kyaC6A5Done" }, impartial: ["\"Seventeen folios. Six dynasties. Every one of them added a line acknowledging Kavah's craftsman-origin when they used the banner. The same phrase each time.\""], questActive: ["\"The incoming guild master will file it without reading it. I will be dead by then. Get it to Weimar while I can still tell you what it is.\""], friendly: ["\"Kavah was a blacksmith who raised his leather apron as the banner of Persian kingship. Six dynasties knew exactly what they were carrying when they carried it.\""], dearFriend: ["\"The Guild Ledger is in the archive. The six acknowledgments are in the archive. Kavah's leather apron outlasted every king who ever flew it.\""], quote: "A craftsman-origin acknowledged by six dynasties in the same phrase is not an accident. It is a decision that outlasted every dynasty that made it." },
   ardeshir_kya: { meta: { worldTruth:"A thing held sealed for twenty years is being held for a reason. The reason may be in the thing.", enemy:"Property courts that would break a seal to produce evidence.", missionBit:"kyaC7A5Done" }, impartial: ["\"I have known about the ivory case since my first audit. I have never opened it. The seal is the whole point.\""], questActive: ["\"One Símúrgh feather, Alberz mountain provenance. That is what the inventory says. Get it to Constantinople for assessment, then to Weimar, sealed and unopened.\""], friendly: ["\"Twenty years keeping the inventory without opening the case. That is the only way I know to hold something correctly.\""], dearFriend: ["\"The ivory case is in the archive sealed. The inventory entry is in the archive. Whether the feather is real is a question for scholars with better tools than mine.\""], quote: "I have known about the ivory case since my first audit. I have never opened it. The seal is the whole point." },
   watcher_gvw: { meta: { name:"The Greenwood Watcher", occupation:"Natural historian of cognition, forest warden", node:"GVW", worldTruth:"Knowing a thing and being able to say how you know it are two different skills, and only one of them is taught.", enemy:"Anyone who calls a thing a guess because the person who knew it could not show their working." }, impartial: ["\"I wondered which word you would use. People who ask for the witch never find the clearing. People who ask for the woman in the woods do.\"","\"Three turns on the cache walk and you never once looked at the ground. You were reading the light. You could not have told me that.\"","\"The crossroads has no signs because signs would spoil it. The tracks tell you which fork the last traveller regretted.\"","\"I do not teach the knowing. I teach you to stop arguing with it.\""], quote: "\"You knew before you knew. Most people talk themselves out of it on the way.\"" },
+  bram_trailhand: { meta: { name:"Bram the Trailhand", occupation:"hired trail guide", worldTruth:"A road is only as safe as the last person who walked it and said so.", enemy:"Guides who take the wage and the shortcut — the ones whose clients stop writing home." }, impartial: ["\"Twelve. Counted. I'll sleep by the door.\"","\"Wage is fair. The road wasn't, today. Tomorrow it might be.\"","\"I write the day's road down before I sleep. Somebody walks it after us.\"","\"You pay on time. You'd be surprised how rare that is.\""], quote: "\"Sixty up front, twelve a night. I walk in front, and I don't charge for the walk back.\"" },
 };
 // ◆◆◆ WORLDBUILDER:NPC_DIALOGUES:END ◆◆◆
 
@@ -28890,7 +28891,21 @@ function _partyEncounterRate(base) {
 // §MESH-01f co-presence buffs. The guide NEVER gates movement — "follow me" just
 // sets the same waypoint the player could set by hand, then runs the normal
 // travel loop (Free-Movement holds).
-const HIRELING_SPEC = { name: 'Bram the Trailhand', hireCost: 60, dailyFee: 12, atkBonus: 4, dmgDie: 6, dmgCount: 1, dmgFlat: 2 };
+const HIRELING_SPEC = { name: 'Bram the Trailhand', dialogueKey: 'bram_trailhand', hireCost: 60, dailyFee: 12, atkBonus: 4, dmgDie: 6, dmgCount: 1, dmgFlat: 2 };
+
+// The guide's voice lives in NPC_DIALOGUES[dialogueKey]: `quote` on hire, and the
+// `impartial` pool on each paid day, cycled on gameDay so consecutive rests never repeat.
+function _hirelingHireMsg(rec) {
+  const d = NPC_DIALOGUES[HIRELING_SPEC.dialogueKey];
+  return '🤝 ' + rec.name + ' joins you.' + (d && d.quote ? ' ' + d.quote : '') +
+    ' ' + HIRELING_SPEC.dailyFee + 'g/day, paid when you rest.';
+}
+function _hirelingWageMsg(fee) {
+  const d = NPC_DIALOGUES[HIRELING_SPEC.dialogueKey];
+  const pool = (d && d.impartial) || [];
+  const line = pool.length ? ' ' + pool[(S_story.gameDay || 0) % pool.length] : '';
+  return '🧭 Paid your guide ' + fee + 'g for the day.' + line;
+}
 
 function _hirelingActive() { return !!(typeof S_story !== 'undefined' && S_story && S_story.hireling); }
 
@@ -29063,7 +29078,7 @@ function _renderHirelingSection() {
     const hBtn = document.getElementById('btn-hire-hire');
     if (hBtn) hBtn.onclick = () => {
       const rec = _hirelingHire();
-      if (rec) { storyMsg('🤝 ' + rec.name + ' joins you. ' + HIRELING_SPEC.dailyFee + 'g/day, paid when you rest.'); storyUpdateStatus(); storyRenderQuests(); }
+      if (rec) { storyMsg(_hirelingHireMsg(rec)); storyUpdateStatus(); storyRenderQuests(); }
       else storyMsg('🧭 You cannot afford the wage right now.');
     };
   }
@@ -36959,7 +36974,7 @@ function storyConfirmSleep() {
   // pay, the hand walks off (auto-dismiss). No-op when no guide is hired.
   if (_hirelingActive()) {
     const _wage = _hirelingDayTick();
-    if (_wage.paid) setTimeout(() => storyMsg('🧭 Paid your guide ' + _wage.fee + 'g for the day.'), 200);
+    if (_wage.paid) setTimeout(() => storyMsg(_hirelingWageMsg(_wage.fee)), 200);
     else if (_wage.dismissed) setTimeout(() => storyMsg('🧭 Your guide left — no gold for the day\'s wage.'), 200);
   }
   // §MESH-01h: sentry upkeep on the day tick. Recall server-side any the player
