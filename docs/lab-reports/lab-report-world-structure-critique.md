@@ -266,6 +266,14 @@ Two consequences, both silent:
 So §V.D's assurance that seeding "will place them at the correct positions" fails for exactly one anchor, and it
 is one of the four Atlantic islands that section is about. → filed as **§AUDIT-03bb**.
 
+> **Closed 2026-10-07 by §AUDIT-03bb (with §DX-02bh).** The second bullet had already retired with the projection
+> it describes: the live `POST /api/layout/geo-seed` is §WALK-1.5's 1° equirectangular grid with no longitude bound,
+> and it places `PDL` at column floor(−25.7 + 180) = **154**, row 32, exactly the cell `NODE_COORDS` holds. The 8→500
+> clamp survives only in `worldmap.js`'s `--seed` arithmetic, which is §DX-02bo's. The first bullet was real:
+> `MAP.minLon` is now **−26**, so `PDL` falls in region `C1` and draws on the overview, and
+> `audit03bb-worldmap-bounds.test.js` fails if any `GEO` anchor leaves the bounds or lands in other than one cell.
+> The anchor keeps its real coordinates.
+
 **Anchor contention is real but small.** Running the seeding arithmetic over all 152 anchors: **149 land in
 distinct cells**; three pairs contend, and the tie-break shoves the loser east one column at a time. All three
 are genuine same-place duplicates rather than projection failures:

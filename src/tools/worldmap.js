@@ -232,7 +232,7 @@ const GEO = {
 const MAP = {
   minLat: -8,
   maxLat: 68,
-  minLon: -25,
+  minLon: -26,
   maxLon: 72,
   // Terminal display size
   WIDTH:  96,

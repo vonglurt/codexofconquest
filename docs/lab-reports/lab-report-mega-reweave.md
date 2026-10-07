@@ -215,7 +215,7 @@ now *placed* on the 90×360 full-globe grid. Measured at HEAD: of the 155 cities
 table, exactly one falls outside that box — **`PDL`, Ponta Delgada, lat 37.7 lon −25.7**, missing the
 western edge by **0.7°**. `citiesInRegion` filters on strict bounds with no clamp, so Ponta Delgada
 appears in **zero** regions; confirmed by running `./api.sh worldmap --regions` at HEAD (0 occurrences
-across 19 populated cells). Filed as **§DX-02bh**.
+across 19 populated cells). Filed as **§DX-02bh**. *(Closed 2026-10-07 with §AUDIT-03bb: `minLon` −25 → −26, `PDL` in region `C1`, pinned by `audit03bb-worldmap-bounds.test.js`.)*
 
 There is a pleasing symmetry here. The sibling report's one surviving contribution was a fix that made
 `worldmap --regions` render at all, turning `NaN×NaN` into `6×6`. Two months later the same overview is
