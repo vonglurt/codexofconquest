@@ -8047,6 +8047,13 @@ function loadEnemyPreset(key) {
 /* ══════════════════════════════════════════════════════════
    WORLD ENGINE  (S11)
 ══════════════════════════════════════════════════════════ */
+function _syncTerrainOptionLabels() {
+  document.querySelectorAll('#terrain-select option[value], #quest-terrain-select option[value]').forEach(opt => {
+    const t = WORLD_DB[opt.value];
+    if (t) opt.textContent = (t.icon ? t.icon + ' ' : '') + t.label;
+  });
+}
+
 function populateTerrainEnemies(terrainId) {
   const sel = document.getElementById('terrain-enemy-select');
   sel.innerHTML = '';
@@ -8319,6 +8326,7 @@ document.addEventListener('DOMContentLoaded', () => {
   setupDieSelector('heal-die-sel', die => { S.heal.die = die; });
 
   // ── World terrain cascade  (S11) ──
+  _syncTerrainOptionLabels();
   document.getElementById('terrain-select').addEventListener('change', e => {
     S.terrain = e.target.value;
     populateTerrainEnemies(S.terrain);
