@@ -43,10 +43,10 @@
 ---
 ## §BACKLOG — Open Items (Phase 6)
 
-### §DX-02mj — the index's `S_story` field table lists a field the engine dropped with the mesh, and nothing checks the table against `_S_DEFAULTS()` (NEW 2026-10-07 during §DX-02ez, 🟢 one row out, then a gate)
+### §DX-02mq — the `S_story` table names 214 fields of the 501 `_S_DEFAULTS()` declares, and nothing says which belong in it (NEW 2026-10-07 during §DX-02mj, 🟡 document them, or define the table as a curated subset)
 
-- [ ] **§DX-02mj — `S_story.lastCorridorCells` is documented and gone.** 🟢 Of the 212 field names in `docs/design/index.md`'s `S_story` table, **two** have zero occurrences in `play.html`: `voidSignClicked` (removed from the table by §DX-02ez) and **`lastCorridorCells`**, which `lab-report-circuit-map-theory.md` records as *"dropped with the mesh"*. `docs/design/maps.md`'s `_setActivePath(from,to,dir)` row still names it as a write target. Measured with: each backticked `S_story.<name>` at the start of an index.md table row, `grep -c "\b<name>\b" play.html`. **Fix:** delete the index row, and correct the maps.md row against what `_setActivePath` writes today. **Then the gate:** a `check:walk` member (or a section of an existing one) that fails on any `S_story.<field>` row in index.md with no occurrence in `play.html`, so the next retirement turns the table red instead of waiting for a lab report. Also check the table's *"All 193 `S_story` fields"* claim against a fresh `_S_DEFAULTS()` count while you're there; 212 names are listed.
-> **Provenance:** §DX-02ez — the table still listed `voidSignClicked`, three months after `df320b0` removed it.
+- [ ] **§DX-02mq — 288 declared fields have no row.** Measured 2026-10-07 by evaluating the `_S_DEFAULTS()` literal: **501** keys. The index's *State Fields Quick Reference (S_story)* table names 214 fields, 213 of them declared plus `party`, which `play.html` sets outside the defaults. The table claimed *"All 193"* until §DX-02mj, so its completeness was asserted and never checked. **The call:** (a) generate the missing rows' Field/Type columns from the literal and write the Purpose cells by hand, then extend `check:sstory` to require every declared field; or (b) declare the table a curated subset with a stated rule for what earns a row (player-visible? save-critical?) and leave the rest to `_S_DEFAULTS()` itself. `party` either joins `_S_DEFAULTS()` or its row says why it doesn't. **Verify:** whichever ships, the header states it and the gate holds it.
+> **Provenance:** §DX-02mj.
 
 ### §DX-02lp — the 460 historical hashes could be mapped to live commits, and the rewrite left a key for part of it (NEW 2026-09-26 during §DX-02lo, 🟡 do it only when someone needs the old commits)
 
@@ -661,6 +661,6 @@
 
 ## §RESUME — Phase 6 history
 
-> **Completed work is not carried here.** The 104 closed increments for this phase are condensed in **[`../archive/backlog-resume-history.md`](../archive/backlog-resume-history.md)**; full prose for recent closes is in [`plan-archive.md`](plan-archive.md). This file carries open rows only.
+> **Completed work is not carried here.** The 105 closed increments for this phase are condensed in **[`../archive/backlog-resume-history.md`](../archive/backlog-resume-history.md)**; full prose for recent closes is in [`plan-archive.md`](plan-archive.md). This file carries open rows only.
 
 > When an increment ships: write the full entry into `plan-archive.md`, add its one-line row to `../archive/backlog-resume-history.md` and to the cross-phase table in [`BACKLOG.md`](BACKLOG.md), and delete the row from this file.

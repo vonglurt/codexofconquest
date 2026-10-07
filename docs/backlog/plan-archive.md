@@ -19,6 +19,17 @@
 
 ---
 
+## Archived 2026-10-07 — §DX-02mj (lastCorridorCells out of the table and maps.md; gate #44 check:sstory; the 'All 193' claim replaced by a measurement)
+
+### §DX-02mj — the index's `S_story` field table lists a field the engine dropped with the mesh, and nothing checks the table against `_S_DEFAULTS()` (NEW 2026-10-07 during §DX-02ez, 🟢 one row out, then a gate)
+
+- [x] ✅ SHIPPED 2026-10-07 `415c527` **§DX-02mj — `S_story.lastCorridorCells` is documented and gone.** 🟢 Of the 212 field names in `docs/design/index.md`'s `S_story` table, **two** have zero occurrences in `play.html`: `voidSignClicked` (removed from the table by §DX-02ez) and **`lastCorridorCells`**, which `lab-report-circuit-map-theory.md` records as *"dropped with the mesh"*. `docs/design/maps.md`'s `_setActivePath(from,to,dir)` row still names it as a write target. Measured with: each backticked `S_story.<name>` at the start of an index.md table row, `grep -c "\b<name>\b" play.html`. **Fix:** delete the index row, and correct the maps.md row against what `_setActivePath` writes today. **Then the gate:** a `check:walk` member (or a section of an existing one) that fails on any `S_story.<field>` row in index.md with no occurrence in `play.html`, so the next retirement turns the table red instead of waiting for a lab report. Also check the table's *"All 193 `S_story` fields"* claim against a fresh `_S_DEFAULTS()` count while you're there; 212 names are listed.
+> **Provenance:** §DX-02ez — the table still listed `voidSignClicked`, three months after `df320b0` removed it.
+
+> **Closed 2026-10-07 at `415c527`.** **Re-measured before:** the table named **215** fields, counting both names of pair rows like `hp / hpMax`. One, **`lastCorridorCells`**, occurs nowhere in `play.html`. `maps.md`'s `_setActivePath` row still listed it as written, and listed `NODE_COORDS` as read. Today the function writes only `lastExitCode` and `lastExitDir`, which the map grid uses to mark `mc-exit-active`. **The header's "All 193 `S_story` fields from `_S_DEFAULTS()`" was false both ways:** evaluating the literal gives **501** declared fields. The table names 213 of them plus `party`, which `play.html` sets outside the defaults. **288** declared fields have no row. **Shipped:** the dead row is gone; the `maps.md` row now says what the function does; the header states the measurement and the gate instead of a count that rots. **Gate #44 `check:sstory`** (`src/scripts/check-sstory-table.js`, 9 selftest checks) fails on any field the table names that `play.html` does not, as a whole word, both names of a pair checked. It is in `run-gates.js` and `check:walk:serial`, with an index row. **After:** 0 of 214 missing. Run before the fix, the gate named `lastCorridorCells`. `check:walk` **44/44**. **Full suite:** 1,399 passed / 8 failed / 0 flaky, the known eight. Shards 1–2 hit a 290 s per-call cap and were rerun at 590 s. **Found on the path:** 288 declared fields have no row, and whether the table should hold them all is a call (§DX-02mq).
+
+---
+
 ## Archived 2026-10-07 — §DX-02mo (per-test timeouts on the four tests over half the 45 s limit; the §DX-02mp push test no longer races gossip)
 
 ### §DX-02mo — `quest-runtime-uqf`'s 235-quest parity test runs at 80% of the 45 s test timeout, so a loaded shard times it out (NEW 2026-10-07 during §DX-02mn, 🟢)
