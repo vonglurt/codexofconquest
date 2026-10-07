@@ -45,9 +45,10 @@
 ---
 ## §BACKLOG — Open Items (Phase 5)
 
-### §DX-02lz — ledger sync and trade relay still require equal `worldHash`, so two servers with different quests can meet but never trade (NEW 2026-09-29 during the §DX-02cq close, 🟡 unblocked 2026-10-07: §MESH-03e-FU shipped `e7a0044`)
+### §DX-02mp — `POST /api/ledger/ingest` checks neither compatibility nor the ACL, so a refused server can still push events (NEW 2026-10-07 during §DX-02lz, 🟡)
 
-- [ ] **§DX-02lz — let content-divergent servers trade once a mint can be bounded.** **Measured at `9223207`:** `ledger/sync` and `trade/relay` refuse a body whose `worldHash` differs (409 `incompatible`, both beside their `meshRateAllows` checks in `wbapi-server.js`). `meshIngest` starts `ledgerSyncWith` only when `p.worldHash === m.worldHash`. So §MESH-03c's split reaches presence and chat only: two friends who each add a quest see each other, but a ⇄ offer between them relays to a 409, and their item ledgers never converge. **Why it waits:** `worldHash` still covers `QUEST_DB` and `MONSTER_POOL`, so the gate is what keeps one world's reward table from spending in another. §MESH-03e already tags pack items with their pack and holds them until the pack arrives, but a mint is authorized by nothing (§MESH-03e-FU). **Change, after §MESH-03e-FU:** gate ledger and trade on `universeHash`, and hold or refuse a pack-tagged mint by §MESH-03e's rules. **Verify:** two servers that share a universe and differ in one pack complete a ⇄ trade of a base-content item, and each ledger holds it.
+- [ ] **§DX-02mp — the push half of ledger anti-entropy is gated by the rate limit alone.** `ledger/sync` (pull) and `trade/relay` refuse a different universe with 409 and an ACL-denied server with 403. The `ingest` branch hands `body.events` straight to `ledgerIngestEvents`, and `ledgerSyncWith`'s push sends no identity to check. Every event is still signature-checked, single-writer and mint-bounded, so this is not a forgery path. But a server the ACL denies, or one on another map, can still fill this server's ledger and held queue. **Call:** have the push carry `{serverId, proto, engineVer, worldHash, universeHash}` and gate it as `sync` is gated, or record why ingest is meant to be open. **Verify:** an ACL-denied and an other-universe push are refused, and a same-universe push still lands.
+> **Provenance:** §DX-02lz.
 
 ### §DX-02ji — the `help/{type}` schema blocks are a second, older schema than `SCHEMAS`, and 39 field names diverge across four topics (NEW 2026-09-07 during §DX-02jg, ASK — the call §DX-02jg held and could not make)
 
@@ -128,6 +129,6 @@
 
 ## §RESUME — Phase 5 history
 
-> **Completed work is not carried here.** The 128 closed increments for this phase are condensed in **[`../archive/backlog-resume-history.md`](../archive/backlog-resume-history.md)**; full prose for recent closes is in [`plan-archive.md`](plan-archive.md). This file carries open rows only.
+> **Completed work is not carried here.** The 129 closed increments for this phase are condensed in **[`../archive/backlog-resume-history.md`](../archive/backlog-resume-history.md)**; full prose for recent closes is in [`plan-archive.md`](plan-archive.md). This file carries open rows only.
 
 > When an increment ships: write the full entry into `plan-archive.md`, add its one-line row to `../archive/backlog-resume-history.md` and to the cross-phase table in [`BACKLOG.md`](BACKLOG.md), and delete the row from this file.
