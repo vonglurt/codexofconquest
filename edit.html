@@ -467,6 +467,7 @@ select.fi{appearance:none;}
     <span id="diff-badge" class="badge yellow" style="display:none">0 changes</span>
     <button class="btn" id="btn-diff" disabled>Diff</button>
     <button class="btn primary" id="btn-apply-patch" disabled>Save</button>
+    <span id="load-error" style="display:none;font-size:11px;color:var(--red)"></span>
     <span id="node-count" style="font-size:11px;color:var(--muted)">—</span>
     <span id="quest-count" style="font-size:11px;color:var(--muted)">—</span>
   </div>
@@ -1507,6 +1508,11 @@ const WBAPI = {
   loaded: false,
 
   load(src) {
+    const prev = Object.fromEntries(Object.keys(this).map((k) => [k, this[k]]));
+    try { return this._load(src); } catch (e) { Object.assign(this, prev); throw e; }
+  },
+
+  _load(src) {
     const A = '◆◆◆ WORLDBUILDER:';
     const extr = (s, e) => { const a=src.indexOf(s), b=src.indexOf(e); return (a>-1&&b>a) ? src.slice(a+s.length, b).trim() : null; };
 
@@ -1614,19 +1620,27 @@ const WBAPI = {
       return out;
     };
 
-    // Simple eval (no external refs)
-    const parseSimple = (block, name) => {
-      const obj = extractObj(block, name); if (!obj) return {};
-      try { return new Function('return (' + obj + ')')(); }
-      catch(e) { console.warn(name + ':', e.message); return {}; }
+    // §DX-02fi, as wbapi-core's parseChecked: a section whose text is present must parse
+    // to something, so a destroyed section is refused by name and never reads as empty.
+    const sectionUnreadable = (name, why) => new Error(`${name} is present in the source but ${why}; refusing to read it as empty`);
+    const literalHasText = (lit) => lit.slice(1, -1).replace(/\/\*[\s\S]*?\*\//g, '').replace(/\/\/[^\n]*/g, '').trim().length > 0;
+    const parseChecked = (block, name, extract, evaluate, empty) => {
+      const lit = extract(block, name);
+      if (!lit) {
+        if (block && new RegExp(`(?:const|let|var)\\s+${name}\\s*=`).test(block)) throw sectionUnreadable(name, 'its literal never closes');
+        return empty;
+      }
+      let v;
+      try { v = evaluate(lit); } catch (e) { throw sectionUnreadable(name, `does not parse (${e.message})`); }
+      const n = Array.isArray(v) ? v.length : (v && typeof v === 'object' ? Object.keys(v).length : 0);
+      if (!n && literalHasText(lit)) throw sectionUnreadable(name, 'parses to no entries');
+      return v;
     };
 
+    const parseSimple = (block, name) => parseChecked(block, name, extractObj, (obj) => new Function('return (' + obj + ')')(), {});
+
     // Eval with P proxy (for WORLD_DB which references P.monster_key)
-    const parseWithP = (block, name, Pref) => {
-      const obj = extractObj(block, name); if (!obj) return {};
-      try { return new Function('P', 'return (' + obj + ')')(Pref); }
-      catch(e) { console.warn(name + ':', e.message); return {}; }
-    };
+    const parseWithP = (block, name, Pref) => parseChecked(block, name, extractObj, (obj) => new Function('P', 'return (' + obj + ')')(Pref), {});
 
     // Array literal extractor — tracks [ ] depth, skips // and /* */ comments
     const extractArr = (block, name) => {
@@ -1656,17 +1670,10 @@ const WBAPI = {
       }
       return null;
     };
-    const parseArr = (block, name) => {
-      const arr = extractArr(block, name); if (!arr) return [];
-      try { return new Function('return ' + arr)(); } catch(e) { return []; }
-    };
+    const parseArr = (block, name) => parseChecked(block, name, extractArr, (arr) => new Function('return ' + arr)(), []);
 
     // Eval after stripping function values (QUEST_DB, BIRKA_NPC)
-    const parseSanitized = (block, name) => {
-      const obj = extractObj(block, name); if (!obj) return {};
-      try { return new Function('return (' + removeFns(obj) + ')')(); }
-      catch(e) { console.warn(name + ':', e.message); return {}; }
-    };
+    const parseSanitized = (block, name) => parseChecked(block, name, extractObj, (obj) => new Function('return (' + removeFns(obj) + ')')(), {});
 
     this.monsterPool  = parseSimple(extr(`// ${A}MONSTER_POOL:START ◆◆◆`, `// ${A}MONSTER_DROPS:START ◆◆◆`), 'MONSTER_POOL');
     this.monsterDrops = parseSimple(extr(`// ${A}MONSTER_DROPS:START ◆◆◆`, `// ${A}MONSTER_DROPS:END ◆◆◆`), 'MONSTER_DROPS');
@@ -2686,8 +2693,14 @@ window.terrainColor = terrainColor;   // bridge for §WALK-G tests
 const TIER_ORDER = ['trivial','easy','medium','hard','deadly'];
 
 function loadFile(text) {
+  try { WBAPI.load(text); }
+  catch (e) {
+    $('load-error').textContent = '✗ ' + e.message;
+    $('load-error').style.display = '';
+    return e.message;
+  }
+  $('load-error').style.display = 'none';
   _rawSource = text;
-  WBAPI.load(text);
   const nc = Object.keys(WBAPI.nodeMap).length;
   const qc = Object.keys(WBAPI.questDb).length;
   $('node-count').textContent = nc + ' nodes';
@@ -2709,6 +2722,7 @@ function loadFile(text) {
   $('builder-content').innerHTML = ''; $('builder-content').style.display = 'none'; $('builder-empty').style.display = '';
   $('welcome-screen').classList.add('hidden');
   serverDetect();
+  return null;
 }
 
 // ── Server-first API load — populates WBAPI directly from JSON endpoints ──────
@@ -5748,6 +5762,12 @@ const BIRKA_NPC = {};
   function dismiss() {
     $('welcome-screen').classList.add('hidden');
   }
+  function refuseOrDismiss(card, err) {
+    if (!err) { dismiss(); return; }
+    $(card).classList.remove('active');
+    $(card).classList.add('err');
+    $(card + '-status').textContent = err;
+  }
 
   // ── Card: New World ──
   $('wcard-new').addEventListener('click', () => {
@@ -5765,7 +5785,7 @@ const BIRKA_NPC = {};
     $('wcard-browse').classList.add('active');
     $('wcard-browse-status').textContent = f.name;
     const reader = new FileReader();
-    reader.onload = ev => { loadFile(ev.target.result); dismiss(); };
+    reader.onload = ev => { refuseOrDismiss('wcard-browse', loadFile(ev.target.result)); };
     reader.readAsText(f);
   });
 
@@ -5777,7 +5797,7 @@ const BIRKA_NPC = {};
     $('wcard-drop-status').textContent = f.name;
     $('welcome-drop-zone').classList.remove('drag-over');
     const reader = new FileReader();
-    reader.onload = ev => { loadFile(ev.target.result); dismiss(); };
+    reader.onload = ev => { refuseOrDismiss('wcard-drop', loadFile(ev.target.result)); };
     reader.readAsText(f);
   }
   ['dragover','dragenter'].forEach(ev =>
