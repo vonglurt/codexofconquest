@@ -50,6 +50,14 @@ async function jpost(p, body, base = BASE) {
   return r.json();
 }
 async function jget(p, base = BASE) { return (await fetch(base + '/api' + p)).json(); }
+// A ledger push names a compatible sender (§DX-02mp); the harness pushes as one.
+const _manifests = new Map();
+async function ingest(events, base) {
+  if (!_manifests.has(base)) _manifests.set(base, await jget('/manifest', base));
+  const m = _manifests.get(base);
+  return jpost('/ledger/ingest', { serverId: 'fe'.repeat(16), proto: m.proto, engineVer: m.engineVer,
+    worldHash: m.worldHash, universeHash: m.universeHash, events }, base);
+}
 async function jput(p, body, base = BASE) {
   const r = await fetch(base + '/api' + p, { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
   return r.json();
@@ -1046,23 +1054,23 @@ async function main() {
     body: { player: pX1, item: { key: 'amulet_dupe', name: 'Duped Amulet', qty: 1 }, mintId: [X, 1] } });
   const tampered = { ...mintX, sig: { [X]: Buffer.alloc(64, 7).toString('base64') } };
   tampered.hash = hashOf(tampered);
-  const ingBad = await jpost('/ledger/ingest', { events: [tampered] }, led.base);
+  const ingBad = await ingest([tampered], led.base);
   check(ingBad.accepted === 0 && ingBad.rejected.length === 1 && ingBad.rejected[0].reason === 'bad-sig', 'ingest drops an event whose Ed25519 signature does not verify');
   const legacy = { kind: 'mint', id: [X, 40], ts: 1700000000000, chain: { [pX1]: { height: 0, prevHash: null } },
     body: { player: pX1, item: { key: 'hmac', name: 'HMAC era', qty: 1 }, mintId: [X, 40] } };
   legacy.sig = { [X]: crypto.createHmac('sha256', X).update(canon(legacy)).digest('hex') };
   legacy.hash = hashOf(legacy);
-  check(['bad-key', 'bad-sig'].includes((await jpost('/ledger/ingest', { events: [legacy] }, led.base)).rejected[0].reason),
+  check(['bad-key', 'bad-sig'].includes((await ingest([legacy], led.base)).rejected[0].reason),
     'an HMAC-era event keyed by the public origin id is refused (anyone could compute it)');
   const forged = sealed({ kind: 'mint', id: [ledId, 999], ts: 1700000000001, chain: { [pX1]: { height: 0, prevHash: null } },
     body: { player: pX1, item: { key: 'forge', name: 'Forged', qty: 1 }, mintId: [ledId, 999] } });
-  check((await jpost('/ledger/ingest', { events: [forged] }, led.base)).rejected[0].reason === 'own-origin', 'ingest refuses an event forged in OUR origin’s name (single-writer)');
-  const ingOk = await jpost('/ledger/ingest', { events: [mintX] }, led.base);
-  const ingDup = await jpost('/ledger/ingest', { events: [mintX] }, led.base);
+  check((await ingest([forged], led.base)).rejected[0].reason === 'own-origin', 'ingest refuses an event forged in OUR origin’s name (single-writer)');
+  const ingOk = await ingest([mintX], led.base);
+  const ingDup = await ingest([mintX], led.base);
   check(ingOk.accepted === 1 && ingDup.dup === 1, 'a valid foreign event is accepted once and deduped on replay');
   const impostor = sealed({ kind: 'mint', id: [X, 41], ts: 1700000000003, chain: { [pX2]: { height: 0, prevHash: null } },
     body: { player: pX2, item: { key: 'imp', name: 'Impostor', qty: 1 }, mintId: [X, 41] } }, crypto.generateKeyPairSync('ed25519'));
-  check((await jpost('/ledger/ingest', { events: [impostor] }, led.base)).rejected[0].reason === 'key-mismatch',
+  check((await ingest([impostor], led.base)).rejected[0].reason === 'key-mismatch',
     'once an origin is pinned to its key, an event signed for it by any other key is refused');
   const selfKey = crypto.generateKeyPairSync('ed25519');
   const Z = crypto.createHash('sha256').update(Buffer.from(pubOf(selfKey), 'base64')).digest('hex').slice(0, 32);
@@ -1070,12 +1078,12 @@ async function main() {
   const mintZ = (seq, k) => sealed({ kind: 'mint', id: [Z, seq], ts: 1700000000004, chain: { [pZ]: { height: seq - 1, prevHash: null } },
     body: { player: pZ, item: { key: 'z' + seq, name: 'Z', qty: 1 }, mintId: [Z, seq] } }, k);
   const strict = await startServer(PORT + 45, { LEDGER_DIR: fs.mkdtempSync(path.join(tmp, 'coc-ledstrict-')), MESH_SERVER_ID: '0f'.repeat(16), MESH_REQUIRE_SELF_CERT: '1' });
-  const zFirst = await jpost('/ledger/ingest', { events: [mintZ(1, crypto.generateKeyPairSync('ed25519'))] }, strict.base);
+  const zFirst = await ingest([mintZ(1, crypto.generateKeyPairSync('ed25519'))], strict.base);
   check(zFirst.rejected.length === 1 && zFirst.rejected[0].reason === 'key-mismatch',
     'with MESH_REQUIRE_SELF_CERT, a first-seen forgery of a key-derived id is refused (no trust on first use)');
-  check((await jpost('/ledger/ingest', { events: [mintZ(1, selfKey)] }, strict.base)).accepted === 1,
+  check((await ingest([mintZ(1, selfKey)], strict.base)).accepted === 1,
     'with MESH_REQUIRE_SELF_CERT, the origin whose id is sha256(its key) is accepted');
-  check((await jpost('/ledger/ingest', { events: [mintX] }, strict.base)).rejected[0].reason === 'key-mismatch',
+  check((await ingest([mintX], strict.base)).rejected[0].reason === 'key-mismatch',
     'with MESH_REQUIRE_SELF_CERT, an origin whose id is not derived from its key is refused');
   const freshDir = fs.mkdtempSync(path.join(tmp, 'coc-freshid-'));
   const fresh = await startServer(PORT + 46, { SERVER_ID_FILE: path.join(freshDir, 'id'), MESH_KEY_FILE: path.join(freshDir, 'key.pem'),
@@ -1097,12 +1105,12 @@ async function main() {
   const branchB = dupeTrade(3, pX3, 'bb'.repeat(16));
   const winner = branchA.hash < branchB.hash ? branchA : branchB;
   const loser  = branchA.hash < branchB.hash ? branchB : branchA;
-  await jpost('/ledger/ingest', { events: [branchA, branchB] }, led.base);
+  await ingest([branchA, branchB], led.base);
   const verdict = await jget(`/ledger/owner?mintId=${X}:1`, led.base);
   check(verdict.owner === winner.body.transfers[0].to, `fork-choice: lowest event hash wins the double-spent item (${winner === branchA ? 'A' : 'B'})`);
   check(verdict.voided.includes(loser.hash) && !verdict.voided.includes(winner.hash), 'the losing branch is voided; the winner is not');
   const led2 = await startServer(PORT + 32, { LEDGER_DIR: fs.mkdtempSync(path.join(tmp, 'coc-ledger2-')), MESH_SERVER_ID: 'ef'.repeat(16) });
-  await jpost('/ledger/ingest', { events: [branchB, branchA, mintX] }, led2.base);   // different arrival order, same event set
+  await ingest([branchB, branchA, mintX], led2.base);   // different arrival order, same event set
   const verdict2 = await jget(`/ledger/owner?mintId=${X}:1`, led2.base);
   check(verdict2.owner === verdict.owner && verdict2.voided.includes(loser.hash), 'an independent server reaches the identical verdict from a different arrival order');
 
@@ -1198,7 +1206,7 @@ async function main() {
   const forkA = forkOf(2, pY2, 'cc'.repeat(16));
   const forkB = forkOf(3, pY3, 'dd'.repeat(16));
   const loserY = forkA.hash < forkB.hash ? forkB : forkA;
-  await jpost('/ledger/ingest', { events: [mintY, forkA, forkB] }, gA.base);
+  await ingest([mintY, forkA, forkB], gA.base);
   const verdictOn = async (base) => jget(`/ledger/owner?mintId=${Y}:1`, base);
   check(await until(async () => (await verdictOn(gC.base)).voided && (await verdictOn(gB.base)).voided
       && (await verdictOn(gB.base)).owner === (await verdictOn(gA.base)).owner

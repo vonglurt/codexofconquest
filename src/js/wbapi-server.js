@@ -910,7 +910,8 @@ async function ledgerSyncWith(addr, peerVV) {
     if (missing.events.length) {
       const resp = await fetch(`${meshUrl(addr)}/api/ledger/ingest`, {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ events: missing.events }),
+        body: JSON.stringify({ serverId: getServerId(), proto: m.proto, engineVer: m.engineVer,
+          worldHash: m.worldHash, universeHash: m.universeHash, addr: meshAdvertise(), events: missing.events }),
       });
       const data = await resp.json().catch(() => ({}));
       if (resp.ok && data.ok) pushTraffic('out', 'ledger', addr, true, `pushed ${data.accepted} ev · ${data.dup} dup${missing.truncated ? ' (more queued)' : ''}`);
@@ -9188,7 +9189,29 @@ async function route(req, res) {
       return json(res, 201, { ok: true, mintId: evt.body.mintId, mintKey: mintKeyOf(evt.body.mintId), event: evt });
     }
 
-    // ── POST /api/ledger/ingest  body: {events:[…]} — the gossip receive path ─
+    // Both halves of ledger anti-entropy take the same gate as presence gossip: a server
+    // that may not pull from this ledger may not push into it either (§DX-02mp).
+    if (sub === 'sync' || sub === 'ingest') {
+      const m = getManifest();
+      const ip = req.socket.remoteAddress;
+      const from = (body && body.addr) || ip;
+      if (!meshCompatible(body, m)) {
+        pushTraffic('in', 'ledger', from, false, `${sub} refused: incompatible (${body && body.engineVer}/${String(body && (body.universeHash || body.worldHash)).slice(0, 8)})`);
+        logResponse(method, url.pathname, 409, `ledger/${sub}: incompatible`);
+        return json(res, 409, { ok: false, reason: 'incompatible', want: { proto: m.proto, engineVer: m.engineVer, universeHash: m.universeHash } });
+      }
+      if (!body.serverId || body.serverId === getServerId()) {
+        logResponse(method, url.pathname, 400, `ledger/${sub}: bad serverId`);
+        return json(res, 400, { ok: false, reason: 'bad-serverId' });
+      }
+      if (!aclAllows({ serverId: body.serverId, ip, worldHash: body.worldHash, universeHash: body.universeHash })) {
+        pushTraffic('in', 'ledger', from, false, `${sub} refused: ACL (${String(body.serverId).slice(0, 8)})`);
+        logResponse(method, url.pathname, 403, `ledger/${sub}: ACL`);
+        return json(res, 403, { ok: false, reason: 'acl' });
+      }
+    }
+
+    // ── POST /api/ledger/ingest  body: {serverId, proto, engineVer, worldHash, universeHash, addr?, events:[…]} — the gossip receive path ─
     // Validated foreign events (shape, hash recompute, per-origin HMAC self-
     // consistency), deduped by hash + version vector, persisted per origin.
     // The parallel gossip CHANNEL (push/anti-entropy) is the cross-mesh rung;
@@ -9204,25 +9227,10 @@ async function route(req, res) {
     // The anti-entropy PULL half of the parallel durable gossip channel: the
     // caller sends its ledger version vector and receives every event it lacks
     // (per-origin seq order, capped per response — the next round continues).
-    // Same compatibility gate + ACL as presence gossip; no TTL, no age cap.
+    // Gated above with ingest; no TTL, no age cap.
     if (sub === 'sync') {
-      const m = getManifest();
       const ip = req.socket.remoteAddress;
       const from = (body && body.addr) || ip;
-      if (!meshCompatible(body, m)) {
-        pushTraffic('in', 'ledger', from, false, `sync refused: incompatible (${body && body.engineVer}/${String(body && (body.universeHash || body.worldHash)).slice(0, 8)})`);
-        logResponse(method, url.pathname, 409, 'ledger/sync: incompatible');
-        return json(res, 409, { ok: false, reason: 'incompatible', want: { proto: m.proto, engineVer: m.engineVer, universeHash: m.universeHash } });
-      }
-      if (!body.serverId || body.serverId === getServerId()) {
-        logResponse(method, url.pathname, 400, 'ledger/sync: bad serverId');
-        return json(res, 400, { ok: false, reason: 'bad-serverId' });
-      }
-      if (!aclAllows({ serverId: body.serverId, ip, worldHash: body.worldHash, universeHash: body.universeHash })) {
-        pushTraffic('in', 'ledger', from, false, `sync refused: ACL (${String(body.serverId).slice(0, 8)})`);
-        logResponse(method, url.pathname, 403, 'ledger/sync: ACL');
-        return json(res, 403, { ok: false, reason: 'acl' });
-      }
       const { events, truncated } = ledgerEventsSince(body.vv);
       if (events.length) pushTraffic('in', 'ledger', from, true, `sync: served ${events.length} ev${truncated ? ' (more queued)' : ''} · ${String(body.serverId).slice(0, 8)}`);
       logResponse(method, url.pathname, 200, `ledger sync: served ${events.length} event(s)${truncated ? ' (truncated)' : ''}`);
@@ -11859,7 +11867,7 @@ server.listen(PORT, BIND_ADDR, () => {
     ['GET',    '/api/ledger/chain[?pid=]             → a player’s hash chain (or the full event log)'],
     ['GET',    '/api/ledger/held                     → foreign events held for packs not applied here, each missing pack with its state (§MESH-03e)'],
     ['GET',    '/api/ledger/status                   → ledger seq/events/origins/pending trades'],
-    ['POST',   '/api/ledger/ingest                   body: {events:[…]} → validated foreign-event ingest (the gossip PUSH receive path)'],
+    ['POST',   '/api/ledger/ingest                   body: {serverId, proto, engineVer, worldHash, universeHash, addr?, events:[…]} → validated foreign-event ingest (the gossip PUSH receive path; compat+ACL gated)'],
     ['POST',   '/api/ledger/sync                     body: {serverId, proto, engineVer, worldHash, addr?, vv} → events above the caller’s vv (anti-entropy PULL; compat+ACL gated)'],
     ['POST',   '/api/trade/propose                   body: {sessionId, to, give:[mintId…], want:[mintId…]} → {tradeId, ttlMs} (60s)'],
     ['POST',   '/api/trade/accept                    body: {tradeId, sessionId} → ONE co-signed dual-chain trade event'],

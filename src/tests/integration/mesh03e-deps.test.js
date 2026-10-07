@@ -26,6 +26,11 @@ test.describe('§MESH-03e — events on pack content wait for the pack', () => {
   const post = async (port, p, body) => (await fetch(url(port) + p, { method: 'POST',
     headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) })).json();
   const get = async (port, p) => (await fetch(url(port) + p)).json();
+  const push = async (port, events) => {
+    const m = await get(port, '/api/manifest');
+    return post(port, '/api/ledger/ingest', { serverId: 'fe'.repeat(16), proto: m.proto, engineVer: m.engineVer,
+      worldHash: m.worldHash, universeHash: m.universeHash, events });
+  };
   const waitUp = async (port) => {
     for (let i = 0; i < 200; i++) {
       try { if ((await fetch(`${url(port)}/api/ping`)).ok) return true; } catch {}
@@ -104,7 +109,7 @@ test.describe('§MESH-03e — events on pack content wait for the pack', () => {
   });
 
   test('B holds what depends on the pack, admits the rest, fetches the pack and says it is not accepted', async () => {
-    const r = await post(PB, '/api/ledger/ingest', { events: [plainMint, relicMint, tradeEvt] });
+    const r = await push(PB, [plainMint, relicMint, tradeEvt]);
     expect(r).toMatchObject({ ok: true, accepted: 1, held: 2, rejected: [] });
     expect((await get(PB, `/api/ledger/owner?mintId=${plainMint.body.mintId.join(':')}`)).minted).toBe(true);
     expect((await get(PB, `/api/ledger/owner?mintId=${relicMint.body.mintId.join(':')}`)).minted).toBe(false);
@@ -112,7 +117,7 @@ test.describe('§MESH-03e — events on pack content wait for the pack', () => {
     await expect.poll(async () => (await get(PB, '/api/ledger/held')).held.map((h) => h.deps[0].state).join(','),
       { timeout: 15000 }).toBe('not accepted,not accepted');
     expect(fs.existsSync(path.join(dir, 'b', 'packs', packId + '.json'))).toBe(true);
-    expect((await post(PB, '/api/ledger/ingest', { events: [relicMint] })).dup).toBe(1);
+    expect((await push(PB, [relicMint])).dup).toBe(1);
     expect((await get(PB, '/api/ledger/status')).held).toBe(2);
   });
 
@@ -132,7 +137,7 @@ test.describe('§MESH-03e — events on pack content wait for the pack', () => {
 
   test('§MESH-03e-FU — with the pack applied, a receiver refuses a pack item minted without a cite, whatever its deps say', async () => {
     expect(beforeMint.body.deps).toBeUndefined();
-    const r = await post(PB, '/api/ledger/ingest', { events: [beforeMint] });
+    const r = await push(PB, [beforeMint]);
     expect(r.accepted).toBe(0);
     expect(r.rejected).toEqual([{ hash: beforeMint.hash, reason: 'uncited' }]);
   });
@@ -142,7 +147,7 @@ test.describe('§MESH-03e — events on pack content wait for the pack', () => {
     plainRun = [];
     for (let i = 0; i < 3; i++)
       plainRun.push((await post(PA, '/api/ledger/mint', { sessionId: s3.sessionId, item: { key: 'mesh03efu_rate', name: 'Mesh03efu Rate' } })).event);
-    const r = await post(PB, '/api/ledger/ingest', { events: plainRun });
+    const r = await push(PB, plainRun);
     expect(r.accepted).toBe(2);
     expect(r.rejected).toEqual([{ hash: plainRun[2].hash, reason: 'mint-rate' }]);
   });

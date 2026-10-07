@@ -97,4 +97,24 @@ test.describe('§DX-02lz — servers whose content differs trade', () => {
       expect(await until(async () => (await get(port, `/ledger/owner?mintId=${sword.mintKey}`)).owner === ben.ledgerPid
         && (await get(port, `/ledger/owner?mintId=${shield.mintKey}`)).owner === gil.ledgerPid), `ownership on :${port}`).toBe(true);
   });
+
+  test('§DX-02mp — a push names its sender and is gated as a pull is', async () => {
+    const as = (man, serverId) => ({ serverId, proto: man.proto, engineVer: man.engineVer, worldHash: man.worldHash, universeHash: man.universeHash });
+    const cal = await post(PB, '/session/start', { name: 'Cal', seed: 11, playerKey: '9a8b'.repeat(8) });
+    await post(PB, '/ledger/mint', { sessionId: cal.sessionId, item: { key: 'lantern', name: 'Lantern' } });
+    const pulled = await post(PB, '/ledger/sync', { ...as(manA, '0d'.repeat(16)), vv: {} });
+    expect(pulled.events.length).toBeGreaterThan(0);
+    const push = async (body) => { const r = await fetch(url(PA) + '/api/ledger/ingest', { method: 'POST',
+      headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) }); return { status: r.status, ...(await r.json()) }; };
+    expect((await push({ events: pulled.events })).status).toBe(409);
+    expect((await push({ ...as(manB, 'fe'.repeat(16)), universeHash: 'deadbeefdeadbeef', worldHash: 'deadbeefdeadbeef', events: pulled.events })).status).toBe(409);
+    const acl = path.join(dir, 'a', 'acl.json');
+    fs.writeFileSync(acl, JSON.stringify({ blockServerIds: ['fe'.repeat(16)] }));
+    const denied = await push({ ...as(manB, 'fe'.repeat(16)), events: pulled.events });
+    fs.rmSync(acl);
+    expect(denied.status).toBe(403);
+    const ok = await push({ ...as(manB, 'fe'.repeat(16)), events: pulled.events });
+    expect(ok.status).toBe(200);
+    expect(ok.dup).toBe(pulled.events.length);
+  });
 });
