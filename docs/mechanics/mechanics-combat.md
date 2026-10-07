@@ -44,6 +44,20 @@ Conditions are priced as decisive tactical tools — mid-to-late-game investment
 3. Click **⚔ Start Battle** → **Initiative** is rolled automatically (`d20 + tier modifier` for both sides; ties go to player).
 4. The **Story Battle Focus overlay** appears, replacing the screen.
 
+#### Open-ground encounters: the browser and a MUD session roll differently
+
+A step onto an empty cell rolls an encounter on both sides of the same seeded stream: the browser in `_enterEmptyCell`, a MUD session in the server's move route. Both read the same `TERRAIN_ENCOUNTER_RATE` literal (the server parses it; `check:terrain` holds the parse and `terrainAt` ≡ `_inferTerrain`). **What each side does with that rate differs, on purpose**, and `check:terrain` does not compare the composed rate:
+
+| Step | Browser (`_enterEmptyCell`) | MUD session (`seededNext(s) < mres.encounter.baseRate`) |
+|---|---|---|
+| Party | `_partyEncounterRate`: **0** if a sentry is in the co-present list (`MP.players`, remote peers included), **×0.5** with a co-present ally (§MESH-01f) | none |
+| Hunt Mode | `S_story.huntMode` doubles the rate, capped at 0.8 (§KG-01) | none: a session has no `huntMode` |
+| Roll | one `_seededNext()` draw, **even at rate 0**, so a sentry still advances the stream by one | one `seededNext(s)` draw |
+| Monster | `_weightedMonsterPick`: notoriety-weighted tiers; under Hunt Mode one extra draw sends 80% of picks to monsters at or below the player's level | `pickMonster`: flat `BASE_TIER_WEIGHTS` (notoriety ≤ 5) |
+| Sentry | applied **before** the roll, as rate 0 | applied **after**: on a hit, `pickMonster` draws once more and `sentryAt` (a local bot session on the destination cell) voids the result |
+
+So under a sentry, the two streams part by one draw on every server-side hit, never on a miss. **Why the server keeps the bare kernel rate:** the browser never reads the server's `encounter` (the client rolls its own), so the server's roll serves MUD sessions, bots and the §WALK-5 harness. A session carries no level, notoriety or `huntMode` to apply. Ally-halving there would make a session's trace depend on other sessions' positions, and the trace is meant to replay from its seed and its path alone. Recorded by §AUDIT-03bg; the first row of this divergence was §WALK-5 §4.3's flat tier weights.
+
 #### Story Battle Focus Overlay
 A full-screen focused UI showing:
 

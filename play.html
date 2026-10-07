@@ -28681,7 +28681,7 @@ function _enterEmptyCell(r, c) {
   // you can grind low-level fights on purpose. Roads/junctions stay at rate 0
   // (2 × 0 = 0) and a deployed sentry still suppresses to 0 (applied above).
   if (S_story.huntMode) baseRate = Math.min(0.8, baseRate * 2);
-  if (_seededNext() < baseRate) {   // §VM-01-B: seeded stream — same event the server rolls (wbapi-server.js:8784), now byte-compatible + replayable
+  if (_seededNext() < baseRate) {   // §VM-01-B: seeded stream — same event the server rolls (`seededNext(s) < mres.encounter.baseRate`); what each side applies differs, see mechanics-combat.md
     const monster = _weightedMonsterPick(terrain);
     if (monster) {
       _encounterQueued = true;   // §NAV-01d: halts auto-travel before the battle fires

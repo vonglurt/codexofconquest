@@ -614,6 +614,7 @@ All 54 source books are marked `[x]` in `books.md` — all have been processed t
 | **Death saves** | `docs/spec/combat.md` | `docs/archive/lab-report-plan-cleanup-v17.md` |
 | **defi_land cluster (`ZRH`/`DUS`/`MUC`)** | `maps.md` · `world.md` | `docs/story/story-flowchart.md` |  *(historical: `DF`=`ZRH` · `HM`=`DUS` · `GL`=`MUC`)*
 | **Drop rates / reward formula** | `docs/mechanics/mechanics-combat.md` | `docs/lab-reports/lab-report-drop-rates-balance-and-health.md` |
+| **Encounter roll, browser vs MUD session** — what each side applies to `TERRAIN_ENCOUNTER_RATE` (party, Hunt Mode, sentry, tier weights) | `docs/mechanics/mechanics-combat.md` (*Open-ground encounters*) | `docs/lab-reports/lab-report-walk5-mud-harness.md` §4.3 · §AUDIT-03bg |
 | **Entry 42** | `docs/story/story-arc-ngplus.md` | `docs/lab-reports/lab-report-ng-plus-remembrance.md` · `docs/lab-reports/lab-report-void-archaeology.md` |
 | **Epic Battlegrounds** | `docs/story/story-arc-epic-battlegrounds.md` | `docs/lab-reports/lab-report-epic-battlegrounds.md` · `docs/story/story-flowchart.md` |
 | **Endings / epilogue** | `story.md` | `docs/lab-reports/lab-report-endings-and-echoes.md` |

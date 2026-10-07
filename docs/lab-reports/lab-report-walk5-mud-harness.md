@@ -200,6 +200,11 @@ written to prove one design decision became the repo's entire multiplayer test r
   rate**, which is exactly where three later tracks widened the gap. The row also carries a stale cross-file
   pointer: the comment at HTML line 28441 cites `wbapi-server.js:8784` for the server's matching roll, which
   now lives at **8890**. (Its two neighbours, `:1147` and `:1155`, are still exact.)
+  **✅ Closed 2026-10-07 by §AUDIT-03bg:** the divergences are one table in `docs/mechanics/mechanics-combat.md`
+  (*Open-ground encounters*), and the comment names the server's roll instead of a line. Measured at close,
+  the fourth is narrower than this note said: the client's sentry roll **does** draw once (against rate 0),
+  so the streams part by one draw only when the server's roll **hits** and `pickMonster` draws before the void.
+  The server keeps the bare kernel rate by decision: the browser never reads its `encounter`.
 - **§AUDIT-03be** — extended, not re-filed: this report is the **seventh** site certifying a Hunt Mode
   removal that was undone. Annotated in place in §3 above.
 
