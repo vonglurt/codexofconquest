@@ -746,7 +746,7 @@ MILEPOINT E  Journal + Navigate button show "(n steps, NE)"; ★ clears on arriv
 | `_travelTick()` | Auto-travel loop — one `cellMove` per ~120 ms; halts on encounter/arrival/input/block | travel state, `_encounterQueued` | `S_story.playerR/playerC` (via cellMove) |
 | `storyWaypoint()` | WP button — start/stop auto-travel along `_roadGridPath` (Shift+WP = single step) | `S_story.waypoint` | travel state; `S_story.waypoint` (clears on arrival) |
 | `storySetWaypoint(nodeCode)` | Sets waypoint target, starts travel, draws waypoint ★ | `NODE_MAP` | `S_story.waypoint` |
-| `_setActivePath(from,to,dir)` | Records last-traversed edge for minimap gold highlight | `NODE_COORDS` | `S_story.lastCorridorCells`, `lastExitDir`, `lastExitCode` |
+| `_setActivePath(from,to,dir)` | Records the node and direction last departed; the map grid marks that exit `mc-exit-active` | — | `S_story.lastExitCode`, `lastExitDir` |
 | `_updateWaypointBtn()` | Refreshes waypoint button label and state | `S_story.waypoint` | DOM only |
 | `storyMapToggle()` | Opens/closes map overlay panel | DOM state | DOM only |
 | `_renderMapGrid()` | Renders 11×11 node grid in map overlay; click handler uses actual `playerR/C` for adjacency check | `NODE_MAP`, `NODE_COORDS`, `CELL_GRID`, `S_story.playerR/playerC` | DOM only |
