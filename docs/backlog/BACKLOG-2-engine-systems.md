@@ -55,6 +55,11 @@
 ---
 ## §BACKLOG — Open Items (Phase 2)
 
+### §DX-02mm — about half of what the Warrant's Board posts names a destination the player can never arrive at by name (NEW 2026-10-07 during §DX-02it, 🟡 measure completion, then filter or wait on §AUDIT-03x)
+
+- [ ] **§DX-02mm — at `TLL` on a fresh game, 505 of the 1,058 postable bounties have an `activateNode` that is not the primary of its cell** (`CELL_GRID[cell][0]`), e.g. `BK` (37, under `LHR`), `ANT` (16, under `HTY`), `ROM` (15, under `FCO`). `_bountyPostable` checks only that `NODE_MAP[q.activateNode]` exists. Accepting a card `unlock`s the quest at once, so it does start; what is at risk is the waypoint (`_acceptBounty` sets it to the non-primary code, and the player arrives there as the primary) and any completion that reads `atNode` or `S_story.currentCode` against that code. 🟡 **First measure** how many of the 505 can complete at all. **Then decide:** (a) `_bountyPostable` skips destinations that are not their cell's primary (one line; the pool falls to ~550 and §DX-02it's census moves with it), or (b) leave the pool as is and let §AUDIT-03x's design call fix arrival. **Related:** §AUDIT-03x (172 nodes that can never be arrived at), §DX-02ah-FU.
+> **Provenance:** §DX-02it, checking why `ERF`'s census counted 151 quests at 0 legs.
+
 ### §DX-02ah-FU — scope the quest panel's roll to the quest's node once cell primacy allows it (NEW 2026-10-04 during §DX-02ah, 🟡 blocked behind §AUDIT-03x)
 
 - [ ] **§DX-02ah-FU — option (2) of §DX-02ah: keep listing every active quest, but enable the roll button only where `node.code === q.activateNode`.** That restores the meaning of §BOARD-01-FU3's leg count and §BOARD-01-FU2's auto-waypoint, and stops the player rolling a distant quest's check from anywhere. **Blocked:** on 2026-10-04, **1,207 of 2,652** rollable-type quests (`skill_check`/`combat`/`delivery`/`escort`/`dialogue`) have an `activateNode` that is not its cell's primary, so each would become unrollable everywhere. **Unblocks when** that count reaches 0 for the quests a player can activate, which is §AUDIT-03x's work. **Verify then:** `dx02ah-global-quest-log.test.js` flips to assert the button is absent away from the node and present at it. **Provenance:** §DX-02ah, closed by ratifying option (1) until then.
