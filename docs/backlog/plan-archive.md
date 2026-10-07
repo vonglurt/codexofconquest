@@ -19,6 +19,17 @@
 
 ---
 
+## Archived 2026-10-07 — §DX-02mp (sync and ingest share one compatibility + serverId + ACL gate; the push carries its sender's identity)
+
+### §DX-02mp — `POST /api/ledger/ingest` checks neither compatibility nor the ACL, so a refused server can still push events (NEW 2026-10-07 during §DX-02lz, 🟡)
+
+- [x] ✅ SHIPPED 2026-10-07 `8279718` **§DX-02mp — the push half of ledger anti-entropy is gated by the rate limit alone.** `ledger/sync` (pull) and `trade/relay` refuse a different universe with 409 and an ACL-denied server with 403. The `ingest` branch hands `body.events` straight to `ledgerIngestEvents`, and `ledgerSyncWith`'s push sends no identity to check. Every event is still signature-checked, single-writer and mint-bounded, so this is not a forgery path. But a server the ACL denies, or one on another map, can still fill this server's ledger and held queue. **Call:** have the push carry `{serverId, proto, engineVer, worldHash, universeHash}` and gate it as `sync` is gated, or record why ingest is meant to be open. **Verify:** an ACL-denied and an other-universe push are refused, and a same-universe push still lands.
+> **Provenance:** §DX-02lz.
+
+> **Closed 2026-10-07 at `8279718`. 🟡 decided: gate the push.** **Evidence for the call:** an ACL that refuses `sync` but not `ingest` refuses nothing, because a denied server only has to push instead of pull. The push is also not needed for convergence: both sides pull (`ledgerSyncWith` pulls whenever the peer's vector is ahead), so gating it costs a compatible peer nothing. **Re-measured before:** a push to `POST /api/ledger/ingest` with no identity at all answered **200** and ingested. The route had no compatibility or ACL check, so an ACL-blocked or other-universe sender was admitted too. **Shipped:** `sync` and `ingest` pass through one gate before either runs: `meshCompatible`, a `serverId` that isn't ours, then `aclAllows` with both hashes. `ledgerSyncWith`'s push sends `{serverId, proto, engineVer, worldHash, universeHash, addr}` with the events, and the endpoint listing names the new body. **After:** a bare push gets **409**, an other-universe push **409**, an ACL-blocked sender **403**, and the same push once the block is lifted **200** with every event a dup. **Evidence:** the §DX-02mp test in `dx02lz-content-divergent-trade.test.js` (red before); `mesh03e-deps.test.js` and the mud harness's 12 ingests push through a helper that names a compatible sender; `test:mud` 288 checks; `test:write`, `test:help` green; `check:walk` 43/43. **Full suite:** 1,399 passed / 8 failed / 0 flaky, the known eight. Shard 3 took 8.9 min, close to the 590 s cap of one call.
+
+---
+
 ## Archived 2026-10-07 — §DX-02lz (ledger sync and trade relay gate on universeHash via meshCompatible; mints stay bounded by the receiver)
 
 ### §DX-02lz — ledger sync and trade relay still require equal `worldHash`, so two servers with different quests can meet but never trade (NEW 2026-09-29 during the §DX-02cq close, 🟡 unblocked 2026-10-07: §MESH-03e-FU shipped `e7a0044`)
