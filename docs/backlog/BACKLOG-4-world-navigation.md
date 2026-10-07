@@ -41,13 +41,6 @@
 ---
 ## §BACKLOG — Open Items (Phase 4)
 
-### §DX-02mk — two hand-written terrain `<select>` lists in `play.html` carry their own copies of the terrain labels, and 33 of their 93 options disagree with `WORLD_DB` (NEW 2026-10-07 during §DX-02kb, 🟡 derive them or delete them)
-
-- [ ] **§DX-02mk — `#terrain-select` and `#quest-terrain-select` are label copies nothing keeps in step.** 🟡 Of the 93 `<option value="<terrain key>">` entries across the two lists (47 in `#terrain-select`, 46 in `#quest-terrain-select`), **33** show text other than that terrain's `WORLD_DB` label: **31** before §DX-02kb, which renamed seven terrain labels through the API and could not reach these copies. Examples: `soviet_checkpoint` shows *Nevsky Checkpoint* (the node's label, which §DX-02el moved off the terrain), `komsomol_school` *Komsomol School* vs *Drill Hall*, and `atlantis` reads *Atlantis — Sunken City* in one list and *Atlantis* in the other. Measured by matching each option's value against `WORLD_DB[key].label` (icon prefix stripped) through `wbapi-core`. **THE CALL:** (a) build both lists from `WORLD_DB` at render time (one helper, the icon from `WORLD_DB[key].icon`), so a label written through the API reaches them; or (b) if either list is dead UI, delete it. Ground first: find what reads each `<select>`'s value and whether a player can reach it.
-> **Provenance:** §DX-02kb — its terrain renames moved this count 31 → 33.
-
-
-
 ### §DX-02it — the world's quest work is authored far from the places that offer it, and nothing measures the gap (NEW 2026-09-06 during §DX-02ei, 🟡 a census first, then ONE DESIGN CALL)
 
 - [ ] **§DX-02it — of the 1,063 quests eligible for the Warrant's Board at `TLL`, exactly 12 lie within 10 legs, across 5 destinations; the pool's own median is 30 legs.** 🟡 §DX-02ei fixed the *selector* — one slate seat is now reserved for the nearest work — and in doing so measured the thing underneath it, which is a **content** fact the selector can only paper over: the board draws from a population whose mass sits a month's walk away. Four uniform draws from that pool yield an expected **0.045** cards within 10 legs per day, which is why the pre-fix sweep found **0 in 120** and why no sort could have found more.
@@ -91,6 +84,6 @@
 
 ## §RESUME — Phase 4 history
 
-> **Completed work is not carried here.** The 25 closed increments for this phase are condensed in **[`../archive/backlog-resume-history.md`](../archive/backlog-resume-history.md)**; full prose for recent closes is in [`plan-archive.md`](plan-archive.md). This file carries open rows only.
+> **Completed work is not carried here.** The 26 closed increments for this phase are condensed in **[`../archive/backlog-resume-history.md`](../archive/backlog-resume-history.md)**; full prose for recent closes is in [`plan-archive.md`](plan-archive.md). This file carries open rows only.
 
 > When an increment ships: write the full entry into `plan-archive.md`, add its one-line row to `../archive/backlog-resume-history.md` and to the cross-phase table in [`BACKLOG.md`](BACKLOG.md), and delete the row from this file.

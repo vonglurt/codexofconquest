@@ -19,6 +19,17 @@
 
 ---
 
+## Archived 2026-10-07 — §DX-02mk (option (a): both terrain pickers take their text from `WORLD_DB` at load; rendered disagreements 32/93 → 0)
+
+### §DX-02mk — two hand-written terrain `<select>` lists in `play.html` carry their own copies of the terrain labels, and 33 of their 93 options disagree with `WORLD_DB` (NEW 2026-10-07 during §DX-02kb, 🟡 derive them or delete them)
+
+- [x] ✅ SHIPPED 2026-10-07 `753b3af` **§DX-02mk — `#terrain-select` and `#quest-terrain-select` are label copies nothing keeps in step.** 🟡 Of the 93 `<option value="<terrain key>">` entries across the two lists (47 in `#terrain-select`, 46 in `#quest-terrain-select`), **33** show text other than that terrain's `WORLD_DB` label: **31** before §DX-02kb, which renamed seven terrain labels through the API and could not reach these copies. Examples: `soviet_checkpoint` shows *Nevsky Checkpoint* (the node's label, which §DX-02el moved off the terrain), `komsomol_school` *Komsomol School* vs *Drill Hall*, and `atlantis` reads *Atlantis — Sunken City* in one list and *Atlantis* in the other. Measured by matching each option's value against `WORLD_DB[key].label` (icon prefix stripped) through `wbapi-core`. **THE CALL:** (a) build both lists from `WORLD_DB` at render time (one helper, the icon from `WORLD_DB[key].icon`), so a label written through the API reaches them; or (b) if either list is dead UI, delete it. Ground first: find what reads each `<select>`'s value and whether a player can reach it.
+> **Provenance:** §DX-02kb — its terrain renames moved this count 31 → 33.
+
+> **Closed 2026-10-07 at `753b3af` — option (a), 🟡 decided here.** **Grounded:** both lists are live. `#terrain-select` drives the Opponent config's terrain → monster cascade (`populateTerrainEnemies`), and `#quest-terrain-select` is the player's *Create Custom Quest* picker (`storyCreateCustomQuest`). Both read only the option **value**; the text is display only. All 93 values resolve in `WORLD_DB`, and every icon already matched. So option (b), delete, was out. **Shipped:** `_syncTerrainOptionLabels()` writes each option's text as `WORLD_DB[key].icon + ' ' + label`, called where the cascade is wired at `DOMContentLoaded`. The curated key sets and optgroups stay in the HTML. **Number corrected:** the row's *31 → 33* counted the `&amp;` in *Plains &amp; Midlands* as a disagreement; decoded, it is **30 → 32** across §DX-02kb. Rendered options disagreeing with `WORLD_DB`: **32 → 0**. The static HTML text still holds the old copies, and nothing reads it now. **Verified:** `dx02mk-terrain-option-labels.test.js` (every option in both lists reads its icon and label, none unknown) is red on `HEAD^`'s `play.html` and green on this one; `check:walk` 43/43; suite **1,382 passed / 8 failed / 0 flaky** on this host (Chromium launched), the same eight. HTML line count 39,540 → 39,548.
+
+---
+
 ## Archived 2026-10-07 — §DX-02kb (21 labels through ./bin/api, `STUTTER_KNOWN` deleted; I7 stutters 21 → 0)
 
 ### §DX-02kb — twenty-one nodes still say their name twice, and five of them anchor terrains other nodes share (NEW 2026-09-13 during §DX-02el, 🟡 per-node naming, NO ENGINE WORK)
