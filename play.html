@@ -35298,6 +35298,14 @@ function storyRender(node, prefix) {
           storyMsg('📖 You close the journal. The page remains empty. That is your entry.');
           storyAutoSave();
         });
+      } else {
+        const e42Div = document.createElement('div');
+        e42Div.id = 'story-entry42-prompt';
+        e42Div.className = 'sweelinck-variant';
+        e42Div.style.cssText = 'margin-top:10px;border-left-color:#5c3311;';
+        e42Div.innerHTML = '<div style="color:#bba;font-weight:700;margin-bottom:6px;">📖 Froberger\'s Journal — Entry 42</div>'
+          + '<div style="font-size:12px;color:#998;">The forty-second page is blank, and the pen will not move. Froberger filled forty-one entries with the people who kept him. This one is waiting for someone kept by as many: three in Birka who would call you a Dear Friend. You have ' + _e42Dear + '.</div>';
+        document.getElementById('story-text-box').insertAdjacentElement('afterend', e42Div);
       }
     }
   }

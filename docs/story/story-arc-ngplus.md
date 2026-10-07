@@ -45,7 +45,7 @@ At `LHR` (historical `CI`) — **City Streets — Birka**, *not* the inn (`TLL` 
 - `S_story.ngPlusRun >= 1`
 - `S_story.priorQuestMinusOne === true` (found the door in prior run)
 - `!S_story.entry42Written` (not yet engaged)
-- **`_e42Dear >= 3`** — at least three of `yael`/`brynn`/`quill`/`pachelbel`/`crov`/`auros` at fav ≥ 2 (`const _e42Dear = ['yael','brynn','quill','pachelbel','crov','auros']@34883`). Undocumented until §DOC-02aa; it is also the gate on the game's **fifth ending**, since `vaArchitectureKnown` requires `entry42Written`. Below the threshold the panel renders nothing and says nothing — §AUDIT-03ah.
+- **`_e42Dear >= 3`** — at least three of `yael`/`brynn`/`quill`/`pachelbel`/`crov`/`auros` at fav ≥ 2 (`const _e42Dear = ['yael','brynn','quill','pachelbel','crov','auros']@34883`). Undocumented until §DOC-02aa; it is also the gate on the game's **fifth ending**, since `vaArchitectureKnown` requires `entry42Written`. Below the threshold the same slot shows a signpost instead of the page: the forty-second page waits for *"three in Birka who would call you a Dear Friend. You have N."*, with nothing to write in (§AUDIT-03ah, 2026-10-07).
 
 ### Panel Text
 

@@ -248,7 +248,7 @@ The blast radius is larger than the panel. `entry42Written` is the gate on
 (`// Layer 52: §XVII — fifth ending: vaArchitectureKnown overrides all other questions@28418`), on the
 victory-screen addendum, and on `quest_va_04`. So the game's fifth ending requires three NPC relationships
 carried across a run boundary, and **no document, quest hint, or on-screen line says so**. A player at two
-Dear Friends walks into Birka on NG+ and simply sees nothing. → **§AUDIT-03ah** (🟡, small design call).
+Dear Friends walks into Birka on NG+ and simply sees nothing. → **§AUDIT-03ah** (🟡, small design call). *(Fixed 2026-10-07 by §AUDIT-03ah, option (1): below three, the page at `LHR` says it is waiting for three Dear Friends and how many you have.)*
 
 The threshold is *good design* — it makes the deferred-reward thesis of §I-C real rather than rhetorical.
 It is only undocumented, and an undocumented threshold with a silent failure mode is indistinguishable
