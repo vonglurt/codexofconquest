@@ -7403,7 +7403,7 @@ async function route(req, res) {
       const nm = WBAPI.nodeMap;
       // §AUDIT-03bc — `label` here is an Earth gazetteer name, not the game's name for the node:
       //   • It names the real-world place, for author orientation (TRD → 'Trondheim'). It is NOT
-      //     NODE_MAP[code].label (TRD → 'Goblin Warrens'); 5 of these 155 happen to agree. For the
+      //     NODE_MAP[code].label (TRD → 'The Three-Clan Warrens'); 5 of these 155 happen to agree. For the
       //     name a player sees, read NODE_MAP.
       //   • Every code in this table is a live NODE_MAP node (155 of 155, no orphans, 2026-09-13), so
       //     "an anchor with no node behind it" is not a state this table can be in. MAD is a node.

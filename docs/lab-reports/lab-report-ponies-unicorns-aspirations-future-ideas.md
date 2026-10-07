@@ -95,7 +95,7 @@ Two program instruments carried this pass in particular:
 | 13 | 20-rank fish pool | §II.2 | ✅ **exact** | `const FISH_POOL = [@26637`, 20 entries; plus `const NIGHT_FISH_POOL = [@26659` (5, §XLVIII) |
 | 14 | The Hooked condition | §II.1 | ✅ SHIPPED | `condition:'Hooked'` in the catch resolver |
 | 15 | 2d20 cast roll table | §II.1 | **RETIRED**, not never-shipped | archive carries the *"🎣 Cast Line (2d20)"* button; Layer 47 replaced it with a four-phase Catch system (§DOC-02m) |
-| 16 | `BAIT_FISH_POOL` apex predators | §II.3 | **NOT SHIPPED under that name** | 0 commits ever; apex predator shipped as `name:'Horned Shark'@5508` in `yugurt_lake:      { label:'Yugurt Lake'@6284` |
+| 16 | `BAIT_FISH_POOL` apex predators | §II.3 | **NOT SHIPPED under that name** | 0 commits ever; apex predator shipped as `name:'Horned Shark'@5508` in `yugurt_lake:      { label:"Still Lake"@6284` |
 | 17 | "Master of Yugurt" tournament, five rounds | §II.4 | ✅ **SHIPPED, six** | `title:'Master of Yugurt'@26853`; `const TOUR_TITLES = {@26856` names six ranks |
 | 18 | The Fisherman: *"no quest, no connection to the main arc"* | §II.5 | ⚠️ **REVERSED** | he gives the rod, keeps a free-sleep cabin, and is named in Yael's Level-1 tutorial monologue |
 | 19 | Organ: 12 voices × 6 harmonics = 72 oscillators | §VI.B/H | ✅ **exact** | `src/sources/5thOrgan.html:const N_HARM   = 6;@142` · `src/sources/5thOrgan.html:const MAX_VOX  = 12;@143` |

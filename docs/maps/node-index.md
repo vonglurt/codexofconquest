@@ -20,7 +20,7 @@
 | `ADN` | 428 | `midlands` | 1 | 20,185 |  | Ardennes — Road Junction |  |
 | `ADR` | 547 | `city` | 6 | 28,206 |  | Adrianople — Ottoman Capital Western Gate |  |
 | `AEG` | 438 | `camelot` | 4 | 9,185 |  | Ægir's Feast Hall — The Flyting End |  |
-| `AHB` | 31 | `desert` | 6 | 39,211 |  | Desert Wastes |  |
+| `AHB` | 31 | `desert` | 6 | 39,211 |  | The Crossroads Post |  |
 | `AIX` | 442 | `camelot` | — | 19,186 |  | Aix-la-Chapelle — Charlemagne's Chapel |  |
 | `ALB` | 303 | `city` | 1 | 33,217 |  | Aleppo Hills — Mar Marun Monastery |  |
 | `ALE` | 178 | `market_quarter` | 3 | 38,209 |  | Alexandria — Venetian Consul Frankish Quarter |  |
@@ -48,10 +48,10 @@
 | `BDA` | 199 | `city` | — | 22,199 |  | Buda — Hungarian Royal Capital and Registry |  |
 | `BDX` | 219 | `city` | 1 | 25,179 |  | Bordeaux — English Registry and Diocesan Port |  |
 | `BEG` | 61 | `epic_freshwater_lake` | 4 | 25,200 |  | Sunken God's Throne |  |
-| `BEL` | 33 | `jungle` | 6 | 15,174 |  | Dense Jungle | Herbalist Mael |
+| `BEL` | 33 | `jungle` | 6 | 15,174 |  | The Scholar Kings' Road | Herbalist Mael |
 | `BGC` | 283 | `forest` | 3 | 18,177 |  | Treasure Island — Ben Gunn's Cave |  |
 | `BGD` | 190 | `city` | 1 | 36,224 |  | Baghdad — Sufi Scholar Quarter |  |
-| `BGI` | 17 | `beach` | 3 | 33,208 |  | Tropical Beach |  |
+| `BGI` | 17 | `beach` | 3 | 33,208 |  | Signal Cove |  |
 | `BGZ` | 420 | `city` | 1 | 27,176 |  | Burgos — Castilian Royal City |  |
 | `BHD` | 38 | `camelot` | 7 | 18,177 |  | Camelot — Arthurian Road |  |
 | `BIS` | 196 | `city` | — | 22,204 |  | Bistritz — Saxon Merchant Town and District Capital |  |
@@ -135,7 +135,7 @@
 | `FAM` | 177 | `docks` | 3 | 34,213 |  | Famagusta — Hospitaller Commandery Port |  |
 | `FBR` | 63994 | `skill_fabrika` | 1 | 13,215 |  | The Skill Fabrika | Technician Iosif |
 | `FCO` | 96 | `rome` | 4 | 28,192 | 🛏 | Rome — House Arrest | Timael |
-| `FEZ` | 28 | `monster_cave` | 5 | 36,175 |  | Monster Den |  |
+| `FEZ` | 28 | `monster_cave` | 5 | 36,175 |  | The Zeugl Den |  |
 | `FLM` | 243 | `mountains` | 1 | 9,185 |  | Hindfell — Brynhild's Flame-Ringed Summit |  |
 | `FLR` | 56 | `epic_beach` | 3 | 26,191 |  | Wreck of the Unbroken |  |
 | `FRK` | 217 | `city` | 1 | 21,182 |  | Paris — French Royal Antechamber |  |
@@ -154,7 +154,7 @@
 | `GEO` | 424 | `highlands` | 1 | 28,224 |  | Georgia — Mountain Road Crossroads |  |
 | `GHC` | 426 | `camelot` | 1 | 27,224 |  | Guard House Cell |  |
 | `GHL` | 397 | `beach` | 1 | 18,177 |  | Gild-Holm-Ur Seat — The Tidal Rock |  |
-| `GIB` | 21 | `sea_cavern` | 4 | 33,174 |  | Sea Cavern |  |
+| `GIB` | 21 | `sea_cavern` | 4 | 33,174 |  | The Brackwater Passage |  |
 | `GLA` | 404 | `city` | 1 | 14,175 |  | Glasgow — The Gallowgate Counting-House |  |
 | `GLD` | 428 | `city` | — | 17,188 |  | Trade Guild Court — The Prior Registration |  |
 | `GLN` | 406 | `highlands` | 1 | 13,175 |  | MacGregor Glen — Rob Roy Highland Shelter |  |
@@ -171,7 +171,7 @@
 | `HAV` | 70 | `epic_pirate_cave` | 5 | 18,177 |  | Admiral's Last Cove |  |
 | `HCA` | 129 | `hag_swamp` | 3 | 25,206 |  | The Deeper Clearing |  |
 | `HEO` | 223 | `city` | 1 | 14,191 |  | Lejre — Danish Royal Hall Archive Chamber |  |
-| `HER` | 37 | `greek_agora` | 7 | 32,203 |  | Greek Agora | Oracle Kassiphane |
+| `HER` | 37 | `greek_agora` | 7 | 32,203 |  | Kassiphane's Colonnade | Oracle Kassiphane |
 | `HFD` | 276 | `city` | 0 | 17,177 |  | Hereford — The English Craftsmen Town |  |
 | `HFG` | 231 | `mountains` | 1 | 4,157 |  | Helgafell — Gudrun Hermit Cell |  |
 | `HFT` | 109 | `lake_south` | 4 | 10,191 | 🛏 | South Shore — The Fishermen's Village | The Elder Fisherwoman |
@@ -211,7 +211,7 @@
 | `JUR` | 445 | `camelot` | 1 | 17,201 |  | Spychów — Jurand's Castle |  |
 | `KBL` | 551 | `mountains` | 1 | 35,249 |  | Kabul — Mountain Fortress District |  |
 | `KHR` | 301 | `scholars_qtr` | 1 | 39,211 |  | Cairo — Booksellers' Quarter |  |
-| `KIR` | 14 | `highlands` | 3 | 17,170 |  | Irish Highlands | Elder Fionn |
+| `KIR` | 14 | `highlands` | 3 | 17,170 |  | Dunfall Loch | Elder Fionn |
 | `KLN` | 299 | `ruins` | — | 16,178 |  | Kirklees Nunnery — Gate Chapel |  |
 | `KLZ` | 197 | `city` | — | 23,203 |  | Klausenburg — Transylvanian Administrative and Court City |  |
 | `KMS` | 63992 | `komsomol_school` | 1 | 11,211 |  | Komsomol School | Commissar-Instructor Roshkova |
@@ -255,7 +255,7 @@
 | `LYG` | 246 | `city` | 1 | 8,189 |  | Lyngvi Hall — Borgny's Estate |  |
 | `LYR` | 41 | `arctic` | 7 | 2,194 |  | Arctic Wastes — Detour |  |
 | `MAD` | 69 | `epic_heavenly_clouds` | 7 | 29,176 |  | Shattered Seraph's Spire |  |
-| `MAN` | 12 | `midlands` | 3 | 16,177 |  | Plains & Midlands |  |
+| `MAN` | 12 | `midlands` | 3 | 16,177 |  | The Shadowless Fields |  |
 | `MAR` | 183 | `city` | — | 26,185 |  | Marseille — Consular Court |  |
 | `MBR` | 458 | `ruins` | 6 | 26,191 |  | Montbrione Monastery — Dissolving Archive |  |
 | `MCRJN` | 167 | `road` | 3 | 26,191 |  | Monte di Croce — Mountain Road Junction |  |
@@ -279,12 +279,12 @@
 | `MRV` | 192 | `city` | 1 | 32,242 |  | Merv — Central Asian Market and Scholar Quarter |  |
 | `MSE` | 250 | `city` | 0 | 18,181 |  | Canterbury — Pilgrimage Road |  |
 | `MSN` | 457 | `city` | 6 | 33,201 |  | Messenia — The Pylos Road Notary |  |
-| `MSY` | 15 | `swamp` | 3 | 25,206 |  | Murky Swamp |  |
+| `MSY` | 15 | `swamp` | 3 | 25,206 |  | The Broken Causeway |  |
 | `MTP` | 182 | `city` | — | 26,183 |  | Montpellier — University Quarter |  |
 | `MUC` | 74 | `defi_land` | 1 | 21,191 |  | Old Guard's Corner | Zeke 'The Signal' |
 | `MYS` | 209 | `city` | 1 | 32,202 |  | Mystras — Monastery |  |
 | `NAP` | 151 | `market_quarter` | 4 | 29,194 |  | Naples — Harbor District |  |
-| `NAS` | 27 | `pirate_cave` | 5 | 12,198 | 🛏 | Pirate Cave |  |
+| `NAS` | 27 | `pirate_cave` | 5 | 12,198 | 🛏 | Smugglers' Passage |  |
 | `NGM` | 295 | `midlands` | — | 17,178 |  | Nottingham Common — Gallows Tree |  |
 | `NHS` | 284 | `beach` | 3 | 18,177 |  | Treasure Island — North Inlet |  |
 | `NIC` | 542 | `city` | 6 | 29,209 |  | Nicaea — Ottoman Academic Registry |  |
@@ -306,7 +306,7 @@
 | `OTP` | 62 | `epic_deep_trench` | 4 | 25,206 |  | Trench Titan |  |
 | `PAR` | 300 | `city` | 4 | 31,193 |  | Palermo — Archive District |  |
 | `PCR` | 258 | `road` | 0 | 18,181 |  | Canterbury Road — Pilgrims' Camp |  |
-| `PDL` | 19 | `islands` | 4 | 32,154 |  | Island Shore | Oracle's Apprentice |
+| `PDL` | 19 | `islands` | 4 | 32,154 |  | Deepwater Harbor | Oracle's Apprentice |
 | `PER` | 218 | `midlands` | 1 | 24,180 |  | Périgord — Forest Roads and Priory Country |  |
 | `PHC` | 454 | `city` | 1 | 30,199 |  | Phaeacia — Alcinous's Court |  |
 | `PHY` | 425 | `camelot` | 1 | 27,223 |  | Court Physician's Study |  |
@@ -359,7 +359,7 @@
 | `SHF` | 290 | `city` | 2 | 17,178 |  | Nottingham — Lord High Sheriff's Court |  |
 | `SHW` | 291 | `forest` | 3 | 16,178 |  | Sherwood Forest — Locksley Camp |  |
 | `SIB` | 198 | `city` | — | 24,204 |  | Sibiu — Hermannstadt Saxon Administrative Capital |  |
-| `SID` | 23 | `deep_sea` | 4 | 53,157 |  | Deep Sea Trench |  |
+| `SID` | 23 | `deep_sea` | 4 | 53,157 |  | Leviathan Deep |  |
 | `SIG` | 248 | `city` | 1 | 10,191 |  | Siggeir's Hall — Signy's Captivity |  |
 | `SIN` | 206 | `city` | 1 | 28,215 |  | Sinope — Merchant Quarter |  |
 | `SIS` | 554 | `city` | 1 | 39,241 |  | Sistan — Rustam's Garrison City |  |
@@ -397,8 +397,8 @@
 | `TOL` | 421 | `city` | 1 | 30,175 |  | Toledo — Castilian Royal Capital |  |
 | `TPR` | 289 | `city` | 3 | 16,178 |  | Templestowe Preceptory — Trial Hall |  |
 | `TRB` | 187 | `city` | 4 | 29,219 |  | Trebizond — Genoese Registry Quarter |  |
-| `TRD` | 26 | `goblin_cave` | 5 | 6,190 |  | Goblin Warrens |  |
-| `TRF` | 22 | `freshwater_lake` | 4 | 10,190 | 🛏 | Freshwater Lake & River |  |
+| `TRD` | 26 | `goblin_cave` | 5 | 6,190 |  | The Three-Clan Warrens |  |
+| `TRF` | 22 | `freshwater_lake` | 4 | 10,190 | 🛏 | The Drowned Circle |  |
 | `TRH` | 452 | `beach` | 1 | 30,206 |  | Trojan Harbor — The Gravel Shore |  |
 | `TUN` | 302 | `city` | 1 | 33,190 |  | Tunis — Monastery of the Two Saints |  |
 | `TUO` | 416 | `ruins` | 1 | 8,207 |  | Tuonela — The Boundary Shore |  |
@@ -462,32 +462,32 @@
 | `SF` | 9 | **`STN`** | The Map Shop |  |
 | `MS` | 10 | **`SEN`** | Aboard the Tilbury Star |  |
 | `AL` | 11 | **`GOT`** | Visby Approach Alley |  |
-| `MI` | 12 | **`MAN`** | Plains & Midlands |  |
+| `MI` | 12 | **`MAN`** | The Shadowless Fields |  |
 | `FO` | 13 | **`FRO`** | Aldric's Forest |  |
-| `HL` | 14 | **`KIR`** | Irish Highlands |  |
-| `SW` | 15 | **`MSY`** | Murky Swamp |  |
+| `HL` | 14 | **`KIR`** | Dunfall Loch |  |
+| `SW` | 15 | **`MSY`** | The Broken Causeway |  |
 | `HS` | 16 | **`SDQ`** | The Crones' Domain |  |
-| `BE` | 17 | **`BGI`** | Tropical Beach |  |
+| `BE` | 17 | **`BGI`** | Signal Cove |  |
 | `OC` | 18 | **`HOR`** | Aboard the Cerulean Debt |  |
-| `IS` | 19 | **`PDL`** | Island Shore |  |
+| `IS` | 19 | **`PDL`** | Deepwater Harbor |  |
 | `AT` | 20 | **`RAI`** | Atlantis — Sunken City |  |
-| `SC` | 21 | **`GIB`** | Sea Cavern |  |
-| `FL` | 22 | **`TRF`** | Freshwater Lake & River |  |
-| `DS` | 23 | **`SID`** | Deep Sea Trench |  |
+| `SC` | 21 | **`GIB`** | The Brackwater Passage |  |
+| `FL` | 22 | **`TRF`** | The Drowned Circle |  |
+| `DS` | 23 | **`SID`** | Leviathan Deep |  |
 | `SE` | 24 | **`SFT`** | Visby Sewers |  |
 | `BK` | 25 | **`VBY`** | Broken Tooth Tavern | ⚠️ `BK` is ALSO a live key — a **different** node (Birka Shore — Northern Longship Landing) |
-| `GC` | 26 | **`TRD`** | Goblin Warrens |  |
-| `PC` | 27 | **`NAS`** | Pirate Cave |  |
-| `MC` | 28 | **`FEZ`** | Monster Den |  |
+| `GC` | 26 | **`TRD`** | The Three-Clan Warrens |  |
+| `PC` | 27 | **`NAS`** | Smugglers' Passage |  |
+| `MC` | 28 | **`FEZ`** | The Zeugl Den |  |
 | `CA` | 29 | **`VIE`** | Scholar Kings' Underground Road |  |
 | `VC` | 30 | **`CLJ`** | Vampire Castle Ruins |  |
-| `DE` | 31 | **`AHB`** | Desert Wastes |  |
+| `DE` | 31 | **`AHB`** | The Crossroads Post |  |
 | `DC` | 32 | **`DOH`** | Izador's Desert Caravan | terrain renamed → `arabia` |
-| `JU` | 33 | **`BEL`** | Dense Jungle |  |
+| `JU` | 33 | **`BEL`** | The Scholar Kings' Road |  |
 | `BQ` | 34 | **`ERF`** | Blacksmith Quarter — Weimar |  |
 | `SQ` | 35 | **`NUE`** | Scholar's Quarter — Weimar |  |
 | `OU` | 36 | **`EGE`** | The Observatory Outhouse |  |
-| `GA` | 37 | **`HER`** | Greek Agora |  |
+| `GA` | 37 | **`HER`** | Kassiphane's Colonnade |  |
 | `KT` | 38 | **`BHD`** | Camelot — Arthurian Road |  |
 | `OP` | 39 | **`BKK`** | Oriental Dragon Palace |  |
 | `HC` | 40 | **`CTU`** | Sky Road — Heavenly Clouds |  |

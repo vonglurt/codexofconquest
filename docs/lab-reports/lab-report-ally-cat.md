@@ -75,7 +75,7 @@ Fragment 👑 50.
 
 ### 3.4 WORLD_DB terrain
 
-- `` `cat_quarter:      { label:'The Cat Quarter'@6287` `` — 10 pool slots, `fluffy_cat` listed
+- `` `cat_quarter:      { label:"Back Lanes"@6287` `` — 10 pool slots, `fluffy_cat` listed
   twice (intentional spawn weighting), `cat_king` **absent** (reserved for the `CQ_KING`
   encounter). Shipped exactly as specified.
 - `` `alley:            { label:'Dark Alley'@6288` `` — the 7 specified keys appended
@@ -208,7 +208,7 @@ Each is filed as a BACKLOG row; none is fixed here (this pass is documentation-o
 `` `CDG:{ num:77@8811` `` · `` `CDG:{r:21,c:182}@9632` `` ·
 `` `stray_alley_cat:  { key:'stray_alley_cat'@5392` `` ·
 `` `stray_alley_cat:      { name:'Flea-Dusted Pelt'@5837` `` ·
-`` `cat_quarter:      { label:'The Cat Quarter'@6287` `` ·
+`` `cat_quarter:      { label:"Back Lanes"@6287` `` ·
 `` `alley:            { label:'Dark Alley'@6288` `` ·
 `` `quest_cat_01: { id:'quest_cat_01'@13716` `` ·
 `` `catKills: {}, monsterKills: {}@23153` `` ·

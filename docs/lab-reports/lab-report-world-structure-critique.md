@@ -219,7 +219,7 @@ compactness is intact. Only the arithmetic supporting it is gone.
 
 | Code | GEO says | The node actually is | Act |
 |---|---|---|---|
-| `TRD` | Trondheim | `TRD:{ num:26, code:'TRD', name:'goblin_cave',     label:'Goblin Warrens'@8699` | 5 |
+| `TRD` | Trondheim | `TRD:{ num:26, code:'TRD', name:'goblin_cave',     label:"The Three-Clan Warrens"@8699` | 5 |
 | `MOL` | Molde | Lake Approach — West Shore | 3 |
 | `KSU` | Kristiansund | The Lake Harbor | 3 |
 | `MJF` | Mosjøen | `MJF:{ num:77, code:'MJF', name:'shale_drop',   label:'The Shale Drop'@8797` | 3 |
