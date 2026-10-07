@@ -11574,14 +11574,29 @@ async function route(req, res) {
     if (type === 'npc' && action === 'dialogue') {
       if (!body.quote) {
         logResponse(method, url.pathname, 400, 'body.quote required');
-        return json(res, 400, { error:'Required: quote (string). Optional: meta{worldTruth,missionBit}, impartial[], friendly[], dearFriend[]' });
+        return json(res, 400, { error:'Required: quote (string). Optional: meta{name,occupation,worldTruth,enemy,missionBit,node}, impartial[], questActive[], friendly[], dearFriend[]; a top-level name/occupation is folded into meta' });
       }
       if (WBAPI.npcDialogues[key]) {
         logResponse(method, url.pathname, 409, `dialogue for "${key}" already exists — use PUT to update`);
         return json(res, 409, { error:`NPC_DIALOGUES entry for "${key}" already exists.` });
       }
-      const npc = WBAPI.birkaNpcs[key];
-      const enriched = { ...body, name: body.name || npc?.name || key, occupation: body.occupation || npc?.occupation };
+      // serializeNpcDialogueLiteral writes meta, the four pools and quote, so anything else
+      // would answer 201 and be gone after the reload. A top-level name/occupation is folded
+      // into meta, where _npcDisplayName reads it; a BIRKA_NPC key already resolves without it.
+      const DLG_CREATE = ['quote', 'meta', 'impartial', 'questActive', 'friendly', 'dearFriend', 'name', 'occupation', 'nonce'];
+      const unknownFields = Object.keys(body).filter((f) => !DLG_CREATE.includes(f));
+      if (unknownFields.length) {
+        logResponse(method, url.pathname, 400, `dialogue create: unkept field(s): ${unknownFields.join(', ')}`);
+        return json(res, 400, { ok:false, error:`dialogue create would drop ${unknownFields.join(', ')} and answer 201.`,
+          unknownFields, accepted: DLG_CREATE.filter((f) => f !== 'nonce') });
+      }
+      if (body.meta !== undefined && (typeof body.meta !== 'object' || body.meta === null || Array.isArray(body.meta)))
+        return json(res, 400, { ok:false, error:'"meta" must be an object' });
+      const { name, occupation, nonce, ...kept } = body;
+      const meta = { ...(body.meta || {}) };
+      if (name && !meta.name) meta.name = name;
+      if (occupation && !meta.occupation) meta.occupation = occupation;
+      const enriched = { ...kept, meta };
       const entry = serializeNpcDialogueLiteral(key, enriched);
       const ins = insertBeforeSectionClose('NPC_DIALOGUES', entry);
       if (!ins.ok) { logResponse(method, url.pathname, 500, ins.error); return json(res, 500, ins); }

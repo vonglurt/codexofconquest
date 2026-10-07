@@ -69,7 +69,7 @@ export function sectionHeadersIn(src) {
 // ── the checks, as pure functions of a probe ─────────────────────────────────
 // Each returns a finding string or null. `poolRow` reads the entity's literal back out of
 // the scratch file, so "where it landed" is answered from disk and not from the response.
-export async function runChecks({ probe, poolRow, dropRow, onDisk, sectionHeaders, questRoundTrip, createRefusals, staleWriteProbe, terrainGuard, coordGuard }) {
+export async function runChecks({ probe, poolRow, dropRow, onDisk, sectionHeaders, questRoundTrip, createRefusals, staleWriteProbe, terrainGuard, coordGuard, dialogueCreate }) {
   const out = [];
   const add = (f) => { if (f) out.push(f); };
   const headersBefore = await sectionHeaders();
@@ -192,6 +192,14 @@ export async function runChecks({ probe, poolRow, dropRow, onDisk, sectionHeader
       : `[header-doubled] ${sec}:START now carries ${doubled.length} duplicate comment line(s) — a serializer and replaceSection are both emitting it`);
   }
 
+  // §DX-02mh — the dialogue create serializes meta, the four pools and quote. A top-level
+  // name must reach the file as meta.name, and a key the serializer drops must be refused.
+  const dc = await dialogueCreate();
+  add(dc.named.status === 201 && dc.named.metaName ? null
+    : `[dialogue-name] POST /api/npc/{key}/dialogue with a top-level name answered ${dc.named.status}, meta.name on disk: ${dc.named.metaName} — the name must survive the reload`);
+  add(dc.unknown.status === 400 && (dc.unknown.named || []).includes('nosuchfield') && !dc.unknown.landed ? null
+    : `[dialogue-unknown] POST /api/npc/{key}/dialogue with nosuchfield answered ${dc.unknown.status}${dc.unknown.landed ? ' and wrote the entry' : ''} — a field the create would drop must be refused 400 naming itself`);
+
   // §DX-02aa — CONTRIBUTING Hazard #1, as an acceptance test rather than a warning. The
   // server rewrites the whole file from the text it loaded, so a write issued after an
   // external edit reverts that edit with no error. Runs last: it dirties the scratch file.
@@ -243,6 +251,7 @@ const PERSIST_ROUTES = [
 const DIALOGUE_VOCAB = ['dearFriend', 'friendly', 'impartial', 'meta', 'questActive', 'quote'];
 
 // ── selftest — the check functions against a stub probe ─────────────────────
+const DC0 = { named: { status: 201, metaName: true }, unknown: { status: 400, named: ['nosuchfield'], landed: false } };
 const CG0 = { cell: '1,1', holder: 'AAA', create: { status: 409, landed: false },
   locale: { status: 201, code: 'ZZ', primary: 'AAA', unstandable: ['ZZ'], coordsOnDisk: true }, move: { status: 409, moved: false } };
 if (process.argv.includes('--selftest')) {
@@ -269,6 +278,7 @@ if (process.argv.includes('--selftest')) {
     staleWriteProbe: async () => ({ refused: 409, editSurvived: true, refusedValueLanded: false, recovered: 200 }),
     terrainGuard: async () => ({ epic: { status: 422, landed: false }, roster: { status: 200, pRefs: true, row: '' } }),
     coordGuard: async () => CG0,
+    dialogueCreate: async () => DC0,
   };
   ok((await runChecks(healthy)).length === 0, 'a healthy write path produces no findings');
 
@@ -411,6 +421,10 @@ if (process.argv.includes('--selftest')) {
     .some((f) => f.startsWith('[locale]')), 'a refused opt-in is caught as [locale]');
   ok((await runChecks(bend({ coordGuard: async () => ({ ...CG0, move: { status: 200, moved: true } }) })))
     .some((f) => f.startsWith('[slot]')), 'a coords write onto a held cell without opt-in is caught as [slot]');
+  ok((await runChecks(bend({ dialogueCreate: async () => ({ ...DC0, named: { status: 201, metaName: false } }) })))
+    .some((f) => f.startsWith('[dialogue-name]')), 'a dialogue create whose name is lost on reload is caught');
+  ok((await runChecks(bend({ dialogueCreate: async () => ({ ...DC0, unknown: { status: 201, named: [], landed: true } }) })))
+    .some((f) => f.startsWith('[dialogue-unknown]')), 'a dialogue create that keeps an unknown field silently is caught');
   ok((await runChecks(bend({ staleWriteProbe: async () => ({ ...S0, recovered: 409 }) })))
     .some((f) => f.startsWith('[stale-unrecoverable]')),
     'a refusal naming a recovery that does not work is caught');
@@ -591,7 +605,16 @@ const coordGuard = async () => {
     move: { status: m.status, moved: at(other).r !== before.r || at(other).c !== before.c } };
 };
 
-const findings = await runChecks({ probe, poolRow, dropRow, onDisk, sectionHeaders, questRoundTrip, createRefusals, staleWriteProbe, terrainGuard, coordGuard });
+const dialogueCreate = async () => {
+  const core = createRequire(import.meta.url)(path.join(ROOT, 'src', 'js', 'wbapi-core.js'));
+  const a = await probe('POST', '/api/npc/zz_dlg_probe/dialogue', { quote: 'Probe.', name: 'Probe Named', occupation: 'probe' });
+  core.load(scratch);
+  const b = await probe('POST', '/api/npc/zz_dlg_probe2/dialogue', { quote: 'Probe.', nosuchfield: 1 });
+  return { named: { status: a.status, metaName: core.npcDialogues.zz_dlg_probe?.meta?.name === 'Probe Named' },
+    unknown: { status: b.status, named: b.json?.unknownFields, landed: fs.readFileSync(scratch, 'utf8').includes('zz_dlg_probe2') } };
+};
+
+const findings = await runChecks({ probe, poolRow, dropRow, onDisk, sectionHeaders, questRoundTrip, createRefusals, staleWriteProbe, terrainGuard, coordGuard, dialogueCreate });
 console.log(`  probe monster written to a throwaway copy · pool row read from disk: ${(await poolRow()).trim().slice(0, 100)}`);
 if (findings.length) {
   findings.forEach((f) => console.log('  ✗ ' + f));
