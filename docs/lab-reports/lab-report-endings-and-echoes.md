@@ -55,7 +55,7 @@ The nine subsystems: **(II)** the Covenant Ceremony · **(III)** Sweelinck's dyn
 | III | Sweelinck's naming | ✅ byte-identical | Gate `missionDone && curse <= 0` is reachable **only at −5** — i.e. it silently requires **all 20** EB returns |
 | IV | NPC epilogues | ✅ byte-identical | EB block ships as **one summary count line**, not "one line each"; the gate field the spec names is the dead twin (**F4**) |
 | V | Cursed Seal echo | ✅ byte-identical | Predicate `!mc && cs >= 15` shipped exactly as written; `FROBERGER_EPILOGUE.cursed` had no selector (**F5**) — ✅ §DX-02eo appended it to this block's tail 2026-08-26, which is the state it was written for |
-| VI | Rough Whiskey | ✅ 18/18 lines | **NOT SHIPPED: the use path.** `roughWhiskeyActive` has one writer, and the fight that sets it clears it on victory (**F3**) |
+| VI | Rough Whiskey | ✅ 18/18 lines | *(Use path shipped 2026-10-07 `5b3bf37`, §DX-02ep: 🥃 Drink.)* **NOT SHIPPED: the use path.** `roughWhiskeyActive` has one writer, and the fight that sets it clears it on victory (**F3**) |
 | VII | Covenant Standing | ✅ sheet row | Unlock is `shards >= 1` (**Act II**), not "after Act III"; **NOT SHIPPED: the payoff** — no ending speaks the label (**F2**); the top rung is dead (**F1**) |
 | VIII | Pit Training perks | ⚠️ half | Unlock, message, persistence, badge all ship. **1 of 5 combat effects shipped 2026-09-05** — Weckmann's Lesson (**F8** ✅ §DX-02eq); `readTheRoom` retired as ungrantable, the other three are §DX-02is |
 | IX | Froberger's Last Note | ✅ | Item, seeding, loot injection, read panel, 5-line body — all present; seeded with `Math.random()` (**F9**) |
@@ -122,6 +122,8 @@ The spec's opening — *"consuming Rough Whiskey before visiting any named NPC t
 The vendor even promises otherwise, in the game's own voice: `storyMsg('🥃 Bought Rough Whiskey. ★ Social — each NPC reacts differently if you visit them@24447`.
 
 What *did* ship is exact: disadvantage on every attack roll (`if (S_story._drunkFight) adv = 'dis';@25094`), `const drunkBonus = S_story._drunkFight ? 3 : 0;@25121`, and Weckmann delighted — *"You absolute idiot. I'm counting it."* — with a favor bump to Friendly on the win. → **§DX-02ep** 🟡
+
+> **Fixed 2026-10-07 `5b3bf37` (§DX-02ep, option (a)).** The inventory's 🥃 Drink button is the spec's use path. It sets `roughWhiskeyActive` and consumes one bottle, and the window keeps its two clearers, rest and battle victory. Entering the `HKG` pit fight already drunk is the drunk fight. Lines reachable without losing the pit fight: **0/18 → 18/18** (`dx02ep-rough-whiskey-drink.test.js`).
 
 ### F4 — the spec's own state field was created, written, and never read
 
