@@ -362,6 +362,15 @@ joins the two.* → **§DX-02ei**.
 > with any work sit 11–15 legs out. What ships is the **relative** guarantee, which holds at every
 > host: *one seat always goes to the nearest work there is*. ***A listing gate can only be as local
 > as its population; the honest floor is the pool's minimum, not a number chosen in advance.***
+>
+> **§DX-02it (2026-10-07) measured that population at every host, and TLL turned out to be
+> one of the thin ones, not a typical one.** On a fresh game at standing 0, the postable pool is
+> ~1,060 quests at every host. Within 10 legs, **34 of the 39 hosts carry 29 or more** (median
+> 109, and `INN` 283, `SZG` 297). Only five carry 12 or fewer: **`TVR` 1 · `DNF` 8 · `RUH` 10 ·
+> `SSJ` 11 · `TLL` 12**. So the board's work is not authored far from the board in general. It is
+> thin around five hosts, which is an authoring job for those five (§DX-02ml). The floor the
+> row could fund ships as `dx02it-board-near-census.test.js`: **no host may have no postable
+> work within 10 legs**, which TVR meets by one quest.
 
 **Every visible change between those two columns is a follow-up closing a promise §8 made and §7
 could not keep** — FU1 the reward preview, FU3 the `~N legs` label, FU4/FU5 the characterful
