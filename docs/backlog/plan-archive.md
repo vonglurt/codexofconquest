@@ -19,6 +19,17 @@
 
 ---
 
+## Archived 2026-10-07 — §DX-02mm (measured: 502 of 505 non-primary bounties finish anywhere, 3 never; option (b), the three handed to §AUDIT-03x)
+
+### §DX-02mm — about half of what the Warrant's Board posts names a destination the player can never arrive at by name (NEW 2026-10-07 during §DX-02it, 🟡 measure completion, then filter or wait on §AUDIT-03x)
+
+- [x] ✅ SHIPPED 2026-10-07 `aa958b5` **§DX-02mm — at `TLL` on a fresh game, 505 of the 1,058 postable bounties have an `activateNode` that is not the primary of its cell** (`CELL_GRID[cell][0]`), e.g. `BK` (37, under `LHR`), `ANT` (16, under `HTY`), `ROM` (15, under `FCO`). `_bountyPostable` checks only that `NODE_MAP[q.activateNode]` exists. Accepting a card `unlock`s the quest at once, so it does start; what is at risk is the waypoint (`_acceptBounty` sets it to the non-primary code, and the player arrives there as the primary) and any completion that reads `atNode` or `S_story.currentCode` against that code. 🟡 **First measure** how many of the 505 can complete at all. **Then decide:** (a) `_bountyPostable` skips destinations that are not their cell's primary (one line; the pool falls to ~550 and §DX-02it's census moves with it), or (b) leave the pool as is and let §AUDIT-03x's design call fix arrival. **Related:** §AUDIT-03x (172 nodes that can never be arrived at), §DX-02ah-FU.
+> **Provenance:** §DX-02it, checking why `ERF`'s census counted 151 quests at 0 legs.
+
+> **Closed 2026-10-07 at `aa958b5` — option (b), 🟡 decided on the measurement.** **Census** (headless Chromium, fresh game at `TLL`, standing 0, the live `_bountyPostable` + void exclusion + base ceiling): **505** of the **1,058** postable bounties name an `activateNode` that is not its cell's primary (464 `skill_check`, 26 `delivery`, 8 `combat`, 4 `side`, 3 other). **What finishing needs:** 501 carry a `skill_check` bit, and no bit in any of them names a place (kinds: `skill_check` 501, `mission_bit` 395, `_legacy_fn` 10, `reward` 9, `narrative` 2, `unlock` 2). None of the 10 `_legacy_fn` bodies reads the player's position. The quest panel rolls any active quest from anywhere (§DX-02ah), so all 501 can be finished. `quest_sea_01` has `completion.atNode` at a primary. **Three cannot ever finish:** `quest_tl_01`, `quest_vs_01` and `quest_hunt_01`. Each completes on a flag written only by engine code guarded by `node.code === 'STN'` / `'VS'` / `'HFT'`, and all three are non-primary. **The waypoint was not at risk:** auto-travel and the WP button both count arrival by cell (`pos.r === wpCo.r && pos.c === wpCo.c`), so a waypoint on a non-primary code clears on arrival. **Why not (a):** filtering non-primary destinations would drop **502** finishable bounties to hide **3**, about half the pool. **Why (b):** the three are §AUDIT-03x's own nodes, and whatever that row decides for `STN`, `VS` and `HFT` fixes the bounties as well. They are now written into §AUDIT-03x as the board's whole exposure to the class. **Evidence:** `check:walk` 43/43; no code changed.
+
+---
+
 ## Archived 2026-10-07 — §DX-02mh (the dialogue create folds a top-level name/occupation into `meta` and refuses what it would drop; names lost on reload 1 → 0)
 
 ### §DX-02mh — `POST /api/npc/{key}/dialogue` answers with a field the file never gets (NEW 2026-10-05 during §MESH-01-HIRE-A, 🟢)
