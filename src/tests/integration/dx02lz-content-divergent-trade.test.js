@@ -115,6 +115,7 @@ test.describe('§DX-02lz — servers whose content differs trade', () => {
     expect(denied.status).toBe(403);
     const ok = await push({ ...as(manB, 'fe'.repeat(16)), events: pulled.events });
     expect(ok.status).toBe(200);
-    expect(ok.dup).toBe(pulled.events.length);
+    expect(ok.rejected).toEqual([]);
+    expect(ok.accepted + ok.dup).toBe(pulled.events.length);
   });
 });

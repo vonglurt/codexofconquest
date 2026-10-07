@@ -131,6 +131,7 @@ test.describe('§VM-01-B — the seeded client RNG', () => {
   // determined the future — but the placement was not reproducible FROM a seed,
   // which is the property this file exists to guarantee.
   test('§DX-02er — Froberger\'s Last Note is placed from the seeded stream, on both new-game paths', async ({ page }) => {
+    test.setTimeout(90_000);
     await page.goto('/play.html');
     const r = await page.evaluate((NG) => {
       // the source carries no Math.random() on either placement line

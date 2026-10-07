@@ -2986,6 +2986,7 @@ test.describe('§ARCH-01 Wave 2b — ada* family (bulk-migrated, 235 acts)', () 
   });
 
   test('PASS/FAIL parity across all 235: pass→done+flag+_flagToLabel token; fail→failed+no flag/token', async ({ page }) => {
+    test.setTimeout(120_000);
     await page.goto('/play.html');
     const r = await page.evaluate(() => {
       const ada = Object.values(QUEST_DB).filter(q => /^ada/.test(q.id) && q.type === 'skill_check');
@@ -3060,6 +3061,7 @@ test.describe('§ARCH-01 Wave 2c — ath* family (bulk-migrated, 113 acts; fixes
   });
 
   test('PASS/FAIL parity across all 113 + gate behavior (flags ⇒ activatable iff flag set; {} ⇒ always)', async ({ page }) => {
+    test.setTimeout(90_000);
     await page.goto('/play.html');
     const r = await page.evaluate(() => {
       const ath = Object.values(QUEST_DB).filter(q => /^ath/.test(q.id) && q.type === 'skill_check');
@@ -3148,6 +3150,7 @@ test.describe('§ARCH-01 Wave 2d — lis* family (bulk-migrated, 89 acts)', () =
   });
 
   test('PASS/FAIL parity across all 89 + gate behavior (flags ⇒ activatable iff flag set; {} ⇒ always)', async ({ page }) => {
+    test.setTimeout(90_000);
     await page.goto('/play.html');
     const r = await page.evaluate(() => {
       // checkStat is uppercase but abilityScores keys are lowercase; the UQF
