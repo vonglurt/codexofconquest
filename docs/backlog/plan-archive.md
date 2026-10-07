@@ -19,6 +19,16 @@
 
 ---
 
+## Archived 2026-10-07 — §DX-02mh (the dialogue create folds a top-level name/occupation into `meta` and refuses what it would drop; names lost on reload 1 → 0)
+
+### §DX-02mh — `POST /api/npc/{key}/dialogue` answers with a field the file never gets (NEW 2026-10-05 during §MESH-01-HIRE-A, 🟢)
+
+- [x] ✅ SHIPPED 2026-10-07 `ec5b56c` **§DX-02mh — the dialogue create keeps `name`/`occupation` at the top level, where the serializer cannot see them.** The route builds `enriched = { ...body, name: body.name || npc?.name || key, occupation: … }` and stores that in `WBAPI.npcDialogues[key]`, but `serializeNpcDialogueLiteral` writes only `meta`, the four pools and `quote`. **Measured 2026-10-05** creating `bram_trailhand`: the 201 body carried `"name":"bram_trailhand"`, and the read-back after the reload did not. The harm is the case without `meta.name`: the route looks a name up from `BIRKA_NPC` and reports it, and the file keeps no name at all, so the engine's card and `_npcDisplayName` fall back to the raw key. **Fix:** fold the looked-up `name`/`occupation` into `meta` when `meta` lacks them, refuse top-level keys the serializer drops (the §DX-02lc-FU `CREATE_KEEPS` shape), and add the probe to `test:write`.
+
+> **Closed 2026-10-07 at `ec5b56c` — 🟢, with one narrowing.** **Grounded:** the route still spread `body` into `enriched` with a top-level `name`/`occupation`, and `serializeNpcDialogueLiteral` still writes only `meta`, the four pools and `quote`. Every one of the 215 live entries holds only those six top-level keys. `meta.name` and `meta.occupation` are real keys (23 entries each), read by `_npcDisplayName` and the card builder. **Shipped:** the create refuses any key outside `quote`, `meta`, the four pools, `name`, `occupation` and `nonce`, with 400 naming `unknownFields` and the accepted set. It refuses a non-object `meta`. It folds an explicit `name`/`occupation` into `meta` when `meta` lacks them. It stores and reports exactly what the serializer writes. The 400 help text now lists the real `meta` keys and `questActive`. **Narrowed from the row:** a name *looked up* from `BIRKA_NPC` is not copied into `meta`. The engine resolves those keys through the registry already, and the case the row worried about (no `BIRKA_NPC` entry) has no name to look up: the old route stored the raw key as the "name", and the engine falls back to that key anyway. **Measured, before → after:** on the old route `test:write`'s new probe fails twice, a top-level `name` answers 201 and is gone from disk after the reload, and `nosuchfield` answers 201 and writes the entry. On the new route both pass. **Evidence:** `test:write` selftest 32 → **34** checks plus the live run green; `test:help` green; `check:walk` 43/43. Full suite not re-run: no Playwright test or editor page calls this route.
+
+---
+
 ## Archived 2026-10-07 — §AUDIT-03bb + §DX-02bh (worldmap's `minLon` −25 → −26; `PDL` in region `C1`; anchors outside the bounds 1 → 0; the geo-seed clamp had already retired)
 
 ### §AUDIT-03bb — one GEO anchor lies outside the map's own projection bounds, and both code paths that meet it fail silently (NEW 2026-08-14 during §DOC-02bj, 🟡 small design call)
