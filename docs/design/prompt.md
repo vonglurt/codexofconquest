@@ -222,8 +222,12 @@ npm run anchors           # audit every doc anchor; `anchors:fix` refreshes drif
 npm run legacy            # report 26×16-era node codes still in doc prose; `--annotate <file>` sweeps one (§AUDIT-03m)
 npm test                  # Playwright integration suite  (STOP the server first — see below)
 npm run test:mud          # MUD server-protocol harness
+npm run test:help         # calls every endpoint, collection and enum value GET /api/help claims
+npm run test:write        # what the write path refuses, and where a routed field lands — on a throwaway copy
 node --check src/js/wbapi-server.js   # server-file parse only — the HTML inline <script> is validated by npm test's browser load + the parity fences
 ```
+
+**These are everything CI runs** (`.github/workflows/walk-invariants.yml`): its `invariants` job is `check:walk` alone, and its `mud` job is `test:mud`, `test:help` and `test:write`. A `check:*` script in `package.json` that is in neither `GATES` nor `GATE_EXEMPT` fails `check:walk` before any gate starts, so there is no CI gate outside it to remember.
 
 **The baseline is a property of the host, so this file does not carry one.** `check:walk` has none: every gate is expected green, and its final `✓ N/N` line is the verdict. The Playwright suite's known reds differ between the hosts this repo is worked from, so read the newest measurement for your host in §DX-02ke ([`BACKLOG-6`](../backlog/BACKLOG-6-verification-docs.md)) and the newest §RESUME entry that ran the full suite, and diff your failures against that list. Anything outside it is yours.
 
