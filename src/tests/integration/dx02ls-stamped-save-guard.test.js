@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson
 // §DX-02ls — POST /api/save copies a stamped save over the game file and reloads it.
-// A reload cannot fail (§DX-02fi), so a destroyed section would load as an empty
-// collection with a 200. The save now runs under §DX-02fj's guard. No API write can
+// A destroyed section must be refused, not loaded as an empty collection with a 200:
+// the reload throws naming it (§DX-02fi) under §DX-02fj's guard. No API write can
 // break a section, so a preload wraps saveStamped to break QUEST_DB in the stamped
 // file while a flag file exists, and the real route is driven against a scratch copy.
 
@@ -76,8 +76,7 @@ test.describe('§DX-02ls — the stamped save is guarded', () => {
     fs.rmSync(flag);
     expect(r.status).toBe(500);
     const body = await r.json();
-    expect(body.emptied).toEqual(['questDb']);
-    expect(body.error).toContain(`questDb ${quests} → 0`);
+    expect(body.error).toContain('QUEST_DB is present in the source but does not parse');
     expect(body.backup).toMatch(/-\d{8}-\d{6}/);
     expect(fs.readFileSync(game, 'utf8')).toBe(before);
     expect(await questCount()).toBe(quests);
