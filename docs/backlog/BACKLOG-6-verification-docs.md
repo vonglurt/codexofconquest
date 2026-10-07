@@ -43,11 +43,6 @@
 ---
 ## §BACKLOG — Open Items (Phase 6)
 
-### §DX-02mq — the `S_story` table names 214 fields of the 501 `_S_DEFAULTS()` declares, and nothing says which belong in it (NEW 2026-10-07 during §DX-02mj, 🟡 document them, or define the table as a curated subset)
-
-- [ ] **§DX-02mq — 288 declared fields have no row.** Measured 2026-10-07 by evaluating the `_S_DEFAULTS()` literal: **501** keys. The index's *State Fields Quick Reference (S_story)* table names 214 fields, 213 of them declared plus `party`, which `play.html` sets outside the defaults. The table claimed *"All 193"* until §DX-02mj, so its completeness was asserted and never checked. **The call:** (a) generate the missing rows' Field/Type columns from the literal and write the Purpose cells by hand, then extend `check:sstory` to require every declared field; or (b) declare the table a curated subset with a stated rule for what earns a row (player-visible? save-critical?) and leave the rest to `_S_DEFAULTS()` itself. `party` either joins `_S_DEFAULTS()` or its row says why it doesn't. **Verify:** whichever ships, the header states it and the gate holds it.
-> **Provenance:** §DX-02mj.
-
 ### §DX-02lp — the 460 historical hashes could be mapped to live commits, and the rewrite left a key for part of it (NEW 2026-09-26 during §DX-02lo, 🟡 do it only when someone needs the old commits)
 
 - [ ] **§DX-02lp — option (a) of §DX-02lo, deferred there: annotate each pre-rewrite citation as `` `new` (was `old`) `` and delete its line from `src/scripts/historical-hashes.txt`.** Gate #40 `check:hashes` then ratchets the list down, since a listed hash nothing cites is a finding. **What §DX-02lo learned that makes this cheaper than it looked:** the 2026-08-23 rewrite remapped every hash inside a commit *message* and no file contents. So a pre-rewrite *"record the ship hash X"* commit carries the new hash in its subject and the old one in its diff. Of the 54 such commits, **14** add exactly one dead stamp and are clean old→new pairs, for example `0f5ebe0`: message `72e9d7d`, diff `3d0ab1d`. The rest add up to 86 dead hashes each, because they rewrite whole tables. For the remainder, a `SHIPPED <date> `old`` stamp names its row, and the ship commit is the one whose subject carries that row on that date: `git log --format='%h %ad %s' --date=short | grep '§ROW'`. **Measure first:** how many of the 460 sit in a `SHIPPED` stamp (275 stamps matched in all, dead and live), and how many resolve to exactly one commit by row and date. **Why 🟡:** 313 of the citations are in `plan-archive.md`, a record, so the value is only to someone running `git show` on an old row. **Provenance:** §DX-02lo, 2026-09-26.
@@ -510,6 +505,6 @@
 
 ## §RESUME — Phase 6 history
 
-> **Completed work is not carried here.** The 105 closed increments for this phase are condensed in **[`../archive/backlog-resume-history.md`](../archive/backlog-resume-history.md)**; full prose for recent closes is in [`plan-archive.md`](plan-archive.md). This file carries open rows only.
+> **Completed work is not carried here.** The 106 closed increments for this phase are condensed in **[`../archive/backlog-resume-history.md`](../archive/backlog-resume-history.md)**; full prose for recent closes is in [`plan-archive.md`](plan-archive.md). This file carries open rows only.
 
 > When an increment ships: write the full entry into `plan-archive.md`, add its one-line row to `../archive/backlog-resume-history.md` and to the cross-phase table in [`BACKLOG.md`](BACKLOG.md), and delete the row from this file.
