@@ -483,7 +483,7 @@ All 54 source books are marked `[x]` in `books.md` — all have been processed t
 | `docs/lab-reports/lab-report-npc-dialogue-system.md` | 42 | 4-state dialogue system, `NPC_DIALOGUES` (6×4×5), `_missionComplete()` |
 | `docs/lab-reports/lab-report-npc-speak-sdk.md` | — | Dynamic NPC speech via LLM API — lightweight character instantiation, voice consistency, first-person vignette register. **Rec 1 ✅ 2026-09-25 §DX-02al:** `WBAPI.npcSpeakSystem` builds the prompt and joins `worldTruth`/`enemy` from `NPC_DIALOGUES` meta |
 | `docs/lab-reports/lab-report-friendships-with-magic.md` | 41–42 | Session postmortem — waypoint BFS highlight, Hunt Mode, EB negotiation |
-| `docs/lab-reports/lab-report-living-world.md` | 44 | World progression events, Gigault stall, NPC farewells, Act III desaturation. **§III corrected 2026-08-23 (§DX-02fb): 6 of 6 events can fire** — `weckmann_class` reads `_npcFavor('crov') >= 3`, unreachable until `quest_pit_training` gained an `add:2` favor bit |
+| `docs/lab-reports/lab-report-living-world.md` | 44 | World progression events, Gigault stall, NPC farewells, Act III desaturation. **§X, the Void's First Sign, was built and retired 2026-07-07 `df320b0`, and stays retired (§DX-02ez).** **§III corrected 2026-08-23 (§DX-02fb): 6 of 6 events can fire** — `weckmann_class` reads `_npcFavor('crov') >= 3`, unreachable until `quest_pit_training` gained an `add:2` favor bit |
 | `docs/lab-reports/lab-report-web-of-connections.md` | 45 | `FROBERGER_TRACES`, `NPC_CROSS_REFS` (17), Room 6, Yael patrol, cross-item triggers. **§II corrected 2026-08-23 (§DX-02fb): 6 of 6 traces deliverable**, and the report's own proposed remedy (`add:1` on `quest_pit_debut`) is annotated as the wrong one — measured, it lands `crov` on 1 |
 | `docs/lab-reports/lab-report-ally-cat.md` | 44 | §IX Cat Quarter — 7-quest arc (6 + `quest_cat_void`), Ally Cat hierarchy, Kenickie unlock. **Re-verified against HEAD 2026-08-11** — carries the spec→shipped delta table and the two defects it found (§AUDIT-03r/s) |
 | `docs/lab-reports/lab-report-narrative-arcs-brynn-bruhns-yael.md` | 70+72+74 | §XXXV Brynn's Vigil + §XXXVII Bruhns CO scene + §XXXIX Yael Named Report |
@@ -761,7 +761,7 @@ All 54 source books are marked `[x]` in `books.md` — all have been processed t
 
 ## State Fields Quick Reference (S_story)
 
-> Moved from `index.md`. All 193 `S_story` fields from `_S_DEFAULTS()`. Updated 2026-06-26 (§TIMELESS-01 removed `huntMode`).
+> Moved from `index.md`. All 193 `S_story` fields from `_S_DEFAULTS()`. Updated 2026-06-26 (§TIMELESS-01 removed `huntMode`); 2026-10-07 §DX-02ez removed `voidSignClicked`, retired from the engine 2026-07-07.
 
 | Field | Type | Purpose |
 |---|---|---|
@@ -867,7 +867,6 @@ All 54 source books are marked `[x]` in `books.md` — all have been processed t
 | `S_story.brynFirewoodBrought` | boolean | Firewood delivered to Bryn |
 | `S_story.brynPantryRestocked` | boolean | Pantry restocked for Bryn |
 | `S_story.brynLedgerBalance` | number | Bryn's ledger debt (starts −8) |
-| `S_story.voidSignClicked` | boolean | Player has clicked the Void Sign once |
 | `S_story.brynnsJournalRead` | boolean | Bryn's hidden cabin journal read |
 | `S_story.pachelbelPaidBack` | boolean | Pachelbel's debt paid |
 | `S_story.quillQuestComplete` | boolean | Quill's main quest resolved |

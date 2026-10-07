@@ -357,7 +357,7 @@ The third step creaks. The kitchen closes at ninth bell. The fire needs tending.
 **S42 — Covenant Keeper Achievement Variant** ✅  
 If `_missionComplete() && _curseScore() <= -6` (perfect run — not just complete but actively generous, ebNegotiatedPayments ≥ 5, pitTrainingWins ≥ 5, etc.): the victory screen shows a different Covenant Standing string: "Covenant Keeper (True)." Same mechanics. Different acknowledgment. The game does not explain what makes it "true." Players who get it will know.
 
-**S43 — The Void's First Sign** ✅  
+**S43 — The Void's First Sign** ✅ *(retired 2026-07-07 `df320b0`; stays retired, §DX-02ez)*  
 In Act I, before any EB quests are available, there is one dark cell at the edge of the map that flickers — the WW cell nearest the SQ node. When the player tries to navigate to it, the path fails silently (no message). By Act III, the flicker is gone. By Act V, the cell is accessible — it contains one line: "You saw this before. It was waiting for you to be ready." No combat. No loot. A marker that the player ignored in Act I.
 
 **S44 — The Ledger at IN** ✅  

@@ -49,7 +49,7 @@ The eleven subsystems: **(II)** the off-screen character · **(III)** world prog
 
 ## III. Result — spec → shipped delta
 
-**25 of 29 named symbols resolve at HEAD.** Only §X's four (`VOID_SIGN_ROW`, `VOID_SIGN_COL`, `void-flicker`, `_renderMinimapCell`) are absent, and they are absent together.
+**25 of 29 named symbols resolve at HEAD.** Only §X's four (`VOID_SIGN_ROW`, `VOID_SIGN_COL`, `void-flicker`, `_renderMinimapCell`) are absent, and they are absent together. *(Corrected 2026-10-07, §DX-02ez: §X was built, not skipped. The initial commit `08f2f28` carries `.void-flicker`, `voidSignClicked` and an `r === 4 && c === 3` case in `_renderMiniMap`; `df320b0` retired all three on 2026-07-07, after the cell model left (4,3) an empty ocean cell and nothing read the click flag. `VOID_SIGN_ROW`, `VOID_SIGN_COL` and `_renderMinimapCell` are the spec's names and never existed.)*
 
 | § | Subsystem | Shipped? | Delta |
 |---|---|---|---|
@@ -61,7 +61,7 @@ The eleven subsystems: **(II)** the off-screen character · **(III)** world prog
 | VII | Brynn's maintenance | ✅ byte-identical | 3 tasks, narration + `brynn_after` exact, ledger panel, zero-balance line. Ledger arithmetic never balanced (**F6** → §DX-02iq, ASK); surplus **closed 2026-09-03** at exactly 0 (**F6** ✅ §DX-02ew); gate one tier low (**F7**) |
 | VIII | Quiet receipts | ✅ 19/24 reachable | 5 Birka keys have no lookup path; `INV` has no receipt (**F5**). *(Both fixed: `INV` by §DX-02ev(c) 2026-09-13; the Birka five by §DX-02ev(b) 2026-10-05, 25/25.)* |
 | IX | Pachelbel's code | ✅ byte-identical | 4 rules exact, ungated and public **exactly as the spec asked** — the `→ doc:` comment claiming a Dear Friend gate is the thing that's wrong (**F11**) |
-| X | The Void's First Sign | ❌ | Not shipped, in any form (**F3b**) |
+| X | The Void's First Sign | ❌ | Not shipped, in any form (**F3b**). *(Wrong: shipped at `08f2f28`, retired 2026-07-07 `df320b0`; **stays retired** — §DX-02ez, 2026-10-07.)* |
 | XI | Final map | ✅ + ⚠️ | 129 cells, timings matched to the millisecond. **Overlay is not full-screen** (**F3**); §XI's "no text on the map" superseded by Layer 66b's caption |
 
 Anchors at HEAD: `const GIGAULT_STALL_STATES = [@27544` · `const WORLD_PROGRESSION_EVENTS = [@27538` · `const NODE_NPC_KEYS = {@27547` · `const NPC_FAREWELLS = {@27561` · `const NPC_ACT_THREE_LINES = {@27603` · `const BRYNN_MAINTENANCE_TASKS = [@27634` · `const QUIET_RETURN_RECEIPTS = {@27655` · `const DEACON_CODE_TEXT =@27682` · `function _getGigaultState()@27694` · `function _getNodeMapColor(nodeSlug)@27698` · `function _getFarewell(fromCode, toCode)@27711` · `function _checkWorldProgressionEvents()@27728` · `function _applyActThreeWeight()@27739` · `function _renderFinalMap()@27746` · `function _storyEbReturnBeat(ebCode)@30516` · `function _nodeHookBirkaGigaultStall(node,@32333` · `function _nodeHookBirkaDeaconCode(node,@32342` · `function _nodeHookBirkaBrynnMaintenance(node,@32370`.
@@ -122,6 +122,8 @@ Rendered proof (`test-results/l44-final-map.png`): the grid is correct — 129 c
 ### F3b — §X, the Void's First Sign, did not ship
 
 `VOID_SIGN_ROW`, `VOID_SIGN_COL`, `void-flicker`, `_renderMinimapCell`: **zero occurrences each**. The three-act arc — a barely-off-color pixel in Act I, gone by Act III, a one-tile traversable space in Act V reading *"You saw this before. It was waiting for you to be ready."* — is absent in every part. It is the only whole section of this report with no implementation at all, and it is the section that most depended on being built once and never touched.
+
+> **Corrected 2026-10-07 (§DX-02ez) — built, then retired; it stays retired.** All three acts shipped in the initial commit `08f2f28`: Act I added `.void-flicker` to minimap cell (4,3) and a click set `S_story.voidSignClicked`; Act V gave the same cell the line as a title and a click message. That's a click on the minimap, not the traversable tile the spec describes. `df320b0` removed it on 2026-07-07: the cell model had turned (4,3) into empty North Atlantic with no `CELL_GRID` entry, and no quest, gate or branch read `voidSignClicked`. So this finding measured the retirement, not an omission. Building it again would need a real location in `CELL_GRID` (cell = location) and a mover change for the Act V tile, all for a foreshadow nothing pays off. The row's default, retire, is the decision.
 
 ### F4 — Auros has farewells and no doorway
 

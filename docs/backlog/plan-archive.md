@@ -19,6 +19,17 @@
 
 ---
 
+## Archived 2026-10-07 — §DX-02ez (ALREADY RETIRED by `df320b0`, 2026-07-07: §X shipped at `08f2f28` and was retired as orphaned; it stays retired)
+
+### §DX-02ez — §X of the Living World lock never shipped, in any part (NEW 2026-08-23 during §DOC-02cy, 🟡 implement-or-retire)
+
+- [x] ✅ SHIPPED 2026-10-07 `df320b0` **§DX-02ez — the Void's First Sign is absent.** 🟡 `VOID_SIGN_ROW`, `VOID_SIGN_COL`, `void-flicker`, `_renderMinimapCell`: **zero occurrences each** in `play.html`. The three-act arc §X specifies — a barely-off-color pixel on the minimap in Act I, gone by Act III, a one-tile traversable space in Act V reading *"You saw this before. It was waiting for you to be ready."* — is absent in every part. It is the only whole section of the lock with no implementation at all, and 4 of the layer's 29 named symbols are its. **THE CALL:** implement (the minimap render path and `S_story.actNumber` are both live, so the Act I flicker is a CSS keyframe and one cell special-case; the Act V traversable tile is the real work and touches the mover — invariant #1 applies) or **retire the section**, annotating it *specified, never built* in the §AUDIT-03n/§DX-02c form rather than deleting it. **Retire is the honest default** unless the Act V payoff is wanted; a foreshadow nobody was ever shown foreshadows nothing.
+> **Provenance:** §DOC-02cy, finding F3b, `docs/lab-reports/lab-report-living-world.md` §X.
+
+> **Closed 2026-10-07 as ALREADY RETIRED by `df320b0` (2026-07-07); 🟡 decided here: it stays retired.** The row's premise, *never shipped, in any part*, is wrong. The initial commit `08f2f28` carries all three acts: `.void-flicker` with its keyframes, `voidSignClicked: false` in `_S_DEFAULTS()`, and an `r === 4 && c === 3` case in `_renderMiniMap` that flickers in Act I and, from Act V, shows *"You saw this before. It was waiting for you to be ready."* as a title and a click message. That's a minimap click, not the traversable tile §X specifies. §NAV-01's follow-up (1) removed all three on 2026-07-07, after the cell model turned (4,3) into empty North Atlantic with no `CELL_GRID` entry and nothing read the click flag. `VOID_SIGN_ROW`, `VOID_SIGN_COL` and `_renderMinimapCell` are the spec's names and never existed. **Why retire:** a recorded decision already covers it (plan-archive, *Small follow-ups (found during §NAV-01)* (1)). Building it again means a real location in `CELL_GRID` (cell = location), a design call on which cell, and a mover change for the Act V tile, all for a foreshadow nothing pays off. **Done in this close (docs only, no `play.html` or world-data change):** `lab-report-living-world.md` §III's intro, row X and F3b are annotated with the history; S43 in `archive/lab-report-timeline-history-completed.md` is annotated *retired*; the dead `S_story.voidSignClicked` row is gone from `docs/design/index.md`, and the living-world index line says *retired*. **Number:** index.md `S_story` rows naming a field absent from `play.html`, **2 → 1**. **Found on the path:** the remaining one, `lastCorridorCells`, plus a gate so the table can't drift again → **§DX-02mj** (Phase 6, top).
+
+---
+
 ## Archived 2026-10-05 — §DX-02mi (a journal find joins the arrival strip; first-visit strips lost at journal nodes 24/31 → 0/31)
 
 ### §DX-02mi — a journal find replaces the whole arrival strip, so that render's quest messages are never shown (NEW 2026-10-05 during §DX-02ev(b), 🟢)
