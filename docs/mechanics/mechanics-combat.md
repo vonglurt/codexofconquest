@@ -693,11 +693,13 @@ Locked buttons show `🔒`, opacity 0.45, `disabled`, and a tooltip hint. The `b
 
 ### Stalk / Hunt Mechanic *(§XLIII — ⊘ Retired §TIMELESS-01, 2026-06-26)*
 
-> **Retired.** Hunt/Stalk Mode — the targeted-hunt target picker, the WIS Survival check, the "Rush In" path, surprise-advantage on hunt, and all hunt-only time costs — was removed in **§TIMELESS-01** (movement is now timeless; encounters are always a plain `baseRate` + `_weightedMonsterPick(terrain)` roll). This section is kept as a historical pointer; the mechanic no longer exists in the engine.
+> **Retired.** Hunt/Stalk Mode — the targeted-hunt target picker, the WIS Survival check, the "Rush In" path, surprise-advantage on hunt, and all hunt-only time costs — was removed in **§TIMELESS-01** (movement is now timeless; an encounter is a plain `baseRate` + `_weightedMonsterPick(terrain)` roll, modified only by §KG-01's Hunt Mode and the party rules). This section is kept as a historical pointer; the mechanic no longer exists in the engine.
 >
-> **What replaced it:** entering an empty cell rolls a notoriety-weighted random encounter from the terrain pool — no player target selection, no survival roll, no extra hour (movement and battle no longer advance the clock). Quest-kill progress is tracked purely by winning battles at the relevant node (e.g. `quest_slums_cleanup` completes after 3 BMA combat wins via `S_story.slStalksWon`, a field name retained to avoid a save migration).
+> **Not the Hunt Mode in the game today.** §KG-01 (2026-07-08) reused the names `huntMode`, `storyToggleHunt` and `_updateHuntBtn` and the 🎯 d-pad button for a **different** mechanic: no target, no survival roll, no clock cost — the wilderness encounter rate doubles (capped at 0.8) and 80% of picks prefer a monster at or below your level. It is live; see *Open-ground encounters* above.
 >
-> **Removed code/state:** `storyToggleHunt`, `_updateHuntBtn`, `storyQuestHunt`, `storyQuickWait`, `_stalkedMonsterPick`, `_getQuestTargetKeys`, the `HUNTING_GROUNDS` constant, the stalk modal, and the `huntMode` / `pb.stalk` / `huntSelectedTarget` / `huntLastSurvivalRoll` state fields. See `docs/lab-reports/lab-report-timeless-movement-hunt-removal.md`.
+> **What replaced it:** entering an empty cell rolls a notoriety-weighted random encounter from the terrain pool — no player target selection, no survival roll, no extra hour (movement no longer advances the clock; a battle still costs one hour in `_storyRollInit`). Quest-kill progress is tracked purely by winning battles at the relevant node (e.g. `quest_slums_cleanup` completes after 3 BMA combat wins via `S_story.slStalksWon`, a field name retained to avoid a save migration).
+>
+> **Removed code/state** (`storyToggleHunt`, `_updateHuntBtn` and `huntMode` are live again under §KG-01, with the meaning above): `storyToggleHunt`, `_updateHuntBtn`, `storyQuestHunt`, `storyQuickWait`, `_stalkedMonsterPick`, `_getQuestTargetKeys`, the `HUNTING_GROUNDS` constant, the stalk modal, and the `huntMode` / `pb.stalk` / `huntSelectedTarget` / `huntLastSurvivalRoll` state fields. See `docs/lab-reports/lab-report-timeless-movement-hunt-removal.md`.
 
 ---
 

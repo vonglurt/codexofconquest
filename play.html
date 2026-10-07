@@ -25383,7 +25383,7 @@ function _storyBattleVictory() {
   }
   // Layer 41: track BMA battle wins for quest_slums_cleanup (completes at >= 3).
   // §TIMELESS-01: `slStalksWon` counts plain BMA combat wins — it never depended on
-  // Hunt Mode (removed in Inc B). Field name kept as-is to avoid a save migration.
+  // June Hunt/Stalk mode (removed in Inc B). Field name kept as-is to avoid a save migration.
   if (pb && pb.nodeCode === 'BMA') {
     S_story.slStalksWon = (S_story.slStalksWon || 0) + 1;
   }
@@ -38946,7 +38946,8 @@ function storyWaypoint() {
   cellMove(dir);
 }
 
-// §TIMELESS-01: _updateHuntBtn / storyToggleHunt removed with the Hunt feature.
+// §TIMELESS-01: _updateHuntBtn / storyToggleHunt removed with the Hunt/Stalk feature;
+// §KG-01 reused both names above for a different Hunt Mode (a rate doubling, no target).
 
 function _storyFindTerrainNode(terrain) {
   const candidates = new Set(Object.keys(NODE_MAP).filter(c => NODE_MAP[c].name === terrain));

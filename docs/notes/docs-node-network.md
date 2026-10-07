@@ -303,7 +303,7 @@ Both `_updateExitLinks()` and `storyWaypoint()` pass `(pr, pc)` — the actual p
 
 **Auto-travel (§NAV-01d/e):** the WP button no longer nudges one step — it toggles a travel loop. `_roadGridPath(_playerPos(), toCode)` runs a road-weighted Dijkstra (road/sea-lane cells cost 1, open land 2 — routes prefer the §NAV-01b road net), and `_travelTick()` executes one `cellMove` per ~120 ms until: an encounter roll fires (`_encounterQueued`), the player arrives, any user input lands, or a step is blocked. Shift+WP keeps the old single-step nudge. Quest "📍 Navigate →" (`storySetWaypoint`) starts travel directly; journal and Navigate button show `(n steps, NE)` readouts and a waypoint ★ is drawn on the minimap and both world canvases.
 
-**Empty-cell encounters:** `_enterEmptyCell` always rolls once at the terrain's `TERRAIN_ENCOUNTER_RATE` (no Hunt-Mode toggle — `S_story.huntMode` and the guaranteed-encounter `effectiveRate = 1.0` path were removed in §TIMELESS-01). On a hit, `_weightedMonsterPick(terrain)` selects the monster; the old quest-stalked `_stalkedMonsterPick` is gone. Named-node battles are unchanged.
+**Empty-cell encounters:** `_enterEmptyCell` rolls once at the terrain's `TERRAIN_ENCOUNTER_RATE`, doubled (capped at 0.8) when §KG-01's Hunt Mode (`S_story.huntMode`) is on. The guaranteed-encounter `effectiveRate = 1.0` path of the June Hunt/Stalk toggle, which used the same field name, was removed in §TIMELESS-01. On a hit, `_weightedMonsterPick(terrain)` selects the monster; the old quest-stalked `_stalkedMonsterPick` is gone. Named-node battles are unchanged.
 
 ---
 
