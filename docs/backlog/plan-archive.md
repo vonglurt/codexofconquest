@@ -19,6 +19,17 @@
 
 ---
 
+## Archived 2026-10-07 — §DX-02mn (edit.html's four parsers take parseChecked's rule; the welcome card or #load-error names the section; the loaded world stays)
+
+### §DX-02mn — `edit.html`'s hand-copied parser still reads an unreadable section as empty (NEW 2026-10-07 during §DX-02fi, 🟢)
+
+- [x] ✅ SHIPPED 2026-10-07 `45f9a03` **§DX-02mn — the world editor page parses `play.html` with its own copies of `parseArr`/`parseSanitized`, which end `catch(e) { return []; }` and `catch(e) { console.warn(name + ':', e.message); return {}; }`.** §DX-02fi made `wbapi-core`'s parsers throw, naming the section, when a section is present but unreadable; the editor's copies were not touched (the hand-mirror hazard §DX-02mc met). With the server off, a broken section still shows as an empty collection in the editor. **Fix:** port `parseChecked`'s rule and surface the named error in the editor's load banner instead of an empty list. **Verify:** load the editor against a copy with a broken `QUEST_DB` and see the section named, not zero quests.
+> **Provenance:** §DX-02fi.
+
+> **Closed 2026-10-07 at `45f9a03`.** **Re-measured before:** a copy of `play.html` with `QUEST_DB` broken by one token, loaded through the editor's `loadFile` with no server, gave `loaded:true` · **0 quests** · welcome screen dismissed, and raised nothing. **Shipped:** the editor's `parseSimple`/`parseWithP`/`parseArr`/`parseSanitized` share a `parseChecked` ported from `wbapi-core`, with the same three refusals and the same message, and an empty literal in the source (`{}`, or only comments) still loads empty. `load()` snapshots its fields and restores them before rethrowing. `loadFile` returns the error, or `null` on success. The Browse and Drop welcome cards keep the welcome screen up and show the error in their `err` state. A file dropped on the map over a loaded world leaves that world in place and shows the error in a new top-bar `#load-error`, which the next good load hides. **After:** the same file reads `QUEST_DB is present in the source but does not parse (Invalid or unexpected token); refusing to read it as empty`, with `loaded:false`, the quest count still `—`, and the welcome screen up. **Evidence:** `dx02mn-editor-load-fails-loud.test.js` has 4 tests: the welcome refusal, the drop over a loaded world, the good load clearing the notice, and New World's all-empty template still opening. Both refusals were red on the old editor. The 36 editor specs that call `load`/`loadFile` pass, and `check:walk` is 43/43. **Full suite:** 1,394 passed / 9 failed: the known eight plus `quest-runtime-uqf:2988`, a 45 s timeout in a loaded shard that passes alone in 36.7 s and does not touch `edit.html` (filed §DX-02mo).
+
+---
+
 ## Archived 2026-10-07 — §DX-02fi (fail loud: a present-but-unreadable section throws, naming itself; start and /api/reload refuse; the loaded world stays)
 
 ### §DX-02fi — a corrupt data section loads silently as an empty collection (NEW 2026-08-23 during §DOC-02da, 🟢 decided 2026-10-04 (was 🔴 the highest-value fence in the backlog))
