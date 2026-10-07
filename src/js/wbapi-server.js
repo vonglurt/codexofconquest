@@ -9219,6 +9219,8 @@ async function route(req, res) {
     // dupe-void fork-choice with a doctored origin today.
     if (sub === 'ingest') {
       const { accepted, dup, held, rejected } = ledgerIngestEvents(body.events);
+      const from = body.addr || req.socket.remoteAddress;
+      pushTraffic('in', 'ledger', from, true, `ingested ${accepted} ev · ${dup} dup · ${held} held · ${rejected.length} rejected · ${String(body.serverId).slice(0, 8)}`);
       logResponse(method, url.pathname, 200, `ledger ingest: ${accepted} accepted · ${dup} dup · ${held} held · ${rejected.length} rejected`);
       return json(res, 200, { ok: true, accepted, dup, held, rejected });
     }
