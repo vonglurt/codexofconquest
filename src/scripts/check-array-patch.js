@@ -8,6 +8,8 @@
 // function values, and refuses a write that would delete a comment from the
 // entry unless the caller accepts the loss. Pure: loads play.html read-only into a
 // detached WBAPI instance and round-trips via load(text) — never writes the file.
+// §MATH-01 widened the path from arrays to bare objects (`gate`, `completion`), which
+// had been routed to a memory-only put; [3b] holds that branch.
 // Lab report: lab-reports/lab-report-wbapi01-ph3-array-patch.md
 
 const path = require('path');
@@ -46,6 +48,24 @@ WBAPI.load(WBAPI._rawSrc);
 ok(JSON.stringify(WBAPI.questDb[qTM1][SA]) === JSON.stringify(['New Item A', "O'Brien's Token", 'multi\nline']), 'escape-heavy string array round-trips');
 ok(JSON.stringify(WBAPI.questDb[qKG].killGoals) === JSON.stringify([{ key: 'test_mob', need: 7, label: "O'Test" }, { key: 'm2', need: 1, label: 'Two' }]), 'killGoals round-trips');
 ok(JSON.stringify(WBAPI.questDb[qTM2][SA]) === JSON.stringify(['alpha', 'beta']), 'plain string array round-trips');
+
+// [3b] §MATH-01 — a BARE object field (`gate`, `completion`) rides the same path. It
+// used to go to a memory-only `ns.put` and was lost on file-watch reload, and it is now
+// the larger population, so it is asserted here rather than inferred from `killGoals`.
+WBAPI.load(GAME);
+const qObj = (() => {
+  const sec = WBAPI._parse.extrSection(WBAPI._rawSrc, 'QUEST_DB');
+  return Object.keys(q).find(id => { const c = q[id].completion;
+    return c && typeof c === 'object' && !Array.isArray(c) && !WBAPI._parse.fieldsWithComments(sec, id).completion; });
+})();
+const flatObj = { itemsAll: ["O'Brien's Token", 'Trade Seal'], atNode: 'LHR' };
+const nestObj = { any: [{ all: [{ flag: { key: 'probe_flag', eq: true } }, { items: ['x'] }] }], atNode: 'LHR' };
+r = WBAPI.editStructuredField('quest', qObj, 'completion', flatObj);
+let objBack = r.ok && (WBAPI.load(WBAPI._rawSrc), WBAPI.questDb[qObj].completion);
+ok(JSON.stringify(objBack) === JSON.stringify(flatObj), `a bare object field round-trips from source (${qObj}.completion): ` + (r.error || JSON.stringify(objBack)));
+r = WBAPI.editStructuredField('quest', qObj, 'completion', nestObj);
+objBack = r.ok && (WBAPI.load(WBAPI._rawSrc), WBAPI.questDb[qObj].completion);
+ok(JSON.stringify(objBack) === JSON.stringify(nestObj), 'a four-level nested object round-trips from source: ' + (r.error || JSON.stringify(objBack)));
 
 // [4] a LIVE function value is rejected — it cannot be serialized, only escaped
 r = WBAPI.editStructuredField('quest', qTM1, 'completeFn', function () { return true; });
