@@ -899,7 +899,7 @@ async function ledgerSyncWith(addr, peerVV) {
       const resp = await fetch(`${meshUrl(addr)}/api/ledger/sync`, {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ serverId: getServerId(), proto: m.proto, engineVer: m.engineVer,
-          worldHash: m.worldHash, addr: meshAdvertise(), vv: ours }),
+          worldHash: m.worldHash, universeHash: m.universeHash, addr: meshAdvertise(), vv: ours }),
       });
       const data = await resp.json().catch(() => ({}));
       if (resp.ok && data.ok) {
@@ -932,7 +932,7 @@ async function ledgerPullFrom(addr) {
   const resp = await fetch(`${meshUrl(addr)}/api/ledger/sync`, {
     method: 'POST', headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ serverId: getServerId(), proto: m.proto, engineVer: m.engineVer,
-      worldHash: m.worldHash, addr: meshAdvertise(), vv: ledgerVVObj() }),
+      worldHash: m.worldHash, universeHash: m.universeHash, addr: meshAdvertise(), vv: ledgerVVObj() }),
     signal: AbortSignal.timeout(5000),
   });
   const data = await resp.json().catch(() => ({}));
@@ -1098,10 +1098,14 @@ function rawSpan(src, name) {
 
 // World manifest. engineVer is ENGINE_VER's label plus a hash of the parity-fenced
 // kernels. universeHash = engineVer + the map (UNIVERSE_PARTS): presence, movement and
-// chat require it equal. contentHash = the story (CONTENT_PARTS): advertised, and allowed
-// to differ. worldHash = engineVer + every part, and ledger and trade still require it
-// equal (§MESH-03e replaces that with a dependency rule). Per-part hashes show WHERE two
-// worlds differ.
+// chat, ledger sync and trade relay require it equal. contentHash = the story
+// (CONTENT_PARTS): advertised, and allowed to differ, because a receiver bounds every mint
+// itself — a pack item by the reward it cites, a base item by a per-origin rate
+// (§MESH-03e-FU). worldHash = engineVer + every part. Per-part hashes show WHERE two worlds
+// differ.
+function meshCompatible(b, m) {
+  return !!b && b.proto === m.proto && b.engineVer === m.engineVer && sameUniverse(b, m);
+}
 const sha16 = (s) => crypto.createHash('sha256').update(s).digest('hex').slice(0, 16);
 const UNIVERSE_PARTS = ['NODE_MAP', 'NODE_COORDS', 'SEA_RUNS', 'SEA_LANES', 'ROAD_RUNS'];
 const CONTENT_PARTS = ['QUEST_DB', 'MONSTER_POOL', 'WORLD_DB'];
@@ -9205,16 +9209,16 @@ async function route(req, res) {
       const m = getManifest();
       const ip = req.socket.remoteAddress;
       const from = (body && body.addr) || ip;
-      if (!body || body.proto !== m.proto || body.engineVer !== m.engineVer || body.worldHash !== m.worldHash) {
-        pushTraffic('in', 'ledger', from, false, `sync refused: incompatible (${body && body.engineVer}/${String(body && body.worldHash).slice(0, 8)})`);
+      if (!meshCompatible(body, m)) {
+        pushTraffic('in', 'ledger', from, false, `sync refused: incompatible (${body && body.engineVer}/${String(body && (body.universeHash || body.worldHash)).slice(0, 8)})`);
         logResponse(method, url.pathname, 409, 'ledger/sync: incompatible');
-        return json(res, 409, { ok: false, reason: 'incompatible', want: { proto: m.proto, engineVer: m.engineVer, worldHash: m.worldHash } });
+        return json(res, 409, { ok: false, reason: 'incompatible', want: { proto: m.proto, engineVer: m.engineVer, universeHash: m.universeHash } });
       }
       if (!body.serverId || body.serverId === getServerId()) {
         logResponse(method, url.pathname, 400, 'ledger/sync: bad serverId');
         return json(res, 400, { ok: false, reason: 'bad-serverId' });
       }
-      if (!aclAllows({ serverId: body.serverId, ip, worldHash: body.worldHash })) {
+      if (!aclAllows({ serverId: body.serverId, ip, worldHash: body.worldHash, universeHash: body.universeHash })) {
         pushTraffic('in', 'ledger', from, false, `sync refused: ACL (${String(body.serverId).slice(0, 8)})`);
         logResponse(method, url.pathname, 403, 'ledger/sync: ACL');
         return json(res, 403, { ok: false, reason: 'acl' });
@@ -9333,7 +9337,7 @@ async function route(req, res) {
           const resp = await fetch(`${meshUrl(peer.addr)}/api/trade/relay`, {
             method: 'POST', headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ op: 'propose', serverId: getServerId(), proto: m.proto, engineVer: m.engineVer,
-              worldHash: m.worldHash, addr: meshAdvertise(), vv: ledgerVVObj(),
+              worldHash: m.worldHash, universeHash: m.universeHash, addr: meshAdvertise(), vv: ledgerVVObj(),
               tradeId, from, to, give, want, ttlMs: TRADE_TTL }),
             signal: AbortSignal.timeout(5000),
           });
@@ -9385,7 +9389,7 @@ async function route(req, res) {
           const resp = await fetch(`${meshUrl(t.remote.addr)}/api/trade/relay`, {
             method: 'POST', headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ op: 'accept', serverId: getServerId(), proto: m.proto, engineVer: m.engineVer,
-              worldHash: m.worldHash, addr: meshAdvertise(), vv: ledgerVVObj(),
+              worldHash: m.worldHash, universeHash: m.universeHash, addr: meshAdvertise(), vv: ledgerVVObj(),
               tradeId: body.tradeId, by: t.to,
               assent: { pub: getServerKey().pub, sig: signCanonical(tradeTerms(body.tradeId, t.from, t.to, t.give, t.want)) } }),
             signal: AbortSignal.timeout(8000),
@@ -9449,7 +9453,7 @@ async function route(req, res) {
         fetch(`${meshUrl(t.remote.addr)}/api/trade/relay`, {
           method: 'POST', headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ op: 'cancel', serverId: getServerId(), proto: m.proto, engineVer: m.engineVer,
-            worldHash: m.worldHash, addr: meshAdvertise(), tradeId: body.tradeId }),
+            worldHash: m.worldHash, universeHash: m.universeHash, addr: meshAdvertise(), tradeId: body.tradeId }),
           signal: AbortSignal.timeout(3000),
         }).catch(() => {});
       }
@@ -9470,16 +9474,16 @@ async function route(req, res) {
       const m = getManifest();
       const ip = req.socket.remoteAddress;
       const rFrom = (body && body.addr) || ip;
-      if (!body || body.proto !== m.proto || body.engineVer !== m.engineVer || body.worldHash !== m.worldHash) {
-        pushTraffic('in', 'trade', rFrom, false, `relay refused: incompatible (${body && body.engineVer}/${String(body && body.worldHash).slice(0, 8)})`);
+      if (!meshCompatible(body, m)) {
+        pushTraffic('in', 'trade', rFrom, false, `relay refused: incompatible (${body && body.engineVer}/${String(body && (body.universeHash || body.worldHash)).slice(0, 8)})`);
         logResponse(method, url.pathname, 409, 'trade/relay: incompatible');
-        return json(res, 409, { ok: false, reason: 'incompatible', want: { proto: m.proto, engineVer: m.engineVer, worldHash: m.worldHash } });
+        return json(res, 409, { ok: false, reason: 'incompatible', want: { proto: m.proto, engineVer: m.engineVer, universeHash: m.universeHash } });
       }
       if (!/^[0-9a-f]{32}$/.test(body.serverId || '') || body.serverId === getServerId()) {
         logResponse(method, url.pathname, 400, 'trade/relay: bad serverId');
         return json(res, 400, { ok: false, reason: 'bad-serverId' });
       }
-      if (!aclAllows({ serverId: body.serverId, ip, worldHash: body.worldHash })) {
+      if (!aclAllows({ serverId: body.serverId, ip, worldHash: body.worldHash, universeHash: body.universeHash })) {
         pushTraffic('in', 'trade', rFrom, false, `relay refused: ACL (${body.serverId.slice(0, 8)})`);
         logResponse(method, url.pathname, 403, 'trade/relay: ACL');
         return json(res, 403, { ok: false, reason: 'acl' });

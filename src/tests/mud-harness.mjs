@@ -401,7 +401,7 @@ async function main() {
   check(gKern.status === 409, 'gossip ingress refuses a build whose parity kernels differ with 409');
 
   // §MESH-03c — the universe (engine + map) must match; the content (quests, monsters,
-  // terrain) may differ. Ledger and trade still require the whole world to match.
+  // terrain) may differ, and so may ledger and trade (§DX-02lz): a receiver bounds each mint itself.
   const questFile = path.join(tmp, `coc-quest-${process.pid}.html`);
   const srcMesh03c = fs.readFileSync(path.join(ROOT, 'play.html'), 'utf8');
   fs.writeFileSync(questFile, srcMesh03c.replace('sdq_05_act1: { id:"sdq_05_act1", ',
@@ -427,7 +427,7 @@ async function main() {
     body: JSON.stringify({ serverId: '0f'.repeat(16), proto: manContent.proto, engineVer: manContent.engineVer,
       worldHash: manContent.worldHash, universeHash: manContent.universeHash, vv: {} }),
   });
-  check(lContent.status === 409, 'ledger sync still refuses a server whose content differs with 409 (until §MESH-03e)');
+  check(lContent.status === 200, 'ledger sync answers a server whose content differs (§DX-02lz)');
   mContent.proc.kill('SIGTERM');
   fs.rmSync(questFile, { force: true });
 

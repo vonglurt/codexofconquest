@@ -284,7 +284,7 @@ function meshIngest(p, ip) {
       MESH.peers.set(a, { serverId: null, lastSeen: 0, lastErr: null });   // PEX candidate — dialed next round
   // §MESH-01i slice 2: ledger anti-entropy off the inbound frontier (fire-and-
   // forget — the dialer's own round covers us if p.addr isn't dialable back).
-  if (p.ledgerVV && p.addr && p.worldHash === m.worldHash) ledgerSyncWith(p.addr, p.ledgerVV).catch(() => {});
+  if (p.ledgerVV && p.addr) ledgerSyncWith(p.addr, p.ledgerVV).catch(() => {});
   return { status: 200, body: { ok: true, ...meshPayload() } };
 }
 let _meshRoundBusy = false;
@@ -319,7 +319,7 @@ async function meshGossipRound() {
           for (const a of data.peers || [])
             if (typeof a === 'string' && a && a !== meshAdvertise() && !MESH.peers.has(a))
               MESH.peers.set(a, { serverId: null, lastSeen: 0, lastErr: null });
-          if (data.ledgerVV && data.worldHash === getManifest().worldHash) ledgerSyncWith(addr, data.ledgerVV).catch(() => {});   // §MESH-01i slice 2
+          if (data.ledgerVV && sameUniverse(data, getManifest())) ledgerSyncWith(addr, data.ledgerVV).catch(() => {});   // §MESH-01i slice 2
           pushTraffic('out', 'gossip', addr, true, `⇄ ${(data.events || []).length} ev · snap ${(data.snapshot && data.snapshot.sessions || []).length} · ${(data.peers || []).length} px`);
         } else {
           MESH.peers.set(addr, { ...rec, lastErr: unproven || data.reason || `http-${resp.status}` });
