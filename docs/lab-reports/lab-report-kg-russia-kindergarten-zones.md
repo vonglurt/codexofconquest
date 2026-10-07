@@ -310,6 +310,12 @@ appears in `const TERRAIN_ENCOUNTER_RATE = {@9905`. All five fall through the `?
 so nothing was violated; but a band whose entire purpose is to be *ground* paces identically to open
 wilderness, while `city` (0.05) and `forest` (0.25) are deliberately tuned. → **§DX-02ek**
 
+> **Closed 2026-10-07 by §DX-02ek:** all five now carry **0.30** (the `swamp`/`jungle` rate; Hunt Mode
+> doubles it to 0.60). The nine open cells are unchanged, so ~31 average kills to level 6 take about
+> **103** steps of oscillation, down from ~207. `kg-zones.test.js` asserts each zone terrain has its own
+> entry above `_default` and is inferred on at least one open cell. The assertion is not world-wide: 66
+> other terrains use `_default` by design.
+
 ### F7 — Every §KG node renders its own name twice
 
 §4 gives each terrain the node's display name as its `label` (`soviet_checkpoint:{ label:@6295`), and §5 gives the node the same string. The header composes

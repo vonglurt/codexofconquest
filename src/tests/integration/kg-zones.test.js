@@ -88,6 +88,28 @@ test.describe('§KG Increment 2 — Russia kindergarten zones', () => {
     }
   });
 
+  // §DX-02ek: the band exists to be ground, so it must not pace like open wilderness
+  // through the `_default` fallthrough. Every zone terrain carries its own rate, above the
+  // default, and its open cells really roll it.
+  test('the 5 zone terrains roll their own encounter rate, above the default', async ({ page }) => {
+    const r = await page.evaluate((terrains) => {
+      const own = {}, cells = {};
+      for (const t of terrains) own[t] = Object.prototype.hasOwnProperty.call(TERRAIN_ENCOUNTER_RATE, t) ? TERRAIN_ENCOUNTER_RATE[t] : null;
+      for (let row = 0; row < GEO_PROJ.ROWS; row++) for (let col = 0; col < GEO_PROJ.COLS; col++) {
+        const k = row + ',' + col;
+        if (CELL_GRID[k] && CELL_GRID[k].length) continue;
+        const t = _inferTerrain(row, col);
+        if (terrains.includes(t)) cells[t] = (cells[t] || 0) + 1;
+      }
+      return { own, cells, dflt: TERRAIN_ENCOUNTER_RATE._default };
+    }, Object.keys(TERRAIN_POOLS));
+    for (const t of Object.keys(TERRAIN_POOLS)) {
+      expect(r.own[t], `${t} has its own TERRAIN_ENCOUNTER_RATE entry`).not.toBeNull();
+      expect(r.own[t]).toBeGreaterThan(r.dflt);
+      expect(r.cells[t] || 0, `${t} is inferred on at least one open cell`).toBeGreaterThan(0);
+    }
+  });
+
   test('ZVD / FBR carry their signature battles; TVR is a rest stop', async ({ page }) => {
     const r = await page.evaluate(() => ({
       zvd: NODE_MAP.ZVD.battle, fbr: NODE_MAP.FBR.battle,
