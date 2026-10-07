@@ -10720,6 +10720,25 @@ async function route(req, res) {
     }
   }
 
+  // POST /api/section/:SECTION/sub — substitute a phrase inside a data section's comments.
+  if (type === 'section' && action === 'sub' && method === 'POST') {
+    let body;
+    try { body = await readBody(req); } catch(e) { return json(res, 400, { error:'Invalid JSON' }); }
+    const r = WBAPI.substituteComment(rawId, body.from, body.to);
+    logRow('target', `section \u203a ${rawId}`);
+    if (!r.ok) {
+      logRow('sub', `${C.red}\u2717 ${r.error}${C.reset}`);
+      logResponse(method, url.pathname, 422, `section sub failed: ${r.error}`);
+      return json(res, 422, { ok:false, error:r.error });
+    }
+    logRow('sub', `${C.green}\u2713${C.reset} ${r.count} comment occurrence(s)  ${JSON.stringify(r.from)} \u2192 ${JSON.stringify(r.to)}`);
+    logResponse(method, url.pathname, 200, `${r.count} occurrence(s) substituted in ${rawId}'s comments`);
+    return saveAndVerify(res, 200, { ok:true, section:rawId, from:r.from, to:r.to, count:r.count, strategy:r.strategy }, null, null, null, () => {
+      const onDisk = WBAPI.sectionText(rawId);
+      return onDisk === r.expected ? { verifiedOnDisk: true } : { ok:false, error:`${rawId} on disk is not the patched section` };
+    });
+  }
+
   if (!CONNECT[type]) {
     logResponse(method, url.pathname, 400, `Unknown type "${type}"`);
     return json(res, 400, { error: `Unknown type "${type}". Use: node quest monster npc terrain location fish lake-magic count`, availableTypes: ['node','quest','monster','npc','terrain','location','fish','lake-magic','count'], routeIndex: '/api/list' });

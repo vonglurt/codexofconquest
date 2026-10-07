@@ -577,6 +577,24 @@ function _fnTally(sectionSrc, entryKey) {
 // §DX-02ix: every comment inside a stretch of section source, in order. String-aware,
 // and deliberately as naive about regex literals as removeFns is — the count is only ever
 // compared against itself either side of one patch, so a consistent misread cancels.
+// Start and end (exclusive) of every comment in a stretch of source, strings skipped whole.
+function _commentSpans(src) {
+  const out = [];
+  let i = 0;
+  while (i < src.length) {
+    const c = src[i];
+    if (c === '"' || c === "'" || c === '`') {
+      const q = c; i++;
+      while (i < src.length) { if (src[i] === '\\' && q !== '`') { i += 2; continue; } if (src[i++] === q) break; }
+      continue;
+    }
+    if (c === '/' && src[i + 1] === '/') { const s = i; while (i < src.length && src[i] !== '\n') i++; out.push({ start: s, end: i }); continue; }
+    if (c === '/' && src[i + 1] === '*') { const s = i; i += 2; while (i < src.length && !(src[i] === '*' && src[i + 1] === '/')) i++; i = Math.min(i + 2, src.length); out.push({ start: s, end: i }); continue; }
+    i++;
+  }
+  return out;
+}
+
 function _commentScan(src) {
   const out = [];
   let i = 0;
@@ -1895,6 +1913,39 @@ const WBAPI = {
   // (§DX-02ix) — the only escape offered is accepting the loss. A substitution edits the
   // source text in place and matches only inside string literals, so comments, keys and code
   // are out of its reach by construction rather than by care.
+  // The comment twin of substituteText: a data section's comments sit between and inside its
+  // entries, where no entry write reaches. Every match must lie wholly inside one comment, and
+  // the section with its comments stripped must come out byte-identical.
+  sectionText(name) { return this._rawSrc ? extrSection(this._rawSrc, name) : null; },
+
+  substituteComment(sectionName, from, to) {
+    if (!this._rawSrc) return { ok:false, error:'no source loaded' };
+    const sectionSrc = typeof sectionName === 'string' && /^[A-Z][A-Z0-9_]*$/.test(sectionName) ? extrSection(this._rawSrc, sectionName) : null;
+    if (sectionSrc === null) return { ok:false, error:`no WORLDBUILDER section "${sectionName}"` };
+    if (typeof from !== 'string' || from === '') return { ok:false, error:'"from" must be a non-empty string' };
+    if (typeof to !== 'string') return { ok:false, error:'"to" must be a string' };
+    if (/[\r\n]|\*\/|\/\*/.test(to)) return { ok:false, error:'"to" may not carry a newline, "/*" or "*/" — it would end or open a comment. Source NOT modified.' };
+
+    const spans = _commentSpans(sectionSrc);
+    const hits = [];
+    for (let i = sectionSrc.indexOf(from); i >= 0; i = sectionSrc.indexOf(from, i + 1)) hits.push(i);
+    if (hits.length === 0) return { ok:false, error:`"${from}" does not occur in ${sectionName}. Source NOT modified.` };
+    const outside = hits.filter(i => !spans.some(c => i >= c.start && i + from.length <= c.end));
+    if (outside.length)
+      return { ok:false, error:`refusing: ${outside.length} of ${hits.length} occurrence(s) of "${from}" in ${sectionName} lie outside a comment — authored text is written with sub <type> <id>, code is not written by sub at all. Source NOT modified.` };
+
+    let patched = sectionSrc;
+    for (let k = hits.length - 1; k >= 0; k--) patched = patched.slice(0, hits[k]) + to + patched.slice(hits[k] + from.length);
+    const strip = (src) => { let out = '', at = 0; for (const c of _commentSpans(src)) { out += src.slice(at, c.start); at = c.end; } return out + src.slice(at); };
+    if (strip(patched) !== strip(sectionSrc))
+      return { ok:false, error:'refused: the substitution changed source outside comments. Source NOT modified.' };
+    if (_commentSpans(patched).length !== spans.length)
+      return { ok:false, error:'refused: the substitution changed the number of comments. Source NOT modified.' };
+
+    this._rawSrc = respliceSection(this._rawSrc, sectionName, patched);
+    return { ok:true, section: sectionName, from, to, count: hits.length, strategy:'substituteComment', expected: patched };
+  },
+
   substituteText(type, idOrTitle, from, to) {
     if (!this._rawSrc) return { ok:false, error:'no source loaded' };
     const section = ENTRY_SECTION[type]; if (!section) return { ok:false, error:'unknown type' };

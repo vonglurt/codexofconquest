@@ -30,14 +30,7 @@ const NOT_A_NODE = {
   CSS: 'stylesheet',
 };
 
-const PENDING = {
-  CO: { n: 1, row: '§AUDIT-03ba-FU', note: '→ TLS, QUEST_DB §D02-10 banner; needs ./bin/api sub' },
-  MM: { n: 1, row: '§AUDIT-03ba-FU', note: '→ LIM, QUEST_DB §D02-08 banner; needs ./bin/api sub' },
-  AT: { n: 1, row: '§AUDIT-03ba-FU', note: '→ RAI, QUEST_DB §D02-01 banner; needs ./bin/api sub' },
-  WK: { n: 1, row: '§AUDIT-03ba-FU', note: '→ SZG, QUEST_DB §D02-06 banner; needs ./bin/api sub' },
-  YC: { n: 1, row: '§AUDIT-03ba-FU', note: '→ SSJ, QUEST_DB §XLV comment; needs ./bin/api sub' },
-  LT: { n: 1, row: '§AUDIT-03ba-FU', note: '→ KYA, QUEST_DB quest_stoning_lystra comment; needs ./bin/api sub' },
-};
+const PENDING = {};
 
 const CONTEXTS = [
   /\bat ([A-Z]{2,3})\b/g, /\b([A-Z]{2,3}) nodes?\b/g, /\b[Nn]ode ([A-Z]{2,3})\b/g,
@@ -149,4 +142,4 @@ if (findings.length) {
 }
 const pend = Object.values(PENDING).reduce((s, e) => s + e.n, 0);
 console.log(`✓ §AUDIT-03ba comment node codes: every place-context code in play.html's comments is a live node, `
-  + `apart from ${hits - pend} word(s) in NOT_A_NODE and ${pend} pending in ${Object.keys(PENDING).length} code(s) owned by §AUDIT-03ba-FU`);
+  + `apart from ${hits - pend} word(s) in NOT_A_NODE${pend ? ` and ${pend} pending in ${Object.keys(PENDING).length} code(s)` : ''}`);

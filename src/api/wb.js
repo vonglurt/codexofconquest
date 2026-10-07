@@ -573,7 +573,7 @@ const CMD = {
     const r = await request('POST', `/api/${type}/${encodeURIComponent(id)}/sub`, { from, to });
     if (r.status >= 400) { printError(r); process.exit(1); }
     if (flags.raw || flags.out) { printResult(r.body, flags); return; }
-    ok(`${type}:${id}  ${r.body.count} occurrence(s)  ${JSON.stringify(from)} \u2192 ${JSON.stringify(to)}`);
+    ok(`${type}:${id}  ${r.body.count} ${type === 'section' ? 'comment ' : ''}occurrence(s)  ${JSON.stringify(from)} \u2192 ${JSON.stringify(to)}`);
   },
 
   async post(pos, flags) {
@@ -2250,10 +2250,20 @@ ${C.bold}═══════════════════════�
   \\' there. --to may not carry a backslash, a newline, or the quote
   character of a literal it lands in — write the whole field for those.
 
+  ./bin/api sub section <SECTION> --from "<text>" --to "<text>"
+
+  The comment form. A data section's comments — the banners between its
+  entries, the notes inside them — are reached by no entry write. Here
+  every occurrence must lie wholly INSIDE a comment of that WORLDBUILDER
+  section (QUEST_DB, NODE_MAP, …), and one outside refuses the write. --to
+  may not carry a newline, "/*" or "*/", and the section with its comments
+  stripped must come out byte-identical.
+
   Examples:
     ./bin/api sub quest quest_brynn_ledger --from "archive at Nuremberg" --to "archive at Weimar"
     ./bin/api sub npc  ulrich_von_gessert  --from "Nuremberg archive"   --to "Weimar archive"
     ./bin/api sub node NUE --from " (draft)" --to ""
+    ./bin/api sub section QUEST_DB --from "(Node MM — Mimic Meadows)" --to "(Node LIM — Mimic Meadows)"
 
 ${C.bold}═══════════════════════════════════════════════════════════════════
   post — create a new entity

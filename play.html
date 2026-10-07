@@ -11362,7 +11362,7 @@ const QUEST_DB = { // → doc: quest.md §Quest Format
   // (quest_lame_lystra done) → gate{questsDone}. Shared pass/fail flag stoningEvent (bitLabel
   // 'Lystra Stoning'): retryable:false, so the same mission_bit grants on BOTH onPass and onFail.
   // The onFail hp→1 closure rides as a _legacy_fn (ordered before the bit, mirroring legacy
-  // onFail()-then-_grantMissionBit). stoningEvent read directly at LT render + the KYA HP cap.
+  // onFail()-then-_grantMissionBit). stoningEvent read directly at KYA render + the KYA HP cap.
   quest_stoning_lystra: { id:'quest_stoning_lystra', type:'skill_check', title:'Left for Dead',
     onComplete:[ { kind:'narrative', msg:'🪨 +100 XP. He got up. Everyone else left. Timael decided to stay.' } ], // §ARCH-01 W7c
       // ⚠ dead in legacy too: skill_check quests never reach 'complete' in storyCheckQuests (§DUNGEON-01 gap)
@@ -13852,7 +13852,7 @@ const QUEST_DB = { // → doc: quest.md §Quest Format
     failText:"The coupon from the No-Fishing Sign lamppost has not been taken to the Fisherman at Yugurt Cabin yet.",
     npc:"the_fisherman",
   },
-  // §XLV — Yugurt Tournament chain (activate at YC when Fishing Rod present; cascade on each win)
+  // §XLV — Yugurt Tournament chain (activate at SSJ when Fishing Rod present; cascade on each win)
   quest_tour_01: { id:'quest_tour_01', type:'side', schema:'UQF-1.0', gate:{itemsAll:['Fishing Rod']}, bits:[], completion:{ flagsPath:['yugurtTourBeat.pip'] }, title:"Pip's Challenge",
     desc:"A kid at Yugurt Cabin has issued a fishing challenge. Stake: 50gp. He uses a stick and string. He's been practicing.",
     hint:'Beat Pip in a 1v1 cast at Yugurt Cabin.', activateNode:'SSJ', 
@@ -21448,7 +21448,7 @@ const QUEST_DB = { // → doc: quest.md §Quest Format
     ],
     npc:"archivus_sweelinck",
   },
-  // ── §D02-01 — "The Drowned Page" (AT — Abyssal Scriptorium approach) ──
+  // ── §D02-01 — "The Drowned Page" (RAI — Abyssal Scriptorium approach) ──
   quest_d0201_a1: { id:'quest_d0201_a1', type:'skill_check', title:'Act I — The Page Afloat',
     hint:'The entrance to the Scriptorium is three inches of ink-black water. Something floats at the surface.',
     schema:'UQF-1.0',
@@ -21560,7 +21560,7 @@ const QUEST_DB = { // → doc: quest.md §Quest Format
     bits:[{ kind:'skill_check', stat:'DEX', skill:'Athletics', dc:12, onPass:[{ kind:'mission_bit', flag:'d0205_complete' }, { kind:'reward', xp:250, gold:75 }], onFail:[] }],
     npc:"warlord_kael_mordus",
   },
-  // ── §D02-09 — "The Spell Scroll" (AT/CY — Void Flux Chamber) ──
+  // ── §D02-09 — "The Spell Scroll" (RAI — Void Flux Chamber) ──
   quest_d0209_a1: { id:'quest_d0209_a1', type:'skill_check', title:'Act I — The Entry',
     hint:'The room hums at a frequency that isn\'t sound. The spell scroll in your pack glows wrong.',
     schema:'UQF-1.0',
@@ -21618,7 +21618,7 @@ const QUEST_DB = { // → doc: quest.md §Quest Format
       onPass:[{ kind:'mission_bit', flag:'d0209_complete' }, { kind:'reward', xp:200, gold:75 }, { kind:'_legacy_fn', fn:() => { S_story.voidFluxActive = false; } }], onFail:[] }],
     npc:"captain_selene_draketide",
   },
-  // ── §D02-04: The Journal Entry — Memory Gate, CO catacombs approach ──
+  // ── §D02-04: The Journal Entry — Memory Gate, TLS catacombs approach ──
   quest_d0204_a1: { id:'quest_d0204_a1', type:'skill_check', title:'Act I — The Inscription',
     hint:'The gate runes pulse with old void-script. Something is being asked.',
     schema:'UQF-1.0',
@@ -21670,7 +21670,7 @@ const QUEST_DB = { // → doc: quest.md §Quest Format
       onPass:[{ kind:'mission_bit', flag:'d0204_complete' }, { kind:'reward', xp:250, gold:100, items:[{name:'Memory Token', desc:'A gate-rune fragment. It remembers you crossed.', icon:'🪨'}] }, { kind:'_legacy_fn', fn:() => { S_story.memorGatePassedEntry = true; } }], onFail:[] }],
     npc:"auros",
   },
-  // ── §D02-10 — "The Seventh Shard" (CO — Loop Heart / Codex Core Chamber) ──
+  // ── §D02-10 — "The Seventh Shard" (TLS — Loop Heart / Codex Core Chamber) ──
   quest_d0210_a1: { id:'quest_d0210_a1', type:'skill_check', title:'Act I — The Hum',
     hint:'The chamber hums at the frequency of something that has been running for centuries without maintenance.',
     schema:'UQF-1.0',
@@ -21719,7 +21719,7 @@ const QUEST_DB = { // → doc: quest.md §Quest Format
       onPass:[{ kind:'mission_bit', flag:'d0210_complete' }, { kind:'reward', xp:500, gold:200, items:[{name:"Loop Closure Seal", desc:'A rune that appeared on your hand when the question was answered. It fades slowly. While it lasts, the loop remembers.', icon:'🔮'}] }, { kind:'_legacy_fn', fn:() => { S_story.loopHeartComplete = true; } }], onFail:[] }],
     npc:"auros",
   },
-  // ── §D02-06 — "The Blueprint Roll" (Node WK — Scholar King's Workshop) ──
+  // ── §D02-06 — "The Blueprint Roll" (Node SZG — Scholar King's Workshop) ──
   quest_d0206_a1: { id:'quest_d0206_a1', type:'skill_check', title:'Act I — The Dusty Table',
     hint:'The blueprint is exactly where he left it.',
     schema:'UQF-1.0',
@@ -21781,7 +21781,7 @@ const QUEST_DB = { // → doc: quest.md §Quest Format
       onPass:[{ kind:'mission_bit', flag:'d0206_complete' }, { kind:'reward', xp:400, gold:150, items:[{name:'Blueprint Roll', icon:'📜', type:'key_item', sell:0, desc:"Commander Auros's original armor schematics. Your name is on the cover. Three centuries old."}] }, { kind:'_legacy_fn', fn:() => { S_story.scholarWorkshopComplete = true; } }], onFail:[] }],
     npc:"auros",
   },
-  // ── §D02-08 — "The Dropped Coin" (Node MM — Mimic Meadows) ──
+  // ── §D02-08 — "The Dropped Coin" (Node LIM — Mimic Meadows) ──
   quest_d0208_a1: { id:'quest_d0208_a1', type:'skill_check', title:'Act I — The Coin',
     hint:'Pick it up gently, visibly — let the mimic see you.',
     schema:'UQF-1.0',

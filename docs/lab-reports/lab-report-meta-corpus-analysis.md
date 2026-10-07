@@ -213,7 +213,7 @@ Seven of the report's nine node codes are right, including one the sibling synth
 Two are wrong, and both are wrong the same way.
 
 **`CO` — "Loop Heart".** The string *"Loop Heart"* occurs **exactly once in the entire file**, at both
-builds, and it is inside a comment: `(CO — Loop Heart / Codex Core Chamber)@21740`. `CO` was never a
+builds, and it is inside a comment: *`(CO — Loop Heart / Codex Core Chamber)`@21740*. `CO` was never a
 `NODE_MAP` key; every block under that comment guards on `TLS`. The sibling `synthesis-part6` read the
 **same comment** 53 minutes earlier and made the same error.
 

@@ -69,7 +69,7 @@ export function sectionHeadersIn(src) {
 // ── the checks, as pure functions of a probe ─────────────────────────────────
 // Each returns a finding string or null. `poolRow` reads the entity's literal back out of
 // the scratch file, so "where it landed" is answered from disk and not from the response.
-export async function runChecks({ probe, poolRow, dropRow, onDisk, sectionHeaders, questRoundTrip, createRefusals, staleWriteProbe, terrainGuard, coordGuard, dialogueCreate }) {
+export async function runChecks({ probe, poolRow, dropRow, onDisk, sectionHeaders, questRoundTrip, createRefusals, staleWriteProbe, terrainGuard, coordGuard, dialogueCreate, commentSub }) {
   const out = [];
   const add = (f) => { if (f) out.push(f); };
   const headersBefore = await sectionHeaders();
@@ -200,6 +200,13 @@ export async function runChecks({ probe, poolRow, dropRow, onDisk, sectionHeader
   add(dc.unknown.status === 400 && (dc.unknown.named || []).includes('nosuchfield') && !dc.unknown.landed ? null
     : `[dialogue-unknown] POST /api/npc/{key}/dialogue with nosuchfield answered ${dc.unknown.status}${dc.unknown.landed ? ' and wrote the entry' : ''} — a field the create would drop must be refused 400 naming itself`);
 
+  // §AUDIT-03ba-FU — a data section's comments have one write path, and it reaches comments only.
+  const cs = await commentSub();
+  add(cs.comment.status === 200 && cs.comment.landed && cs.comment.questsAfter === cs.comment.questsBefore ? null
+    : `[comment-sub] POST /api/section/QUEST_DB/sub on a comment answered ${cs.comment.status}, landed on disk ${cs.comment.landed}, quests ${cs.comment.questsBefore} → ${cs.comment.questsAfter}`);
+  add(cs.inString.status === 422 && cs.inString.unchanged ? null
+    : `[comment-sub-string] POST /api/section/QUEST_DB/sub on a phrase inside a string answered ${cs.inString.status}${cs.inString.unchanged ? '' : ' and changed the file'} — authored text is not a comment`);
+
   // §DX-02aa — CONTRIBUTING Hazard #1, as an acceptance test rather than a warning. The
   // server rewrites the whole file from the text it loaded, so a write issued after an
   // external edit reverts that edit with no error. Runs last: it dirties the scratch file.
@@ -251,6 +258,7 @@ const PERSIST_ROUTES = [
 const DIALOGUE_VOCAB = ['dearFriend', 'friendly', 'impartial', 'meta', 'questActive', 'quote'];
 
 // ── selftest — the check functions against a stub probe ─────────────────────
+const CS0 = { comment: { status: 200, landed: true, questsBefore: 9, questsAfter: 9 }, inString: { status: 422, unchanged: true } };
 const DC0 = { named: { status: 201, metaName: true }, unknown: { status: 400, named: ['nosuchfield'], landed: false } };
 const CG0 = { cell: '1,1', holder: 'AAA', create: { status: 409, landed: false },
   locale: { status: 201, code: 'ZZ', primary: 'AAA', unstandable: ['ZZ'], coordsOnDisk: true }, move: { status: 409, moved: false } };
@@ -279,6 +287,7 @@ if (process.argv.includes('--selftest')) {
     terrainGuard: async () => ({ epic: { status: 422, landed: false }, roster: { status: 200, pRefs: true, row: '' } }),
     coordGuard: async () => CG0,
     dialogueCreate: async () => DC0,
+    commentSub: async () => CS0,
   };
   ok((await runChecks(healthy)).length === 0, 'a healthy write path produces no findings');
 
@@ -425,6 +434,12 @@ if (process.argv.includes('--selftest')) {
     .some((f) => f.startsWith('[dialogue-name]')), 'a dialogue create whose name is lost on reload is caught');
   ok((await runChecks(bend({ dialogueCreate: async () => ({ ...DC0, unknown: { status: 201, named: [], landed: true } }) })))
     .some((f) => f.startsWith('[dialogue-unknown]')), 'a dialogue create that keeps an unknown field silently is caught');
+  ok((await runChecks(bend({ commentSub: async () => ({ ...CS0, comment: { ...CS0.comment, landed: false } }) })))
+    .some((f) => f.startsWith('[comment-sub]')), 'a comment substitution that never reaches disk is caught');
+  ok((await runChecks(bend({ commentSub: async () => ({ ...CS0, comment: { ...CS0.comment, questsAfter: 8 } }) })))
+    .some((f) => f.startsWith('[comment-sub]')), 'a comment substitution that loses an entry is caught');
+  ok((await runChecks(bend({ commentSub: async () => ({ ...CS0, inString: { status: 200, unchanged: false } }) })))
+    .some((f) => f.startsWith('[comment-sub-string]')), 'a comment substitution that rewrites a string is caught');
   ok((await runChecks(bend({ staleWriteProbe: async () => ({ ...S0, recovered: 409 }) })))
     .some((f) => f.startsWith('[stale-unrecoverable]')),
     'a refusal naming a recovery that does not work is caught');
@@ -614,7 +629,25 @@ const dialogueCreate = async () => {
     unknown: { status: b.status, named: b.json?.unknownFields, landed: fs.readFileSync(scratch, 'utf8').includes('zz_dlg_probe2') } };
 };
 
-const findings = await runChecks({ probe, poolRow, dropRow, onDisk, sectionHeaders, questRoundTrip, createRefusals, staleWriteProbe, terrainGuard, coordGuard, dialogueCreate });
+const commentSub = async () => {
+  const core = createRequire(import.meta.url)(path.join(ROOT, 'src', 'js', 'wbapi-core.js'));
+  core.load(scratch);
+  const sec = core.sectionText('QUEST_DB');
+  const line = sec.split('\n').find((l) => /^\s*\/\/ \S.{11}/.test(l));
+  const from = line.trim().slice(3, 15);
+  const title = Object.values(core.questDb).find((q) => typeof q.title === 'string' && q.title.length > 8).title.slice(0, 8);
+  const questsBefore = Object.keys(core.questDb).length;
+  const a = await probe('POST', '/api/section/QUEST_DB/sub', { from, to: from + ' ZZCOMMENTPROBE' });
+  core.load(scratch);
+  const landed = core.sectionText('QUEST_DB').includes(from + ' ZZCOMMENTPROBE');
+  const questsAfter = Object.keys(core.questDb).length;
+  const text = fs.readFileSync(scratch, 'utf8');
+  const b = await probe('POST', '/api/section/QUEST_DB/sub', { from: title, to: 'ZZ' });
+  return { comment: { status: a.status, landed, questsBefore, questsAfter },
+    inString: { status: b.status, unchanged: fs.readFileSync(scratch, 'utf8') === text } };
+};
+
+const findings = await runChecks({ probe, poolRow, dropRow, onDisk, sectionHeaders, questRoundTrip, createRefusals, staleWriteProbe, terrainGuard, coordGuard, dialogueCreate, commentSub });
 console.log(`  probe monster written to a throwaway copy · pool row read from disk: ${(await poolRow()).trim().slice(0, 100)}`);
 if (findings.length) {
   findings.forEach((f) => console.log('  ✗ ' + f));
