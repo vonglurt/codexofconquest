@@ -43,10 +43,6 @@
 ---
 ## §BACKLOG — Open Items (Phase 6)
 
-### §DX-02mr — the [I9] traffic-ring check reads a 100-packet window once, after a wait of unbounded length (NEW 2026-10-07 during §DX-02ca, 🟢 no design call)
-
-- [ ] **§DX-02mr — `test:mud` [I9]'s *"the Mesh traffic ring records the ledger channel packets"* failed 1 run in 3 on this host (2026-10-07, 287/1; the other two 288/288).** 🟢 **one assertion, ~20 minutes.** The check is a single `/mesh/status` read on gB taken right after two `until()` waits for ledger replication. `src/js/mesh.js` keeps 200 traffic rows and `/mesh/status` returns the newest **100**, while both servers gossip presence at `MESH_GOSSIP_MS: '120'`. **Hypothesis, not yet measured:** under load the waits run long enough for presence packets to push gB's `kind:'ledger'` rows out of the 100-row window. **Plan:** first log the window's kinds on a failing run to confirm or kill the hypothesis, then make the assertion independent of window position (read inside an `until()`, or assert on a per-kind counter if `/mesh/status` exposes one). Do not raise the ring size to hide it. **Verify:** five consecutive `npm run test:mud` runs at 288/288.
-
 ### §DX-02lp — the 460 historical hashes could be mapped to live commits, and the rewrite left a key for part of it (NEW 2026-09-26 during §DX-02lo, 🟡 do it only when someone needs the old commits)
 
 - [ ] **§DX-02lp — option (a) of §DX-02lo, deferred there: annotate each pre-rewrite citation as `` `new` (was `old`) `` and delete its line from `src/scripts/historical-hashes.txt`.** Gate #40 `check:hashes` then ratchets the list down, since a listed hash nothing cites is a finding. **What §DX-02lo learned that makes this cheaper than it looked:** the 2026-08-23 rewrite remapped every hash inside a commit *message* and no file contents. So a pre-rewrite *"record the ship hash X"* commit carries the new hash in its subject and the old one in its diff. Of the 54 such commits, **14** add exactly one dead stamp and are clean old→new pairs, for example `0f5ebe0`: message `72e9d7d`, diff `3d0ab1d`. The rest add up to 86 dead hashes each, because they rewrite whole tables. For the remainder, a `SHIPPED <date> `old`` stamp names its row, and the ship commit is the one whose subject carries that row on that date: `git log --format='%h %ad %s' --date=short | grep '§ROW'`. **Measure first:** how many of the 460 sit in a `SHIPPED` stamp (275 stamps matched in all, dead and live), and how many resolve to exactly one commit by row and date. **Why 🟡:** 313 of the citations are in `plan-archive.md`, a record, so the value is only to someone running `git show` on an old row. **Provenance:** §DX-02lo, 2026-09-26.
@@ -475,6 +471,6 @@
 
 ## §RESUME — Phase 6 history
 
-> **Completed work is not carried here.** The 113 closed increments for this phase are condensed in **[`../archive/backlog-resume-history.md`](../archive/backlog-resume-history.md)**; full prose for recent closes is in [`plan-archive.md`](plan-archive.md). This file carries open rows only.
+> **Completed work is not carried here.** The 114 closed increments for this phase are condensed in **[`../archive/backlog-resume-history.md`](../archive/backlog-resume-history.md)**; full prose for recent closes is in [`plan-archive.md`](plan-archive.md). This file carries open rows only.
 
 > When an increment ships: write the full entry into `plan-archive.md`, add its one-line row to `../archive/backlog-resume-history.md` and to the cross-phase table in [`BACKLOG.md`](BACKLOG.md), and delete the row from this file.

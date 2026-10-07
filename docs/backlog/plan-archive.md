@@ -19,6 +19,16 @@
 
 ---
 
+## Archived 2026-10-07 — §DX-02mr (eviction disproved (window 6–7 rows); the cause was a push-before-pull race — a successful ingest wrote no traffic row; it does now; test:mud 288/288 ×5)
+
+### §DX-02mr — the [I9] traffic-ring check reads a 100-packet window once, after a wait of unbounded length (NEW 2026-10-07 during §DX-02ca, 🟢 no design call)
+
+- [x] ✅ SHIPPED 2026-10-07 `bbde2b5` **§DX-02mr — `test:mud` [I9]'s *"the Mesh traffic ring records the ledger channel packets"* failed 1 run in 3 on this host (2026-10-07, 287/1; the other two 288/288).** 🟢 **one assertion, ~20 minutes.** The check is a single `/mesh/status` read on gB taken right after two `until()` waits for ledger replication. `src/js/mesh.js` keeps 200 traffic rows and `/mesh/status` returns the newest **100**, while both servers gossip presence at `MESH_GOSSIP_MS: '120'`. **Hypothesis, not yet measured:** under load the waits run long enough for presence packets to push gB's `kind:'ledger'` rows out of the 100-row window. **Plan:** first log the window's kinds on a failing run to confirm or kill the hypothesis, then make the assertion independent of window position (read inside an `until()`, or assert on a per-kind counter if `/mesh/status` exposes one). Do not raise the ring size to hide it. **Verify:** five consecutive `npm run test:mud` runs at 288/288.
+
+> **Closed 2026-10-07 at `bbde2b5` — the row's hypothesis was disproved, and the measured cause fixed.** **Disproof:** a temporary dump of gB's `/mesh/status` traffic at the [I9] check, across three runs, showed a window of **6–7 rows**, nowhere near the 100-row cut, so eviction was not the cause. **Measured cause:** a push-before-pull race. On the receiver every ledger path wrote a traffic row (pull, pull refused, sync served, ingest refused for incompatible or ACL) **except a successful `POST /api/ledger/ingest`**. Run 1's only ledger row on gB was a pull with *"0 ev · 1 dup"*: both events had arrived by A's push, which gB never recorded, and the pull just happened to land before the status read. When it did not, the ring held no ledger row and the check failed. **Fix:** the ingest handler in `src/js/wbapi-server.js` writes `pushTraffic('in','ledger',from,true,'ingested N ev · … · <serverId8>')`. The harness was not changed and the ring size was not raised. **Control, both ways, with gB's pull row disabled:** with the fix, [I9] passes; without it, [I9] fails every time. **Verify:** `npm run test:mud` **288/288 ×5**; `test:write`, `test:help`, `check:restart` green; `worldbuilder-mesh` + `mesh03b` + `mesh03e` 17/17; `check:walk` ✓ 44/44.
+
+---
+
 ## Archived 2026-10-07 — §DX-02ca (the [D] TTL fix had shipped with §DX-02hi (TTL_MS 700 → 6000 + a too-slow guard); test:mud 288/288; positive control red at [D] only; potential.md annotated)
 
 ### §DX-02ca — the MUD harness is red, `npm test:mud` exits 1, and the assertion that broke is the one that closed the §WALK series (NEW 2026-08-14 during §DOC-02bm, 🟢 no design call)
