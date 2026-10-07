@@ -870,7 +870,7 @@ Each NPC has 5 dialogue quotes per state in `NPC_DIALOGUES`, cycled by visit cou
 
 **NPC farewell lines** (`NPC_FAREWELLS`) appear when leaving a node where a Friendly+ NPC lives.
 
-**Rough Whiskey** (sold at BA vendor) — giving it to Brynn triggers a one-time drunk pit fight scene at CY. Tracked via `S_story.roughWhiskeyUsed`.
+**Rough Whiskey** (sold at BA vendor) — drunk from the inventory, it sets `S_story.roughWhiskeyActive` until the next rest or battle victory, and the Birka NPCs react to it. Entering the CY pit fight drunk, or with a bottle in the pack, triggers the one-time drunk pit fight scene, tracked via `S_story.roughWhiskeyUsed`. See `world.md` §Rough Whiskey.
 
 ---
 
@@ -1206,7 +1206,7 @@ MILEPOINT E  _magicTierAllowed(magic) — single line: level >= magic * 5
 | `storyBuyPotion(tier)` | 8470 | Purchases potion of given tier; gold check | `POTION_TIERS[tier]`, `S_story.gold` | `S_story.gold`, `S_story.inventory` push |
 | `storyBuyShield(tier)` | 8485 | Purchases and equips shield; _magicTierAllowed() gate | `SHIELD_ITEMS`, `S_story.level/gold` | `equippedShield`, `S_story.gold` |
 | `storyBuyFlashbang()` | 8527 | Purchases Flashbang condition item | `S_story.gold` | `S_story.gold`, inventory push |
-| `storyBuyWhiskey()` | 8538 | Purchases Rough Whiskey; sets roughWhiskeyActive | `S_story.gold` | `S_story.gold`, `roughWhiskeyActive = true` |
+| `storyBuyWhiskey()` | 8538 | Purchases one Rough Whiskey (5gp); the inventory's 🥃 Drink sets roughWhiskeyActive | `S_story.gold` | `S_story.gold`, `S_story.inventory` |
 | `_autoSellDuplicates()` | 8219 | Auto-sells duplicate weapons/daggers/shields; idempotent per node | `lastAutoSellNode`, `inventory`, equipped tiers | `inventory` filtered, `S_story.gold`, `lastAutoSellNode` |
 | `storyCollectLoot(node)` | 11308 | Collects node loot on first visit; parses multi-item `loot` field | `node.loot`, `visited[code]` | `visited[code]`, inventory push, `S_story.shards` |
 | `_rollD100Loot()` | 8714 | Rolls d100 weighted loot table; 3 attempts before fallback | `_D100_TABLE`, `S_story.level/inventory`, `_magicTierAllowed()` | returns item object |

@@ -529,7 +529,7 @@ These six NPCs are fully implemented with `npcFavorability` states, `NPC_DIALOGU
 
 ### Key Interactions
 
-**Rough Whiskey** (`LLA` (historical `BA`) vendor item) — buy and give to Brynn. Triggers one-time drunk pit fight event at `HKG`. `roughWhiskeyUsed` prevents repeat. At Brynn Dear Friend+, a daughter's letter appears at `TLL` (S2).  *(historical: `BA`=`LLA` · `CY`=`HKG` · `IN`=`TLL`)*
+**Rough Whiskey** (`LLA` (historical `BA`) vendor item, 5gp) — drunk from the inventory (🥃 Drink, Consumables). Drinking sets `roughWhiskeyActive` until the next rest or battle victory, and while it is set each of the six Birka NPCs greets you with a `ROUGH_WHISKEY_REACTIONS` line for your favor tier (18 lines). Walking into the `HKG` pit fight drunk, or with a bottle in the pack (drunk there), is the one-time drunk pit fight; `roughWhiskeyUsed` prevents repeat. At Brynn Dear Friend+, a daughter's letter appears at `TLL` (S2).  *(historical: `BA`=`LLA` · `CY`=`HKG` · `IN`=`TLL`)*
 
 **Blue Shutters Archive** (`LHR` (historical `CI`), gated by Yael letter) — three-state button: blocked → ask Yael → enter. Grants Entry 33, Undercity Survey (Partial) key item. Survey deliverable to Auros at `HKG` (historical `CY`).
 

@@ -24726,13 +24726,16 @@ function _showBattleOverlay() {
   _updateBattleOverlay();
   // ── Layer 41: Drunk Pit Fight (HKG only) ──
   const _pb41 = S_story.pendingBattle;
+  const _rwBottle = (S_story.inventory||[]).findIndex(i => i.name === 'Rough Whiskey');
   if (_pb41 && _pb41.nodeCode === 'HKG' && !S_story.roughWhiskeyUsed
-      && (S_story.inventory||[]).some(i => i.name === 'Rough Whiskey')) {
+      && (S_story.roughWhiskeyActive || _rwBottle >= 0)) {
+    const _rwAlready = S_story.roughWhiskeyActive;
     S_story.roughWhiskeyUsed = true;
     S_story.roughWhiskeyActive = true;
-    S_story.inventory = S_story.inventory.filter(i => i.name !== 'Rough Whiskey');
+    if (!_rwAlready) S_story.inventory.splice(_rwBottle, 1);
     S_story._drunkFight = true;
-    storyMsg('🥃 You drank the Rough Whiskey before the pit fight. Weckmann stares at you. The pit stares at you. You stare at the pit.');
+    storyMsg((_rwAlready ? '🥃 You walk into the pit with the Rough Whiskey already in you.' : '🥃 You drank the Rough Whiskey before the pit fight.')
+      + ' Weckmann stares at you. The pit stares at you. You stare at the pit.');
   } else {
     S_story._drunkFight = false;
   }
@@ -31489,9 +31492,9 @@ function storyRenderInventory() {
     }
   }
 
-  // ── 2. Consumables (potions + spell scrolls + flashbangs + farewell gifts) ──
+  // ── 2. Consumables (potions + spell scrolls + flashbangs + farewell gifts + Rough Whiskey) ──
   const consumables = S_story.inventory.filter(i => i.type === 'potion' || i.type === 'spell' || i.type === 'flashbang'
-    || i.type === 'consumable'
+    || i.type === 'consumable' || i.type === 'consumable_misc'
     || Object.values(POTION_TIERS).some(p => p.name === i.name && p.heal > 0));
   if (consumables.length) {
     makeSection('💊 Consumables');
@@ -31555,6 +31558,21 @@ function storyRenderInventory() {
             if (idx >= 0) S_story.inventory.splice(idx, 1);
             storyRenderInventory();
             storyMsg('⚗️ Champion\'s Tincture: advantage on your next attack roll.');
+          });
+          div.appendChild(useBtn);
+        }
+        if (it.name === 'Rough Whiskey') {
+          const drunk = !!S_story.roughWhiskeyActive;
+          const useBtn = document.createElement('button');
+          useBtn.className = 'inv-use-btn';
+          useBtn.textContent = drunk ? '🥃 In effect' : '🥃 Drink';
+          useBtn.disabled = drunk;
+          useBtn.addEventListener('click', () => {
+            S_story.roughWhiskeyActive = true;
+            const idx = S_story.inventory.indexOf(it);
+            if (idx >= 0) S_story.inventory.splice(idx, 1);
+            storyRenderInventory();
+            storyMsg('🥃 You drink the Rough Whiskey. Everyone you visit will notice, until you rest or win a fight.');
           });
           div.appendChild(useBtn);
         }
@@ -31772,7 +31790,7 @@ function storyRenderInventory() {
   }
 
   // ── 9. Other items (trophies, etc.) ──
-  const knownTypes = new Set(['potion','spell','flashbang','shard','key','item','shield','weapon','mainweapon','knowledge','key_item','readable','consumable','mission_bit']);
+  const knownTypes = new Set(['potion','spell','flashbang','shard','key','item','shield','weapon','mainweapon','knowledge','key_item','readable','consumable','consumable_misc','mission_bit']);
   const potionNames = new Set(Object.values(POTION_TIERS).map(p => p.name));
   const otherItems = S_story.inventory.filter(i =>
     !knownTypes.has(i.type) && !potionNames.has(i.name));
