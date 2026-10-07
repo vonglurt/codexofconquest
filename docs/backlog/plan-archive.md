@@ -19,6 +19,17 @@
 
 ---
 
+## Archived 2026-10-07 — §DX-02mo (per-test timeouts on the four tests over half the 45 s limit; the §DX-02mp push test no longer races gossip)
+
+### §DX-02mo — `quest-runtime-uqf`'s 235-quest parity test runs at 80% of the 45 s test timeout, so a loaded shard times it out (NEW 2026-10-07 during §DX-02mn, 🟢)
+
+- [x] ✅ SHIPPED 2026-10-07 `b0b74b8` **§DX-02mo — the Wave 2b `ada*` parity test (`quest-runtime-uqf.test.js`, *PASS/FAIL parity across all 235*) needs ~36 s alone against `playwright.config.js`'s 45 s per-test `timeout`.** Measured 2026-10-07 on this Alpine host with Chromium: 35.9 s in a 6.6 min shard 3, then **48.1 s and 47.6 s (timeout, both tries)** in a 9.0 min shard 3 at `45f9a03`, and 36.7 s alone. Nothing in that shard changed `play.html`. **Fix:** give this test its own `test.setTimeout`, or split the 235 into batches, so a slow host doesn't read as a regression. Check the other long tests in the file for the same margin. **Verify:** the slowest test in each shard sits under half its timeout.
+> **Provenance:** §DX-02mn's full-suite run.
+
+> **Closed 2026-10-07 at `b0b74b8`.** **Re-measured before**, across this session's three full runs on this Alpine host with Chromium: four tests ran over half of `playwright.config.js`'s 45 s `timeout`. `quest-runtime-uqf:2988` (the 235 `ada*` acts) peaked at **42.9 s** passing and timed out at 48 s. `rng-seed:133` (§DX-02er) took **32.3 s**, and the 113-act and 89-act parities took **24.9 s** and **24.4 s**. **Shipped:** `test.setTimeout(120_000)` on the 235, and `90_000` on the other three. The work is fixed, so a longer allowance is the honest fix; splitting the 235 into batches would only redistribute it. **After:** the same tests ran 39.9 s, 25.1 s, 17.0 s and 16.8 s, each under half its new limit. The slowest test still on the 45 s default is `mesh03b-shareable:105` at 16.4 s (36%). **Also fixed here:** the §DX-02mp test in `dx02lz-content-divergent-trade.test.js` went flaky in this row's suite run. It expected every pushed event to be a dup, but a mint made a moment earlier can reach A through the push before gossip delivers it. It now asserts none rejected and accepted + dup = all, and passed 20/20 with `--repeat-each=5`. **Full suite:** 1,398 passed / 8 failed / 1 flaky (the known eight; the flaky one is that race, fixed after the run). `check:walk` 43/43.
+
+---
+
 ## Archived 2026-10-07 — §DX-02mp (sync and ingest share one compatibility + serverId + ACL gate; the push carries its sender's identity)
 
 ### §DX-02mp — `POST /api/ledger/ingest` checks neither compatibility nor the ACL, so a refused server can still push events (NEW 2026-10-07 during §DX-02lz, 🟡)

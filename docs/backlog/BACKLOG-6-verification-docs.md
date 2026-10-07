@@ -43,11 +43,6 @@
 ---
 ## §BACKLOG — Open Items (Phase 6)
 
-### §DX-02mo — `quest-runtime-uqf`'s 235-quest parity test runs at 80% of the 45 s test timeout, so a loaded shard times it out (NEW 2026-10-07 during §DX-02mn, 🟢)
-
-- [ ] **§DX-02mo — the Wave 2b `ada*` parity test (`quest-runtime-uqf.test.js`, *PASS/FAIL parity across all 235*) needs ~36 s alone against `playwright.config.js`'s 45 s per-test `timeout`.** Measured 2026-10-07 on this Alpine host with Chromium: 35.9 s in a 6.6 min shard 3, then **48.1 s and 47.6 s (timeout, both tries)** in a 9.0 min shard 3 at `45f9a03`, and 36.7 s alone. Nothing in that shard changed `play.html`. **Fix:** give this test its own `test.setTimeout`, or split the 235 into batches, so a slow host doesn't read as a regression. Check the other long tests in the file for the same margin. **Verify:** the slowest test in each shard sits under half its timeout.
-> **Provenance:** §DX-02mn's full-suite run.
-
 ### §DX-02mj — the index's `S_story` field table lists a field the engine dropped with the mesh, and nothing checks the table against `_S_DEFAULTS()` (NEW 2026-10-07 during §DX-02ez, 🟢 one row out, then a gate)
 
 - [ ] **§DX-02mj — `S_story.lastCorridorCells` is documented and gone.** 🟢 Of the 212 field names in `docs/design/index.md`'s `S_story` table, **two** have zero occurrences in `play.html`: `voidSignClicked` (removed from the table by §DX-02ez) and **`lastCorridorCells`**, which `lab-report-circuit-map-theory.md` records as *"dropped with the mesh"*. `docs/design/maps.md`'s `_setActivePath(from,to,dir)` row still names it as a write target. Measured with: each backticked `S_story.<name>` at the start of an index.md table row, `grep -c "\b<name>\b" play.html`. **Fix:** delete the index row, and correct the maps.md row against what `_setActivePath` writes today. **Then the gate:** a `check:walk` member (or a section of an existing one) that fails on any `S_story.<field>` row in index.md with no occurrence in `play.html`, so the next retirement turns the table red instead of waiting for a lab report. Also check the table's *"All 193 `S_story` fields"* claim against a fresh `_S_DEFAULTS()` count while you're there; 212 names are listed.
@@ -666,6 +661,6 @@
 
 ## §RESUME — Phase 6 history
 
-> **Completed work is not carried here.** The 103 closed increments for this phase are condensed in **[`../archive/backlog-resume-history.md`](../archive/backlog-resume-history.md)**; full prose for recent closes is in [`plan-archive.md`](plan-archive.md). This file carries open rows only.
+> **Completed work is not carried here.** The 104 closed increments for this phase are condensed in **[`../archive/backlog-resume-history.md`](../archive/backlog-resume-history.md)**; full prose for recent closes is in [`plan-archive.md`](plan-archive.md). This file carries open rows only.
 
 > When an increment ships: write the full entry into `plan-archive.md`, add its one-line row to `../archive/backlog-resume-history.md` and to the cross-phase table in [`BACKLOG.md`](BACKLOG.md), and delete the row from this file.
