@@ -51,13 +51,13 @@ test.describe('§MESH-03e — events on pack content wait for the pack', () => {
   };
   const qid = Object.keys(WB.questDb).find((k) => WB.shareable('quest', k).shareable && Array.isArray(WB.questDb[k].bits));
   const RELIC = { key: 'mesh03e_held_relic', name: 'Mesh03e Held Relic' };
-  let packId, relicMint, plainMint, tradeEvt;
+  let packId, relicMint, plainMint, tradeEvt, beforeMint, plainRun;
 
   test.beforeAll(async () => {
     dir = fs.mkdtempSync(path.join(os.tmpdir(), 'coc-mesh03e-'));
     boot('tracker', PT, { TRACKER_MODE: '1' });
     boot('a', PA, { TRACKER_URL: url(PT) });
-    boot('b', PB, { TRACKER_URL: url(PT) });
+    boot('b', PB, { TRACKER_URL: url(PT), MINT_RATE_PER_HOUR: '2' });
     const died = watchChildren(children);
     for (const port of [PT, PA, PB])
       if (!await waitUp(port)) throw new Error(`throwaway wbapi-server did not answer on :${port}` + (died.length ? ` — ${died.join('; ')}` : ''));
@@ -82,10 +82,16 @@ test.describe('§MESH-03e — events on pack content wait for the pack', () => {
     const s2 = await post(PA, '/api/session/start', { name: 'Bo', playerKey: 'cd'.repeat(16) });
     const before = await post(PA, '/api/ledger/mint', { sessionId: s1.sessionId, item: RELIC });
     expect(before.event.body.deps).toBeUndefined();
+    beforeMint = before.event;
 
     expect(cli(PA, 'pack', 'publish', packId).status).toBe(0);
-    relicMint = (await post(PA, '/api/ledger/mint', { sessionId: s1.sessionId, item: RELIC })).event;
+    const uncited = await post(PA, '/api/ledger/mint', { sessionId: s1.sessionId, item: RELIC });
+    expect(uncited).toMatchObject({ ok: false, reason: 'uncited', deps: [packId] });
+    relicMint = (await post(PA, '/api/ledger/mint', { sessionId: s1.sessionId, item: RELIC, quest: qid })).event;
     expect(relicMint.body.deps).toEqual([packId]);
+    expect(relicMint.body.cite).toEqual({ quest: qid });
+    expect((await post(PA, '/api/ledger/mint', { sessionId: s1.sessionId, item: RELIC, quest: qid })).reason).toBe('over-reward');
+    expect((await post(PA, '/api/ledger/mint', { sessionId: s2.sessionId, item: RELIC, quest: qid })).ok).toBe(true);
     plainMint = (await post(PA, '/api/ledger/mint', { sessionId: s1.sessionId, item: { key: 'mesh03e_plain', name: 'Mesh03e Plain' } })).event;
     expect(plainMint.body.deps).toBeUndefined();
 
@@ -115,12 +121,29 @@ test.describe('§MESH-03e — events on pack content wait for the pack', () => {
     expect((await get(PB, '/api/ledger/held')).held[0].deps[0].state).toBe('accepted, applies at the next restart');
 
     await new Promise((r) => { children.b.once('exit', r); children.b.kill('SIGTERM'); });
-    boot('b', PB, { TRACKER_URL: url(PT) });
+    boot('b', PB, { TRACKER_URL: url(PT), MINT_RATE_PER_HOUR: '2' });
     expect(await waitUp(PB)).toBe(true);
     await expect.poll(async () => (await get(PB, '/api/ledger/held')).held.length, { timeout: 30000 }).toBe(0);
     const owner = await get(PB, `/api/ledger/owner?mintId=${relicMint.body.mintId.join(':')}`);
     expect(owner.minted).toBe(true);
     expect(owner.owner).toBe(tradeEvt.body.parties[1]);
     expect(owner.hops).toBe(1);
+  });
+
+  test('§MESH-03e-FU — with the pack applied, a receiver refuses a pack item minted without a cite, whatever its deps say', async () => {
+    expect(beforeMint.body.deps).toBeUndefined();
+    const r = await post(PB, '/api/ledger/ingest', { events: [beforeMint] });
+    expect(r.accepted).toBe(0);
+    expect(r.rejected).toEqual([{ hash: beforeMint.hash, reason: 'uncited' }]);
+  });
+
+  test('§MESH-03e-FU — base items: a receiver caps one origin minting one key per hour', async () => {
+    const s3 = await post(PA, '/api/session/start', { name: 'Cy', playerKey: 'ef'.repeat(16) });
+    plainRun = [];
+    for (let i = 0; i < 3; i++)
+      plainRun.push((await post(PA, '/api/ledger/mint', { sessionId: s3.sessionId, item: { key: 'mesh03efu_rate', name: 'Mesh03efu Rate' } })).event);
+    const r = await post(PB, '/api/ledger/ingest', { events: plainRun });
+    expect(r.accepted).toBe(2);
+    expect(r.rejected).toEqual([{ hash: plainRun[2].hash, reason: 'mint-rate' }]);
   });
 });

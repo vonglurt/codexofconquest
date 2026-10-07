@@ -735,6 +735,41 @@ function ledgerDepsOf(kind, body) {
     if (!inPacks.has(qid) && PACKS.rewardItemKeys(q).includes(key)) return [];
   return deps.sort();
 }
+// §MESH-03e-FU — a pack item is legitimate only as the reward of a pack quest: the mint
+// cites the quest, and the item count minted against one (origin, player, quest, key) may
+// not pass what that quest's reward bits grant. The minting server enforces it at
+// /api/ledger/mint and every receiver re-checks it against its own copy of the pack.
+function ledgerMintCiteError(evt) {
+  if (evt.kind !== 'mint' || !evt.body || !evt.body.item) return null;
+  // The receiver's own packs decide too, so an origin cannot skip the cite by omitting deps.
+  const deps = [...new Set([...(evt.body.deps || []), ...ledgerDepsOf('mint', evt.body)])];
+  if (!deps.length) return null;
+  const quest = evt.body.cite && evt.body.cite.quest;
+  if (!quest) return 'uncited';
+  const key = evt.body.item && evt.body.item.key;
+  const q = deps.map(packRead).filter(Boolean).map((p) => p.quests && p.quests[quest]).find(Boolean);
+  if (!q) return 'cite-not-in-pack';
+  const owed = PACKS.rewardItemQty(q, key);
+  if (!owed) return 'cite-grants-nothing';
+  let minted = 0;
+  for (const e of LEDGER.events)
+    if (e.kind === 'mint' && e.hash !== evt.hash && e.id[0] === evt.id[0] && e.body.player === evt.body.player
+        && e.body.cite && e.body.cite.quest === quest && e.body.item && e.body.item.key === key) minted += e.body.item.qty || 1;
+  return minted + (evt.body.item.qty || 1) > owed ? 'over-reward' : null;
+}
+// The base-content floor: no pack to cite, so a receiver caps how fast one origin may mint
+// one item key, by the events' signed timestamps over a rolling hour.
+const MINT_RATE_PER_HOUR = Math.max(1, +process.env.MINT_RATE_PER_HOUR || 300);
+function ledgerMintRateError(evt) {
+  if (evt.kind !== 'mint' || !evt.body || !evt.body.item || (evt.body.deps || []).length || ledgerDepsOf('mint', evt.body).length) return null;
+  const key = evt.body.item && evt.body.item.key, t = +evt.ts || 0;
+  let n = 0;
+  for (const e of LEDGER.events)
+    if (e.kind === 'mint' && e.id[0] === evt.id[0] && e.body.item && e.body.item.key === key
+        && !(e.body.deps || []).length && +e.ts > t - 3600e3 && +e.ts <= t) n++;
+  return n >= MINT_RATE_PER_HOUR ? 'mint-rate' : null;
+}
+
 // A foreign event whose deps are not all applied here is HELD, durably: the
 // version vector records only each origin's highest seq, so an event dropped
 // here would never be offered again. It is released once every dep is applied.
@@ -791,13 +826,16 @@ function ledgerAdmit(evt) {
 }
 function ledgerReleaseHeld() {
   ledgerLoad(); ledgerHeldLoad();
-  let released = 0;
+  let released = 0, dropped = 0;
   for (const [hash, evt] of LEDGER_HELD.byHash) {
     if (ledgerMissingDeps(evt).length) continue;
     LEDGER_HELD.byHash.delete(hash);
-    if (!LEDGER.byHash.has(hash)) { ledgerAdmit(evt); released++; }
+    if (LEDGER.byHash.has(hash)) continue;
+    const unearned = ledgerMintCiteError(evt);
+    if (unearned) { dropped++; logRow('ledger', `dropped held ${evt.kind} ${hash.slice(0, 12)}…: ${unearned}`); continue; }
+    ledgerAdmit(evt); released++;
   }
-  if (released) { ledgerHeldSave(); logRow('ledger', `released ${released} held event${released === 1 ? '' : 's'}`); }
+  if (released || dropped) { ledgerHeldSave(); if (released) logRow('ledger', `released ${released} held event${released === 1 ? '' : 's'}`); }
   return released;
 }
 
@@ -821,6 +859,8 @@ function ledgerIngestEvents(events) {
       held++;
       continue;
     }
+    const unearned = ledgerMintCiteError(evt) || ledgerMintRateError(evt);
+    if (unearned) { rejected.push({ hash: evt.hash, reason: unearned }); continue; }
     ledgerAdmit(evt);
     accepted++;
   }
@@ -9125,7 +9165,15 @@ async function route(req, res) {
       }
       s.lastSeen = Date.now();
       const pid = ledgerPidOf(body.sessionId);   // durable when the session presented a playerKey (§6.4)
-      const evt = ledgerEvent('mint', [pid], { player: pid, item });
+      const deps = ledgerDepsOf('mint', { item });
+      const mintBody = { player: pid, item, ...(deps.length && body.quest ? { cite: { quest: String(body.quest) } } : {}) };
+      const unearned = ledgerMintCiteError({ kind: 'mint', id: [getServerId(), 0], hash: null, body: { ...mintBody, deps } });
+      if (unearned) {
+        logResponse(method, url.pathname, 409, `ledger/mint: ${item.key} ${unearned}`);
+        return json(res, 409, { ok: false, reason: unearned, deps,
+          error: `${item.key} is granted only by a quest in pack ${deps.join(', ')}: mint it with body.quest naming that quest, at most what its reward grants per player (${unearned}).` });
+      }
+      const evt = ledgerEvent('mint', [pid], mintBody);
       logRow('ledger', `mint ${item.name} ×${item.qty}  ·  ${mintKeyOf(evt.body.mintId).slice(0, 12)}…  ·  → ${pid}`);
       logResponse(method, url.pathname, 201, `minted ${item.key} → ${pid}`);
       return json(res, 201, { ok: true, mintId: evt.body.mintId, mintKey: mintKeyOf(evt.body.mintId), event: evt });
@@ -11796,7 +11844,7 @@ server.listen(PORT, BIND_ADDR, () => {
     ['POST',   '/api/sentry/deploy                   body: {node, dailyFee?} → station a §MESH-01h sentry bot at a junction (suppresses encounters + auto-assists there)'],
     ['POST',   '/api/sentry/recall                   body: {sentryId} → recall a sentry'],
     ['GET',    '/api/sentry/list                     → all deployed sentries'],
-    ['POST',   '/api/ledger/mint                     body: {sessionId, item:{key,name,qty?}} → §MESH-01i mint event (mintId = [serverId, seq]; only minted items trade)'],
+    ['POST',   '/api/ledger/mint                     body: {sessionId, item:{key,name,qty?}, quest?} → §MESH-01i mint event (mintId = [serverId, seq]; only minted items trade). A pack item needs quest: the pack quest whose reward grants it, at most that reward per player (§MESH-03e-FU)'],
     ['GET',    '/api/ledger/owner?mintId=            → ownership resolution (pure fn of the chains; carries the voided double-spend hashes)'],
     ['GET',    '/api/ledger/owned?pid=               → every item a pid currently owns [{mintId, mintKey, item, tipHash}] (the trade UI read surface)'],
     ['GET',    '/api/ledger/chain[?pid=]             → a player’s hash chain (or the full event log)'],

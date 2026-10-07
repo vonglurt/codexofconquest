@@ -357,7 +357,7 @@ function createQuestRuntime(host) {
         if (bit.gold) { st.gold = (st.gold || 0) + bit.gold; }
         // mint — §MESH-01i slice 2b: acquisition-while-connected mints the item
         // (async; stamps mintId on the pushed copy). No-op offline/SP.
-        if (bit.items && bit.items.length) { st.inventory = st.inventory || []; bit.items.forEach(i => { const it = { ...i }; st.inventory.push(it); if (E.mint) E.mint(it); }); }
+        if (bit.items && bit.items.length) { st.inventory = st.inventory || []; bit.items.forEach(i => { const it = { ...i }; st.inventory.push(it); if (E.mint) E.mint(it, ctx.questId); }); }
         if (bit.knowledge) { st.knowledge = st.knowledge || []; st.knowledge.push(bit.knowledge); }
       },
       // §VM-01-G4a — pay a price. REFUSE-AT-CLICK is the shipped contract (user

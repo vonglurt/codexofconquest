@@ -60,5 +60,16 @@ module.exports = function createPacks({ canonical, sign, verify, pub }) {
     return null;
   }
 
-  return { PACK_FORMAT, PACK_ID, packId, monsterRefs, rewardItemKeys, makePack, verifyPack };
+  // How many of `key` a quest's reward bits grant, summed over every branch: the most a
+  // player can be owed for one completion.
+  function rewardItemQty(q, key) {
+    let n = 0;
+    walkBits(q, (b) => {
+      if (b.kind === 'reward' && Array.isArray(b.items))
+        for (const it of b.items) if (it && it.name && itemKey(it.name) === key) n += Math.max(1, +it.qty | 0 || 1);
+    });
+    return n;
+  }
+
+  return { PACK_FORMAT, PACK_ID, packId, monsterRefs, rewardItemKeys, rewardItemQty, makePack, verifyPack };
 };
