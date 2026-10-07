@@ -41,14 +41,12 @@
 ---
 ## §BACKLOG — Open Items (Phase 4)
 
+### §DX-02mk — two hand-written terrain `<select>` lists in `play.html` carry their own copies of the terrain labels, and 33 of their 93 options disagree with `WORLD_DB` (NEW 2026-10-07 during §DX-02kb, 🟡 derive them or delete them)
+
+- [ ] **§DX-02mk — `#terrain-select` and `#quest-terrain-select` are label copies nothing keeps in step.** 🟡 Of the 93 `<option value="<terrain key>">` entries across the two lists (47 in `#terrain-select`, 46 in `#quest-terrain-select`), **33** show text other than that terrain's `WORLD_DB` label: **31** before §DX-02kb, which renamed seven terrain labels through the API and could not reach these copies. Examples: `soviet_checkpoint` shows *Nevsky Checkpoint* (the node's label, which §DX-02el moved off the terrain), `komsomol_school` *Komsomol School* vs *Drill Hall*, and `atlantis` reads *Atlantis — Sunken City* in one list and *Atlantis* in the other. Measured by matching each option's value against `WORLD_DB[key].label` (icon prefix stripped) through `wbapi-core`. **THE CALL:** (a) build both lists from `WORLD_DB` at render time (one helper, the icon from `WORLD_DB[key].icon`), so a label written through the API reaches them; or (b) if either list is dead UI, delete it. Ground first: find what reads each `<select>`'s value and whether a player can reach it.
+> **Provenance:** §DX-02kb — its terrain renames moved this count 31 → 33.
 
 
-### §DX-02kb — twenty-one nodes still say their name twice, and five of them anchor terrains other nodes share (NEW 2026-09-13 during §DX-02el, 🟡 per-node naming, NO ENGINE WORK)
-
-- [ ] **§DX-02kb — the 21 nodes `check:invariants` I7 holds in `STUTTER_KNOWN`.** 🟡 **the edit is one `./bin/api put` each; which label changes is a naming call per node.** §DX-02el renamed the five §KG terrain labels and added I7, which fails on any new node whose terrain label equals its own label and lets the known list only shrink. Twenty-one remain, in two kinds. **16 own their terrain alone:** `MSY swamp` · `RAI atlantis` · `GIB sea_cavern` · `SID deep_sea` · `TRD goblin_cave` · `NAS pirate_cave` · `FEZ monster_cave` · `AHB desert` · `BEL jungle` · `HER greek_agora` · `BKK oriental_palace` · `BOO yugurt_lake` · `SSJ yugurt_cabin` · `CDG cat_quarter` · `SZG workshop` · `LIM mimic_meadow`. Either the terrain takes a kind-of-place label or the node takes a proper name: *Yugurt Lake* is already a proper name, so its terrain should say what kind of place it is, while *Murky Swamp* is a kind, so the node wants a name. **5 anchor a shared terrain:** `MAN midlands` (17 nodes) · `KIR highlands` (16) · `BGI beach` (13) · `TRF freshwater_lake` (12) · `PDL islands` (3). Renaming one of these terrains changes the header of every node on it, so the fix there is the anchor node's own label, not the terrain's.
-> **Fix:** per node through `./bin/api put node <code> label=…` or `put terrain <key> label=…`, deleting the code from `STUTTER_KNOWN` in `src/scripts/check-invariants.js` in the same edit — I7 fails if a listed code stops stuttering, so the list cannot lag the data.
-> **Verify:** I7's summary line reads `known=0`, and the set is deleted.
-> **Provenance:** §DX-02el.
 
 ### §DX-02it — the world's quest work is authored far from the places that offer it, and nothing measures the gap (NEW 2026-09-06 during §DX-02ei, 🟡 a census first, then ONE DESIGN CALL)
 
@@ -93,6 +91,6 @@
 
 ## §RESUME — Phase 4 history
 
-> **Completed work is not carried here.** The 24 closed increments for this phase are condensed in **[`../archive/backlog-resume-history.md`](../archive/backlog-resume-history.md)**; full prose for recent closes is in [`plan-archive.md`](plan-archive.md). This file carries open rows only.
+> **Completed work is not carried here.** The 25 closed increments for this phase are condensed in **[`../archive/backlog-resume-history.md`](../archive/backlog-resume-history.md)**; full prose for recent closes is in [`plan-archive.md`](plan-archive.md). This file carries open rows only.
 
 > When an increment ships: write the full entry into `plan-archive.md`, add its one-line row to `../archive/backlog-resume-history.md` and to the cross-phase table in [`BACKLOG.md`](BACKLOG.md), and delete the row from this file.
