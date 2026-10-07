@@ -227,6 +227,7 @@ const PORT_BLOCKS = {
   dm: 15600,          // two ports per worker: A and B
   dmpage: 15700,      // two ports per worker: A and B, driven by two browsers
   wizard: 15800,      // one port per worker: the Wizard's CLI lines against a scratch copy
+  failloud: 15900,    // two ports per worker: a server on a broken copy, and one reloaded onto it
 };
 
 // Returns `count` consecutive ports reserved for this worker inside `block`'s

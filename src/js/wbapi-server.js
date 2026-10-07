@@ -2325,14 +2325,19 @@ function collectionSizes() {
   return out;
 }
 function reloadGuarded(before, prevText) {
-  WBAPI.load(GAME_FILE);
-  const emptied = GUARDED_COLLECTIONS.filter((k) => before[k] > 0 && collectionSize(WBAPI[k]) === 0);
-  if (!emptied.length) return null;
+  let unreadable = null;
+  try { WBAPI.load(GAME_FILE); } catch (e) { unreadable = e.message; }
+  const emptied = unreadable ? [] : GUARDED_COLLECTIONS.filter((k) => before[k] > 0 && collectionSize(WBAPI[k]) === 0);
+  if (!unreadable && !emptied.length) return null;
   const tmp = `${GAME_FILE}.tmp-${process.pid}`;
   fs.writeFileSync(tmp, prevText);
   fs.renameSync(tmp, GAME_FILE);
   refreshSourceDigest();
   WBAPI.load(GAME_FILE);
+  if (unreadable) {
+    logRow('reload', `${C.red}✗ ${unreadable} — previous file restored${C.reset}`);
+    return { ok:false, emptied, error:`refused: after the write ${unreadable}; ${path.basename(GAME_FILE)} is restored to its state before the write` };
+  }
   logRow('reload', `${C.red}✗ ${emptied.join(', ')} parsed empty after the write — previous file restored${C.reset}`);
   return { ok:false, emptied, error:`refused: the write left ${emptied.join(', ')} unparseable (${emptied.map((k) => `${k} ${before[k]} → 0`).join(', ')}); ${path.basename(GAME_FILE)} is restored to its state before the write` };
 }

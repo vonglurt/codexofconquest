@@ -290,22 +290,40 @@ function extractArr(block, name) {
   return null;
 }
 
+// §DX-02fi — a section whose text is present must parse to something. Each parser throws,
+// naming the section, when the literal is declared but never closes, does not evaluate, or
+// evaluates to nothing while holding text, so a destroyed section can never read as an
+// empty one. A literal that is empty in the source (`{}`, or only comments) still loads empty.
+function sectionUnreadable(name, why) {
+  return new Error(`${name} is present in the source but ${why}; refusing to read it as empty`);
+}
+function literalHasText(lit) {
+  return lit.slice(1, -1).replace(/\/\*[\s\S]*?\*\//g, '').replace(/\/\/[^\n]*/g, '').trim().length > 0;
+}
+function parseChecked(block, name, extract, evaluate, empty) {
+  const lit = extract(block, name);
+  if (!lit) {
+    if (block && new RegExp(`(?:const|let|var)\\s+${name}\\s*=`).test(block)) throw sectionUnreadable(name, 'its literal never closes');
+    return empty;
+  }
+  let v;
+  try { v = evaluate(lit); } catch (e) { throw sectionUnreadable(name, `does not parse (${e.message})`); }
+  const n = Array.isArray(v) ? v.length : (v && typeof v === 'object' ? Object.keys(v).length : 0);
+  if (!n && literalHasText(lit)) throw sectionUnreadable(name, 'parses to no entries');
+  return v;
+}
 function parseSimple(block, name) {
-  const obj = extractObj(block, name); if (!obj) return {};
-  try { return new Function('return (' + obj + ')')(); } catch(e) { return {}; }
+  return parseChecked(block, name, extractObj, (obj) => new Function('return (' + obj + ')')(), {});
 }
 function parseArr(block, name) {
-  const arr = extractArr(block, name); if (!arr) return [];
-  try { return new Function('return ' + arr)(); } catch(e) { return []; }
+  return parseChecked(block, name, extractArr, (arr) => new Function('return ' + arr)(), []);
 }
 function parseWithP(block, name, P) {
-  const obj = extractObj(block, name); if (!obj) return {};
   const Pp = new Proxy(P, { get: (t, k) => t[k] || { key: String(k) } });
-  try { return new Function('P', 'return (' + obj + ')')(Pp); } catch(e) { return {}; }
+  return parseChecked(block, name, extractObj, (obj) => new Function('P', 'return (' + obj + ')')(Pp), {});
 }
 function parseSanitized(block, name, opts) {
-  const obj = extractObj(block, name); if (!obj) return {};
-  try { return new Function('return (' + removeFns(obj, opts) + ')')(); } catch(e) { return {}; }
+  return parseChecked(block, name, extractObj, (obj) => new Function('return (' + removeFns(obj, opts) + ')')(), {});
 }
 
 // ═══════════════════════════════════════════════════════════════════════════
@@ -1022,7 +1040,13 @@ const WBAPI = {
   loaded: false,
   _pendingPatches: null, // null = inactive; Map<code, Map<field, value|null>> when active
 
+  // A section that cannot be read throws (§DX-02fi), and the world loaded before stays in place.
   load(filePathOrText) {
+    const prev = Object.fromEntries(Object.keys(this).map((k) => [k, this[k]]));
+    try { return this._load(filePathOrText); } catch (e) { Object.assign(this, prev); throw e; }
+  },
+
+  _load(filePathOrText) {
     let src;
     if (filePathOrText.includes('\n') || !filePathOrText.endsWith('.html')) {
       src = filePathOrText;
@@ -1943,7 +1967,9 @@ const WBAPI = {
     // Pre-flight: re-parse the PATCHED section and prove it reads back as exactly the
     // requested roster before committing, mirroring deleteEntrySource's refuse-rather-
     // than-corrupt guard. A write path's acceptance test is a round trip (Hazard #5).
-    const reparsed = parseWithP(patched, 'WORLD_DB', this.monsterPool);
+    let reparsed;
+    try { reparsed = parseWithP(patched, 'WORLD_DB', this.monsterPool); }
+    catch (e) { return { ok:false, error:`refused: ${e.message} — source NOT modified` }; }
     const readBack = ((reparsed[key] || {}).monsters || []).map(m => (typeof m === 'string' ? m : m && m.key));
     if (readBack.length !== monsterKeys.length || readBack.some((k, i) => k !== monsterKeys[i]))
       return { ok:false, error:`refused: "${key}" re-parsed as [${readBack.join(', ')}] not [${monsterKeys.join(', ')}] — source NOT modified` };
