@@ -51,12 +51,14 @@ The server holds the file text from when it started. A write after a hand-edit s
 ./bin/api put <type> <id> --drop-comments  # a comment inside a field's value has no escape through JSON, so a
                                        # write that would delete one is refused; this accepts the loss (§DX-02ix)
 npm run check:walk --prefix src        # every gate in parallel, ~30s; the final ✓ N/N line is the verdict
-./run.sh stop && npm test --prefix src # 1023 tests, server stopped
+./run.sh stop && npm test --prefix src # 1,407 tests, server stopped, ALWAYS via --prefix src (or from src/)
 npm run check:restart --prefix src     # the restart itself — outside check:walk, it binds :1367
 npm run test:write --prefix src        # what the write path REFUSES, on a throwaway copy
 ```
 
 **A write of a field name nothing uses is refused** (§DX-02gy): `put` rejects any key absent from both the type's corpus and its schema, with 400 and the accepted set, and routes a `related` field (`drop`) to the section that owns it. The vocabulary is derived from the corpus, never from the schema alone — `SCHEMAS` omits `id` and `desc`, which nearly every quest carries.
+
+**Playwright runs from `src/`, never from the repo root.** The config is `src/playwright.config.js`; invoked from the root, `playwright test` still collects all 1,407 tests but under Playwright's defaults — no `chromium` project, no web servers, the bundled glibc browser — so every page test fails `browserType.launch … Executable doesn't exist`, which reads as §DX-02ir's missing browser and is a `cd` (§DX-02js). A session-state baseline names the directory it ran from only by naming the command: `npm test --prefix src`.
 
 **Never pipe a test run** — a pipe returns the last stage's exit code. Redirect to a file and read the counts. `check:walk` exists only in `src/package.json`. Each gate carries a **120 s deadline**, so a stuck gate now fails by name instead of hanging (`--timeout` / `GATE_TIMEOUT_MS`, `--jobs` / `GATE_JOBS`; `check:walk:serial` runs the old one-at-a-time chain).
 

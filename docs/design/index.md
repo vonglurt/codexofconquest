@@ -288,7 +288,11 @@ Run with `npm test`. Tests serve the project at `localhost:7654` (no WBAPI serve
 > worldbuilder-walk 73→**89**, multiplayer-presence 2→**7**, worldbuilder-mesh 2→**4** — each of them
 > the number that was true when the row that wrote the line closed. **This table is a selected list of
 > 12 files, not the suite:** `npx playwright test --list` reports **1046 declared across 91 files**,
-> of which **1033 run** (the balance are skipped/fixme).
+> of which **1033 run** (the balance are skipped/fixme). At `16fd1da` (2026-10-08, §DX-02js): **1,407
+> across 175 files**. **Run `--list` from `src/`.** From the repo root the same binary lists the same
+> 1,407 under Playwright's default config — no `[chromium]` project prefix on each line is the tell — and a
+> *run* from there fails every page test `browserType.launch … Executable doesn't exist`, which is a `cd`,
+> not §DX-02ir.
 
 | File | Coverage | Count |
 |------|---------|-------|
