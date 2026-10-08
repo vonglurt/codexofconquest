@@ -26,10 +26,14 @@ const MUC = { code: 'MUC', r: 21, c: 191 };
 
 const seedAt = (n, extra = {}) => ({ currentCode: n.code, playerR: n.r, playerC: n.c, visited: { [n.code]: true }, ...extra });
 
-// Suppress the per-step terrain encounter roll (Math.random >= rate → no battle)
-// so empty-cell renders settle before assertions.
+// The per-step encounter roll is `_seededNext() < TERRAIN_ENCOUNTER_RATE[terrain]`, so
+// the rate table is the dial that suppresses it.
+const noEncounters = page => page.evaluate(() => {
+  Object.keys(TERRAIN_ENCOUNTER_RATE).forEach(k => { TERRAIN_ENCOUNTER_RATE[k] = 0; });
+});
 async function moveNoEncounter(page, dir) {
-  await page.evaluate(d => { const o = Math.random; Math.random = () => 1; cellMove(d); Math.random = o; }, dir);
+  await noEncounters(page);
+  await page.evaluate(d => cellMove(d), dir);
 }
 
 // ── 1 — One-cell movement ────────────────────────────────────────────────────
@@ -180,9 +184,8 @@ test.describe('§NAV-01 D-pad buttons move the player', () => {
   });
 
   test('clicking #btn-E moves one cell east onto BMA and re-renders', async ({ page }) => {
-    await page.evaluate(() => { window.__rr = Math.random; Math.random = () => 1; });
+    await noEncounters(page);
     await page.click('#btn-E');
-    await page.evaluate(() => { Math.random = window.__rr; });
     const s = await page.evaluate(() => ({
       r: S_story.playerR, c: S_story.playerC, code: S_story.currentCode,
       name: document.getElementById('s-node-name').textContent,
@@ -193,9 +196,8 @@ test.describe('§NAV-01 D-pad buttons move the player', () => {
 
   test('clicking #btn-N steps into open terrain and the room text changes', async ({ page }) => {
     const before = await page.evaluate(() => document.getElementById('story-text-box').textContent);
-    await page.evaluate(() => { window.__rr = Math.random; Math.random = () => 1; });
+    await noEncounters(page);
     await page.click('#btn-N');
-    await page.evaluate(() => { Math.random = window.__rr; });
     const after = await page.evaluate(() => ({
       r: S_story.playerR, c: S_story.playerC,
       body: document.getElementById('story-text-box').textContent,
@@ -255,7 +257,8 @@ test.describe('§NAV-01 D-pad buttons move the player', () => {
         return d[0] > 200 && d[1] < 120;   // red-ish player pixel
       };
       const before = at(9, 197);
-      const o = Math.random; Math.random = () => 1; cellMove('N'); Math.random = o;
+      Object.keys(TERRAIN_ENCOUNTER_RATE).forEach(k => { TERRAIN_ENCOUNTER_RATE[k] = 0; });
+      cellMove('N');
       return { before, after: at(9, 197) };
     });
     expect(marker.before).toBe(false);
@@ -447,8 +450,8 @@ test.describe('Navigation — grid BFS connectivity', () => {
   });
 
   test('LHR is reachable from a spread of named nodes (no disconnection)', async ({ page }) => {
-    // The invariant suite proves full reachability offline (409/409); this spot-
-    // checks 15 deterministic samples through the in-browser BFS.
+    // check:invariants (I3) proves full reachability offline; this spot-checks 15
+    // deterministic samples through the in-browser BFS.
     const unreachable = await page.evaluate(() => {
       const codes = Object.keys(NODE_COORDS).filter(c => c !== 'LHR');
       const sample = [];
@@ -491,8 +494,8 @@ test.describe('Navigation — waypoint follow (storyWaypoint)', () => {
 // shortest route passes (18,191) or (19,192), both EMPTY cells, so a
 // rate-1 encounter override is guaranteed to fire mid-route. LHR (10,197) is
 // ~16 steps away — far enough that an interrupt always lands mid-journey.
-// Math.random is pinned to 0.999999 (not 1: array picks index len-1, in
-// bounds) so no step ever rolls an encounter unless the test forces rates.
+// Rates are zeroed through TERRAIN_ENCOUNTER_RATE so no step rolls an encounter
+// unless the test forces every rate to 1.
 
 test.describe('Navigation — auto-travel (§NAV-01d)', () => {
   test.beforeEach(async ({ page }) => {
@@ -501,8 +504,8 @@ test.describe('Navigation — auto-travel (§NAV-01d)', () => {
   });
 
   test('WP click travels NUE → MGR (3 cells) and clears the waypoint on arrival', async ({ page }) => {
+    await noEncounters(page);
     await page.evaluate(() => {
-      Math.random = () => 0.999999;
       S_story.waypoint = 'MGR';
       _updateWaypointBtn();
     });
@@ -520,7 +523,6 @@ test.describe('Navigation — auto-travel (§NAV-01d)', () => {
 
   test('a wilderness encounter halts auto-travel before the battle fires', async ({ page }) => {
     await page.evaluate(() => {
-      Math.random = () => 0;                     // every empty-cell step rolls an encounter
       Object.keys(TERRAIN_ENCOUNTER_RATE).forEach(k => { TERRAIN_ENCOUNTER_RATE[k] = 1; });
       S_story.waypoint = 'LHR';
       _travelStart();
@@ -531,8 +533,8 @@ test.describe('Navigation — auto-travel (§NAV-01d)', () => {
   });
 
   test('any keypress halts auto-travel (waypoint kept)', async ({ page }) => {
+    await noEncounters(page);
     await page.evaluate(() => {
-      Math.random = () => 0.999999;
       S_story.waypoint = 'LHR';                  // ~16 steps: interrupt lands mid-journey
       _travelStart();
     });
@@ -543,14 +545,16 @@ test.describe('Navigation — auto-travel (§NAV-01d)', () => {
   });
 
   test('Shift+WP takes a single step (old behavior), no travel loop', async ({ page }) => {
-    await page.evaluate(() => { Math.random = () => 0.999999; S_story.waypoint = 'MUC'; });
+    await noEncounters(page);
+    await page.evaluate(() => { S_story.waypoint = 'MUC'; });
     await page.click('#btn-waypoint', { modifiers: ['Shift'] });
     expect(await page.evaluate(() => _travelActive())).toBe(false);
     expect(await readStory(page, 'currentCode')).toBe('MUC'); // exactly one step S
   });
 
   test('quest "Navigate →" (storySetWaypoint) starts travel and arrives', async ({ page }) => {
-    await page.evaluate(() => { Math.random = () => 0.999999; storySetWaypoint('MGR'); });
+    await noEncounters(page);
+    await page.evaluate(() => { storySetWaypoint('MGR'); });
     expect(await page.evaluate(() => _travelActive())).toBe(true);
     await page.waitForFunction(() => S_story.waypoint === null, null, { timeout: 15000 });
     expect(await readStory(page, 'currentCode')).toBe('MGR');
