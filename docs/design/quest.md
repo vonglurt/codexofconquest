@@ -2,7 +2,7 @@
 
 # quest.md — The Shattered Codex: Master Quest Register
 
-> **Purpose:** Location-organized register of all quests — implemented, planned, and specced. For five-act quest elaborations see `plan-archive.md §DUNGEON-02`. For skill check mechanic spec see `plan-archive.md §DESIGN-03`. For grief arc quests see `plan-archive.md §GR`.
+> **Purpose:** Location-organized register of the **hand-authored** quests — the `quest_*`, `mq_*` and `sq_*` families, 309 ids at 2026-10-08, implemented, planned and specced. `check:questindex` (gate #45, §DX-02ad) scores this file against that population and prints how many it still lacks; the generated per-node five-act corpus (2,544 `<node>_actN` / `<node>_cNaN` skill checks) is not registered here — `./bin/api list quest --node <CODE>` is its index. For five-act quest elaborations see `plan-archive.md §DUNGEON-02`. For skill check mechanic spec see `plan-archive.md §DESIGN-03`. For grief arc quests see `plan-archive.md §GR`.
 
 ---
 
