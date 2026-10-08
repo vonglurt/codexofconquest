@@ -133,13 +133,32 @@ function sliceObject(constName) {
 }
 
 const worldBody = sliceObject('WORLD_DB');
-// top-level terrain keys: `^  key:` at 2-space indent inside the object
+// top-level terrain keys: `^  key:` at 2-space indent inside the object; a key with a
+// space or a paren is quoted (`'bar (Visby)':`)
 const terrainKeys = new Set();
 for (const line of worldBody.split('\n')) {
-  const m = line.match(/^ {2}([A-Za-z_][A-Za-z0-9_]*)\s*:/);
-  if (m) terrainKeys.add(m[1]);
+  const m = line.match(/^ {2}(?:'([^']+)'|"([^"]+)"|([A-Za-z_][A-Za-z0-9_]*))\s*:/);
+  if (m) terrainKeys.add(m[1] || m[2] || m[3]);
 }
 if (terrainKeys.has('junction')) fails.push(`I2: WORLD_DB still has a 'junction' terrain entry`);
+
+// sanity: every WORLD_DB entry is `key: { … }`, so the literal's depth-2 `{` count is its
+// entry count by a walk that ignores strings and line comments (catch a silently-stale key pattern)
+function objectEntries(body) {
+  let depth = 0, entries = 0, quote = null;
+  for (let i = body.indexOf('{'); i < body.length; i++) {
+    const c = body[i];
+    if (quote) { if (c === '\\') i++; else if (c === quote) quote = null; continue; }
+    if (c === "'" || c === '"' || c === '`') { quote = c; continue; }
+    if (c === '/' && body[i + 1] === '/') { i = body.indexOf('\n', i); if (i < 0) break; continue; }
+    if (c === '{') { depth++; if (depth === 2) entries++; }
+    else if (c === '}') { depth--; if (depth === 0) break; }
+  }
+  return entries;
+}
+const terrainEntries = objectEntries(worldBody);
+if (terrainEntries !== terrainKeys.size)
+  fails.push(`I1: parsed ${terrainKeys.size} WORLD_DB terrain keys but the literal holds ${terrainEntries} entries — key pattern likely stale, re-check WORLD_DB format`);
 
 // ════════════════════════════════════════════════════════════════════════════
 // I1 — terrain totality
