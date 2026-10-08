@@ -39,6 +39,7 @@ test.describe('§VM-01-F — gate expression AST', () => {
         if (g.flagsPath) t.push(g.flagsPath.every(p => !!pathVal(st, p)));
         if (g.countMin) t.push(g.countMin.every(c => asCount(pathVal(st, c.path)) >= c.min));
         if (g.dayMin != null || g.dayMax != null) { const d = st.day || 1; t.push((g.dayMin == null || d >= g.dayMin) && (g.dayMax == null || d < g.dayMax)); }
+        if (g.itemsAll) t.push(g.itemsAll.every(e => { const nm = (typeof e === 'string') ? e : e.name, mn = (typeof e === 'string') ? 1 : (e.min || 1); return invExact(st, nm) >= mn; }));
         return t.every(Boolean);
       }
       function refCompletion(g, st) {

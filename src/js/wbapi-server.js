@@ -295,6 +295,7 @@ function getServerId() {
 // authors ONE event carrying both players' chain links and the counterparty
 // origin's signed assent to the terms.
 const LEDGER_DIR = process.env.LEDGER_DIR || path.join(ROOT, 'build', 'ledger');
+const PATCH_DIR = process.env.PATCH_DIR || path.join(ROOT, 'build', 'milepoints', 'patches');
 const TRADE_TTL = parseInt(process.env.LEDGER_TRADE_TTL_MS || '', 10) || 60 * 1000;
 const LEDGER = {
   loaded: false,
@@ -2293,7 +2294,7 @@ function listSnapshots() {
   const base = path.basename(GAME_FILE, '.html').replace(/(-\d{8}-\d{6})+$/, '');
   const re   = new RegExp(`^${base.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}-\\d{8}-\\d{6}\\.html$`);
 
-  const patchDir = path.join(ROOT, 'build', 'milepoints', 'patches');
+  const patchDir = PATCH_DIR;
   const archived = new Set();
   try {
     for (const f of fs.readdirSync(patchDir))

@@ -40,11 +40,11 @@ const [PORT] = workerPorts('snapshots').ports;
 const BASE = `http://localhost:${PORT}`;
 const STAMPED = /^play-\d{8}-\d{6}\.html$/;
 
-// A name the real patch chain already knows — `build/milepoints/patches/<stem>.patch`
-// exists — so `archived:true` can be exercised without writing into the repo.
+// A stem the throwaway server's own patch chain holds — `<scratch>/patches/<stem>.patch`,
+// handed to it as PATCH_DIR — so `archived:true` is exercised without touching the repo's chain.
 const ARCHIVED_NAME = 'play-20260709-034151.html';
 
-let server, dir, scratch;
+let server, dir, scratch, patchDir, archivedPatch;
 
 const stampedIn = d => fs.readdirSync(d).filter(f => STAMPED.test(f));
 
@@ -55,12 +55,16 @@ function cli(...args) {
 
 test.beforeAll(async () => {
   dir = fs.mkdtempSync(path.join(os.tmpdir(), 'coc-dx02l-'));
+  patchDir = path.join(dir, 'patches');
+  archivedPatch = path.join(patchDir, `${path.basename(ARCHIVED_NAME, '.html')}.patch`);
+  fs.mkdirSync(patchDir, { recursive: true });
+  fs.writeFileSync(archivedPatch, '');
   scratch = path.join(dir, 'play.html');
   fs.copyFileSync(GAME, scratch);
   server = spawn(process.execPath, [path.join(ROOT, 'src', 'js', 'wbapi-server.js')], {
     cwd: ROOT,
     env: { ...process.env, LEDGER_DIR: testLedgerDir(), PORT: String(PORT), CODEXOFCONQUEST_FILE: scratch,
-      PEERS_CACHE_FILE: path.join(dir, 'peers.json') },
+      PEERS_CACHE_FILE: path.join(dir, 'peers.json'), PATCH_DIR: patchDir },
     stdio: 'ignore',
   });
   const died = watchChildren({ server });
@@ -131,8 +135,7 @@ test.describe('§DX-02l — ./bin/api save + ./bin/api snapshots', () => {
     cli('save');
     const fresh = stampedIn(dir)[0];
     fs.copyFileSync(path.join(dir, fresh), path.join(dir, ARCHIVED_NAME));
-    expect(fs.existsSync(path.join(ROOT, 'build', 'milepoints', 'patches',
-      `${path.basename(ARCHIVED_NAME, '.html')}.patch`))).toBe(true);
+    expect(fs.existsSync(archivedPatch)).toBe(true);
 
     const swept = JSON.parse(cli('snapshots', '--sweep', '--raw'));
     expect(swept.deleted).toEqual([ARCHIVED_NAME]);

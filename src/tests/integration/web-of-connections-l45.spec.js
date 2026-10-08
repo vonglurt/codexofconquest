@@ -244,8 +244,8 @@ test.describe('Layer 45 — Web of Connections', () => {
     expect(out.exhaustedAfter).toBe(15);  // then the pool is silent forever
   });
 
-  // ── F6: the training log ships an authoring stage direction as player text ──
-  test('Weckmann\'s log renders a bracketed editorial placeholder to the player', async ({ page }) => {
+  // ── F6: the training log's one bracketed span is authored prose (§DX-02fg) ──
+  test('Weckmann\'s log carries the authored gap and no editorial placeholder', async ({ page }) => {
     await seedAndLoad(page, {});
     await dismissContinue(page);
 
@@ -255,15 +255,19 @@ test.describe('Layer 45 — Web of Connections', () => {
       const log = _buildWeckmannLog();
       return {
         hasStageDirection: log.includes("[years of entries — fighters' names, brief notes, outcomes]"),
+        bracketed: (log.match(/\[[^\]\n]*\]/g) || []).length,
         hasGap: log.includes('[gap of two years]'),
+        hasReincken: log.includes('Reincken'),
         unreplaced: /\{PLAYER_ENTRIES\}|\{CHAMP_ENTRY\}/.test(log),
         playerEntries: (log.match(/^Day \d+:/gm) || []).length,
         hasBruna: log.includes('Bruna'),
       };
     });
 
-    expect(out.hasStageDirection).toBe(true);
+    expect(out.hasStageDirection).toBe(false);
+    expect(out.bracketed).toBe(1);
     expect(out.hasGap).toBe(true);              // authored prose, not a placeholder -- do not substitute
+    expect(out.hasReincken).toBe(true);        // the third decade-laster, named by §DX-02fg
     expect(out.unreplaced).toBe(false);
     expect(out.playerEntries).toBe(3);          // wins=3 -> Day 3, Day 7, Day 12
     expect(out.hasBruna).toBe(true);

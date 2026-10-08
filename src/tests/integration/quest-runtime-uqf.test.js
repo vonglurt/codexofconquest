@@ -2804,19 +2804,18 @@ test.describe('§ARCH-01 Wave 1v — folk wisdom (lxvii67 jester / guide_04 U-cu
     }
   });
 
-  test('gates: guide_04 → questsDone[quest_guide_03]; lxvii67 keeps load-bearing activateCond behind a _legacyFn gate (faith_folk>=1 inexpressible)', async ({ page }) => {
+  test('gates: guide_04 → questsDone[quest_guide_03]; lxvii67\'s faith_folk ≥ 1 is a countMin gate the prover can read (§DX-02dy)', async ({ page }) => {
     await page.goto('/play.html');
     const r = await page.evaluate(() => {
       S_story.quests = {}; const g04closed = QuestRuntime.canActivate('quest_guide_04');
       S_story.quests = { quest_guide_03:'done' }; const g04open = QuestRuntime.canActivate('quest_guide_04');
       const lq = QUEST_DB['quest_lxvii67'];
-      const gateLegacy = !!(lq.gate && lq.gate._legacyFn);
-      const caAlways = QuestRuntime.canActivate('quest_lxvii67');
-      S_story.faith_folk = 0; const acClosed = lq.activateCond();
-      S_story.faith_folk = 1; const acOpen = lq.activateCond();
-      return { g04closed, g04open, gateLegacy, caAlways, acClosed, acOpen };
+      S_story.quests = {};
+      S_story.faith_folk = 0; const folkClosed = QuestRuntime.canActivate('quest_lxvii67');
+      S_story.faith_folk = 1; const folkOpen = QuestRuntime.canActivate('quest_lxvii67');
+      return { g04closed, g04open, gate: lq.gate, noActivateCond: typeof lq.activateCond === 'undefined', folkClosed, folkOpen };
     });
-    expect(r).toEqual({ g04closed:false, g04open:true, gateLegacy:true, caAlways:true, acClosed:false, acOpen:true });
+    expect(r).toEqual({ g04closed:false, g04open:true, gate:{ countMin:[{ path:'faith_folk', min:1 }] }, noActivateCond:true, folkClosed:false, folkOpen:true });
   });
 
   test('PASS parity: done + xp + onPass flag effect (faith_folk++ / emmerStage4a) + NO token', async ({ page }) => {
@@ -7677,7 +7676,7 @@ test.describe('§ARCH-01 Wave 2bc — quest_* singletons (11 newly-migrated; xp/
         const gate = q.gate || {};
         return { id, schema:q.schema, valid:validateQuest(q).valid,
           noAC: typeof q.activateCond === 'undefined',
-          gateShape: gate._legacyFn ? 'legacyFn' : (gate.flags ? 'flags' : (JSON.stringify(gate) === '{}' ? 'empty' : 'other')),
+          gateShape: gate.itemsAll ? 'itemsAll' : (gate.flags ? 'flags' : (JSON.stringify(gate) === '{}' ? 'empty' : 'other')),
           hasStat:!!(b && b.stat), abilOk: b ? ABILS.has(b.stat) : false,
           hasDc:typeof (b && b.dc) === 'number',
           hasReward: !!rw, hasMb: !!mb,
@@ -7686,7 +7685,7 @@ test.describe('§ARCH-01 Wave 2bc — quest_* singletons (11 newly-migrated; xp/
     }, [...NEWLY_MIGRATED]);
     expect(errs).toEqual([]);
     expect(r.length).toBe(11);
-    const gateShapes = { legacyFn:0, flags:0, empty:0 };
+    const gateShapes = { itemsAll:0, flags:0, empty:0 };
     let withMb = 0;
     for (const q of r) {
       expect(q.missing).toBeFalsy();
@@ -7701,7 +7700,8 @@ test.describe('§ARCH-01 Wave 2bc — quest_* singletons (11 newly-migrated; xp/
       gateShapes[q.gateShape] = (gateShapes[q.gateShape] || 0) + 1;
       if (q.hasMb) withMb++;
     }
-    expect(gateShapes).toEqual({ legacyFn:7, flags:3, empty:1 });
+    // §DX-02dy retired the seven tautology closures to `{}`; §DX-02iu wrote muffat_01's item test as data.
+    expect(gateShapes).toEqual({ itemsAll:1, flags:3, empty:7 });
     expect(withMb).toBe(10); // quest_sir_jullean is flagless
   });
 
@@ -8248,11 +8248,16 @@ test.describe('§ARCH-01 Wave 3a — side-quest declarative completion (61 migra
   // placeholders (the terminal legacy holdouts) migrated 2026-07-07 (§MATH-01
   // completions ship) — legacyCount pin flipped 5 → 0.
   const W3B = ['quest_math_01','quest_math_02','quest_math_03','quest_math_04','quest_math_05'];
-  const GATE_KEPT = ['quest_wm_05','quest_road_damascus','quest_inn_06'];
+  // §DX-02dy / §DX-02iu — the three gates that were closures are data now, and `activateCond` is gone.
+  const DATA_GATES = {
+    quest_wm_05: { flags:['wmLowerArchiveUnlocked'], itemsAll:['Y. Gurt Field Survey'] },
+    quest_road_damascus: { itemsAll:['Three Jerusalem Warrants'] },
+    quest_inn_06: { countMin:[{ path:'innmotherKindness', min:5 }] },
+  };
 
   test('all 61 are UQF-1.0, validate, bits:[], completion present, no completeFn; legacy holdouts untouched', async ({ page }) => {
     await page.goto('/play.html');
-    const r = await page.evaluate(({ w3a, w3b, kept }) => {
+    const r = await page.evaluate(({ w3a, w3b, gates }) => {
       const bad = [];
       for (const id of w3a) {
         const q = QUEST_DB[id];
@@ -8263,14 +8268,14 @@ test.describe('§ARCH-01 Wave 3a — side-quest declarative completion (61 migra
         if ((q.bits || []).length) bad.push(id + ':bits');
         if (q.completeFn) bad.push(id + ':completeFn-residue');
         if (q.type !== 'side') bad.push(id + ':type');
-        if (kept.includes(id)) {
-          if (typeof q.activateCond !== 'function') bad.push(id + ':lost-activateCond');
-          if (!q.gate || q.gate._legacyFn !== true) bad.push(id + ':gate-not-legacyFn');
+        if (gates[id]) {
+          if (typeof q.activateCond !== 'undefined') bad.push(id + ':activateCond-residue');
+          if (JSON.stringify(q.gate) !== JSON.stringify(gates[id])) bad.push(id + ':gate=' + JSON.stringify(q.gate));
         }
       }
       const legacyStill = w3b.filter(id => QUEST_DB[id] && QUEST_DB[id].schema === undefined);
       return { bad, legacyCount: legacyStill.length };
-    }, { w3a: W3A, w3b: W3B, kept: GATE_KEPT });
+    }, { w3a: W3A, w3b: W3B, gates: DATA_GATES });
     expect(r.bad).toEqual([]);
     expect(r.legacyCount).toBe(0);   // §MATH-01 2026-07-07: the last 5 legacy holdouts are UQF now
   });
@@ -8403,11 +8408,16 @@ test.describe('§ARCH-01 Wave 3b — counter/nested-path/item-count sides (32 mi
   const HOLDOUTS = ['quest_math_01','quest_math_02','quest_math_03','quest_math_04','quest_math_05'];
   // §ARCH-01 W4: guide_02/03/06 moved OFF the _legacyFn gate — their `=== 'done'`
   // activateConds were DEAD (side quests only reach 'complete'); now gate.questsDone.
-  const GATE_KEPT = ['quest_fish_01','quest_tour_01','quest_guide_01'];
+  // §DX-02iu: the rod trio's closures are `itemsAll` gates on the item's real name.
+  const DATA_GATES = {
+    quest_fish_01: { itemsAll:['Fishing Rod'], countMin:[{ path:'fishingCatchLog', min:1 }] },
+    quest_tour_01: { itemsAll:['Fishing Rod'] },
+    quest_guide_01: { itemsAll:['Fishing Rod'] },
+  };
 
   test('all 32 are UQF-1.0, validate, bits:[], completion, no completeFn; holdouts stay legacy', async ({ page }) => {
     await page.goto('/play.html');
-    const r = await page.evaluate(({ w3b, holdouts, kept }) => {
+    const r = await page.evaluate(({ w3b, holdouts, gates }) => {
       const bad = [];
       for (const id of w3b) {
         const q = QUEST_DB[id];
@@ -8417,12 +8427,12 @@ test.describe('§ARCH-01 Wave 3b — counter/nested-path/item-count sides (32 mi
         if (!q.completion) bad.push(id + ':no-completion');
         if ((q.bits || []).length) bad.push(id + ':bits');
         if (q.completeFn) bad.push(id + ':completeFn-residue');
-        if (kept.includes(id) && (typeof q.activateCond !== 'function' || q.gate._legacyFn !== true))
-          bad.push(id + ':gate-kept-broken');
+        if (gates[id] && (typeof q.activateCond !== 'undefined' || JSON.stringify(q.gate) !== JSON.stringify(gates[id])))
+          bad.push(id + ':gate=' + JSON.stringify(q.gate));
       }
       const stillLegacy = holdouts.filter(id => QUEST_DB[id] && QUEST_DB[id].schema === undefined);
       return { bad, legacyCount: stillLegacy.length };
-    }, { w3b: W3B, holdouts: HOLDOUTS, kept: GATE_KEPT });
+    }, { w3b: W3B, holdouts: HOLDOUTS, gates: DATA_GATES });
     expect(r.bad).toEqual([]);
     expect(r.legacyCount).toBe(0);   // §MATH-01 2026-07-07: math holdouts migrated (see §MATH-01 describe)
   });

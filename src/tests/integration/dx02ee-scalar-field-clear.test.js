@@ -100,13 +100,14 @@ test.describe('§DX-02ee — =null clears an unquoted scalar', () => {
     expect(r.ok).toBe(false);
   });
 
-  test('a structured field is left to editStructuredField, not half-removed', () => {
+  test('a structured field is removed whole by the expression scanner (§DX-02dy), never half-removed', () => {
     const W = freshWorld();
     const [key] = Object.entries(W.questDb).find(([, q]) => Array.isArray(q.bits) && q.bits.length);
     const before = JSON.parse(JSON.stringify(W.questDb[key]));
 
     const r = W.editField('quest', key, 'bits', null);
-    expect(r.ok).toBe(false);
-    expect(roundTrip(W).questDb[key]).toEqual(before);
+    expect(r).toMatchObject({ ok: true, removed: true, field: 'bits' });
+    const { bits, ...rest } = before;
+    expect(roundTrip(W).questDb[key]).toEqual(rest);
   });
 });
