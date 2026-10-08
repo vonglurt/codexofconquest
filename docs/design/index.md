@@ -292,7 +292,9 @@ Run with `npm test`. Tests serve the project at `localhost:7654` (no WBAPI serve
 > across 175 files**. **Run `--list` from `src/`.** From the repo root the same binary lists the same
 > 1,407 under Playwright's default config — no `[chromium]` project prefix on each line is the tell — and a
 > *run* from there fails every page test `browserType.launch … Executable doesn't exist`, which is a `cd`,
-> not §DX-02ir.
+> not §DX-02ir. **`npm run test:judge --prefix src [-- <playwright args>]`** (§DX-02jd) runs the same suite with the JSON
+> reporter beside the list and sorts every unexpected test into *real* or *taken by the browser*: the exit
+> code follows the real ones alone, the taken count is printed, and a run the browser took whole is *no verdict*.
 
 | File | Coverage | Count |
 |------|---------|-------|

@@ -52,6 +52,8 @@ The server holds the file text from when it started. A write after a hand-edit s
                                        # write that would delete one is refused; this accepts the loss (§DX-02ix)
 npm run check:walk --prefix src        # every gate in parallel, ~30s; the final ✓ N/N line is the verdict
 ./run.sh stop && npm test --prefix src # 1,407 tests, server stopped, ALWAYS via --prefix src (or from src/)
+npm run test:judge --prefix src        # the same run, judged: fails only on a failure that is NOT browserType.launch,
+                                       # prints how many tests the browser took, and calls an all-taken run NO VERDICT
 npm run check:restart --prefix src     # the restart itself — outside check:walk, it binds :1367
 npm run test:write --prefix src        # what the write path REFUSES, on a throwaway copy
 ```

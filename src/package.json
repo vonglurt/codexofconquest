@@ -39,6 +39,7 @@
     "test": "playwright test -c playwright.config.js",
     "posttest": "node scripts/cleantree.js",
     "test:headed": "playwright test -c playwright.config.js --headed",
+    "test:judge": "node scripts/test-judge.js --selftest && node scripts/test-judge.js",
     "test:install": "playwright install chromium",
     "check:invariants": "node scripts/check-invariants.js",
     "check:dupkeys": "node scripts/check-dupkeys.js --selftest && node scripts/check-dupkeys.js",
