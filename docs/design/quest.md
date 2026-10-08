@@ -2,7 +2,7 @@
 
 # quest.md — The Shattered Codex: Master Quest Register
 
-> **Purpose:** Location-organized register of the **hand-authored** quests — the `quest_*`, `mq_*` and `sq_*` families, 309 ids at 2026-10-08, implemented, planned and specced. `check:questindex` (gate #45, §DX-02ad) scores this file against that population and prints how many it still lacks; the generated per-node five-act corpus (2,544 `<node>_actN` / `<node>_cNaN` skill checks) is not registered here — `./bin/api list quest --node <CODE>` is its index. For five-act quest elaborations see `plan-archive.md §DUNGEON-02`. For skill check mechanic spec see `plan-archive.md §DESIGN-03`. For grief arc quests see `plan-archive.md §GR`.
+> **Purpose:** Location-organized register of the **hand-authored** quests — the `quest_*`, `mq_*` and `sq_*` families, 309 ids at 2026-10-08, every one of them cited here by id (the gate's ratchet is 0), implemented, planned and specced. *Arrive?* in the tables below is the cell rule (§AUDIT-03x): ✅ when the quest's `activateNode` is the first node declared in its cell, ⛔ naming the node that holds the cell otherwise; *hook* when the quest has no `activateNode`. `check:questindex` (gate #45, §DX-02ad) scores this file against that population and prints how many it still lacks; the generated per-node five-act corpus (2,544 `<node>_actN` / `<node>_cNaN` skill checks) is not registered here — `./bin/api list quest --node <CODE>` is its index. For five-act quest elaborations see `plan-archive.md §DUNGEON-02`. For skill check mechanic spec see `plan-archive.md §DESIGN-03`. For grief arc quests see `plan-archive.md §GR`.
 
 ---
 
@@ -257,6 +257,26 @@ resolve. Pinned by `src/tests/integration/audit03h-npc-normalize.test.js`.
 
 ---
 
+## MAIN LINE — The Seven Shards (`mq_*`) and the Warrant's side line (`sq_*`)
+
+The spine `story.md` tells. Each shard quest is `type:'main'`, gate `{}`, giver `yael` (Sweelinck for the last) and completes on holding its shard item; no quest here pays gold, the shard is the pay.
+
+| ID | Title | Type | Node → waypoint | Cond | Reward | Arrive? |
+|----|-------|------|------|------|--------|---------|
+| `mq_1` | Follow the Bloodstained Map | [MAIN] | LHR → LCY | `{}` | Trade Seal (Shard #1) held | ✅ |
+| `mq_2` | Find Brother Aldric | [MAIN] | LCY → FRO | `{}` | Grove Token (Shard #2) held | ✅ |
+| `mq_3` | The Sea Road South | [MAIN] | SDQ → RAI | `{}` | Tidal Rune (Shard #3) held | ⛔ SDQ's cell is held by `WG0` |
+| `mq_4` | The Goblin Shaman | [MAIN] | BK → TRD | `{}` | Crimson Warrant (Shard #4) held | ⛔ BK's cell is held by `LHR` |
+| `mq_5` | The Djinn's Binding | [MAIN] | DOH → DOH | `{}` | Sand Cipher (Shard #5) held | ✅ |
+| `mq_6` | The Mythic Circuit | [MAIN] | HER → BKK | `{}` | Codex Shard #6 + Weimar Fragment (Shard #7) held | ⛔ HER's cell is held by `SEA` |
+| `mq_7` | The Reckoning | [MAIN] | NUE → TLS | `{}` | `VICTORY` held (the Convergence) — giver `archivus_sweelinck` | ✅ |
+| `sq_1` | The Disappeared Merchants | [SIDE] | TLL → LCY | `{}` | Trade Seal (Shard #1) held — giver `brynn` | ✅ |
+| `sq_2` | Kelpie in the Loch | [SIDE] [BATTLE] | KIR → KIR | `{}` | Highland Horse held; the `onComplete` narrative opens the Dunfall road (§PORT-02) | ✅ |
+| `sq_battling` | Battling — Earn Your Reputation | [SIDE] | LHR | `{}` | `dropsCollected ≥ 3` | ✅ |
+| `sq_leveling` | Leveling — The Spoils of War | [SIDE] | LHR | `{}` | `defeatedBattles ≥ 5` | ✅ |
+
+---
+
 ## BIRKA — Act I (Nodes: BA, SL, IN, TA, bar, CP, CY, CDG, AMS, MM)
 
 ### City Streets (BA) — NODE 1
@@ -429,7 +449,7 @@ resolve. Pinned by `src/tests/integration/audit03h-npc-normalize.test.js`.
 
 | Quest ID | Title | Type | Acts | Reward | Status |
 |----------|-------|------|------|--------|--------|
-| `quest_inquisitor_handshake` + `_questions` + `_final` *(design: quest_inquisitor)* | "The Extended Hand" | [SKILL CHECK]+[BATTLE if lying] | 3-quest gauntlet (NUE) | Archive key + `inquisitorPassed` | [✅ LIVE §D02-02] |
+| `quest_inquisitor_handshake` + `quest_inquisitor_questions` + `quest_inquisitor_final` *(design: quest_inquisitor)* | "The Extended Hand" | [SKILL CHECK]+[BATTLE if lying] | 3-quest gauntlet (NUE) | Archive key + `inquisitorPassed` | [✅ LIVE §D02-02] |
 | *(node-woven at NUE — no quest ids; story-render interaction behind the Archive Key, sets `priorCarrierSeen/Spoke`)* | "The Worn Boots" | [STORY] | node interaction | Prior Carrier's Token + `priorCarrierSeen` | [✅ LIVE §D02-03] |
 
 **`quest_inquisitor` — "The Extended Hand"** *(5-act, see §D02-02)*
@@ -449,6 +469,17 @@ resolve. Pinned by `src/tests/integration/audit03h-npc-normalize.test.js`.
 5. [STORY-DRIVING] CHA Persuasion DC 13 — "How do you know my name?"
 
 ---
+
+### Scholar's Quarter (NUE) — Gret Orrens, §SCAR-01
+
+Four beats at NUE. The skill checks pay from their own `onPass`; the close pays from `onComplete` and sets favor `gret` to 2.
+
+| ID | Title | Type | Node | Cond | Reward | Arrive? |
+|----|-------|------|------|------|--------|---------|
+| `quest_scar_01` | The Open Ledger | [SKILL CHECK] INT Investigation DC 8, retry next day | NUE | `{}` | +100 XP (`onPass`) | ✅ |
+| `quest_scar_02` | The Labyrinth | [SKILL CHECK] WIS Insight DC 12, retry next day | NUE | `gretMet` | +200 XP (`onPass`) — giver `pier` | ✅ |
+| `quest_scar_03` | The Shock | [SKILL CHECK] WIS Insight DC 11, one try | NUE | `gretLabyrinth`, not `gretChoice` | +250 XP (`onPass`) | ✅ |
+| `quest_scar_04` | The Star | [SIDE] | NUE | `gretChoice` | at NUE with `gretChoice` → 500gp + 350 XP, `gretComplete`, favor `gret` 2 | ✅ |
 
 ### Scholar King's Workshop (WK) — NODE
 
@@ -477,6 +508,23 @@ resolve. Pinned by `src/tests/integration/audit03h-npc-normalize.test.js`.
 | `quest_tl_01` | "Rennau: The Ledger" | `{}` (unconditional; silent) | STN *(was mis-remapped LCY)* | Harrow Manifest + Rennau Friendly | [✅ LIVE] |
 | `quest_tl_02` | "Rennau: The Embargo" | `tlLedgerRead` | TL | embargo decision + FU6 referral → tl_03 | [✅ LIVE] |
 | `quest_tl_03` | "Rennau: The Missing Ship" | questsDone `tl_02` + not `tlMissingShipSolved` | STN | 300gp + Ori's Account + Rennau Dear Friend (paid once, via onComplete) | [✅ LIVE] |
+
+### The Architecture — Magistra Muffat's Station 7 thread (§ARCH-01 / §ARCH-02)
+
+Muffat's beats run LCY → DUS → SVO and back (the family numbers 01, 02, 03 and 05); the Antecedent chamber HAJ, below HKG, closes the question; Benedikt Rasp's four Architecture beats are hook-driven (no `activateNode`) and point at the Scholar's Quarter. Side quests pay from `onComplete`, the one skill check from `onPass`.
+
+| ID | Title | Type | Node → waypoint | Cond | Reward | Arrive? |
+|----|-------|------|------|------|--------|---------|
+| `quest_muffat_01` | The Third Berth | [SKILL CHECK] DEX Stealth DC 13, retry next day | LCY | holds Trade Seal (Shard #1) | `muffatBerthReached` + 150gp + 150 XP (`onPass`) — giver `magistra_elara_muffat` | ✅ |
+| `quest_muffat_02` | The Distribution Pattern | [SIDE] | LCY → DUS | `muffatBerthReached` | at DUS → 300gp + 250 XP, `muffatManifestRead`, Shipping Manifest (Intercepted) | ✅ |
+| `quest_muffat_03` | The Dark Station | [SIDE] | LCY → SVO | `muffatManifestRead` | at SVO → 350gp + 300 XP, `station7LogRead`, Station 7 Transmission Log | ✅ |
+| `quest_muffat_05` | Cycle 4 | [SIDE] | LCY → LCY | `antecedentMet` | `cycle4NoteRead` → 200gp + 150 XP, Scholar Kings Requisition (Handwritten) | ✅ |
+| `quest_solm_01` | The Field Analyst | [SIDE] | LCY → STN | `antecedentMet` | `solmFound` → 150gp + 200 XP, Analyst Solm Field File — giver `proprietor_dusk` | ✅ LCY; STN's cell is held by `LCY` |
+| `quest_antecedent_01` | The Question | [SIDE] | HKG → HAJ | `suppressorLogRead` | `antecedentMet` → 400 XP — giver `auros` | ✅ |
+| `quest_va_01` | The Architecture: Five Marks | [SIDE] | hook → LHR | — | `vaAllMarksFound` → narrative only — giver `benedikt_rasp` | hook |
+| `quest_va_02` | The Architecture: Constructor's Log | [SIDE] | hook → NUE | — | `vaLogFound` → The Constructor's Log (readable) | hook |
+| `quest_va_03` | The Architecture: The Sealed Tunnel | [SIDE] | hook → GVA | — | `vaLastWardVisited` → 200gp | hook |
+| `quest_va_04` | The Architecture: The Chain | [SIDE] | hook → NUE | — | `vaArchitectureKnown` → 500gp | hook |
 
 ### §SPARK-01 — The Harmony Chain (📋 PLANNED)
 
@@ -547,9 +595,73 @@ resolve. Pinned by `src/tests/integration/audit03h-npc-normalize.test.js`.
 
 ---
 
-### §SPARK-01 SEA Extension (📋 PLANNED — unscheduled, see plan-archive.md §SPARK-01-H)
+### §SPARK-01 SEA Extension (✅ LIVE — three quests; the spec is plan-archive.md §SPARK-01-H)
 
 A Deep Warmth Eel (CR 4, non-aggressive) at open sea between DK and LW. Three-mile calm radius. Two pirate crews cooperating. Monster hunt: 4-phase structure. Resolution: escort the eel to deeper water. Reward: pirate crews owe a debt; sea route unlocks.
+
+| ID | Title | Type | Node → waypoint | Cond | Reward | Arrive? |
+|----|-------|------|------|------|--------|---------|
+| `quest_sea_01` | The Calm Sea | [SIDE] | SEN → NWI | `{}` | at NWI → `seaStrangenessNoticed` + 100 XP — giver `ship_captain` | ⛔ SEN's cell is held by `LCY`; NWI is primary |
+| `quest_sea_02` | The Warmth Eel | [SKILL CHECK] INT Investigation DC 13, retryable | NWI | `seaStrangenessNoticed` | `warmthEelFound` (`onPass`) — giver `redmast_quartermaster` | ✅ |
+| `quest_sea_03` | The Escort | [SKILL CHECK] WIS Nature DC 14, retryable | NWI | `warmthEelFound` | `warmthEelEscorted` (`onPass`) | ✅ |
+
+---
+
+## THE TILBURY STAR VOYAGE — §NAVAL-01 · §PORT-01 · §PORT-02 · §SPARK-02 · §WHODUNIT-01 · §HUNT-02
+
+The ship's run after §SPARK-01: the intercept three miles out (GCI), Saltwick (MME), Dunfall (DNF, opened by `sq_2`), the bilge aboard (SEN) and the relay road inland (WRO → BNX). Side quests pay from `onComplete`, skill checks from `onPass`; the role trio at GCI is gated on `sbChosenRole`.
+
+### §NAVAL-01 — A Privateer Commission (GCI, Captain Vera Keel)
+
+| ID | Title | Type | Node | Cond | Reward | Arrive? |
+|----|-------|------|------|------|--------|---------|
+| `quest_sb_01` | A Privateer Commission | [SIDE] | GCI | `{}` | `sbApproachSeen` → nothing paid; the role choice is the pay — giver `captain_vera_keel` | ✅ |
+| `quest_sb_parley` | Speak to Their Captain | [SKILL CHECK] CHA Persuasion DC 12, one try | GCI | `sbApproachSeen` + `sbChosenRole` = parley | `sbParleySucceeded` (`onPass`) | ✅ |
+| `quest_sb_examine` | Read the Letter of Marque | [SKILL CHECK] INT Investigation DC 11, one try | GCI | `sbApproachSeen` + `sbChosenRole` = examine | `sbPapersRead` (`onPass`) | ✅ |
+| `quest_sb_fight` | Board and Clear | [BATTLE] `SB_PRIVATEER` | GCI | `sbApproachSeen` + `sbChosenRole` = fight | `sbResolved` + 200gp + 400 XP + Letter of Marque (Keel) | ✅ |
+
+### §PORT-01 — Saltwick (MME, Harbormaster Dorit)
+
+| ID | Title | Type | Node | Cond | Reward | Arrive? |
+|----|-------|------|------|------|--------|---------|
+| `quest_sk_01` | The Unwritten Port | [SIDE] | MME | `{}` | `saltwickAccessed` → nothing paid — giver `harbormaster_dorit` | ✅ |
+| `quest_sk_02` | The Missing Consignment | [SKILL CHECK] CHA Persuasion DC 12, retryable | MME | `saltwickAccessed` | `saltwickJobAccepted` (`onPass`) | ✅ |
+| `quest_sk_hull` | The Cracked Strake | [SIDE] | MME | `saltwickAccessed` | `shipRepaired` (the 200gp dry dock) → +200 XP | ✅ |
+
+### §PORT-02 — Dunfall (DNF, Mairén Fionn)
+
+| ID | Title | Type | Node | Cond | Reward | Arrive? |
+|----|-------|------|------|------|--------|---------|
+| `quest_df_01` | The Open Harbor | [SIDE] | DNF | `{}` | `dunfallAccessed` → nothing paid — giver `mairén_fionn` | ✅ |
+| `quest_df_02` | The Salt Price | [SKILL CHECK] WIS Insight DC 11, retryable | DNF | `dunfallAccessed` | `dfBarterLearned` (`onPass`) | ✅ |
+
+### §SPARK-02 — The Commissioner's Problem (DNF)
+
+| ID | Title | Type | Node | Cond | Reward | Arrive? |
+|----|-------|------|------|------|--------|---------|
+| `quest_spark2_01` | The Commissioner's Problem | [SIDE] | DNF | `dunfallAccessed` | `spark2HookReceived` — giver `mairén_fionn` | ✅ |
+| `quest_spark2_02` | Bram and the Ledger | [SKILL CHECK] WIS Animal Handling DC 11, retryable | DNF | `spark2HookReceived` | `bramBefriended` (`onPass`) | ✅ |
+| `quest_spark2_03` | Bram Leads South | [SIDE] | DNF | `bramBefriended` | `oatMet` | ✅ |
+| `quest_spark2_04` | What Oat Carries | [SKILL CHECK] INT Nature DC 12, one try | DNF | `oatMet` | `brimFound` (`onPass`) | ✅ |
+| `quest_spark2_05` | Commissioner Fehn's Three Names | [SIDE] | DNF | `brimFound` | `fehnConfessed`; the DNF confrontation button pays 400gp + 400 XP, the quest pays nothing | ✅ |
+
+### §WHODUNIT-01 — Missing from the Hold (SEN, the ship's captain)
+
+| ID | Title | Type | Node | Cond | Reward | Arrive? |
+|----|-------|------|------|------|--------|---------|
+| `quest_bilge_01` | Missing from the Hold | [SIDE] | SEN | `saltwickAccessed` | `whodunit2HookReceived` — giver `ship_captain` | ⛔ SEN's cell is held by `LCY` |
+| `quest_bilge_02` | The Port Drain | [SKILL CHECK] INT Investigation DC 12, one try | SEN | `whodunit2HookReceived` | `whodunit2ClueFound` (`onPass`) | ⛔ |
+| `quest_bilge_03` | What Delt Remembers | [SKILL CHECK] WIS Insight DC 13, one try | SEN | `whodunit2ClueFound` | `whodunit2WitnessRead` (`onPass`) | ⛔ |
+| `quest_bilge_04` | Clear the Bilge | [BATTLE] `MS_BILGE` | SEN | `whodunit2WitnessRead` | `whodunit2Solved` + 600gp + 600 XP + Sea Spawn Scale Fragment | ⛔ |
+
+### §HUNT-02 — The Relay Road (WRO → BNX, the Elder Fisherwoman)
+
+| ID | Title | Type | Node | Cond | Reward | Arrive? |
+|----|-------|------|------|------|--------|---------|
+| `quest_hunt2_01` | The Relay Road Warning | [SIDE] | WRO | `{}` | `huntHook2Received` — giver `the_elder_fisherwoman` | ✅ |
+| `quest_hunt2_02` | Reading the Road | [SKILL CHECK] WIS Perception DC 11, one try | WRO | `huntHook2Received` | `bendRoadClue` (`onPass`) | ✅ |
+| `quest_hunt2_03` | The Sleeping Post | [SKILL CHECK] INT Investigation DC 13, one try | BNX | `bendRoadClue` | `bendLairFound` (`onPass`) | ✅ |
+| `quest_hunt2_04` | Drive the Hag Out | [BATTLE] `BN_NIGHTHAG` | BNX | `bendLairFound` | `hagDefeated2` + 400gp + 600 XP + Relay Station Token | ✅ |
 
 ---
 
@@ -569,6 +681,33 @@ A Deep Warmth Eel (CR 4, non-aggressive) at open sea between DK and LW. Three-mi
 ---
 
 ## EPIC BATTLEGROUNDS — Approach Quests (✅ ALL LIVE — §D01-01 + §D02)
+
+### The twenty approach pairs — the `_primary` / `_return` quests (§D01-01)
+
+Each battleground has a giver at a road node and two quests. `_primary` completes on the battleground's boss battle and pays nothing itself (the boss drop is the pay); `_return` completes on `ebReturnDone.<battleground>` and pays its `reward` in gold. *Arrive?* is the giver node's cell rule, with the battleground's own failure noted where it has one (the eight chains §AUDIT-03x counts).
+
+| Battleground | `_primary` → battle | `_return` → pays | Giver node | Giver | Arrive? |
+|--------------|---------------------|-------------------|------------|-------|---------|
+| Abyssal Scriptorium | `quest_ea_primary` → IST | `quest_ea_return` → 300gp | RAI | `captain_selene_draketide` | ✅ RAI; ⛔ IST's cell is held by `SEA` |
+| Wreck of the Unbroken | `quest_eb_primary` → FLR | `quest_eb_return` → 300gp | BGI | `harbormaster_tula` | ✅ |
+| Scholar Kings' Forge | `quest_ec_primary` → SOF | `quest_ec_return` → 250gp | GIB | `runewright_ossian` | ✅ |
+| Trench Titan | `quest_ed_primary` → OTP | `quest_ed_return` → 320gp | SID | `first_mate_darro` | ✅ SID; ⛔ OTP's cell is held by `WG0` |
+| Pharaoh's Vault | `quest_ee_primary` → CAI | `quest_ee_return` → 300gp | AHB | `caravan_master_zephyrine` | ✅ AHB; ⛔ CAI's cell is held by `AHB` |
+| Thornwood Maw | `quest_ef_primary` → PRN | `quest_ef_return` → 220gp | FRO | `woodcutter_bram` | ✅ |
+| Void Shaman's Sanctum | `quest_eg_primary` → TBS | `quest_eg_return` → 400gp | BK | `warlord_kael_mordus` | ⛔ BK's cell is held by `LHR` |
+| Loch of the Drowned King | `quest_eh_primary` → INV | `quest_eh_return` → 260gp | KIR | `shepherd_rona` | ✅ |
+| Isle of the Wyrm Crown | `quest_ei_primary` → ACE | `quest_ei_return` → 280gp | PDL | `island_elder_maris` | ✅ |
+| Canopy Cathedral | `quest_ej_primary` → SJO | `quest_ej_return` → 250gp | BEL | `herbalist_mael` | ✅ |
+| Shattered Seraph's Spire | `quest_ek_primary` → MAD | `quest_ek_return` → 0gp | CTU | `grounded_seraph_ithiel` | ✅ |
+| Sunken God's Throne | `quest_el_primary` → BEG | `quest_el_return` → 280gp | TRF | `river_trader_aldous` | ✅ |
+| Noonwraith Queen's Field | `quest_em_primary` → WAW | `quest_em_return` → 260gp | MAN | `farmer_wren` | ✅ |
+| Leviathan's Eye | `quest_eo_primary` → KUN | `quest_eo_return` → 320gp | SID | `navigator_cassius` | ✅ |
+| Admiral's Last Cove | `quest_ep_primary` → HAV | `quest_ep_return` → 300gp | NAS | `fence_boss_carrick` | ⛔ NAS's cell is held by `VBY`; HAV's by `HOR` |
+| Frost Warden's Throne | `quest_er_primary` → RKV | `quest_er_return` → 350gp | LYR | `fur_trader_sigrid` | ✅ |
+| Sunken Altar | `quest_es_primary` → SDR | `quest_es_return` → 240gp | MSY | `herbalist_gwynne` | ⛔ MSY's cell is held by `WG0` |
+| Peak of the Eldest | `quest_et_primary` → KTM | `quest_et_return` → 300gp | ERF | `blacksmith_dora_flint` | ✅ ERF; ⛔ KTM's cell is held by `INN` |
+| Djinn Lord's Palace | `quest_ev_primary` → MCT | `quest_ev_return` → 350gp | DOH | `izador_al-rashun` | ✅ |
+| Hag Mother's Cradle | `quest_ew_primary` → PMO | `quest_ew_return` → 200gp | SDQ | `wane` | ⛔ SDQ's cell is held by `WG0` |
 
 ### Abyssal Scriptorium (AT)
 
@@ -752,6 +891,21 @@ The Overseer. It has been in the water since Port Aurel, in telepathic contact w
 | `quest_inn_05` | "The Return" | INN | [COMPLETION] | — | — | `_innKindness(1)` (on return to INN after departing it — `flagsPath:['departedNodes.INN']`) | — | [✅ LIVE §CROWN-01] |
 | `quest_inn_06` | "The Free Booking" | INN | [THRESHOLD] | Kindness ≥5 | — | `freeBookingUnlocked`, Innmother's Key | — | [✅ LIVE §CROWN-01] |
 
+**Amendment A — the hag commissions and the iodine track.** A commission opens once the crown quest named in its gate has been *attempted*; the hunts complete on their battle key and pay from `onComplete`, the iodine checks from `onPass`.
+
+| ID | Title | Type | Node | Cond | Reward | Arrive? |
+|----|-------|------|------|------|--------|---------|
+| `quest_whisper_kelpie` | Track the Silent One | [BATTLE] `HW1_KELPIE` | HW1 | `quest_whisper_01` attempted | its legacy `onComplete` handler | ⛔ HW1's cell is held by `WG0` |
+| `quest_whisper_witch` | The Unnamed Thing | [BATTLE] `HW1_WITCH` | HW1 | `quest_whisper_03` attempted | Sea Witch's Tome knowledge (INT checks +1) | ⛔ |
+| `quest_glut_mudcrab` | Find What Left | [BATTLE] `HG1_MUDCRAB` | HG1 | `quest_glut_01` attempted | its legacy `onComplete` handler | ⛔ HG1's cell is held by `WG0` |
+| `quest_glut_octopus` | What I Fed | [BATTLE] `HG1_OCTOPUS` | HG1 | `quest_glut_03` attempted | Glut's Hoard Fragment (loot) | ⛔ |
+| `quest_wane_spawn` | What Moved It Before You | [BATTLE] `HN1_SPAWN` | HN1 | `quest_wane_02` attempted | `waneStoneDCReduced` | ⛔ HN1's cell is held by `WG0` |
+| `quest_wane_demon` | The Better Drainer | [BATTLE] `HN1_DEMON` | HN1 | `quest_wane_03` attempted | `atlanteanProcessKnown` + Atlantean Kelp Scroll knowledge | ⛔ |
+| `quest_inn_eel` | The Smell in the South Corridor | [BATTLE] `INN_EEL` | INN | `quest_inn_03` attempted | `electricEelOrganHeld` + Electric Eel Organ (craft) | ✅ |
+| `quest_iodine_01` | The Salt Test | [SKILL CHECK] INT Investigation DC 11, retryable | INN | `quest_inn_01` attempted | +100 XP (`onPass`) | ✅ |
+| `quest_iodine_02` | The Gathered Burn | [SIDE] | INN | `quest_iodine_01` attempted | 2× Swamp Kelp at INN → both consumed, Iodine Salt (+3 to one skill check) | ✅ |
+| `quest_iodine_03` | The Charged Reduction | [SIDE] | INN | `electricEelOrganHeld` + `quest_iodine_01` attempted | organ + kelp at INN → both consumed, `atlanteanProcessKnown` | ✅ |
+
 **Kindness Meter thresholds:** ≥3 first register shift · ≥5 free booking + Innmother's Key · ≥7 `innmotherNamed = true` ("Mère Boudine.")
 
 **Crone Mark conversion at HCA:** 6–9 → WIS +1 · 10–14 → WIS +1 + Crone Bead · 15–18 → WIS +1 + Crone Bead + Crone Staff (🪄 +3 ATK, 1d8)
@@ -774,6 +928,63 @@ MORE (*Encore*). The jar given at first arrival. Completion: player holds Glut's
 
 **`quest_inn_03` — "The Correction"** *(Node: INN. Object: the spoon, held incorrectly for the third time.)*
 MINE (*À moi*). She corrects it again. The correction is the same each time. CHA Persuasion DC 13: set the spoon down; say you are not leaving. Pass: the correction produces a response she did not have a category for; `_innKindness(1)`. Fail: you apologize; the corrections continue.
+
+---
+
+## §LXX–§LXXIII — The Atlantean Chain (HCA → DS0 → DS1 → DSF → DA1 → DA2 → CAN)
+
+Opened by the Leviathan boss at HCA, §CROWN-01's arc close. Skill checks pay from `onPass`; the button/quest pairs pay once from `onComplete` (the §LXX-01-FU shape, see the note under §QUEST COUNT SUMMARY). Every node of the chain sits in `SEA`'s cell, and HCA itself in `WG0`'s, so nothing here is arrival-activated under the cell rule (§AUDIT-03x).
+
+| ID | Title | Type | Node → waypoint | Cond | Reward | Arrive? |
+|----|-------|------|------|------|--------|---------|
+| `quest_shore_01` | The Path Opens | [SIDE] | HCA → DS0 | battle `HCA_BOSS` won | at DS0 → `shorePathFound` + 200gp + 200 XP — giver `the_tide_reader` | ⛔ HCA's cell is held by `WG0` |
+| `quest_shore_02` | The Bed Register | [SKILL CHECK] WIS Perception DC 12, retryable | DS1 | `{}` | +150 XP (`onPass`) | ⛔ DS1's cell is held by `SEA` |
+| `quest_forge_01` | The Mechanism | [SKILL CHECK] INT Arcana DC 14, retryable | DSF | `atlanteanProcessKnown` | +300 XP (`onPass`) — giver `the_forge_echo` | ⛔ |
+| `quest_forge_02` | The Smelting | [SIDE] | DSF | `forgeActivated` | `seaElementCrafted` → 400gp + Sea Element (weapon) | ⛔ |
+| `quest_sunken_01` | The Foundation | [SKILL CHECK] INT Arcana DC 13, retryable | DA1 | `{}` | +250 XP (`onPass`) — giver `the_stone_inscription` | ⛔ |
+| `quest_sunken_02` | The Tide Gate | [SIDE] | DA2 | `inscriptionRead` | `tideGateOpened` → Sea Element consumed, 500gp + 500 XP | ⛔ |
+| `quest_depth_01` | The Depth — 18 Meters | [SIDE] | DA2 | `tideGateOpened` | `antecedentDepthMet` → 500 XP + Constructor Design knowledge | ⛔ |
+| `quest_ca_01` | The Adjusted Timeline | [SIDE] | LCY → CAN | `tideGateOpened` + `cycle4NoteRead` | `conclaveResponseRead` → 300gp + 300 XP — giver `magistra_elara_muffat` | ✅ LCY; CAN's cell is held by `VBY` |
+
+---
+
+## THE VOID TIDE — Auros's board calls (§BOARD-01-FU8) and Void Below
+
+Day-gated `combat` cards posted by Commander Bruhns (`auros`), each a retryable STR check paying XP from `onPass`; `quest_void_below` is her Undercity side quest.
+
+| ID | Title | Type | Node | Cond | Reward | Arrive? |
+|----|-------|------|------|------|--------|---------|
+| `quest_void_below` | Auros: Void Below | [BATTLE] `CY_VOID` | HKG | `{}` | favor `auros` 2 + Scholar's Note + EMP Grenade + `bruhnsDepthsReported` | ✅ |
+| `quest_void_tide_21` | The Uncollected Bounty | [COMBAT] STR DC 13 | VS | day 21–35 | +150 XP (`onPass`) | ⛔ VS's cell is held by `VBY` |
+| `quest_void_tide_35` | The Thing at the Signal-Fire | [COMBAT] STR DC 15 | ECF | day 35–42 | +220 XP (`onPass`) | ✅ |
+| `quest_void_tide_42` | The Outriders at the Crossing | [COMBAT] STR DC 17 | RVP | day ≥ 42 | +320 XP (`onPass`) | ✅ |
+
+---
+
+## YUGURT LAKE — §GUIDE-01 · §XLV tournament · §FISH-01/02 (SSJ cabin, BOO lake, MJF)
+
+Emmer Finch's six-beat Self-Discovery arc, the six-opponent cast tournament and the Fisherman's hunts. Every quest here activates at the cabin SSJ, which is primary, and sends the player to the lake BOO, whose cell is held by `LYR` (§AUDIT-03x: the player can meet the Fisherman and never fish). Side quests pay from `onComplete` and `xpAward`, the one skill check from `onPass`.
+
+| ID | Title | Type | Node → waypoint | Cond | Reward | Arrive? |
+|----|-------|------|------|------|--------|---------|
+| `quest_guide_01` | The Fool's First Cast | [SIDE] | SSJ → BOO | holds Fishing Rod | `fishingCatchLog ≥ 1` → 50 XP — giver `emmer` | ✅ SSJ; ⛔ BOO's cell is held by `LYR` |
+| `quest_guide_02` | The Weight of the Hook | [SIDE] | SSJ → BOO | `quest_guide_01` done + 1 catch | `fishingCatchLog ≥ 2` → 150 XP | ✅ |
+| `quest_guide_03` | Morning Repetitions | [SIDE] | SSJ → BOO | `quest_guide_02` done | `fishingCatchLog ≥ 5` → 250 XP | ✅ |
+| `quest_guide_04` | The Middle Way Sneers | [SKILL CHECK] WIS Insight DC 11, retryable | SSJ | `quest_guide_03` done | +250 XP (`onPass`) | ✅ |
+| `quest_guide_05` | The Cast That Didn't Think | [SIDE] | SSJ | `emmerStage4a` | at SSJ → 300 XP | ✅ |
+| `quest_guide_06` | Just Be Yourself | [SIDE] | SSJ → BOO | `quest_guide_05` done | `fishingCatchLog ≥ 6` → 400 XP, `emmerComplete`, favor `emmer` 2, Rod of Self-Discovery — giver `the_fisherman` | ✅ |
+| `quest_tour_01` | Pip's Challenge | [SIDE] | SSJ | holds Fishing Rod | `yugurtTourBeat.pip` → 50gp + 100 XP | ✅ |
+| `quest_tour_02` | The Spreadsheet Casts | [SIDE] | SSJ | `yugurtTourBeat.pip` | `yugurtTourBeat.renard` → 75gp + 150 XP | ✅ |
+| `quest_tour_03` | Bog's Terms | [SIDE] | SSJ | `yugurtTourBeat.renard` | `yugurtTourBeat.bog` → 150gp + 200 XP | ✅ |
+| `quest_tour_04` | Vera's Rulebook | [SIDE] | SSJ | `yugurtTourBeat.bog` | `yugurtTourBeat.vera` → 300gp + 300 XP | ✅ |
+| `quest_tour_05` | Tonnage | [SIDE] | SSJ | `yugurtTourBeat.vera` | `yugurtTourBeat.dirk` → 600gp + 500 XP | ✅ |
+| `quest_tour_06` | The Fisherman's Tournament | [SIDE] | SSJ | `yugurtTourBeat.dirk` | `yugurtTourBeat.master` → 1500gp + 1000 XP | ✅ |
+| `quest_no_fishing_sign` | The No-Fishing Sign | [SIDE] | hook → SSJ | — | `fishingRodCouponRedeemed` → 50 XP and the free Fishing Rod — giver `the_fisherman` | hook |
+| `quest_fishing_guide` | The Fisherman: Listen Closely | [SIDE] | SSJ → BOO | `{}` | 1 catch, then at SSJ → Fishing Guide (zone DCs in the modal) | ✅ |
+| `quest_fish_01` | The Leviathan Class | [SIDE] | SSJ → BOO | holds Fishing Rod + 1 catch | `fishingQuestFlags.landed15Plus` → 200gp + 750 XP, `fishingYugurtFavour` | ✅ |
+| `quest_horned_shark` | The Noon Point | [SIDE] | BOO | `fishingYugurtFavour` | `hornedSharkSlain` → 300gp + 500 XP — giver `the_fisherman` | ⛔ BOO's cell is held by `LYR` |
+| `quest_night_eel` | Night Water | [SIDE] | BOO | `hornedSharkSlain` | `lanternEelLanded` → 150gp + 400 XP, `eelSkinPouchActive` | ⛔ |
+| `quest_shale_drop` | The Shale Drop | [SIDE] | BOO → MJF | `eelSkinPouchActive` | `shaleDropFound` → 250gp + 300 XP, Y. Gurt Field Survey | ⛔ BOO; MJF is primary |
 
 ---
 
