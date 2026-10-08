@@ -160,6 +160,16 @@ const statesMapping = (line, i, len) =>
 const inBackticks = (line, i, len) => line[i - 1] === '`' && line[i + len] === '`';
 
 /**
+ * §DX-02jw — a token flanked by another all-caps word is a SHOUTED English word, not a
+ * code: `THE CODEX IS REFORGED.`, a notebook labelled `RAD IDEAS DO NOT READ`. The prose
+ * rule makes a lone code count, so this is the exemption that keeps it from reading
+ * emphasis as geography.
+ */
+const shouted = (line, i, len) =>
+  /\b[A-Z]{3,}[^A-Za-z0-9]*$/.test(line.slice(Math.max(0, i - 24), i)) ||
+  /^[^A-Za-z0-9]*[A-Z]{3,}\b/.test(line.slice(i + len, i + len + 24));
+
+/**
  * Is this index inside ANY inline code span on the line? Not the same test as
  * inBackticks, which asks whether the code is a span all by itself.
  *
@@ -181,7 +191,7 @@ function inCodeSpan(line, i) {
 }
 
 /** Does this LINE talk about nodes at all? */
-function nodeContextLine(line, codes) {
+function nodeTells(line, codes) {
   if (/`?(?:NODE_MAP|NODE_COORDS|activateNode|waypointNode|CELL_GRID)`?/.test(line)) return true;
   if (/\bnodes?\b/i.test(line)) return true;
   if (/[→←↑↓]|-->|->/.test(line)) return true;
@@ -190,6 +200,33 @@ function nodeContextLine(line, codes) {
   // a table cell whose ENTIRE content is a code is a code column: `| Yael | CI | watch |`
   if (codes.some(c => new RegExp('\\|\\s*' + c + '\\s*\\|').test(line))) return true;
   return codes.length >= 2;                                       // a run of codes IS the context
+}
+
+/**
+ * §DX-02jw — a single code in RUNNING PROSE is a place reference too: "The CY pit
+ * training bouts are informal affairs" names a node and carries none of the tells
+ * above. Prose is a line with sentence punctuation and no table pipe, box-drawing
+ * character or heading mark; a table row or ASCII art with one code is still skipped,
+ * and `--check` reports both counts so the skipped side stays visible.
+ */
+const SENTENCE_END = /[.!?](?=[\s*_)"'”’]|$)/;
+const NOT_PROSE = /\||[─│┌┐└┘├┤┬┴┼═║╔╗╚╝╭╮╯╰]|^\s*#/;
+const proseLine = line => SENTENCE_END.test(line) && !NOT_PROSE.test(line);
+
+function nodeContextLine(line, codes) {
+  return nodeTells(line, codes) || (codes.length === 1 && proseLine(line));
+}
+
+/** The single-code lines of a file: how many the prose rule reads, how many it still skips. */
+function singleCodeCensus(text, map, re) {
+  const c = { prose: 0, skipped: 0 };
+  eachProseLine(text, line => {
+    re.lastIndex = 0;
+    const codes = [...new Set([...line.matchAll(re)].map(m => m[1]))];
+    if (codes.length !== 1 || nodeTells(line, codes)) return;
+    c[proseLine(line) ? 'prose' : 'skipped']++;
+  });
+  return c;
 }
 
 /**
@@ -319,6 +356,7 @@ function scanFile(text, map, re) {
       if (JARGON_ONLY.has(code) && CI_BUILD_LINE.test(line)) continue;
       const cued = localCue(line, m.index, code.length);
       if (AMBIGUOUS.has(code) && !ctx && !cued) continue;
+      if (AMBIGUOUS.has(code) && shouted(line, m.index, code.length)) continue;
       // `EB`/`DC` are jargon far more often than nodes, so a leading cue is required —
       // but a code column reads the other way round: `### Q56 — EB | Wreck of the Unbroken`.
       if (STRICT_LOCAL.has(code) && !LOCAL_CUE.test(before) && !/^\s*\|/.test(after)) continue;
@@ -399,6 +437,11 @@ const NOT_A_NODE_CODE = new Map([
   ['MP', 'multiplayer'],
   ['TC', 'Town Crier — the `TC_*` line consts'],
   ['GB', 'gigabytes — the V8 heap limit'],
+  ['CF', 'a `defeatedBattles` key (the pit championship), not a node'],
+  ['MM', 'Monster Manual — the "Succubus/Incubus MM p.349" citation'],
+  ['AM', 'ante meridiem — "2 AM"'],
+  ['BI', 'story-flowchart.md\'s town-hub abbreviation for Birka, declared on its own legend line'],
+  ['FC', 'the §FC-series fix items (FC01–FC08) in index.md\'s status table'],
   ['VM', 'virtual machine — the UQF quest VM (`QuestRuntime`), §VM-01'],
   ['AD', 'anno domini — the 1367 AD setting'],
   ['FR', 'a real pre-airport code (Fishmonger\'s Row → `AMS`) that the `maps.md` legend never listed, so `npm run nodes` never put it in the LEGACY CODE MAP; every live-doc use states the mapping'],
@@ -441,6 +484,7 @@ function scanUnknown(text, live, map) {
       // note names `SH`/`PH`/`MH` precisely to record that they were never nodes.
       if (explanatory && (inBackticks(line, m.index, code.length) || inCodeSpan(line, m.index) || statesMapping(line, m.index, code.length))) continue;
       if (!ctx && !localCue(line, m.index, code.length)) continue;
+      if (shouted(line, m.index, code.length)) continue;
       out.push({ line: i + 1, col: m.index, code, text: line.trim() });
     }
   });
@@ -589,6 +633,12 @@ function main() {
     if (bad.length || unclassified.length || p2.bare.length || p2.unclassified.length) process.exit(1);
     const pend = rows.filter(r => r.cls === 'PENDING');
     for (const r of pend) console.log(`  … PENDING ${r.rel} — ${r.n} (live doc, not yet swept — §AUDIT-03m)`);
+    const single = { prose: 0, skipped: 0 };
+    for (const rel of SWEEP) {
+      const c = singleCodeCensus(fs.readFileSync(path.join(ROOT, rel), 'utf8'), map, re);
+      single.prose += c.prose; single.skipped += c.skipped;
+    }
+    console.log(`  single-code lines (§DX-02jw) — ${single.prose} in prose, read; ${single.skipped} in tables or art, skipped`);
     console.log(`check:legacycodes OK — ${SWEEP.length} swept doc(s) carry no bare legacy code` +
       (pend.length ? `; ${pend.reduce((a, r) => a + r.n, 0)} references remain in ${pend.length} pending live doc(s)` : '') +
       `\n  phase 2 (§AUDIT-03q) — ${p2.counts.size} two-letter token(s) resolve in neither registry across the swept docs, all classified` +
@@ -627,6 +677,6 @@ function main() {
 
 if (require.main === module) main();
 module.exports = {
-  loadLegacyMap, loadLiveCodes, classify, scanFile, scanUnknown, codeRe, annotateLine,
+  loadLegacyMap, loadLiveCodes, classify, scanFile, scanUnknown, codeRe, annotateLine, singleCodeCensus, proseLine,
   SWEEP, PENDING, AMBIGUOUS, BORN_DEAD, NOT_A_NODE_CODE,
 };

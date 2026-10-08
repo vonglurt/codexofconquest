@@ -32,7 +32,7 @@ Aldo found the net three days later in the rubble of his stall, draped over the 
 
 The Corrupted Cats found the crates first. When Connie went back — once, two weeks after — they were already settled into the broken wood, void-touched eyes catching the light in the wrong color. She stood at the edge of what had been the Row and counted what she could still name by shape: the Sardino stall, the ice box, the hook rack where the morning catch went up. The cats watched her count. They did not move. She counted everything she could name and then she left because she had finished what she came to do, which was to confirm that it was all still there in the shape of absence.
 
-Sandy Scratchpad Mewlino knows about the Corrupted Cats at the Row. She has not told Connie directly. She told Jimmy: *"There's something wrong with that block. Wrong the way the DF strays are wrong. They're not just feral — they're HOLDING something."* Jimmy said: *"That's above our pay grade."* Sandy said: *"Above everyone's, apparently."* This is the neighborhood's working theory: the grief at Fishmonger's Row is nobody's problem in particular, which is how it stays everyone's ambient condition.
+Sandy Scratchpad Mewlino knows about the Corrupted Cats at the Row. She has not told Connie directly. She told Jimmy: *"There's something wrong with that block. Wrong the way the `ZRH` (historical `DF`) strays are wrong. They're not just feral — they're HOLDING something."* Jimmy said: *"That's above our pay grade."* Sandy said: *"Above everyone's, apparently."* This is the neighborhood's working theory: the grief at Fishmonger's Row is nobody's problem in particular, which is how it stays everyone's ambient condition.
 
 ---
 
@@ -1765,7 +1765,7 @@ Collecting all 7 fires journal reward: *"Seven people carried the pieces. Five o
 
 **Threshold 2 — Fracture (≥ 6):** Sets `voidFracturesFired`. NPC pressure line fires once per Dear Friend NPC (fav ≥ 2) via `_getNPCDialogue()`. Second flavor line added per node: *"[label]: the air here has a quality you can't name. Wrong, somehow."* Monsters: `void_wolf` + `void_rat_swarm` in MONSTER_POOL (voidTainted:true); drop `Void Shard` (◈, 25/15gp).
 
-**Threshold 3 — Imminent (= 9):** Sets `voidImminentWarned`. Fires storyMsg warning with shard count. `void_mercy_count = 1` if shards ≥ 5. CO gate appends urgency line. Mercy window in `storyCheckVoidTide()`: skips pressure increment, posts *"You sleep fitfully. The Void holds its breath with you."*
+**Threshold 3 — Imminent (= 9):** Sets `voidImminentWarned`. Fires storyMsg warning with shard count. `void_mercy_count = 1` if shards ≥ 5. `TLS` (historical `CO`) gate appends urgency line. Mercy window in `storyCheckVoidTide()`: skips pressure increment, posts *"You sleep fitfully. The Void holds its breath with you."*
 
 **State flags:** `voidCrackFired`, `voidFracturesFired`, `voidImminentWarned`, `void_mercy_count`.
 
@@ -2716,7 +2716,7 @@ An optional interactive stone at `LHR` (historical `CI`). One `[Examine Memorial
 
 **Function:** `storyShowFrobergerMemorial()` — builds layered plaque text, renders overlay with book entries and action buttons.
 
-**CI button:** `⛪ Examine the memorial.` injected in Layer 63 block at `npcRowDiv` inside the birkaNpcs render block, alongside Nivers/Archive buttons.
+**`LHR` (historical `CI`) button:** `⛪ Examine the memorial.` injected in Layer 63 block at `npcRowDiv` inside the birkaNpcs render block, alongside Nivers/Archive buttons.
 
 **State flags:** `frobergerMemorialVisited`, `frobergerMemorialFlowers`, `frobergerMemorialBookSigned`, `_memorialPlayerEntry: null` — all in `_S_DEFAULTS()`.
 
@@ -2744,7 +2744,7 @@ One-time championship bout at `HKG` (historical `CY`) node (Weckmann's actual no
 
 Two parallel one-time scenes triggered by `frobergerLastEntryRead === true`. Each fires on the first visit to its node after the flag is set. State flags `s49BrynnDelivered` and `s49SweelinckDelivered` pre-exist in `_S_DEFAULTS()`.
 
-**Brynn's scene (IN, `!s49BrynnDelivered`):** `📔 You read the last entry.` button fires `storyMsg(S49_BRYNN_SCENE)` — full scene with double-read, the *"Come back"* quote, *"Glad you're not done yet."* Sets `s49BrynnDelivered = true`, button removes itself.
+**Brynn's scene (`TLL` (historical `IN`), `!s49BrynnDelivered`):** `📔 You read the last entry.` button fires `storyMsg(S49_BRYNN_SCENE)` — full scene with double-read, the *"Come back"* quote, *"Glad you're not done yet."* Sets `s49BrynnDelivered = true`, button removes itself.
 
 **Sweelinck's scene (NUE, `!s49SweelinckDelivered`):** Same button pattern fires `storyMsg(_getS49SweelinckScene())` — full scene with Sweelinck reading standing, *"He knew the shape of the absence"*, journal kept. NG+ closing: *"Still here. Bring it back when you're done again."* Base closing: *"I'll keep it here. You know where to find me when you're done."* `_getS49SweelinckScene()` function resolves the correct closing at call time.
 
@@ -2760,7 +2760,7 @@ Two parallel one-time scenes triggered by `frobergerLastEntryRead === true`. Eac
 
 **S54 — Yael and Brynn at `LHR` (Layer 66a):** Fires on first `LHR` visit where `storyAct >= 7` AND `_npcFavor('yael') >= 1` AND `_npcFavor('brynn') >= 1` AND `!s54JointMomentDelivered`. `storyMsg(S54_JOINT_MOMENT)` via `setTimeout(400)`. Full scene: Brynn with delivery basket, Yael already at `LHR`, *"Still the same light?" / "Still the same light."*, then both address the player. Sets `s54JointMomentDelivered = true`.  *(historical: `CI`=`LHR`)*
 
-**Flag split:** Pre-existing TV stub (Quill plays Brynn's song) was using `s54JointMomentDelivered`. Renamed to `s54QuillBrynnDelivered` (new flag in `_S_DEFAULTS()`). NUE "map on the wall" stub was using `s55MapLineDelivered`. Renamed to `s55SqMapLineDelivered` (new flag in `_S_DEFAULTS()`). Both pre-existing stubs now have their own flags; canonical §XXXI flags restored to their intended roles.
+**Flag split:** Pre-existing `MHQ` (historical `TV`) stub (Quill plays Brynn's song) was using `s54JointMomentDelivered`. Renamed to `s54QuillBrynnDelivered` (new flag in `_S_DEFAULTS()`). NUE "map on the wall" stub was using `s55MapLineDelivered`. Renamed to `s55SqMapLineDelivered` (new flag in `_S_DEFAULTS()`). Both pre-existing stubs now have their own flags; canonical §XXXI flags restored to their intended roles.
 
 **S55 — The Map Caption (Layer 66b):** `_renderFinalMap()` patched — creates `<div id="final-map-caption">` positioned absolute at bottom of overlay, fade-in at +400 ms after grid appears (3500 ms total), fades with grid at 5000 ms. Base: *"He walked every corridor. So did you. The map remembers."* Sweelinck variant (if `s49SweelinckDelivered`): *"...Sweelinck has the record."* Sets `s55MapLineDelivered = true` immediately on render (no gate needed — fires once per victory).
 
@@ -2786,7 +2786,7 @@ Two S-suggestion systems. Pre-existing flags: `archiveVisited`, `archiveLetterOb
 
 **Pachelbel's Ledger (`LLA` (historical `BA`), Dear Friend):** [Read Ledger] button when `fav_pachelbel >= 2`. Const: `PACHELBEL_LEDGER` (keyed by act). Entry 2: Raison's arrest at the north gate (*"They called it unauthorized research access... His eldest was brought in for 'evaluation.'"*). Entry 3: younger child escaped south by night (*"Someone had left a boat. I don't know who."*) → Vonn in §XIX (Tilbury, unnamed connection). Pachelbel bought the tools back at impound: *"I don't know what I'm going to do with them."* Inline overlay with [Close] and backdrop-click-to-close.
 
-**Flag note:** Spec flag `surveyDeliveredToAuros` was not added; `undercitySurveyDelivered` handles both the archive state and the CY delivery gate.
+**Flag note:** Spec flag `surveyDeliveredToAuros` was not added; `undercitySurveyDelivered` handles both the archive state and the `HKG` (historical `CY`) delivery gate.
 
 ---
 
@@ -2858,7 +2858,7 @@ Two S-suggestion systems. Pre-existing flags: `archiveVisited`, `archiveLetterOb
 
 **Ambient:** `TLL` (historical `IN`) node S58 regulars block prepends *"A lamp burns in the corner. It has been lit since your first night here."* as the first line — no flag, no condition. `BRYNN_KEEPER_STORY` const holds all scene strings.
 
-**Beat 1 — Inquiry (IN, fav_brynn ≥ 1, Act II+, !brynnKeeperStoryTold):** `🕯 Ask Brynn about the lamp in the corner.` button appears. On click: shows `BRYNN_KEEPER_STORY.inquiry`, removes button, shows `💬 Why that night?` follow-up. On follow-up click: shows `BRYNN_KEEPER_STORY.followUp`, sets `brynnKeeperStoryTold = true`.
+**Beat 1 — Inquiry (`TLL` (historical `IN`), fav_brynn ≥ 1, Act II+, !brynnKeeperStoryTold):** `🕯 Ask Brynn about the lamp in the corner.` button appears. On click: shows `BRYNN_KEEPER_STORY.inquiry`, removes button, shows `💬 Why that night?` follow-up. On follow-up click: shows `BRYNN_KEEPER_STORY.followUp`, sets `brynnKeeperStoryTold = true`.
 
 **Beat 2 — Choice (`TLL` (historical `IN`), fav_brynn ≥ 2, brynnKeeperStoryTold, !brynnLightChoiceMade):** `BRYNN_KEEPER_STORY.choicePrompt` rendered inline with two buttons: `🕯 Let it keep burning.` → `brynnLightKept = true`; `🌙 It can rest when I'm done.` → `brynnLightKept = false`. Both set `brynnLightChoiceMade = true`.
 
