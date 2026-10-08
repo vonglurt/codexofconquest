@@ -2239,8 +2239,9 @@ function cors(res) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET,PUT,DELETE,POST,OPTIONS');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, X-Nonce');
-  // §MESH-01d3: let the worldbuilder read world-download identity headers cross-origin
-  res.setHeader('Access-Control-Expose-Headers', 'X-R2H-ServerId, X-R2H-WorldHash, X-R2H-EngineVer, Content-Disposition');
+  // §MESH-01d3: let the worldbuilder read world-download identity headers cross-origin.
+  // X-COC-* is the name; X-R2H-* rides alongside for peers that still read it (§DX-02hj).
+  res.setHeader('Access-Control-Expose-Headers', 'X-COC-ServerId, X-COC-WorldHash, X-COC-EngineVer, X-R2H-ServerId, X-R2H-WorldHash, X-R2H-EngineVer, Content-Disposition');
 }
 
 function json(res, status, body) {
@@ -3925,6 +3926,7 @@ async function route(req, res) {
     res.writeHead(200, {
       'Content-Type': 'text/html; charset=utf-8',
       'Content-Disposition': `attachment; filename="world-${getServerId().slice(0, 8)}-${m.worldHash}.html"`,
+      'X-COC-ServerId': getServerId(), 'X-COC-WorldHash': m.worldHash, 'X-COC-EngineVer': m.engineVer,
       'X-R2H-ServerId': getServerId(), 'X-R2H-WorldHash': m.worldHash, 'X-R2H-EngineVer': m.engineVer,
     });
     pushTraffic('out', 'world', req.socket.remoteAddress, true, `download served (${src.length} B)`);

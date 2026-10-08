@@ -336,7 +336,7 @@ src/scripts/publish-bootstrap.sh http://tracker:1368 [--wh h] > bootstrap.txt  #
 curl -XPOST http://localhost:1368/api/tracker/sync -d '{...}'      # federation (tracker↔tracker)
 
 # World download + mod inspection (tracker-mode refuses with 410)
-curl -O http://localhost:1367/api/world/download   # game file + X-R2H-* identity headers
+curl -O http://localhost:1367/api/world/download   # game file + X-COC-* identity headers (X-R2H-* alongside until §DX-02hj-FU)
 node src/scripts/world-diff.js mine.html theirs.html   # DEEP per-entry diff (exact field paths,
                                                    # fn bodies compared by source); LOUD if CODE differs
 node src/scripts/world-diff.js a.html b.html --json    # machine-readable report (tooling)

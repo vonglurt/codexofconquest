@@ -543,9 +543,12 @@ async function main() {
   // ── §MESH-01d3 — world download endpoint ──
   const dl = await fetch(mI.base + '/api/world/download');
   check(dl.status === 200 && (dl.headers.get('content-type') || '').includes('text/html')
+    && dl.headers.get('x-coc-worldhash') === manA.worldHash
     && dl.headers.get('x-r2h-worldhash') === manA.worldHash
+    && dl.headers.get('x-coc-serverid') === dl.headers.get('x-r2h-serverid')
+    && (dl.headers.get('access-control-expose-headers') || '').includes('X-COC-WorldHash')
     && /^attachment; filename="world-/.test(dl.headers.get('content-disposition') || ''),
-    'world download serves the game file with identity headers + attachment filename');
+    'world download serves the game file with X-COC-* identity headers, X-R2H-* alongside, + attachment filename');
   const dlTxt = await dl.text();
   check(dlTxt.includes("const ENGINE_VER = '") && dlTxt.length > 1_000_000, 'downloaded world is the full single-file game');
   check((await fetch(trkA2.base + '/api/world/download')).status === 410, 'tracker-mode refuses world download (rendezvous only, never a relay)');
