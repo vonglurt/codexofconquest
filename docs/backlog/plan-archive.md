@@ -19,6 +19,16 @@
 
 ---
 
+## Archived 2026-10-08 — §AUDIT-03bd (gate #1's terrain-key pattern takes a quoted key and its census is held to the literal's entry count; 110 → 111)
+
+### §AUDIT-03bd — CI gate #1 counts 110 of the world's 111 terrains, because its key pattern cannot see a quoted key (NEW 2026-08-14 during §DOC-02bk, 🟢 no design call)
+
+- [x] ✅ SHIPPED 2026-10-08 `b2997e3` **§AUDIT-03bd — `check:invariants` is one authored node away from a false red on the gate that proves the world is walkable.** 🟢 **one regex, ~5 minutes.** `src/scripts/check-invariants.js:127` collects `WORLD_DB`'s top-level terrain keys with `` /^ {2}([A-Za-z_][A-Za-z0-9_]*)\s*:/ `` — bare identifiers only. `WORLD_DB` holds **111** entries by a brace-depth walk and by `npm run stats`; the gate reports **110**. The missing one is the single quoted key, `'bar (Visby)':` — the Broken Tooth Tavern terrain. **Nothing is red today** because no node currently carries `name:'bar (Visby)'`, so I1's *"node references a terrain absent from `WORLD_DB`"* check finds nothing to complain about. Author one node onto that terrain and gate #1 fails, blaming the node. **The tell that this is a known class and was guarded on the other side only:** the very next scan in the same file — the NODE_MAP terrain pass at `src/scripts/check-invariants.js:142` — carries an explicit staleness guard (*"only parsed N node terrains for M coord'd nodes — regex likely stale"*). The WORLD_DB side has no such guard, so its blindness is silent by construction. **Fix:** widen the pattern to `` /^ {2}('[^']+'|[A-Za-z_][A-Za-z0-9_]*)\s*:/ `` and strip the quotes, then add the same count-sanity guard the NODE_MAP side already has (fail if the parsed key count diverges from a brace-depth count). **Instrument 51 in a live CI gate:** a census is only as good as the pattern that took it, and the entry written in the *older* style — the one quoted key, dating to the era when terrain keys carried spaces — is the one the newer pattern cannot see.
+
+> **Closed 2026-10-08 at `b2997e3` — as written.** **Re-measured at `0e59083`:** `WORLD_DB` holds **111** keys through `wbapi-core`, exactly one of them a non-identifier (`'bar (Visby)'`, `play.html:6331`); `node src/scripts/check-invariants.js` printed `terrains=110`; no node carries `name:'bar (Visby)'`, so nothing was red. **Shipped:** the key pattern is now `` /^ {2}(?:'([^']+)'|"([^"]+)"|([A-Za-z_][A-Za-z0-9_]*))\s*:/ ``, and a string-aware brace walk (`objectEntries`) counts the literal's depth-2 openings — every entry is `key: { … }` — and I1 fails when that count and the parsed key count diverge, the guard the NODE_MAP side has had since §WALK-4. **Measured after:** `terrains=111`, gate green; **planting the old pattern** fails with *I1: parsed 110 WORLD_DB terrain keys but the literal holds 111 entries — key pattern likely stale*. The node→terrain regex already read a quoted name, so the fix is one side only. `check:walk` 44/44. `index.md`'s gate #1 row names the new guard.
+
+---
+
 ## Archived 2026-10-08 — §AUDIT-03bf (ALREADY SHIPPED: the "All 193" sentence left index.md with §DX-02mj; §DX-02mq wrote the coverage rule and gate #44 holds it; §AUDIT-03be fixed the huntMode half)
 
 ### §AUDIT-03bf — `index.md` says it lists "All 193" state fields; the function has 493 and the table has 208 (NEW 2026-08-14 during §DOC-02bl, 🟢 no design call)
