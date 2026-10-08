@@ -51,6 +51,7 @@ The server holds the file text from when it started. A write after a hand-edit s
 ./bin/api put <type> <id> --drop-comments  # a comment inside a field's value has no escape through JSON, so a
                                        # write that would delete one is refused; this accepts the loss (§DX-02ix)
 npm run check:walk --prefix src        # every gate in parallel, ~30s; the final ✓ N/N line is the verdict
+npm run check:walk --prefix src -- --only check:foo   # a red gate re-run under the 120 s deadline — never bare, it can hang on exit (§DX-02hy)
 ./run.sh stop && npm test --prefix src # 1,407 tests, server stopped, ALWAYS via --prefix src (or from src/)
 npm run test:judge --prefix src        # the same run, judged: fails only on a failure that is NOT browserType.launch,
                                        # prints how many tests the browser took, and calls an all-taken run NO VERDICT

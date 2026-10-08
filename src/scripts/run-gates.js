@@ -69,6 +69,17 @@ const TIMEOUT_MS = Number(argOf('--timeout', process.env.GATE_TIMEOUT_MS || 120_
 const JOBS = Math.max(1, Number(argOf('--jobs',
   process.env.GATE_JOBS || Math.min(6, Math.max(1, os.cpus().length - 2)))));
 const SELFTEST = argv.includes('--selftest');
+const ONLY = argOf('--only', '');
+
+// `--only a,b` runs a subset under the same deadline, in GATES order, with or without the
+// `check:` prefix; a name outside GATES is an error, not an empty run.
+function onlyGates(all, spec) {
+  if (!spec) return { gates: all };
+  const want = spec.split(',').map((s) => s.trim()).filter(Boolean).map((s) => (s.startsWith('check:') ? s : 'check:' + s));
+  const unknown = want.filter((w) => !all.includes(w));
+  if (unknown.length) return { unknown };
+  return { gates: all.filter((g) => want.includes(g)) };
+}
 
 const fmt = (ms) => (ms >= 1000 ? `${(ms / 1000).toFixed(1)}s` : `${ms}ms`);
 
@@ -120,6 +131,9 @@ async function selftest() {
   checks.push(['serial-chain-parsed',
     serialChain({ scripts: { 'check:walk:serial': 'npm run check:a && npm run check:b' } })
       .join(' ') === 'check:a check:b']);
+  checks.push(['only-filters-in-chain-order', onlyGates(['check:a', 'check:b', 'check:c'], 'c,check:a').gates.join(' ') === 'check:a check:c']);
+  checks.push(['only-unknown-is-an-error', onlyGates(['check:a'], 'a,zzz').unknown.join(',') === 'check:zzz']);
+  checks.push(['only-empty-is-everything', onlyGates(['check:a'], '').gates.join(' ') === 'check:a']);
   console.log('selftest ' + checks.map(([k, v]) => `${k}=${v}`).join(' ') + ` (hang caught in ${fmt(elapsed)})`);
   if (checks.some(([, v]) => !v)) { console.error('✗ run-gates selftest failed'); process.exit(1); }
   console.log('');
@@ -144,7 +158,13 @@ async function selftest() {
     process.exit(1);
   }
 
-  const gates = GATES.map((name) => {
+  const picked = onlyGates(GATES, ONLY);
+  if (picked.unknown) {
+    console.error(`✗ run-gates: --only names no gate: ${picked.unknown.join(', ')}`);
+    console.error(`    gates: ${GATES.join(' ')}`);
+    process.exitCode = 1; return;
+  }
+  const gates = picked.gates.map((name) => {
     const script = PKG.scripts[name];
     if (!script) { console.error(`✗ run-gates: package.json has no script "${name}"`); process.exit(1); }
     return { name, script };
@@ -161,6 +181,7 @@ async function selftest() {
       console.error('  A gate is a pure read over play.html and finishes in seconds. Past the');
       console.error('  deadline it is hung, not slow — re-run it alone to see where it stops:');
       console.error(`      npm run ${r.name} --prefix src`);
+      console.error(`  or under this deadline: npm run check:walk --prefix src -- --only ${r.name}`);
       console.error('  Raise the deadline only to confirm that: --timeout <ms> / GATE_TIMEOUT_MS.');
     }
   }
@@ -170,7 +191,7 @@ async function selftest() {
   const slowest = results.slice().sort((a, b) => b.ms - a.ms).slice(0, 3)
     .map((r) => `${r.name} ${fmt(r.ms)}`).join(' · ');
 
-  console.log(`\n${failed.length ? '✗' : '✓'} ${results.length - failed.length}/${results.length} gates green · wall ${fmt(totalWall)} (${fmt(cpu)} of work) · jobs ${JOBS} · slowest: ${slowest}`);
+  console.log(`\n${failed.length ? '✗' : '✓'} ${results.length - failed.length}/${results.length} gates green · wall ${fmt(totalWall)} (${fmt(cpu)} of work) · jobs ${JOBS} · slowest: ${slowest}${ONLY ? ` · ONLY ${gates.map((g) => g.name).join(',')} of ${GATES.length}` : ''}`);
   if (failed.length) {
     console.error(`  red: ${failed.map((r) => r.name + (r.timedOut ? ' (deadline)' : '')).join(', ')}`);
     process.exit(1);
