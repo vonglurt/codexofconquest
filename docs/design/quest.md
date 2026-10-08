@@ -831,6 +831,45 @@ Gate spine (W→E, listing only): `{}` → `kgEnlisted` → `kgManifestDelivered
 
 ---
 
+## §ALCHEMY-01 — The Personal Legend ✅ SHIPPED (`e339aeb`, 2026-05-28) · ⛔ arrival-dead past `MAN` (§AUDIT-03x)
+
+**Nodes (live codes):** KIR → MAN → SEN → PDL → MLA → ATH → KIR — six existing nodes, none new; the design under its pre-§CELL codes is `docs/archive/plan-archive-verbatim-2026-06-12.md` §ALCHEMY-01. **Companion:** Roen, Highland shepherd — `world.md` §Roen. **Flags:** `roenMet → roenMidlandsWisdom → roenAtSea → roenOracleRead → roenMaltaCrisis → roenAlchemistMet → personalLegendComplete`, each the gate of the next. **`npc`:** `elder_fionn` (KIR, MAN) · `ship_captain` (SEN) · `oracle's_apprentice` (PDL) · `malta_shore_islanders` (MLA) · `deacon_nikolaos_ath` (ATH) — authoring metadata, not speakers (§AUDIT-03b).
+**Who pays:** the five `side` quests carry `bits:[]` and `reward:0`; their flags, prose and tokens come from the arrival panels registered in the node-hook table (`_nodeHookAlchKirDream@33895`, `_nodeHookAlchManNoon@33967`, `_nodeHookAlchSenShip@33990`, `_nodeHookAlchAthStoic@34013`), and each quest completes on its flag. The two `skill_check` quests pay in their own `onPass` and roll from the quest panel anywhere once active (§DX-02ah).
+
+| ID | Title | Type | Node | Gate | Completion — who writes it | Arrive? |
+|----|-------|------|------|------|----------------------------|---------|
+| `quest_alch_01` | The Shepherd's Dream | [SIDE] | KIR | `{}` | `roenMet` — `_nodeHookAlchKirDream` (Shepherd's Fortune Slip) | ✅ KIR is its cell's primary |
+| `quest_alch_02` | The Noon Plain | [SIDE] | MAN | `roenMet` | `roenMidlandsWisdom` — `_nodeHookAlchManNoon` | ✅ |
+| `quest_alch_03` | The Ship Remembers | [SIDE] | SEN | `roenMidlandsWisdom` | `roenAtSea` — `_nodeHookAlchSenShip` | ⛔ SEN shares its cell with LCY and STN; LCY is first-declared, so the panel never renders |
+| `quest_alch_04` | The Oracle's Reading | [SKILL CHECK] CHA Persuasion DC 11, retryable | PDL | `roenAtSea` | `roenOracleRead` (own `onPass`) | ✅ — the gate never opens |
+| `quest_alch_05` | The Lost Stone | [SKILL CHECK] WIS Insight DC 12, retryable | MLA | `roenOracleRead` | `roenMaltaCrisis` (own `onPass`) | ✅ — the gate never opens |
+| `quest_alch_06` | The Stoic's Gold | [SIDE] | ATH | `roenMaltaCrisis` | `roenAlchemistMet` — `_nodeHookAlchAthStoic` | ⛔ ATH's cell is held by `SEA` |
+| `quest_alch_07` | The Gold Was Home | [SIDE] | KIR | `roenAlchemistMet` | `personalLegendComplete` — `_nodeHookAlchKirDream` (Loch Gold Flake) | ✅ — the gate never opens |
+
+**Reachability at HEAD (§AUDIT-03aw, 2026-10-08, by the `CELL_GRID` first-declared rule):** **2 of 7** complete in order (`alch_01`, `alch_02`). `alch_03`'s panel fires only when the player stands on `SEN`, which `S_story.currentCode` can never hold, so `roenAtSea` has no reachable writer and `alch_04`–`07` wait behind it. The 5-of-7 figure in `lab-report-wisdom-arc.md` (verified 2026-08-13) still holds; the fix is §AUDIT-03x's.
+
+---
+
+## §WISDOM-01 — The Book of Human Nature ✅ SHIPPED (`e339aeb`, 2026-05-28) · ⛔ arrival-dead at the hook (§AUDIT-03x)
+
+**Nodes (live codes):** VS (hook, W6, close) · LCY (W1) · MME (W2) · GCI (W3) · BK (W4) · ATH (W5) — six existing nodes; the design is `docs/archive/plan-archive-verbatim-2026-06-12.md` §WISDOM-01, lab report `lab-report-wisdom-arc.md`. **Companion:** Roen, after `personalLegendComplete` — `world.md` §Roen. **The ghost:** Master Fenn Ardley, court historian, never met; six scattered pages of his suppressed *Complete Account of Human Nature*, one law each. **Flags:** `wisHookReceived` opens every page; `wisPage1_masks … wisPage6_shadow`; `wisArchiveLetter` (W5); `personalLegendMature` at the close. **`npc`:** `solvak` (VS) · `magistra_elara_muffat` (LCY) · `harbormaster_dorit` (MME) · `captain_vera_keel` (GCI) · `warlord_kael_mordus` (BK) · `deacon_nikolaos_ath` (ATH).
+**Who pays:** W1–W6 are `skill_check` quests that pay inside their own `onPass` (`mission_bit` + `reward` with a knowledge entry). The hook and the close are `side` quests with `reward:0`, paid by `_nodeHookWisVsHub@34061` (the hook button writes `wisHookReceived` and hands over the Pages of the Ardley Manuscript; the close writes `personalLegendMature`). W6 has two paths — the Insight roll on `quest_wis_06` itself (§AUDIT-03ad, `bf34ce2`) or the `VS_SHADOW` mirror-construct battle from `_nodeHookWisVsUnderground@34039` — and both `quest_wis_06` and `quest_wis_07` accept either (`flagsAny` + `battles`).
+
+| ID | Title | Type | Node | Gate | Pays | Arrive? |
+|----|-------|------|------|------|------|---------|
+| `quest_wis_00` | The Manuscript Hook | [SIDE] | VS | `personalLegendComplete` | `wisHookReceived` — `_nodeHookWisVsHub` | ⛔ VS's cell is held by `VBY` |
+| `quest_wis_01` | Mask Check | [SKILL CHECK] WIS Insight DC 13 | LCY | `wisHookReceived` | `wisPage1_masks` + 150gp + 250 XP + knowledge (Silas Vance's hands) | ✅ |
+| `quest_wis_02` | What Dorit Already Knew | [SKILL CHECK] WIS Insight DC 12 | MME | `wisHookReceived` + `saltwickAccessed` | `wisPage2_aggression` + 250 XP + knowledge | ✅ |
+| `quest_wis_03` | The Chart Room | [SKILL CHECK] INT Investigation DC 11 | GCI | `wisHookReceived` + `sbResolved` | `wisPage3_thumbscrew` + 300 XP + knowledge (Keel's survey data) | ✅ |
+| `quest_wis_04` | The Stalemate Cost | [SKILL CHECK] INT Investigation DC 12 | BK | `wisHookReceived` | `wisPage4_sight` + 300 XP + knowledge | ⛔ BK's cell is held by `LHR` |
+| `quest_wis_05` | The Philosopher's Pivot | [SKILL CHECK] WIS Insight DC 12 | ATH | `wisHookReceived` + `roenAlchemistMet` | `wisPage5_form` + `wisArchiveLetter` + 300 XP + knowledge | ⛔ ATH's cell is held by `SEA` |
+| `quest_wis_06` | The Shadow Room | [SKILL CHECK] WIS Insight DC 14, retryable · or [BATTLE] `VS_SHADOW` | VS | `visbyUnderground` | `wisPage6_shadow` + 350 XP + Shadow Shard + knowledge | ⛔ `visbyUnderground` is written only by `_nodeHookWisVsUnderground` at VS |
+| `quest_wis_07` | Ardley's Book | [SIDE] | VS | `wisHookReceived` | all six pages → `personalLegendMature` — `_nodeHookWisVsHub` | ⛔ |
+
+**Reachability at HEAD (§AUDIT-03aw, 2026-10-08):** **0 of 8.** The hook fires only on `VS`, which is not its cell's primary, and its gate is `personalLegendComplete`, which §ALCHEMY-01 cannot reach either. Were `wisHookReceived` ever set, W1–W5 would roll from the quest panel anywhere (§DX-02ah), three of their five nodes being primaries regardless. `lab-report-wisdom-arc.md` (verified 2026-08-13: 8 of 8 unreachable) still holds; the fix is §AUDIT-03x's.
+
+---
+
 ## QUEST COUNT SUMMARY
 
 | Status | Count |
@@ -857,7 +896,9 @@ Gate spine (W→E, listing only): `{}` → `kgEnlisted` → `kgManifestDelivered
 | ✅ Live §PORT-02 | 2 (The Open Harbor + The Salt Price) |
 | ✅ Live §NAVAL-01 | 4 (Approach + Parley CHA DC 12 + Examine INT DC 11 + Board and Clear) |
 | ✅ Live §1367 | 7 (Historical 1367 AD vignettes A–G; Event G "The Unseen Pen" shipped by promoting `quest_lxvii67`) |
-| **Total live** | **~141** (Event G re-themed an existing quest — no net new quest object) |
+| ✅ Shipped §ALCHEMY-01 | 7 (Roen's Personal Legend, KIR → MAN → SEN → PDL → MLA → ATH → KIR) — ⛔ 2 of 7 complete in order; the chain dies on `SEN` (§AUDIT-03aw / §AUDIT-03x) |
+| ✅ Shipped §WISDOM-01 | 8 (Ardley's six pages + hook + close) — ⛔ 0 of 8; the hook is on `VS` behind §ALCHEMY-01's last flag (§AUDIT-03aw / §AUDIT-03x) |
+| **Total live** | **~156** (Event G re-themed an existing quest — no net new quest object; 15 of the 156 are shipped but unreachable at HEAD — §AUDIT-03x) |
 | Planned | 0 |
 
 > **✅ §LXX-01-FU (measured 2026-08-05, §VM-01-G-FU-e; FIXED 2026-08-06):** three of the four
