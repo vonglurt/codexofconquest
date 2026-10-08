@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson
 'use strict';
-const { test, expect } = require('@playwright/test');
+const { test, expect } = require('./helpers');
 
 // ── §ARCH-01 Phase 1 — UQF runtime (inert) ───────────────────────────────────
 //
@@ -12,8 +12,7 @@ const { test, expect } = require('@playwright/test');
 // skill-check resolver _rollCeremonia is still the only thing wired in).
 
 test.describe('UQF runtime — Phase 1 inert engine (§ARCH-01)', () => {
-  test('the engine is defined and exposed, schema = UQF-1.0', async ({ page }) => {
-    await page.goto('/play.html');
+  test('the engine is defined and exposed, schema = UQF-1.0', async ({ roPage: page }) => {
     const r = await page.evaluate(() => ({
       schema:    QuestRuntime.SCHEMA_VERSION,
       onWindow:  typeof window.QuestRuntime === 'object' && typeof window.validateQuest === 'function',
@@ -29,8 +28,7 @@ test.describe('UQF runtime — Phase 1 inert engine (§ARCH-01)', () => {
     expect(r.kinds).toBe('_legacy_fn,choice,combat,cost,favor,flag_write,item_check,item_remove,mission_bit,narrative,reward,skill_check,unlock');   // favor added in W7c; cost in §VM-01-G4a
   });
 
-  test('validateQuest enforces bit contracts', async ({ page }) => {
-    await page.goto('/play.html');
+  test('validateQuest enforces bit contracts', async ({ roPage: page }) => {
     const r = await page.evaluate(() => {
       const good = { schema:'UQF-1.0', id:'q_test', bits:[
         { kind:'skill_check', stat:'WIS', dc:13, onPass:[{ kind:'flag_write', set:['fooDone'] }] },
@@ -59,8 +57,7 @@ test.describe('UQF runtime — Phase 1 inert engine (§ARCH-01)', () => {
     expect(r.noSchema.errors).toContain('Missing schema version');
   });
 
-  test('adaptLegacyQuest is a §W7d no-op: identity passthrough for legacy AND UQF entries', async ({ page }) => {
-    await page.goto('/play.html');
+  test('adaptLegacyQuest is a §W7d no-op: identity passthrough for legacy AND UQF entries', async ({ roPage: page }) => {
     const r = await page.evaluate(() => {
       // Pre-W7d this wrapped legacy entries in a '0.legacy' UQF shell; the shim is
       // retired with the legacy execution paths (nothing left to adapt).
@@ -118,8 +115,7 @@ test.describe('UQF runtime — Phase 1 inert engine (§ARCH-01)', () => {
     expect(r.know).toBe('Learned a thing.');
   });
 
-  test('the engine is inert — the live legacy skill-check path is unchanged', async ({ page }) => {
-    await page.goto('/play.html');
+  test('the engine is inert — the live legacy skill-check path is unchanged', async ({ roPage: page }) => {
     const r = await page.evaluate(() => ({
       // legacy resolver still present and still the wired path
       legacyResolver: typeof _rollCeremonia === 'function',
@@ -293,8 +289,7 @@ test.describe('UQF dual-path dispatch — Phase 2 (§ARCH-01)', () => {
 // entry, and a non-retryable fail locks the quest.
 
 test.describe('§WISDOM-01 migrated to UQF — quest_wis_01 (§ARCH-01 Phase 3)', () => {
-  test('the quest is now UQF and still validates', async ({ page }) => {
-    await page.goto('/play.html');
+  test('the quest is now UQF and still validates', async ({ roPage: page }) => {
     const r = await page.evaluate(() => {
       const q = QUEST_DB.quest_wis_01;
       return { schema: q.schema, hasGate: !!(q.gate && q.gate.flags), bitKind: q.bits[0].kind,
@@ -377,8 +372,7 @@ test.describe('§WISDOM-01 migrated to UQF — quest_wis_01 (§ARCH-01 Phase 3)'
 // knowledge entry. wis_05 additionally sets the wisArchiveLetter flag.
 
 test.describe('§WISDOM-01 wis_02–05 migrated to UQF (§ARCH-01 Phase 3)', () => {
-  test('all four validate as UQF with a skill_check bit', async ({ page }) => {
-    await page.goto('/play.html');
+  test('all four validate as UQF with a skill_check bit', async ({ roPage: page }) => {
     const r = await page.evaluate(() => ['quest_wis_02','quest_wis_03','quest_wis_04','quest_wis_05'].map(id => {
       const q = QUEST_DB[id];
       return { id, schema:q.schema, bit:q.bits[0].kind, stat:q.bits[0].stat, dc:q.bits[0].dc,
@@ -458,8 +452,7 @@ test.describe('§WISDOM-01 wis_02–05 migrated to UQF (§ARCH-01 Phase 3)', () 
 // battles — no boolean-expression language needed.
 
 test.describe('§WISDOM-01 side quests wis_00/06/07 → UQF (§ARCH-01 Phase 3)', () => {
-  test('all three validate as UQF (completion gate; wis_06 also carries the W6 check)', async ({ page }) => {
-    await page.goto('/play.html');
+  test('all three validate as UQF (completion gate; wis_06 also carries the W6 check)', async ({ roPage: page }) => {
     const r = await page.evaluate(() => ['quest_wis_00','quest_wis_06','quest_wis_07'].map(id => {
       const q = QUEST_DB[id];
       return { id, schema:q.schema, type:q.type, completion:!!q.completion, bits:q.bits.length, valid:validateQuest(q).valid };
@@ -544,8 +537,7 @@ test.describe('§WISDOM-01 side quests wis_00/06/07 → UQF (§ARCH-01 Phase 3)'
 test.describe('§ARCH-01 Wave 1 — Wane\'s Crown arc (quest_wane_01..06)', () => {
   const IDS = ['quest_wane_01','quest_wane_02','quest_wane_03','quest_wane_04','quest_wane_05','quest_wane_06'];
 
-  test('all six validate as UQF skill_check quests with exact stat/dc/xp transcription', async ({ page }) => {
-    await page.goto('/play.html');
+  test('all six validate as UQF skill_check quests with exact stat/dc/xp transcription', async ({ roPage: page }) => {
     const r = await page.evaluate((ids) => ids.map(id => {
       const q = QUEST_DB[id];
       const sc = q.bits[0];
@@ -667,8 +659,7 @@ test.describe('§ARCH-01 Wave 1 — Wane\'s Crown arc (quest_wane_01..06)', () =
 test.describe('§ARCH-01 Wave 1 — Whisper\'s Crown arc (quest_whisper_01..06)', () => {
   const SKILL = ['quest_whisper_01','quest_whisper_02','quest_whisper_03','quest_whisper_04','quest_whisper_06'];
 
-  test('five skill_checks + the side quest all validate as UQF', async ({ page }) => {
-    await page.goto('/play.html');
+  test('five skill_checks + the side quest all validate as UQF', async ({ roPage: page }) => {
     const r = await page.evaluate((skill) => {
       const sc = skill.map(id => {
         const q = QUEST_DB[id]; const bit = q.bits[0];
@@ -770,8 +761,7 @@ test.describe('§ARCH-01 Wave 1 — Whisper\'s Crown arc (quest_whisper_01..06)'
 test.describe('§ARCH-01 Wave 1 — Glut\'s Crown arc (quest_glut_01..06)', () => {
   const SKILL = ['quest_glut_01','quest_glut_02','quest_glut_03','quest_glut_04','quest_glut_05'];
 
-  test('five skill_checks + the side quest all validate as UQF', async ({ page }) => {
-    await page.goto('/play.html');
+  test('five skill_checks + the side quest all validate as UQF', async ({ roPage: page }) => {
     const r = await page.evaluate((skill) => {
       const sc = skill.map(id => {
         const q = QUEST_DB[id]; const bit = q.bits[0];
@@ -869,8 +859,7 @@ test.describe('§ARCH-01 Wave 1 — Glut\'s Crown arc (quest_glut_01..06)', () =
 test.describe('§ARCH-01 Wave 1 — Ceremonia: Yael arc (quest_ceremonia_yael_01..05)', () => {
   const IDS = ['quest_ceremonia_yael_01','quest_ceremonia_yael_02','quest_ceremonia_yael_03','quest_ceremonia_yael_04','quest_ceremonia_yael_05'];
 
-  test('all five validate as UQF with mission_bit + reward + transcription', async ({ page }) => {
-    await page.goto('/play.html');
+  test('all five validate as UQF with mission_bit + reward + transcription', async ({ roPage: page }) => {
     const r = await page.evaluate((ids) => ids.map(id => {
       const q = QUEST_DB[id]; const bit = q.bits[0];
       const mb = (bit.onPass||[]).find(b => b.kind==='mission_bit');
@@ -1043,8 +1032,7 @@ test.describe('§ARCH-01 Wave 1 — Ceremonia: Yael arc (quest_ceremonia_yael_01
 test.describe('§ARCH-01 Wave 1 — §1367 skill-checks (quest_1367_{e,b,c,d})', () => {
   const IDS = ['quest_1367_e_wycliffe','quest_1367_b_tamerlane','quest_1367_c_ottoman','quest_1367_d_hansa'];
 
-  test('all four validate as UQF skill_checks (no mission_bit, exact stat/dc/xp)', async ({ page }) => {
-    await page.goto('/play.html');
+  test('all four validate as UQF skill_checks (no mission_bit, exact stat/dc/xp)', async ({ roPage: page }) => {
     const r = await page.evaluate((ids) => ids.map(id => {
       const q = QUEST_DB[id]; const bit = q.bits[0];
       return { id, schema:q.schema, valid:validateQuest(q).valid, stat:bit.stat, dc:bit.dc,
@@ -1122,8 +1110,7 @@ test.describe('§ARCH-01 Wave 1 — §1367 skill-checks (quest_1367_{e,b,c,d})',
 test.describe('§ARCH-01 Wave 1 — Ceremonia d0207 arc (5-act, fully UQF)', () => {
   const ALL = ['quest_d0207_a1','quest_d0207_a2','quest_d0207_a3','quest_d0207_a4','quest_d0207_a5'];
 
-  test('all five acts validate as UQF (3 skill_check + 2 side)', async ({ page }) => {
-    await page.goto('/play.html');
+  test('all five acts validate as UQF (3 skill_check + 2 side)', async ({ roPage: page }) => {
     const r = await page.evaluate((ids) => ids.map(id => {
       const q = QUEST_DB[id];
       return { id, type:q.type, schema:q.schema, valid:validateQuest(q).valid,
@@ -1232,8 +1219,7 @@ test.describe('§ARCH-01 Wave 1 — Ceremonia d0201/d0205/d0209 arcs (15 quests)
   const ALL = [];
   for (const arc of ['d0201','d0205','d0209']) for (const a of ['a1','a2','a3','a4','a5']) ALL.push('quest_'+arc+'_'+a);
 
-  test('all 15 validate as UQF; the a3 acts are declarative-completion side quests', async ({ page }) => {
-    await page.goto('/play.html');
+  test('all 15 validate as UQF; the a3 acts are declarative-completion side quests', async ({ roPage: page }) => {
     const r = await page.evaluate((ids) => ids.map(id => {
       const q = QUEST_DB[id];
       return { id, schema:q.schema, valid:validateQuest(q).valid, type:q.type,
@@ -1375,8 +1361,7 @@ test.describe('§ARCH-01 Wave 1 — Ceremonia d0204/d0206/d0208/d0210 arcs (20 q
   const ALL = [];
   for (const arc of ['d0204','d0206','d0208','d0210']) for (const a of ['a1','a2','a3','a4','a5']) ALL.push('quest_'+arc+'_'+a);
 
-  test('all 20 validate as UQF', async ({ page }) => {
-    await page.goto('/play.html');
+  test('all 20 validate as UQF', async ({ roPage: page }) => {
     const r = await page.evaluate((ids) => ids.map(id => {
       const q = QUEST_DB[id];
       return { id, schema:q.schema, valid:validateQuest(q).valid };
@@ -1539,8 +1524,7 @@ test.describe('§SKILLFIX-01 — legacy _rollCeremonia applies checkStat ability
 test.describe('§ARCH-01 Wave 1 — Innmother skill-checks (quest_inn_{02,03,04})', () => {
   const IDS = ['quest_inn_02','quest_inn_03','quest_inn_04'];
 
-  test('all three validate as UQF skill_checks (no mission_bit, sleptAt gate, exact stat/dc/xp)', async ({ page }) => {
-    await page.goto('/play.html');
+  test('all three validate as UQF skill_checks (no mission_bit, sleptAt gate, exact stat/dc/xp)', async ({ roPage: page }) => {
     const r = await page.evaluate((ids) => ids.map(id => {
       const q = QUEST_DB[id]; const bit = q.bits[0];
       return { id, schema:q.schema, valid:validateQuest(q).valid, stat:bit.stat, skill:bit.skill, dc:bit.dc,
@@ -1622,8 +1606,7 @@ test.describe('§ARCH-01 Wave 1 — Innmother skill-checks (quest_inn_{02,03,04}
 // since §SKILLFIX-01, so the whole arc is pure parity.
 
 test.describe('§ARCH-01 Wave 1j — Spark Harmony Chain (quest_spark_01..05)', () => {
-  test('the three skill_checks validate with exact stat/skill/dc and mission_bit + gates', async ({ page }) => {
-    await page.goto('/play.html');
+  test('the three skill_checks validate with exact stat/skill/dc and mission_bit + gates', async ({ roPage: page }) => {
     const r = await page.evaluate(() => ['quest_spark_01','quest_spark_03','quest_spark_04'].map(id => {
       const q = QUEST_DB[id]; const bit = q.bits[0];
       const mb = (bit.onPass||[]).find(b=>b.kind==='mission_bit');
@@ -1640,8 +1623,7 @@ test.describe('§ARCH-01 Wave 1j — Spark Harmony Chain (quest_spark_01..05)', 
     ]);
   });
 
-  test('the two side quests validate as UQF completion gates that retain onComplete', async ({ page }) => {
-    await page.goto('/play.html');
+  test('the two side quests validate as UQF completion gates that retain onComplete', async ({ roPage: page }) => {
     const r = await page.evaluate(() => ['quest_spark_02','quest_spark_05'].map(id => {
       const q = QUEST_DB[id];
       return { id, schema:q.schema, type:q.type, valid:validateQuest(q).valid,
@@ -1716,8 +1698,7 @@ test.describe('§ARCH-01 Wave 1j — Spark Harmony Chain (quest_spark_01..05)', 
 // gates with NO onComplete — completion flags set by story interaction elsewhere.
 
 test.describe('§ARCH-01 Wave 1k — Spark2 Dunfall Harmony Chain (quest_spark2_01..05)', () => {
-  test('the two skill_checks validate with exact stat/skill/dc, mission_bit (no label), gates, retryability', async ({ page }) => {
-    await page.goto('/play.html');
+  test('the two skill_checks validate with exact stat/skill/dc, mission_bit (no label), gates, retryability', async ({ roPage: page }) => {
     const r = await page.evaluate(() => ['quest_spark2_02','quest_spark2_04'].map(id => {
       const q = QUEST_DB[id]; const bit = q.bits[0];
       const mb = (bit.onPass||[]).find(b=>b.kind==='mission_bit');
@@ -1734,8 +1715,7 @@ test.describe('§ARCH-01 Wave 1k — Spark2 Dunfall Harmony Chain (quest_spark2_
     ]);
   });
 
-  test('the three side quests validate as structural completion gates (no onComplete)', async ({ page }) => {
-    await page.goto('/play.html');
+  test('the three side quests validate as structural completion gates (no onComplete)', async ({ roPage: page }) => {
     const r = await page.evaluate(() => ['quest_spark2_01','quest_spark2_03','quest_spark2_05'].map(id => {
       const q = QUEST_DB[id];
       return { id, schema:q.schema, type:q.type, valid:validateQuest(q).valid,
@@ -1809,8 +1789,7 @@ test.describe('§ARCH-01 Wave 1k — Spark2 Dunfall Harmony Chain (quest_spark2_
 test.describe('§ARCH-01 Wave 1l — Codex Inquisitor gauntlet (quest_inquisitor_*)', () => {
   const IDS = ['quest_inquisitor_handshake','quest_inquisitor_questions','quest_inquisitor_final'];
 
-  test('all three validate; exact stat/skill/dc, mission_bit (no label), reward xp, gates, retryGateDays', async ({ page }) => {
-    await page.goto('/play.html');
+  test('all three validate; exact stat/skill/dc, mission_bit (no label), reward xp, gates, retryGateDays', async ({ roPage: page }) => {
     const r = await page.evaluate((ids) => ids.map(id => {
       const q = QUEST_DB[id]; const bit = q.bits[0];
       const mb = (bit.onPass||[]).find(b=>b.kind==='mission_bit');
@@ -1915,8 +1894,7 @@ test.describe('§ARCH-01 Wave 1m — Sea: The Warmth Calm (quest_sea_01..03)', (
     expect(r.atNWI).toBe(true);
   });
 
-  test('the two skill_checks validate with exact stat/skill/dc + mission_bit (no label) + gates', async ({ page }) => {
-    await page.goto('/play.html');
+  test('the two skill_checks validate with exact stat/skill/dc + mission_bit (no label) + gates', async ({ roPage: page }) => {
     const r = await page.evaluate(() => ['quest_sea_02','quest_sea_03'].map(id => {
       const q = QUEST_DB[id]; const bit = q.bits[0];
       const mb = (bit.onPass||[]).find(b=>b.kind==='mission_bit');
@@ -1980,8 +1958,7 @@ test.describe('§ARCH-01 Wave 1n — Naval Intercept branch (quest_sb_*)', () =>
     expect(r).toEqual({ parleyNoApproach:false, parleyWrongRole:false, parleyMatch:true, examineMatch:true, fightMatch:true, fightWrongRole:false });
   });
 
-  test('all four validate; sb_01 structural side, sb_fight battle-completion, parley/examine skill_checks', async ({ page }) => {
-    await page.goto('/play.html');
+  test('all four validate; sb_01 structural side, sb_fight battle-completion, parley/examine skill_checks', async ({ roPage: page }) => {
     const r = await page.evaluate(() => {
       const get = (id) => { const q = QUEST_DB[id]; return { id, schema:q.schema, type:q.type, valid:validateQuest(q).valid, gate:JSON.stringify(q.gate), completion:q.completion?JSON.stringify(q.completion):null }; };
       const sc = (id) => { const q = QUEST_DB[id]; const b = q.bits[0]; const mb=(b.onPass||[]).find(x=>x.kind==='mission_bit'); return { id, stat:b.stat, skill:b.skill, dc:b.dc, mbFlag:mb&&mb.flag, mbLabel:mb&&(mb.label||null), failFlips:(b.onFail||[]).some(x=>x.kind==='_legacy_fn'), retryable:q.retryable }; };
@@ -2063,8 +2040,7 @@ test.describe('§ARCH-01 Wave 1o — Lake/Relay Monster Hunt (quest_hunt_* / que
     { id:'quest_hunt_03',  stat:'WIS', skill:'Perception',    dc:13, flag:'lakeLairLocated', gate:'{"flags":["lakeClueFound"]}',     xp:250, knowledge:0 },
   ];
 
-  test('all 8 validate; 4 skill_checks (no mission_bit label) + 4 side quests (hooks gate:{}, lairs battle-completion)', async ({ page }) => {
-    await page.goto('/play.html');
+  test('all 8 validate; 4 skill_checks (no mission_bit label) + 4 side quests (hooks gate:{}, lairs battle-completion)', async ({ roPage: page }) => {
     const r = await page.evaluate(() => {
       const sk = ['quest_hunt2_02','quest_hunt2_03','quest_hunt_02','quest_hunt_03'].map(id => {
         const q = QUEST_DB[id]; const b = q.bits[0]; const mb=(b.onPass||[]).find(x=>x.kind==='mission_bit');
@@ -2141,8 +2117,7 @@ test.describe('§ARCH-01 Wave 1o — Lake/Relay Monster Hunt (quest_hunt_* / que
 // xpAward removed 2026-07-07 (open-gaps item 4) → onComplete +600 is the sole vector.
 
 test.describe('§ARCH-01 Wave 1p — Bilge Mystery (quest_bilge_01..04)', () => {
-  test('all 4 validate; 2 skill_checks (no label) + hook side (flag gate) + lair side (battle completion)', async ({ page }) => {
-    await page.goto('/play.html');
+  test('all 4 validate; 2 skill_checks (no label) + hook side (flag gate) + lair side (battle completion)', async ({ roPage: page }) => {
     const r = await page.evaluate(() => {
       const sk = ['quest_bilge_02','quest_bilge_03'].map(id => {
         const q = QUEST_DB[id]; const b = q.bits[0]; const mb=(b.onPass||[]).find(x=>x.kind==='mission_bit');
@@ -2235,8 +2210,7 @@ test.describe('open-gaps item 3 — mimic rename prompt (skill_check terminal is
 // personalLegendComplete gates the §WISDOM-01 wis arc. Zero engine changes.
 
 test.describe('§ARCH-01 Wave 1q — The Personal Legend (quest_alch_01..07)', () => {
-  test('all 7 validate; 5 chained side quests (no onComplete) + 2 skill_checks (no label)', async ({ page }) => {
-    await page.goto('/play.html');
+  test('all 7 validate; 5 chained side quests (no onComplete) + 2 skill_checks (no label)', async ({ roPage: page }) => {
     const r = await page.evaluate(() => {
       const side = ['quest_alch_01','quest_alch_02','quest_alch_03','quest_alch_06','quest_alch_07'].map(id => {
         const q = QUEST_DB[id];
@@ -2303,8 +2277,7 @@ test.describe('§ARCH-01 Wave 1q — The Personal Legend (quest_alch_01..07)', (
 // atNode:'NUE'.
 
 test.describe('§ARCH-01 Wave 1r — The Scar (quest_scar_01..04)', () => {
-  test('all 4 validate; 3 checkAbility skill_checks (no mission_bit) + scar_04 side (flags+atNode completion)', async ({ page }) => {
-    await page.goto('/play.html');
+  test('all 4 validate; 3 checkAbility skill_checks (no mission_bit) + scar_04 side (flags+atNode completion)', async ({ roPage: page }) => {
     const r = await page.evaluate(() => {
       const sk = ['quest_scar_01','quest_scar_02','quest_scar_03'].map(id => {
         const q = QUEST_DB[id]; const b = q.bits[0];
@@ -2399,8 +2372,7 @@ const SIREN = [
 ];
 
 test.describe('§ARCH-01 Wave 1s — The Four Courts of the Littoral Sea (§SIREN-01)', () => {
-  test('all 5 validate as UQF skill_checks; gate:{}, retryable:false, onPass mission_bit{flag,label}+reward, onFail mission_bit (solen onFail:[])', async ({ page }) => {
-    await page.goto('/play.html');
+  test('all 5 validate as UQF skill_checks; gate:{}, retryable:false, onPass mission_bit{flag,label}+reward, onFail mission_bit (solen onFail:[])', async ({ roPage: page }) => {
     const r = await page.evaluate((SIREN) => SIREN.map(s => {
       const q = QUEST_DB[s.id]; const b = (q.bits || []).find(x => x.kind === 'skill_check');
       const pb = (b.onPass || []).find(x => x.kind === 'mission_bit');
@@ -2495,8 +2467,7 @@ test.describe('§ARCH-01 Wave 1s — The Four Courts of the Littoral Sea (§SIRE
 //     'Basket Rope') + reward; onFail:[] (retryable → no terminal fail flag). gate
 //     {flags:['anathSightRestored']}.
 test.describe('§ARCH-01 Wave 1t — Biblical singletons (stoning_lystra, basket_damascus)', () => {
-  test('both validate as UQF skill_checks with correct gate / stat / dc / onPass / onFail shape', async ({ page }) => {
-    await page.goto('/play.html');
+  test('both validate as UQF skill_checks with correct gate / stat / dc / onPass / onFail shape', async ({ roPage: page }) => {
     const r = await page.evaluate(() => {
       const dump = (id) => {
         const q = QUEST_DB[id]; const b = (q.bits || []).find(x => x.kind === 'skill_check');
@@ -2618,8 +2589,7 @@ const IODINE = [
 ];
 
 test.describe('§ARCH-01 Wave 1u — Atlantean iodine chain (iodine_01/shore_02/forge_01/sunken_01)', () => {
-  test('all 4 validate as UQF skill_checks; retryable:true, onPass [reward{xp}, _legacy_fn], onFail:[]', async ({ page }) => {
-    await page.goto('/play.html');
+  test('all 4 validate as UQF skill_checks; retryable:true, onPass [reward{xp}, _legacy_fn], onFail:[]', async ({ roPage: page }) => {
     const r = await page.evaluate((IODINE) => IODINE.map(s => {
       const q = QUEST_DB[s.id]; const b = (q.bits || []).find(x => x.kind === 'skill_check');
       const rw = (b.onPass || []).find(x => x.kind === 'reward');
@@ -2785,8 +2755,7 @@ const FOLK = [
 ];
 
 test.describe('§ARCH-01 Wave 1v — folk wisdom (lxvii67 jester / guide_04 U-curve)', () => {
-  test('both validate; xpAward → onPass [reward{xp}, _legacy_fn] (no token), onFail:[]', async ({ page }) => {
-    await page.goto('/play.html');
+  test('both validate; xpAward → onPass [reward{xp}, _legacy_fn] (no token), onFail:[]', async ({ roPage: page }) => {
     const r = await page.evaluate((FOLK) => FOLK.map(s => {
       const q = QUEST_DB[s.id]; const b = (q.bits || []).find(x => x.kind === 'skill_check');
       const rw = (b.onPass || []).find(x => x.kind === 'reward');
@@ -2865,9 +2834,8 @@ test.describe('§ARCH-01 Wave 1v — folk wisdom (lxvii67 jester / guide_04 U-cu
 // family from QUEST_DB and asserts structure + pass/fail parity + gate chaining.
 // ══════════════════════════════════════════════════════════════════════════
 test.describe('§ARCH-01 Wave 2 — hav_* family (bulk-migrated, 30 acts)', () => {
-  test('every hav_* skill_check is UQF-1.0, validates, onPass:[mission_bit], onFail:[]', async ({ page }) => {
+  test('every hav_* skill_check is UQF-1.0, validates, onPass:[mission_bit], onFail:[]', async ({ roPage: page }) => {
     const errs = []; page.on('pageerror', e => errs.push(String(e)));
-    await page.goto('/play.html');
     const r = await page.evaluate(() => {
       const hav = Object.values(QUEST_DB).filter(q => /^hav_/.test(q.id) && q.type === 'skill_check');
       return hav.map(q => {
@@ -2957,9 +2925,8 @@ test.describe('§ARCH-01 Wave 2 — hav_* family (bulk-migrated, 30 acts)', () =
 // bitLabel/xp/gold), non-retryable, and NO activateCond on any act → all
 // gate:{} (independently activatable, matching legacy). Self-contained.
 test.describe('§ARCH-01 Wave 2b — ada* family (bulk-migrated, 235 acts)', () => {
-  test('every ada* skill_check is UQF-1.0, validates, gate:{}, onPass:[mission_bit](no label), onFail:[]', async ({ page }) => {
+  test('every ada* skill_check is UQF-1.0, validates, gate:{}, onPass:[mission_bit](no label), onFail:[]', async ({ roPage: page }) => {
     const errs = []; page.on('pageerror', e => errs.push(String(e)));
-    await page.goto('/play.html');
     const r = await page.evaluate(() => {
       const ada = Object.values(QUEST_DB).filter(q => /^ada/.test(q.id) && q.type === 'skill_check');
       return ada.map(q => {
@@ -3028,9 +2995,8 @@ test.describe('§ARCH-01 Wave 2b — ada* family (bulk-migrated, 235 acts)', () 
 // forms and decomposes the intended gate, so this also FIXES that latent crash —
 // asserted here via canActivate gate behavior + the no-activateCond invariant.
 test.describe('§ARCH-01 Wave 2c — ath* family (bulk-migrated, 113 acts; fixes string-activateCond crash)', () => {
-  test('every ath* skill_check is UQF-1.0, validates, onPass:[mission_bit](no label), onFail:[], NO residual activateCond', async ({ page }) => {
+  test('every ath* skill_check is UQF-1.0, validates, onPass:[mission_bit](no label), onFail:[], NO residual activateCond', async ({ roPage: page }) => {
     const errs = []; page.on('pageerror', e => errs.push(String(e)));
-    await page.goto('/play.html');
     const r = await page.evaluate(() => {
       const ath = Object.values(QUEST_DB).filter(q => /^ath/.test(q.id) && q.type === 'skill_check');
       return ath.map(q => {
@@ -3114,9 +3080,8 @@ test.describe('§ARCH-01 Wave 2c — ath* family (bulk-migrated, 113 acts; fixes
 // pre-migration vs a golden seeded under BOTH cases (deterministic extreme
 // through either resolver); the seed() helper below mirrors that. Self-contained.
 test.describe('§ARCH-01 Wave 2d — lis* family (bulk-migrated, 89 acts)', () => {
-  test('every lis* skill_check is UQF-1.0, validates, onPass:[mission_bit](no label), onFail:[], NO residual activateCond', async ({ page }) => {
+  test('every lis* skill_check is UQF-1.0, validates, onPass:[mission_bit](no label), onFail:[], NO residual activateCond', async ({ roPage: page }) => {
     const errs = []; page.on('pageerror', e => errs.push(String(e)));
-    await page.goto('/play.html');
     const r = await page.evaluate(() => {
       const lis = Object.values(QUEST_DB).filter(q => /^lis/.test(q.id) && q.type === 'skill_check');
       return lis.map(q => {
@@ -3205,9 +3170,8 @@ test.describe('§ARCH-01 Wave 2d — lis* family (bulk-migrated, 89 acts)', () =
 // applies the real modifier. Parity was verified pre-migration vs a golden
 // seeded under BOTH cases; the seed() helper below mirrors that. Self-contained.
 test.describe('§ARCH-01 Wave 2e — zth* family (bulk-migrated, 75 acts)', () => {
-  test('every zth* skill_check is UQF-1.0, validates, onPass:[mission_bit](no label), onFail:[], NO residual activateCond', async ({ page }) => {
+  test('every zth* skill_check is UQF-1.0, validates, onPass:[mission_bit](no label), onFail:[], NO residual activateCond', async ({ roPage: page }) => {
     const errs = []; page.on('pageerror', e => errs.push(String(e)));
-    await page.goto('/play.html');
     const r = await page.evaluate(() => {
       const zth = Object.values(QUEST_DB).filter(q => /^zth/.test(q.id) && q.type === 'skill_check');
       return zth.map(q => {
@@ -3295,9 +3259,8 @@ test.describe('§ARCH-01 Wave 2e — zth* family (bulk-migrated, 75 acts)', () =
 // modifier. Parity verified pre-migration vs a golden seeded under BOTH cases;
 // the seed() helper below mirrors that. Self-contained.
 test.describe('§ARCH-01 Wave 2f — flr* family (bulk-migrated, 71 acts)', () => {
-  test('every flr* skill_check is UQF-1.0, validates, onPass:[mission_bit](no label), onFail:[], NO residual activateCond', async ({ page }) => {
+  test('every flr* skill_check is UQF-1.0, validates, onPass:[mission_bit](no label), onFail:[], NO residual activateCond', async ({ roPage: page }) => {
     const errs = []; page.on('pageerror', e => errs.push(String(e)));
-    await page.goto('/play.html');
     const r = await page.evaluate(() => {
       const flr = Object.values(QUEST_DB).filter(q => /^flr/.test(q.id) && q.type === 'skill_check');
       return flr.map(q => {
@@ -3387,9 +3350,8 @@ test.describe('§ARCH-01 Wave 2f — flr* family (bulk-migrated, 71 acts)', () =
 // type-gates out the non-skill_check members (hft_10_act3 combat + 4 deliveries).
 // Self-contained.
 test.describe('§ARCH-01 Wave 2g — hft_* family (bulk-migrated, 50 acts; mixed flag/flagless)', () => {
-  test('every hft_* skill_check is UQF-1.0, validates, onFail:[], NO residual activateCond; onPass = mission_bit OR empty', async ({ page }) => {
+  test('every hft_* skill_check is UQF-1.0, validates, onFail:[], NO residual activateCond; onPass = mission_bit OR empty', async ({ roPage: page }) => {
     const errs = []; page.on('pageerror', e => errs.push(String(e)));
-    await page.goto('/play.html');
     const r = await page.evaluate(() => {
       const hft = Object.values(QUEST_DB).filter(q => /^hft_/.test(q.id) && q.type === 'skill_check');
       return hft.map(q => {
@@ -3495,9 +3457,8 @@ test.describe('§ARCH-01 Wave 2g — hft_* family (bulk-migrated, 50 acts; mixed
 // that. Transform type-gates out non-skill_check members (rkv_10_act3 combat + 4
 // deliveries). Self-contained.
 test.describe('§ARCH-01 Wave 2h — rkv_* family (bulk-migrated, 50 acts; mixed flag/flagless)', () => {
-  test('every rkv_* skill_check is UQF-1.0, validates, onFail:[], NO residual activateCond; onPass = mission_bit OR empty', async ({ page }) => {
+  test('every rkv_* skill_check is UQF-1.0, validates, onFail:[], NO residual activateCond; onPass = mission_bit OR empty', async ({ roPage: page }) => {
     const errs = []; page.on('pageerror', e => errs.push(String(e)));
-    await page.goto('/play.html');
     const r = await page.evaluate(() => {
       const rkv = Object.values(QUEST_DB).filter(q => /^rkv_/.test(q.id) && q.type === 'skill_check');
       return rkv.map(q => {
@@ -3611,9 +3572,8 @@ test.describe('§ARCH-01 Wave 2i / §SKILLFIX-02 — ist_* family (skill→abili
     DECEPTION:'CHA', INTIMIDATION:'CHA', PERFORMANCE:'CHA', PERSUASION:'CHA', COURAGE:'CHA', PRESENCE:'CHA',
   };
 
-  test('every ist_* skill_check is UQF-1.0, validates, stat is a real ability, skill→ability mapping holds', async ({ page }) => {
+  test('every ist_* skill_check is UQF-1.0, validates, stat is a real ability, skill→ability mapping holds', async ({ roPage: page }) => {
     const errs = []; page.on('pageerror', e => errs.push(String(e)));
-    await page.goto('/play.html');
     const r = await page.evaluate(() => {
       const ist = Object.values(QUEST_DB).filter(q => /^ist_/.test(q.id) && q.type === 'skill_check');
       return ist.map(q => {
@@ -3705,9 +3665,8 @@ test.describe('§ARCH-01 Wave 2i / §SKILLFIX-02 — ist_* family (skill→abili
 // type-gates out the 8 non-skill_check members (combat rix_01/03_act3 + the
 // delivery acts). Self-contained.
 test.describe('§ARCH-01 Wave 2j — rix_* family (bulk-migrated, 47 acts; mixed flag/flagless)', () => {
-  test('every rix_* skill_check is UQF-1.0, validates, onFail:[], NO residual activateCond; onPass = mission_bit OR empty', async ({ page }) => {
+  test('every rix_* skill_check is UQF-1.0, validates, onFail:[], NO residual activateCond; onPass = mission_bit OR empty', async ({ roPage: page }) => {
     const errs = []; page.on('pageerror', e => errs.push(String(e)));
-    await page.goto('/play.html');
     const r = await page.evaluate(() => {
       const rix = Object.values(QUEST_DB).filter(q => /^rix_/.test(q.id) && q.type === 'skill_check');
       return rix.map(q => {
@@ -3811,9 +3770,8 @@ test.describe('§ARCH-01 Wave 2j — rix_* family (bulk-migrated, 47 acts; mixed
 // non-skill_check members (5 combat ost_01_act2/02_act4/03_act3/09_act3/10_act3 +
 // 4 deliveries). Self-contained.
 test.describe('§ARCH-01 Wave 2k — ost_* family (bulk-migrated, 46 acts; mixed flag/flagless)', () => {
-  test('every ost_* skill_check is UQF-1.0, validates, onFail:[], NO residual activateCond; onPass = mission_bit OR empty', async ({ page }) => {
+  test('every ost_* skill_check is UQF-1.0, validates, onFail:[], NO residual activateCond; onPass = mission_bit OR empty', async ({ roPage: page }) => {
     const errs = []; page.on('pageerror', e => errs.push(String(e)));
-    await page.goto('/play.html');
     const r = await page.evaluate(() => {
       const ost = Object.values(QUEST_DB).filter(q => /^ost_/.test(q.id) && q.type === 'skill_check');
       return ost.map(q => {
@@ -3917,9 +3875,8 @@ test.describe('§ARCH-01 Wave 2k — ost_* family (bulk-migrated, 46 acts; mixed
 // non-skill_check members (4 combat arn_01/03/05_act3 + arn_10_act2 + 3
 // deliveries). Self-contained.
 test.describe('§ARCH-01 Wave 2l — arn_* family (bulk-migrated, 43 acts; mixed flag/flagless)', () => {
-  test('every arn_* skill_check is UQF-1.0, validates, onFail:[], NO residual activateCond; onPass = mission_bit OR empty', async ({ page }) => {
+  test('every arn_* skill_check is UQF-1.0, validates, onFail:[], NO residual activateCond; onPass = mission_bit OR empty', async ({ roPage: page }) => {
     const errs = []; page.on('pageerror', e => errs.push(String(e)));
-    await page.goto('/play.html');
     const r = await page.evaluate(() => {
       const arn = Object.values(QUEST_DB).filter(q => /^arn_/.test(q.id) && q.type === 'skill_check');
       return arn.map(q => {
@@ -4025,9 +3982,8 @@ test.describe('§ARCH-01 Wave 2l — arn_* family (bulk-migrated, 43 acts; mixed
 // non-skill_check members (5 combat vby_01/03/08_act3 + vby_09_act2 + vby_10_act3
 // + 3 deliveries vby_08/09/10_act5). Self-contained.
 test.describe('§ARCH-01 Wave 2m — vby_* family (bulk-migrated, 42 acts; mixed flag/flagless)', () => {
-  test('every vby_* skill_check is UQF-1.0, validates, onFail:[], NO residual activateCond; onPass = mission_bit OR empty', async ({ page }) => {
+  test('every vby_* skill_check is UQF-1.0, validates, onFail:[], NO residual activateCond; onPass = mission_bit OR empty', async ({ roPage: page }) => {
     const errs = []; page.on('pageerror', e => errs.push(String(e)));
-    await page.goto('/play.html');
     const r = await page.evaluate(() => {
       const vby = Object.values(QUEST_DB).filter(q => /^vby_/.test(q.id) && q.type === 'skill_check');
       return vby.map(q => {
@@ -4132,9 +4088,8 @@ test.describe('§ARCH-01 Wave 2m — vby_* family (bulk-migrated, 42 acts; mixed
 // non-skill_check members (2 hybrid kya_c1a2/c7a4 + 1 combat kya_c2a4 + 5
 // deliveries kya_26/27/28/29/30_act5). Self-contained.
 test.describe('§ARCH-01 Wave 2n — kya_* family (bulk-migrated, 52 acts; uniform flag-bearing)', () => {
-  test('every kya_* skill_check is UQF-1.0, validates, onFail:[], NO residual activateCond; onPass = mission_bit', async ({ page }) => {
+  test('every kya_* skill_check is UQF-1.0, validates, onFail:[], NO residual activateCond; onPass = mission_bit', async ({ roPage: page }) => {
     const errs = []; page.on('pageerror', e => errs.push(String(e)));
-    await page.goto('/play.html');
     const r = await page.evaluate(() => {
       const kya = Object.values(QUEST_DB).filter(q => /^kya_/.test(q.id) && q.type === 'skill_check');
       return kya.map(q => {
@@ -4224,9 +4179,8 @@ test.describe('§ARCH-01 Wave 2n — kya_* family (bulk-migrated, 52 acts; unifo
 // type-gates out the 4 non-skill_check members (deliveries jrs_08/09/10/11_act5).
 // Self-contained.
 test.describe('§ARCH-01 Wave 2o — jrs_* family (bulk-migrated, 51 acts; uniform flag-bearing)', () => {
-  test('every jrs_* skill_check is UQF-1.0, validates, onFail:[], NO residual activateCond; onPass = mission_bit', async ({ page }) => {
+  test('every jrs_* skill_check is UQF-1.0, validates, onFail:[], NO residual activateCond; onPass = mission_bit', async ({ roPage: page }) => {
     const errs = []; page.on('pageerror', e => errs.push(String(e)));
-    await page.goto('/play.html');
     const r = await page.evaluate(() => {
       const jrs = Object.values(QUEST_DB).filter(q => /^jrs/.test(q.id) && q.type === 'skill_check');
       return jrs.map(q => {
@@ -4316,9 +4270,8 @@ test.describe('§ARCH-01 Wave 2o — jrs_* family (bulk-migrated, 51 acts; unifo
 // checkStats). Transform type-gates out the 3 combat members
 // (clj02/08/09_act4). Self-contained.
 test.describe('§ARCH-01 Wave 2p — clj_* family (bulk-migrated, 42 acts; mixed flag/flagless)', () => {
-  test('every clj_* skill_check is UQF-1.0, validates, onFail:[], NO residual activateCond; onPass = mission_bit OR empty', async ({ page }) => {
+  test('every clj_* skill_check is UQF-1.0, validates, onFail:[], NO residual activateCond; onPass = mission_bit OR empty', async ({ roPage: page }) => {
     const errs = []; page.on('pageerror', e => errs.push(String(e)));
-    await page.goto('/play.html');
     const r = await page.evaluate(() => {
       const clj = Object.values(QUEST_DB).filter(q => /^clj/.test(q.id) && q.type === 'skill_check');
       return clj.map(q => {
@@ -4421,9 +4374,8 @@ test.describe('§ARCH-01 Wave 2p — clj_* family (bulk-migrated, 42 acts; mixed
 // that. NO §SKILLFIX-02 (0 skill-name checkStats). Transform type-gates out the
 // 3 combat members (nwi002/04/07_act4). Self-contained.
 test.describe('§ARCH-01 Wave 2q — nwi_* family (bulk-migrated, 42 acts; uniform flag-bearing)', () => {
-  test('every nwi_* skill_check is UQF-1.0, validates, onFail:[], NO residual activateCond; onPass = mission_bit (+ chain-completion flag_write on the 8 chain tails)', async ({ page }) => {
+  test('every nwi_* skill_check is UQF-1.0, validates, onFail:[], NO residual activateCond; onPass = mission_bit (+ chain-completion flag_write on the 8 chain tails)', async ({ roPage: page }) => {
     const errs = []; page.on('pageerror', e => errs.push(String(e)));
-    await page.goto('/play.html');
     const r = await page.evaluate(() => {
       const nwi = Object.values(QUEST_DB).filter(q => /^nwi/.test(q.id) && q.type === 'skill_check');
       return nwi.map(q => {
@@ -4517,9 +4469,8 @@ test.describe('§ARCH-01 Wave 2q — nwi_* family (bulk-migrated, 42 acts; unifo
 // type-gates out the 8 non-skill_check members (3 hybrid bey_c1a3/c4a2/c5a2 +
 // 2 combat bey_c3a4/c6a4 + 3 deliveries bey_14/15/16_act5). Self-contained.
 test.describe('§ARCH-01 Wave 2r — bey_* family (bulk-migrated, 42 acts; uniform flag-bearing)', () => {
-  test('every bey_* skill_check is UQF-1.0, validates, onFail:[], NO residual activateCond; onPass = mission_bit', async ({ page }) => {
+  test('every bey_* skill_check is UQF-1.0, validates, onFail:[], NO residual activateCond; onPass = mission_bit', async ({ roPage: page }) => {
     const errs = []; page.on('pageerror', e => errs.push(String(e)));
-    await page.goto('/play.html');
     const r = await page.evaluate(() => {
       const bey = Object.values(QUEST_DB).filter(q => /^bey_/.test(q.id) && q.type === 'skill_check');
       return bey.map(q => {
@@ -4611,9 +4562,8 @@ test.describe('§ARCH-01 Wave 2r — bey_* family (bulk-migrated, 42 acts; unifo
 // the gate test toggles the prior flag directly, so cross-sibling gates verify
 // transparently. Self-contained.
 test.describe('§ARCH-01 Wave 2s — tbs_* family (bulk-migrated, 41 acts; uniform flag-bearing)', () => {
-  test('every tbs_* skill_check is UQF-1.0, validates, onFail:[], NO residual activateCond; onPass = mission_bit', async ({ page }) => {
+  test('every tbs_* skill_check is UQF-1.0, validates, onFail:[], NO residual activateCond; onPass = mission_bit', async ({ roPage: page }) => {
     const errs = []; page.on('pageerror', e => errs.push(String(e)));
-    await page.goto('/play.html');
     const r = await page.evaluate(() => {
       const tbs = Object.values(QUEST_DB).filter(q => /^tbs_/.test(q.id) && q.type === 'skill_check');
       return tbs.map(q => {
@@ -4705,9 +4655,8 @@ test.describe('§ARCH-01 Wave 2s — tbs_* family (bulk-migrated, 41 acts; unifo
 // gate test toggles the prior flag directly, so they verify transparently.
 // Self-contained.
 test.describe('§ARCH-01 Wave 2t — crl_* family (bulk-migrated, 40 acts; uniform flag-bearing)', () => {
-  test('every crl_* skill_check is UQF-1.0, validates, onFail:[], NO residual activateCond; onPass = mission_bit', async ({ page }) => {
+  test('every crl_* skill_check is UQF-1.0, validates, onFail:[], NO residual activateCond; onPass = mission_bit', async ({ roPage: page }) => {
     const errs = []; page.on('pageerror', e => errs.push(String(e)));
-    await page.goto('/play.html');
     const r = await page.evaluate(() => {
       const crl = Object.values(QUEST_DB).filter(q => /^crl/.test(q.id) && q.type === 'skill_check');
       return crl.map(q => {
@@ -4798,9 +4747,8 @@ test.describe('§ARCH-01 Wave 2t — crl_* family (bulk-migrated, 40 acts; unifo
 // the 7 non-skill_check members (3 combat shk_04_act3/shk_06_act3/shk_07_act4 +
 // 4 deliveries shk_04_act5/shk_05_act5/shk_06_act5/shk_07_act5). Self-contained.
 test.describe('§ARCH-01 Wave 2u — shk_* family (bulk-migrated, 40 acts; mixed flag/flagless)', () => {
-  test('every shk_* skill_check is UQF-1.0, validates, onFail:[], NO residual activateCond; onPass = mission_bit OR empty', async ({ page }) => {
+  test('every shk_* skill_check is UQF-1.0, validates, onFail:[], NO residual activateCond; onPass = mission_bit OR empty', async ({ roPage: page }) => {
     const errs = []; page.on('pageerror', e => errs.push(String(e)));
-    await page.goto('/play.html');
     const r = await page.evaluate(() => {
       const shk = Object.values(QUEST_DB).filter(q => /^shk/.test(q.id) && q.type === 'skill_check');
       return shk.map(q => {
@@ -4902,9 +4850,8 @@ test.describe('§ARCH-01 Wave 2u — shk_* family (bulk-migrated, 40 acts; mixed
 // clean 7×5 grid — no type-gated siblings, no prefix bleed (all 35 file ids are
 // the migrated acts). Self-contained.
 test.describe('§ARCH-01 Wave 2v — kir_* family (bulk-migrated, 35 acts; uniform flag-bearing)', () => {
-  test('every kir_* skill_check is UQF-1.0, validates, onFail:[], NO residual activateCond; onPass = mission_bit', async ({ page }) => {
+  test('every kir_* skill_check is UQF-1.0, validates, onFail:[], NO residual activateCond; onPass = mission_bit', async ({ roPage: page }) => {
     const errs = []; page.on('pageerror', e => errs.push(String(e)));
-    await page.goto('/play.html');
     const r = await page.evaluate(() => {
       const kir = Object.values(QUEST_DB).filter(q => /^kir/.test(q.id) && q.type === 'skill_check');
       return kir.map(q => {
@@ -4997,9 +4944,8 @@ test.describe('§ARCH-01 Wave 2v — kir_* family (bulk-migrated, 35 acts; unifo
 // 7×5 grid — no type-gated siblings, no prefix bleed (all 35 file `lcy` ids are
 // the migrated acts). Self-contained.
 test.describe('§ARCH-01 Wave 2w — lcy_* family (bulk-migrated, 35 acts; uniform flag-bearing)', () => {
-  test('every lcy_* skill_check is UQF-1.0, validates, onFail:[], NO residual activateCond; onPass = mission_bit', async ({ page }) => {
+  test('every lcy_* skill_check is UQF-1.0, validates, onFail:[], NO residual activateCond; onPass = mission_bit', async ({ roPage: page }) => {
     const errs = []; page.on('pageerror', e => errs.push(String(e)));
-    await page.goto('/play.html');
     const r = await page.evaluate(() => {
       const lcy = Object.values(QUEST_DB).filter(q => /^lcy/.test(q.id) && q.type === 'skill_check');
       return lcy.map(q => {
@@ -5091,9 +5037,8 @@ test.describe('§ARCH-01 Wave 2w — lcy_* family (bulk-migrated, 35 acts; unifo
 // siblings, no prefix bleed (all 35 file `lgw` ids are the migrated acts).
 // Self-contained.
 test.describe('§ARCH-01 Wave 2x — lgw_* family (bulk-migrated, 35 acts; uniform flag-bearing)', () => {
-  test('every lgw_* skill_check is UQF-1.0, validates, onFail:[], NO residual activateCond; onPass = mission_bit', async ({ page }) => {
+  test('every lgw_* skill_check is UQF-1.0, validates, onFail:[], NO residual activateCond; onPass = mission_bit', async ({ roPage: page }) => {
     const errs = []; page.on('pageerror', e => errs.push(String(e)));
-    await page.goto('/play.html');
     const r = await page.evaluate(() => {
       const lgw = Object.values(QUEST_DB).filter(q => /^lgw/.test(q.id) && q.type === 'skill_check');
       return lgw.map(q => {
@@ -5187,9 +5132,8 @@ test.describe('§ARCH-01 Wave 2x — lgw_* family (bulk-migrated, 35 acts; unifo
 // migrated acts). Last clean (pure-parity) head from the Wave-2v re-scope trio.
 // Self-contained.
 test.describe('§ARCH-01 Wave 2y — gci_* family (bulk-migrated, 35 acts; uniform flag-bearing)', () => {
-  test('every gci_* skill_check is UQF-1.0, validates, onFail:[], NO residual activateCond; onPass = mission_bit', async ({ page }) => {
+  test('every gci_* skill_check is UQF-1.0, validates, onFail:[], NO residual activateCond; onPass = mission_bit', async ({ roPage: page }) => {
     const errs = []; page.on('pageerror', e => errs.push(String(e)));
-    await page.goto('/play.html');
     const r = await page.evaluate(() => {
       const gci = Object.values(QUEST_DB).filter(q => /^gci/.test(q.id) && q.type === 'skill_check');
       return gci.map(q => {
@@ -5286,9 +5230,8 @@ test.describe('§ARCH-01 Wave 2y — gci_* family (bulk-migrated, 35 acts; unifo
 // WIS). Golden seeded under BOTH cases. No prefix bleed (the non-`_actN` `wawNNNaM`
 // ids are gate-flag values, not quests). Self-contained.
 test.describe('§ARCH-01 Wave 2z — waw_* family (bulk-migrated, 38 acts; uniform flag-bearing)', () => {
-  test('every waw_* skill_check is UQF-1.0, validates, onFail:[], NO residual activateCond; onPass = mission_bit', async ({ page }) => {
+  test('every waw_* skill_check is UQF-1.0, validates, onFail:[], NO residual activateCond; onPass = mission_bit', async ({ roPage: page }) => {
     const errs = []; page.on('pageerror', e => errs.push(String(e)));
-    await page.goto('/play.html');
     const r = await page.evaluate(() => {
       const waw = Object.values(QUEST_DB).filter(q => /^waw/.test(q.id) && q.type === 'skill_check');
       return waw.map(q => {
@@ -5379,9 +5322,8 @@ test.describe('§ARCH-01 Wave 2z — waw_* family (bulk-migrated, 38 acts; unifo
 // UPPERCASE-checkStat (CHA/INT/STR/WIS). Golden seeded under BOTH cases. No prefix
 // bleed (the non-`_NN_NN` ids are the `amsNNaM` passFlag values). Self-contained.
 test.describe('§ARCH-01 Wave 2aa — ams_* family (bulk-migrated, 35 acts; uniform flag-bearing)', () => {
-  test('every ams_* skill_check is UQF-1.0, validates, onFail:[], NO residual activateCond; onPass = mission_bit', async ({ page }) => {
+  test('every ams_* skill_check is UQF-1.0, validates, onFail:[], NO residual activateCond; onPass = mission_bit', async ({ roPage: page }) => {
     const errs = []; page.on('pageerror', e => errs.push(String(e)));
-    await page.goto('/play.html');
     const r = await page.evaluate(() => {
       const ams = Object.values(QUEST_DB).filter(q => /^ams/.test(q.id) && q.type === 'skill_check');
       return ams.map(q => {
@@ -5480,9 +5422,8 @@ test.describe('§ARCH-01 Wave 2ab / §SKILLFIX-02 — bgw_* family (skill→abil
     DECEPTION:'CHA', INTIMIDATION:'CHA', PERFORMANCE:'CHA', PERSUASION:'CHA', COURAGE:'CHA', PRESENCE:'CHA',
   };
 
-  test('every bgw_* skill_check is UQF-1.0, validates, stat is a real ability, skill→ability mapping holds', async ({ page }) => {
+  test('every bgw_* skill_check is UQF-1.0, validates, stat is a real ability, skill→ability mapping holds', async ({ roPage: page }) => {
     const errs = []; page.on('pageerror', e => errs.push(String(e)));
-    await page.goto('/play.html');
     const r = await page.evaluate(() => {
       const bgw = Object.values(QUEST_DB).filter(q => /^bgw_/.test(q.id) && q.type === 'skill_check');
       return bgw.map(q => {
@@ -5582,9 +5523,8 @@ test.describe('§ARCH-01 Wave 2ac / §SKILLFIX-02 — cai_* family (skill→abil
     DECEPTION:'CHA', INTIMIDATION:'CHA', PERFORMANCE:'CHA', PERSUASION:'CHA', COURAGE:'CHA', PRESENCE:'CHA',
   };
 
-  test('every cai_* skill_check is UQF-1.0, validates, stat is a real ability, skill→ability mapping holds', async ({ page }) => {
+  test('every cai_* skill_check is UQF-1.0, validates, stat is a real ability, skill→ability mapping holds', async ({ roPage: page }) => {
     const errs = []; page.on('pageerror', e => errs.push(String(e)));
-    await page.goto('/play.html');
     const r = await page.evaluate(() => {
       const cai = Object.values(QUEST_DB).filter(q => /^cai_/.test(q.id) && q.type === 'skill_check');
       return cai.map(q => {
@@ -5689,9 +5629,8 @@ const BLQ_WF_IDS = [
   'blq_12_act1','blq_12_act2','blq_12_act3','blq_12_act4','blq_12_act5',
 ];
 test.describe('§ARCH-01 Wave 2ad — blq_* family SPLIT (29 well-formed migrated; 30 degenerate stubs left legacy)', () => {
-  test('every well-formed blq act is UQF-1.0, validates, onFail:[], NO residual activateCond; onPass = mission_bit; the 30 stubs stay legacy', async ({ page }) => {
+  test('every well-formed blq act is UQF-1.0, validates, onFail:[], NO residual activateCond; onPass = mission_bit; the 30 stubs stay legacy', async ({ roPage: page }) => {
     const errs = []; page.on('pageerror', e => errs.push(String(e)));
-    await page.goto('/play.html');
     const r = await page.evaluate((wfIds) => {
       const wfSet = new Set(wfIds);
       const allBlq = Object.values(QUEST_DB).filter(q => /^blq/.test(q.id) && q.type === 'skill_check');
@@ -5799,9 +5738,8 @@ test.describe('§ARCH-01 Wave 2ad — blq_* family SPLIT (29 well-formed migrate
 // no type-gated siblings, no prefix bleed (all 35 `inv_` ids are the migrated acts).
 // Self-contained.
 test.describe('§ARCH-01 Wave 2ae — inv_* family (bulk-migrated, 35 acts; uniform flag-bearing)', () => {
-  test('every inv_* skill_check is UQF-1.0, validates, onFail:[], NO residual activateCond; onPass = mission_bit', async ({ page }) => {
+  test('every inv_* skill_check is UQF-1.0, validates, onFail:[], NO residual activateCond; onPass = mission_bit', async ({ roPage: page }) => {
     const errs = []; page.on('pageerror', e => errs.push(String(e)));
-    await page.goto('/play.html');
     const r = await page.evaluate(() => {
       const inv = Object.values(QUEST_DB).filter(q => /^inv_/.test(q.id) && q.type === 'skill_check');
       return inv.map(q => {
@@ -5895,9 +5833,8 @@ test.describe('§ARCH-01 Wave 2ae — inv_* family (bulk-migrated, 35 acts; unif
 // — `skill→ability mapped 0`, 0 skill-names, NOT §SKILLFIX-02. No type-gated
 // siblings, no prefix bleed (all 35 `bhd_` ids are the migrated acts). Self-contained.
 test.describe('§ARCH-01 Wave 2af — bhd_* family (bulk-migrated, 35 acts; uniform flag-bearing)', () => {
-  test('every bhd_* skill_check is UQF-1.0, validates, onFail:[], NO residual activateCond; onPass = mission_bit', async ({ page }) => {
+  test('every bhd_* skill_check is UQF-1.0, validates, onFail:[], NO residual activateCond; onPass = mission_bit', async ({ roPage: page }) => {
     const errs = []; page.on('pageerror', e => errs.push(String(e)));
-    await page.goto('/play.html');
     const r = await page.evaluate(() => {
       const bhd = Object.values(QUEST_DB).filter(q => /^bhd_/.test(q.id) && q.type === 'skill_check');
       return bhd.map(q => {
@@ -5992,9 +5929,8 @@ test.describe('§ARCH-01 Wave 2af — bhd_* family (bulk-migrated, 35 acts; unif
 // — `skill→ability mapped 0`, 0 skill-names, NOT §SKILLFIX-02. No type-gated
 // siblings, no prefix bleed (all 35 `sdq_` ids are the migrated acts). Self-contained.
 test.describe('§ARCH-01 Wave 2ag — sdq_* family (bulk-migrated, 35 acts; uniform flag-bearing)', () => {
-  test('every sdq_* skill_check is UQF-1.0, validates, onFail:[], NO residual activateCond; onPass = mission_bit', async ({ page }) => {
+  test('every sdq_* skill_check is UQF-1.0, validates, onFail:[], NO residual activateCond; onPass = mission_bit', async ({ roPage: page }) => {
     const errs = []; page.on('pageerror', e => errs.push(String(e)));
-    await page.goto('/play.html');
     const r = await page.evaluate(() => {
       const sdq = Object.values(QUEST_DB).filter(q => /^sdq_/.test(q.id) && q.type === 'skill_check');
       return sdq.map(q => {
@@ -6089,9 +6025,8 @@ test.describe('§ARCH-01 Wave 2ag — sdq_* family (bulk-migrated, 35 acts; unif
 // — `skill→ability mapped 0`, 0 skill-names, NOT §SKILLFIX-02. No type-gated
 // siblings, no prefix bleed (all 35 `plw_` ids are the migrated acts). Self-contained.
 test.describe('§ARCH-01 Wave 2ah — plw_* family (bulk-migrated, 35 acts; uniform flag-bearing)', () => {
-  test('every plw_* skill_check is UQF-1.0, validates, onFail:[], NO residual activateCond; onPass = mission_bit', async ({ page }) => {
+  test('every plw_* skill_check is UQF-1.0, validates, onFail:[], NO residual activateCond; onPass = mission_bit', async ({ roPage: page }) => {
     const errs = []; page.on('pageerror', e => errs.push(String(e)));
-    await page.goto('/play.html');
     const r = await page.evaluate(() => {
       const plw = Object.values(QUEST_DB).filter(q => /^plw_/.test(q.id) && q.type === 'skill_check');
       return plw.map(q => {
@@ -6186,9 +6121,8 @@ test.describe('§ARCH-01 Wave 2ah — plw_* family (bulk-migrated, 35 acts; unif
 // — `skill→ability mapped 0`, 0 skill-names, NOT §SKILLFIX-02. No type-gated
 // siblings, no prefix bleed (all 35 `gdn_` ids are the migrated acts). Self-contained.
 test.describe('§ARCH-01 Wave 2ai — gdn_* family (bulk-migrated, 35 acts; uniform flag-bearing)', () => {
-  test('every gdn_* skill_check is UQF-1.0, validates, onFail:[], NO residual activateCond; onPass = mission_bit', async ({ page }) => {
+  test('every gdn_* skill_check is UQF-1.0, validates, onFail:[], NO residual activateCond; onPass = mission_bit', async ({ roPage: page }) => {
     const errs = []; page.on('pageerror', e => errs.push(String(e)));
-    await page.goto('/play.html');
     const r = await page.evaluate(() => {
       const gdn = Object.values(QUEST_DB).filter(q => /^gdn_/.test(q.id) && q.type === 'skill_check');
       return gdn.map(q => {
@@ -6283,9 +6217,8 @@ test.describe('§ARCH-01 Wave 2ai — gdn_* family (bulk-migrated, 35 acts; unif
 // mod; golden seeded under BOTH cases. CLEAN — `skill→ability mapped 0`, 0 skill-
 // names, NOT §SKILLFIX-02. No type-gated siblings, no prefix bleed. Self-contained.
 test.describe('§ARCH-01 Wave 2aj — boo_* family (bulk-migrated, 35 acts; uniform flag-bearing)', () => {
-  test('every boo_* skill_check is UQF-1.0, validates, onFail:[], NO residual activateCond; onPass = mission_bit', async ({ page }) => {
+  test('every boo_* skill_check is UQF-1.0, validates, onFail:[], NO residual activateCond; onPass = mission_bit', async ({ roPage: page }) => {
     const errs = []; page.on('pageerror', e => errs.push(String(e)));
-    await page.goto('/play.html');
     const r = await page.evaluate(() => {
       const boo = Object.values(QUEST_DB).filter(q => /^boo_/.test(q.id) && q.type === 'skill_check');
       return boo.map(q => {
@@ -6380,9 +6313,8 @@ test.describe('§ARCH-01 Wave 2aj — boo_* family (bulk-migrated, 35 acts; unif
 // BOTH cases. CLEAN — `skill→ability mapped 0`, 0 skill-names, NOT §SKILLFIX-02.
 // No type-gated siblings, no prefix bleed (all 35 `alf_` ids migrated). Self-contained.
 test.describe('§ARCH-01 Wave 2ak — alf_* family (bulk-migrated, 35 acts; uniform flag-bearing)', () => {
-  test('every alf_* skill_check is UQF-1.0, validates, onFail:[], NO residual activateCond; onPass = mission_bit', async ({ page }) => {
+  test('every alf_* skill_check is UQF-1.0, validates, onFail:[], NO residual activateCond; onPass = mission_bit', async ({ roPage: page }) => {
     const errs = []; page.on('pageerror', e => errs.push(String(e)));
-    await page.goto('/play.html');
     const r = await page.evaluate(() => {
       const alf = Object.values(QUEST_DB).filter(q => /^alf_/.test(q.id) && q.type === 'skill_check');
       return alf.map(q => {
@@ -6477,9 +6409,8 @@ test.describe('§ARCH-01 Wave 2ak — alf_* family (bulk-migrated, 35 acts; unif
 // mod; golden seeded under BOTH cases. CLEAN — `skill→ability mapped 0`, 0 skill-
 // names, NOT §SKILLFIX-02. No type-gated siblings, no prefix bleed. Self-contained.
 test.describe('§ARCH-01 Wave 2al — ksu_* family (bulk-migrated, 35 acts; uniform flag-bearing)', () => {
-  test('every ksu_* skill_check is UQF-1.0, validates, onFail:[], NO residual activateCond; onPass = mission_bit', async ({ page }) => {
+  test('every ksu_* skill_check is UQF-1.0, validates, onFail:[], NO residual activateCond; onPass = mission_bit', async ({ roPage: page }) => {
     const errs = []; page.on('pageerror', e => errs.push(String(e)));
-    await page.goto('/play.html');
     const r = await page.evaluate(() => {
       const ksu = Object.values(QUEST_DB).filter(q => /^ksu_/.test(q.id) && q.type === 'skill_check');
       return ksu.map(q => {
@@ -6576,9 +6507,8 @@ test.describe('§ARCH-01 Wave 2al — ksu_* family (bulk-migrated, 35 acts; unif
 // cases. CLEAN — `skill→ability mapped 0`, 0 skill-names, NOT §SKILLFIX-02. No
 // type-gated siblings, no prefix bleed (all 35 `cdg_` ids migrated). Self-contained.
 test.describe('§ARCH-01 Wave 2am — cdg_* family (bulk-migrated, 35 acts; uniform flag-bearing)', () => {
-  test('every cdg_* skill_check is UQF-1.0, validates, onFail:[], NO residual activateCond; onPass = mission_bit', async ({ page }) => {
+  test('every cdg_* skill_check is UQF-1.0, validates, onFail:[], NO residual activateCond; onPass = mission_bit', async ({ roPage: page }) => {
     const errs = []; page.on('pageerror', e => errs.push(String(e)));
-    await page.goto('/play.html');
     const r = await page.evaluate(() => {
       const cdg = Object.values(QUEST_DB).filter(q => /^cdg_/.test(q.id) && q.type === 'skill_check');
       return cdg.map(q => {
@@ -6674,9 +6604,8 @@ test.describe('§ARCH-01 Wave 2am — cdg_* family (bulk-migrated, 35 acts; unif
 // ⇒ real mod; golden seeded under BOTH cases. CLEAN — `skill→ability mapped 0`, 0
 // skill-names, NOT §SKILLFIX-02. No type-gated siblings, no prefix bleed. Self-contained.
 test.describe('§ARCH-01 Wave 2an — vie_* family (bulk-migrated, 35 acts; uniform flag-bearing)', () => {
-  test('every vie_* skill_check is UQF-1.0, validates, onFail:[], NO residual activateCond; onPass = mission_bit', async ({ page }) => {
+  test('every vie_* skill_check is UQF-1.0, validates, onFail:[], NO residual activateCond; onPass = mission_bit', async ({ roPage: page }) => {
     const errs = []; page.on('pageerror', e => errs.push(String(e)));
-    await page.goto('/play.html');
     const r = await page.evaluate(() => {
       const vie = Object.values(QUEST_DB).filter(q => /^vie_/.test(q.id) && q.type === 'skill_check');
       return vie.map(q => {
@@ -6774,9 +6703,8 @@ test.describe('§ARCH-01 Wave 2an — vie_* family (bulk-migrated, 35 acts; unif
 // CLEAN — `skill→ability mapped 0`, 0 skill-names, NOT §SKILLFIX-02. No type-gated
 // siblings, no prefix bleed (all 35 `erf_` ids migrated). Self-contained.
 test.describe('§ARCH-01 Wave 2ao — erf_* family (bulk-migrated, 35 acts; uniform flag-bearing)', () => {
-  test('every erf_* skill_check is UQF-1.0, validates, onFail:[], NO residual activateCond; onPass = mission_bit', async ({ page }) => {
+  test('every erf_* skill_check is UQF-1.0, validates, onFail:[], NO residual activateCond; onPass = mission_bit', async ({ roPage: page }) => {
     const errs = []; page.on('pageerror', e => errs.push(String(e)));
-    await page.goto('/play.html');
     const r = await page.evaluate(() => {
       const erf = Object.values(QUEST_DB).filter(q => /^erf_/.test(q.id) && q.type === 'skill_check');
       return erf.map(q => {
@@ -6871,9 +6799,8 @@ test.describe('§ARCH-01 Wave 2ao — erf_* family (bulk-migrated, 35 acts; unif
 // 0`, 0 skill-names, NOT §SKILLFIX-02. No type-gated siblings, no prefix bleed (all
 // 34 `mla` skill_checks migrated). Self-contained.
 test.describe('§ARCH-01 Wave 2ap — mla_* family (bulk-migrated, 34 acts; uniform flag-bearing)', () => {
-  test('every mla* skill_check is UQF-1.0, validates, onFail:[], NO residual activateCond; onPass = mission_bit (+ chain-completion flag_write on the 6 chain tails)', async ({ page }) => {
+  test('every mla* skill_check is UQF-1.0, validates, onFail:[], NO residual activateCond; onPass = mission_bit (+ chain-completion flag_write on the 6 chain tails)', async ({ roPage: page }) => {
     const errs = []; page.on('pageerror', e => errs.push(String(e)));
-    await page.goto('/play.html');
     const r = await page.evaluate(() => {
       const mla = Object.values(QUEST_DB).filter(q => /^mla/.test(q.id) && q.type === 'skill_check');
       return mla.map(q => {
@@ -6973,9 +6900,8 @@ test.describe('§ARCH-01 Wave 2ap — mla_* family (bulk-migrated, 34 acts; unif
 // (`mse_c2a4`, correctly skipped — skill_check filter excludes it, so chapter 2 has
 // 4 skill_check acts a1/a2/a3/a5). No prefix bleed. Self-contained.
 test.describe('§ARCH-01 Wave 2aq — mse_* family (bulk-migrated, 34 acts; uniform flag-bearing)', () => {
-  test('every mse_* skill_check is UQF-1.0, validates, onFail:[], NO residual activateCond; onPass = mission_bit', async ({ page }) => {
+  test('every mse_* skill_check is UQF-1.0, validates, onFail:[], NO residual activateCond; onPass = mission_bit', async ({ roPage: page }) => {
     const errs = []; page.on('pageerror', e => errs.push(String(e)));
-    await page.goto('/play.html');
     const r = await page.evaluate(() => {
       const mse = Object.values(QUEST_DB).filter(q => /^mse_/.test(q.id) && q.type === 'skill_check');
       return mse.map(q => {
@@ -7070,9 +6996,8 @@ test.describe('§ARCH-01 Wave 2aq — mse_* family (bulk-migrated, 34 acts; unif
 // correctly skipped — skill_check filter excludes it, so chapter 2 has 4
 // skill_check acts a1/a3/a4/a5). No prefix bleed. Self-contained.
 test.describe('§ARCH-01 Wave 2ar — lhr_* family (bulk-migrated, 34 acts; uniform flag-bearing)', () => {
-  test('every lhr_* skill_check is UQF-1.0, validates, onFail:[], NO residual activateCond; onPass = mission_bit', async ({ page }) => {
+  test('every lhr_* skill_check is UQF-1.0, validates, onFail:[], NO residual activateCond; onPass = mission_bit', async ({ roPage: page }) => {
     const errs = []; page.on('pageerror', e => errs.push(String(e)));
-    await page.goto('/play.html');
     const r = await page.evaluate(() => {
       const lhr = Object.values(QUEST_DB).filter(q => /^lhr_/.test(q.id) && q.type === 'skill_check');
       return lhr.map(q => {
@@ -7167,9 +7092,8 @@ test.describe('§ARCH-01 Wave 2ar — lhr_* family (bulk-migrated, 34 acts; unif
 // (`cid_c2a4`, correctly skipped — skill_check filter excludes it, so chapter 2 has
 // 4 skill_check acts a1/a2/a3/a5). No prefix bleed. Self-contained.
 test.describe('§ARCH-01 Wave 2as — cid_* family (bulk-migrated, 34 acts; uniform flag-bearing)', () => {
-  test('every cid_* skill_check is UQF-1.0, validates, onFail:[], NO residual activateCond; onPass = mission_bit', async ({ page }) => {
+  test('every cid_* skill_check is UQF-1.0, validates, onFail:[], NO residual activateCond; onPass = mission_bit', async ({ roPage: page }) => {
     const errs = []; page.on('pageerror', e => errs.push(String(e)));
-    await page.goto('/play.html');
     const r = await page.evaluate(() => {
       const cid = Object.values(QUEST_DB).filter(q => /^cid_/.test(q.id) && q.type === 'skill_check');
       return cid.map(q => {
@@ -7265,9 +7189,8 @@ test.describe('§ARCH-01 Wave 2as — cid_* family (bulk-migrated, 34 acts; unif
 // filter excludes them, so c1 has acts a1/a2/a4/a5 and c5 has a1/a2/a3/a5). No
 // prefix bleed. Self-contained.
 test.describe('§ARCH-01 Wave 2at — lbc_* family (bulk-migrated, 33 acts; uniform flag-bearing)', () => {
-  test('every lbc_* skill_check is UQF-1.0, validates, onFail:[], NO residual activateCond; onPass = mission_bit', async ({ page }) => {
+  test('every lbc_* skill_check is UQF-1.0, validates, onFail:[], NO residual activateCond; onPass = mission_bit', async ({ roPage: page }) => {
     const errs = []; page.on('pageerror', e => errs.push(String(e)));
-    await page.goto('/play.html');
     const r = await page.evaluate(() => {
       const lbc = Object.values(QUEST_DB).filter(q => /^lbc_/.test(q.id) && q.type === 'skill_check');
       return lbc.map(q => {
@@ -7363,9 +7286,8 @@ test.describe('§ARCH-01 Wave 2at — lbc_* family (bulk-migrated, 33 acts; unif
 // correctly skipped — skill_check filter excludes them, so c2 has a1/a2/a3/a5 and
 // c6 has a1/a2/a3/a5). No prefix bleed. Self-contained.
 test.describe('§ARCH-01 Wave 2au — hty_* family (bulk-migrated, 33 acts; mixed flag/flagless)', () => {
-  test('every hty* skill_check is UQF-1.0, validates, onFail:[], NO residual activateCond; onPass = mission_bit OR empty', async ({ page }) => {
+  test('every hty* skill_check is UQF-1.0, validates, onFail:[], NO residual activateCond; onPass = mission_bit OR empty', async ({ roPage: page }) => {
     const errs = []; page.on('pageerror', e => errs.push(String(e)));
-    await page.goto('/play.html');
     const r = await page.evaluate(() => {
       const hty = Object.values(QUEST_DB).filter(q => /^hty/.test(q.id) && q.type === 'skill_check');
       return hty.map(q => {
@@ -7471,9 +7393,8 @@ test.describe('§ARCH-01 Wave 2au — hty_* family (bulk-migrated, 33 acts; mixe
 // §SKILLFIX-02. THREE type-gated siblings (2 hybrid + 1 combat, correctly skipped).
 // No prefix bleed. Self-contained.
 test.describe('§ARCH-01 Wave 2av — fro_* family (bulk-migrated, 32 acts; uniform flag-bearing)', () => {
-  test('every fro_* skill_check is UQF-1.0, validates, onFail:[], NO residual activateCond; onPass = mission_bit', async ({ page }) => {
+  test('every fro_* skill_check is UQF-1.0, validates, onFail:[], NO residual activateCond; onPass = mission_bit', async ({ roPage: page }) => {
     const errs = []; page.on('pageerror', e => errs.push(String(e)));
-    await page.goto('/play.html');
     const r = await page.evaluate(() => {
       const fro = Object.values(QUEST_DB).filter(q => /^fro_/.test(q.id) && q.type === 'skill_check');
       return fro.map(q => {
@@ -7567,9 +7488,8 @@ test.describe('§ARCH-01 Wave 2av — fro_* family (bulk-migrated, 32 acts; unif
 // skill-names, NOT §SKILLFIX-02. FIVE `combat` type-gated siblings correctly
 // skipped. No prefix bleed. Self-contained.
 test.describe('§ARCH-01 Wave 2aw — mol* family (bulk-migrated, 30 acts; uniform flag-bearing)', () => {
-  test('every mol* skill_check is UQF-1.0, validates, onFail:[], NO residual activateCond; onPass = mission_bit', async ({ page }) => {
+  test('every mol* skill_check is UQF-1.0, validates, onFail:[], NO residual activateCond; onPass = mission_bit', async ({ roPage: page }) => {
     const errs = []; page.on('pageerror', e => errs.push(String(e)));
-    await page.goto('/play.html');
     const r = await page.evaluate(() => {
       const mol = Object.values(QUEST_DB).filter(q => /^mol/.test(q.id) && q.type === 'skill_check');
       return mol.map(q => {
@@ -7657,9 +7577,8 @@ test.describe('§ARCH-01 Wave 2aw — mol* family (bulk-migrated, 30 acts; unifo
 // (quest_sir_jullean is flagless). 3 also have goldAward. Skills via checkAbility (lowercase abbrev)
 // or checkStat; skill→ability mapped 0 (all were already abilities). Self-contained.
 test.describe('§ARCH-01 Wave 2bc — quest_* singletons (11 newly-migrated; xp/gold rewards, mixed gates)', () => {
-  test('every newly-migrated quest_* is UQF-1.0, validates, onFail:[], has reward bit; mission_bit where flagged', async ({ page }) => {
+  test('every newly-migrated quest_* is UQF-1.0, validates, onFail:[], has reward bit; mission_bit where flagged', async ({ roPage: page }) => {
     const errs = []; page.on('pageerror', e => errs.push(String(e)));
-    await page.goto('/play.html');
     const NEWLY_MIGRATED = new Set([
       'quest_muffat_01','quest_ezzir','quest_governor_cyprus','quest_lame_lystra',
       'quest_prison_phillam','quest_areopagus','quest_ephesus_riot','quest_shipwreck_melta',
@@ -7760,9 +7679,8 @@ test.describe('§ARCH-01 Wave 2bc — quest_* singletons (11 newly-migrated; xp/
 // WIS (direct ability check — migrator sets stat:WIS, skill:null for this one).
 // skill→ability mapped 10. Self-contained.
 test.describe('§ARCH-01 Wave 2bb — stn_* family (bulk-migrated, 11 acts; §SKILLFIX-02)', () => {
-  test('every stn_* skill_check is UQF-1.0, validates, onFail:[], ability mapped; 10 have skill name + 1 raw-ability', async ({ page }) => {
+  test('every stn_* skill_check is UQF-1.0, validates, onFail:[], ability mapped; 10 have skill name + 1 raw-ability', async ({ roPage: page }) => {
     const errs = []; page.on('pageerror', e => errs.push(String(e)));
-    await page.goto('/play.html');
     const r = await page.evaluate(() => {
       const ABILS = new Set(['STR','DEX','CON','INT','WIS','CHA']);
       const stn = Object.values(QUEST_DB).filter(q => /^stn_c/.test(q.id) && q.type === 'skill_check');
@@ -7857,9 +7775,8 @@ test.describe('§ARCH-01 Wave 2bb — stn_* family (bulk-migrated, 11 acts; §SK
 // use D&D skill names (Stealth/Deception/Perception/Insight/Courage/Persuasion/
 // Athletics) → mapped to governing ability (DEX/CHA/WIS/STR). Self-contained.
 test.describe('§ARCH-01 Wave 2ba — sen_* family (bulk-migrated, 19 acts; §SKILLFIX-02)', () => {
-  test('every sen_* skill_check is UQF-1.0, validates, onFail:[], skill name preserved, ability mapped', async ({ page }) => {
+  test('every sen_* skill_check is UQF-1.0, validates, onFail:[], skill name preserved, ability mapped', async ({ roPage: page }) => {
     const errs = []; page.on('pageerror', e => errs.push(String(e)));
-    await page.goto('/play.html');
     const r = await page.evaluate(() => {
       const ABILS = new Set(['STR','DEX','CON','INT','WIS','CHA']);
       const sen = Object.values(QUEST_DB).filter(q => /^sen_/.test(q.id) && q.type === 'skill_check');
@@ -7954,9 +7871,8 @@ test.describe('§ARCH-01 Wave 2ba — sen_* family (bulk-migrated, 19 acts; §SK
 // Courage/Insight/Presence/Athletics/Sleight of Hand) → mapped to governing ability
 // (DEX/CHA/WIS/STR); skill name preserved in bits[0].skill. Self-contained.
 test.describe('§ARCH-01 Wave 2az — man_* family (bulk-migrated, 23 acts; §SKILLFIX-02)', () => {
-  test('every man_* skill_check is UQF-1.0, validates, onFail:[], skill name preserved, ability mapped', async ({ page }) => {
+  test('every man_* skill_check is UQF-1.0, validates, onFail:[], skill name preserved, ability mapped', async ({ roPage: page }) => {
     const errs = []; page.on('pageerror', e => errs.push(String(e)));
-    await page.goto('/play.html');
     const r = await page.evaluate(() => {
       const ABILS = new Set(['STR','DEX','CON','INT','WIS','CHA']);
       const man = Object.values(QUEST_DB).filter(q => /^man_/.test(q.id) && q.type === 'skill_check');
@@ -8050,9 +7966,8 @@ test.describe('§ARCH-01 Wave 2az — man_* family (bulk-migrated, 23 acts; §SK
 // type-gated siblings. Pre-migrated (UQF at authoring time; bulk migrator
 // reports skipped:5). Self-contained.
 test.describe('§ARCH-01 Wave 2ay — clr_* family (pre-migrated, 5 acts; uniform flag-bearing)', () => {
-  test('every clr_* skill_check is UQF-1.0, validates, onFail:[], NO residual activateCond; onPass = mission_bit', async ({ page }) => {
+  test('every clr_* skill_check is UQF-1.0, validates, onFail:[], NO residual activateCond; onPass = mission_bit', async ({ roPage: page }) => {
     const errs = []; page.on('pageerror', e => errs.push(String(e)));
-    await page.goto('/play.html');
     const r = await page.evaluate(() => {
       const clr = Object.values(QUEST_DB).filter(q => /^clr_/.test(q.id) && q.type === 'skill_check');
       return clr.map(q => {
@@ -8138,9 +8053,8 @@ test.describe('§ARCH-01 Wave 2ay — clr_* family (pre-migrated, 5 acts; unifor
 // siblings at act2+act4; c2/c3/c5/c7 each have 1 at act3 or act4) correctly
 // skipped. No prefix bleed. Self-contained.
 test.describe('§ARCH-01 Wave 2ax — cph* family (bulk-migrated, 29 acts; uniform flag-bearing)', () => {
-  test('every cph* skill_check is UQF-1.0, validates, onFail:[], NO residual activateCond; onPass = mission_bit', async ({ page }) => {
+  test('every cph* skill_check is UQF-1.0, validates, onFail:[], NO residual activateCond; onPass = mission_bit', async ({ roPage: page }) => {
     const errs = []; page.on('pageerror', e => errs.push(String(e)));
-    await page.goto('/play.html');
     const r = await page.evaluate(() => {
       const cph = Object.values(QUEST_DB).filter(q => /^cph/.test(q.id) && q.type === 'skill_check');
       return cph.map(q => {
@@ -8255,8 +8169,7 @@ test.describe('§ARCH-01 Wave 3a — side-quest declarative completion (61 migra
     quest_inn_06: { countMin:[{ path:'innmotherKindness', min:5 }] },
   };
 
-  test('all 61 are UQF-1.0, validate, bits:[], completion present, no completeFn; legacy holdouts untouched', async ({ page }) => {
-    await page.goto('/play.html');
+  test('all 61 are UQF-1.0, validate, bits:[], completion present, no completeFn; legacy holdouts untouched', async ({ roPage: page }) => {
     const r = await page.evaluate(({ w3a, w3b, gates }) => {
       const bad = [];
       for (const id of w3a) {
@@ -8415,8 +8328,7 @@ test.describe('§ARCH-01 Wave 3b — counter/nested-path/item-count sides (32 mi
     quest_guide_01: { itemsAll:['Fishing Rod'] },
   };
 
-  test('all 32 are UQF-1.0, validate, bits:[], completion, no completeFn; holdouts stay legacy', async ({ page }) => {
-    await page.goto('/play.html');
+  test('all 32 are UQF-1.0, validate, bits:[], completion, no completeFn; holdouts stay legacy', async ({ roPage: page }) => {
     const r = await page.evaluate(({ w3b, holdouts, gates }) => {
       const bad = [];
       for (const id of w3b) {
@@ -8589,8 +8501,7 @@ test.describe('§ARCH-01 Wave 4 — combat quests (fight-roll resolver, 78 migra
     expect(r.gateEmpty).toBe(21);           // truly ungated / ()=>true  (57 + 3 + 21 = 81)
   });
 
-  test('placeholder + defaulted stats: null/0 and absent stat/DC became STR DC 12', async ({ page }) => {
-    await page.goto('/play.html');
+  test('placeholder + defaulted stats: null/0 and absent stat/DC became STR DC 12', async ({ roPage: page }) => {
     const r = await page.evaluate(() => {
       const pick = id => { const b = QUEST_DB[id].bits.find(x => x.kind === 'skill_check'); return b.stat + ' ' + b.dc; };
       return {
@@ -8711,8 +8622,7 @@ test.describe('§ARCH-01 Wave 4 — combat quests (fight-roll resolver, 78 migra
       g6Before:false, g6After:true, residue:[] });
   });
 
-  test('worldbuilder-export artifact purged: no string-typed activateCond dups (ath/zth/cid crash fix)', async ({ page }) => {
-    await page.goto('/play.html');
+  test('worldbuilder-export artifact purged: no string-typed activateCond dups (ath/zth/cid crash fix)', async ({ roPage: page }) => {
     const r = await page.evaluate(() => {
       const strCond = Object.values(QUEST_DB).filter(q => typeof q.activateCond === 'string').map(q => q.id);
       // W4 kept the two hybrids' FUNCTION gates; W5 then migrated them fully:
@@ -8736,8 +8646,7 @@ test.describe('§ARCH-01 Wave 4 — combat quests (fight-roll resolver, 78 migra
 // main quests (mq_1–7) were ALIVE via completeItems → pure-parity
 // completion:{items} migration (fuzzy-OR term = the legacy matching rule).
 test.describe('§ARCH-01 Wave 5 — other types (typed-roll resolvers + main parity, 106 migrated)', () => {
-  test('all 99 dead-type quests are UQF-1.0 + valid with typed defaults; no legacy residue', async ({ page }) => {
-    await page.goto('/play.html');
+  test('all 99 dead-type quests are UQF-1.0 + valid with typed defaults; no legacy residue', async ({ roPage: page }) => {
     const r = await page.evaluate(() => {
       const bad = [];
       const byType = { delivery:0, escort:0, dialogue:0, hybrid:0 };
@@ -8765,8 +8674,7 @@ test.describe('§ARCH-01 Wave 5 — other types (typed-roll resolvers + main par
     expect(r.dialogueSkill).toBe(6);         // 6 stn dialogues keep skill names; stn_c7a2 carried a raw ability (WIS)
   });
 
-  test('skill-name mapping: stn dialogue + cai hybrid stats govern correctly', async ({ page }) => {
-    await page.goto('/play.html');
+  test('skill-name mapping: stn dialogue + cai hybrid stats govern correctly', async ({ roPage: page }) => {
     const r = await page.evaluate(() => {
       const pick = id => { const b = QUEST_DB[id].bits.find(x => x.kind === 'skill_check'); return [b.stat, b.skill || null, b.dc].join('|'); };
       return {
@@ -8857,8 +8765,7 @@ test.describe('§ARCH-01 Wave 5 — other types (typed-roll resolvers + main par
 // ebReturnDone[X] → completion.flagsPath. Zero engine changes; the epic
 // activation exclusion (`if (q.type==='epic') return;`) is untouched.
 test.describe('§ARCH-01 Wave 6 — epic quests (EB pairs, parity completion, 40 migrated)', () => {
-  test('all 40 epics are UQF-1.0 + valid: 20 battles-completions, 20 flagsPath-completions, fields kept', async ({ page }) => {
-    await page.goto('/play.html');
+  test('all 40 epics are UQF-1.0 + valid: 20 battles-completions, 20 flagsPath-completions, fields kept', async ({ roPage: page }) => {
     const r = await page.evaluate(() => {
       const epics = Object.values(QUEST_DB).filter(q => q.type === 'epic');
       const bad = [];
@@ -8988,8 +8895,7 @@ test.describe('§ARCH-01 W7 — completion-bit execution point (Phase 4)', () =>
     expect(r.closureRan).toBe(true);
   });
 
-  test('validateQuest walks an array-valued onComplete chain', async ({ page }) => {
-    await page.goto('/play.html');
+  test('validateQuest walks an array-valued onComplete chain', async ({ roPage: page }) => {
     const r = await page.evaluate(() => {
       const good = validateQuest({ id:'x', schema:'UQF-1.0', completion:{ flags:['f'] },
         onComplete:[{ kind:'reward', xp:10 }] });
@@ -9027,8 +8933,7 @@ test.describe('§ARCH-01 W7 — completion-bit execution point (Phase 4)', () =>
 // are PRESERVED, not fixed.
 
 test.describe('§ARCH-01 W7b — QUEST_DB onComplete closures folded into bit chains', () => {
-  test('no function-valued onComplete remains in QUEST_DB; all chains validate', async ({ page }) => {
-    await page.goto('/play.html');
+  test('no function-valued onComplete remains in QUEST_DB; all chains validate', async ({ roPage: page }) => {
     const r = await page.evaluate(() => {
       const carriers = Object.values(QUEST_DB).filter(q => q.onComplete);
       const fns = carriers.filter(q => typeof q.onComplete === 'function').map(q => q.id);
@@ -9128,8 +9033,7 @@ test.describe('§ARCH-01 W7b — QUEST_DB onComplete closures folded into bit ch
 // dead — storyCheckQuests never flips them to 'complete'.
 
 test.describe('§ARCH-01 W7c — per-id effects block folded into onComplete chains', () => {
-  test('the id-keyed block is gone from storyCheckQuests', async ({ page }) => {
-    await page.goto('/play.html');
+  test('the id-keyed block is gone from storyCheckQuests', async ({ roPage: page }) => {
     const r = await page.evaluate(() => storyCheckQuests.toString().includes("if (id === '"));
     expect(r).toBe(false);
   });
@@ -9345,8 +9249,7 @@ test.describe('§ARCH-01 W7d / §VM-01-F — legacy branches retired; wm_01 in t
     expect(r).toEqual({ twoSeals:false, threeSeals:true, fuzzyRejected:false, flagAlone:true, defaultMin:true });
   });
 
-  test('quest_wm_01 is UQF: validates, completion is the letter-OR-3-seals gate in the grammar, no completeFn residue', async ({ page }) => {
-    await page.goto('/play.html');
+  test('quest_wm_01 is UQF: validates, completion is the letter-OR-3-seals gate in the grammar, no completeFn residue', async ({ roPage: page }) => {
     const r = await page.evaluate(() => {
       const q = QUEST_DB.quest_wm_01;
       return { schema: q.schema, valid: validateQuest(q).valid, noFn: !('completeFn' in q),
@@ -9381,8 +9284,7 @@ test.describe('§ARCH-01 W7d / §VM-01-F — legacy branches retired; wm_01 in t
     expect(r).toEqual({ fn:'active', items:'active' });   // neither completes anymore
   });
 
-  test('§W8a canonical fields: no QUEST_DB entry carries a dead legacy field (completeItems / root check* / bitLabel / goldAward)', async ({ page }) => {
-    await page.goto('/play.html');
+  test('§W8a canonical fields: no QUEST_DB entry carries a dead legacy field (completeItems / root check* / bitLabel / goldAward)', async ({ roPage: page }) => {
     const r = await page.evaluate(() => {
       // Root-level legacy fields swept in W8a. NB checkStat/checkDC etc. are fine
       // INSIDE bits (that is the UQF home for stat/dc) — this checks quest roots only.
@@ -9502,8 +9404,7 @@ test.describe('§MATH-01 — quest_math_01–05 UQF completions', () => {
     quest_math_05: { item: 'Moonshine Memo',           at: 'CNTR', gold: 600, xp: 600 },
   };
 
-  test('all five are UQF-1.0, validate, gate:{}, bits:[], itemsAll+atNode shapes as designed', async ({ page }) => {
-    await page.goto('/play.html');
+  test('all five are UQF-1.0, validate, gate:{}, bits:[], itemsAll+atNode shapes as designed', async ({ roPage: page }) => {
     const r = await page.evaluate((shapes) => {
       const bad = [];
       for (const [id, s] of Object.entries(shapes)) {
@@ -9526,8 +9427,7 @@ test.describe('§MATH-01 — quest_math_01–05 UQF completions', () => {
     expect(r).toEqual([]);
   });
 
-  test('math nodes occupy the HKG pocket, one code per cell, cells passable; node.loot carries the documents', async ({ page }) => {
-    await page.goto('/play.html');
+  test('math nodes occupy the HKG pocket, one code per cell, cells passable; node.loot carries the documents', async ({ roPage: page }) => {
     const r = await page.evaluate(() => {
       const want = { EHZ: '29,247', ZERO: '28,247', MONS: '29,248', CNTR: '28,248' };
       const bad = [];
@@ -9624,8 +9524,7 @@ test.describe('§MATH-01 — quest_math_01–05 UQF completions', () => {
 // ══════════════════════════════════════════════════════════════════════════
 
 test.describe('§MBIT-02 — _flagToLabel expander', () => {
-  test('chain/act flags expand cleanly; plain camelCase is unchanged', async ({ page }) => {
-    await page.goto('/play.html');
+  test('chain/act flags expand cleanly; plain camelCase is unchanged', async ({ roPage: page }) => {
     const r = await page.evaluate(() => [
       'athC1A1Done', 'bgw_c1a1_passed', 'lis_08_act1', 'WAW_002_act1Pass',
       'wisPage1_masks', 'blq02GatePassed', 'ams01a1', 'sbParleySucceeded',
@@ -9640,8 +9539,7 @@ test.describe('§MBIT-02 — _flagToLabel expander', () => {
     ]);
   });
 
-  test('no fallback label in QUEST_DB is left with raw underscores or glued letter-digit runs', async ({ page }) => {
-    await page.goto('/play.html');
+  test('no fallback label in QUEST_DB is left with raw underscores or glued letter-digit runs', async ({ roPage: page }) => {
     const r = await page.evaluate(() => {
       const flags = new Set();
       const walk = (bits) => (bits || []).forEach(b => {
@@ -9660,8 +9558,7 @@ test.describe('§MBIT-02 — _flagToLabel expander', () => {
     expect(r.bad).toEqual([]);
   });
 
-  test('Paul-arc mission_bits all carry explicit labels (fallback never used)', async ({ page }) => {
-    await page.goto('/play.html');
+  test('Paul-arc mission_bits all carry explicit labels (fallback never used)', async ({ roPage: page }) => {
     const r = await page.evaluate(() => {
       const ids = ['quest_ezzir', 'quest_governor_cyprus', 'quest_lame_lystra', 'quest_stoning_lystra',
                    'quest_prison_phillam', 'quest_areopagus', 'quest_ephesus_riot', 'quest_basket_damascus',
@@ -9690,8 +9587,7 @@ test.describe('§MBIT-02 — _flagToLabel expander', () => {
 // There are no hardcoded _takeMissionBit call sites by design; the only author path
 // is the declarative `takeBit` itemChain action, which this guard makes safe.
 test.describe('§MBIT-02 — _takeMissionBit spends the token without un-gating an arc', () => {
-  test('_gateFlagSet() collects flags/flagsAny/notFlags and includes a known gate flag', async ({ page }) => {
-    await page.goto('/play.html');
+  test('_gateFlagSet() collects flags/flagsAny/notFlags and includes a known gate flag', async ({ roPage: page }) => {
     const r = await page.evaluate(() => ({
       size: _gateFlagSet().size,
       hasEzzir: _gateFlagSet().has('ezzirConfronted'),   // gate:{flags:['ezzirConfronted']} on quest_governor_cyprus

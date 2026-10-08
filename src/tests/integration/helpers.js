@@ -1,6 +1,6 @@
 // SPDX-License-Identifier: MIT — Copyright (c) 2026 Paul Richeson
 'use strict';
-const { expect } = require('@playwright/test');
+const { test: base, expect } = require('@playwright/test');
 
 // ── HTML patch ────────────────────────────────────────────────────────────────
 // The orphaned junction blocks (originally lines 9864–33152) that caused
@@ -396,7 +396,41 @@ async function expectNpcRenderStateClean(page, keys) {
     + `is pinned to (BOO), or call resetNpcRenderState first`).toEqual([]);
 }
 
+// ── Shared page for read-only tests (§DX-02hr) ─────────────────────────────────
+// A fresh `{ page }` parses the whole game from cold; a test that only reads
+// QUEST_DB or calls the engine's pure functions pays that for nothing. `roPage` is
+// one page per worker, loaded once and handed to each opted-in test, and the test
+// is failed if the game's state fingerprint differs after it from before — so a
+// test that mutates anything cannot keep the shared page, and no later test can
+// inherit its leak. A test that seeds, clicks, renders or saves keeps `{ page }`.
+const GAME_FINGERPRINT = () => {
+  let h = 2166136261;
+  const mix = (s) => { for (let i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 16777619) >>> 0; } };
+  mix(JSON.stringify(typeof QUEST_DB === 'undefined' ? null : QUEST_DB));
+  mix(JSON.stringify(typeof S_story === 'undefined' ? null : S_story));
+  mix(JSON.stringify(typeof S === 'undefined' ? null : S));
+  return `${h.toString(16)}:${Object.keys(window).length}:${localStorage.length}`;
+};
+const test = base.extend({
+  sharedGame: [async ({ browser }, use) => {
+    const ctx = await browser.newContext();
+    const page = await ctx.newPage();
+    await page.goto('/play.html');
+    await use(page);
+    await ctx.close();
+  }, { scope: 'worker' }],
+  roPage: async ({ sharedGame }, use) => {
+    const before = await sharedGame.evaluate(GAME_FINGERPRINT);
+    await use(sharedGame);
+    sharedGame.removeAllListeners('pageerror');
+    const after = await sharedGame.evaluate(GAME_FINGERPRINT);
+    expect(after, 'this test changed game state on the shared page — give it its own { page }').toBe(before);
+  },
+});
+
 module.exports = {
+  test,
+  expect,
   SEED_STATE,
   NPC_RENDER_KEYS,
   NPC_RENDER_MAPS,
