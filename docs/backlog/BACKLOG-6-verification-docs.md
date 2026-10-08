@@ -43,16 +43,13 @@
 ---
 ## §BACKLOG — Open Items (Phase 6)
 
+### §DX-02hj-FU — drop the `X-R2H-*` identity headers once no peer older than the rename is expected (NEW 2026-10-08 during §DX-02hj, 🟡 one call: when)
+
+- [ ] **§DX-02hj-FU — `/api/world/download` emits each identity header twice: `X-COC-ServerId`/`-WorldHash`/`-EngineVer` are the names, and `X-R2H-*` ride alongside so a peer whose `edit.html` predates §DX-02hj still reads them.** `edit.html` reads `X-COC-*` first and falls back to `X-R2H-*`; `cors()` exposes both sets; `mud-harness.mjs` asserts the two sets agree. **The call is a date, not a design:** mesh peers are other people's deployments, so the old names come off the wire when the user judges no peer older than §DX-02hj's ship is still downloading worlds. **Do then:** delete the three `X-R2H-*` entries from the download handler and from `Access-Control-Expose-Headers`, drop the fallback in `edit.html`'s `meshDlConfirm`, change the harness check to assert `x-r2h-worldhash` is **absent**, and update `docs/api/wbapi-help.md`'s download line. **Provenance:** §DX-02hj, which shipped the dual emission as the only version of the rename that does not break a peer mid-flight.
+
 ### §DX-02lp — the 460 historical hashes could be mapped to live commits, and the rewrite left a key for part of it (NEW 2026-09-26 during §DX-02lo, 🟡 do it only when someone needs the old commits)
 
 - [ ] **§DX-02lp — option (a) of §DX-02lo, deferred there: annotate each pre-rewrite citation as `` `new` (was `old`) `` and delete its line from `src/scripts/historical-hashes.txt`.** Gate #40 `check:hashes` then ratchets the list down, since a listed hash nothing cites is a finding. **What §DX-02lo learned that makes this cheaper than it looked:** the 2026-08-23 rewrite remapped every hash inside a commit *message* and no file contents. So a pre-rewrite *"record the ship hash X"* commit carries the new hash in its subject and the old one in its diff. Of the 54 such commits, **14** add exactly one dead stamp and are clean old→new pairs, for example `0f5ebe0`: message `72e9d7d`, diff `3d0ab1d`. The rest add up to 86 dead hashes each, because they rewrite whole tables. For the remainder, a `SHIPPED <date> `old`` stamp names its row, and the ship commit is the one whose subject carries that row on that date: `git log --format='%h %ad %s' --date=short | grep '§ROW'`. **Measure first:** how many of the 460 sit in a `SHIPPED` stamp (275 stamps matched in all, dead and live), and how many resolve to exactly one commit by row and date. **Why 🟡:** 313 of the citations are in `plan-archive.md`, a record, so the value is only to someone running `git show` on an old row. **Provenance:** §DX-02lo, 2026-09-26.
-
-### §DX-02hj — the `r2h → coc` rename reached the harness and not the wire (NEW 2026-08-25 during §DX-02hi, 🟡 ONE DESIGN CALL: rename the headers or keep them)
-
-- [ ] **§DX-02hj — three response headers still carry the retired product name, and the test that would have said so asserted the new one.** **Measured at `779f5c0`:** `/api/world/download` emits `X-R2H-ServerId`, `X-R2H-WorldHash`, `X-R2H-EngineVer` (`wbapi-server.js@6429`), and `wbapi-server.js:1442`'s `Access-Control-Expose-Headers` names the same three. **The reader agrees** — `edit.html:10646-10647` reads `X-R2H-ServerId` / `X-R2H-WorldHash`. So the shipped contract is self-consistent and the **only** thing naming `x-coc-*` was `mud-harness.mjs`, whose assertion `a0801b7` updated while leaving the code alone. That assertion has been red ever since, in a job nothing was reading.
-> **Why it is a call and not a 🟢:** these headers are wire format. Renaming them is a coordinated change across the server, `edit.html`, and any peer server already running — mesh peers are other people's deployments, and the download endpoint is how a world crosses between them. The cheap alternative is to keep `X-R2H-*` as the wire name and note in `spec-engine.md` that the prefix predates the `coc` rename.
-> **Recommendation:** emit **both** for one release — new name authoritative, old name alongside — then drop `X-R2H-*`. That is the only version of the rename that does not break a peer mid-flight.
-> **Provenance:** the harness's third failing assertion in §DX-02hi. Pointed at the shipped header there so the job could go green; this row is the actual decision.
 
 ### §DX-02gf — one mesh test is green alone and red in the suite, and it has been red in every full run measured (NEW 2026-08-24 during §DX-02gd, 🟡 ONE DESIGN CALL: fix the wait or fence the test)
 
@@ -387,6 +384,6 @@
 
 ## §RESUME — Phase 6 history
 
-> **Completed work is not carried here.** The 129 closed increments for this phase are condensed in **[`../archive/backlog-resume-history.md`](../archive/backlog-resume-history.md)**; full prose for recent closes is in [`plan-archive.md`](plan-archive.md). This file carries open rows only.
+> **Completed work is not carried here.** The 130 closed increments for this phase are condensed in **[`../archive/backlog-resume-history.md`](../archive/backlog-resume-history.md)**; full prose for recent closes is in [`plan-archive.md`](plan-archive.md). This file carries open rows only.
 
 > When an increment ships: write the full entry into `plan-archive.md`, add its one-line row to `../archive/backlog-resume-history.md` and to the cross-phase table in [`BACKLOG.md`](BACKLOG.md), and delete the row from this file.
